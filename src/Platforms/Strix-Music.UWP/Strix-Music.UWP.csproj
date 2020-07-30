@@ -160,12 +160,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\UI\Strix-Music.Controls\Strix-Music.Controls.csproj">
-      <Project>{9bdd7670-4681-4239-a9ae-879026f226ea}</Project>
-      <Name>Strix-Music.Controls</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="..\..\UI\Strix-Music.Shared\Strix_Music.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
