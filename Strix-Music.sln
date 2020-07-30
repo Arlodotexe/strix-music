@@ -27,6 +27,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ViewModels", "ViewModels", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Styles", "Styles", "{37320CFB-1D32-4133-B364-F89FED0F52A9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1096697A-79A8-4D67-8093-8F322AB244B3}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\UI\Strix-Music.Shared\Strix_Music.Shared.projitems*{422b2330-2238-4d9b-94f6-6aaea2d17877}*SharedItemsImports = 4

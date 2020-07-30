@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# SA1200: Using directives should be placed correctly
+dotnet_diagnostic.SA1200.severity = none

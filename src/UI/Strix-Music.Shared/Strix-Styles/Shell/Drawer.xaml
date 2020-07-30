@@ -1,0 +1,151 @@
+﻿<UserControl
+    x:Class="Strix_Music.Shared.Strix_Style.Shell.Drawer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Strix_Music.Shared.Strix_Style.Shell"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    
+    <Grid x:Name="maingrid">
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="topBarRow" Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition x:Name="bottomBarRow" Height="auto"/>
+        </Grid.RowDefinitions>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup" CurrentStateChanged="VisualStateGroup_CurrentStateChanged">
+                <VisualState x:Name="Small">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="topBarRow.Height" Value="0"/>
+                        <Setter Target="topBar.Visibility" Value="Collapsed"/>
+                        <Setter Target="bottomBarRow.Height" Value="auto"/>
+                        <Setter Target="bottomCommandsRow.Height" Value="64"/>
+                        <Setter Target="bottomBar.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Mid">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger x:Name="MediumTrigger" MinWindowWidth="800"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="topBarRow.Height" Value="auto"/>
+                        <Setter Target="topBar.Visibility" Value="Visible"/>
+                        <Setter Target="bottomBarRow.Height" Value="auto"/>
+                        <Setter Target="bottomCommandsRow.Height" Value="0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="SideBarVisualStates">
+                <VisualState x:Name="Opened">
+                    <VisualState.Setters>
+                        <Setter Target="content.Margin" Value="0,0,0,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Closed">
+                    <VisualState.Setters>
+                        <Setter Target="content.Margin" Value="240,0,0,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid x:Name="panel" Grid.Row="1" HorizontalAlignment="Left">
+            <ContentControl x:Name="panelContent" Width="240" HorizontalAlignment="Left"
+                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsTabStop="False"/>
+        </Grid>
+
+        <Grid x:Name="content" Grid.Row="1">
+            <animations:Implicit.Animations>
+                <animations:Vector3Animation Target="Offset"/>
+            </animations:Implicit.Animations>
+            <Rectangle IsHitTestVisible="False" Width="12" HorizontalAlignment="Left" Opacity="{StaticResource ShadowOpacity}" Margin="-12,0,0,0">
+                <Rectangle.Fill>
+                    <LinearGradientBrush EndPoint="0,0" StartPoint="1,0">
+                        <GradientStop Offset="1"/>
+                        <GradientStop Color="{ThemeResource ShadowColor}" Offset="0"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <ContentControl x:Name="mainContent" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="0,0,0,0" IsTabStop="False"/>
+        </Grid>
+
+        <Grid x:Name="topBar">
+            <animations:Implicit.ShowAnimations>
+                <animations:TranslationAnimation Duration="0:0:0.5" To="0">
+                    <animations:Vector3KeyFrame Key="0.1" Value="0, -300, 0"/>
+                    <animations:Vector3KeyFrame Key="0.5" Value="0, 10, 0"/>
+                </animations:TranslationAnimation>
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:TranslationAnimation Duration="0:0:0.25" To="0, -300, 0"/>
+            </animations:Implicit.HideAnimations>
+            <Rectangle IsHitTestVisible="False" Height="12"
+                       HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                       Opacity="{StaticResource ShadowOpacity}" Margin="0,0,0,-12">
+                <Rectangle.Fill>
+                    <LinearGradientBrush EndPoint="0,0" StartPoint="1,0">
+                        <LinearGradientBrush.RelativeTransform>
+                            <CompositeTransform CenterY="0.5" CenterX="0.5" Rotation="90"/>
+                        </LinearGradientBrush.RelativeTransform>
+                        <GradientStop Offset="0"/>
+                        <GradientStop Color="{ThemeResource ShadowColor}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <ContentControl x:Name="topBarContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsTabStop="False"/>
+        </Grid>
+
+        <Grid x:Name="bottomBar" Grid.Row="2" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition MinHeight="64"/>
+                <RowDefinition x:Name="bottomCommandsRow" Height="64"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="64"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <animations:Implicit.ShowAnimations>
+                <animations:TranslationAnimation Duration="0:0:0.5" To="0">
+                    <animations:Vector3KeyFrame Key="0.1" Value="0, 300, 0"/>
+                    <animations:Vector3KeyFrame Key="0.5" Value="0, -10, 0"/>
+                </animations:TranslationAnimation>
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.Animations>
+                <animations:Vector3Animation Target="Offset"/>
+            </animations:Implicit.Animations>
+            <animations:Implicit.HideAnimations>
+                <animations:TranslationAnimation Duration="0:0:0.25" To="0, 300, 0"/>
+            </animations:Implicit.HideAnimations>
+            <Rectangle IsHitTestVisible="False" Height="12" Grid.ColumnSpan="2"
+                       HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                       Opacity="{StaticResource ShadowOpacity}" Margin="0,-12,0,0">
+                <Rectangle.Fill>
+                    <LinearGradientBrush EndPoint="0,0" StartPoint="1,0">
+                        <LinearGradientBrush.RelativeTransform>
+                            <CompositeTransform CenterY="0.5" CenterX="0.5" Rotation="-90"/>
+                        </LinearGradientBrush.RelativeTransform>
+                        <GradientStop Offset="0"/>
+                        <GradientStop Color="{ThemeResource ShadowColor}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <ContentControl x:Name="bottomBarSecondaryContent" Grid.ColumnSpan="2"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch" IsTabStop="False"/>
+            <Button Height="64" Width="64" Grid.Row="1" Click="TogglePanel">
+                <FontIcon Glyph=""/>
+            </Button>
+            <ContentControl x:Name="bottomBarContent" Height="64" Grid.Row="1" Grid.Column="1"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch" IsTabStop="False"/>
+        </Grid>
+    </Grid>
+</UserControl>

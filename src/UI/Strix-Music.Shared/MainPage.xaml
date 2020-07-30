@@ -5,9 +5,10 @@
     xmlns:local="using:Strix_Music"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strix="using:Strix_Music.Shared.Strix_Style.Shell"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-		<TextBlock Text="Hello, world!" Margin="20" FontSize="30" />
+        <strix:Shell/>
     </Grid>
 </Page>
