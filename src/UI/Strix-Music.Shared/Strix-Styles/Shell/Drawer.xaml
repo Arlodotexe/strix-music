@@ -48,14 +48,6 @@
             <animations:Implicit.Animations>
                 <animations:Vector3Animation Target="Offset"/>
             </animations:Implicit.Animations>
-            <Rectangle IsHitTestVisible="False" Width="12" HorizontalAlignment="Left" Opacity="{StaticResource ShadowOpacity}" Margin="-12,0,0,0">
-                <Rectangle.Fill>
-                    <LinearGradientBrush EndPoint="0,0" StartPoint="1,0">
-                        <GradientStop Offset="1"/>
-                        <GradientStop Color="{ThemeResource ShadowColor}" Offset="0"/>
-                    </LinearGradientBrush>
-                </Rectangle.Fill>
-            </Rectangle>
             <ContentControl x:Name="mainContent" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="0,0,0,0" IsTabStop="False"/>
         </Grid>
 
@@ -75,7 +67,7 @@
                 <Rectangle.Fill>
                     <LinearGradientBrush EndPoint="0,0" StartPoint="0,1">
                         <LinearGradientBrush.RelativeTransform>
-                            <CompositeTransform CenterY="0.5" CenterX="0.5" Rotation="90"/>
+                            <RotateTransform CenterY="0.5" CenterX="0.5" Angle="90"/>
                         </LinearGradientBrush.RelativeTransform>
                         <GradientStop Offset="0"/>
                         <GradientStop Color="{ThemeResource ShadowColor}" Offset="1"/>
@@ -86,7 +78,7 @@
                             HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsTabStop="False"/>
         </Grid>
 
-        <Grid x:Name="bottomBar" Grid.Row="2" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid x:Name="bottomBar" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition MinHeight="64"/>
                 <RowDefinition x:Name="bottomCommandsRow" Height="64"/>

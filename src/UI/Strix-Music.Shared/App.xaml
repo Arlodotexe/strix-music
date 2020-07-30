@@ -7,5 +7,15 @@
     <Application.Resources>
         <Color x:Key="ShadowColor">#FF000000</Color>
         <x:Double x:Key="ShadowOpacity">0.1</x:Double>
+
+        <AcrylicBrush x:Key="AcrylicContentBackgroundBrush" TintColor="#302e38"
+                          FallbackColor="#302e38" BackgroundSource="HostBackdrop"/>
+
+        <AcrylicBrush x:Key="AcrylicBarBackgroundBrush" TintColor="#18171c"
+                          FallbackColor="#18171c" BackgroundSource="HostBackdrop"/>
+
+        <AcrylicBrush x:Key="AcrylicSecondaryBarBackgroundBrush" TintColor="#24222a"
+                          FallbackColor="#24222a" BackgroundSource="HostBackdrop"/>
+
     </Application.Resources>
 </Application>

@@ -6,22 +6,22 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignHeight="900"
+    d:DesignWidth="1000">
 
     <Grid>
         <local:Drawer>
             <local:Drawer.TopBarContent>
-                <Rectangle Fill="#FFFF00" Height="96"/>
+                <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}" Height="128"/>
             </local:Drawer.TopBarContent>
             <local:Drawer.BottomBarContent>
-                <Rectangle Fill="#FF0000"/>
+                <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}"/>
             </local:Drawer.BottomBarContent>
             <local:Drawer.BottomBarSecondaryContent>
-                <Rectangle Fill="#FF00FF" Height="96"/>
+                <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}" Height="96"/>
             </local:Drawer.BottomBarSecondaryContent>
             <local:Drawer.MainContent>
-                <Rectangle Fill="#0000FF"/>
+                <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}"/>
             </local:Drawer.MainContent>
         </local:Drawer>
     </Grid>
