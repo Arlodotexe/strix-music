@@ -8,41 +8,48 @@ using Windows.UI.Xaml.Controls;
 namespace Strix_Music.Shared.Strix_Style.Shell
 {
     /// <summary>
-    /// A Drawer used as the root of the 
+    /// A Drawer used as the root of the Shell.
     /// </summary>
     public sealed partial class Drawer : UserControl
     {
-        private bool isPanelOpen = false;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Drawer"/> class.
+        /// </summary>
         public Drawer()
         {
             this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Gets or sets UIElement to always show as top bar.
+        /// </summary>
         public object TopBarContent
         {
             get { return this.topBarContent.Content; }
             set { this.topBarContent.Content = value; }
         }
 
-        public object PanelContent
-        {
-            get { return this.panelContent.Content; }
-            set { this.panelContent.Content = value; }
-        }
-
+        /// <summary>
+        /// Gets or sets UIElement to always show as bottom bar.
+        /// </summary>
         public object BottomBarContent
         {
             get { return this.bottomBarContent.Content; }
             set { this.bottomBarContent.Content = value; }
         }
 
+        /// <summary>
+        /// Gets or sets UIElement to always show as secondary bottom bar.
+        /// </summary>
         public object BottomBarSecondaryContent
         {
             get { return this.bottomBarSecondaryContent.Content; }
             set { this.bottomBarSecondaryContent.Content = value; }
         }
 
+        /// <summary>
+        /// Gets or sets UIElement to always show as main content.
+        /// </summary>
         public object MainContent
         {
             get { return this.mainContent.Content; }
@@ -51,21 +58,6 @@ namespace Strix_Music.Shared.Strix_Style.Shell
 
         private void VisualStateGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
         {
-            if (e.NewState == this.Mid)
-            {
-                this.SetPanel(false);
-            }
-        }
-
-        private void TogglePanel(object sender, RoutedEventArgs args)
-        {
-            this.SetPanel(!this.isPanelOpen);
-        }
-
-        private void SetPanel(bool open)
-        {
-            VisualStateManager.GoToState(this, open ? "Closed" : "Opened", true);
-            this.isPanelOpen = open;
         }
     }
 }

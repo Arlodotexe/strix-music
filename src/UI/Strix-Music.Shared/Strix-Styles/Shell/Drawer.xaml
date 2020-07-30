@@ -42,24 +42,7 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-            <VisualStateGroup x:Name="SideBarVisualStates">
-                <VisualState x:Name="Opened">
-                    <VisualState.Setters>
-                        <Setter Target="content.Margin" Value="0,0,0,0"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Closed">
-                    <VisualState.Setters>
-                        <Setter Target="content.Margin" Value="240,0,0,0"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-
-        <Grid x:Name="panel" Grid.Row="1" HorizontalAlignment="Left">
-            <ContentControl x:Name="panelContent" Width="240" HorizontalAlignment="Left"
-                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsTabStop="False"/>
-        </Grid>
 
         <Grid x:Name="content" Grid.Row="1">
             <animations:Implicit.Animations>
@@ -108,10 +91,6 @@
                 <RowDefinition MinHeight="64"/>
                 <RowDefinition x:Name="bottomCommandsRow" Height="64"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="64"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation Duration="0:0:0.5" To="0">
                     <animations:Vector3KeyFrame Key="0.1" Value="0, 300, 0"/>
@@ -124,7 +103,7 @@
             <animations:Implicit.HideAnimations>
                 <animations:TranslationAnimation Duration="0:0:0.25" To="0, 300, 0"/>
             </animations:Implicit.HideAnimations>
-            <Rectangle IsHitTestVisible="False" Height="12" Grid.ColumnSpan="2"
+            <Rectangle IsHitTestVisible="False" Height="12"
                        HorizontalAlignment="Stretch" VerticalAlignment="Top"
                        Opacity="{StaticResource ShadowOpacity}" Margin="0,-12,0,0">
                 <Rectangle.Fill>
@@ -137,14 +116,13 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <ContentControl x:Name="bottomBarSecondaryContent" Grid.ColumnSpan="2"
-                            HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Stretch"
+            <ContentControl x:Name="bottomBarSecondaryContent"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                            HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch" IsTabStop="False"/>
-            <Button Height="64" Width="64" Grid.Row="1" Click="TogglePanel">
-                <FontIcon Glyph=""/>
-            </Button>
-            <ContentControl x:Name="bottomBarContent" Height="64" Grid.Row="1" Grid.Column="1"
-                            HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Stretch"
+            <ContentControl x:Name="bottomBarContent" Height="64" Grid.Row="1"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                            HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch" IsTabStop="False"/>
         </Grid>
     </Grid>

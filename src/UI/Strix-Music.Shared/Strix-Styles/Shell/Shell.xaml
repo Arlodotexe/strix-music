@@ -20,9 +20,6 @@
             <local:Drawer.BottomBarSecondaryContent>
                 <Rectangle Fill="#FF00FF" Height="96"/>
             </local:Drawer.BottomBarSecondaryContent>
-            <local:Drawer.PanelContent>
-                <Rectangle Fill="#00FF00"/>
-            </local:Drawer.PanelContent>
             <local:Drawer.MainContent>
                 <Rectangle Fill="#0000FF"/>
             </local:Drawer.MainContent>
