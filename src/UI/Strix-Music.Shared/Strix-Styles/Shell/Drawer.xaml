@@ -66,9 +66,6 @@
                        Opacity="{StaticResource ShadowOpacity}" Margin="0,0,0,-12">
                 <Rectangle.Fill>
                     <LinearGradientBrush EndPoint="0,0" StartPoint="0,1">
-                        <LinearGradientBrush.RelativeTransform>
-                            <RotateTransform CenterY="0.5" CenterX="0.5" Angle="90"/>
-                        </LinearGradientBrush.RelativeTransform>
                         <GradientStop Offset="0"/>
                         <GradientStop Color="{ThemeResource ShadowColor}" Offset="1"/>
                     </LinearGradientBrush>
