@@ -8,10 +8,5 @@ namespace Strix_Music.DefaultShell.Controls
         {
             this.DefaultStyleKey = typeof(ShellControl);
         }
-
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-        }
     }
 }

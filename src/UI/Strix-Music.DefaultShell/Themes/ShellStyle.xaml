@@ -8,7 +8,22 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:ShellControl">
-                        <TextBlock Text="It's fine" />
+                        <NavigationView>
+                            <NavigationView.MenuItems>
+                                <NavigationViewItem Content="Library">
+                                    <NavigationViewItem.Icon>
+                                        <FontIcon Glyph="&#xE8F1;"/>
+                                    </NavigationViewItem.Icon>
+                                </NavigationViewItem>
+                                <NavigationViewItem Icon="Clock" Content="Recently Played"/>
+                                <NavigationViewItem Content="Now Playing">
+                                    <NavigationViewItem.Icon>
+                                        <FontIcon Glyph="&#xF61F;"/>
+                                    </NavigationViewItem.Icon>
+                                </NavigationViewItem>
+                                <NavigationViewItemSeparator/>
+                            </NavigationView.MenuItems>
+                        </NavigationView>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
