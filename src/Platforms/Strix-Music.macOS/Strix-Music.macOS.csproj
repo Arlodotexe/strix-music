@@ -69,6 +69,11 @@
     <Reference Include="System.Memory" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers">
+      <Version>1.1.118</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Uno.UI" Version="2.4.0" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="2.4.0" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
@@ -95,6 +100,7 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
+    <None Include="..\..\..\stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />

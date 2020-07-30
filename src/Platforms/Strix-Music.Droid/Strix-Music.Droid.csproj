@@ -61,6 +61,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers">
+      <Version>1.1.118</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Uno.UI" Version="2.4.0" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="2.4.0" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.32" />
@@ -76,6 +81,7 @@
     <AndroidAsset Include="Assets\Fonts\winjs-symbols.ttf" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
+    <None Include="..\..\..\stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
@@ -89,7 +95,7 @@
   <ItemGroup>
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
-  <Import Project="..\Strix_Music.Shared\Strix_Music.Shared.projitems" Label="Shared" Condition="Exists('..\Strix_Music.Shared\Strix_Music.Shared.projitems')" />
+  <Import Project="..\..\UI\Strix-Music.Shared\Strix_Music.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- This will force the generation of the APK when not building inside visual studio -->
   <Target Name="GenerateBuild" DependsOnTargets="SignAndroidPackage" AfterTargets="Build" Condition="'$(BuildingInsideVisualStudio)'==''" />

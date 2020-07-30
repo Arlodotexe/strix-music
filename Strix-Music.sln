@@ -29,7 +29,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Styles", "Styles", "{37320C
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\UI\Strix-Music.Shared\Strix_Music.Shared.projitems*{422b2330-2238-4d9b-94f6-6aaea2d17877}*SharedItemsImports = 4
 		src\UI\Strix-Music.Shared\Strix_Music.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
+		src\UI\Strix-Music.Shared\Strix_Music.Shared.projitems*{73d134e2-4a55-46e2-9f05-95049a52af79}*SharedItemsImports = 5
+		src\UI\Strix-Music.Shared\Strix_Music.Shared.projitems*{7acfe9fe-4243-43c2-9de2-2232b090274c}*SharedItemsImports = 4
+		src\UI\Strix-Music.Shared\Strix_Music.Shared.projitems*{89ac1131-5215-4f43-b5ac-b4dfae1366f6}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU

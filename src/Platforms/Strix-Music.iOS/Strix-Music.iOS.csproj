@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
-    <ProjectGuid>422b2330-2238-4d9b-94f6-6aaea2d17877</ProjectGuid>
+    <ProjectGuid>{422B2330-2238-4D9B-94F6-6AAEA2D17877}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>Strix_Music</RootNamespace>
@@ -104,6 +104,7 @@
     <BundleResource Include="Resources\SplashScreen%402x.png" />
     <BundleResource Include="Resources\SplashScreen%403x.png" />
     <BundleResource Include="Resources\Default-568h%402x.png" />
+    <BundleResource Include="..\..\..\stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -115,6 +116,11 @@
     <BundleResource Include="Resources\Fonts\winjs-symbols.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers">
+      <Version>1.1.118</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Uno.UI" Version="2.4.0" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="2.4.0" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
@@ -149,11 +155,7 @@
       <Visible>false</Visible>
     </ImageAsset>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Media" Visible="false" />
-    <Folder Include="Media\AppIcons" Visible="false" />
-    <Folder Include="Media\LaunchImages" Visible="false" />
-  </ItemGroup>
-  <Import Project="..\Strix_Music.Shared\Strix_Music.Shared.projitems" Label="Shared" Condition="Exists('..\Strix_Music.Shared\Strix_Music.Shared.projitems')" />
+  <ItemGroup />
+  <Import Project="..\..\UI\Strix-Music.Shared\Strix_Music.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
