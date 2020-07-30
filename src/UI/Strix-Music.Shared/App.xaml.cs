@@ -59,7 +59,7 @@ namespace Strix_Music
                 }
 
                 // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
+                Windows.UI.Xaml.Window.Current.Content = rootFrame;
             }
 
             if (e.PrelaunchActivated == false)
@@ -73,7 +73,7 @@ namespace Strix_Music
                 }
 
                 // Ensure the current window is active
-                Window.Current.Activate();
+                Windows.UI.Xaml.Window.Current.Activate();
             }
         }
 

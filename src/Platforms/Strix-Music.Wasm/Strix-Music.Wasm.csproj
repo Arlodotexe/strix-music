@@ -7,7 +7,7 @@
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
     <NoWarn>NU1701</NoWarn>
     <RootNamespace>Strix_Music.Wasm</RootNamespace>
-    <AssemblyName>Strix_Music.Wasm</AssemblyName>
+    <AssemblyName></AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>

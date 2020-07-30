@@ -104,7 +104,6 @@
     <BundleResource Include="Resources\SplashScreen%402x.png" />
     <BundleResource Include="Resources\SplashScreen%403x.png" />
     <BundleResource Include="Resources\Default-568h%402x.png" />
-    <BundleResource Include="..\..\..\stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -120,6 +119,9 @@
       <Version>1.1.118</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations">
+      <Version>6.1.0-build.71.g38c59ea2a0</Version>
     </PackageReference>
     <PackageReference Include="Uno.UI" Version="2.4.0" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="2.4.0" Condition="'$(Configuration)'=='Debug'" />
