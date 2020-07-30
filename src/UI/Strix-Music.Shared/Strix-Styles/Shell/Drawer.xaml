@@ -107,7 +107,7 @@
                        HorizontalAlignment="Stretch" VerticalAlignment="Top"
                        Opacity="{StaticResource ShadowOpacity}" Margin="0,-12,0,0">
                 <Rectangle.Fill>
-                    <LinearGradientBrush EndPoint="0,0" StartPoint="0,1">
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Offset="0"/>
                         <GradientStop Color="{ThemeResource ShadowColor}" Offset="1"/>
                     </LinearGradientBrush>
