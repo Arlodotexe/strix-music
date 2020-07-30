@@ -1,0 +1,19 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Strix_Music.Style"
+    xmlns:control="using:Strix_Music.Default.Controls">
+  
+  <Style TargetType="control:ShellControl">
+    <Style.Setters>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="control:ShellControl">
+            <TextBlock Text="It's fine" />
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style.Setters>
+  </Style>
+  
+</ResourceDictionary>

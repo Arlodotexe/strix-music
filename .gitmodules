@@ -1,0 +1,3 @@
+[submodule "src/OwlCore"]
+	path = src/OwlCore
+	url = https://dev.azure.com/arloappx/_git/OwlCore

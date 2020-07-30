@@ -8,7 +8,5 @@ namespace Strix_Music.Shared.Strix_Style.Shell
         {
             this.InitializeComponent();
         }
-
-
     }
 }

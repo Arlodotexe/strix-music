@@ -6,23 +6,141 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="900"
-    d:DesignWidth="1000">
+    d:DesignHeight="1080"
+    d:DesignWidth="1920">
+
+    <UserControl.Resources>
+        <Style x:Key="GenericBarButton" TargetType="Button">
+            <Style.Setters>
+                <Setter Target="Background" Value="Transparent"/>
+                <Setter Target="BorderThickness" Value="1"/>
+                <Setter Target="HorizontalAlignment" Value="Stretch"/>
+                <Setter Target="VerticalAlignment" Value="Stretch"/>
+            </Style.Setters>
+        </Style>
+        <Style x:Key="TopBarButton" TargetType="Button">
+            <Style.Setters>
+                <Setter Target="Background" Value="Transparent"/>
+                <Setter Target="BorderThickness" Value="1"/>
+                <Setter Target="HorizontalAlignment" Value="Stretch"/>
+                <Setter Target="VerticalAlignment" Value="Stretch"/>
+                <Setter Target="Width" Value="150"/>
+            </Style.Setters>
+        </Style>
+    </UserControl.Resources>
 
     <Grid>
         <local:Drawer>
             <local:Drawer.TopBarContent>
-                <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}" Height="128"/>
+                <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}" Height="128">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="64"/>
+                            <ColumnDefinition Width="600"/>
+                            <ColumnDefinition Width="64"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Style="{StaticResource GenericBarButton}">
+                            <SymbolIcon Symbol="Contact"/>
+                        </Button>
+                        <TextBox Grid.Column="1"/>
+                        <Button Grid.Column="2" Style="{StaticResource GenericBarButton}">
+                            <SymbolIcon Symbol="Find"/>
+                        </Button>
+                    </Grid>
+                    
+                    <Grid Grid.Row="1" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Style="{StaticResource TopBarButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xF61F;"/>
+                                <TextBlock Text="Now Playing" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="1" Style="{StaticResource TopBarButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Clock"/>
+                                <TextBlock Text="Recent" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="2" Style="{StaticResource TopBarButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE8F1;"/>
+                                <TextBlock Text="Library" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="3" Style="{StaticResource TopBarButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xEB44;"/>
+                                <TextBlock Text="Browse" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+
+                    <Button Grid.Row="1" HorizontalAlignment="Right" Style="{StaticResource GenericBarButton}">
+                        <SymbolIcon Symbol="Setting" Margin="0,0,32,0"/>
+                    </Button>
+                </Grid>
             </local:Drawer.TopBarContent>
-            <local:Drawer.BottomBarContent>
-                <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}"/>
-            </local:Drawer.BottomBarContent>
-            <local:Drawer.BottomBarSecondaryContent>
-                <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}" Height="96"/>
-            </local:Drawer.BottomBarSecondaryContent>
             <local:Drawer.MainContent>
                 <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}"/>
             </local:Drawer.MainContent>
+            <local:Drawer.BottomBarSecondaryContent>
+                <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}" Height="96"/>
+            </local:Drawer.BottomBarSecondaryContent>
+            <local:Drawer.BottomBarContent>
+                <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Style="{StaticResource GenericBarButton}">
+                            <StackPanel>
+                                <FontIcon Glyph="&#xF61F;"/>
+                                <TextBlock Text="Now Playing" FontSize="8"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="1" Style="{StaticResource GenericBarButton}">
+                            <StackPanel>
+                                <SymbolIcon Symbol="Clock"/>
+                                <TextBlock Text="Recent" FontSize="8"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="2" Style="{StaticResource GenericBarButton}">
+                            <StackPanel>
+                                <FontIcon Glyph="&#xE8F1;"/>
+                                <TextBlock Text="Library" FontSize="8"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="3" Style="{StaticResource GenericBarButton}">
+                            <StackPanel>
+                                <FontIcon Glyph="&#xEB44;"/>
+                                <TextBlock Text="Browse" FontSize="8"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="4" Style="{StaticResource GenericBarButton}">
+                            <StackPanel>
+                                <SymbolIcon Symbol="Find"/>
+                                <TextBlock Text="Search" FontSize="8"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </local:Drawer.BottomBarContent>
         </local:Drawer>
     </Grid>
 </UserControl>
