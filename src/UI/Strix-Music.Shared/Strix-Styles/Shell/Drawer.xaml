@@ -73,7 +73,7 @@
                        HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
                        Opacity="{StaticResource ShadowOpacity}" Margin="0,0,0,-12">
                 <Rectangle.Fill>
-                    <LinearGradientBrush EndPoint="0,0" StartPoint="1,0">
+                    <LinearGradientBrush EndPoint="0,0" StartPoint="0,1">
                         <LinearGradientBrush.RelativeTransform>
                             <CompositeTransform CenterY="0.5" CenterX="0.5" Rotation="90"/>
                         </LinearGradientBrush.RelativeTransform>
@@ -107,10 +107,7 @@
                        HorizontalAlignment="Stretch" VerticalAlignment="Top"
                        Opacity="{StaticResource ShadowOpacity}" Margin="0,-12,0,0">
                 <Rectangle.Fill>
-                    <LinearGradientBrush EndPoint="0,0" StartPoint="1,0">
-                        <LinearGradientBrush.RelativeTransform>
-                            <CompositeTransform CenterY="0.5" CenterX="0.5" Rotation="-90"/>
-                        </LinearGradientBrush.RelativeTransform>
+                    <LinearGradientBrush EndPoint="0,0" StartPoint="0,1">
                         <GradientStop Offset="0"/>
                         <GradientStop Color="{ThemeResource ShadowColor}" Offset="1"/>
                     </LinearGradientBrush>
