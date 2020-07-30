@@ -5,24 +5,29 @@
     xmlns:local="using:Strix_Music">
 
     <Application.Resources>
-        <Color x:Key="ShadowColor">#FF000000</Color>
-        <x:Double x:Key="ShadowOpacity">0.1</x:Double>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Strix_Music.DefaultShell/Themes/ShellStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <!--<AcrylicBrush x:Key="AcrylicContentBackgroundBrush" TintColor="#302e38"
-                          FallbackColor="#302e38" BackgroundSource="HostBackdrop"/>
+            <Color x:Key="ShadowColor">#FF000000</Color>
+            <x:Double x:Key="ShadowOpacity">0.1</x:Double>
 
-        <AcrylicBrush x:Key="AcrylicBarBackgroundBrush" TintColor="#18171c"
+            <!--<AcrylicBrush x:Key="AcrylicContentBackgroundBrush" TintColor="#302e38"
+                              FallbackColor="#302e38" BackgroundSource="HostBackdrop"/>
+
+            <AcrylicBrush x:Key="AcrylicBarBackgroundBrush" TintColor="#18171c"
                           FallbackColor="#18171c" BackgroundSource="HostBackdrop"/>
 
-        <AcrylicBrush x:Key="AcrylicSecondaryBarBackgroundBrush" TintColor="#24222a"
+            <AcrylicBrush x:Key="AcrylicSecondaryBarBackgroundBrush" TintColor="#24222a"
                           FallbackColor="#24222a" BackgroundSource="HostBackdrop"/>-->
 
-        <SolidColorBrush x:Key="AcrylicContentBackgroundBrush" Color="#302e38"/>
+            <SolidColorBrush x:Key="AcrylicContentBackgroundBrush" Color="#302e38"/>
 
-        <SolidColorBrush x:Key="AcrylicBarBackgroundBrush" Color="#18171c"/>
+            <SolidColorBrush x:Key="AcrylicBarBackgroundBrush" Color="#18171c"/>
 
-        <SolidColorBrush x:Key="AcrylicSecondaryBarBackgroundBrush" Color="#24222a"/>
-       
+            <SolidColorBrush x:Key="AcrylicSecondaryBarBackgroundBrush" Color="#24222a"/>
 
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
