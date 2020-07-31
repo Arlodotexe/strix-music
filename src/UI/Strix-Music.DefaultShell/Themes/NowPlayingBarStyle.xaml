@@ -8,48 +8,89 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:NowPlayingBarControl">
-                        <Grid VerticalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid MaxWidth="300">
+                        <UserControl>
+                            <Grid VerticalAlignment="Center">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="Sizes">
+                                        <VisualState x:Name="Small">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <!--<Setter Target="sliderGrid.Visibility" Value="Collapsed"/>-->
+                                                <Setter Target="sliderRow.Height" Value="48"/>
+                                                <Setter Target="sliderGrid.(Grid.Row)" Value="1"/>
+                                                <Setter Target="sliderGrid.(Grid.Column)" Value="0"/>
+                                                <Setter Target="sliderGrid.(Grid.ColumnSpan)" Value="3"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Large">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="1200"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <!--<Setter Target="sliderGrid.Visibility" Value="Visible"/>-->
+                                                <Setter Target="sliderRow.Height" Value="0"/>
+                                                <Setter Target="sliderGrid.(Grid.Row)" Value="0"/>
+                                                <Setter Target="sliderGrid.(Grid.Column)" Value="1"/>
+                                                <Setter Target="sliderGrid.(Grid.ColumnSpan)" Value="1"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="96"/>
+                                    <RowDefinition x:Name="sliderRow" Height="0"/>
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition x:Name="sliderColumn"/>
+                                    <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="Diplomat's Son"/>
-                                    <TextBlock Text="Vampire Weekend" Opacity=".5"/>
+                                <Grid MaxWidth="300">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Diplomat's Son"/>
+                                        <TextBlock Text="Vampire Weekend" Opacity=".5"/>
+                                    </StackPanel>
+                                    <Rectangle Fill="#FF00FF" Width="96" Height="96"/>
+                                </Grid>
+
+                                <Grid x:Name="sliderGrid" Grid.Column="1" VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="1:08" Grid.Column="0" Margin="16,0" VerticalAlignment="Center"/>
+                                    <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="36" Style="{StaticResource MediaSlider}"/>
+                                    <TextBlock Text="4:40" Grid.Column="2" Margin="16,0" VerticalAlignment="Center"/>
+                                </Grid>
+
+                                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                                    <Button Style="{StaticResource MediaButton}">
+                                        <FontIcon Glyph="&#xE100;"/>
+                                    </Button>
+                                    <Button Style="{StaticResource MediaButton}">
+                                        <FontIcon Glyph="&#xE102;"/>
+                                    </Button>
+                                    <Button Style="{StaticResource MediaButton}">
+                                        <FontIcon Glyph="&#xE101;"/>
+                                    </Button>
+                                    <Button Style="{StaticResource MediaButton}">
+                                        <FontIcon Glyph="&#xE8EE;"/>
+                                    </Button>
+                                    <Button Style="{StaticResource MediaButton}">
+                                        <FontIcon Glyph="&#xE8B1;"/>
+                                    </Button>
                                 </StackPanel>
-                                <Rectangle Fill="#FF00FF" Width="96" Height="96"/>
                             </Grid>
-
-                            <Grid Grid.Column="1" VerticalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock Text="1:08" Grid.Column="0" Margin="16,0" VerticalAlignment="Center"/>
-                                <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="36" />
-                                <TextBlock Text="4:40" Grid.Column="2" Margin="16,0" VerticalAlignment="Center"/>
-                            </Grid>
-
-                            <StackPanel Orientation="Horizontal" Grid.Column="2">
-                                <Button Style="{StaticResource MediaButton}">
-                                    <FontIcon Glyph="&#xE100;"/>
-                                </Button>
-                                <Button Style="{StaticResource MediaButton}">
-                                    <FontIcon Glyph="&#xE102;"/>
-                                </Button>
-                                <Button Style="{StaticResource MediaButton}">
-                                    <FontIcon Glyph="&#xE101;"/>
-                                </Button>
-                            </StackPanel>
-                        </Grid>
+                        </UserControl>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

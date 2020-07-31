@@ -30,7 +30,7 @@
                                 </NavigationView.MenuItems>
                                 <local:ArtistViewControl/>
                             </NavigationView>
-                            <local:NowPlayingBarControl Grid.Row="1" Height="96"/>
+                            <local:NowPlayingBarControl Grid.Row="1"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
