@@ -8,7 +8,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:TrackListControl">
-                        <ListView Margin="32">
+                        <ListView Margin="32" ItemContainerStyle="{StaticResource TrackListItemStyle}">
                             <ListView.Items>
                                 <ListViewItem>
                                     <local:TrackControl/>

@@ -31,5 +31,9 @@
         <Setter Property="Padding" Value="16,8"/>
         <Setter Property="VerticalContentAlignment" Value="Top"/>
     </Style>
+
+    <Style x:Key="TrackListItemStyle" TargetType="ListViewItem">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    </Style>
     
 </ResourceDictionary>
