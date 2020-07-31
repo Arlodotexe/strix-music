@@ -14,7 +14,7 @@
                                     <local:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <local:AlbumControl/>
+                                    <local:ArtistControl/>
                                 </GridViewItem>
                                 <GridViewItem>
                                     <local:AlbumControl/>
@@ -23,7 +23,25 @@
                                     <local:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
+                                    <local:ArtistControl/>
+                                </GridViewItem>
+                                <GridViewItem>
                                     <local:AlbumControl/>
+                                </GridViewItem>
+                                <GridViewItem>
+                                    <local:ArtistControl/>
+                                </GridViewItem>
+                                <GridViewItem>
+                                    <local:ArtistControl/>
+                                </GridViewItem>
+                                <GridViewItem>
+                                    <local:AlbumControl/>
+                                </GridViewItem>
+                                <GridViewItem>
+                                    <local:AlbumControl/>
+                                </GridViewItem>
+                                <GridViewItem>
+                                    <local:ArtistControl/>
                                 </GridViewItem>
                             </GridView.Items>
                         </GridView>
