@@ -76,7 +76,9 @@
                                     <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}"/>
                                 </local:Drawer.MainContent>
                                 <local:Drawer.BottomBarSecondaryContent>
-                                    <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}" Height="96"/>
+                                    <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}">
+                                        <default:NowPlayingBarControl/>
+                                    </Grid>
                                 </local:Drawer.BottomBarSecondaryContent>
                                 <local:Drawer.BottomBarContent>
                                     <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}">
