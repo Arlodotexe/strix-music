@@ -13,22 +13,43 @@
                             <Grid>
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="Sizes">
-                                        <VisualState x:Name="Small">
+                                        <VisualState x:Name="Tiny">
                                             <VisualState.StateTriggers>
                                                 <AdaptiveTrigger MinWindowWidth="0"/>
                                             </VisualState.StateTriggers>
                                             <VisualState.Setters>
                                                 <Setter Target="MoreButton.Visibility" Value="Visible"/>
                                                 <Setter Target="ExtraQuickActions.Visibility" Value="Collapsed"/>
+                                                <Setter Target="QuickActions.(Grid.Row)" Value="1"/>
+                                                <Setter Target="QuickActions.(Grid.Column)" Value="0"/>
+                                                <Setter Target="QuickActions.(Grid.ColumnSpan)" Value="3"/>
+                                                <Setter Target="QuickActions.Margin" Value="0,16,0,-16"/>
                                             </VisualState.Setters>
                                         </VisualState>
-                                        <VisualState x:Name="Mid">
+                                        <VisualState x:Name="Small">
                                             <VisualState.StateTriggers>
                                                 <AdaptiveTrigger MinWindowWidth="600"/>
                                             </VisualState.StateTriggers>
                                             <VisualState.Setters>
+                                                <Setter Target="MoreButton.Visibility" Value="Visible"/>
+                                                <Setter Target="ExtraQuickActions.Visibility" Value="Collapsed"/>
+                                                <Setter Target="QuickActions.(Grid.Row)" Value="0"/>
+                                                <Setter Target="QuickActions.(Grid.Column)" Value="2"/>
+                                                <Setter Target="QuickActions.(Grid.ColumnSpan)" Value="1"/>
+                                                <Setter Target="QuickActions.Margin" Value="16,0"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Mid">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="800"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
                                                 <Setter Target="MoreButton.Visibility" Value="Collapsed"/>
                                                 <Setter Target="ExtraQuickActions.Visibility" Value="Visible"/>
+                                                <Setter Target="QuickActions.(Grid.Row)" Value="0"/>
+                                                <Setter Target="QuickActions.(Grid.Column)" Value="2"/>
+                                                <Setter Target="QuickActions.(Grid.ColumnSpan)" Value="1"/>
+                                                <Setter Target="QuickActions.Margin" Value="16,0"/>
                                             </VisualState.Setters>
                                         </VisualState>
                                     </VisualStateGroup>
@@ -41,6 +62,10 @@
                                                 <ColumnDefinition Width="auto"/>
                                                 <ColumnDefinition/>
                                             </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="auto"/>
+                                            </Grid.RowDefinitions>
                                             <!--Consider removing Artist image-->
                                             <Rectangle Width="48" Height="48" RadiusX="32" RadiusY="32" Fill="#FF00FF"/>
                                             <TextBlock Grid.Column="1" Text="Vampire Weekend" FontSize="30" VerticalAlignment="Center" Margin="16,0"/>
