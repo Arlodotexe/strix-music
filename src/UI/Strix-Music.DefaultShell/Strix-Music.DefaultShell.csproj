@@ -23,13 +23,16 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Resources.xaml" />
     <None Remove="Themes\AlbumViewStyle.xaml" />
+    <None Remove="Themes\ArtistViewStyle.xaml" />
     <None Remove="Themes\NowPlayingBarControl.xaml" />
     <None Remove="Themes\ShellStyle.xaml" />
     <None Remove="Themes\TrackListStyle.xaml" />
     <None Remove="Themes\TrackStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Themes\AlbumViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\NowPlayingBarControl.xaml" />
     <UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
@@ -38,10 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Themes\NowPlayingBarControl.xaml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </Page>
-    <Page Update="Themes\ShellStyle.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>

@@ -3,12 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Strix_Music.DefaultShell.Controls">
 
-    <Style x:Key="QuickActionButton" TargetType="Button">
-        <Setter Property="Margin" Value="4,0"/>
-        <Setter Property="Padding" Value="12"/>
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
-
     <Style x:Key="DefaultAlbumViewControlStyle" TargetType="local:AlbumViewControl">
         <Style.Setters>
             <Setter Property="Template">
