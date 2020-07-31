@@ -12,7 +12,7 @@
                         <Grid>
                             <local:Drawer>
                                 <local:Drawer.TopBarContent>
-                                    <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}" Height="96">
+                                    <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}" Height="96" Margin="0,12,0,0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition/>
                                             <RowDefinition/>
@@ -28,7 +28,7 @@
                                             <Button Style="{StaticResource GenericBarButton}">
                                                 <SymbolIcon Symbol="Contact"/>
                                             </Button>
-                                            <TextBox Grid.Column="1"/>
+                                            <TextBox Grid.Column="1" Style="{StaticResource TextBoxStyle}" FontSize="24"/>
                                             <Button Grid.Column="2" Style="{StaticResource GenericBarButton}">
                                                 <SymbolIcon Symbol="Find"/>
                                             </Button>
