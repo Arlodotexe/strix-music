@@ -26,11 +26,13 @@
     <None Remove="Themes\AlbumViewStyle.xaml" />
     <None Remove="Themes\NowPlayingBarControl.xaml" />
     <None Remove="Themes\ShellStyle.xaml" />
+    <None Remove="Themes\TrackListStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="Themes\AlbumViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\NowPlayingBarControl.xaml" />
     <UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
+    <UpToDateCheckInput Remove="Themes\TrackListStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Themes\NowPlayingBarControl.xaml">
