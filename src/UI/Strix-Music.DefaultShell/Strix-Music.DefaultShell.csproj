@@ -23,12 +23,18 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Themes\NowPlayingBarControl.xaml" />
     <None Remove="Themes\ShellStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <UpToDateCheckInput Remove="Themes\NowPlayingBarControl.xaml" />
     <UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Themes\NowPlayingBarControl.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
     <Page Update="Themes\ShellStyle.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
