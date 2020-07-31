@@ -10,11 +10,20 @@
                     <ControlTemplate TargetType="local:PlayableCollectionListControl">
                         <GridView Padding="16" ItemContainerStyle="{StaticResource PlayableCollectionGridItemStyle}">
                             <GridView.Items>
-                                <GridViewItem Background="#FF0000">
+                                <GridViewItem>
+                                    <local:AlbumControl/>
                                 </GridViewItem>
-                                <GridViewItem Background="#00FF00">
+                                <GridViewItem>
+                                    <local:AlbumControl/>
                                 </GridViewItem>
-                                <GridViewItem Background="#0000FF">
+                                <GridViewItem>
+                                    <local:AlbumControl/>
+                                </GridViewItem>
+                                <GridViewItem>
+                                    <local:AlbumControl/>
+                                </GridViewItem>
+                                <GridViewItem>
+                                    <local:AlbumControl/>
                                 </GridViewItem>
                             </GridView.Items>
                         </GridView>
