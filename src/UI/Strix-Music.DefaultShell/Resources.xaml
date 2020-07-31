@@ -7,6 +7,7 @@
         <ResourceDictionary Source="Themes/AlbumViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
+        <ResourceDictionary Source="Themes/HomeStyle.xaml"/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
         <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
         <ResourceDictionary Source="Themes/ShellStyle.xaml"/>

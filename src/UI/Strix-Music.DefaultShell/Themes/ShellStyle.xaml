@@ -15,9 +15,9 @@
                             </Grid.RowDefinitions>
                             <NavigationView>
                                 <NavigationView.MenuItems>
-                                    <NavigationViewItem Content="Library">
+                                    <NavigationViewItem Content="Home">
                                         <NavigationViewItem.Icon>
-                                            <FontIcon Glyph="&#xE8F1;"/>
+                                            <FontIcon Glyph="&#xE10F;"/>
                                         </NavigationViewItem.Icon>
                                     </NavigationViewItem>
                                     <NavigationViewItem Icon="Clock" Content="Recently Played"/>
