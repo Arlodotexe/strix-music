@@ -1,0 +1,67 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Strix_Music.DefaultShell.Controls">
+
+    <Style x:Key="DefaultArtistViewControlStyle" TargetType="local:ArtistViewControl">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="local:ArtistViewControl">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="300"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Rectangle Fill="#FF00FF" Grid.RowSpan="2" Margin="32"
+                       RadiusX="300" RadiusY="300"/>
+
+                                <Grid Grid.Column="1" Margin="0,32,0,0" MaxWidth="600" HorizontalAlignment="Left">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Vampire Weekend" FontSize="32" FontWeight="SemiBold"/>
+                                    <TextBlock x:Name="BioText" Grid.Row="1" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" Margin="8,8,0,0">
+                    Mixing well-read indie rock with joyful, Afro-pop-inspired melodies and rhythms, Vampire Weekend grew from one of the first bands
+                    to be championed by music bloggers into a chart topping, Grammy Award-winning act that helped define the sound of indie music in the late 2000s and 2010s.
+                    After establishing the foundations of their bright, intircate style of indie music with 2008's Vampire Weekend, the band soon became hugely successful;
+                    they're the first indie rock act to have consecutive albums (2010's Contra and 2013's Modern Vampires of the City) enter the Billboard 200 at number one.
+                    With each release, Vampire Weekend's music grew more diverse, incorporating ska, hip-hop and '80s influences that nevertheless complemented their signature style.
+                                    </TextBlock>
+
+                                    <HyperlinkButton Content="More" Grid.Row="2" Visibility="{Binding BioText.IsTextTrimmed}" HorizontalAlignment="Right" Margin="0,0,32,0" Padding="0,0,0,0"/>
+                                </Grid>
+
+                                <StackPanel Orientation="Horizontal"
+                        Grid.Column="1" Grid.Row="1" Margin="0,0,0,32">
+                                    <Button Content="Play" Style="{StaticResource QuickActionButton}"/>
+                                    <Button Content="Add to" Style="{StaticResource QuickActionButton}"/>
+                                    <Button Content="Follow" Style="{StaticResource QuickActionButton}"/>
+                                    <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <Rectangle Fill="Blue" Grid.Row="1"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultArtistViewControlStyle}" TargetType="local:ArtistViewControl"/>
+
+</ResourceDictionary>

@@ -34,6 +34,7 @@
   <ItemGroup>
     <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Themes\AlbumViewStyle.xaml" />
+    <UpToDateCheckInput Remove="Themes\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\NowPlayingBarControl.xaml" />
     <UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\TrackListStyle.xaml" />
