@@ -7,7 +7,7 @@
         <!--<ResourceDictionary Source="Themes/AlbumStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Themes/AlbumViewStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Themes/ArtistStyle.xaml"/>-->
-        <!--<ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>-->
+        <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
         <!--<ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>-->
         <ResourceDictionary Source="Themes/ShellStyle.xaml"/>
@@ -32,6 +32,12 @@
             <Setter Target="VerticalAlignment" Value="Stretch"/>
             <Setter Target="Width" Value="150"/>
         </Style.Setters>
+    </Style>
+
+    <Style x:Key="QuickActionButton" TargetType="Button">
+        <Setter Property="Margin" Value="4,0"/>
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="Background" Value="Transparent"/>
     </Style>
     
     <Style x:Key="MediaButton" TargetType="Button">
