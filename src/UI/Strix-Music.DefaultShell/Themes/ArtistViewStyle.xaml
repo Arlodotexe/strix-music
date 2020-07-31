@@ -54,7 +54,15 @@
                                 </StackPanel>
                             </Grid>
 
-                            <Rectangle Fill="Blue" Grid.Row="1"/>
+                            <Pivot Grid.Row="1">
+                                <PivotItem Header="Songs">
+                                    <local:TrackListControl/>
+                                </PivotItem>
+                                <PivotItem Header="Albums">
+                                </PivotItem>
+                                <PivotItem Header="Similar Artists">
+                                </PivotItem>
+                            </Pivot>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
