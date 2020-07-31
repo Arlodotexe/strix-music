@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources.xaml" />
+    <None Remove="Themes\AlbumStyle.xaml" />
     <None Remove="Themes\AlbumViewStyle.xaml" />
     <None Remove="Themes\ArtistViewStyle.xaml" />
     <None Remove="Themes\NowPlayingBarControl.xaml" />
@@ -34,6 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="Resources.xaml" />
+    <UpToDateCheckInput Remove="Themes\AlbumStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\AlbumViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\NowPlayingBarControl.xaml" />
