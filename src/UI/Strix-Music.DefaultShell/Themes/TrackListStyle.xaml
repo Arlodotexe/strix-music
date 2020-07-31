@@ -8,7 +8,25 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:TrackListControl">
-                        <ListView Background="Blue" Margin="32"/>
+                        <ListView Margin="32">
+                            <ListView.Items>
+                                <ListViewItem>
+                                    <local:TrackControl/>
+                                </ListViewItem>
+                                <ListViewItem>
+                                    <local:TrackControl/>
+                                </ListViewItem>
+                                <ListViewItem>
+                                    <local:TrackControl/>
+                                </ListViewItem>
+                                <ListViewItem>
+                                    <local:TrackControl/>
+                                </ListViewItem>
+                                <ListViewItem>
+                                    <local:TrackControl/>
+                                </ListViewItem>
+                            </ListView.Items>
+                        </ListView>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
