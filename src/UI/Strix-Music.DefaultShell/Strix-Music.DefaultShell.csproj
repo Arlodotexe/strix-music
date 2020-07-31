@@ -27,6 +27,7 @@
     <None Remove="Themes\AlbumViewStyle.xaml" />
     <None Remove="Themes\ArtistViewStyle.xaml" />
     <None Remove="Themes\NowPlayingBarControl.xaml" />
+    <None Remove="Themes\PlayableCollectionListStyle.xaml" />
     <None Remove="Themes\ShellStyle.xaml" />
     <None Remove="Themes\TrackListStyle.xaml" />
     <None Remove="Themes\TrackStyle.xaml" />
@@ -36,6 +37,7 @@
     <UpToDateCheckInput Remove="Themes\AlbumViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\NowPlayingBarControl.xaml" />
+    <UpToDateCheckInput Remove="Themes\PlayableCollectionListStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\TrackListStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\TrackStyle.xaml" />

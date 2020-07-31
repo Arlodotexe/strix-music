@@ -6,6 +6,7 @@
         <ResourceDictionary Source="Themes/AlbumViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
+        <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
         <ResourceDictionary Source="Themes/ShellStyle.xaml"/>
         <ResourceDictionary Source="Themes/TrackListStyle.xaml"/>
         <ResourceDictionary Source="Themes/TrackStyle.xaml"/>
@@ -22,5 +23,11 @@
         <Setter Property="Padding" Value="12"/>
         <Setter Property="Background" Value="Transparent"/>
     </Style>
-
+    
+    <Style x:Key="PlayableCollectionGridItemStyle" TargetType="GridViewItem">
+        <Setter Property="Margin" Value="16"/>
+        <Setter Property="Height" Value="192"/>
+        <Setter Property="Width" Value="192"/>
+    </Style>
+    
 </ResourceDictionary>
