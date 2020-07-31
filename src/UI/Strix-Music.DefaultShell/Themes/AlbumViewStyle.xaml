@@ -47,7 +47,7 @@
                                 </StackPanel>
                             </Grid>
 
-                            <Rectangle Grid.Row="1" Fill="Blue"/>
+                            <local:TrackListControl Grid.Row="1"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
