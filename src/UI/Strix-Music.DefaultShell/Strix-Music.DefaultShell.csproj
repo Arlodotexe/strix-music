@@ -6,6 +6,9 @@
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <AssemblyName>Strix_Music.DefaultShell</AssemblyName>
     <RootNamespace>Strix_Music.DefaultShell</RootNamespace>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>

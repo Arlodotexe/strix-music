@@ -8,6 +8,9 @@
     <NoWarn>NU1701</NoWarn>
     <RootNamespace>Strix_Music.Wasm</RootNamespace>
     <AssemblyName></AssemblyName>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
