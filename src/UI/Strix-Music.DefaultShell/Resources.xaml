@@ -5,6 +5,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Themes/AlbumStyle.xaml"/>
         <ResourceDictionary Source="Themes/AlbumViewStyle.xaml"/>
+        <ResourceDictionary Source="Themes/ArtistStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
         <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
@@ -24,10 +25,11 @@
         <Setter Property="Padding" Value="12"/>
         <Setter Property="Background" Value="Transparent"/>
     </Style>
-    
+
     <Style x:Key="PlayableCollectionGridItemStyle" TargetType="GridViewItem">
         <Setter Property="Margin" Value="8,12"/>
         <Setter Property="Padding" Value="16,8"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
     </Style>
     
 </ResourceDictionary>
