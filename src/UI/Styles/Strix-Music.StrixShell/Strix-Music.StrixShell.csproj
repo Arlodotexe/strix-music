@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
   <PropertyGroup>
-    <!--<TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.16299</TargetFrameworks>-->
-    <TargetFrameworks>netstandard2.0;xamarinios10;MonoAndroid90;monoandroid10.0;uap10.0.16299</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.16299</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <RootNamespace>Strix_Music.StrixShell</RootNamespace>
@@ -14,8 +13,8 @@
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='MonoAndroid90' or '$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='netstandard2.0'">
-    <PackageReference Include="Uno.UI" Version="2.4.0" />
+  <ItemGroup>
+    <PackageReference Include="Uno.UI" Version="3.0.0-dev.1253" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -40,7 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
-    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="6.1.0-build.71.g38c59ea2a0" />
+    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="6.1.0-build.186.g928c99f74d" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Strix-Music.DefaultShell\Strix-Music.DefaultShell.csproj" />

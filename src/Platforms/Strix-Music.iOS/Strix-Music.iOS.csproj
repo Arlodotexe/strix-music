@@ -126,8 +126,8 @@
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations">
       <Version>6.1.0-build.71.g38c59ea2a0</Version>
     </PackageReference>
-    <PackageReference Include="Uno.UI" Version="2.4.0" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="2.4.0" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.UI" Version="3.0.0-dev.1253" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.0.0-dev.1253" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
   </ItemGroup>
