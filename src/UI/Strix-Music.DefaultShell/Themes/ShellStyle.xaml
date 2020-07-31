@@ -8,34 +8,30 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:ShellControl">
-                        <NavigationView>
-                            <NavigationView.MenuItems>
-                                <NavigationViewItem Content="Library">
-                                    <NavigationViewItem.Icon>
-                                        <FontIcon Glyph="&#xE8F1;"/>
-                                    </NavigationViewItem.Icon>
-                                </NavigationViewItem>
-                                <NavigationViewItem Icon="Clock" Content="Recently Played"/>
-                                <NavigationViewItem Content="Now Playing">
-                                    <NavigationViewItem.Icon>
-                                        <FontIcon Glyph="&#xF61F;"/>
-                                    </NavigationViewItem.Icon>
-                                </NavigationViewItem>
-                                <NavigationViewItemSeparator/>
-                            </NavigationView.MenuItems>
-
-
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition Height="auto"/>
-                                </Grid.RowDefinitions>
-
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <NavigationView>
+                                <NavigationView.MenuItems>
+                                    <NavigationViewItem Content="Library">
+                                        <NavigationViewItem.Icon>
+                                            <FontIcon Glyph="&#xE8F1;"/>
+                                        </NavigationViewItem.Icon>
+                                    </NavigationViewItem>
+                                    <NavigationViewItem Icon="Clock" Content="Recently Played"/>
+                                    <NavigationViewItem Content="Now Playing">
+                                        <NavigationViewItem.Icon>
+                                            <FontIcon Glyph="&#xF61F;"/>
+                                        </NavigationViewItem.Icon>
+                                    </NavigationViewItem>
+                                    <NavigationViewItemSeparator/>
+                                </NavigationView.MenuItems>
                                 <local:ArtistViewControl/>
-
-                                <local:NowPlayingBarControl Grid.Row="1" Height="96"/>
-                            </Grid>
-                        </NavigationView>
+                            </NavigationView>
+                            <local:NowPlayingBarControl Grid.Row="1" Height="96"/>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
