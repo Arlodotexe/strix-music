@@ -50,7 +50,7 @@
                                                     <Button Content="Follow" Style="{StaticResource QuickActionButton}"/>
                                                     <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
                                                 </StackPanel>
-                                                <Button x:Name="MoreButton" Style="{StaticResource QuickActionButton}">
+                                                <Button x:Name="MoreButton" Style="{StaticResource InstantActionButton}">
                                                     <FontIcon Glyph="&#xE10C;"/>
                                                 </Button>
                                             </StackPanel>

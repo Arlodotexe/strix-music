@@ -13,38 +13,9 @@
         <ResourceDictionary Source="Themes/ShellStyle.xaml"/>
         <!--<ResourceDictionary Source="Themes/TrackListStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Themes/TrackStyle.xaml"/>-->
+
+        <ResourceDictionary Source="Styles/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-
-    <Style x:Key="GenericBarButton" TargetType="Button">
-        <Style.Setters>
-            <Setter Target="Background" Value="Transparent"/>
-            <Setter Target="BorderThickness" Value="1"/>
-            <Setter Target="HorizontalAlignment" Value="Stretch"/>
-            <Setter Target="VerticalAlignment" Value="Stretch"/>
-        </Style.Setters>
-    </Style>
-    
-    <Style x:Key="TopBarButton" TargetType="Button">
-        <Style.Setters>
-            <Setter Target="Background" Value="Transparent"/>
-            <Setter Target="BorderThickness" Value="1"/>
-            <Setter Target="HorizontalAlignment" Value="Stretch"/>
-            <Setter Target="VerticalAlignment" Value="Stretch"/>
-            <Setter Target="Width" Value="150"/>
-        </Style.Setters>
-    </Style>
-
-    <Style x:Key="QuickActionButton" TargetType="Button">
-        <Setter Property="Margin" Value="4,0"/>
-        <Setter Property="Padding" Value="12"/>
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
-    
-    <Style x:Key="MediaButton" TargetType="Button">
-        <Setter Property="Margin" Value="4,0"/>
-        <Setter Property="Padding" Value="12"/>
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
     
     <Style x:Key="MediaSlider" TargetType="Slider">
         <Setter Property="Background" Value="#cccccc" />
