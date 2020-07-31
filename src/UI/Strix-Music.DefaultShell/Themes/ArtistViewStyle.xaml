@@ -59,8 +59,10 @@
                                     <local:TrackListControl/>
                                 </PivotItem>
                                 <PivotItem Header="Albums">
+                                    <local:PlayableCollectionListControl/>
                                 </PivotItem>
                                 <PivotItem Header="Similar Artists">
+                                    <local:PlayableCollectionListControl/>
                                 </PivotItem>
                             </Pivot>
                         </Grid>
