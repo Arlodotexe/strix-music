@@ -8,64 +8,138 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:ArtistViewControl">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="300"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-
+                        <UserControl>
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="300"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="Sizes">
+                                        <VisualState x:Name="Small">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="QuickActionsBar.(Grid.Row)" Value="2"/>
+                                                <Setter Target="QuickActionsBar.(Grid.Column)" Value="0"/>
+                                                <Setter Target="QuickActionsBar.(Grid.ColumnSpan)" Value="2"/>
+                                                <Setter Target="QuickActionsBar.HorizontalAlignment" Value="Center"/>
+                                                <Setter Target="ArtistImage.(Grid.RowSpan)" Value="1"/>
+                                                <Setter Target="ArtistImage.(Grid.ColumnSpan)" Value="2"/>
+                                                <Setter Target="ArtistImage.Margin" Value="16,32,16,8"/>
+                                                <Setter Target="DetailsGrid.(Grid.Row)" Value="1"/>
+                                                <Setter Target="DetailsGrid.(Grid.Column)" Value="0"/>
+                                                <Setter Target="DetailsGrid.(Grid.ColumnSpan)" Value="2"/>
+                                                <Setter Target="DetailsGrid.HorizontalAlignment" Value="Center"/>
+                                                <Setter Target="DetailsGrid.Margin" Value="0,8,0,16"/>
+                                                <Setter Target="DetailsGrid.Padding" Value="0,0,0,0"/>
+                                                <Setter Target="BioText.Visibility" Value="Collapsed"/>
+                                                <Setter Target="BioMoreButton.Visibility" Value="Collapsed"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Mid">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="600"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="QuickActionsBar.(Grid.Row)" Value="2"/>
+                                                <Setter Target="QuickActionsBar.(Grid.Column)" Value="0"/>
+                                                <Setter Target="QuickActionsBar.(Grid.ColumnSpan)" Value="2"/>
+                                                <Setter Target="QuickActionsBar.HorizontalAlignment" Value="Left"/>
+                                                <Setter Target="ArtistImage.(Grid.RowSpan)" Value="2"/>
+                                                <Setter Target="ArtistImage.(Grid.ColumnSpan)" Value="1"/>
+                                                <Setter Target="ArtistImage.Margin" Value="32"/>
+                                                <Setter Target="DetailsGrid.(Grid.Row)" Value="0"/>
+                                                <Setter Target="DetailsGrid.(Grid.Column)" Value="1"/>
+                                                <Setter Target="DetailsGrid.(Grid.ColumnSpan)" Value="1"/>
+                                                <Setter Target="DetailsGrid.HorizontalAlignment" Value="Left"/>
+                                                <Setter Target="DetailsGrid.Margin" Value="0,32,0,0"/>
+                                                <Setter Target="DetailsGrid.Padding" Value="0,0,64,0"/>
+                                                <Setter Target="BioText.Visibility" Value="Visibile"/>
+                                                <Setter Target="BioMoreButton.Visibility" Value="Visibile"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Large">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="1200"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="QuickActionsBar.(Grid.Row)" Value="1"/>
+                                                <Setter Target="QuickActionsBar.(Grid.Column)" Value="1"/>
+                                                <Setter Target="QuickActionsBar.(Grid.ColumnSpan)" Value="1"/>
+                                                <Setter Target="QuickActionsBar.HorizontalAlignment" Value="Left"/>
+                                                <Setter Target="ArtistImage.(Grid.RowSpan)" Value="2"/>
+                                                <Setter Target="ArtistImage.(Grid.ColumnSpan)" Value="1"/>
+                                                <Setter Target="ArtistImage.Margin" Value="32"/>
+                                                <Setter Target="DetailsGrid.(Grid.Row)" Value="0"/>
+                                                <Setter Target="DetailsGrid.(Grid.Column)" Value="1"/>
+                                                <Setter Target="DetailsGrid.(Grid.ColumnSpan)" Value="1"/>
+                                                <Setter Target="DetailsGrid.HorizontalAlignment" Value="Left"/>
+                                                <Setter Target="DetailsGrid.Margin" Value="0,32,0,0"/>
+                                                <Setter Target="DetailsGrid.Padding" Value="0,0,64,0"/>
+                                                <Setter Target="BioText.Visibility" Value="Visibile"/>
+                                                <Setter Target="BioMoreButton.Visibility" Value="Visibile"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
                                     <RowDefinition Height="auto"/>
+                                    <RowDefinition/>
                                 </Grid.RowDefinitions>
 
-                                <Rectangle Fill="#FF00FF" Grid.RowSpan="2" Margin="32"
-                       RadiusX="300" RadiusY="300"/>
-
-                                <Grid Grid.Column="1" Margin="0,32,0,0" MaxWidth="600" HorizontalAlignment="Left">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="300"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
                                         <RowDefinition/>
                                         <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Text="Vampire Weekend" FontSize="32" FontWeight="SemiBold"/>
-                                    <TextBlock x:Name="BioText" Grid.Row="1" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" Margin="8,8,0,0">
-                    Mixing well-read indie rock with joyful, Afro-pop-inspired melodies and rhythms, Vampire Weekend grew from one of the first bands
-                    to be championed by music bloggers into a chart topping, Grammy Award-winning act that helped define the sound of indie music in the late 2000s and 2010s.
-                    After establishing the foundations of their bright, intircate style of indie music with 2008's Vampire Weekend, the band soon became hugely successful;
-                    they're the first indie rock act to have consecutive albums (2010's Contra and 2013's Modern Vampires of the City) enter the Billboard 200 at number one.
-                    With each release, Vampire Weekend's music grew more diverse, incorporating ska, hip-hop and '80s influences that nevertheless complemented their signature style.
-                                    </TextBlock>
 
-                                    <HyperlinkButton Content="More" Grid.Row="2" Visibility="{Binding BioText.IsTextTrimmed}" HorizontalAlignment="Right" Margin="0,0,32,0" Padding="0,0,0,0"/>
+                                    <Rectangle x:Name="ArtistImage" Fill="#FF00FF" Grid.RowSpan="2" Margin="32"
+                                               Height="224" Width="224" HorizontalAlignment="Center" RadiusX="300" RadiusY="300"/>
+
+                                    <Grid x:Name="DetailsGrid" Grid.Column="1" Margin="0,32,0,0" MaxWidth="600" HorizontalAlignment="Left" Padding="0,0,64,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Vampire Weekend" FontSize="32" FontWeight="SemiBold"/>
+                                        <TextBlock x:Name="BioText" Grid.Row="1" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" Margin="8,8,0,0">
+                                            Mixing well-read indie rock with joyful, Afro-pop-inspired melodies and rhythms, Vampire Weekend grew from one of the first bands
+                                            to be championed by music bloggers into a chart topping, Grammy Award-winning act that helped define the sound of indie music in the late 2000s and 2010s.
+                                            After establishing the foundations of their bright, intircate style of indie music with 2008's Vampire Weekend, the band soon became hugely successful;
+                                            they're the first indie rock act to have consecutive albums (2010's Contra and 2013's Modern Vampires of the City) enter the Billboard 200 at number one.
+                                            With each release, Vampire Weekend's music grew more diverse, incorporating ska, hip-hop and '80s influences that nevertheless complemented their signature style.
+                                        </TextBlock>
+
+                                        <HyperlinkButton x:Name="BioMoreButton" Content="More" Grid.Row="2" Visibility="{Binding BioText.IsTextTrimmed}" HorizontalAlignment="Right" Margin="0,0,32,0" Padding="0,0,0,0"/>
+                                    </Grid>
+
+                                    <StackPanel x:Name="QuickActionsBar" Orientation="Horizontal"
+                                                Grid.Column="1" Grid.Row="1" Margin="0,0,0,32">
+                                        <Button Content="Play" Style="{StaticResource QuickActionButton}"/>
+                                        <Button Content="Add to" Style="{StaticResource QuickActionButton}"/>
+                                        <Button Content="Follow" Style="{StaticResource QuickActionButton}"/>
+                                        <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
+                                    </StackPanel>
                                 </Grid>
 
-                                <StackPanel Orientation="Horizontal"
-                        Grid.Column="1" Grid.Row="1" Margin="0,0,0,32">
-                                    <Button Content="Play" Style="{StaticResource QuickActionButton}"/>
-                                    <Button Content="Add to" Style="{StaticResource QuickActionButton}"/>
-                                    <Button Content="Follow" Style="{StaticResource QuickActionButton}"/>
-                                    <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
-                                </StackPanel>
+                                <Pivot Grid.Row="1">
+                                    <PivotItem Header="Songs">
+                                        <local:TrackListControl/>
+                                    </PivotItem>
+                                    <PivotItem Header="Albums">
+                                        <local:PlayableCollectionListControl/>
+                                    </PivotItem>
+                                    <PivotItem Header="Similar Artists">
+                                        <local:PlayableCollectionListControl/>
+                                    </PivotItem>
+                                </Pivot>
                             </Grid>
-
-                            <Pivot Grid.Row="1">
-                                <PivotItem Header="Songs">
-                                    <local:TrackListControl/>
-                                </PivotItem>
-                                <PivotItem Header="Albums">
-                                    <local:PlayableCollectionListControl/>
-                                </PivotItem>
-                                <PivotItem Header="Similar Artists">
-                                    <local:PlayableCollectionListControl/>
-                                </PivotItem>
-                            </Pivot>
-                        </Grid>
+                        </UserControl>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
