@@ -73,7 +73,9 @@
                                     </Grid>
                                 </local:Drawer.TopBarContent>
                                 <local:Drawer.MainContent>
-                                    <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}"/>
+                                    <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}">
+                                        <default:ArtistViewControl/>
+                                    </Grid>
                                 </local:Drawer.MainContent>
                                 <local:Drawer.BottomBarSecondaryContent>
                                     <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}">
