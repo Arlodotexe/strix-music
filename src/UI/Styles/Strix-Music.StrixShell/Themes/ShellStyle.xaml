@@ -12,7 +12,7 @@
                         <Grid>
                             <local:Drawer>
                                 <local:Drawer.TopBarContent>
-                                    <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}" Height="128">
+                                    <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}" Height="96">
                                         <Grid.RowDefinitions>
                                             <RowDefinition/>
                                             <RowDefinition/>
@@ -67,8 +67,8 @@
                                             </Button>
                                         </Grid>
 
-                                        <Button Grid.Row="1" HorizontalAlignment="Right" Style="{StaticResource GenericBarButton}">
-                                            <SymbolIcon Symbol="Setting" Margin="0,0,32,0"/>
+                                        <Button Grid.Row="1" HorizontalAlignment="Right" Style="{StaticResource GenericBarButton}" Width="48" Margin="0,0,32,0">
+                                            <SymbolIcon Symbol="Setting"/>
                                         </Button>
                                     </Grid>
                                 </local:Drawer.TopBarContent>
