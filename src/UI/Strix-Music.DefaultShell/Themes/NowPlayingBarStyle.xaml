@@ -14,7 +14,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:NowPlayingBarControl">
-                        <Grid VerticalAlignment="Center" Height="64">
+                        <Grid VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition/>
@@ -29,7 +29,7 @@
                                     <TextBlock Text="Diplomat's Son"/>
                                     <TextBlock Text="Vampire Weekend" Opacity=".5"/>
                                 </StackPanel>
-                                <Rectangle Fill="#000000" Width="64"/>
+                                <Rectangle Fill="#FF00FF" Width="96" Height="96"/>
                             </Grid>
 
                             <Grid Grid.Column="1" VerticalAlignment="Center">
