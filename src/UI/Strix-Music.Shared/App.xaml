@@ -9,6 +9,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Strix_Music.DefaultShell/Themes/ShellStyle.xaml"/>
                 <ResourceDictionary Source="ms-appx:///Strix_Music.DefaultShell/Themes/NowPlayingBarStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Strix_Music.DefaultShell/Themes/AlbumViewStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Color x:Key="ShadowColor">#FF000000</Color>

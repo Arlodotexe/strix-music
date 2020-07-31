@@ -31,6 +31,8 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
 
+                                <local:AlbumViewControl/>
+
                                 <local:NowPlayingBarControl Grid.Row="1" Height="96"/>
                             </Grid>
                         </NavigationView>
