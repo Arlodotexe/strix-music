@@ -1,0 +1,86 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:default="using:Strix_Music.DefaultShell.Controls"
+    xmlns:local="using:Strix_Music.StrixShell.Controls">
+
+    <Style x:Key="StrixHomeViewControlStyle" TargetType="default:HomeControl">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="default:HomeControl">
+                        <UserControl>
+                            <Grid>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="Sizes">
+                                        <VisualState x:Name="Tiny">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="0"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="MoreButton.Visibility" Value="Visible"/>
+                                                <Setter Target="ExtraQuickActions.Visibility" Value="Collapsed"/>
+                                                <Setter Target="QuickActions.(Grid.Row)" Value="1"/>
+                                                <Setter Target="QuickActions.(Grid.Column)" Value="0"/>
+                                                <Setter Target="QuickActions.(Grid.ColumnSpan)" Value="3"/>
+                                                <Setter Target="QuickActions.Margin" Value="0,16,0,-16"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Small">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="600"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="MoreButton.Visibility" Value="Visible"/>
+                                                <Setter Target="ExtraQuickActions.Visibility" Value="Collapsed"/>
+                                                <Setter Target="QuickActions.(Grid.Row)" Value="0"/>
+                                                <Setter Target="QuickActions.(Grid.Column)" Value="2"/>
+                                                <Setter Target="QuickActions.(Grid.ColumnSpan)" Value="1"/>
+                                                <Setter Target="QuickActions.Margin" Value="16,0"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Mid">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="800"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="MoreButton.Visibility" Value="Collapsed"/>
+                                                <Setter Target="ExtraQuickActions.Visibility" Value="Visible"/>
+                                                <Setter Target="QuickActions.(Grid.Row)" Value="0"/>
+                                                <Setter Target="QuickActions.(Grid.Column)" Value="2"/>
+                                                <Setter Target="QuickActions.(Grid.ColumnSpan)" Value="1"/>
+                                                <Setter Target="QuickActions.Margin" Value="16,0"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Pivot>
+                                    <Pivot.LeftHeader>
+                                        <TextBlock Grid.Column="1" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0"/>
+                                    </Pivot.LeftHeader>
+                                    <PivotItem Header="Overview">
+                                    </PivotItem>
+                                    <PivotItem Header="Playlists">
+                                        <default:PlayableCollectionListControl/>
+                                    </PivotItem>
+                                    <PivotItem Header="Albums">
+                                        <default:PlayableCollectionListControl/>
+                                    </PivotItem>
+                                    <PivotItem Header="Artists">
+                                        <default:PlayableCollectionListControl/>
+                                    </PivotItem>
+                                    <PivotItem Header="Tracks">
+                                        <default:TrackListControl/>
+                                    </PivotItem>
+                                </Pivot>
+                            </Grid>
+                        </UserControl>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource StrixHomeViewControlStyle}" TargetType="default:HomeControl"/>
+
+</ResourceDictionary>
