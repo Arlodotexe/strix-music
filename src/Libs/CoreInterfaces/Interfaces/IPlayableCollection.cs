@@ -1,9 +1,6 @@
-﻿using System;
+﻿using StrixMusic.CoreInterfaces.Enums;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using CoreInterfaces.Enums;
-using CoreInterfaces.Interfaces;
-using StrixMusic.CoreInterfaces.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using CoreInterfaces.Enums;
+using StrixMusic.CoreInterfaces.Enums;
 
-namespace CoreInterfaces.Interfaces
+namespace StrixMusic.CoreInterfaces.Interfaces
 {
     /// <summary>
     /// Base interface for track.
