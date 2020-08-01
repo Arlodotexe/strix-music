@@ -102,9 +102,9 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libs\CoreInterfaces\CoreInterfaces.csproj">
+    <ProjectReference Include="..\..\Libs\CoreInterfaces\StrixMusic.CoreInterfaces.csproj">
       <Project>{A0D7A122-5DFD-4926-8BBF-58FA8039C517}</Project>
-      <Name>CoreInterfaces</Name>
+      <Name>StrixMusic.CoreInterfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\OwlCore\OwlCore.csproj">
       <Project>{6C80141D-7328-4EE1-8077-6F5EF7CDB2AC}</Project>
