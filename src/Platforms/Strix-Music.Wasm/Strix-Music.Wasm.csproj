@@ -53,6 +53,7 @@
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.4.0-dev.16" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj" />
     <ProjectReference Include="..\..\OwlCore\OwlCore.csproj" />
     <ProjectReference Include="..\..\UI\Strix-Music.DefaultShell\Strix-Music.DefaultShell.csproj" />
     <ProjectReference Include="..\..\UI\Styles\Strix-Music.StrixShell\Strix-Music.StrixShell.csproj" />

@@ -156,6 +156,10 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj">
+      <Project>{c5ce5911-1c37-4650-a1e9-4f1062534394}</Project>
+      <Name>StrixMusic.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\OwlCore\OwlCore.csproj">
       <Project>{6c80141d-7328-4ee1-8077-6f5ef7cdb2ac}</Project>
       <Name>OwlCore</Name>
