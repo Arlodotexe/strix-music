@@ -1,5 +1,4 @@
-﻿using Strix_Music.Shared;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 
 namespace Strix_Music
 {

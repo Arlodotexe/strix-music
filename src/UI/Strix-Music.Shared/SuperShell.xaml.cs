@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace Strix_Music.Shared
+namespace Strix_Music
 {
     public sealed partial class SuperShell : UserControl
     {
