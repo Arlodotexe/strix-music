@@ -14,36 +14,36 @@
                                 <GridViewItem>
                                     <default:AlbumControl/>
                                 </GridViewItem>
-                                <!--<GridViewItem>
+                                <GridViewItem>
                                     <default:ArtistControl/>
-                                </GridViewItem>-->
+                                </GridViewItem>
                                 <GridViewItem>
                                     <default:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
                                     <default:AlbumControl/>
                                 </GridViewItem>
-                                <!--<GridViewItem>
-                                    <default:ArtistControl/>
-                                </GridViewItem>-->
-                                <GridViewItem>
-                                    <default:AlbumControl/>
-                                </GridViewItem>
-                                <!--<GridViewItem>
-                                    <default:ArtistControl/>
-                                </GridViewItem>
                                 <GridViewItem>
                                     <default:ArtistControl/>
-                                </GridViewItem>-->
-                                <GridViewItem>
-                                    <default:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
                                     <default:AlbumControl/>
                                 </GridViewItem>
-                                <!--<GridViewItem>
+                                <GridViewItem>
                                     <default:ArtistControl/>
-                                </GridViewItem>-->
+                                </GridViewItem>
+                                <GridViewItem>
+                                    <default:ArtistControl/>
+                                </GridViewItem>
+                                <GridViewItem>
+                                    <default:AlbumControl/>
+                                </GridViewItem>
+                                <GridViewItem>
+                                    <default:AlbumControl/>
+                                </GridViewItem>
+                                <GridViewItem>
+                                    <default:ArtistControl/>
+                                </GridViewItem>
                             </GridView.Items>
                         </GridView>
                     </ControlTemplate>

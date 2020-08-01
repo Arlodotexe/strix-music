@@ -6,7 +6,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Themes/AlbumStyle.xaml"/>
         <!--<ResourceDictionary Source="Themes/AlbumViewStyle.xaml"/>-->
-        <!--<ResourceDictionary Source="Themes/ArtistStyle.xaml"/>-->
+        <ResourceDictionary Source="Themes/ArtistStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
         <ResourceDictionary Source="Themes/HomeStyle.xaml"/>
