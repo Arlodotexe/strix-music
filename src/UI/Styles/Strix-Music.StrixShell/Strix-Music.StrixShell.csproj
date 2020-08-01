@@ -32,6 +32,7 @@
     <None Remove="Themes\ArtistViewStyle.xaml" />
     <None Remove="Themes\HomeStyle.xaml" />
     <None Remove="Themes\NowPlayingBarStyle.xaml" />
+    <None Remove="Themes\PlayableCollectionListStyle.xaml" />
     <None Remove="Themes\ShellStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +42,7 @@
     <UpToDateCheckInput Remove="Themes\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\HomeStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\NowPlayingBarStyle.xaml" />
+    <UpToDateCheckInput Remove="Themes\PlayableCollectionListStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
