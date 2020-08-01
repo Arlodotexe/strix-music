@@ -4,17 +4,18 @@
     xmlns:default="using:Strix_Music.DefaultShell.Controls"
     xmlns:local="using:Strix_Music.StrixShell.Controls">
     <ResourceDictionary.MergedDictionaries>
-        <!--<ResourceDictionary Source="Themes/AlbumStyle.xaml"/>-->
+        <ResourceDictionary Source="Themes/AlbumStyle.xaml"/>
         <!--<ResourceDictionary Source="Themes/AlbumViewStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Themes/ArtistStyle.xaml"/>-->
         <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
         <ResourceDictionary Source="Themes/HomeStyle.xaml"/>
-        <!--<ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>-->
+        <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
         <ResourceDictionary Source="Themes/ShellStyle.xaml"/>
         <!--<ResourceDictionary Source="Themes/TrackListStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Themes/TrackStyle.xaml"/>-->
 
+        <ResourceDictionary Source="Styles/Brushes.xaml"/>
         <ResourceDictionary Source="Styles/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
@@ -520,7 +521,7 @@
 
     <Style x:Key="PlayableCollectionGridItemStyle" TargetType="GridViewItem">
         <Setter Property="Margin" Value="8,12"/>
-        <Setter Property="Padding" Value="16,8"/>
-        <Setter Property="VerticalContentAlignment" Value="Top"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
     </Style>
 </ResourceDictionary>

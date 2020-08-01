@@ -1,0 +1,17 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:default="using:Strix_Music.DefaultShell.Controls"
+    xmlns:local="using:Strix_Music.StrixShell.Controls">
+
+    <!--<AcrylicBrush x:Key="AcrylicContentBackgroundBrush" TintColor="#302e38"
+                              FallbackColor="#302e38" BackgroundSource="HostBackdrop"/>
+    <AcrylicBrush x:Key="AcrylicBarBackgroundBrush" TintColor="#18171c"
+                          FallbackColor="#18171c" BackgroundSource="HostBackdrop"/>
+    <AcrylicBrush x:Key="AcrylicSecondaryBarBackgroundBrush" TintColor="#24222a"
+                          FallbackColor="#24222a" BackgroundSource="HostBackdrop"/>-->
+
+    <SolidColorBrush x:Key="AcrylicContentBackgroundBrush" Color="#302e38"/>
+    <SolidColorBrush x:Key="AcrylicBarBackgroundBrush" Color="#18171c"/>
+    <SolidColorBrush x:Key="AcrylicSecondaryBarBackgroundBrush" Color="#24222a"/>
+</ResourceDictionary>
