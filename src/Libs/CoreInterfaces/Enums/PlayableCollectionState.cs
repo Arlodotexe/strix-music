@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CoreInterfaces.Enums
+namespace StrixMusic.CoreInterfaces.Enums
 {
     /// <summary>
-    /// Current state the track is in.
+    /// Current state the playable collection is in.
     /// </summary>
-    public enum TrackState
+    public enum PlayableCollectionState
     {
-        Unloaded,
         Playing,
         Paused,
         Queued,
