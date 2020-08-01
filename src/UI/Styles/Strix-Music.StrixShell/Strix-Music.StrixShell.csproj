@@ -28,7 +28,9 @@
   <ItemGroup>
     <None Remove="Controls\Drawer.xaml" />
     <None Remove="Resources.xaml" />
+    <None Remove="Styles\Brushes.xaml" />
     <None Remove="Styles\ButtonStyles.xaml" />
+    <None Remove="Themes\AlbumStyle.xaml" />
     <None Remove="Themes\ArtistViewStyle.xaml" />
     <None Remove="Themes\HomeStyle.xaml" />
     <None Remove="Themes\NowPlayingBarStyle.xaml" />
@@ -38,7 +40,9 @@
   <ItemGroup>
     <UpToDateCheckInput Remove="Controls\Drawer.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
+    <UpToDateCheckInput Remove="Styles\Brushes.xaml" />
     <UpToDateCheckInput Remove="Styles\ButtonStyles.xaml" />
+    <UpToDateCheckInput Remove="Themes\AlbumStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\HomeStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\NowPlayingBarStyle.xaml" />

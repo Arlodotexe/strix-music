@@ -8,41 +8,42 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="default:PlayableCollectionListControl">
-                        <GridView Padding="16" ItemContainerStyle="{StaticResource PlayableCollectionGridItemStyle}">
+                        <GridView Padding="16" ItemContainerStyle="{StaticResource PlayableCollectionGridItemStyle}" SelectionMode="None"
+                                  IsItemClickEnabled="True">
                             <GridView.Items>
                                 <GridViewItem>
                                     <default:AlbumControl/>
                                 </GridViewItem>
-                                <GridViewItem>
+                                <!--<GridViewItem>
                                     <default:ArtistControl/>
-                                </GridViewItem>
+                                </GridViewItem>-->
                                 <GridViewItem>
                                     <default:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
                                     <default:AlbumControl/>
                                 </GridViewItem>
+                                <!--<GridViewItem>
+                                    <default:ArtistControl/>
+                                </GridViewItem>-->
                                 <GridViewItem>
+                                    <default:AlbumControl/>
+                                </GridViewItem>
+                                <!--<GridViewItem>
                                     <default:ArtistControl/>
                                 </GridViewItem>
+                                <GridViewItem>
+                                    <default:ArtistControl/>
+                                </GridViewItem>-->
                                 <GridViewItem>
                                     <default:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <default:ArtistControl/>
-                                </GridViewItem>
-                                <GridViewItem>
-                                    <default:ArtistControl/>
-                                </GridViewItem>
-                                <GridViewItem>
                                     <default:AlbumControl/>
                                 </GridViewItem>
-                                <GridViewItem>
-                                    <default:AlbumControl/>
-                                </GridViewItem>
-                                <GridViewItem>
+                                <!--<GridViewItem>
                                     <default:ArtistControl/>
-                                </GridViewItem>
+                                </GridViewItem>-->
                             </GridView.Items>
                         </GridView>
                     </ControlTemplate>
