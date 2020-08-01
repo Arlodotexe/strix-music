@@ -8,7 +8,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="default:AlbumControl">
-                        <Grid x:Name="rootGrid" Padding="24,16">
+                        <Grid x:Name="rootGrid" Padding="24,16" Background="Transparent">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
