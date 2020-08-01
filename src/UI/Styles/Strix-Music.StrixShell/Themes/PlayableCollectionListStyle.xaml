@@ -11,37 +11,37 @@
                         <GridView Padding="16" ItemContainerStyle="{StaticResource PlayableCollectionGridItemStyle}">
                             <GridView.Items>
                                 <GridViewItem>
-                                    <local:AlbumControl/>
+                                    <default:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <local:ArtistControl/>
+                                    <default:ArtistControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <local:AlbumControl/>
+                                    <default:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <local:AlbumControl/>
+                                    <default:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <local:ArtistControl/>
+                                    <default:ArtistControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <local:AlbumControl/>
+                                    <default:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <local:ArtistControl/>
+                                    <default:ArtistControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <local:ArtistControl/>
+                                    <default:ArtistControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <local:AlbumControl/>
+                                    <default:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <local:AlbumControl/>
+                                    <default:AlbumControl/>
                                 </GridViewItem>
                                 <GridViewItem>
-                                    <local:ArtistControl/>
+                                    <default:ArtistControl/>
                                 </GridViewItem>
                             </GridView.Items>
                         </GridView>
