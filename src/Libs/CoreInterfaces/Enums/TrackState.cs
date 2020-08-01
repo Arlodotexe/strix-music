@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CoreInterfaces.Enums
+﻿namespace StrixMusic.CoreInterfaces.Enums
 {
     /// <summary>
     /// Current state the track is in.
@@ -10,8 +6,8 @@ namespace CoreInterfaces.Enums
     public enum TrackState
     {
         Unloaded,
-        Queued,
         Playing,
         Paused,
+        Queued,
     }
 }

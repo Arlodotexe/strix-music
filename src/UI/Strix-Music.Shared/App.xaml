@@ -7,7 +7,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="ms-appx:///Strix_Music.DefaultShell/Resources.xaml"/>-->
+                <ResourceDictionary Source="ms-appx:///Strix_Music.DefaultShell/Resources.xaml"/>
                 <ResourceDictionary Source="ms-appx:///Strix_Music.StrixShell/Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 

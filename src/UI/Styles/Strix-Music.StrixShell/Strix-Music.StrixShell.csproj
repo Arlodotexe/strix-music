@@ -31,6 +31,7 @@
     <None Remove="Styles\Brushes.xaml" />
     <None Remove="Styles\ButtonStyles.xaml" />
     <None Remove="Themes\AlbumStyle.xaml" />
+    <None Remove="Themes\AlbumViewStyle.xaml" />
     <None Remove="Themes\ArtistStyle.xaml" />
     <None Remove="Themes\ArtistViewStyle.xaml" />
     <None Remove="Themes\HomeStyle.xaml" />
@@ -44,6 +45,7 @@
     <UpToDateCheckInput Remove="Styles\Brushes.xaml" />
     <UpToDateCheckInput Remove="Styles\ButtonStyles.xaml" />
     <UpToDateCheckInput Remove="Themes\AlbumStyle.xaml" />
+    <UpToDateCheckInput Remove="Themes\AlbumViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\ArtistStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\HomeStyle.xaml" />

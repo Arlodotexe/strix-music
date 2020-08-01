@@ -1,9 +1,9 @@
 ﻿namespace StrixMusic.CoreInterfaces.Interfaces
 {
     /// <summary>
-    /// Interface representing lyrics for a <see cref="ITrack"/>.
+    /// Interface for user
     /// </summary>
-    public interface ILyrics
+    public interface IUser
     {
     }
 }
