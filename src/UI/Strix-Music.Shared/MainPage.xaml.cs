@@ -15,11 +15,5 @@ namespace Strix_Music
         {
             this.InitializeComponent();
         }
-
-        private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            this.OverlayFrame.Visibility = Windows.UI.Xaml.Visibility.Visible;
-            this.OverlayFrame.Navigate(typeof(SuperShell));
-        }
     }
 }

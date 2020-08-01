@@ -1,0 +1,62 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace StrixMusic.Services.SettingsStorage
+{
+    /// <summary>
+    /// Handle storing and retreiving data
+    /// </summary>
+    public interface IStorageService
+    {
+        /// <summary>
+        /// Returns a stored setting, deserialized into a type.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize into</typeparam>
+        /// <param name="filename">The name of the file to get</param>
+        /// <returns></returns>
+        Task<T> GetValueAsync<T>(string filename);
+
+        /// <summary>
+        /// Stores data locally.
+        /// </summary>
+        /// <param name="filename">The name of the file (including the file extension)</param>
+        /// <param name="value">The value to be stored</param>
+        /// <returns></returns>
+        Task SetValueAsync(string filename, object? value);
+
+        /// <summary>
+        /// Returns a stored setting, deserialized into a type.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize into</typeparam>
+        /// <param name="filename">The name of the file to get</param>
+        /// <param name="path">A relative path (separated by forward slashes), to save the file in a subfolder.</param>
+        /// <returns></returns>
+        Task<T> GetValueAsync<T>(string filename, string path);
+
+        /// <summary>
+        /// Stores data locally.
+        /// </summary>
+        /// <param name="filename">The name of the file (including the file extension)</param>
+        /// <param name="value">The value to be stored</param>
+        /// <param name="path">A relative path (separated by forward slashes), to save the file in a subfolder.</param>
+        /// <returns>The <see cref="Task"/> representing the asyncronous operation.</returns>
+        Task SetValueAsync(string filename, object? value, string path);
+
+        /// <summary>
+        /// Checks if the file exists
+        /// </summary>
+        /// <param name="filename">The name of the file (including the file extension)</param>
+        /// <returns>True if the file exists, otherwise false</returns>
+        Task<bool> FileExistsAsync(string filename);
+
+        /// <summary>
+        /// Checks if the file exists
+        /// </summary>
+        /// <param name="filename">The name of the file (including the file extension)</param>
+        /// <param name="path">A relative path (separated by forward slashes), to save the file in a subfolder.</param>
+        /// <returns>True if the file exists, otherwise false</returns>
+        Task<bool> FileExistsAsync(string filename, string path);
+    }
+}

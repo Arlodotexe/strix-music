@@ -1,4 +1,5 @@
 ﻿<Page
+    xmlns:shared="clr-namespace:Strix_Music.Shared"
     x:Class="Strix_Music.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,6 +14,6 @@
 
         <Button Content="Open Super" Click="Button_Click" HorizontalAlignment="Right"/>
 
-        <Frame x:Name="OverlayFrame" Visibility="Collapsed"/>
+        <shared:SuperShell />
     </Grid>
 </Page>
