@@ -102,6 +102,14 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libs\CoreInterfaces\CoreInterfaces.csproj">
+      <Project>{A0D7A122-5DFD-4926-8BBF-58FA8039C517}</Project>
+      <Name>CoreInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OwlCore\OwlCore.csproj">
+      <Project>{6C80141D-7328-4EE1-8077-6F5EF7CDB2AC}</Project>
+      <Name>OwlCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\UI\Strix-Music.DefaultShell\Strix-Music.DefaultShell.csproj">
       <Project>{73ae4e82-e513-4e1c-b771-429431d85982}</Project>
       <Name>Strix-Music.DefaultShell</Name>
