@@ -1,10 +1,17 @@
-﻿namespace StrixMusic.CoreInterfaces.Interfaces
+﻿using System.Collections.Generic;
+
+namespace StrixMusic.CoreInterfaces.Interfaces
 {
     /// <summary>
     /// Interface representing an album.
     /// </summary>
     public interface IAlbum : IPlayableCollection
     {
+        /// <summary>
+        /// List of <see cref="ITrack"/>s that this collection contains.
+        /// </summary>
+        IList<ITrack> Tracks { get; }
+
         /// <summary>
         /// An <see cref="IArtist"/> object that this album was created by.
         /// </summary>
