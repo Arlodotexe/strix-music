@@ -45,9 +45,6 @@
     <None Remove="Themes\ShellStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Page Remove="PreviewDrafting.xaml" />
-  </ItemGroup>
-  <ItemGroup>
     <UpToDateCheckInput Remove="Controls\Drawer.xaml" />
     <UpToDateCheckInput Remove="Preview.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />

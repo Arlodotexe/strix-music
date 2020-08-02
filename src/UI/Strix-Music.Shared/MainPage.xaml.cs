@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using OwlCore.ArchTools;
-using Strix_Music.Services;
 using Strix_Music.Shell.Default.Controls;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.Settings.Enums;
