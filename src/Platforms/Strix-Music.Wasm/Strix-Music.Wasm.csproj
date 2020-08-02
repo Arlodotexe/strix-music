@@ -55,8 +55,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj" />
     <ProjectReference Include="..\..\OwlCore\OwlCore.csproj" />
-    <ProjectReference Include="..\..\UI\Strix-Music.DefaultShell\Strix-Music.DefaultShell.csproj" />
-    <ProjectReference Include="..\..\UI\Styles\Strix-Music.StrixShell\Strix-Music.StrixShell.csproj" />
+    <ProjectReference Include="..\..\UI\Strix-Music.DefaultShell\Strix-Music.Shell.Default.csproj" />
+    <ProjectReference Include="..\..\UI\Styles\Strix-Music.StrixShell\Strix-Music.Shell.Strix.csproj" />
   </ItemGroup>
   <Import Project="..\..\UI\Strix-Music.Shared\Strix_Music.Shared.projitems" Label="Shared" />
 </Project>

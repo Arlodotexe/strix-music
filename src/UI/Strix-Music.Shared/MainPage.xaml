@@ -5,14 +5,14 @@
     xmlns:local="using:Strix_Music"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Strix_Music.DefaultShell.Controls"
+    xmlns:controls="using:Strix_Music.Shell.Default.Controls"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <controls:ShellControl/>
+        <ContentPresenter x:Name="ShellDisplay" />
 
-        <Button Content="Open Super" Click="Button_Click" HorizontalAlignment="Right"/>
+        <Button Click="Button_Click" Content="SS" HorizontalAlignment="Right"/>
 
-        <Frame x:Name="OverlayFrame" Visibility="Collapsed"/>
+        <ContentPresenter x:Name="SuperShellDisplay" />
     </Grid>
 </Page>

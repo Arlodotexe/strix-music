@@ -4,8 +4,8 @@
     <TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.16299</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
-    <AssemblyName>Strix_Music.DefaultShell</AssemblyName>
-    <RootNamespace>Strix_Music.DefaultShell</RootNamespace>
+    <AssemblyName>Strix_Music.Shell.Default</AssemblyName>
+    <RootNamespace>Strix_Music.Shell.Default</RootNamespace>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -14,6 +14,10 @@
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Uno.UI" Version="3.0.0-dev.1253" />
   </ItemGroup>
   <ItemGroup>

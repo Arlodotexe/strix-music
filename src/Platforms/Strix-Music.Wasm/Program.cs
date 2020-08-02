@@ -1,13 +1,18 @@
-﻿using System;
-using Windows.UI.Xaml;
-
-namespace Strix_Music.Wasm
+﻿namespace Strix_Music.Wasm
 {
+    /// <summary>
+    /// From the Uno template
+    /// </summary>
     public class Program
     {
         private static App? _app;
 
-        static int Main(string[] args)
+        /// <summary>
+        /// From the Uno template
+        /// </summary>
+        /// <param name="args">From the Uno template</param>
+        /// <returns>From the Uno template</returns>
+        public static int Main(string[] args)
         {
             Windows.UI.Xaml.Application.Start(_ => _app = new App());
 

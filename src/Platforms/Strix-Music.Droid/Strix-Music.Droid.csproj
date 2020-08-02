@@ -102,6 +102,10 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj">
+      <Project>{C5CE5911-1C37-4650-A1E9-4F1062534394}</Project>
+      <Name>StrixMusic.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libs\CoreInterfaces\StrixMusic.CoreInterfaces.csproj">
       <Project>{A0D7A122-5DFD-4926-8BBF-58FA8039C517}</Project>
       <Name>StrixMusic.CoreInterfaces</Name>
@@ -110,13 +114,13 @@
       <Project>{6C80141D-7328-4EE1-8077-6F5EF7CDB2AC}</Project>
       <Name>OwlCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Strix-Music.DefaultShell\Strix-Music.DefaultShell.csproj">
+    <ProjectReference Include="..\..\UI\Strix-Music.DefaultShell\Strix-Music.Shell.Default.csproj">
       <Project>{73ae4e82-e513-4e1c-b771-429431d85982}</Project>
-      <Name>Strix-Music.DefaultShell</Name>
+      <Name>Strix-Music.Shell.Default</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Styles\Strix-Music.StrixShell\Strix-Music.StrixShell.csproj">
+    <ProjectReference Include="..\..\UI\Styles\Strix-Music.StrixShell\Strix-Music.Shell.Strix.csproj">
       <Project>{0a9dddf4-43d4-452c-9818-aa43b8f38c38}</Project>
-      <Name>Strix-Music.StrixShell</Name>
+      <Name>Strix-Music.Shell.Strix</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\UI\Strix-Music.Shared\Strix_Music.Shared.projitems" Label="Shared" />

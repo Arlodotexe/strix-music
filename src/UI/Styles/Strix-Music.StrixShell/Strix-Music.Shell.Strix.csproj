@@ -4,8 +4,8 @@
     <TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.16299</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
-    <RootNamespace>Strix_Music.StrixShell</RootNamespace>
-    <AssemblyName>Strix_Music.StrixShell</AssemblyName>
+    <RootNamespace>Strix_Music.Shell.Strix</RootNamespace>
+    <AssemblyName>Strix_Music.Shell.Strix</AssemblyName>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -14,6 +14,10 @@
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Uno.UI" Version="3.0.0-dev.1253" />
   </ItemGroup>
   <ItemGroup>
@@ -27,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Controls\Drawer.xaml" />
+    <None Remove="Preview.xaml" />
     <None Remove="Resources.xaml" />
     <None Remove="Styles\Brushes.xaml" />
     <None Remove="Styles\ButtonStyles.xaml" />
@@ -41,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="Controls\Drawer.xaml" />
+    <UpToDateCheckInput Remove="Preview.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Styles\Brushes.xaml" />
     <UpToDateCheckInput Remove="Styles\ButtonStyles.xaml" />
@@ -58,6 +64,6 @@
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="6.1.0-build.186.g928c99f74d" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Strix-Music.DefaultShell\Strix-Music.DefaultShell.csproj" />
+    <ProjectReference Include="..\..\Strix-Music.DefaultShell\Strix-Music.Shell.Default.csproj" />
   </ItemGroup>
 </Project>

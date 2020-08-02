@@ -1,30 +1,34 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-#pragma warning disable CS8601 // Possible null reference assignment.
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-namespace Strix_Music.DefaultShell.Controls
+namespace Strix_Music.Shell.Default.Controls
 {
-    [TemplatePart(Name = nameof(rootGrid), Type = typeof(Grid))]
+    [TemplatePart(Name = nameof(_rootGrid), Type = typeof(Grid))]
     public sealed partial class ArtistControl : Control
     {
-        private Grid rootGrid;
+        private Grid? _rootGrid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ArtistControl"/> class.
+        /// </summary>
         public ArtistControl()
         {
             this.DefaultStyleKey = typeof(ArtistControl);
         }
 
+        /// <inheritdoc/>
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
             // Find and set RootGrid
-            rootGrid = GetTemplateChild(nameof(rootGrid)) as Grid;
+            _rootGrid = GetTemplateChild(nameof(_rootGrid)) as Grid;
 
-            rootGrid.PointerEntered += RootGrid_PointerEntered;
-            rootGrid.PointerExited += RootGrid_PointerExited;
+            if (_rootGrid != null)
+            {
+                _rootGrid.PointerEntered += RootGrid_PointerEntered;
+                _rootGrid.PointerExited += RootGrid_PointerExited;
+            }
         }
 
         private void RootGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
@@ -38,6 +42,3 @@ namespace Strix_Music.DefaultShell.Controls
         }
     }
 }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-#pragma warning restore CS8601 // Possible null reference assignment.
