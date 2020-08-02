@@ -7,7 +7,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Contains all the data needed to run the app
     /// </summary>
-    public interface PretendViewModel : ICommonPlayableCollections
+    public interface IMainViewModel : ICommonPlayableCollections
     {
         /// <summary>
         /// A consolidated list of all users in the app

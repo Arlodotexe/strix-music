@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using OwlCore.ArchTools;
-using StrixMusic.Services.SettingsStorage;
+using StrixMusic.Services.StorageService;
 
 namespace StrixMusic.Services.Settings
 {

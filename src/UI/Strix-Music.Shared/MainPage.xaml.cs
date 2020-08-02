@@ -3,7 +3,7 @@ using Strix_Music.Services;
 using Strix_Music.Shell.Default.Controls;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.Settings.Enums;
-using StrixMusic.Services.SettingsStorage;
+using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
 using System;
 using System.Threading.Tasks;
@@ -81,11 +81,11 @@ namespace Strix_Music
 
         private async Task Initialize()
         {
+            await InitCores();
             InitServices();
             await SetupPreferredShell();
 
             SuperShellDisplay.Content = new SuperShell();
-            await InitCores();
         }
 
         /// <summary>
