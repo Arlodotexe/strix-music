@@ -50,11 +50,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         IUser? Owner { get; }
 
         /// <summary>
-        /// List of <see cref="ITrack"/>s that this collection contains.
-        /// </summary>
-        IList<ITrack> Tracks { get; }
-
-        /// <summary>
         /// If the collection is currently playing, this will represent the time in milliseconds that the song is currently playing.
         /// </summary>
         PlaybackState State { get; }

@@ -17,7 +17,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Images for the track.
         /// </summary>
-        object Images { get; }
+        List<IImage> Images { get; }
 
         /// <summary>
         /// An external link related to the track.
