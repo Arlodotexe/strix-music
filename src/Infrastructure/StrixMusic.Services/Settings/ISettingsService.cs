@@ -58,5 +58,10 @@ namespace StrixMusic.Services.Settings
         /// </summary>
         /// <param name="identifier">Identifies a unique settings store</param>
         void ResetToDefaults(Type identifier);
+
+        /// <summary>
+        /// Fires when a setting has changed.
+        /// </summary>
+        event EventHandler<SettingChangedEventArgs>? SettingChanged;
     }
 }

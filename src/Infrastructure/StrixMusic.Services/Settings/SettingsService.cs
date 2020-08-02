@@ -89,10 +89,12 @@ namespace StrixMusic.Services.Settings
                 if (!await _settingsStorageService.Value.FileExistsAsync(key))
                 {
                     await _settingsStorageService.Value.SetValueAsync(key, serialized, nameof(identifier));
+                    SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
                 }
                 else if (overwrite)
                 {
                     await _settingsStorageService.Value.SetValueAsync(key, serialized, nameof(identifier));
+                    SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
                 }
             });
         }
@@ -119,7 +121,10 @@ namespace StrixMusic.Services.Settings
                 throw new InvalidOperationException($"The setting {key} doesn't exist");
             }
 
-            return (T)obj!;
+            return obj!;
         }
+
+        /// <inheritdoc cref="ISettingsService.SettingChanged"/>
+        public event EventHandler<SettingChangedEventArgs>? SettingChanged;
     }
 }

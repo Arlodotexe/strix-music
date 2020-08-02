@@ -1,6 +1,6 @@
-﻿using StrixMusic.Services.SettingsStorage;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using StrixMusic.Services.SettingsStorage;
 using Windows.Storage;
 
 namespace Strix_Music.Services

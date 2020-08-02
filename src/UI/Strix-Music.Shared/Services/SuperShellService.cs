@@ -1,5 +1,5 @@
-﻿using StrixMusic.Services.SuperShell;
-using System;
+﻿using System;
+using StrixMusic.Services.SuperShell;
 using Windows.UI.Xaml;
 
 namespace Strix_Music.Services
