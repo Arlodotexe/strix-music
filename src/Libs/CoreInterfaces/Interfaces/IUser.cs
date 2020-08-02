@@ -31,7 +31,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Profile images or other images related to this user.
         /// </summary>
-        IList<Image> Images { get; set; }
+        IList<IImage> Images { get; set; }
 
         /// <summary>
         /// The <see cref="DateTime"/> the user was born.
