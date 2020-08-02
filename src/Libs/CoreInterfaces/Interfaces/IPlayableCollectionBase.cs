@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using StrixMusic.CoreInterfaces.Enums;
-using StrixMusic.Services.Settings.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -19,7 +18,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// The source core which created the parent.
         /// </summary>
-        public Core SourceCore { get; set; }
+        public ICore SourceCore { get; set; }
 
         /// <summary>
         /// The name of the Playable Collection.

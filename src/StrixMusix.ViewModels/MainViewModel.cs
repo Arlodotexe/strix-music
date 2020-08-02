@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services.Settings;
@@ -44,5 +45,20 @@ namespace StrixMusix.ViewModels
         /// Used to browse and discovered new music.
         /// </summary>
         public ObservableCollection<IPlayableCollectionGroup>? Discoverables { get; }
+
+        /// <summary>
+        /// Search results.
+        /// </summary>
+        public ISearchResults? SearchResults { get; }
+
+        /// <summary>
+        /// Current search query.
+        /// </summary>
+        public string SearchQuery { get; set; }
+
+        /// <summary>
+        /// Autocomplete for the current search query.
+        /// </summary>
+        public IEnumerable<string> SearchSuggestions { get; set; }
     }
 }

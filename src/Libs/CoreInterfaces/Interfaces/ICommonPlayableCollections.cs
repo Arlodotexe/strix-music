@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -21,7 +22,5 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Used to browse and discovered new music.
         /// </summary>
         public IList<IPlayableCollectionGroup>? Discoverables { get; }
-
-        // TODO: Search
     }
 }

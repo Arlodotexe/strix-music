@@ -21,4 +21,8 @@
   <ItemGroup>
     <None Include="..\..\..\stylecop.json" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Events\" />
+  </ItemGroup>
 </Project>

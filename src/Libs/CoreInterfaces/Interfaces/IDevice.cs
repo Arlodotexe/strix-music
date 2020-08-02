@@ -19,9 +19,9 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         string Name { get; set; }
 
         /// <summary>
-        /// The source core which created the parent.
+        /// The source core which created the object.
         /// </summary>
-        public Core SourceCore { get; set; }
+        public ICore SourceCore { get; set; }
 
         /// <summary>
         /// If true, the device is currently active and playing audio.
