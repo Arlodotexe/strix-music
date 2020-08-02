@@ -3,7 +3,11 @@
     /// <summary>
     /// Interface representing an album.
     /// </summary>
-    public interface IAlbum
+    public interface IAlbum : IPlayableCollection
     {
+        /// <summary>
+        /// An <see cref="IArtist"/> object that this track was created by.
+        /// </summary>
+        IArtist Artist { get; }
     }
 }
