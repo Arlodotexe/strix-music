@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using OwlCore.ArchTools;
 using Strix_Music.Services;
@@ -78,11 +79,13 @@ namespace Strix_Music
 
         private async Task SetupPreferredShell()
         {
+            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+
             var settingsService = ServiceLocator.Instance.Resolve<ISettingsService>();
 
             var preferredShell = await settingsService.GetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell));
 
-            var assemblyName = $"ms-appx:///Strix_Music.{preferredShell}/Resources.xaml";
+            var assemblyName = $"ms-appx:///Strix_Music.Shell.{preferredShell}/Resources.xaml";
 
             var resourceDictionary = new ResourceDictionary() { Source = new Uri(assemblyName) };
 

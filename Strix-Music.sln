@@ -32,13 +32,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{71DCDF74-9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlCore", "src\OwlCore\OwlCore.csproj", "{6C80141D-7328-4EE1-8077-6F5EF7CDB2AC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strix-Music.DefaultShell", "src\UI\Strix-Music.DefaultShell\Strix-Music.DefaultShell.csproj", "{73AE4E82-E513-4E1C-B771-429431D85982}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strix-Music.Shell.Default", "src\UI\Strix-Music.DefaultShell\Strix-Music.Shell.Default.csproj", "{73AE4E82-E513-4E1C-B771-429431D85982}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.CoreInterfaces", "src\Libs\CoreInterfaces\StrixMusic.CoreInterfaces.csproj", "{A0D7A122-5DFD-4926-8BBF-58FA8039C517}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strix-Music.StrixShell", "src\UI\Styles\Strix-Music.StrixShell\Strix-Music.StrixShell.csproj", "{0A9DDDF4-43D4-452C-9818-AA43B8F38C38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strix-Music.Shell.Strix", "src\UI\Styles\Strix-Music.StrixShell\Strix-Music.Shell.Strix.csproj", "{0A9DDDF4-43D4-452C-9818-AA43B8F38C38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrixMusic.Services", "src\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj", "{C5CE5911-1C37-4650-A1E9-4F1062534394}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Services", "src\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj", "{C5CE5911-1C37-4650-A1E9-4F1062534394}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
