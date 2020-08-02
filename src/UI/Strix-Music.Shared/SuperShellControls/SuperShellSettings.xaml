@@ -11,6 +11,7 @@
 
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <StackPanel>
+            <!-- TODO: Destroy and replace with the default settings control -->
             <TextBlock Text="Skins" FontSize="24" />
             <ComboBox Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="{x:Bind CurrentSkin}"
                   SelectionChanged="ComboBox_SelectionChanged"/>
