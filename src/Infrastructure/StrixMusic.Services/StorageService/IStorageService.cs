@@ -15,16 +15,16 @@ namespace StrixMusic.Services.SettingsStorage
         /// </summary>
         /// <typeparam name="T">The type to deserialize into</typeparam>
         /// <param name="filename">The name of the file to get</param>
-        /// <returns></returns>
-        Task<T> GetValueAsync<T>(string filename);
+        /// <returns>String representation of the stored value. Null if file isn't found</returns>
+        Task<string> GetValueAsync(string filename);
 
         /// <summary>
         /// Stores data locally.
         /// </summary>
         /// <param name="filename">The name of the file (including the file extension)</param>
         /// <param name="value">The value to be stored</param>
-        /// <returns></returns>
-        Task SetValueAsync(string filename, object? value);
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task SetValueAsync(string filename, string value);
 
         /// <summary>
         /// Returns a stored setting, deserialized into a type.
@@ -32,8 +32,8 @@ namespace StrixMusic.Services.SettingsStorage
         /// <typeparam name="T">The type to deserialize into</typeparam>
         /// <param name="filename">The name of the file to get</param>
         /// <param name="path">A relative path (separated by forward slashes), to save the file in a subfolder.</param>
-        /// <returns></returns>
-        Task<T> GetValueAsync<T>(string filename, string path);
+        /// <returns>String representation of the stored value. Null if file isn't found</returns>
+        Task<string> GetValueAsync(string filename, string path);
 
         /// <summary>
         /// Stores data locally.
@@ -42,7 +42,7 @@ namespace StrixMusic.Services.SettingsStorage
         /// <param name="value">The value to be stored</param>
         /// <param name="path">A relative path (separated by forward slashes), to save the file in a subfolder.</param>
         /// <returns>The <see cref="Task"/> representing the asyncronous operation.</returns>
-        Task SetValueAsync(string filename, object? value, string path);
+        Task SetValueAsync(string filename, string value, string path);
 
         /// <summary>
         /// Checks if the file exists

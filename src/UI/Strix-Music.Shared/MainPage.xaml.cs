@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using OwlCore.ArchTools;
+using Strix_Music.Services;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.Settings.Enums;
+using StrixMusic.Services.SettingsStorage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -20,6 +22,11 @@ namespace Strix_Music
         {
             this.InitializeComponent();
             Loaded += MainPage_Loaded;
+        }
+
+        private static void RegSvc<T>(object value)
+        {
+            ServiceLocator.Instance.Register<T>((T)value);
         }
 
         private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -48,7 +55,7 @@ namespace Strix_Music
         private async Task Initialize()
         {
             await InitCores();
-            await InitServices();
+            InitServices();
             await SetupPreferredShell();
         }
 
@@ -62,11 +69,10 @@ namespace Strix_Music
             return Task.CompletedTask;
         }
 
-        private async Task InitServices()
+        private void InitServices()
         {
-
             // TODO: Create storage service implementation
-            // RegSvc<IStorageService>();
+            RegSvc<IStorageService>(new StorageService());
             RegSvc<ISettingsService>(new SettingsService());
         }
 
@@ -81,11 +87,6 @@ namespace Strix_Music
             var resourceDictionary = new ResourceDictionary() { Source = new Uri(assemblyName) };
 
             App.Current.Resources.MergedDictionaries.Add(resourceDictionary);
-        }
-
-        private static void RegSvc<T>(T value)
-        {
-            ServiceLocator.Instance.Register<T>(value);
         }
     }
 }

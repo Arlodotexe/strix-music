@@ -1,5 +1,5 @@
-﻿using StrixMusic.Services.Settings.Enums;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using StrixMusic.Services.Settings.Enums;
 
 namespace StrixMusic.Services.Settings
 {

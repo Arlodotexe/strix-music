@@ -2,11 +2,12 @@
 // Sergio's GitHub: https://github.com/Sergio0694
 // Legere: https://www.microsoft.com/store/apps/9PHJRVCSKVJZ
 
-using OwlCore.ArchTools;
-using StrixMusic.Services.SettingsStorage;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using OwlCore.ArchTools;
+using StrixMusic.Services.SettingsStorage;
 
 namespace StrixMusic.Services.Settings
 {
@@ -44,6 +45,7 @@ namespace StrixMusic.Services.Settings
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public void ResetToDefaults(Type identifier)
         {
             foreach (var prop in identifier.GetProperties())
@@ -52,6 +54,7 @@ namespace StrixMusic.Services.Settings
             }
         }
 
+        /// <inheritdoc/>
         public void SetValue<T>(string key, object? value, Type identifier, bool overwrite = true)
         {
             // Serialize the value
@@ -65,7 +68,7 @@ namespace StrixMusic.Services.Settings
             }
             else if (typeof(T).IsPrimitive || typeof(T) == typeof(string))
             {
-                // We don't care if it's null
+                // It's fine to be null
                 serializable = value!;
             }
             else if (typeof(T) == typeof(DateTime))
@@ -73,7 +76,11 @@ namespace StrixMusic.Services.Settings
                 serializable = Unsafe.As<object?, DateTime>(ref value).ToBinary();
             }
             else
+            {
                 throw new ArgumentException($"Invalid setting of type {typeof(T)}", nameof(value));
+            }
+
+            var serialized = JsonConvert.SerializeObject(serializable);
 
             // It's fine
             Task.Run(async () =>
@@ -81,18 +88,29 @@ namespace StrixMusic.Services.Settings
                 // Store the new value
                 if (!await _settingsStorageService.Value.FileExistsAsync(key))
                 {
-                    await _settingsStorageService.Value.SetValueAsync(key, serializable, nameof(identifier));
+                    await _settingsStorageService.Value.SetValueAsync(key, serialized, nameof(identifier));
                 }
                 else if (overwrite)
                 {
-                    await _settingsStorageService.Value.SetValueAsync(key, serializable, nameof(identifier));
+                    await _settingsStorageService.Value.SetValueAsync(key, serialized, nameof(identifier));
                 }
             });
         }
 
+        /// <inheritdoc/>
         public async Task<T> GetValue<T>(string key, Type identifier, bool fallback = false)
         {
-            object? obj = await _settingsStorageService.Value.GetValueAsync<T>(key);
+            string result = await _settingsStorageService.Value.GetValueAsync(key);
+
+            T obj;
+            try
+            {
+                obj = JsonConvert.DeserializeObject<T>(result);
+            }
+            catch (Exception)
+            {
+                return default!;
+            }
 
             // Try to get the setting value
             if (obj is T)
@@ -101,13 +119,7 @@ namespace StrixMusic.Services.Settings
                 throw new InvalidOperationException($"The setting {key} doesn't exist");
             }
 
-            // Cast and return the retrieved setting
-            if (typeof(T) == typeof(DateTime))
-                obj = DateTime.FromBinary((long)obj!);
-
             return (T)obj!;
         }
-
     }
-
 }
