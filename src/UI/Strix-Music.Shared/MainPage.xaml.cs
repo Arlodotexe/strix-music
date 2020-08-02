@@ -22,6 +22,11 @@ namespace Strix_Music
             Loaded += MainPage_Loaded;
         }
 
+        private static void RegSvc<T>(T value)
+        {
+            ServiceLocator.Instance.Register<T>(value);
+        }
+
         private async void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             Loaded -= MainPage_Loaded;
@@ -48,7 +53,7 @@ namespace Strix_Music
         private async Task Initialize()
         {
             await InitCores();
-            await InitServices();
+            InitServices();
             await SetupPreferredShell();
         }
 
@@ -62,9 +67,8 @@ namespace Strix_Music
             return Task.CompletedTask;
         }
 
-        private async Task InitServices()
+        private void InitServices()
         {
-
             // TODO: Create storage service implementation
             // RegSvc<IStorageService>();
             RegSvc<ISettingsService>(new SettingsService());
@@ -81,11 +85,6 @@ namespace Strix_Music
             var resourceDictionary = new ResourceDictionary() { Source = new Uri(assemblyName) };
 
             App.Current.Resources.MergedDictionaries.Add(resourceDictionary);
-        }
-
-        private static void RegSvc<T>(T value)
-        {
-            ServiceLocator.Instance.Register<T>(value);
         }
     }
 }
