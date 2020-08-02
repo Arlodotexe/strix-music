@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using StrixMusic.CoreInterfaces.Enums;
+using StrixMusic.Services.Settings.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -93,5 +94,10 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// The device that the track should play on.
         /// </summary>
         IDevice Device { get; set; }
+
+        /// <summary>
+        /// The source core which created the parent.
+        /// </summary>
+        public Core SourceCore { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using StrixMusic.CoreInterfaces.Enums;
+using StrixMusic.Services.Settings.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -16,6 +17,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// The displayed name of this device
         /// </summary>
         string Name { get; set; }
+
+        /// <summary>
+        /// The source core which created the parent.
+        /// </summary>
+        public Core SourceCore { get; set; }
 
         /// <summary>
         /// If true, the device is currently active and playing audio.

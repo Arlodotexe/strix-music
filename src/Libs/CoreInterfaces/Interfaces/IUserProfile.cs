@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StrixMusic.Services.Settings.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -50,5 +51,10 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// The user's country or region of origin.
         /// </summary>
         string? Region { get; set; }
+
+        /// <summary>
+        /// The source core which created the parent.
+        /// </summary>
+        public Core SourceCore { get; set; }
     }
 }

@@ -40,7 +40,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strix-Music.Shell.Strix", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Services", "src\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj", "{C5CE5911-1C37-4650-A1E9-4F1062534394}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrixMusix.ViewModels", "src\StrixMusix.ViewModels\StrixMusix.ViewModels.csproj", "{6E6B1D19-4B25-4F73-9FE5-D3BCB8644B2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.ViewModels", "src\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj", "{6E6B1D19-4B25-4F73-9FE5-D3BCB8644B2B}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -724,6 +724,7 @@ Global
 		{A0D7A122-5DFD-4926-8BBF-58FA8039C517} = {1F480499-567B-4A14-A9F4-F67E5B017F5E}
 		{0A9DDDF4-43D4-452C-9818-AA43B8F38C38} = {61E25943-3416-41AC-BC23-34E684953336}
 		{C5CE5911-1C37-4650-A1E9-4F1062534394} = {1F480499-567B-4A14-A9F4-F67E5B017F5E}
+		{6E6B1D19-4B25-4F73-9FE5-D3BCB8644B2B} = {1F480499-567B-4A14-A9F4-F67E5B017F5E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {48425E8F-F5B5-47DB-A42B-29BD64798016}

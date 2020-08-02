@@ -13,13 +13,5 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// The <see cref="IPlayableCollectionBase"/>s in this Group
         /// </summary>
         IList<IPlayableCollectionBase> Items { get; }
-
-        /// <summary>
-        /// The name of the collection group.
-        /// </summary>
-        /// <remarks>
-        /// Example: <example>Library, Recently Played, Playlist folder name, Daily Mix, etc</example>
-        /// </remarks>
-        new string Name { get; }
     }
 }
