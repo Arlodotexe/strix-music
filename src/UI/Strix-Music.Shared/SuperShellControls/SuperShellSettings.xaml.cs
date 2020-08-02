@@ -8,8 +8,6 @@ using StrixMusic.Services.Settings.Enums;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace Strix_Music.SuperShellControls
 {
     public sealed partial class SuperShellSettings : UserControl
@@ -61,7 +59,7 @@ namespace Strix_Music.SuperShellControls
         public ObservableCollection<string> Skins { get; set; } = new ObservableCollection<string>();
 
         /// <summary>
-        /// The skin that the app is currently using
+        /// The skin that the app is currently using.
         /// </summary>
         public string CurrentSkin { get; set; } = "Loading...";
     }

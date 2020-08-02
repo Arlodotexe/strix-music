@@ -33,7 +33,6 @@ namespace Strix_Music
             DetachEvents();
         }
 
-
         private void AttachEvents()
         {
             Unloaded += SuperShell_Unloaded;
