@@ -3,10 +3,10 @@ using Windows.UI.Xaml.Controls;
 
 namespace Strix_Music.DefaultShell.Controls
 {
-    [TemplatePart(Name = nameof(rootGrid), Type = typeof(Grid))]
+    [TemplatePart(Name = nameof(_rootGrid), Type = typeof(Grid))]
     public sealed partial class AlbumControl : Control
     {
-        private Grid? rootGrid;
+        private Grid? _rootGrid;
 
         public AlbumControl()
         {
@@ -18,12 +18,12 @@ namespace Strix_Music.DefaultShell.Controls
             base.OnApplyTemplate();
 
             // Find and set RootGrid
-            rootGrid = GetTemplateChild(nameof(rootGrid)) as Grid;
+            _rootGrid = GetTemplateChild(nameof(_rootGrid)) as Grid;
 
-            if (rootGrid != null)
+            if (_rootGrid != null)
             {
-                rootGrid.PointerEntered += RootGrid_PointerEntered;
-                rootGrid.PointerExited += RootGrid_PointerExited;
+                _rootGrid.PointerEntered += RootGrid_PointerEntered;
+                _rootGrid.PointerExited += RootGrid_PointerExited;
             }
         }
 
