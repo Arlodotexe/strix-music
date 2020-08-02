@@ -20,6 +20,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <remarks>
         /// Example: <example>Library, Recently Played, Playlist folder name, Daily Mix, etc</example>
         /// </remarks>
-        string Name { get; }
+        new string Name { get; }
     }
 }

@@ -30,7 +30,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         string Type { get; }
 
         /// <summary>
-        /// Name of the track
+        /// Name of the track.
         /// </summary>
         string Title { get; }
 

@@ -15,6 +15,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         string Id { get; }
 
         /// <summary>
+        /// The name of the Playable Collection.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Cover images for the collection.
         /// </summary>
         IList<IImage> Images { get; }
