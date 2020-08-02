@@ -113,7 +113,7 @@ namespace StrixMusic.Services.Settings
             }
 
             // Try to get the setting value
-            if (obj is T)
+            if (!(obj is T))
             {
                 if (fallback) return default!;
                 throw new InvalidOperationException($"The setting {key} doesn't exist");

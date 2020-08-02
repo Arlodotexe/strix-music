@@ -39,7 +39,7 @@ namespace Strix_Music
                 // this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            Frame? rootFrame = Windows.UI.Xaml.Window.Current.Content as Frame;
+            Frame? rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -70,7 +70,7 @@ namespace Strix_Music
                 }
 
                 // Ensure the current window is active
-                Windows.UI.Xaml.Window.Current.Activate();
+                Window.Current.Activate();
             }
         }
 

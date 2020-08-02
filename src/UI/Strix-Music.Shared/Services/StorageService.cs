@@ -1,6 +1,6 @@
-﻿using System;
+﻿using StrixMusic.Services.SettingsStorage;
+using System;
 using System.Threading.Tasks;
-using StrixMusic.Services.SettingsStorage;
 using Windows.Storage;
 
 namespace Strix_Music.Services
@@ -79,21 +79,33 @@ namespace Strix_Music.Services
         /// <inheritdoc />
         public async Task SetValueAsync(string filename, string value)
         {
-            if (await FileExistsAsync(filename))
+            StorageFile fileHandle;
+            try
             {
-                var fileHandle = await _localFolder.GetFileAsync(filename);
-                await FileIO.WriteTextAsync(fileHandle, value);
+                fileHandle = await _localFolder.GetFileAsync(filename);
             }
+            catch (Exception)
+            {
+                fileHandle = await _localFolder.CreateFileAsync(filename);
+            }
+
+            await FileIO.WriteTextAsync(fileHandle, value);
         }
 
         /// <inheritdoc />
         public async Task SetValueAsync(string filename, string value, string path)
         {
-            if (await FileExistsAsync(filename))
+            StorageFile fileHandle;
+            try
             {
-                var fileHandle = await _localFolder.GetFileAsync(filename);
-                await FileIO.WriteTextAsync(fileHandle, value);
+                fileHandle = await _localFolder.GetFileAsync(filename);
             }
+            catch (Exception)
+            {
+                fileHandle = await _localFolder.CreateFileAsync(filename);
+            }
+
+            await FileIO.WriteTextAsync(fileHandle, value);
         }
     }
 }

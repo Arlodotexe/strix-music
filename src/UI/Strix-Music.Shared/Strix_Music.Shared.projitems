@@ -22,8 +22,12 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Services\StorageService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SuperShell.xaml.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SuperShellService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuperShellControls\SuperShell.xaml.cs">
       <DependentUpon>SuperShell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)SuperShellControls\SuperShellSettings.xaml.cs">
+      <DependentUpon>SuperShellSettings.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -31,7 +35,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)SuperShell.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)SuperShellControls\SuperShell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)SuperShellControls\SuperShellSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
