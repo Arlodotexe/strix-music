@@ -8,7 +8,6 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Strix_Music
 {
-
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
