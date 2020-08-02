@@ -12,6 +12,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm">
+      <Version>7.0.0-build.149</Version>
+    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -163,6 +166,10 @@
     <ProjectReference Include="..\..\OwlCore\OwlCore.csproj">
       <Project>{6c80141d-7328-4ee1-8077-6f5ef7cdb2ac}</Project>
       <Name>OwlCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\StrixMusix.ViewModels\StrixMusix.ViewModels.csproj">
+      <Project>{6e6b1d19-4b25-4f73-9fe5-d3bcb8644b2b}</Project>
+      <Name>StrixMusix.ViewModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\UI\Strix-Music.DefaultShell\Strix-Music.Shell.Default.csproj">
       <Project>{73ae4e82-e513-4e1c-b771-429431d85982}</Project>

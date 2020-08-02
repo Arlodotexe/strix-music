@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SuperShellControls\SuperShellSettings.xaml.cs">
       <DependentUpon>SuperShellSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
