@@ -10,10 +10,11 @@
     Visibility="Collapsed">
 
     <Grid>
-        <Border Background="Black" Opacity="0.65" />
+        <Border Background="Black" Opacity="0.5" />
 
         <Button Click="CloseButton_Click" Content="Close SuperShell" />
 
         <ContentPresenter x:Name="Presenter" />
     </Grid>
 </UserControl>
+ 

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Reflection;
-using System.Threading.Tasks;
-using OwlCore.ArchTools;
+﻿using OwlCore.ArchTools;
 using Strix_Music.Services;
 using Strix_Music.Shell.Default.Controls;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.Settings.Enums;
 using StrixMusic.Services.SettingsStorage;
 using StrixMusic.Services.SuperShell;
+using System;
+using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -19,6 +19,7 @@ namespace Strix_Music
     public sealed partial class MainPage : Page
     {
         private LazyService<ISuperShellService> _superShellService;
+        private ISettingsService? _settingService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -47,8 +48,8 @@ namespace Strix_Music
             Loaded -= MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
 
-            AttachEvents();
             await Initialize();
+            AttachEvents();
         }
 
         private void MainPage_Unloaded(object sender, RoutedEventArgs e)
@@ -58,18 +59,30 @@ namespace Strix_Music
 
         private void AttachEvents()
         {
+            _settingService = ServiceLocator.Instance.Resolve<ISettingsService>();
+            if (_settingService != null)
+                _settingService.SettingChanged += SettingsService_SettingChanged;
         }
 
         private void DetachEvents()
         {
             Unloaded -= MainPage_Unloaded;
+            if (_settingService != null)
+                _settingService.SettingChanged -= SettingsService_SettingChanged;
+        }
+
+        private async void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)
+        {
+            if (e.Key == nameof(PreferredShell))
+            {
+                await SetupPreferredShell();
+            }
         }
 
         private async Task Initialize()
         {
             InitServices();
             await SetupPreferredShell();
-            ShellDisplay.Content = new ShellControl();
 
             SuperShellDisplay.Content = new SuperShell();
             await InitCores();
@@ -95,17 +108,32 @@ namespace Strix_Music
 
         private async Task SetupPreferredShell()
         {
-            Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                var shellNamespacePrefix = "Strix_Music.Shell";
 
-            var settingsService = ServiceLocator.Instance.Resolve<ISettingsService>();
+                ShellDisplay.Content = null;
 
-            var preferredShell = await settingsService.GetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell));
+                foreach (var dict in App.Current.Resources.MergedDictionaries)
+                {
+                    if (dict.Source.AbsoluteUri.Contains(shellNamespacePrefix))
+                    {
+                        App.Current.Resources.MergedDictionaries.Remove(dict);
+                    }
+                }
 
-            var assemblyName = $"ms-appx:///Strix_Music.Shell.{preferredShell}/Resources.xaml";
+                var settingsService = ServiceLocator.Instance.Resolve<ISettingsService>();
 
-            var resourceDictionary = new ResourceDictionary() { Source = new Uri(assemblyName) };
+                var preferredShell = await settingsService.GetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell));
 
-            App.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+                var assemblyName = $"ms-appx:///{shellNamespacePrefix}.{preferredShell}/Resources.xaml";
+
+                var resourceDictionary = new ResourceDictionary() { Source = new Uri(assemblyName) };
+
+                App.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+
+                ShellDisplay.Content = new ShellControl();
+            });
         }
     }
 }
