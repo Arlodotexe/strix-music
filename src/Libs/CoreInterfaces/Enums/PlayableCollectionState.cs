@@ -9,6 +9,7 @@ namespace StrixMusic.CoreInterfaces.Enums
     /// </summary>
     public enum PlayableCollectionState
     {
+        Unloaded,
         Playing,
         Paused,
         Queued,
