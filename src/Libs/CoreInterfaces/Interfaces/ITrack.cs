@@ -100,7 +100,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         TrackState State { get; }
 
         /// <summary>
-        /// Attempts to play the track.
+        /// Attempts to play the collection from the beginning, or resumes playback if already playing.
         /// </summary>
         /// <returns><see langword="true"/> if the <see cref="ITrack"/> was played successfully, <see langword="false"/> otherwise.</returns>
         bool Play();

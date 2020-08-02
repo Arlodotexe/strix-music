@@ -45,7 +45,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         IUser? Owner { get; }
 
         /// <summary>
-        /// List of <see cref="ITrack"/>
+        /// List of <see cref="ITrack"/>s that this collection contains.
         /// </summary>
         IList<ITrack> Tracks { get; }
 
@@ -60,15 +60,13 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         ITrack? PlayingTrack { get; }
 
         /// <summary>
-        /// Attempts to play the collection.
+        /// Attempts to play the collection from the beginning, or resumes playback if already playing.
         /// </summary>
-        /// <returns><see langword="true"/> if the <see cref="IPlayableCollection"/> was played successfully, <see langword="false"/> otherwise.</returns>
-        bool Play();
+        void Play();
 
         /// <summary>
         /// Attempts to pause the collection.
         /// </summary>
-        /// <returns><see langword="true"/> if the <see cref="IPlayableCollection"/> was paused successfully, <see langword="false"/> otherwise.</returns>
-        bool Pause();
+        void Pause();
     }
 }
