@@ -114,7 +114,7 @@
       <Project>{6C80141D-7328-4EE1-8077-6F5EF7CDB2AC}</Project>
       <Name>OwlCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\StrixMusix.ViewModels\StrixMusix.ViewModels.csproj">
+    <ProjectReference Include="..\..\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj">
       <Project>{6e6b1d19-4b25-4f73-9fe5-d3bcb8644b2b}</Project>
       <Name>StrixMusix.ViewModels</Name>
     </ProjectReference>
