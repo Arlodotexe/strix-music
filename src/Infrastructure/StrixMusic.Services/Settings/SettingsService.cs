@@ -12,15 +12,13 @@ using StrixMusic.Services.SettingsStorage;
 namespace StrixMusic.Services.Settings
 {
     /// <summary>
-    /// A simple <see langword="class"/> that handles the local app settings
+    /// A <see langword="class"/> that handles the local app settings.
     /// </summary>
     public class SettingsService : ISettingsService
     {
         /// <summary>
-        /// A service to store and retrieve settings throughout the app
+        /// A service to store and retrieve settings throughout the app.
         /// </summary>
-        /// <param name="identifier">Indentifies this source of the settings</param>
-        /// <param name="keysClassType"></param>
         public SettingsService()
         {
         }
