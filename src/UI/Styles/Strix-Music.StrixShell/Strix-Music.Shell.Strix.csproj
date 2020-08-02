@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Controls\Drawer.xaml" />
+    <None Remove="Preview.xaml" />
     <None Remove="Resources.xaml" />
     <None Remove="Styles\Brushes.xaml" />
     <None Remove="Styles\ButtonStyles.xaml" />
@@ -45,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="Controls\Drawer.xaml" />
+    <UpToDateCheckInput Remove="Preview.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Styles\Brushes.xaml" />
     <UpToDateCheckInput Remove="Styles\ButtonStyles.xaml" />
