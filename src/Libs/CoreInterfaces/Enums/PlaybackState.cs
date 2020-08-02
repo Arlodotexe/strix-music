@@ -1,9 +1,9 @@
 ﻿namespace StrixMusic.CoreInterfaces.Enums
 {
     /// <summary>
-    /// Current state the track is in.
+    /// Current playback state.
     /// </summary>
-    public enum TrackState
+    public enum PlaybackState
     {
         Unloaded,
         Playing,

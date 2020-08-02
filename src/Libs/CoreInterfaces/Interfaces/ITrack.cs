@@ -22,7 +22,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// An external link related to the track.
         /// </summary>
-        Uri Url { get; }
+        Uri? Url { get; }
 
         /// <summary>
         /// Identifies which type of track this is (song, podcast, etc).
@@ -37,27 +37,27 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// An <see cref="IArtist"/> object that this track was created by.
         /// </summary>
-        IArtist Artist { get; }
+        IArtist? Artist { get; }
 
         /// <summary>
         /// An <see cref="IAlbum"/> object that this track belongs to
         /// </summary>
-        IAlbum Album { get; }
+        IAlbum? Album { get; }
 
         /// <summary>
         /// The date the track was released.
         /// </summary>
-        DateTime DatePublished { get; }
+        DateTime? DatePublished { get; }
 
         /// <summary>
         /// A list of <see cref="string"/> describing the genres for this track.
         /// </summary>
-        List<string> Genere { get; }
+        IList<string>? Genre { get; }
 
         /// <summary>
         /// Position in a set, usually the album.
         /// </summary>
-        int TrackNumber { get; }
+        int? TrackNumber { get; }
 
         /// <summary>
         /// Number of the times this track has been played.
@@ -65,14 +65,14 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         int PlayCount { get; }
 
         /// <summary>
-        /// The language this track is spoken in
+        /// The language this track is spoken in.
         /// </summary>
-        string Language { get; }
+        string? Language { get; }
 
         /// <summary>
         /// The lyrics for this track.
         /// </summary>
-        ILyrics Lyrics { get; }
+        ILyrics? Lyrics { get; }
 
         /// <summary>
         /// If this track contains explicit language.
@@ -87,17 +87,17 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Provides comments about the track.
         /// </summary>
-        string Description { get; }
+        string? Description { get; }
 
         /// <summary>
         /// If the song is currently playing this will represent the time in milliseconds that the song is currently playing.
         /// </summary>
-        long Position { get; }
+        long? Position { get; }
 
         /// <summary>
         /// If the song is currently playing this will represent the time in milliseconds that the song is currently playing.
         /// </summary>
-        TrackState State { get; }
+        PlaybackState State { get; }
 
         /// <summary>
         /// Attempts to play the collection from the beginning, or resumes playback if already playing.

@@ -31,7 +31,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Profile images or other images related to this user.
         /// </summary>
-        IList<IImage> Images { get; set; }
+        IList<IImage> Images { get; }
 
         /// <summary>
         /// The <see cref="DateTime"/> the user was born.
@@ -39,16 +39,21 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <remarks>
         /// If missing data, replace the day, month and/or year with part of 1/1/1970
         /// </remarks>
-        DateTime Birthdate { get; set; }
+        DateTime? Birthdate { get; }
 
         /// <summary>
-        /// A link to the user's profile
+        /// Links to the users' profile(s).
         /// </summary>
-        IList<Uri> Url { get; }
+        IList<Uri>? Url { get; }
 
         /// <summary>
         /// The user's country or region of origin.
         /// </summary>
-        string Region { get; set; }
+        string? Region { get; set; }
+
+        /// <summary>
+        /// The playable collection groups for this user.
+        /// </summary>
+        IList<IPlayableCollectionGroup> PlayableCollectionGroups { get; }
     }
 }

@@ -1,6 +1,6 @@
-﻿using StrixMusic.CoreInterfaces.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using StrixMusic.CoreInterfaces.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -15,9 +15,9 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         string Id { get; }
 
         /// <summary>
-        /// Images for the track.
+        /// Cover images for the collection.
         /// </summary>
-        object Images { get; }
+        IList<IImage> Images { get; }
 
         /// <summary>
         /// An external link related to the collection.
@@ -50,12 +50,12 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         IList<ITrack> Tracks { get; }
 
         /// <summary>
-        /// If the collection is currently playing this will represent the time in milliseconds that the song is currently playing.
+        /// If the collection is currently playing, this will represent the time in milliseconds that the song is currently playing.
         /// </summary>
-        PlayableCollectionState State { get; }
+        PlaybackState State { get; }
 
         /// <summary>
-        /// If the collection is currently playing this will represent the currently playing <see cref="ITrack"/>.
+        /// If the collection is currently playing, this will represent the currently playing <see cref="ITrack"/>.
         /// </summary>
         ITrack? PlayingTrack { get; }
 

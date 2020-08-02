@@ -11,12 +11,12 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         ///  Local or remote resource pointing to the image.
         /// </summary>
         Uri Uri { get; set; }
-        
+
         /// <summary>
         /// Height of the image.
         /// </summary>
         double Height { get; set; }
-    
+
         /// <summary>
         /// Width of the image.
         /// </summary>
