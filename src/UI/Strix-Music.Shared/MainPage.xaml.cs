@@ -67,12 +67,12 @@ namespace Strix_Music
 
         private async Task Initialize()
         {
-            await InitCores();
             InitServices();
             await SetupPreferredShell();
-
             ShellDisplay.Content = new ShellControl();
+
             SuperShellDisplay.Content = new SuperShell();
+            await InitCores();
         }
 
         /// <summary>
