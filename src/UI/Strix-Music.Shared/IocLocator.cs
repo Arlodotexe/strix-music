@@ -2,6 +2,8 @@
 using Microsoft.Toolkit.Mvvm;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Strix_Music.Services;
+using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Cores.Dummy;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.StorageService;
 using StrixMusix.ViewModels;
@@ -19,6 +21,10 @@ namespace StrixMusic.Shared
             {
                 services.AddSingleton<ISettingsService, SettingsService>();
                 services.AddSingleton<IStorageService, StorageService>();
+
+                services.AddSingleton<ICore, DummyCore>();
+                services.AddSingleton<ICore, DummyCore>();
+
                 services.AddSingleton<MainViewModel>();
             });
         }

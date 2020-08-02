@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services.Settings;
 
@@ -19,8 +21,11 @@ namespace StrixMusix.ViewModels
         /// <param name="service"></param>
         public MainViewModel(ISettingsService settings)
         {
-        }
+            var x = Ioc.Default.GetServices<ICore>();
+        
 
+        }
+/*
         /// <summary>
         /// A consolidated list of all users in the app
         /// </summary>
@@ -59,6 +64,6 @@ namespace StrixMusix.ViewModels
         /// <summary>
         /// Autocomplete for the current search query.
         /// </summary>
-        public IEnumerable<string> SearchSuggestions { get; set; }
+        public IEnumerable<string> SearchSuggestions { get; set; }*/
     }
 }

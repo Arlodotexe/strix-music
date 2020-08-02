@@ -1,12 +1,13 @@
-﻿using OwlCore.ArchTools;
+﻿using System;
+using System.Threading.Tasks;
+using OwlCore.ArchTools;
 using Strix_Music.Services;
 using Strix_Music.Shell.Default.Controls;
+using StrixMusic.Cores.Dummy;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.Settings.Enums;
 using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
-using System;
-using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -81,26 +82,28 @@ namespace Strix_Music
 
         private async Task Initialize()
         {
-            await InitCores();
+            // TODO: Remove or replace.
             InitServices();
             await SetupPreferredShell();
 
             SuperShellDisplay.Content = new SuperShell();
+
+            // Initailizing cores should not get in the way of showing the UI.
+            InitCores();
         }
 
         /// <summary>
         /// Initializes the media provider cores. Fire and forget.
         /// </summary>
-        /// <returns><see cref="Task"/> representing the async operation. Returns once all cores have started init (fire and forget)</returns>
-        private Task InitCores()
+        private void InitCores()
         {
-            // TODO
-            return Task.CompletedTask;
+            // TODO: Create and register cores
+            new DummyCore();
         }
 
         private void InitServices()
         {
-            // TODO: Create storage service implementation
+            // TODO: Optimize load times, getting app setting takes time on other platforms.
             RegSvc<IStorageService>(new StorageService());
             RegSvc<ISettingsService>(new SettingsService());
             RegSvc<ISuperShellService>(new SuperShellService());

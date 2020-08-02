@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DummyCore
+namespace StrixMusic.Cores.Dummy
 {
     public class DummyCore : ICore
     {
