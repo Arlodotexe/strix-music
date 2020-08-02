@@ -5,7 +5,7 @@ using StrixMusic.CoreInterfaces.Enums;
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
     /// <summary>
-    /// Base interface for track.
+    /// Metadata about a track.
     /// </summary>
     public interface ITrack
     {
@@ -90,32 +90,8 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         string? Description { get; }
 
         /// <summary>
-        /// If the song is currently playing this will represent the time in milliseconds that the song is currently playing.
+        /// The device that the track should play on.
         /// </summary>
-        long? Position { get; }
-
-        /// <summary>
-        /// If the song is currently playing this will represent the time in milliseconds that the song is currently playing.
-        /// </summary>
-        PlaybackState State { get; }
-
-        /// <summary>
-        /// Attempts to play the collection from the beginning, or resumes playback if already playing.
-        /// </summary>
-        /// <returns><see langword="true"/> if the <see cref="ITrack"/> was played successfully, <see langword="false"/> otherwise.</returns>
-        bool Play();
-
-        /// <summary>
-        /// Attempts to pause the track.
-        /// </summary>
-        /// <returns><see langword="true"/> if the <see cref="ITrack"/> was paused successfully, <see langword="false"/> otherwise.</returns>
-        bool Pause();
-
-        /// <summary>
-        /// Seeks the track to a given timestamp.
-        /// </summary>
-        /// <param name="position">Time in milliseconds to seek the song to.</param>
-        /// <returns><see langword="true"/> if the <see cref="ITrack"/> was seeked to successfully, <see langword="false"/> otherwise.</returns>
-        bool Seek(long position);
+        IDevice Device { get; set; }
     }
 }

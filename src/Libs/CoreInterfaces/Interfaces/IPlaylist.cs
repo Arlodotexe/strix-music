@@ -7,7 +7,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Interface that represents a playlist.
     /// </summary>
-    public interface IPlaylist : IPlayableCollection
+    public interface IPlaylist : IPlayableCollectionBase
     {
         /// <summary>
         /// List of <see cref="ITrack"/>s that this collection contains.

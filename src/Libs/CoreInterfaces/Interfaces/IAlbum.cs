@@ -5,7 +5,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Interface representing an album.
     /// </summary>
-    public interface IAlbum : IPlayableCollection
+    public interface IAlbum : IPlayableCollectionBase
     {
         /// <summary>
         /// List of <see cref="ITrack"/>s that this collection contains.

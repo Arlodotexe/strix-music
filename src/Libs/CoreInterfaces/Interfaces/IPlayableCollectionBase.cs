@@ -7,7 +7,8 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Interface representing a collection of <see cref="ITrack"/>.
     /// </summary>
-    public interface IPlayableCollection
+    /// <remarks>No class should directly implement this interface.</remarks>
+    public interface IPlayableCollectionBase
     {
         /// <summary>
         /// Id for the collection.
@@ -40,14 +41,9 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         string Title { get; }
 
         /// <summary>
-        /// Number of tracks in the collection.
-        /// </summary>
-        int TrackCount { get; }
-
-        /// <summary>
         /// Owner of the collection.
         /// </summary>
-        IUser? Owner { get; }
+        IUserProfile? Owner { get; }
 
         /// <summary>
         /// If the collection is currently playing, this will represent the time in milliseconds that the song is currently playing.
