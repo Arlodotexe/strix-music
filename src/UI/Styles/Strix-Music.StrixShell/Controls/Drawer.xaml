@@ -1,8 +1,8 @@
 ﻿<UserControl
-    x:Class="Strix_Music.StrixShell.Controls.Drawer"
+    x:Class="Strix_Music.Shell.Strix.Controls.Drawer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Strix_Music.StrixShell.Controls"
+    xmlns:local="using:Strix_Music.Shell.Strix.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"

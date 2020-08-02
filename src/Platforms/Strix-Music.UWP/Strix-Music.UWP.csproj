@@ -164,13 +164,13 @@
       <Project>{6c80141d-7328-4ee1-8077-6f5ef7cdb2ac}</Project>
       <Name>OwlCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Strix-Music.DefaultShell\Strix-Music.DefaultShell.csproj">
+    <ProjectReference Include="..\..\UI\Strix-Music.DefaultShell\Strix-Music.Shell.Default.csproj">
       <Project>{73ae4e82-e513-4e1c-b771-429431d85982}</Project>
-      <Name>Strix-Music.DefaultShell</Name>
+      <Name>Strix-Music.Shell.Default</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Styles\Strix-Music.StrixShell\Strix-Music.StrixShell.csproj">
+    <ProjectReference Include="..\..\UI\Styles\Strix-Music.StrixShell\Strix-Music.Shell.Strix.csproj">
       <Project>{0a9dddf4-43d4-452c-9818-aa43b8f38c38}</Project>
-      <Name>Strix-Music.StrixShell</Name>
+      <Name>Strix-Music.Shell.Strix</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\UI\Strix-Music.Shared\Strix_Music.Shared.projitems" Label="Shared" />
