@@ -30,7 +30,7 @@
                                             <AdaptiveTrigger MinWindowWidth="800"/>
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
-                                            <Setter Target="topBarRow.Height" Value="96"/>
+                                            <Setter Target="topBarRow.Height" Value="48"/>
                                             <Setter Target="bottomBarRow.Height" Value="0"/>
                                             <Setter Target="sliderRow.Height" Value="48"/>
                                             <Setter Target="slider.(Grid.Row)" Value="1"/>
@@ -43,7 +43,7 @@
                                             <AdaptiveTrigger MinWindowWidth="1200"/>
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
-                                            <Setter Target="topBarRow.Height" Value="96"/>
+                                            <Setter Target="topBarRow.Height" Value="48"/>
                                             <Setter Target="bottomBarRow.Height" Value="0"/>
                                             <Setter Target="sliderRow.Height" Value="0"/>
                                             <Setter Target="slider.(Grid.Row)" Value="0"/>
@@ -61,38 +61,38 @@
                             </Grid.RowDefinitions>
 
                             <Grid Background="#18171c">
-                                <Grid HorizontalAlignment="Center">
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="64"/>
                                         <ColumnDefinition/>
-                                        <ColumnDefinition Width="64"/>
+                                        <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <Rectangle Fill="#FFFFFF" Width="8" Height="8"
-                                               RadiusX="4" RadiusY="4" Grid.Column="0"/>
-                                    <Rectangle Fill="#FFFFFF" Opacity=".06" Height="48" Width="300" Grid.Column="1"/>
-                                    <Rectangle Fill="#FFFFFF" Width="8" Height="8"
-                                               RadiusX="4" RadiusY="4" Grid.Column="2"/>
-                                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Grid.ColumnSpan="3">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.ColumnSpan="3">
                                         <Rectangle Fill="#FFFFFF" Opacity=".5"
-                                                   Width="48" Height="8"
-                                                   RadiusX="4" RadiusY="4"
-                                                   Margin="12,0"/>
+                        Width="48" Height="8"
+                        RadiusX="4" RadiusY="4"
+                        Margin="12,0"/>
                                         <Rectangle Fill="#FFFFFF" Opacity=".5"
-                                                   Width="48" Height="8"
-                                                   RadiusX="4" RadiusY="4"
-                                                   Margin="12,0"/>
+                        Width="48" Height="8"
+                        RadiusX="4" RadiusY="4"
+                        Margin="12,0"/>
                                         <Rectangle Fill="#FFFFFF" Opacity=".5"
-                                                   Width="48" Height="8"
-                                                   RadiusX="4" RadiusY="4"
-                                                   Margin="12,0"/>
+                        Width="48" Height="8"
+                        RadiusX="4" RadiusY="4"
+                        Margin="12,0"/>
                                         <Rectangle Fill="#FFFFFF" Opacity=".5"
-                                                   Width="48" Height="8"
-                                                   RadiusX="4" RadiusY="4"
-                                                   Margin="12,0"/>
+                        Width="48" Height="8"
+                        RadiusX="4" RadiusY="4"
+                        Margin="12,0"/>
+                                    </StackPanel>
+                                    <Rectangle Fill="#FFFFFF" Opacity=".06" Height="48" Width="300" Grid.Column="1" HorizontalAlignment="Right"/>
+                                    <StackPanel Orientation="Horizontal" Grid.Column="2">
+                                        <Rectangle Fill="#FFFFFF" Width="8" Height="8"
+                               RadiusX="4" RadiusY="4" Margin="28,0"/>
+                                        <Rectangle Fill="#FFFFFF" Width="8" Height="8"
+                               RadiusX="4" RadiusY="4" Margin="28,0"/>
+                                        <Rectangle Fill="#FFFFFF" Width="8" Height="8"
+                               RadiusX="4" RadiusY="4" Margin="28,0"/>
                                     </StackPanel>
                                 </Grid>
                             </Grid>
@@ -131,15 +131,15 @@
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
                                 <Rectangle Fill="#FFFFFF" Width="8" Height="8"
-                                           RadiusX="4" RadiusY="4" Grid.Column="0"/>
+                        RadiusX="4" RadiusY="4" Grid.Column="0"/>
                                 <Rectangle Fill="#FFFFFF" Width="8" Height="8"
-                                           RadiusX="4" RadiusY="4" Grid.Column="1"/>
+                        RadiusX="4" RadiusY="4" Grid.Column="1"/>
                                 <Rectangle Fill="#FFFFFF" Width="8" Height="8"
-                                           RadiusX="4" RadiusY="4" Grid.Column="2"/>
+                        RadiusX="4" RadiusY="4" Grid.Column="2"/>
                                 <Rectangle Fill="#FFFFFF" Width="8" Height="8"
-                                           RadiusX="4" RadiusY="4" Grid.Column="3"/>
+                        RadiusX="4" RadiusY="4" Grid.Column="3"/>
                                 <Rectangle Fill="#FFFFFF" Width="8" Height="8"
-                                           RadiusX="4" RadiusY="4" Grid.Column="4"/>
+                        RadiusX="4" RadiusY="4" Grid.Column="4"/>
                             </Grid>
                         </Grid>
                     </ControlTemplate>
@@ -147,5 +147,7 @@
             </Setter>
         </Style.Setters>
     </Style>
+
+    <Style BasedOn="{StaticResource StrixShellPreviewStyle}" TargetType="default:PreviewControl"/>
     
 </ResourceDictionary>
