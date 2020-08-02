@@ -3,7 +3,7 @@
 namespace StrixMusic.Services
 {
     /// <summary>
-    /// Initializes the ViewModel .
+    /// A <see langword="class"/> to initialize the <see cref="MainViewModel"/>.
     /// </summary>
     public class ViewModelLocator
     {

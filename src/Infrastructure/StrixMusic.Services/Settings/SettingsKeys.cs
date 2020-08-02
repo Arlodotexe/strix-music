@@ -1,14 +1,18 @@
-﻿using System.Collections.Generic;
-using StrixMusic.Services.Settings.Enums;
+﻿using StrixMusic.Services.Settings.Enums;
 
 namespace StrixMusic.Services.Settings
 {
     /// <summary>
-    /// The keys for various settings throughout the app.
+    /// A <see langword="class"/> containing keys for all settings throughout the main app.
     /// </summary>
-    /// <remarks></remarks>
+    /// <remarks>
+    /// This <see lang="class"/> is used with reflection to generate settings files.
+    /// </remarks>
     public static class SettingsKeys
     {
+        /// <summary>
+        /// Gets the default value for <see cref="Enums.PreferredShell"/> in settings.
+        /// </summary>
         public static readonly PreferredShell PreferredShell = PreferredShell.Default;
     }
 }

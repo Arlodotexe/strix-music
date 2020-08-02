@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StrixMusic.Services.SuperShell
+﻿namespace StrixMusic.Services.SuperShell
 {
     /// <summary>
-    /// Labels the various content that can be displayed in the SuperShell
+    /// An <see langword="enum"/> that labels the various content that can be displayed in the SuperShell.
     /// </summary>
     public enum SuperShellDisplays
     {
