@@ -8,7 +8,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Services
+namespace StrixMusic.Services.Settings
 {
     /// <summary>
     /// A simple <see langword="class"/> that handles the local app settings

@@ -5,7 +5,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Services
+namespace StrixMusic.Services.Settings
 {
     /// <summary>
     /// The default <see langword="interface"/> for the settings manager used in the app

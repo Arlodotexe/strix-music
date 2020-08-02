@@ -11,7 +11,6 @@ namespace StrixMusic.Services
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelLocator"/> class and the <see cref="MainViewModel"/>.
-        /// Creates and registers all the services with <see cref="SimpleIoc.Default"/>.
         /// </summary>
         public ViewModelLocator()
         {

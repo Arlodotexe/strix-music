@@ -102,6 +102,10 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj">
+      <Project>{C5CE5911-1C37-4650-A1E9-4F1062534394}</Project>
+      <Name>StrixMusic.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libs\CoreInterfaces\StrixMusic.CoreInterfaces.csproj">
       <Project>{A0D7A122-5DFD-4926-8BBF-58FA8039C517}</Project>
       <Name>StrixMusic.CoreInterfaces</Name>
