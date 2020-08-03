@@ -81,15 +81,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public string Description => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IDevice Device => DummyDevice!;
-
-        /// <summary>
-        /// The <see cref="IDevice"/> where the <see cref="DummyTrack"/> should place.
-        /// </summary>
-        public IDevice? DummyDevice { get; set; }
-
-        /// <inheritdoc/>
-        public ICore SourceCore => DummyCore!;
+        public ICore Core => DummyCore!;
 
         /// <summary>
         /// The <see cref="DummyCore"/> where the <see cref="DummyTrack"/> is from.
