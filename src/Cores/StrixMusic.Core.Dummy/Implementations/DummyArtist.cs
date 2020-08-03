@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -8,15 +9,6 @@ namespace StrixMusic.Core.Dummy.Implementations
     /// <inheritdoc/>
     public class DummyArtist : IArtist
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DummyArtist"/> class.
-        /// </summary>
-        public DummyArtist(string id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
-
         /// <inheritdoc/>
         public string Id { get; }
 
@@ -30,6 +22,12 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// List of full <see cref="DummyAlbum"/>s to be used within the DummyCore.
         /// </summary>
         public List<DummyAlbum> DummyAlbums { get; set; }
+
+        /// <summary>
+        /// List of the Ids of <see cref="DummyAlbum"/>s to the <see cref="DummyArtist"/>
+        /// </summary>
+        [JsonProperty("album_ids")]
+        public List<string> AlbumIds { get; set; }
 
         /// <inheritdoc/>
         public IList<IImage> Images => throw new NotImplementedException();

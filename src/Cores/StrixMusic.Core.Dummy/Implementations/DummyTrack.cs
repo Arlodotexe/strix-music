@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.Core.Dummy.Implementations
@@ -7,24 +8,8 @@ namespace StrixMusic.Core.Dummy.Implementations
     /// <inheritdoc/>
     public class DummyTrack : ITrack
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DummyTrack"/> class.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="title"></param>
-        /// <param name="isExplicit"></param>
-        /// <param name="duration"></param>
-        /// <param name="device"></param>
-        /// <param name="core"></param>
-        public DummyTrack(string id, string title, bool isExplicit, long duration, IDevice device, ICore core)
-        {
-            Id = id;
-            Title = title;
-            IsExplicit = isExplicit;
-            Duration = duration;
-        }
-
         /// <inheritdoc/>
+        [JsonProperty("id")]
         public string Id { get; }
 
         /// <inheritdoc/>
@@ -37,6 +22,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public string Type => "song";
 
         /// <inheritdoc/>
+        [JsonProperty("title")]
         public string Title { get; }
 
         /// <inheritdoc/>
@@ -47,8 +33,20 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// </summary>
         public DummyArtist DummyArtist { get; }
 
+        /// <summary>
+        /// The Id of the <see cref="DummyArtist"/>.
+        /// </summary>
+        [JsonProperty("artist_id")]
+        public string ArtistId { get; }
+
         /// <inheritdoc/>
         public IAlbum Album => DummyAlbum;
+
+        /// <summary>
+        /// The Id of the <see cref="DummyAlbum"/>.
+        /// </summary>
+        [JsonProperty("album_id")]
+        public string AlbumId { get; set; }
 
         /// <summary>
         /// Full <see cref="DummyAlbum"/> to be used within the DummyCore.

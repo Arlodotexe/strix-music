@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -8,31 +9,45 @@ namespace StrixMusic.Core.Dummy.Implementations
     /// <inheritdoc/>
     public class DummyAlbum : IAlbum
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DummyAlbum"/> class.
-        /// </summary>
-        public DummyAlbum(string id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
+        /// <inheritdoc/>
+        [JsonProperty("id")]
+        public string Id { get; set; }
 
         /// <inheritdoc/>
-        public string Id { get; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
         /// <inheritdoc/>
-        public string Name { get; }
-
-        /// <inheritdoc/>
+        [JsonIgnore]
         public IList<ITrack> Tracks => (IList<ITrack>)DummyTracks;
 
         /// <summary>
         /// List of full <see cref="DummyTrack"/>s to be used within the DummyCore.
         /// </summary>
+        [JsonIgnore]
         public List<DummyTrack> DummyTracks { get; set; } = new List<DummyTrack>();
 
+        /// <summary>
+        /// List of the Ids of <see cref="DummyTrack"/>s on the <see cref="DummyAlbum"/>.
+        /// </summary>
+        [JsonProperty("track_ids")]
+        public IEnumerable<string> TrackIds { get; set; }
+
         /// <inheritdoc/>
-        public IArtist Artist { get; private set; }
+        [JsonIgnore]
+        public IArtist Artist => DummyArtist;
+
+        /// <summary>
+        /// The full <see cref="DummyArtist"/> of the album.
+        /// </summary>
+        [JsonIgnore]
+        public DummyArtist DummyArtist { get; set; }
+
+        /// <summary>
+        /// The Id of the album's artist.
+        /// </summary>
+        [JsonProperty("artist_id")]
+        public string ArtistId { get; set; }
 
         /// <inheritdoc/>
         public IList<IImage> Images => throw new NotImplementedException();
