@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -10,44 +9,31 @@ namespace StrixMusic.Core.Dummy.Implementations
     public class DummyAlbum : IAlbum
     {
         /// <inheritdoc/>
-        [JsonProperty("id")]
         public string Id { get; set; }
 
         /// <inheritdoc/>
-        [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <inheritdoc/>
-        [JsonIgnore]
         public IList<ITrack> Tracks => (IList<ITrack>)DummyTracks;
 
         /// <summary>
         /// List of full <see cref="DummyTrack"/>s to be used within the DummyCore.
         /// </summary>
-        [JsonIgnore]
         public List<DummyTrack> DummyTracks { get; set; } = new List<DummyTrack>();
 
         /// <summary>
         /// List of the Ids of <see cref="DummyTrack"/>s on the <see cref="DummyAlbum"/>.
         /// </summary>
-        [JsonProperty("track_ids")]
-        public IEnumerable<string> TrackIds { get; set; }
+        public List<string> TrackIds { get; set; }
 
         /// <inheritdoc/>
-        [JsonIgnore]
         public IArtist Artist => DummyArtist;
 
         /// <summary>
         /// The full <see cref="DummyArtist"/> of the album.
         /// </summary>
-        [JsonIgnore]
         public DummyArtist DummyArtist { get; set; }
-
-        /// <summary>
-        /// The Id of the album's artist.
-        /// </summary>
-        [JsonProperty("artist_id")]
-        public string ArtistId { get; set; }
 
         /// <inheritdoc/>
         public IList<IImage> Images => throw new NotImplementedException();
@@ -70,6 +56,19 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// <inheritdoc/>
         public ICore SourceCore { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DummyAlbum"/> class.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        public DummyAlbum(string id, string name, DummyArtist artist)
+        {
+            Id = id;
+            Name = name;
+            TrackIds = new List<string>();
+            DummyArtist = artist;
+        }
+
         /// <inheritdoc/>
         public void Play()
         {
@@ -81,5 +80,6 @@ namespace StrixMusic.Core.Dummy.Implementations
         {
             throw new NotImplementedException();
         }
+
     }
 }

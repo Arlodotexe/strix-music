@@ -15,57 +15,57 @@ namespace StrixMusic.Core.Dummy
         public IUser User => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public event EventHandler<IDevice> DeviceAdded;
+        public event EventHandler<IDevice>? DeviceAdded;
 
         /// <inheritdoc/>
-        public event EventHandler<IDevice> DeviceRemoved;
+        public event EventHandler<IDevice>? DeviceRemoved;
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableCollectionGroup> LibraryChanged;
+        public event EventHandler<IPlayableCollectionGroup>? LibraryChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableCollectionGroup> RecentlyPlayedChanged;
+        public event EventHandler<IPlayableCollectionGroup>? RecentlyPlayedChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableCollectionGroup> DiscoverableAdded;
+        public event EventHandler<IPlayableCollectionGroup>? DiscoverableAdded;
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableCollectionGroup> DiscoverableRemoved;
+        public event EventHandler<IPlayableCollectionGroup>? DiscoverableRemoved;
 
         /// <inheritdoc/>
         public Task<IList<IDevice>> GetDevices()
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<IList<IPlayableCollectionGroup>> GetDiscoverables()
+        public Task<IList<IPlayableCollectionGroup>?> GetDiscoverables()
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task<IPlayableCollectionGroup> GetLibrary()
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task<IPlayableCollectionGroup> GetRecentlyPlayed()
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task<IEnumerable<string>> GetSearchAutoComplete(string query)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task<ISearchResults> GetSearchResults(string query)
         {
-            return null;
+            throw new NotImplementedException();
         }
     }
 }

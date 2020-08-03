@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -16,7 +15,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public string Name { get; }
 
         /// <inheritdoc/>
-        public IList<IAlbum> Albums { get; }
+        public IList<IAlbum> Albums => (IList<IAlbum>)DummyAlbums;
 
         /// <summary>
         /// List of full <see cref="DummyAlbum"/>s to be used within the DummyCore.
@@ -26,7 +25,6 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// <summary>
         /// List of the Ids of <see cref="DummyAlbum"/>s to the <see cref="DummyArtist"/>
         /// </summary>
-        [JsonProperty("album_ids")]
         public List<string> AlbumIds { get; set; }
 
         /// <inheritdoc/>
@@ -52,6 +50,21 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DummyArtist"/> class.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="core"></param>
+        public DummyArtist(string id, string name, ICore core)
+        {
+            Id = id;
+            Name = name;
+            DummyAlbums = new List<DummyAlbum>();
+            AlbumIds = new List<string>();
+            SourceCore = core;
+        }
 
         /// <inheritdoc/>
         public void Play()

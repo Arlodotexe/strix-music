@@ -12,19 +12,16 @@ namespace StrixMusic.Core.Dummy
         /// <summary>
         /// The lists of tracks in the dummy core's library.
         /// </summary>
-        [JsonProperty("tracks")]
-        public List<DummyTrack> Tracks { get; set; }
+        public List<DummyTrack>? Tracks { get; set; }
 
         /// <summary>
         /// The lists of artists in the dummy core's library.
         /// </summary>
-        [JsonProperty("artists")]
-        public List<DummyArtist> Artists { get; set; }
+        public List<DummyArtist>? Artists { get; set; }
 
         /// <summary>
         /// The lists of albums in the dummy core's library.
         /// </summary>
-        [JsonProperty("album")]
-        public List<DummyAlbum> Albums { get; set; }
+        public List<DummyAlbum>? Albums { get; set; }
     }
 }

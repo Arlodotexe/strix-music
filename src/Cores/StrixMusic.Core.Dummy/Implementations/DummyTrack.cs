@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.Core.Dummy.Implementations
@@ -9,7 +8,6 @@ namespace StrixMusic.Core.Dummy.Implementations
     public class DummyTrack : ITrack
     {
         /// <inheritdoc/>
-        [JsonProperty("id")]
         public string Id { get; }
 
         /// <inheritdoc/>
@@ -22,7 +20,6 @@ namespace StrixMusic.Core.Dummy.Implementations
         public string Type => "song";
 
         /// <inheritdoc/>
-        [JsonProperty("title")]
         public string Title { get; }
 
         /// <inheritdoc/>
@@ -33,20 +30,8 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// </summary>
         public DummyArtist DummyArtist { get; }
 
-        /// <summary>
-        /// The Id of the <see cref="DummyArtist"/>.
-        /// </summary>
-        [JsonProperty("artist_id")]
-        public string ArtistId { get; }
-
         /// <inheritdoc/>
         public IAlbum Album => DummyAlbum;
-
-        /// <summary>
-        /// The Id of the <see cref="DummyAlbum"/>.
-        /// </summary>
-        [JsonProperty("album_id")]
-        public string AlbumId { get; set; }
 
         /// <summary>
         /// Full <see cref="DummyAlbum"/> to be used within the DummyCore.
@@ -81,9 +66,23 @@ namespace StrixMusic.Core.Dummy.Implementations
         public string Description => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IDevice Device { get; private set; }
+        public ICore Core { get; }
 
-        /// <inheritdoc/>
-        public ICore SourceCore { get; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DummyTrack"/> class.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="title"></param>
+        /// <param name="artist"></param>
+        /// <param name="album"></param>
+        /// <param name="core"></param>
+        public DummyTrack(string id, string title, DummyArtist artist, DummyAlbum album, ICore core)
+        {
+            Id = id;
+            Title = title;
+            DummyArtist = artist;
+            DummyAlbum = album;
+            Core = core;
+        }
     }
 }
