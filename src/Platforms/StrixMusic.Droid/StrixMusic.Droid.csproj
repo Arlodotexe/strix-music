@@ -102,36 +102,36 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cores\DummyCore\StrixMusic.Core.Dummy.csproj">
-      <Project>{571159f8-6ec0-42cb-ab3a-1361f81210b7}</Project>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Core.Dummy\StrixMusic.Core.Dummy.csproj">
+      <Project>{60f40d66-ad18-4822-b4bc-2535dc32ac85}</Project>
       <Name>StrixMusic.Core.Dummy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj">
+      <Project>{60ee2300-f562-416c-9458-dbea41389d8b}</Project>
+      <Name>StrixMusic.CoreInterfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj">
       <Project>{C5CE5911-1C37-4650-A1E9-4F1062534394}</Project>
       <Name>StrixMusic.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Libs\CoreInterfaces\StrixMusic.CoreInterfaces.csproj">
-      <Project>{A0D7A122-5DFD-4926-8BBF-58FA8039C517}</Project>
-      <Name>StrixMusic.CoreInterfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OwlCore\OwlCore.csproj">
-      <Project>{6C80141D-7328-4EE1-8077-6F5EF7CDB2AC}</Project>
-      <Name>OwlCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj">
-      <Project>{6e6b1d19-4b25-4f73-9fe5-d3bcb8644b2b}</Project>
+    <ProjectReference Include="..\..\Infrastructure\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj">
+      <Project>{40522958-e5ad-4494-8c45-2baf83399499}</Project>
       <Name>StrixMusic.ViewModels</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Strix-Music.DefaultShell\Strix-Music.Shell.Default.csproj">
-      <Project>{73ae4e82-e513-4e1c-b771-429431d85982}</Project>
-      <Name>Strix-Music.Shell.Default</Name>
+    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
+      <Project>{1cbd34e9-8956-483d-b0af-2b762cd54edb}</Project>
+      <Name>OwlCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Styles\Strix-Music.StrixShell\Strix-Music.Shell.Strix.csproj">
-      <Project>{0a9dddf4-43d4-452c-9818-aa43b8f38c38}</Project>
-      <Name>Strix-Music.Shell.Strix</Name>
+    <ProjectReference Include="..\..\UI\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj">
+      <Project>{1b218c58-e2b0-441e-a406-ee8ae87a009e}</Project>
+      <Name>StrixMusic.Shell.Default</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UI\StrixMusic.Shell.Strix\StrixMusic.Shell.Strix.csproj">
+      <Project>{1acebd69-e023-4917-b32e-f83a314a4809}</Project>
+      <Name>StrixMusic.Shell.Strix</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\..\UI\Strix-Music.Shared\Strix_Music.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\UI\StrixMusic.Shared\StrixMusic.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- This will force the generation of the APK when not building inside visual studio -->
   <Target Name="GenerateBuild" DependsOnTargets="SignAndroidPackage" AfterTargets="Build" Condition="'$(BuildingInsideVisualStudio)'==''" />

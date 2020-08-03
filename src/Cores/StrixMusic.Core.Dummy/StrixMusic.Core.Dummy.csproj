@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Libs\CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
   </ItemGroup>
 
 </Project>

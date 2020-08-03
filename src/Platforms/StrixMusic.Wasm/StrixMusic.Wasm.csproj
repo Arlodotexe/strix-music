@@ -53,13 +53,13 @@
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.4.0-dev.16" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cores\DummyCore\StrixMusic.Core.Dummy.csproj" />
+    <ProjectReference Include="..\..\Cores\StrixMusic.Core.Dummy\StrixMusic.Core.Dummy.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj" />
-    <ProjectReference Include="..\..\Libs\CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
-    <ProjectReference Include="..\..\OwlCore\OwlCore.csproj" />
-    <ProjectReference Include="..\..\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj" />
-    <ProjectReference Include="..\..\UI\Strix-Music.DefaultShell\Strix-Music.Shell.Default.csproj" />
-    <ProjectReference Include="..\..\UI\Styles\Strix-Music.StrixShell\Strix-Music.Shell.Strix.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj" />
+    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
+    <ProjectReference Include="..\..\UI\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
+    <ProjectReference Include="..\..\UI\StrixMusic.Shell.Strix\StrixMusic.Shell.Strix.csproj" />
   </ItemGroup>
-  <Import Project="..\..\UI\Strix-Music.Shared\Strix_Music.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\UI\StrixMusic.Shared\StrixMusic.Shared.projitems" Label="Shared" />
 </Project>

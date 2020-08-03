@@ -64,6 +64,6 @@
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="6.1.0-build.186.g928c99f74d" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Strix-Music.DefaultShell\Strix-Music.Shell.Default.csproj" />
+    <ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
   </ItemGroup>
 </Project>
