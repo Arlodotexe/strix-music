@@ -21,12 +21,14 @@ namespace StrixMusix.ViewModels
         /// <param name="service"></param>
         public MainViewModel(ISettingsService settings)
         {
-            var x = Ioc.Default.GetServices<ICore>();
-        
-
+            IEnumerable<ICore> loadedCores = Ioc.Default.GetServices<ICore>();
+            foreach (ICore core in loadedCores)
+            {
+                core.GetLibrary();
+            }
         }
-/*
-        /// <summary>
+
+/*      /// <summary>
         /// A consolidated list of all users in the app
         /// </summary>
         public ObservableCollection<IUser> Users { get; }

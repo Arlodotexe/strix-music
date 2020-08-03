@@ -10,7 +10,7 @@ namespace StrixMusic.Core.Dummy.Implementations
     {
         /// <inheritdoc/>
         [JsonProperty("id")]
-        public string Id { get; }
+        public string Id { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         public List<IImage> Images => throw new NotImplementedException();
@@ -23,35 +23,35 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         [JsonProperty("title")]
-        public string Title { get; }
+        public string Title { get; set; } = string.Empty;
 
         /// <inheritdoc/>
-        public IArtist Artist => DummyArtist;
+        public IArtist Artist => DummyArtist!;
 
         /// <summary>
         /// Full <see cref="DummyArtist"/> to be used within the DummyCore.
         /// </summary>
-        public DummyArtist DummyArtist { get; }
+        public DummyArtist? DummyArtist { get; set; }
 
         /// <summary>
         /// The Id of the <see cref="DummyArtist"/>.
         /// </summary>
         [JsonProperty("artist_id")]
-        public string ArtistId { get; }
+        public string ArtistId { get; set; } = string.Empty;
 
         /// <inheritdoc/>
-        public IAlbum Album => DummyAlbum;
+        public IAlbum Album => DummyAlbum!;
+
+        /// <summary>
+        /// Full <see cref="DummyAlbum"/> to be used within the DummyCore.
+        /// </summary>
+        public DummyAlbum? DummyAlbum { get; set; }
 
         /// <summary>
         /// The Id of the <see cref="DummyAlbum"/>.
         /// </summary>
         [JsonProperty("album_id")]
-        public string AlbumId { get; set; }
-
-        /// <summary>
-        /// Full <see cref="DummyAlbum"/> to be used within the DummyCore.
-        /// </summary>
-        public DummyAlbum DummyAlbum { get; }
+        public string AlbumId { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         public DateTime? DatePublished => throw new NotImplementedException();
@@ -81,9 +81,19 @@ namespace StrixMusic.Core.Dummy.Implementations
         public string Description => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IDevice Device { get; private set; }
+        public IDevice Device => DummyDevice!;
+
+        /// <summary>
+        /// The <see cref="IDevice"/> where the <see cref="DummyTrack"/> should place.
+        /// </summary>
+        public IDevice? DummyDevice { get; set; }
 
         /// <inheritdoc/>
-        public ICore SourceCore { get; }
+        public ICore SourceCore => DummyCore!;
+
+        /// <summary>
+        /// The <see cref="DummyCore"/> where the <see cref="DummyTrack"/> is from.
+        /// </summary>
+        public DummyCore? DummyCore { get; set; }
     }
 }

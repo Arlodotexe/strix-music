@@ -11,11 +11,11 @@ namespace StrixMusic.Core.Dummy.Implementations
     {
         /// <inheritdoc/>
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -31,23 +31,23 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// List of the Ids of <see cref="DummyTrack"/>s on the <see cref="DummyAlbum"/>.
         /// </summary>
         [JsonProperty("track_ids")]
-        public IEnumerable<string> TrackIds { get; set; }
+        public IEnumerable<string>? TrackIds { get; set; }
 
         /// <inheritdoc/>
         [JsonIgnore]
-        public IArtist Artist => DummyArtist;
+        public IArtist Artist => DummyArtist!;
 
         /// <summary>
         /// The full <see cref="DummyArtist"/> of the album.
         /// </summary>
         [JsonIgnore]
-        public DummyArtist DummyArtist { get; set; }
+        public DummyArtist? DummyArtist { get; set; }
 
         /// <summary>
         /// The Id of the album's artist.
         /// </summary>
         [JsonProperty("artist_id")]
-        public string ArtistId { get; set; }
+        public string ArtistId { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         public IList<IImage> Images => throw new NotImplementedException();

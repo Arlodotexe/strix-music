@@ -23,7 +23,6 @@ namespace StrixMusic.Shared
                 services.AddSingleton<IStorageService, StorageService>();
 
                 services.AddSingleton<ICore, DummyCore>();
-                services.AddSingleton<ICore, DummyCore>();
 
                 services.AddSingleton<MainViewModel>();
             });

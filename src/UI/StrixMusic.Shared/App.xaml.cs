@@ -1,11 +1,11 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
+using StrixMusic.Shared;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using StrixMusic.Services;
 
 namespace Strix_Music
 {
@@ -73,6 +73,9 @@ namespace Strix_Music
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+
+            // TODO: Debate location.
+            new IocLocator();
         }
 
         /// <summary>

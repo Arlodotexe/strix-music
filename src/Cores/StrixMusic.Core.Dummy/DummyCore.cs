@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using StrixMusic.Core.Dummy.Deserialization;
 using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.Core.Dummy
@@ -14,6 +15,7 @@ namespace StrixMusic.Core.Dummy
         /// <inheritdoc/>
         public IUser User => throw new NotImplementedException();
 
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         /// <inheritdoc/>
         public event EventHandler<IDevice> DeviceAdded;
 
@@ -21,51 +23,53 @@ namespace StrixMusic.Core.Dummy
         public event EventHandler<IDevice> DeviceRemoved;
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableCollectionGroup> LibraryChanged;
+        public event EventHandler<IPlayableCollectionGroup>? LibraryChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableCollectionGroup> RecentlyPlayedChanged;
+        public event EventHandler<IPlayableCollectionGroup>? RecentlyPlayedChanged;
 
         /// <inheritdoc/>
         public event EventHandler<IPlayableCollectionGroup> DiscoverableAdded;
 
         /// <inheritdoc/>
         public event EventHandler<IPlayableCollectionGroup> DiscoverableRemoved;
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         /// <inheritdoc/>
         public Task<IList<IDevice>> GetDevices()
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<IList<IPlayableCollectionGroup>> GetDiscoverables()
+        public Task<IList<IPlayableCollectionGroup>?> GetDiscoverables()
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task<IPlayableCollectionGroup> GetLibrary()
         {
-            return null;
+            var library = Deserializer.DeserializeLibrary();
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task<IPlayableCollectionGroup> GetRecentlyPlayed()
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task<IEnumerable<string>> GetSearchAutoComplete(string query)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task<ISearchResults> GetSearchResults(string query)
         {
-            return null;
+            throw new NotImplementedException();
         }
     }
 }

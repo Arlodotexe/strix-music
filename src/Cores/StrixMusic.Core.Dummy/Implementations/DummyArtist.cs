@@ -10,24 +10,26 @@ namespace StrixMusic.Core.Dummy.Implementations
     public class DummyArtist : IArtist
     {
         /// <inheritdoc/>
-        public string Id { get; }
+        [JsonProperty("id")]
+        public string Id { get; set; } = string.Empty;
 
         /// <inheritdoc/>
-        public string Name { get; }
+        [JsonProperty("name")]
+        public string Name { get; set; } = string.Empty;
 
         /// <inheritdoc/>
-        public IList<IAlbum> Albums { get; }
+        public IList<IAlbum> Albums => (IList<IAlbum>)DummyAlbums!;
 
         /// <summary>
         /// List of full <see cref="DummyAlbum"/>s to be used within the DummyCore.
         /// </summary>
-        public List<DummyAlbum> DummyAlbums { get; set; }
+        public List<DummyAlbum> DummyAlbums { get; set; } = new List<DummyAlbum>();
 
         /// <summary>
         /// List of the Ids of <see cref="DummyAlbum"/>s to the <see cref="DummyArtist"/>
         /// </summary>
         [JsonProperty("album_ids")]
-        public List<string> AlbumIds { get; set; }
+        public List<string>? AlbumIds { get; set; }
 
         /// <inheritdoc/>
         public IList<IImage> Images => throw new NotImplementedException();
@@ -51,7 +53,12 @@ namespace StrixMusic.Core.Dummy.Implementations
         public IList<IPlayableCollectionBase> Items => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public ICore SourceCore { get; }
+        public ICore SourceCore => DummyCore!;
+
+        /// <summary>
+        /// The <see cref="DummyCore"/> where the <see cref="DummyArtist"/> is from.
+        /// </summary>
+        public DummyCore? DummyCore { get; set; }
 
         /// <inheritdoc/>
         public void Play()

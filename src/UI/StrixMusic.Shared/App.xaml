@@ -13,7 +13,6 @@
 
             <Color x:Key="ShadowColor">#FF000000</Color>
             <x:Double x:Key="ShadowOpacity">0.1</x:Double>
-            <shared:IocLocator x:Key="IocLocator" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
