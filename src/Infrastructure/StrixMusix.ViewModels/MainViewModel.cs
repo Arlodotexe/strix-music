@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -18,35 +16,40 @@ namespace StrixMusix.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
-        /// <param name="service"></param>
+        /// <param name="settings"></param>
         public MainViewModel(ISettingsService settings)
         {
             IEnumerable<ICore> loadedCores = Ioc.Default.GetServices<ICore>();
+            InitializeCores(loadedCores);
+        }
+
+        private async void InitializeCores(IEnumerable<ICore> loadedCores)
+        {
             foreach (ICore core in loadedCores)
             {
-                core.GetLibrary();
+                Library = await core.GetLibrary();
             }
         }
 
-/*      /// <summary>
+        /// <summary>
         /// A consolidated list of all users in the app
         /// </summary>
-        public ObservableCollection<IUser> Users { get; }
+        public ObservableCollection<IUser>? Users { get; }
 
         /// <summary>
         /// All available devices.
         /// </summary>
-        public ObservableCollection<IDevice> Devices { get; }
+        public ObservableCollection<IDevice>? Devices { get; }
 
         /// <summary>
         /// The consolidated music library across all cores.
         /// </summary>
-        public IPlayableCollectionGroup Library { get; set; }
+        public IPlayableCollectionGroup? Library { get; set; }
 
         /// <summary>
         /// The consolidated recently played items across all cores.
         /// </summary>
-        public IPlayableCollectionGroup RecentlyPlayed { get; set; }
+        public IPlayableCollectionGroup? RecentlyPlayed { get; set; }
 
         /// <summary>
         /// Used to browse and discovered new music.
@@ -61,11 +64,11 @@ namespace StrixMusix.ViewModels
         /// <summary>
         /// Current search query.
         /// </summary>
-        public string SearchQuery { get; set; }
+        public string SearchQuery { get; set; } = string.Empty;
 
         /// <summary>
         /// Autocomplete for the current search query.
         /// </summary>
-        public IEnumerable<string> SearchSuggestions { get; set; }*/
+        public IEnumerable<string>? SearchSuggestions { get; set; }
     }
 }

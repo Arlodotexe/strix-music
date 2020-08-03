@@ -2,12 +2,12 @@
 using Newtonsoft.Json;
 using StrixMusic.Core.Dummy.Implementations;
 
-namespace StrixMusic.Core.Dummy
+namespace StrixMusic.Core.Dummy.Deserialization
 {
     /// <summary>
-    /// The root type for the Library stored in JSON.
+    /// A <see cref="class"/> 
     /// </summary>
-    public class Library
+    public class SerializedLibrary
     {
         /// <summary>
         /// The lists of tracks in the dummy core's library.

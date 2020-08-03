@@ -46,10 +46,11 @@ namespace StrixMusic.Core.Dummy
         }
 
         /// <inheritdoc/>
-        public Task<IPlayableCollectionGroup> GetLibrary()
+        public async Task<IPlayableCollectionGroup> GetLibrary()
         {
-            var library = Deserializer.DeserializeLibrary();
-            throw new NotImplementedException();
+            SerializedLibrary library = Deserializer.DeserializeLibrary();
+            var lib = new Library(library.Tracks!, library.Albums!, library.Artists!, this);
+            return lib;
         }
 
         /// <inheritdoc/>

@@ -12,17 +12,17 @@ namespace StrixMusic.Core.Dummy.Deserialization
     public static class Deserializer
     {
         /// <summary>
-        /// Deserializes and sets up the DummyCore <see cref="Library"/>.
+        /// Deserializes and sets up the DummyCore <see cref="SerializedLibrary"/>.
         /// </summary>
-        /// <returns>The <see cref="Library"/> of the DummyCore.</returns>
-        public static Library DeserializeLibrary()
+        /// <returns>The <see cref="SerializedLibrary"/> of the DummyCore.</returns>
+        public static SerializedLibrary DeserializeLibrary()
         {
             string resource = GetManifestResourceString(Assembly.GetExecutingAssembly(), "StrixMusic.Core.Dummy.Library.json");
-            Library lib = JsonConvert.DeserializeObject<Library>(resource);
+            SerializedLibrary lib = JsonConvert.DeserializeObject<SerializedLibrary>(resource);
             return GraphLibrary(lib);
         }
 
-        private static Library GraphLibrary(Library library)
+        private static SerializedLibrary GraphLibrary(SerializedLibrary library)
         {
             Dictionary<string, DummyArtist> artists = new Dictionary<string, DummyArtist>();
             Dictionary<string, DummyAlbum> albums = new Dictionary<string, DummyAlbum>();
