@@ -18,7 +18,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public string Name { get; set; } = string.Empty;
 
         /// <inheritdoc/>
-        public IList<IAlbum> Albums => (IList<IAlbum>)DummyAlbums!;
+        public IReadOnlyList<IAlbum> Albums => DummyAlbums!;
 
         /// <summary>
         /// List of full <see cref="DummyAlbum"/>s to be used within the DummyCore.
@@ -32,7 +32,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public List<string>? AlbumIds { get; set; }
 
         /// <inheritdoc/>
-        public IList<IImage> Images => throw new NotImplementedException();
+        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();
@@ -50,7 +50,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public ITrack PlayingTrack => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IList<IPlayableCollectionBase> Items => throw new NotImplementedException();
+        public IReadOnlyList<IPlayableCollectionBase> Items => Albums;
 
         /// <inheritdoc/>
         public ICore SourceCore => DummyCore!;

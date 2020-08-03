@@ -19,11 +19,11 @@ namespace StrixMusic.Core.Dummy.Models
         public AlbumCollection(List<DummyAlbum> albums, DummyCore core)
         {
             SourceCore = core;
-            Items = (IList<IPlayableCollectionBase>)albums;
+            Items = albums;
         }
 
         /// <inheritdoc/>
-        public IList<IPlayableCollectionBase> Items { get; }
+        public IReadOnlyList<IPlayableCollectionBase> Items { get; }
 
         /// <inheritdoc/>
         public string Id => string.Empty;
@@ -32,7 +32,7 @@ namespace StrixMusic.Core.Dummy.Models
         public string Name => "Albums";
 
         /// <inheritdoc/>
-        public IList<IImage> Images => throw new NotImplementedException();
+        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();

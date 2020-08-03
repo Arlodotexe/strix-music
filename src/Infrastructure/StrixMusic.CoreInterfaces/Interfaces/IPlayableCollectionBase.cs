@@ -31,7 +31,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Cover images for the collection.
         /// </summary>
-        IList<IImage> Images { get; }
+        IReadOnlyList<IImage> Images { get; }
 
         /// <summary>
         /// An external link related to the collection.

@@ -19,7 +19,7 @@ namespace StrixMusic.Core.Dummy.Models
         public TrackCollection(List<DummyTrack> tracks, DummyCore core)
         {
             SourceCore = core;
-            Tracks = (IList<ITrack>)tracks;
+            Tracks = tracks;
         }
 
         /// <inheritdoc/>
@@ -29,7 +29,7 @@ namespace StrixMusic.Core.Dummy.Models
         public string Name => "Tracks";
 
         /// <inheritdoc/>
-        public IList<IImage> Images => throw new NotImplementedException();
+        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();
@@ -44,7 +44,7 @@ namespace StrixMusic.Core.Dummy.Models
         public PlaybackState State => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IList<ITrack> Tracks { get; }
+        public IReadOnlyList<ITrack> Tracks { get; }
 
         /// <inheritdoc/>
         public ITrack? PlayingTrack => null;

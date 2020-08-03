@@ -10,6 +10,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// The Discography for the Artist.
         /// </summary>
-        IList<IAlbum> Albums { get; }
+        IReadOnlyList<IAlbum> Albums { get; }
     }
 }

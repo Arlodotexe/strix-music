@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using StrixMusic.Core.Dummy;
 using StrixMusic.Core.Dummy.Implementations;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -21,11 +19,11 @@ namespace StrixMusic.Core.Dummy.Models
         public ArtistCollection(List<DummyArtist> artists, DummyCore core)
         {
             SourceCore = core;
-            Items = (IList<IPlayableCollectionBase>)artists;
+            Items = artists;
         }
 
         /// <inheritdoc/>
-        public IList<IPlayableCollectionBase> Items { get; }
+        public IReadOnlyList<IPlayableCollectionBase> Items { get; }
 
         /// <inheritdoc/>
         public string Id => string.Empty;
@@ -34,7 +32,7 @@ namespace StrixMusic.Core.Dummy.Models
         public string Name => "Artists";
 
         /// <inheritdoc/>
-        public IList<IImage> Images => throw new NotImplementedException();
+        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();

@@ -19,7 +19,7 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         [JsonIgnore]
-        public IList<ITrack> Tracks => (IList<ITrack>)DummyTracks;
+        public IReadOnlyList<ITrack> Tracks => DummyTracks;
 
         /// <summary>
         /// List of full <see cref="DummyTrack"/>s to be used within the DummyCore.
@@ -50,7 +50,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public string ArtistId { get; set; } = string.Empty;
 
         /// <inheritdoc/>
-        public IList<IImage> Images => throw new NotImplementedException();
+        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();

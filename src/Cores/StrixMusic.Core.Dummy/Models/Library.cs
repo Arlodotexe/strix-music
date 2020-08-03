@@ -21,13 +21,15 @@ namespace StrixMusic.Core.Dummy
         public Library(List<DummyTrack> tracks, List<DummyAlbum> albums, List<DummyArtist> artists, DummyCore core)
         {
             DummyCore = core;
-            Items.Add(new TrackCollection(tracks, DummyCore!));
-            Items.Add(new AlbumCollection(albums, DummyCore!));
-            Items.Add(new ArtistCollection(artists, DummyCore!));
+            List<IPlayableCollectionBase> items = new List<IPlayableCollectionBase>();
+            items.Add(new TrackCollection(tracks, DummyCore!));
+            items.Add(new AlbumCollection(albums, DummyCore!));
+            items.Add(new ArtistCollection(artists, DummyCore!));
+            Items = items;
         }
 
         /// <inheritdoc/>
-        public IList<IPlayableCollectionBase> Items { get; } = new List<IPlayableCollectionBase>();
+        public IReadOnlyList<IPlayableCollectionBase> Items { get; }
 
         /// <inheritdoc/>
         public string Id => string.Empty;
@@ -36,7 +38,7 @@ namespace StrixMusic.Core.Dummy
         public string Name => "Library";
 
         /// <inheritdoc/>
-        public IList<IImage> Images => throw new NotImplementedException();
+        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();

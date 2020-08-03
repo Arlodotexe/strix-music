@@ -12,6 +12,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// The <see cref="IPlayableCollectionBase"/>s in this Group
         /// </summary>
-        IList<IPlayableCollectionBase> Items { get; }
+        IReadOnlyList<IPlayableCollectionBase> Items { get; }
     }
 }

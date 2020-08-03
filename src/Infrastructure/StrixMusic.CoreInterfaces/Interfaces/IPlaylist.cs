@@ -12,6 +12,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// List of <see cref="ITrack"/>s that this collection contains.
         /// </summary>
-        IList<ITrack> Tracks { get; }
+        IReadOnlyList<ITrack> Tracks { get; }
     }
 }
