@@ -1,5 +1,4 @@
 ﻿using StrixMusic.CoreInterfaces.Enums;
-using StrixMusic.Services.Settings.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {

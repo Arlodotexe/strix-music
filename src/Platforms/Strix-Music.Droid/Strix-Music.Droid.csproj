@@ -102,6 +102,10 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Cores\DummyCore\StrixMusic.Core.Dummy.csproj">
+      <Project>{571159f8-6ec0-42cb-ab3a-1361f81210b7}</Project>
+      <Name>StrixMusic.Core.Dummy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj">
       <Project>{C5CE5911-1C37-4650-A1E9-4F1062534394}</Project>
       <Name>StrixMusic.Services</Name>

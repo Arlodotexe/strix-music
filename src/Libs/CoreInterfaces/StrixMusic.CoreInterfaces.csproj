@@ -25,4 +25,8 @@
   <ItemGroup>
     <Folder Include="Events\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\OwlCore\OwlCore.csproj" />
+  </ItemGroup>
 </Project>

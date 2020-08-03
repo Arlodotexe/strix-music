@@ -159,9 +159,17 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Cores\DummyCore\StrixMusic.Core.Dummy.csproj">
+      <Project>{571159f8-6ec0-42cb-ab3a-1361f81210b7}</Project>
+      <Name>StrixMusic.Core.Dummy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj">
       <Project>{c5ce5911-1c37-4650-a1e9-4f1062534394}</Project>
       <Name>StrixMusic.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libs\CoreInterfaces\StrixMusic.CoreInterfaces.csproj">
+      <Project>{A0D7A122-5DFD-4926-8BBF-58FA8039C517}</Project>
+      <Name>StrixMusic.CoreInterfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\OwlCore\OwlCore.csproj">
       <Project>{6c80141d-7328-4ee1-8077-6f5ef7cdb2ac}</Project>
