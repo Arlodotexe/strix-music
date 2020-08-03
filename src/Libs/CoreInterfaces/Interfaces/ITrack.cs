@@ -78,10 +78,10 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// If this track contains explicit language.
         /// </summary>
-        bool Explicit { get; }
+        bool IsExplicit { get; }
 
         /// <summary>
-        /// How long the track is.
+        /// How long the track is in milliseconds.
         /// </summary>
         long Duration { get; }
 
@@ -93,11 +93,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// The device that the track should play on.
         /// </summary>
-        IDevice Device { get; set; }
+        IDevice Device { get; }
 
         /// <summary>
         /// The source core which created the parent.
         /// </summary>
-        public Core SourceCore { get; set; }
+        public ICore SourceCore { get; }
     }
 }

@@ -18,7 +18,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// The source core which created the parent.
         /// </summary>
-        public ICore SourceCore { get; set; }
+        public ICore SourceCore { get; }
 
         /// <summary>
         /// The name of the Playable Collection.
@@ -42,11 +42,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Provides comments about the collection.
         /// </summary>
         string Description { get; }
-
-        /// <summary>
-        /// Name of the collection
-        /// </summary>
-        string Title { get; }
 
         /// <summary>
         /// Owner of the collection.

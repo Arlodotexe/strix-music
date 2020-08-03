@@ -42,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Services", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.ViewModels", "src\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj", "{6E6B1D19-4B25-4F73-9FE5-D3BCB8644B2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyCore", "src\Cores\DummyCore\DummyCore.csproj", "{F55F0C1C-15EA-4AC8-8C5A-960C08D4AD41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Core.Dummy", "src\Cores\DummyCore\StrixMusic.Core.Dummy.csproj", "{F55F0C1C-15EA-4AC8-8C5A-960C08D4AD41}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
