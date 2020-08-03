@@ -90,13 +90,8 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         string? Description { get; }
 
         /// <summary>
-        /// The device that the track should play on.
+        /// The core which created the parent.
         /// </summary>
-        IDevice Device { get; }
-
-        /// <summary>
-        /// The source core which created the parent.
-        /// </summary>
-        public ICore SourceCore { get; }
+        public ICore Core { get; }
     }
 }

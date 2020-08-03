@@ -8,11 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Library.json" />
-    <None Remove="NewFile1.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Library.json" />
   </ItemGroup>
 

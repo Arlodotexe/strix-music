@@ -15,12 +15,11 @@ namespace StrixMusic.Core.Dummy
         /// <inheritdoc/>
         public IUser User => throw new NotImplementedException();
 
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         /// <inheritdoc/>
-        public event EventHandler<IDevice> DeviceAdded;
+        public event EventHandler<IDevice>? DeviceAdded;
 
         /// <inheritdoc/>
-        public event EventHandler<IDevice> DeviceRemoved;
+        public event EventHandler<IDevice>? DeviceRemoved;
 
         /// <inheritdoc/>
         public event EventHandler<IPlayableCollectionGroup>? LibraryChanged;
@@ -29,11 +28,10 @@ namespace StrixMusic.Core.Dummy
         public event EventHandler<IPlayableCollectionGroup>? RecentlyPlayedChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableCollectionGroup> DiscoverableAdded;
+        public event EventHandler<IPlayableCollectionGroup>? DiscoverableAdded;
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableCollectionGroup> DiscoverableRemoved;
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+        public event EventHandler<IPlayableCollectionGroup>? DiscoverableRemoved;
 
         /// <inheritdoc/>
         public Task<IList<IDevice>> GetDevices()
