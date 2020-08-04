@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.ArchTools;
 using Strix_Music.Services;
 using Strix_Music.Shell.Default.Controls;
@@ -8,6 +10,7 @@ using StrixMusic.Services.Settings;
 using StrixMusic.Services.Settings.Enums;
 using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
+using StrixMusix.ViewModels;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -135,8 +138,15 @@ namespace Strix_Music
 
                 App.Current.Resources.MergedDictionaries.Add(resourceDictionary);
 
-                ShellDisplay.Content = new ShellControl();
+                ShellDisplay.Content = CreateShellControl();
             });
+        }
+
+        private ShellControl CreateShellControl()
+        {
+            ShellControl shell = new ShellControl();
+            shell.DataContext = Ioc.Default.GetService<MainViewModel>();
+            return shell;
         }
     }
 }

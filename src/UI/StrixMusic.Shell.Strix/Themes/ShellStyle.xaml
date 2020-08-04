@@ -74,7 +74,7 @@
                                 </local:Drawer.TopBarContent>
                                 <local:Drawer.MainContent>
                                     <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}">
-                                        <default:AlbumViewControl/>
+                                        <default:HomeControl/>
                                     </Grid>
                                 </local:Drawer.MainContent>
                                 <local:Drawer.BottomBarSecondaryContent>
