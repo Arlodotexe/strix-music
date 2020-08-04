@@ -56,6 +56,9 @@
     <UpToDateCheckInput Remove="Themes\TrackStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Themes\NowPlayingBarControl.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Generator>XamlIntelliSenseFileGenerator</Generator>

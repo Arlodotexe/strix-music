@@ -1,12 +1,18 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using StrixMusic.ViewModels.Bindables;
+using Windows.UI.Xaml.Controls;
 
 namespace Strix_Music.Shell.Default.Controls
 {
     public sealed partial class HomeControl : Control
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HomeControl"/> class.
+        /// </summary>
         public HomeControl()
         {
             this.DefaultStyleKey = typeof(HomeControl);
         }
+
+        private BindableLibrary? ViewModel => DataContext as BindableLibrary;
     }
 }
