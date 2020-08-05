@@ -1,4 +1,5 @@
-﻿using OwlCore.ArchTools;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace StrixMusic.Services
 {
@@ -24,6 +25,6 @@ namespace StrixMusic.Services
         /// <summary>
         /// Gets the <see cref="MainViewModel"/>.
         /// </summary>
-        public object Main { get; } = ServiceLocator.Instance.Resolve<object>();
+        public object Main { get; } = Ioc.Default.GetService<object>();
     }
 }

@@ -529,3 +529,4 @@
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
     </Style>
 </ResourceDictionary>
+    

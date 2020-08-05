@@ -177,10 +177,6 @@
       <Project>{40522958-e5ad-4494-8c45-2baf83399499}</Project>
       <Name>StrixMusic.ViewModels</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
-      <Project>{1cbd34e9-8956-483d-b0af-2b762cd54edb}</Project>
-      <Name>OwlCore</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj">
       <Project>{1b218c58-e2b0-441e-a406-ee8ae87a009e}</Project>
       <Name>StrixMusic.Shell.Default</Name>

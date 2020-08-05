@@ -5,8 +5,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Newtonsoft.Json;
-using OwlCore.ArchTools;
 using StrixMusic.Services.StorageService;
 
 namespace StrixMusic.Services.Settings
@@ -22,8 +23,6 @@ namespace StrixMusic.Services.Settings
         public SettingsService()
         {
         }
-
-        private LazyService<IStorageService> _settingsStorageService;
 
         /// <inheritdoc/>
         public void SetValue<T>(string key, object? value, bool overwrite = true)
@@ -84,14 +83,14 @@ namespace StrixMusic.Services.Settings
             Task.Run(async () =>
             {
                 // Store the new value
-                if (!await _settingsStorageService.Value.FileExistsAsync(key))
+                if (!await Ioc.Default.GetService<IStorageService>().FileExistsAsync(key))
                 {
-                    await _settingsStorageService.Value.SetValueAsync(key, serialized, nameof(identifier));
+                    await Ioc.Default.GetService<IStorageService>().SetValueAsync(key, serialized, nameof(identifier));
                     SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
                 }
                 else if (overwrite)
                 {
-                    await _settingsStorageService.Value.SetValueAsync(key, serialized, nameof(identifier));
+                    await Ioc.Default.GetService<IStorageService>().SetValueAsync(key, serialized, nameof(identifier));
                     SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
                 }
             });
@@ -100,7 +99,7 @@ namespace StrixMusic.Services.Settings
         /// <inheritdoc/>
         public async Task<T> GetValue<T>(string key, Type identifier, bool fallback = false)
         {
-            string result = await _settingsStorageService.Value.GetValueAsync(key);
+            string result = await Ioc.Default.GetService<IStorageService>().GetValueAsync(key);
 
             T obj;
             try
