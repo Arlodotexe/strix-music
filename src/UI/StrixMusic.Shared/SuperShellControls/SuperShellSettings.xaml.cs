@@ -2,7 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using OwlCore.ArchTools;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.Settings.Enums;
 using Windows.UI.Xaml;
@@ -12,8 +13,6 @@ namespace Strix_Music.SuperShellControls
 {
     public sealed partial class SuperShellSettings : UserControl
     {
-        private LazyService<ISettingsService> _settingsService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperShellSettings"/> class.
         /// </summary>
@@ -37,7 +36,7 @@ namespace Strix_Music.SuperShellControls
                 Skins.Add(name);
             }
 
-            var preferredSkin = await _settingsService.Value.GetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell));
+            var preferredSkin = await Ioc.Default.GetService<ISettingsService>().GetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell));
             CurrentSkin = Enum.GetName(typeof(PreferredShell), preferredSkin);
             Bindings.Update();
         }
@@ -50,7 +49,7 @@ namespace Strix_Music.SuperShellControls
 
             var newPreferredSkin = Enum.Parse(typeof(PreferredShell), selectedItem);
 
-            _settingsService.Value.SetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell), newPreferredSkin);
+            Ioc.Default.GetService<ISettingsService>().SetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell), newPreferredSkin);
         }
 
         /// <summary>

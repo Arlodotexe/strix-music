@@ -1,5 +1,6 @@
 ﻿using System;
-using OwlCore.ArchTools;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Strix_Music.SuperShellControls;
 using StrixMusic.Services.SuperShell;
 using Windows.UI.Xaml;
@@ -9,7 +10,7 @@ namespace Strix_Music
 {
     public sealed partial class SuperShell : UserControl
     {
-        private LazyService<ISuperShellService> _superShellService;
+        private ISuperShellService _superShellService = Ioc.Default.GetService<ISuperShellService>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperShell"/> class.
@@ -37,7 +38,7 @@ namespace Strix_Music
         {
             Unloaded += SuperShell_Unloaded;
 
-            _superShellService.Value.VisibilityChanged += Value_VisibilityChanged;
+            _superShellService.VisibilityChanged += Value_VisibilityChanged;
         }
 
         private void Value_VisibilityChanged(object sender, SuperShellDisplays e)
@@ -58,14 +59,14 @@ namespace Strix_Music
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            _superShellService.Value.Hide();
+            _superShellService.Hide();
         }
 
         private void DetachEvents()
         {
             Unloaded -= SuperShell_Unloaded;
 
-            _superShellService.Value.VisibilityChanged -= Value_VisibilityChanged;
+            _superShellService.VisibilityChanged -= Value_VisibilityChanged;
         }
     }
 }
