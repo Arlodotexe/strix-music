@@ -4,20 +4,31 @@
     xmlns:local="using:Strix_Music.Shell.Default.Controls"
     xmlns:bindables="using:StrixMusic.ViewModels.Bindables"
     xmlns:interfaces="using:StrixMusic.CoreInterfaces.Interfaces"
+    xmlns:selectors="using:Strix_Music.Shell.Default.TemplateSelectors"
     x:Class="Strix_Music.Shell.Default.Themes.HomeStyle">
+
+    <DataTemplate x:Key="TrackListTemplate">
+        <local:TrackListControl/>
+    </DataTemplate>
+    <DataTemplate x:Key="PlayableCollectionGroupTemplate">
+        <local:PlayableCollectionListControl/>
+    </DataTemplate>
+    <selectors:CollectionSelector x:Key="CollectionSelector"
+                                 TrackListTemplate="{StaticResource TrackListTemplate}"
+                                 PlayableCollectionGroupTemplate="{StaticResource PlayableCollectionGroupTemplate}"/>
 
     <DataTemplate x:Key="DefaultHomeTemplate" x:DataType="bindables:BindableLibrary">
         <UserControl>
             <Grid>
-                <Pivot ItemsSource="{x:Bind Library.Items, Mode=OneWay}">
+                <Pivot ItemsSource="{x:Bind Library.Items, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
                     <Pivot.Title>
                         <TextBlock Text="Home"/>
                     </Pivot.Title>
-                    <Pivot.ItemTemplate>
+                    <Pivot.HeaderTemplate>
                         <DataTemplate x:DataType="interfaces:IPlayableCollectionBase">
-                            
+                            <TextBlock Text="{x:Bind Name}"/>
                         </DataTemplate>
-                    </Pivot.ItemTemplate>
+                    </Pivot.HeaderTemplate>
                     <!--<PivotItem Header="Overview">
                     </PivotItem>
                     <PivotItem Header="Songs">
