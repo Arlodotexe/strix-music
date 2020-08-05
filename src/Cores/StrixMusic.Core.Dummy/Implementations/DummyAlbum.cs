@@ -50,6 +50,10 @@ namespace StrixMusic.Core.Dummy.Implementations
         public string ArtistId { get; set; } = string.Empty;
 
         /// <inheritdoc/>
+        [JsonProperty("image_url")]
+        public Uri? CoverImageUri { get; set; }
+
+        /// <inheritdoc/>
         public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>

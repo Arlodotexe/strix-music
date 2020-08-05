@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -16,5 +17,10 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// An <see cref="IArtist"/> object that this album was created by.
         /// </summary>
         IArtist Artist { get; }
+
+        /// <summary>
+        /// The <see cref="Uri"/> of the AlbumCover's image.
+        /// </summary>
+        Uri? CoverImageUri { get; }
     }
 }
