@@ -75,7 +75,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public bool IsExplicit { get; }
 
         /// <inheritdoc/>
-        public long Duration { get; }
+        public TimeSpan Duration { get; }
 
         /// <inheritdoc/>
         public string Description => throw new NotImplementedException();
