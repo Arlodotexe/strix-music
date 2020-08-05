@@ -63,6 +63,9 @@
     <Compile Update="Themes\HomeStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Themes\TrackListStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Themes\NowPlayingBarControl.xaml">
