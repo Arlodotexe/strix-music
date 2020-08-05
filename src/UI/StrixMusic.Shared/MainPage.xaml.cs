@@ -125,6 +125,7 @@ namespace Strix_Music
                     if (dict.Source.AbsoluteUri.Contains(shellNamespacePrefix))
                     {
                         App.Current.Resources.MergedDictionaries.Remove(dict);
+                        break;
                     }
                 }
 
