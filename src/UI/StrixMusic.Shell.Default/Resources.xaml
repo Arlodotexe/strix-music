@@ -4,13 +4,13 @@
     xmlns:local="using:Strix_Music.Shell.Default.Controls"
     xmlns:themes="using:Strix_Music.Shell.Default.Themes">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Themes/AlbumStyle.xaml"/>
+        <themes:AlbumStyle/>
         <ResourceDictionary Source="Themes/AlbumViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
         <themes:HomeStyle/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
-        <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
+        <themes:PlayableCollectionListStyle/>
         <themes:ShellStyle/>
         <themes:TrackListStyle/>
         <themes:TrackStyle/>
