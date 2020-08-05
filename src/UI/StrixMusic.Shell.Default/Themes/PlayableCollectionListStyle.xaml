@@ -1,50 +1,32 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Strix_Music.Shell.Default.Controls">
+    xmlns:local="using:Strix_Music.Shell.Default.Controls"
+    xmlns:interfaces="using:StrixMusic.CoreInterfaces.Interfaces"
+    xmlns:selectors="using:Strix_Music.Shell.Default.TemplateSelectors"
+    x:Class="Strix_Music.Shell.Default.Themes.PlayableCollectionListStyle">
 
+    <DataTemplate x:Key="AlbumTemplate">
+        <local:AlbumControl/>
+    </DataTemplate>
+    <DataTemplate x:Key="ArtistTemplate">
+        <local:ArtistControl/>
+    </DataTemplate>
+    <selectors:PlayableCollectionGroupSelector x:Key="PlayableCollectionGroupSelector"
+                                               AlbumTemplate="{StaticResource AlbumTemplate}"
+                                               ArtistTemplate="{StaticResource ArtistTemplate}"/>
+
+    <DataTemplate x:Key="DefaultPlayableCollectionListTemplate" x:DataType="interfaces:IPlayableCollectionGroup">
+        <GridView Padding="16" ItemContainerStyle="{StaticResource PlayableCollectionGridItemStyle}" ItemsSource="{x:Bind Items}"
+                  ItemTemplateSelector="{StaticResource PlayableCollectionGroupSelector}"/>
+    </DataTemplate>
+    
     <Style x:Key="DefaultPlayableCollectionListControlStyle" TargetType="local:PlayableCollectionListControl">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:PlayableCollectionListControl">
-                        <GridView Padding="16" ItemContainerStyle="{StaticResource PlayableCollectionGridItemStyle}">
-                            <GridView.Items>
-                                <GridViewItem>
-                                    <local:AlbumControl/>
-                                </GridViewItem>
-                                <GridViewItem>
-                                    <local:ArtistControl/>
-                                </GridViewItem>
-                                <GridViewItem>
-                                    <local:AlbumControl/>
-                                </GridViewItem>
-                                <GridViewItem>
-                                    <local:AlbumControl/>
-                                </GridViewItem>
-                                <GridViewItem>
-                                    <local:ArtistControl/>
-                                </GridViewItem>
-                                <GridViewItem>
-                                    <local:AlbumControl/>
-                                </GridViewItem>
-                                <GridViewItem>
-                                    <local:ArtistControl/>
-                                </GridViewItem>
-                                <GridViewItem>
-                                    <local:ArtistControl/>
-                                </GridViewItem>
-                                <GridViewItem>
-                                    <local:AlbumControl/>
-                                </GridViewItem>
-                                <GridViewItem>
-                                    <local:AlbumControl/>
-                                </GridViewItem>
-                                <GridViewItem>
-                                    <local:ArtistControl/>
-                                </GridViewItem>
-                            </GridView.Items>
-                        </GridView>
+                        <ContentControl ContentTemplate="{StaticResource DefaultPlayableCollectionListTemplate}"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

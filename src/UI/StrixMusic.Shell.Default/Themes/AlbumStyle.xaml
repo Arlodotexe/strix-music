@@ -1,24 +1,37 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Strix_Music.Shell.Default.Controls">
+    xmlns:local="using:Strix_Music.Shell.Default.Controls"
+    xmlns:interfaces="using:StrixMusic.CoreInterfaces.Interfaces"
+    xmlns:converters="using:Strix_Music.Converters"
+    x:Class="Strix_Music.Shell.Default.Themes.AlbumStyle">
 
+    <DataTemplate x:Key="DefaultAlbumTemplate" x:DataType="interfaces:IAlbum">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <!--<Rectangle Fill="#FF00FF" Width="128" Height="128"/>-->
+            <Rectangle Width="128" Height="128">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(CoverImageUri)}"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <StackPanel Grid.Row="1" Margin="0,8,0,0">
+                <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="{x:Bind Artist.Name}" Opacity=".5"/>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+    
     <Style x:Key="DefaultAlbumControlStyle" TargetType="local:AlbumControl">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:AlbumControl">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <Rectangle Fill="#FF00FF" Width="128" Height="128"/>
-                            <StackPanel Grid.Row="1" Margin="0,8,0,0">
-                                <TextBlock Text="Contra" FontWeight="SemiBold"/>
-                                <TextBlock Text="Vampire Weekend" Opacity=".5"/>
-                            </StackPanel>
-                        </Grid>
+                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumTemplate}"
+                                        HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

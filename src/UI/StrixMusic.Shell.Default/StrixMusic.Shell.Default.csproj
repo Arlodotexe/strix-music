@@ -63,6 +63,12 @@
     <Compile Update="Themes\HomeStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Themes\AlbumStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\PlayableCollectionListStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Themes\TrackStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
