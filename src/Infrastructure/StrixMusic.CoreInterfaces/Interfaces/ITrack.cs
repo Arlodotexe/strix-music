@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using StrixMusic.CoreInterfaces.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {

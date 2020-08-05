@@ -13,7 +13,7 @@
         <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
         <themes:ShellStyle/>
         <themes:TrackListStyle/>
-        <ResourceDictionary Source="Themes/TrackStyle.xaml"/>
+        <themes:TrackStyle/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="QuickActionButton" TargetType="Button">
