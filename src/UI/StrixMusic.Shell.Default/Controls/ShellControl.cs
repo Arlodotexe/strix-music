@@ -13,6 +13,9 @@ namespace Strix_Music.Shell.Default.Controls
             this.DefaultStyleKey = typeof(ShellControl);
         }
 
-        private MainViewModel? ViewModel => DataContext as MainViewModel;
+        /// <summary>
+        /// The <see cref="MainViewModel"/> for the app.
+        /// </summary>
+        public MainViewModel? ViewModel => DataContext as MainViewModel;
     }
 }

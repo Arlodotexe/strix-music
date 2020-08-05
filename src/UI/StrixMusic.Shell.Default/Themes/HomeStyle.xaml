@@ -1,59 +1,45 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Strix_Music.Shell.Default.Controls">
+    xmlns:local="using:Strix_Music.Shell.Default.Controls"
+    xmlns:bindables="using:StrixMusic.ViewModels.Bindables"
+    xmlns:interfaces="using:StrixMusic.CoreInterfaces.Interfaces"
+    x:Class="Strix_Music.Shell.Default.Themes.HomeStyle">
+
+    <DataTemplate x:Key="DefaultHomeTemplate" x:DataType="bindables:BindableLibrary">
+        <UserControl>
+            <Grid>
+                <Pivot ItemsSource="{x:Bind Library.Items, Mode=OneWay}">
+                    <Pivot.Title>
+                        <TextBlock Text="Home"/>
+                    </Pivot.Title>
+                    <Pivot.ItemTemplate>
+                        <DataTemplate x:DataType="interfaces:IPlayableCollectionBase">
+                            
+                        </DataTemplate>
+                    </Pivot.ItemTemplate>
+                    <!--<PivotItem Header="Overview">
+                    </PivotItem>
+                    <PivotItem Header="Songs">
+                        <local:TrackListControl/>
+                    </PivotItem>
+                    <PivotItem Header="Albums">
+                        <local:PlayableCollectionListControl/>
+                    </PivotItem>
+                    <PivotItem Header="Artists">
+                        <local:PlayableCollectionListControl/>
+                    </PivotItem>-->
+                </Pivot>
+            </Grid>
+        </UserControl>
+    </DataTemplate>
 
     <Style x:Key="DefaultHomeControlStyle" TargetType="local:HomeControl">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:HomeControl">
-                        <UserControl>
-                            <Grid>
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="Sizes">
-                                        <VisualState x:Name="Small">
-                                            <VisualState.StateTriggers>
-                                                <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
-                                            </VisualState.StateTriggers>
-                                            <VisualState.Setters>
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                        <VisualState x:Name="Mid">
-                                            <VisualState.StateTriggers>
-                                                <AdaptiveTrigger MinWindowWidth="600"/>
-                                            </VisualState.StateTriggers>
-                                            <VisualState.Setters>
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                        <VisualState x:Name="Large">
-                                            <VisualState.StateTriggers>
-                                                <AdaptiveTrigger MinWindowWidth="1200"/>
-                                            </VisualState.StateTriggers>
-                                            <VisualState.Setters>
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
-                                
-                                <Pivot>
-                                    <Pivot.Title>
-                                        <TextBlock Text="Home"/>
-                                    </Pivot.Title>
-                                    <PivotItem Header="Overview">
-                                    </PivotItem>
-                                    <PivotItem Header="Songs">
-                                        <local:TrackListControl/>
-                                    </PivotItem>
-                                    <PivotItem Header="Albums">
-                                        <local:PlayableCollectionListControl/>
-                                    </PivotItem>
-                                    <PivotItem Header="Artists">
-                                        <local:PlayableCollectionListControl/>
-                                    </PivotItem>
-                                </Pivot>
-                            </Grid>
-                        </UserControl>
+                        <ContentControl ContentTemplate="{StaticResource DefaultHomeTemplate}"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

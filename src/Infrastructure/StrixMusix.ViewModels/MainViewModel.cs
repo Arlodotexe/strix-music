@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services.Settings;
+using StrixMusic.ViewModels.Bindables;
 
 namespace StrixMusix.ViewModels
 {
@@ -13,6 +14,8 @@ namespace StrixMusix.ViewModels
     /// </summary>
     public class MainViewModel : ObservableRecipient
     {
+        private BindableLibrary? _pageContent;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
@@ -29,6 +32,17 @@ namespace StrixMusix.ViewModels
             {
                 Library = await core.GetLibrary();
             }
+
+            PageContent = new BindableLibrary(Library!);
+        }
+
+        /// <summary>
+        /// The DataContext to be bound to the Shell's ContentPresenter.
+        /// </summary>
+        public BindableLibrary? PageContent
+        {
+            get => _pageContent;
+            set => SetProperty(ref _pageContent, value);
         }
 
         /// <summary>

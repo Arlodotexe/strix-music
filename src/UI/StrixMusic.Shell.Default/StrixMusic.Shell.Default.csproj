@@ -56,7 +56,13 @@
     <UpToDateCheckInput Remove="Themes\TrackStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
     <ProjectReference Include="..\..\Infrastructure\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Themes\HomeStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Themes\NowPlayingBarControl.xaml">

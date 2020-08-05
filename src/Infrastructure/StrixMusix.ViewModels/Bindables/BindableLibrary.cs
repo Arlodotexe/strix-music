@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.ViewModels.Bindables
@@ -10,18 +8,24 @@ namespace StrixMusic.ViewModels.Bindables
     /// </summary>
     public class BindableLibrary : ObservableObject
     {
+        private IPlayableCollectionGroup _library;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BindableLibrary"/> class.
         /// </summary>
         /// <param name="library">The <see cref="IPlayableCollectionGroup"/> representing the library.</param>
         public BindableLibrary(IPlayableCollectionGroup library)
         {
-            Library = library;
+            _library = library;
         }
 
         /// <summary>
         /// The <see cref="IPlayableCollectionGroup"/> representing the library content.
         /// </summary>
-        public IPlayableCollectionGroup Library { get; set; }
+        public IPlayableCollectionGroup Library
+        {
+            get => _library;
+            set => SetProperty(ref _library, value);
+        }
     }
 }
