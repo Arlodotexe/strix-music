@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -8,9 +9,9 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     public interface ILyrics
     {
         /// <summary>
-        /// Timestamped lyrics. The Key is a timestamp in Milliseconds, and the value is the lyric at that position.
+        /// Timestamped lyrics. The Key is a point in the song, and the value is the lyric at that position.
         /// </summary>
-        Dictionary<int, string>? TimedLyrics { get; }
+        Dictionary<TimeSpan, string>? TimedLyrics { get; }
 
         /// <summary>
         /// A simple text wall containing all the lyrics for this song.
