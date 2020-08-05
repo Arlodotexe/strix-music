@@ -12,7 +12,7 @@
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
         <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
         <themes:ShellStyle/>
-        <ResourceDictionary Source="Themes/TrackListStyle.xaml"/>
+        <themes:TrackListStyle/>
         <ResourceDictionary Source="Themes/TrackStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
