@@ -79,9 +79,9 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         bool IsExplicit { get; }
 
         /// <summary>
-        /// How long the track is in milliseconds.
+        /// How long the track is in.
         /// </summary>
-        long Duration { get; }
+        TimeSpan Duration { get; }
 
         /// <summary>
         /// Provides comments about the track.

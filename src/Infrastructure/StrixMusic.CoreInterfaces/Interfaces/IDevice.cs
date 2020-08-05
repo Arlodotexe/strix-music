@@ -1,4 +1,5 @@
 ﻿using StrixMusic.CoreInterfaces.Enums;
+using System;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -33,9 +34,9 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         IPlayableCollectionBase PlaybackContext { get; set; }
 
         /// <summary>
-        /// If the song is currently playing this will represent the time in milliseconds that the song is currently playing.
+        /// The amount of time that has passed since a song has started.
         /// </summary>
-        long? Position { get; }
+        TimeSpan Position { get; }
 
         /// <inheritdoc cref="PlaybackState"/>
         PlaybackState State { get; }
