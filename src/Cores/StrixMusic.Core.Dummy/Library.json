@@ -125,6 +125,78 @@
       "title": "I Think Ur A Contra",
       "artist_id": "0",
       "album_id": "1"
+    },
+    {
+      "id": "21",
+      "title": "Obvious Bicycle",
+      "artist_id": "0",
+      "album_id": "2"
+    },
+    {
+      "id": "22",
+      "title": "Unbelievers",
+      "artist_id": "0",
+      "album_id": "2"
+    },
+    {
+      "id": "23",
+      "title": "Step",
+      "artist_id": "0",
+      "album_id": "2"
+    },
+    {
+      "id": "24",
+      "title": "Diane Young",
+      "artist_id": "0",
+      "album_id": "2"
+    },
+    {
+      "id": "25",
+      "title": "Don't Lie",
+      "artist_id": "0",
+      "album_id": "2"
+    },
+    {
+      "id": "26",
+      "title": "Hannah Hunt",
+      "artist_id": "0",
+      "album_id": "2"
+    },
+    {
+      "id": "27",
+      "title": "Everlasting Arms",
+      "artist_id": "0",
+      "album_id": "2"
+    },
+    {
+      "id": "28",
+      "title": "Finger Back",
+      "artist_id": "0",
+      "album_id": "2"
+    },
+    {
+      "id": "29",
+      "title": "Worship You",
+      "artist_id": "0",
+      "album_id": "2"
+    },
+    {
+      "id": "30",
+      "title": "Ya Hey",
+      "artist_id": "0",
+      "album_id": "2"
+    },
+    {
+      "id": "31",
+      "title": "Hudson",
+      "artist_id": "0",
+      "album_id": "2"
+    },
+    {
+      "id": "32",
+      "title": "Young Lion",
+      "artist_id": "0",
+      "album_id": "2"
     }
   ],
 
@@ -140,6 +212,12 @@
       "name": "Contra",
       "artist_id": "0",
       "track_ids": [ "11", "12", "13", "14", "15", "16", "17", "18", "19" ]
+    },
+    {
+      "id": "2",
+      "name": "Modern Vampires of the City",
+      "artist_id": "0",
+      "track_ids": [ "20", "21", "22", "23", "24", "25", "26", "27", "27", "28", "29", "30", "31", "32" ]
     }
   ],
 
