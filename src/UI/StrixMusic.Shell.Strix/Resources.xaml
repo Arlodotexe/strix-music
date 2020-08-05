@@ -2,18 +2,22 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:default="using:Strix_Music.Shell.Default.Controls"
-    xmlns:local="using:Strix_Music.Shell.Strix.Controls">
+    xmlns:local="using:Strix_Music.Shell.Strix.Controls"
+    xmlns:themes="using:Strix_Music.Shell.Strix.Themes"
+    xmlns:dthemes="using:Strix_Music.Shell.Default.Themes">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Themes/AlbumStyle.xaml"/>
         <ResourceDictionary Source="Themes/AlbumViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
-        <ResourceDictionary Source="Themes/HomeStyle.xaml"/>
+        <themes:HomeStyle/>
         <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
-        <ResourceDictionary Source="Themes/ShellStyle.xaml"/>
+        <themes:ShellStyle/>
         <!--<ResourceDictionary Source="Themes/TrackListStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Themes/TrackStyle.xaml"/>-->
+        <dthemes:TrackListStyle/>
+        <dthemes:TrackStyle/>
 
         <ResourceDictionary Source="Styles/Brushes.xaml"/>
         <ResourceDictionary Source="Styles/ButtonStyles.xaml"/>
