@@ -5,15 +5,15 @@ using Windows.Storage;
 
 namespace Strix_Music.Services
 {
-    /// <inheritdoc cref="IStorageService"/>
-    public class StorageService : IStorageService
+    /// <inheritdoc cref="ITextStorageService"/>
+    public class TextStorageService : ITextStorageService
     {
         private readonly StorageFolder _localFolder;
 
         /// <summary>
-        /// Initializes a new instance of this <see cref="StorageService"/>
+        /// Initializes a new instance of this <see cref="TextStorageService"/>
         /// </summary>
-        public StorageService()
+        public TextStorageService()
         {
             _localFolder = ApplicationData.Current.LocalFolder;
         }
