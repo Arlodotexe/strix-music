@@ -25,13 +25,13 @@
                             <VisualState.Storyboard>
                                 <Storyboard>
                                     <DoubleAnimation Storyboard.TargetName="AlbumCoverScale" Storyboard.TargetProperty="ScaleX"
-                                                                 Duration="0:0:0.3" From="1.15" To="1">
+                                                                 Duration="0:0:0.6" From="1.15" To="1">
                                         <DoubleAnimation.EasingFunction>
                                             <CircleEase/>
                                         </DoubleAnimation.EasingFunction>
                                     </DoubleAnimation>
                                     <DoubleAnimation Storyboard.TargetName="AlbumCoverScale" Storyboard.TargetProperty="ScaleY"
-                                                                 Duration="0:0:0.3" From="1.15" To="1">
+                                                                 Duration="0:0:0.6" From="1.15" To="1">
                                         <DoubleAnimation.EasingFunction>
                                             <CircleEase/>
                                         </DoubleAnimation.EasingFunction>
