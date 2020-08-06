@@ -47,6 +47,14 @@ namespace StrixMusic.Core.Dummy.Deserialization
                 track.DummyArtist = artists[track.ArtistId];
             }
 
+            foreach (var album in library.Albums)
+            {
+                foreach (var track in album.TrackIds!)
+                {
+                    album.DummyTracks.Add(tracks[track]);
+                }
+            }
+
             return library;
         }
 
