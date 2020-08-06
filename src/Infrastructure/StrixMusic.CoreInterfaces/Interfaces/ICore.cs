@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -10,6 +11,9 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// </summary>
     public interface ICore
     {
+        /// <inheritdoc cref="ICoreConfig" />
+        public ICoreConfig CoreConfig { get; set; }
+
         /// <summary>
         /// The name of the core.
         /// </summary>

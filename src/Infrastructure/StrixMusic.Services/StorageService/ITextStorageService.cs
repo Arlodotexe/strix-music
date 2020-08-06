@@ -5,7 +5,7 @@ namespace StrixMusic.Services.StorageService
     /// <summary>
     /// The <see langword="interface"/> to handle storing and retreiving data.
     /// </summary>
-    public interface IStorageService
+    public interface ITextStorageService
     {
         /// <summary>
         /// Returns a stored setting, deserialized into a type.

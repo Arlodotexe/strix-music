@@ -83,14 +83,14 @@ namespace StrixMusic.Services.Settings
             Task.Run(async () =>
             {
                 // Store the new value
-                if (!await Ioc.Default.GetService<IStorageService>().FileExistsAsync(key))
+                if (!await Ioc.Default.GetService<ITextStorageService>().FileExistsAsync(key))
                 {
-                    await Ioc.Default.GetService<IStorageService>().SetValueAsync(key, serialized, nameof(identifier));
+                    await Ioc.Default.GetService<ITextStorageService>().SetValueAsync(key, serialized, nameof(identifier));
                     SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
                 }
                 else if (overwrite)
                 {
-                    await Ioc.Default.GetService<IStorageService>().SetValueAsync(key, serialized, nameof(identifier));
+                    await Ioc.Default.GetService<ITextStorageService>().SetValueAsync(key, serialized, nameof(identifier));
                     SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
                 }
             });
@@ -99,7 +99,7 @@ namespace StrixMusic.Services.Settings
         /// <inheritdoc/>
         public async Task<T> GetValue<T>(string key, Type identifier, bool fallback = false)
         {
-            string result = await Ioc.Default.GetService<IStorageService>().GetValueAsync(key);
+            string result = await Ioc.Default.GetService<ITextStorageService>().GetValueAsync(key);
 
             T obj;
             try
