@@ -6,13 +6,14 @@
     xmlns:themes="using:Strix_Music.Shell.Strix.Themes"
     xmlns:dthemes="using:Strix_Music.Shell.Default.Themes">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Themes/AlbumStyle.xaml"/>
-        <ResourceDictionary Source="Themes/AlbumViewStyle.xaml"/>
+        <themes:AlbumStyle/>
+        <themes:AlbumViewStyle/>
         <ResourceDictionary Source="Themes/ArtistStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
         <themes:HomeStyle/>
         <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
+        <themes:PlayableCollectionListStyle/>
         <themes:ShellStyle/>
         <!--<ResourceDictionary Source="Themes/TrackListStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Themes/TrackStyle.xaml"/>-->

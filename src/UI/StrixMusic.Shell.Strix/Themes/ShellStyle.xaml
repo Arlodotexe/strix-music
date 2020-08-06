@@ -72,7 +72,8 @@
                 </local:Drawer.TopBarContent>
                 <local:Drawer.MainContent>
                     <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}">
-                        <default:HomeControl DataContext="{x:Bind PageContent}"/>
+                        <!--<default:HomeControl DataContext="{x:Bind PageContent}"/>-->
+                        <default:AlbumViewControl DataContext="{x:Bind PageContent}"/>
                     </Grid>
                 </local:Drawer.MainContent>
                 <local:Drawer.BottomBarSecondaryContent>
@@ -133,7 +134,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="default:ShellControl">
                         <ContentControl ContentTemplate="{StaticResource StrixShellTemplate}"
-                                        VerticalContentAlignment="Stretch"/>
+                                        VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
