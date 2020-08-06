@@ -28,7 +28,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="default:PlayableCollectionListControl">
-                        <ContentControl ContentTemplate="{StaticResource StrixPlayableCollectionListTemplate}"/>
+                        <ContentControl ContentTemplate="{StaticResource StrixPlayableCollectionListTemplate}"
+                                        VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

@@ -67,6 +67,9 @@
     <ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Themes\AlbumViewStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Themes\AlbumStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

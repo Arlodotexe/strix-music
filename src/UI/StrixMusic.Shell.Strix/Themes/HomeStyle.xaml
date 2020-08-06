@@ -54,7 +54,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="default:HomeControl">
-                        <ContentControl ContentTemplate="{StaticResource StrixHomeTemplate}"/>
+                        <ContentControl ContentTemplate="{StaticResource StrixHomeTemplate}"
+                                        VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

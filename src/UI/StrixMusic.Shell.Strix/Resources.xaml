@@ -7,7 +7,7 @@
     xmlns:dthemes="using:Strix_Music.Shell.Default.Themes">
     <ResourceDictionary.MergedDictionaries>
         <themes:AlbumStyle/>
-        <ResourceDictionary Source="Themes/AlbumViewStyle.xaml"/>
+        <themes:AlbumViewStyle/>
         <ResourceDictionary Source="Themes/ArtistStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
