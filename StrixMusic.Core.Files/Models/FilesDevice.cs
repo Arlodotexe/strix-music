@@ -2,7 +2,7 @@
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
-namespace StrixMusic.Core.Files
+namespace StrixMusic.Core.Files.Models
 {
     public class FilesDevice : IDevice
     {

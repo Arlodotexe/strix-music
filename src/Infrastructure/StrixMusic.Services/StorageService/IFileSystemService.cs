@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
+using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 
 namespace StrixMusic.Services.StorageService
 {
@@ -15,8 +13,15 @@ namespace StrixMusic.Services.StorageService
         /// <summary>
         /// Gets the file stream for a path.
         /// </summary>
-        /// <param name="path">The path to check</param>
+        /// <param name="id">A unique file identifier.</param>
         /// <returns>A <see cref="FileStream"/> for the file. Null if not found. Throws on error.</returns>
-        Task<Stream> GetFileStream(string path);
+        Task<Stream> GetFileStream(string id);
+
+        /// <summary>
+        /// Get the <see cref="IMusicFileProperties"/> for a given <paramref name="id"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>A <see cref="Task"/> representing the asyncronous operation, with a result of <see cref="IMusicFileProperties"/></returns>
+        Task<IMusicFileProperties> GetMusicFileProperties(string id);
     }
 }

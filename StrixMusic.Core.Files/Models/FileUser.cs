@@ -9,34 +9,38 @@ namespace StrixMusic.Core.Files.Models
     /// </summary>
     public class FileUser : IUser
     {
+        /// <summary>
+        /// Constructs a new <see cref="FileUser"/>.
+        /// </summary>
+        /// <param name="sourceCore"></param>
         public FileUser(ICore sourceCore)
         {
             SourceCore = sourceCore;
         }
 
         /// <inheritdoc/>
-        public IList<IDevice> Devices => throw new NotImplementedException();
+        public IReadOnlyList<IDevice> Devices => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public string Id => nameof(FileUser);
 
         /// <inheritdoc/>
-        public string DisplayName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string DisplayName => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string FullName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string FullName => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Email { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Email => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IList<IImage> Images => throw new NotImplementedException();
+        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public DateTime? Birthdate => null;
 
         /// <inheritdoc/>
-        public IList<Uri> Url => throw new NotImplementedException();
+        public IReadOnlyList<Uri> Url => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public string Region { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

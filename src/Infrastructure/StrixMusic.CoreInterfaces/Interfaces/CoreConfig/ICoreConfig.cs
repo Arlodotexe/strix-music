@@ -8,6 +8,6 @@
         /// <summary>
         /// <inheritdoc cref="IFileConfig"/>
         /// </summary>
-        IFileConfig FileConfig { get; set; }
+        IFileConfig? FileConfig { get; set; }
     }
 }

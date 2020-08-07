@@ -16,7 +16,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// The total number of songs in this collection.
         /// </summary>
-        int TotalCount { get; }
+        int TrackCount { get; }
 
         /// <summary>
         /// An <see cref="IArtist"/> object that this album was created by.

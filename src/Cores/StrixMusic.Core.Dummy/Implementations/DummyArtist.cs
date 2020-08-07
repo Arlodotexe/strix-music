@@ -65,13 +65,13 @@ namespace StrixMusic.Core.Dummy.Implementations
         public IReadOnlyList<IAlbum> Albums => DummyAlbums!;
 
         /// <inheritdoc/>
-        public int TotalAlbumsCount => throw new NotImplementedException();
+        public int TotalAlbumsCount => Albums.Count;
 
         /// <inheritdoc/>
-        public int TotalTopTracksCount => throw new NotImplementedException();
+        public int TotalTopTracksCount => TopTracks.Count;
 
         /// <inheritdoc/>
-        public int TotalRelatedArtistsCount => throw new NotImplementedException();
+        public int TotalRelatedArtistsCount => RelatedArtists.Count;
 
         /// <inheritdoc/>
         public void Play()

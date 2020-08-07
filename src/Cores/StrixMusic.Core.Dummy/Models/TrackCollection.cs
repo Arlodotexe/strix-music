@@ -45,7 +45,7 @@ namespace StrixMusic.Core.Dummy.Models
         public PlaybackState State => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public int Count { get => Tracks?.Count() ?? 0; set => throw new NotImplementedException(); }
+        public int TrackCount { get => Tracks?.Count() ?? 0; set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public IReadOnlyList<ITrack> Tracks { get; }

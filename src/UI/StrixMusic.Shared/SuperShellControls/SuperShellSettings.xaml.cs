@@ -52,6 +52,13 @@ namespace Strix_Music.SuperShellControls
             Ioc.Default.GetService<ISettingsService>().SetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell), newPreferredSkin);
         }
 
+        private async void ButtonFolderSelect_Clicked(object sender, EventArgs e)
+        {
+            var musicLib = Windows.Storage.KnownFolders.MusicLibrary;
+
+            
+        }
+
         /// <summary>
         /// The labels for the skins that the user can choose from.
         /// </summary>
