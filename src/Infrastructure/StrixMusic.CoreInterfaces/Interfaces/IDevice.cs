@@ -1,5 +1,5 @@
-﻿using StrixMusic.CoreInterfaces.Enums;
-using System;
+﻿using System;
+using StrixMusic.CoreInterfaces.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -18,7 +18,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// </summary>
         string Name { get; set; }
 
-        /// <summary>
+        /// <summary> 
         /// The source core which created the object.
         /// </summary>
         public ICore SourceCore { get; set; }

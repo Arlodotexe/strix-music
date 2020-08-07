@@ -16,7 +16,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Images for the track.
         /// </summary>
-        List<IImage> Images { get; }
+        IReadOnlyList<IImage> Images { get; }
 
         /// <summary>
         /// An external link related to the track.
@@ -51,7 +51,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// A list of <see cref="string"/> describing the genres for this track.
         /// </summary>
-        IList<string>? Genre { get; }
+        IReadOnlyList<string>? Genre { get; }
 
         /// <summary>
         /// Position in a set, usually the album.

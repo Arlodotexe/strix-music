@@ -15,21 +15,36 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// List of <see cref="ITrack"/>s that this collection contains.
         /// </summary>
-        IList<ITrack> Tracks { get; }
+        IReadOnlyList<ITrack> Tracks { get; }
 
         /// <summary>
         /// List of <see cref="IAlbum"/>s that this collection contains.
         /// </summary>
-        IList<IAlbum> Albums { get; }
+        IReadOnlyList<IAlbum> Albums { get; }
 
         /// <summary>
         /// List of <see cref="IArtist"/>s that this collection contains.
         /// </summary>
-        IList<IArtist> Artists { get; }
+        IReadOnlyList<IArtist> Artists { get; }
 
         /// <summary>
         /// List of <see cref="IPlaylist"/>s that this collection contains.
         /// </summary>
-        IList<IPlaylist> Playlists { get; }
+        IReadOnlyList<IPlaylist> Playlists { get; }
+
+        /// <summary>
+        /// The total number of songs in this collection.
+        /// </summary>
+        int TotalAlbumsCount { get; }
+
+        /// <summary>
+        /// The total number of songs in this collection.
+        /// </summary>
+        int TotalArtistsCount { get; }
+
+        /// <summary>
+        /// The total number of songs in this collection.
+        /// </summary>
+        int TotalAlbumCount { get; }
     }
 }

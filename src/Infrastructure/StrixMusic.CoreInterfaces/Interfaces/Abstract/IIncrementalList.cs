@@ -16,7 +16,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces.Abstract
         /// <summary>
         /// Loads the next set of Items.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation loading the next page.</returns>
-        Task<IEnumerable<T>> LoadFurther();
+        /// <returns>A <see cref="IAsyncEnumerable"/> for loading the next page.</returns>
+        IAsyncEnumerable<T> LoadFurtherAsync();
     }
 }
