@@ -87,7 +87,7 @@
                                         <FontIcon Glyph="&#xE101;"/>
                                     </Button>
                                     <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE8EE;"/>
+                                        <FontIcon Glyph="&#xE1CD;"/>
                                     </Button>
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE8B1;"/>

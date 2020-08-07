@@ -16,7 +16,7 @@
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal">
                                     <ToggleButton Style="{StaticResource ZuneSmallToggleButton}" VerticalAlignment="Center"  Margin="4,0">
-                                        <FontIcon Glyph="&#xE8EE;" FontSize="20"/>
+                                        <FontIcon Glyph="&#xE1CD;" FontSize="20"/>
                                     </ToggleButton>
                                     <ToggleButton Style="{StaticResource ZuneSmallToggleButton}" VerticalAlignment="Center"  Margin="4,0,12,0">
                                         <FontIcon Glyph="&#xE8B1;" FontSize="20"/>
