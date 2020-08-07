@@ -33,12 +33,14 @@
 		<None Remove="Assets\Quickplay-Background.png" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Resources.xaml" />
+		<None Remove="Styles\ButtonStyles.xaml" />
 		<None Remove="Themes\NowPlayingBarStyle.xaml" />
 		<None Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 		<UpToDateCheckInput Remove="Preview.xaml" />
 		<UpToDateCheckInput Remove="Resources.xaml" />
+		<UpToDateCheckInput Remove="Styles\ButtonStyles.xaml" />
 		<UpToDateCheckInput Remove="Themes\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>

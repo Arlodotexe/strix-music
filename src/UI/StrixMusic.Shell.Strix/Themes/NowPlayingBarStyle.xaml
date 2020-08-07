@@ -77,9 +77,12 @@
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE100;"/>
                                     </Button>
-                                    <Button Style="{StaticResource MediaButton}">
+                                    <default:ToggleContentButton>
+                                        <default:ToggleContentButton.CheckedContent>
+                                            <FontIcon Glyph="&#xE103;"/>
+                                        </default:ToggleContentButton.CheckedContent>
                                         <FontIcon Glyph="&#xE102;"/>
-                                    </Button>
+                                    </default:ToggleContentButton>
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE101;"/>
                                     </Button>

@@ -24,7 +24,7 @@
                                     <Button Style="{StaticResource ZuneButton}" Width="32">
                                         <FontIcon Glyph="&#xE100;" FontSize="12"/>
                                     </Button>
-                                    <default:ToggleContentButton Width="42">
+                                    <default:ToggleContentButton Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42">
                                         <default:ToggleContentButton.CheckedContent>
                                             <FontIcon Glyph="&#xE103;" FontSize="20"/>
                                         </default:ToggleContentButton.CheckedContent>
