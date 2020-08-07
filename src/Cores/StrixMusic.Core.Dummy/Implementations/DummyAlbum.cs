@@ -79,6 +79,9 @@ namespace StrixMusic.Core.Dummy.Implementations
         public int Count { get => TrackIds?.Count() ?? 0; set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
+        public int TotalCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public void Play()
         {
             throw new NotImplementedException();

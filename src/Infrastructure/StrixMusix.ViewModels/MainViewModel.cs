@@ -30,7 +30,7 @@ namespace StrixMusix.ViewModels
         {
             foreach (ICore core in loadedCores)
             {
-                Library = await core.GetLibrary();
+                Library = await core.GetLibraryAsync();
             }
 
             PageContent = new BindableLibrary(Library!);

@@ -16,8 +16,6 @@ namespace StrixMusic.Core.Dummy
         /// <inheritdoc/>
         public IUser User => throw new NotImplementedException();
 
-        public ICoreConfig CoreConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
         /// <inheritdoc/>
         public ICoreConfig CoreConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
