@@ -15,9 +15,16 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal">
-                                    <ToggleButton Style="{StaticResource ZuneSmallToggleButton}" VerticalAlignment="Center"  Margin="4,0">
+                                    <default:ToggleContentButton Style="{StaticResource ZuneSmallToggleContentButton}" VerticalAlignment="Center" Margin="4,0"
+                                                                 IsThreeState="True">
                                         <FontIcon Glyph="&#xE1CD;" FontSize="20"/>
-                                    </ToggleButton>
+                                        <default:ToggleContentButton.CheckedContent>
+                                            <FontIcon Glyph="&#xE1CD;" FontSize="20"/>
+                                        </default:ToggleContentButton.CheckedContent>
+                                        <default:ToggleContentButton.IndeterminateContent>
+                                            <FontIcon Glyph="&#xE1CC;" FontSize="20"/>
+                                        </default:ToggleContentButton.IndeterminateContent>
+                                    </default:ToggleContentButton>
                                     <ToggleButton Style="{StaticResource ZuneSmallToggleButton}" VerticalAlignment="Center"  Margin="4,0,12,0">
                                         <FontIcon Glyph="&#xE8B1;" FontSize="20"/>
                                     </ToggleButton>
