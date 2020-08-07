@@ -15,18 +15,21 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal">
-                                    <ToggleButton Style="{StaticResource ZuneToggleButton}" VerticalAlignment="Center"  Margin="4,0">
+                                    <ToggleButton Style="{StaticResource ZuneSmallToggleButton}" VerticalAlignment="Center"  Margin="4,0">
                                         <FontIcon Glyph="&#xE8EE;" FontSize="20"/>
                                     </ToggleButton>
-                                    <ToggleButton Style="{StaticResource ZuneToggleButton}" VerticalAlignment="Center"  Margin="4,0,12,0">
+                                    <ToggleButton Style="{StaticResource ZuneSmallToggleButton}" VerticalAlignment="Center"  Margin="4,0,12,0">
                                         <FontIcon Glyph="&#xE8B1;" FontSize="20"/>
                                     </ToggleButton>
                                     <Button Style="{StaticResource ZuneButton}" Width="32">
                                         <FontIcon Glyph="&#xE100;" FontSize="12"/>
                                     </Button>
-                                    <Button Style="{StaticResource ZuneButton}" Width="42">
+                                    <default:ToggleContentButton Width="42">
+                                        <default:ToggleContentButton.CheckedContent>
+                                            <FontIcon Glyph="&#xE103;" FontSize="20"/>
+                                        </default:ToggleContentButton.CheckedContent>
                                         <FontIcon Glyph="&#xE102;" FontSize="20"/>
-                                    </Button>
+                                    </default:ToggleContentButton>
                                     <Button Style="{StaticResource ZuneButton}" Width="32">
                                         <FontIcon Glyph="&#xE101;" FontSize="12"/>
                                     </Button>

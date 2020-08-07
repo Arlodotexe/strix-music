@@ -12,6 +12,7 @@
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
         <themes:PlayableCollectionListStyle/>
         <themes:ShellStyle/>
+        <ResourceDictionary Source="Themes/ToggleContentButton.xaml"/>
         <themes:TrackListStyle/>
         <themes:TrackStyle/>
     </ResourceDictionary.MergedDictionaries>
