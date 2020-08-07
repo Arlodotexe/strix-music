@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using StrixMusic.Core.Dummy.Implementations;
 using StrixMusic.CoreInterfaces.Enums;
@@ -39,6 +40,9 @@ namespace StrixMusic.Core.Dummy.Models
 
         /// <inheritdoc/>
         public string Description => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public int Count { get => Items?.Count() ?? 0; set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public IUserProfile? Owner => throw new NotImplementedException();

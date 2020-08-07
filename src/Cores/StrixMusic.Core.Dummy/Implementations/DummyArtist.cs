@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Linq;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -51,6 +52,9 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         public IReadOnlyList<IPlayableCollectionBase> Items => Albums;
+
+        /// <inheritdoc/>
+        public int Count { get => Items?.Count() ?? 0; set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public ICore SourceCore => DummyCore!;

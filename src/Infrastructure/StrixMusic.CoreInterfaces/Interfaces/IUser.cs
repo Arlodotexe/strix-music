@@ -5,7 +5,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Represents a user that is authenticated with a core and interacts with the app.
     /// </summary>
-    public interface IUser : IUserProfile, ICommonPlayableCollections
+    public interface IUser : IUserProfile
     {
         /// <summary>
         /// A list of devices that this user has access to.

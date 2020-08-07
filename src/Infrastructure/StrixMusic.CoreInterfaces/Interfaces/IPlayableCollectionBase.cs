@@ -59,6 +59,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         ITrack? PlayingTrack { get; }
 
         /// <summary>
+        /// The total number of songs in this collection.
+        /// </summary>
+        int Count { get; set; }
+
+        /// <summary>
         /// Attempts to play the collection from the beginning, or resumes playback if already playing.
         /// </summary>
         void Play();
