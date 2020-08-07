@@ -30,6 +30,7 @@
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<None Remove="Assets\Quickplay-Background.png" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Resources.xaml" />
 		<None Remove="Themes\NowPlayingBarStyle.xaml" />
@@ -40,6 +41,9 @@
 		<UpToDateCheckInput Remove="Resources.xaml" />
 		<UpToDateCheckInput Remove="Themes\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="Assets\Quickplay-Background.png" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
