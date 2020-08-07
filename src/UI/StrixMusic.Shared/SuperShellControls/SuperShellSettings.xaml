@@ -15,6 +15,9 @@
             <TextBlock Text="Skins" FontSize="24" />
             <ComboBox Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="{x:Bind CurrentSkin}"
                   SelectionChanged="ComboBox_SelectionChanged"/>
+
+            <TextBlock Text="Cores" FontSize="24" Margin="0,15,0,0" />
+            <Button Content="Select a folder" Click="" />
         </StackPanel>
     </Grid>
 </UserControl>

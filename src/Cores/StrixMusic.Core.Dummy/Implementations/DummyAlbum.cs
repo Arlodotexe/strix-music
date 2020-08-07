@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using StrixMusic.CoreInterfaces.Enums;
-using StrixMusic.CoreInterfaces.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using StrixMusic.CoreInterfaces.Enums;
+using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.Core.Dummy.Implementations
 {
@@ -76,7 +76,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public ICore SourceCore { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
-        public int Count { get => TrackIds?.Count() ?? 0; set => throw new NotImplementedException(); }
+        public int TrackCount => TrackIds?.Count() ?? 0;
 
         /// <inheritdoc/>
         public void Play()

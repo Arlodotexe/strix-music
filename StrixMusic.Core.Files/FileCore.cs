@@ -7,22 +7,19 @@ using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 
 namespace StrixMusic.Core.Files
 {
-
     /// <summary>
     /// A Core that handles local files.
     /// </summary>
     public class FileCore : ICore
     {
-        /// <summary>
-        /// Configures the <see cref="FileCore"/>
-        /// </summary>
+        /// <inheritdoc/>
         public ICoreConfig CoreConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public string Name => nameof(FileCore);
 
         /// <inheritdoc/>
-        public IUser User { get => new FileUser(); set => throw new NotImplementedException(); }
+        public IUser User { get => new FileUser(this); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public event EventHandler<IDevice> DeviceAdded;
@@ -37,21 +34,19 @@ namespace StrixMusic.Core.Files
         public event EventHandler<IPlayableCollectionGroup> RecentlyPlayedChanged;
 
         /// <inheritdoc/>
-        public Task<IList<IDevice>> GetDevices()
+        public IAsyncEnumerable<IDevice> GetDevicesAsync()
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<IList<IPlayableCollectionGroup>> GetDiscoverables()
+        public IAsyncEnumerable<IPlayableCollectionGroup> GetDiscoverablesAsync()
         {
-            var emptyResult = (IList<IPlayableCollectionGroup>)new List<IPlayableCollectionGroup>();
-
-            return Task.FromResult(emptyResult);
+            throw new NotImplementedException();
         }
 
-        /// <inheritdoc
-        public Task<IPlayableCollectionGroup> GetLibrary()
+        /// <inheritdoc/>
+        public Task<IPlayableCollectionGroup> GetLibraryAsync()
         {
             throw new NotImplementedException();
         }
@@ -63,7 +58,7 @@ namespace StrixMusic.Core.Files
         }
 
         /// <inheritdoc/>
-        public Task<IEnumerable<string>> GetSearchAutoComplete(string query)
+        public IAsyncEnumerable<string> GetSearchAutoComplete(string query)
         {
             throw new NotImplementedException();
         }

@@ -11,22 +11,22 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Identifier for the user
         /// </summary>
-        string Id { get; set; }
+        string Id { get; }
 
         /// <summary>
         /// Username shown to the user or others
         /// </summary>
-        string DisplayName { get; set; }
+        string DisplayName { get; }
 
         /// <summary>
         /// The user's full name
         /// </summary>
-        string? FullName { get; set; }
+        string? FullName { get; }
 
         /// <summary>
         /// The user's email
         /// </summary>
-        string? Email { get; set; }
+        string? Email { get; }
 
         /// <summary>
         /// Profile images or other images related to this user.

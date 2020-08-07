@@ -55,12 +55,23 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// </summary>
         public DummyCore? DummyCore { get; set; }
 
+        /// <inheritdoc/>
         public IReadOnlyList<ITrack> TopTracks => throw new NotImplementedException();
 
+        /// <inheritdoc/>
         public IReadOnlyList<IArtist> RelatedArtists => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public IReadOnlyList<IAlbum> Albums => DummyAlbums!;
+
+        /// <inheritdoc/>
+        public int TotalAlbumsCount => Albums.Count;
+
+        /// <inheritdoc/>
+        public int TotalTopTracksCount => TopTracks.Count;
+
+        /// <inheritdoc/>
+        public int TotalRelatedArtistsCount => RelatedArtists.Count;
 
         /// <inheritdoc/>
         public void Play()

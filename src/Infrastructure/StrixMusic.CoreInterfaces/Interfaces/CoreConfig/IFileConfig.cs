@@ -8,8 +8,8 @@ namespace StrixMusic.CoreInterfaces.Interfaces.CoreConfig
     public interface IFileConfig
     {
         /// <summary>
-        /// Sets a list of file paths that the user has allowed access.
+        /// Sets a list of file Ids, representing files that the user has allowed access.
         /// </summary>
-        void SetFileAccessList(IReadOnlyList<string> filePaths);
+        void SetFileAccessList(IReadOnlyList<string> fileIds);
     }
 }

@@ -13,7 +13,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public string Id { get; set; } = string.Empty;
 
         /// <inheritdoc/>
-        public List<IImage> Images => throw new NotImplementedException();
+        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();
@@ -57,7 +57,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public DateTime? DatePublished => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IList<string> Genre => throw new NotImplementedException();
+        public IReadOnlyList<string> Genre => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public int? TrackNumber => throw new NotImplementedException();
