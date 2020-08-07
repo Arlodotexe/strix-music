@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml;
 
-namespace Strix_Music.Shell.Strix.Themes
+namespace StrixMusic.Shell.Strix.Themes
 {
     public sealed partial class AlbumViewStyle : ResourceDictionary
     {

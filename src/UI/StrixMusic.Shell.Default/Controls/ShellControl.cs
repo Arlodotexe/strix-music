@@ -1,7 +1,7 @@
 ﻿using StrixMusix.ViewModels;
 using Windows.UI.Xaml.Controls;
 
-namespace Strix_Music.Shell.Default.Controls
+namespace StrixMusic.Shell.Default.Controls
 {
     public sealed partial class ShellControl : Control
     {

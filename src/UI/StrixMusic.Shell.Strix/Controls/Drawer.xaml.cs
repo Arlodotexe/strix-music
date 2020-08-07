@@ -5,7 +5,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Strix_Music.Shell.Strix.Controls
+namespace StrixMusic.Shell.Strix.Controls
 {
     /// <summary>
     /// A Drawer used as the root of the Shell.

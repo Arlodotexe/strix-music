@@ -2,7 +2,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Strix_Music.Shell.Default.TemplateSelectors
+namespace StrixMusic.Shell.Default.TemplateSelectors
 {
     /// <summary>
     /// A <see cref="DataTemplateSelector"/> for the collections in a <see cref="IPlayableCollectionGroup"/> library.

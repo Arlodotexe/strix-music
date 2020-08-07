@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml;
 
-namespace StrixMusic.Shell.Strix.Themes
+namespace StrixMusic.Shell.Zune.Themes
 {
     public sealed partial class ShellStyle : ResourceDictionary
     {

@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Strix_Music.Shell.Default.Controls"
+    xmlns:local="using:StrixMusic.Shell.Default.Controls"
     xmlns:interfaces="using:StrixMusic.CoreInterfaces.Interfaces"
-    x:Class="Strix_Music.Shell.Default.Themes.TrackListStyle">
+    x:Class="StrixMusic.Shell.Default.Themes.TrackListStyle">
 
     <DataTemplate x:Key="DefaultTrackList" x:DataType="interfaces:IPlaylist">
         <ListView ItemsSource="{x:Bind Tracks}" ItemContainerStyle="{StaticResource TrackListItemStyle}" Margin="32" HorizontalAlignment="Stretch">

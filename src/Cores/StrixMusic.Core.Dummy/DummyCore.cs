@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Core.Dummy.Deserialization;
 using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 
 namespace StrixMusic.Core.Dummy
 {
@@ -14,6 +15,8 @@ namespace StrixMusic.Core.Dummy
 
         /// <inheritdoc/>
         public IUser User => throw new NotImplementedException();
+
+        public ICoreConfig CoreConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public event EventHandler<IDevice>? DeviceAdded;
