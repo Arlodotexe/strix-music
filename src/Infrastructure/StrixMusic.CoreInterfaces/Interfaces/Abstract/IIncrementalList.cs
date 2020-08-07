@@ -11,18 +11,12 @@ namespace StrixMusic.CoreInterfaces.Interfaces.Abstract
     /// The paginated list doesn't need a <see cref="Mutex"/>, locking is handled in the ViewModel.
     /// </remarks>
     /// <typeparam name="T">The type of items contained in the list.</typeparam>
-    public interface IPaginatedList<T>
+    public interface IIncrementalList<T>
     {
         /// <summary>
-        /// Loads the next page and returns its contents
+        /// Loads the next set of Items.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation loading the next page.</returns>
-        Task<IEnumerable<T>> LoadNextPage();
-
-        /// <summary>
-        /// Loads the previous page and returns its contents
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation loading the previous page.</returns>
-        Task<IEnumerable<T>> LoadPreviousPage();
+        Task<IEnumerable<T>> LoadFurther();
     }
 }
