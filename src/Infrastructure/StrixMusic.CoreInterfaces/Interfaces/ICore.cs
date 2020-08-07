@@ -1,7 +1,7 @@
-﻿using System;
+﻿using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -26,8 +26,8 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Gets available devices.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation. Returns a list of devices.</returns>
-        Task<IList<IDevice>> GetDevices();
+        /// <returns>A <see cref="IAsyncEnumerable"/> representing the asynchronous operation. Returns a list of devices.</returns>
+        IAsyncEnumerable<IDevice> GetDevicesAsync();
 
         /// <summary>
         /// Fires when a new device appears.
@@ -43,7 +43,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Gets the library for the user on this core.
         /// </summary>
         /// <returns>A task representing the async operation. Returns <see cref="ISearchResults"/> containing multiple.</returns>
-        Task<IPlayableCollectionGroup> GetLibrary();
+        Task<IPlayableCollectionGroup> GetLibraryAsync();
 
         /// <summary>
         /// Emits when the library changes.
@@ -54,7 +54,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Gets the recently played tracks for this core.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. </returns>
-        Task<IPlayableCollectionGroup> GetRecentlyPlayed();
+        Task<IPlayableCollectionGroup> GetRecentlyPlayedAsync();
 
         /// <summary>
         /// Emits when the recently played tracks change.
@@ -64,8 +64,8 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Used to browse and discover new music.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation. Containing multiple <see cref="IPlayableCollectionGroup"/>s representing discoverable music.</returns>
-        Task<IList<IPlayableCollectionGroup>?> GetDiscoverables();
+        /// <returns>A <see cref="IAsyncEnumerable"/> representing the asynchronous operation. Containing multiple <see cref="IPlayableCollectionGroup"/>s representing discoverable music.</returns>
+        IAsyncEnumerable<IPlayableCollectionGroup>? GetDiscoverablesAsync();
 
         /// <summary>
         /// Gets search results for a given query.
@@ -79,6 +79,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// </summary>
         /// <param name="query">Search query</param>
         /// <returns>Suggested completed queries.</returns>
-        Task<IEnumerable<string>> GetSearchAutoComplete(string query);
+        IAsyncEnumerable<string> GetSearchAutoComplete(string query);
     }
 }

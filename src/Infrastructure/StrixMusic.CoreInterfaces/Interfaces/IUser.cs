@@ -10,6 +10,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// A list of devices that this user has access to.
         /// </summary>
-        IList<IDevice> Devices { get; }
+        IReadOnlyList<IDevice> Devices { get; }
     }
 }

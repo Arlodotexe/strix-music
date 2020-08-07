@@ -31,7 +31,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Profile images or other images related to this user.
         /// </summary>
-        IList<IImage> Images { get; }
+        IReadOnlyList<IImage> Images { get; }
 
         /// <summary>
         /// The <see cref="DateTime"/> the user was born.
@@ -44,7 +44,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Links to the users' profile(s).
         /// </summary>
-        IList<Uri>? Url { get; }
+        IReadOnlyList<Uri>? Url { get; }
 
         /// <summary>
         /// The user's country or region of origin.

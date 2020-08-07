@@ -13,5 +13,10 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// List of <see cref="ITrack"/>s that this collection contains.
         /// </summary>
         IReadOnlyList<ITrack> Tracks { get; }
+
+        /// <summary>
+        /// The total number of songs in this collection.
+        /// </summary>
+        int TotalCount { get; }
     }
 }

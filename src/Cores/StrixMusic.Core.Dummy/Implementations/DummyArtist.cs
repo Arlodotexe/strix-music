@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using System.Linq;
+using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -17,9 +17,6 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// <inheritdoc/>
         [JsonProperty("name")]
         public string Name { get; set; } = string.Empty;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<IAlbum> Albums => DummyAlbums!;
 
         /// <summary>
         /// List of full <see cref="DummyAlbum"/>s to be used within the DummyCore.
@@ -51,18 +48,19 @@ namespace StrixMusic.Core.Dummy.Implementations
         public ITrack PlayingTrack => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IReadOnlyList<IPlayableCollectionBase> Items => Albums;
-
-        /// <inheritdoc/>
-        public int Count { get => Items?.Count() ?? 0; set => throw new NotImplementedException(); }
-
-        /// <inheritdoc/>
         public ICore SourceCore => DummyCore!;
 
         /// <summary>
         /// The <see cref="DummyCore"/> where the <see cref="DummyArtist"/> is from.
         /// </summary>
         public DummyCore? DummyCore { get; set; }
+
+        public IReadOnlyList<ITrack> TopTracks => throw new NotImplementedException();
+
+        public IReadOnlyList<IArtist> RelatedArtists => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IReadOnlyList<IAlbum> Albums => DummyAlbums!;
 
         /// <inheritdoc/>
         public void Play()

@@ -38,33 +38,33 @@ namespace StrixMusic.Core.Dummy
         public event EventHandler<IPlayableCollectionGroup>? DiscoverableRemoved;
 
         /// <inheritdoc/>
-        public Task<IList<IDevice>> GetDevices()
+        public IAsyncEnumerable<IDevice> GetDevicesAsync()
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<IList<IPlayableCollectionGroup>?> GetDiscoverables()
+        public IAsyncEnumerable<IPlayableCollectionGroup>? GetDiscoverablesAsync()
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public async Task<IPlayableCollectionGroup> GetLibrary()
+        public Task<IPlayableCollectionGroup> GetLibraryAsync()
         {
             SerializedLibrary library = Deserializer.DeserializeLibrary();
             var lib = new Library(library.Tracks!, library.Albums!, library.Artists!, this);
-            return lib;
+            return Task.FromResult<IPlayableCollectionGroup>(lib);
         }
 
         /// <inheritdoc/>
-        public Task<IPlayableCollectionGroup> GetRecentlyPlayed()
+        public Task<IPlayableCollectionGroup> GetRecentlyPlayedAsync()
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<IEnumerable<string>> GetSearchAutoComplete(string query)
+        public IAsyncEnumerable<string> GetSearchAutoComplete(string query)
         {
             throw new NotImplementedException();
         }
