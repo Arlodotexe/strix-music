@@ -19,13 +19,13 @@
                     </Border>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,128,0">
                         <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                            <TextBlock Text="SETTINGS" FontWeight="Bold" FontSize="12" Opacity=".5"/>
+                            <HyperlinkButton Content="SETTINGS" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12"/>
                             <Rectangle Height="12" Width="2" Fill="White" Opacity=".5" Margin="8,3,8,0" VerticalAlignment="Top"/>
-                            <TextBlock Text="HELP" FontWeight="Bold" FontSize="12" Opacity=".5"/>
+                            <HyperlinkButton Content="HELP" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="128,0,0,0">
-                            <TextBlock Text="SIGN IN" FontWeight="Bold" FontSize="16" Opacity=".5" Margin="0,8,8,0"/>
+                            <HyperlinkButton Content="SIGN IN" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="20" Margin="0,8,8,0"/>
                             <Rectangle Fill="#FF00FF" Height="48" Width="48" HorizontalAlignment="Right"/>
                         </StackPanel>
                     </StackPanel>
