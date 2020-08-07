@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml;
 
-namespace Strix_Music.Shell.Default.Themes
+namespace StrixMusic.Shell.Default.Themes
 {
     public sealed partial class PlayableCollectionListStyle : ResourceDictionary
     {

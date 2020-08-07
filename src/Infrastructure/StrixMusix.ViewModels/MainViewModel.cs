@@ -14,7 +14,7 @@ namespace StrixMusix.ViewModels
     /// </summary>
     public class MainViewModel : ObservableRecipient
     {
-        private BindableAlbum? _pageContent;
+        private BindableLibrary? _pageContent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
@@ -30,16 +30,17 @@ namespace StrixMusix.ViewModels
         {
             foreach (ICore core in loadedCores)
             {
-                Library = await core.GetLibrary();
+                Library = await core.GetLibraryAsync();
             }
 
-            PageContent = new BindableAlbum(((Library!.Items[1] ! as IPlayableCollectionGroup) !.Items[1] as IAlbum) !);
+            PageContent = new BindableLibrary(Library!);
+            //PageContent = new BindableAlbum(((Library!.Items[1] ! as IPlayableCollectionGroup) !.Items[1] as IAlbum) !);
         }
 
         /// <summary>
         /// The DataContext to be bound to the Shell's ContentPresenter.
         /// </summary>
-        public BindableAlbum? PageContent
+        public BindableLibrary? PageContent
         {
             get => _pageContent;
             set => SetProperty(ref _pageContent, value);

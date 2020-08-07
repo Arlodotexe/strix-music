@@ -4,8 +4,8 @@
     <TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.16299</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
-    <RootNamespace>Strix_Music.Shell.Strix</RootNamespace>
-    <AssemblyName>Strix_Music.Shell.Strix</AssemblyName>
+    <RootNamespace>StrixMusic.Shell.Strix</RootNamespace>
+    <AssemblyName>StrixMusic.Shell.Strix</AssemblyName>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -18,7 +18,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Uno.UI" Version="3.0.0-dev.1253" />
+	<PackageReference Include="Uno.UI" Version="3.0.0-dev.1253" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

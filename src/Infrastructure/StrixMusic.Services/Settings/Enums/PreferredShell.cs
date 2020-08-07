@@ -7,5 +7,6 @@
     {
         Default,
         Strix,
+        Zune,
     }
 }

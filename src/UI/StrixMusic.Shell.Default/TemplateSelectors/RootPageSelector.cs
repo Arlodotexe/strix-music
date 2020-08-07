@@ -1,9 +1,9 @@
-﻿using Strix_Music.Shell.Default.Controls;
+﻿using StrixMusic.Shell.Default.Controls;
 using StrixMusic.ViewModels.Bindables;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Strix_Music.Shell.Default.TemplateSelectors
+namespace StrixMusic.Shell.Default.TemplateSelectors
 {
     /// <summary>
     /// A <see cref="DataTemplateSelector"/> for the root page of the shell.

@@ -8,17 +8,20 @@
 			you need to make sure that the version provided here matches https://github.com/onovotny/MSBuildSdkExtras/blob/master/Source/MSBuild.Sdk.Extras/DefaultItems/ImplicitPackages.targets#L11.
 			This is not an issue when libraries are referenced through nuget packages. See https://github.com/unoplatform/uno/issues/446 for more details.
 			-->
-      <Version>6.2.2</Version>
+      <Version>6.2.9</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm">
-      <Version>7.0.0-build.149</Version>
+      <Version>7.0.0-build.152</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Uno.Diagnostics.Eventing">
+      <Version>1.0.4</Version>
     </PackageReference>
     <PackageReference Include="Uno.UI" Version="3.0.0-dev.1253" />
   </ItemGroup>
@@ -182,6 +185,10 @@
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Strix\StrixMusic.Shell.Strix.csproj">
       <Project>{1acebd69-e023-4917-b32e-f83a314a4809}</Project>
       <Name>StrixMusic.Shell.Strix</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UI\StrixMusic.Shell.Zune\StrixMusic.Shell.Zune.csproj">
+      <Project>{c6b68a93-c3f0-4018-a1be-0ad2ade4ead4}</Project>
+      <Name>StrixMusic.Shell.Zune</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\UI\StrixMusic.Shared\StrixMusic.Shared.projitems" Label="Shared" />

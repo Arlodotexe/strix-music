@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Strix_Music.Shell.Default.Controls;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.Settings.Enums;
 using StrixMusic.Services.SuperShell;
+using StrixMusic.Shell.Default.Controls;
 using StrixMusix.ViewModels;
-using System;
-using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -81,7 +81,7 @@ namespace Strix_Music
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                var shellNamespacePrefix = "Strix_Music.Shell";
+                var shellNamespacePrefix = "StrixMusic.Shell";
 
                 ShellDisplay.Content = null;
 

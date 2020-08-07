@@ -57,6 +57,9 @@ namespace StrixMusic.Core.Dummy.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
+        public int TotalCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public void Play()
         {
             throw new NotImplementedException();

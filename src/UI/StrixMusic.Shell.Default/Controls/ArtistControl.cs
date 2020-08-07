@@ -1,7 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Strix_Music.Shell.Default.Controls
+namespace StrixMusic.Shell.Default.Controls
 {
     [TemplatePart(Name = nameof(_rootGrid), Type = typeof(Grid))]
     public sealed partial class ArtistControl : Control
