@@ -59,6 +59,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
     <ProjectReference Include="..\..\Infrastructure\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj" />
+    <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Themes\AlbumViewStyle.xaml.cs">

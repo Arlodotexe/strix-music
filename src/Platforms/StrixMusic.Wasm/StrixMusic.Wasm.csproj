@@ -58,6 +58,7 @@
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj" />
     <ProjectReference Include="..\..\Infrastructure\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj" />
+    <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Strix\StrixMusic.Shell.Strix.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Zune\StrixMusic.Shell.Zune.csproj" />
