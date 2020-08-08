@@ -14,10 +14,16 @@ using StrixMusic.Services.StorageService;
 
 namespace StrixMusic.Services.StorageService
 {
-    public partial class FileSystemService : IFileSystemService
+    /// <inheritdoc/>
+    public class FileSystemService : IFileSystemService
     {
         /// <inheritdoc/>
-        public event EventHandler<Progress<IFolderData>> FolderScanStarted;
+        public FileSystemService()
+        {
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<IFolderData> FolderScanStarted;
 
         /// <inheritdoc/>
         public event EventHandler<IFolderData> FolderDeepScanCompleted;
@@ -26,10 +32,10 @@ namespace StrixMusic.Services.StorageService
         public event EventHandler<IFolderData> FolderScanCompleted;
 
         /// <inheritdoc/>
-        public event EventHandler<IFileData> FileScanStarted;
+        public event EventHandler<FileScanStateEventArgs> FileScanStarted;
 
         /// <inheritdoc/>
-        public event EventHandler<IFileData> FileScanCompleted;
+        public event EventHandler<FileScanStateEventArgs> FileScanCompleted;
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IFolderData>> GetPickedFolders()
@@ -45,6 +51,12 @@ namespace StrixMusic.Services.StorageService
 
         /// <inheritdoc/>
         public Task RevokeAccess(IFolderData folder)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task Init()
         {
             throw new NotImplementedException();
         }

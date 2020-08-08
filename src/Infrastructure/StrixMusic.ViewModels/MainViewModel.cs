@@ -7,7 +7,7 @@ using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services.Settings;
 using StrixMusic.ViewModels.Bindables;
 
-namespace StrixMusix.ViewModels
+namespace StrixMusic.ViewModels
 {
     /// <summary>
     /// The MainViewModel used throughout the app

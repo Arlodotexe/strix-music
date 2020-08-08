@@ -6,8 +6,8 @@
     <WasmHead>true</WasmHead>
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
     <NoWarn>NU1701</NoWarn>
-    <RootNamespace>Strix_Music.Wasm</RootNamespace>
-    <AssemblyName>Strix_Music.Wasm</AssemblyName>
+    <RootNamespace>StrixMusic.Wasm</RootNamespace>
+    <AssemblyName>StrixMusic.Wasm</AssemblyName>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -57,7 +57,7 @@
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.Dummy\StrixMusic.Core.Dummy.csproj" />
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ViewModels.csproj" />
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Strix\StrixMusic.Shell.Strix.csproj" />

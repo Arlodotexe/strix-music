@@ -3,7 +3,7 @@ using Android.Runtime;
 using Com.Nostra13.Universalimageloader.Core;
 using Windows.UI.Xaml.Media;
 
-namespace Strix_Music.Droid
+namespace StrixMusic.Droid
 {
     /// <summary>
     /// From the Uno template

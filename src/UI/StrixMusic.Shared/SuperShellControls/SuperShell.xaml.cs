@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Strix_Music.SuperShellControls;
+using StrixMusic.SuperShellControls;
 using StrixMusic.Services.SuperShell;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Strix_Music
+namespace StrixMusic
 {
     public sealed partial class SuperShell : UserControl
     {

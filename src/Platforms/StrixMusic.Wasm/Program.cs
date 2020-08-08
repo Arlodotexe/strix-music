@@ -1,4 +1,4 @@
-﻿namespace Strix_Music.Wasm
+﻿namespace StrixMusic.Wasm
 {
     /// <summary>
     /// From the Uno template

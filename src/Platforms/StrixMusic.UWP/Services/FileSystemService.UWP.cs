@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Strix_Music.Models;
+using StrixMusic.Models;
 using StrixMusic.CoreInterfaces.Interfaces.Storage;
 using StrixMusic.UWP.Models;
 using Windows.Storage;

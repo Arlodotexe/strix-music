@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Core.Files", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.CoreInterfaces", "src\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj", "{60EE2300-F562-416C-9458-DBEA41389D8B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.ViewModels", "src\Infrastructure\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj", "{40522958-E5AD-4494-8C45-2BAF83399499}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.ViewModels", "src\Infrastructure\StrixMusic.ViewModels\StrixMusic.ViewModels.csproj", "{40522958-E5AD-4494-8C45-2BAF83399499}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StrixMusic.Shared", "src\UI\StrixMusic.Shared\StrixMusic.Shared.shproj", "{2E82DB60-BA1E-402C-A4F8-56DA621B04E9}"
 EndProject

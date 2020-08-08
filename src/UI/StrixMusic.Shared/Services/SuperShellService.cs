@@ -2,7 +2,7 @@
 using StrixMusic.Services.SuperShell;
 using Windows.UI.Xaml;
 
-namespace Strix_Music.Services
+namespace StrixMusic.Services
 {
     /// <inheritdoc cref="ISuperShellService"/>
     public class SuperShellService : ISuperShellService

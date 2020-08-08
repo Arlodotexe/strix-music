@@ -14,8 +14,8 @@
   <mp:PhoneIdentity PhoneProductId="5f2553ae-cb74-4dd8-8928-5d654dbf9b75" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Strix_Music</DisplayName>
-    <PublisherDisplayName>Strix_Music</PublisherDisplayName>
+    <DisplayName>StrixMusic</DisplayName>
+    <PublisherDisplayName>StrixMusic</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -29,13 +29,13 @@
 
   <Applications>
     <Application Id="App"
-      Executable="Strix_Music.exe"
-      EntryPoint="Strix_Music.App">
+      Executable="StrixMusic.exe"
+      EntryPoint="StrixMusic.App">
       <uap:VisualElements
-        DisplayName="Strix_Music"
+        DisplayName="StrixMusic"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Strix_Music"
+        Description="StrixMusic"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

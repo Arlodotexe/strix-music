@@ -1,11 +1,11 @@
 ﻿<Page
-    x:Class="Strix_Music.MainPage"
+    x:Class="StrixMusic.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Strix_Music"
+    xmlns:local="using:StrixMusic"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Strix_Music.Shell.Default.Controls"
+    xmlns:controls="using:StrixMusic.Shell.Default.Controls"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

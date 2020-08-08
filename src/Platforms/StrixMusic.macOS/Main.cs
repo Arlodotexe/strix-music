@@ -1,7 +1,8 @@
 ﻿using AppKit;
 
-namespace Strix_Music.macOS
+namespace StrixMusic.macOS
 {
+	/// <inheritdoc/>
 	static class MainClass
 	{
 		static void Main(string[] args)

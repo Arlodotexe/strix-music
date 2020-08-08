@@ -31,8 +31,8 @@
     <ProjectGuid>{89AC1131-5215-4F43-B5AC-B4DFAE1366F6}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Strix_Music</RootNamespace>
-    <AssemblyName>Strix_Music</AssemblyName>
+    <RootNamespace>StrixMusic</RootNamespace>
+    <AssemblyName>StrixMusic</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.17763.0</TargetPlatformVersion>
@@ -40,7 +40,7 @@
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>Strix_Music.Uwp_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>StrixMusic.Uwp_TemporaryKey.pfx</PackageCertificateKeyFile>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -152,7 +152,7 @@
     <None Include="..\..\..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
-    <None Include="Strix_Music.UWP_TemporaryKey.pfx" />
+    <None Include="StrixMusic.UWP_TemporaryKey.pfx" />
     <None Include="..\..\..\stylecop.json" />
   </ItemGroup>
   <ItemGroup>
@@ -177,7 +177,7 @@
       <Project>{c5ce5911-1c37-4650-a1e9-4f1062534394}</Project>
       <Name>StrixMusic.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj">
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ViewModels.csproj">
       <Project>{40522958-e5ad-4494-8c45-2baf83399499}</Project>
       <Name>StrixMusic.ViewModels</Name>
     </ProjectReference>

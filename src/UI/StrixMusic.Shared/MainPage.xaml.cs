@@ -8,12 +8,12 @@ using StrixMusic.Services.Settings.Enums;
 using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
 using StrixMusic.Shell.Default.Controls;
-using StrixMusix.ViewModels;
+using StrixMusic.ViewModels;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Strix_Music
+namespace StrixMusic
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

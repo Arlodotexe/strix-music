@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using StrixMusic.Services.StorageService;
 using Windows.Storage;
 
-namespace Strix_Music.Services
+namespace StrixMusic.Services
 {
     /// <inheritdoc cref="ITextStorageService"/>
     public class TextStorageService : ITextStorageService

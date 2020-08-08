@@ -7,7 +7,7 @@ using StrixMusic.UWP.Models;
 using Uno.Extensions;
 using Windows.Storage;
 
-namespace Strix_Music.Models
+namespace StrixMusic.Models
 {
     /// <inheritdoc/>
     public class FolderData : IFolderData

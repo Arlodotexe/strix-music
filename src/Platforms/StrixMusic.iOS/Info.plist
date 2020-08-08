@@ -3,9 +3,9 @@
 <plist version="1.0">
   <dict>
 	<key>CFBundleDisplayName</key>
-	<string>Strix_Music</string>
+	<string>StrixMusic</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.companyname.Strix_Music</string>
+	<string>com.companyname.StrixMusic</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>

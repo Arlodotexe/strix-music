@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Strix_Music.Services;
+using StrixMusic.Services;
 using StrixMusic.Core.Dummy;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
-using StrixMusix.ViewModels;
+using StrixMusic.ViewModels;
 
 namespace StrixMusic.Shared
 {

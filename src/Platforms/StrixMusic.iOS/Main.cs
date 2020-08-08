@@ -1,7 +1,8 @@
 ﻿using UIKit;
 
-namespace Strix_Music.iOS
+namespace StrixMusic.iOS
 {
+	/// <inheritdoc/>
 	public class Application
 	{
 		// This is the main entry point of the application.

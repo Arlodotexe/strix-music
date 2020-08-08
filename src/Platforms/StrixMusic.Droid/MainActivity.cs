@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Views;
 
-namespace Strix_Music.Droid
+namespace StrixMusic.Droid
 {
     /// <summary>
     /// From the Uno template

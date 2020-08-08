@@ -10,7 +10,7 @@ using StrixMusic.Services.StorageService;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Strix_Music.SuperShellControls
+namespace StrixMusic.SuperShellControls
 {
     public sealed partial class SuperShellSettings : UserControl
     {
