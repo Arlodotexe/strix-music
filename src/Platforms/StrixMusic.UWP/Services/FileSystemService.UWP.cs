@@ -10,7 +10,8 @@ using Windows.Storage.Pickers;
 
 namespace StrixMusic.Services.StorageService
 {
-    public partial class FileSystemService : IFileSystemService
+    /// <inheritdoc cref="IFileSystemService" />
+    public class FileSystemService : IFileSystemService
     {
         /// <summary>
         /// Recursively converts and processes a <see cref="StorageFolder"/> to an instance of <see cref="IFolderData"/>.
@@ -81,19 +82,19 @@ namespace StrixMusic.Services.StorageService
         private readonly List<IFolderData> _registeredFolders;
 
         /// <inheritdoc />
-        public event EventHandler<Progress<IFolderData>> FolderScanStarted;
+        public event EventHandler<Progress<IFolderData>>? FolderScanStarted;
 
         /// <inheritdoc />
-        public event EventHandler<IFolderData> FolderScanCompleted;
+        public event EventHandler<IFolderData>? FolderScanCompleted;
 
         /// <inheritdoc />
-        public event EventHandler<IFileData> FileScanStarted;
+        public event EventHandler<IFileData>? FileScanStarted;
 
         /// <inheritdoc />
-        public event EventHandler<IFileData> FileScanCompleted;
+        public event EventHandler<IFileData>? FileScanCompleted;
 
         /// <inheritdoc />
-        public event EventHandler<IFolderData> FolderDeepScanCompleted;
+        public event EventHandler<IFolderData>? FolderDeepScanCompleted;
 
         /// <summary>
         /// Constructs a new <see cref="FileSystemService"/>.

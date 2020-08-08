@@ -44,8 +44,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shell.Strix", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shell.Zune", "src\UI\StrixMusic.Shell.Zune\StrixMusic.Shell.Zune.csproj", "{C6B68A93-C3F0-4018-A1BE-0AD2ADE4EAD4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Core.Files", "StrixMusic.Core.Files\StrixMusic.Core.Files.csproj", "{DBF0C623-33CF-4DB6-BB3B-353045678A70}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{D825BC4B-7DC6-4399-8573-C1741426B572}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaunchPad", "src\Libs\LaunchPad\LaunchPad.csproj", "{BD87B98B-B958-43EC-B3BF-6058AFEDCDC6}"
