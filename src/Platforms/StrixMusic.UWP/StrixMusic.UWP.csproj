@@ -178,6 +178,10 @@
       <Project>{40522958-e5ad-4494-8c45-2baf83399499}</Project>
       <Name>StrixMusic.ViewModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj">
+      <Project>{bd87b98b-b958-43ec-b3bf-6058afedcdc6}</Project>
+      <Name>LaunchPad</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj">
       <Project>{1b218c58-e2b0-441e-a406-ee8ae87a009e}</Project>
       <Name>StrixMusic.Shell.Default</Name>

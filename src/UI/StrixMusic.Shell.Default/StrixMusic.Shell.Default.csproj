@@ -40,7 +40,6 @@
     <None Remove="Themes\NowPlayingBarControl.xaml" />
     <None Remove="Themes\PlayableCollectionListStyle.xaml" />
     <None Remove="Themes\ShellStyle.xaml" />
-    <None Remove="Themes\ToggleContentButton.xaml" />
     <None Remove="Themes\TrackListStyle.xaml" />
     <None Remove="Themes\TrackStyle.xaml" />
   </ItemGroup>
@@ -54,13 +53,13 @@
     <UpToDateCheckInput Remove="Themes\NowPlayingBarControl.xaml" />
     <UpToDateCheckInput Remove="Themes\PlayableCollectionListStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
-    <UpToDateCheckInput Remove="Themes\ToggleContentButton.xaml" />
     <UpToDateCheckInput Remove="Themes\TrackListStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\TrackStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
     <ProjectReference Include="..\..\Infrastructure\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj" />
+    <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Themes\AlbumViewStyle.xaml.cs">

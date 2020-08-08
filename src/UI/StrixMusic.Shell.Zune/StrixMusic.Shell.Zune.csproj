@@ -51,6 +51,7 @@
 		<PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
 		<ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
 	</ItemGroup>
 	<ItemGroup>

@@ -1,8 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StrixMusic.Shell.Strix.Controls"
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
-    xmlns:local="using:StrixMusic.Shell.Strix.Controls">
+    xmlns:launchpad="using:LaunchPad.Controls">
 
     <Style x:Key="StrixNowPlayingBarControlStyle" TargetType="default:NowPlayingBarControl">
         <Style.Setters>
@@ -77,24 +78,24 @@
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE100;"/>
                                     </Button>
-                                    <default:ToggleContentButton>
-                                        <default:ToggleContentButton.CheckedContent>
+                                    <launchpad:ToggleContentButton>
+                                        <launchpad:ToggleContentButton.CheckedContent>
                                             <FontIcon Glyph="&#xE103;"/>
-                                        </default:ToggleContentButton.CheckedContent>
+                                        </launchpad:ToggleContentButton.CheckedContent>
                                         <FontIcon Glyph="&#xE102;"/>
-                                    </default:ToggleContentButton>
+                                    </launchpad:ToggleContentButton>
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE101;"/>
                                     </Button>
-                                    <default:ToggleContentButton IsThreeState="True">
-                                        <default:ToggleContentButton.IndeterminateContent>
+                                    <launchpad:ToggleContentButton IsThreeState="True">
+                                        <launchpad:ToggleContentButton.IndeterminateContent>
                                             <FontIcon Glyph="&#xE1CC;"/>
-                                        </default:ToggleContentButton.IndeterminateContent>
-                                        <default:ToggleContentButton.CheckedContent>
+                                        </launchpad:ToggleContentButton.IndeterminateContent>
+                                        <launchpad:ToggleContentButton.CheckedContent>
                                             <FontIcon Glyph="&#xE1CD;"/>
-                                        </default:ToggleContentButton.CheckedContent>
+                                        </launchpad:ToggleContentButton.CheckedContent>
                                         <FontIcon Glyph="&#xE194;"/>
-                                    </default:ToggleContentButton>
+                                    </launchpad:ToggleContentButton>
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE8B1;"/>
                                     </Button>

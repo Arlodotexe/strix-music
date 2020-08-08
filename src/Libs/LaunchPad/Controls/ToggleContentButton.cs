@@ -1,10 +1,10 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
 
-namespace StrixMusic.Shell.Default.Controls
+namespace LaunchPad.Controls
 {
     /// <summary>
-    /// A <see cref="ToggleButton"/> that can change content when toggled
+    /// A <see cref="ToggleButton"/> that can change content when toggled.
     /// </summary>
     public partial class ToggleContentButton : ToggleButton
     {
