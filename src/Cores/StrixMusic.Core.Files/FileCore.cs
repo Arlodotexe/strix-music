@@ -29,6 +29,9 @@ namespace StrixMusic.Core.Files
         public IUser User { get => new FileUser(this); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
+        public CoreState CoreState => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<IDevice>? DeviceAdded;
 
         /// <inheritdoc/>
@@ -72,6 +75,24 @@ namespace StrixMusic.Core.Files
 
         /// <inheritdoc/>
         public Task<ISearchResults> GetSearchResults(string query)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task Init()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        Task<ILibrary> ICore.GetLibraryAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        Task<IRecentlyPlayed> ICore.GetRecentlyPlayedAsync()
         {
             throw new NotImplementedException();
         }

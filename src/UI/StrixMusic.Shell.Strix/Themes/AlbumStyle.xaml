@@ -65,7 +65,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="1" Margin="0,8,0,0" HorizontalAlignment="Center">
                     <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                    <TextBlock Text="{x:Bind Artist.Name}" Opacity=".5" HorizontalAlignment="Center"/>
+                    <TextBlock Opacity=".5" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <Rectangle x:Name="AlbumCover" Width="128" Height="128" RenderTransformOrigin=".5,.5">
                     <Rectangle.RenderTransform>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -74,13 +75,44 @@ namespace StrixMusic.Core.Dummy.Implementations
         public int TotalRelatedArtistsCount => RelatedArtists.Count;
 
         /// <inheritdoc/>
+        public IReadOnlyList<IArtist> Artists => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public int TotalArtistsCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IReadOnlyList<ITrack> Tracks => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public int TotalTracksCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public void Play()
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
+        /// <inheritdoc/>
         public void Pause()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateAlbums(int limit, int offset = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateArtists(int limit, int offset = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateTracks(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

@@ -87,5 +87,8 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// The <see cref="DummyCore"/> where the <see cref="DummyTrack"/> is from.
         /// </summary>
         public DummyCore? DummyCore { get; set; }
+
+        /// <inheritdoc/>
+        IReadOnlyList<IArtist> ITrack.Artist => throw new NotImplementedException();
     }
 }

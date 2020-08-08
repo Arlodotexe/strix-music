@@ -33,7 +33,7 @@
                     </NavigationViewItem>
                     <NavigationViewItemSeparator/>
                 </NavigationView.MenuItems>
-                <local:HomeControl DataContext="{x:Bind PageContent}"/>
+                <local:HomeControl/>
                 <!--<ContentPresenter ContentTemplateSelector="{StaticResource RootPageSelector}" DataContext="{x:Bind PageContent, Mode=OneWay}"/>-->
             </NavigationView>
             <local:NowPlayingBarControl Grid.Row="1"/>

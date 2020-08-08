@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -16,7 +17,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// The total number of songs in this collection.
         /// </summary>
-        int TrackCount { get; }
+        int TotalTrackCount { get; }
 
         /// <summary>
         /// An <see cref="IArtist"/> object that this album was created by.
@@ -27,5 +28,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// The <see cref="Uri"/> of the AlbumCover's image.
         /// </summary>
         Uri? CoverImageUri { get; }
+
+        /// <summary>
+        /// Populates a set of <see cref="IAlbum.Tracks"/> into the collection.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PopulateTracks(int limit, int offset = 0);
     }
 }

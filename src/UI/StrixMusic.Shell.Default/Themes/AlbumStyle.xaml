@@ -20,7 +20,7 @@
             </Rectangle>
             <StackPanel Grid.Row="1" Margin="0,8,0,0">
                 <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                <TextBlock Text="{x:Bind Artist.Name}" Opacity=".5"/>
+                <TextBlock Text="{x:Bind Name}" Opacity=".5"/>
             </StackPanel>
         </Grid>
     </DataTemplate>

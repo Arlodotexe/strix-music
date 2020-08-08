@@ -34,12 +34,12 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         string Title { get; }
 
         /// <summary>
-        /// An <see cref="IArtist"/> object that this track was created by.
+        /// A list of <see cref="IArtist"/>s that this track was created by.
         /// </summary>
-        IArtist? Artist { get; }
+        IReadOnlyList<IArtist> Artist { get; }
 
         /// <summary>
-        /// An <see cref="IAlbum"/> object that this track belongs to
+        /// An <see cref="IAlbum"/> object that this track belongs to.
         /// </summary>
         IAlbum? Album { get; }
 

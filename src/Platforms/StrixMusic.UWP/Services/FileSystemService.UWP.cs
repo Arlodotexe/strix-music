@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.Models;
 using StrixMusic.CoreInterfaces.Interfaces.Storage;
+using StrixMusic.Models;
 using StrixMusic.UWP.Models;
 using Windows.Storage;
 using Windows.Storage.AccessCache;

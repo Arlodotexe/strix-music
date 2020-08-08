@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Services.Settings
 {
     /// <summary>
-    /// The <see langword="interface"/> for the settings manager used in the app.
+    /// Manages interactions with app settings.
     /// </summary>
     public interface ISettingsService
     {

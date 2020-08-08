@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using StrixMusic.CoreInterfaces.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
     /// <summary>
-    /// Interface representing a collection of <see cref="ITrack"/>.
+    /// Interface representing a collection of playable items.
     /// </summary>
-    /// <remarks>No class should directly implement this interface.</remarks>
+    /// <remarks>No <see langword="class"/> should ever directly implement this interface. The items in this collection, the count, and the method for getting them are defined in a child <see langword="interface" />.</remarks>
     public interface IPlayableCollectionBase
     {
         /// <summary>
@@ -24,7 +25,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// The name of the Playable Collection.
         /// </summary>
         /// <remarks>
-        /// Example: <example>Artist name, Genre name, Playlist folder name, Daily Mix, etc</example>
+        /// Example: <example>Genre name, Playlist folder name, Daily Mix, etc</example>
         /// </remarks>
         string Name { get; }
 
@@ -41,7 +42,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Provides comments about the collection.
         /// </summary>
-        string Description { get; }
+        string? Description { get; }
 
         /// <summary>
         /// Owner of the collection.
