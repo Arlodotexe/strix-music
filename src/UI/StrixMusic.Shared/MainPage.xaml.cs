@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.Settings.Enums;
+using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
 using StrixMusic.Shell.Default.Controls;
 using StrixMusix.ViewModels;
@@ -42,6 +44,9 @@ namespace Strix_Music
 
             await Initialize();
             AttachEvents();
+
+            // Events must be attached before initializing this.
+            await Ioc.Default.GetService<IFileSystemService>().Init();
         }
 
         private void MainPage_Unloaded(object sender, RoutedEventArgs e)
@@ -52,6 +57,12 @@ namespace Strix_Music
         private void AttachEvents()
         {
             Ioc.Default.GetService<ISettingsService>().SettingChanged += SettingsService_SettingChanged;
+
+            var fileSystemSvc = Ioc.Default.GetService<IFileSystemService>();
+
+            fileSystemSvc.FolderScanStarted += FileSystemSvc_FolderScanStarted;
+            fileSystemSvc.FolderDeepScanCompleted += FileSystemSvc_FolderDeepScanCompleted;
+            fileSystemSvc.FileScanStarted += FileSystemSvc_FileScanStarted;
         }
 
         private void DetachEvents()
@@ -59,6 +70,27 @@ namespace Strix_Music
             Unloaded -= MainPage_Unloaded;
 
             Ioc.Default.GetService<ISettingsService>().SettingChanged -= SettingsService_SettingChanged;
+
+            var fileSystemSvc = Ioc.Default.GetService<IFileSystemService>();
+
+            fileSystemSvc.FolderScanStarted -= FileSystemSvc_FolderScanStarted;
+            fileSystemSvc.FolderDeepScanCompleted -= FileSystemSvc_FolderDeepScanCompleted;
+            fileSystemSvc.FileScanStarted -= FileSystemSvc_FileScanStarted;
+        }
+
+        private void FileSystemSvc_FolderDeepScanCompleted(object sender, StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData e)
+        {
+            Debug.WriteLine($"Deep scan of folder {e.Name} completed");
+        }
+
+        private void FileSystemSvc_FileScanStarted(object sender, FileScanStateEventArgs e)
+        {
+            Debug.WriteLine($"Scanning file {e.FileData.Name}");
+        }
+
+        private void FileSystemSvc_FolderScanStarted(object sender, StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData e)
+        {
+            Debug.WriteLine($"Scanning folder {e.Name}");
         }
 
         private async void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)

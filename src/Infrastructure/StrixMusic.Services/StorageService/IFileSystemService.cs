@@ -12,6 +12,12 @@ namespace StrixMusic.Services.StorageService
     public interface IFileSystemService
     {
         /// <summary>
+        /// Initializes the service, performing first time setup tasks.
+        /// </summary>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task Init();
+
+        /// <summary>
         /// Prompts the user to select a folder to access. Upon selection, the folder is scanned and ingested.
         /// </summary>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
@@ -33,7 +39,7 @@ namespace StrixMusic.Services.StorageService
         /// <summary>
         /// Fires when a folder scan has started.
         /// </summary>
-        event EventHandler<Progress<IFolderData>> FolderScanStarted;
+        event EventHandler<IFolderData> FolderScanStarted;
 
         /// <summary>
         /// Fires when a recursive folder scan has finished.
@@ -48,11 +54,11 @@ namespace StrixMusic.Services.StorageService
         /// <summary>
         /// Fires when a scan of a file's properties has started.
         /// </summary>
-        event EventHandler<IFileData> FileScanStarted;
+        event EventHandler<FileScanStateEventArgs> FileScanStarted;
 
         /// <summary>
         /// Fires when a scan of a file's properties has completed.
         /// </summary>
-        event EventHandler<IFileData> FileScanCompleted;
+        event EventHandler<FileScanStateEventArgs> FileScanCompleted;
     }
 }

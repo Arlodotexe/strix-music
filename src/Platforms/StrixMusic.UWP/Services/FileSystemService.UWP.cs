@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Strix_Music.Models;
 using StrixMusic.CoreInterfaces.Interfaces.Storage;
@@ -21,11 +22,13 @@ namespace StrixMusic.Services.StorageService
         public async Task<IFolderData> StorageFolderToFolderData(StorageFolder storageFolder)
         {
             var folderData = new FolderData(storageFolder);
+            var fileScanTasks = new List<Func<Task>>();
 
-            var fileScanTasks = new List<Task>();
             await RecursiveFolderScan(folderData, fileScanTasks);
 
-            Task.WaitAll(fileScanTasks.ToArray(), System.Threading.CancellationToken.None);
+            // This executes all the tasks in parallel, and has a huge speed boost on SSDs.
+            // Change to using a normal foreach for slower disks.
+            await Task.WhenAll(fileScanTasks.Select(Task.Run));
 
             FolderDeepScanCompleted?.Invoke(this, folderData);
 
@@ -33,16 +36,15 @@ namespace StrixMusic.Services.StorageService
             return folderData;
         }
 
-        private async Task ScanFilesInFolder(IFolderData folder, IProgress<IFolderData> progress)
+        private async Task ScanFilesInFolder(IFolderData folder)
         {
             foreach (var file in folder.Files)
             {
                 if (file is FileData fileData)
                 {
-                    FileScanStarted?.Invoke(this, fileData);
+                    FileScanStarted?.Invoke(this, new FileScanStateEventArgs(folder, file));
                     await fileData.StartMediaScan();
-                    FileScanCompleted?.Invoke(this, fileData);
-                    progress.Report(folder);
+                    FileScanCompleted?.Invoke(this, new FileScanStateEventArgs(folder, file));
                 }
             }
         }
@@ -53,20 +55,16 @@ namespace StrixMusic.Services.StorageService
         /// <param name="folderData">The folder to scan. Will be populated with subfolders.</param>
         /// <param name="fileScanTasks">A list containing the tasks for scanning a file. Await the tasks to scan the files.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private async Task RecursiveFolderScan(IFolderData folderData, List<Task> fileScanTasks)
+        private async Task RecursiveFolderScan(IFolderData folderData, List<Func<Task>> fileScanTasks)
         {
-            var progress = (IProgress<IFolderData>)new Progress<IFolderData>();
-
-            FolderScanStarted?.Invoke(this, (Progress<IFolderData>)progress);
+            FolderScanStarted?.Invoke(this, folderData);
 
             if (!(folderData is FolderData folderDataInstance))
                 throw new InvalidCastException($"{nameof(folderData)} is not an instance of {nameof(FolderData)}");
 
             await folderDataInstance.ScanFolder();
 
-            progress.Report(folderData);
-
-            fileScanTasks.Add(ScanFilesInFolder(folderData, progress));
+            fileScanTasks.Add(() => ScanFilesInFolder(folderData));
 
             FolderScanCompleted?.Invoke(this, folderData);
 
@@ -82,16 +80,16 @@ namespace StrixMusic.Services.StorageService
         private readonly List<IFolderData> _registeredFolders;
 
         /// <inheritdoc />
-        public event EventHandler<Progress<IFolderData>>? FolderScanStarted;
+        public event EventHandler<IFolderData>? FolderScanStarted;
 
         /// <inheritdoc />
         public event EventHandler<IFolderData>? FolderScanCompleted;
 
         /// <inheritdoc />
-        public event EventHandler<IFileData>? FileScanStarted;
+        public event EventHandler<FileScanStateEventArgs>? FileScanStarted;
 
         /// <inheritdoc />
-        public event EventHandler<IFileData>? FileScanCompleted;
+        public event EventHandler<FileScanStateEventArgs>? FileScanCompleted;
 
         /// <inheritdoc />
         public event EventHandler<IFolderData>? FolderDeepScanCompleted;
@@ -120,7 +118,13 @@ namespace StrixMusic.Services.StorageService
 
             var pickedFolder = await picker.PickSingleFolderAsync();
 
-            StorageApplicationPermissions.FutureAccessList.Add(pickedFolder);
+            if (pickedFolder == null)
+                return;
+
+            if (_registeredFolders.Any(x => x.Path == pickedFolder.Path))
+                return;
+
+            var storageToken = StorageApplicationPermissions.FutureAccessList.Add(pickedFolder, pickedFolder.Path);
 
             _ = StorageFolderToFolderData(pickedFolder);
         }
@@ -130,11 +134,36 @@ namespace StrixMusic.Services.StorageService
         {
             if (_registeredFolders.Contains(folder) && folder is FolderData folderData)
             {
-                StorageApplicationPermissions.FutureAccessList.Add(folderData.StorageFolder);
+                var targetFutureAccessListFile = StorageApplicationPermissions.FutureAccessList.Entries
+                    .FirstOrDefault(x => x.Metadata == folderData.StorageFolder.Path);
+
+                StorageApplicationPermissions.FutureAccessList.Remove(targetFutureAccessListFile.Token);
+
                 _registeredFolders.Remove(folder);
             }
 
             return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public async Task Init()
+        {
+            var persistentAccessEntries = StorageApplicationPermissions.FutureAccessList.Entries;
+
+            if (persistentAccessEntries == null || !persistentAccessEntries.Any())
+                return;
+
+            var folderScanTasks = new List<Func<Task>>();
+            foreach (var accessEntry in persistentAccessEntries)
+            {
+                var folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(accessEntry.Token);
+                if (folder == null)
+                    return;
+
+                folderScanTasks.Add(() => StorageFolderToFolderData(folder));
+            }
+
+            await Task.WhenAll(folderScanTasks.Select(Task.Run));
         }
     }
 }
