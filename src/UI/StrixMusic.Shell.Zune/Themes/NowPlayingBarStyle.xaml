@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shell.Zune.Controls"
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:launchpad="using:LaunchPad.Controls">
 
     <Style x:Key="ZuneNowPlayingBarControlStyle" TargetType="default:NowPlayingBarControl">
@@ -17,8 +18,7 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal">
-                                    <launchpad:ToggleContentButton Style="{StaticResource ZuneSmallToggleContentButton}" VerticalAlignment="Center" Margin="4,0"
-                                                                 IsThreeState="True">
+                                    <launchpad:ToggleContentButton Style="{StaticResource ZuneSmallToggleContentButton}" VerticalAlignment="Center" Margin="4,0" IsThreeState="True">
                                         <FontIcon Glyph="&#xE1CD;" FontSize="20"/>
                                         <launchpad:ToggleContentButton.CheckedContent>
                                             <FontIcon Glyph="&#xE1CD;" FontSize="20"/>
@@ -59,7 +59,10 @@
                                     <RowDefinition/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <Rectangle Width="64" Height="64" Fill="#FF00FF" Grid.RowSpan="3" VerticalAlignment="Center"/>
+
+                                <controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">
+                                    <Rectangle Width="64" Height="64" Fill="#FF00FF"/>
+                                </controls:DropShadowPanel>
                                 <TextBlock Text="Diplomat's Son" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5"/>
                                 <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5"/>
                                 <Slider Value="33" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"/>
