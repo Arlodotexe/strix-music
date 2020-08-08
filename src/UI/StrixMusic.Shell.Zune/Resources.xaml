@@ -18,12 +18,11 @@
         <dthemes:TrackListStyle/>
         <dthemes:TrackStyle/>
 
+        <ResourceDictionary Source="Styles/Brushes.xaml"/>
         <ResourceDictionary Source="Styles/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-    
+
     <Style x:Key="ZuneSlider" TargetType="Slider">
-        <Setter Property="Background" Value="#40FFFFFF" />
-        <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}" />
         <Setter Property="Foreground" Value="{ThemeResource SliderTrackValueFill}" />
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
         <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
@@ -38,12 +37,10 @@
                         <Grid.Resources>
                             <Style x:Key="SliderThumbStyle" TargetType="Thumb">
                                 <Setter Property="BorderThickness" Value="0" />
-                                <Setter Property="Background" x:Name="SliderThumbBackground"
-                                            Value="{StaticResource SystemControlBackgroundAccentBrush}" />
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="Thumb">
-                                            <Border Background="White" Width="3"/>
+                                            <Border Background="{ThemeResource SliderPlayedBackground}" Width="3"/>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
@@ -90,14 +87,14 @@
                                 <Border Grid.ColumnSpan="3"
                                         Grid.Row="1">
                                     <Rectangle x:Name="HorizontalTrackRect" Grid.ColumnSpan="3" 
-                                               Fill="{TemplateBinding Background}"
+                                               Fill="{ThemeResource SliderRemainingBackground}"
                                                Height="5" Grid.Row="1" />
                                 </Border>
 
 
                                 <Border Grid.Row="1">
                                     <Rectangle x:Name="HorizontalDecreaseRect"
-                                               Fill="#FFFFFF" Grid.Row="1" />
+                                               Fill="{ThemeResource SliderPlayedBackground}" Grid.Row="1" />
                                 </Border>
 
                                 <Thumb x:Name="HorizontalThumb" AutomationProperties.AccessibilityView="Raw"

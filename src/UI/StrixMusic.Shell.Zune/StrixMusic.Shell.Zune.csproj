@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.16299</TargetFrameworks>
+		<!--<TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.16299</TargetFrameworks>-->
+		<TargetFrameworks>uap10.0.16299</TargetFrameworks>
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 		<RootNamespace>StrixMusic.Shell.Zune</RootNamespace>
@@ -14,6 +15,7 @@
 		<DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -31,15 +33,19 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Assets\Quickplay-Background.png" />
+		<None Remove="Controls\ZuneShell.xaml" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Resources.xaml" />
+		<None Remove="Styles\Brushes.xaml" />
 		<None Remove="Styles\ButtonStyles.xaml" />
 		<None Remove="Themes\NowPlayingBarStyle.xaml" />
 		<None Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<UpToDateCheckInput Remove="Controls\ZuneShell.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
 		<UpToDateCheckInput Remove="Resources.xaml" />
+		<UpToDateCheckInput Remove="Styles\Brushes.xaml" />
 		<UpToDateCheckInput Remove="Styles\ButtonStyles.xaml" />
 		<UpToDateCheckInput Remove="Themes\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />

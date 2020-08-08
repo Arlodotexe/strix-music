@@ -1,0 +1,69 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:UI="using:Windows.UI"
+    xmlns:launchpad="using:LaunchPad.Controls"
+    xmlns:local="using:StrixMusic.Shell.Zune.Controls">
+
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="ZuneBackground" Color="#11090F"/>
+
+            <SolidColorBrush x:Key="Foreground" Color="#FFFFFF"/>
+            <UI:Color x:Key="ForegroundColor">#FFFFFF</UI:Color>
+
+            <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundClicked" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundDisabled" Color="#F5F4F4"/>
+
+            <SolidColorBrush x:Key="SliderPlayedBackground" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="SliderRemainingBackground" Color="#40FFFFFF"/>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="ZuneBackground" Color="#FFFFFF"/>
+
+            <SolidColorBrush x:Key="Foreground" Color="#000000"/>
+            <UI:Color x:Key="ForegroundColor">#000000</UI:Color>
+
+            <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundClicked" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundDisabled" Color="#F5F4F4"/>
+
+            <SolidColorBrush x:Key="SliderPlayedBackground" Color="#000000"/>
+            <SolidColorBrush x:Key="SliderRemainingBackground" Color="#40000000"/>
+        </ResourceDictionary>
+        
+        
+        <ResourceDictionary x:Key="Default">
+            <SolidColorBrush x:Key="ZuneBackground" Color="#11090F"/>
+
+            <SolidColorBrush x:Key="Foreground" Color="#000000"/>
+            <UI:Color x:Key="ForegroundColor">#000000</UI:Color>
+
+            <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundClicked" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundDisabled" Color="#F5F4F4"/>
+
+            <SolidColorBrush x:Key="SliderPlayedBackground" Color="#000000"/>
+            <SolidColorBrush x:Key="SliderRemainingBackground" Color="#40000000"/>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="HighContrast">
+            <SolidColorBrush x:Key="ZuneBackground" Color="#FFFFFF"/>
+
+            <SolidColorBrush x:Key="Foreground" Color="#000000"/>
+            <UI:Color x:Key="ForegroundColor">#000000</UI:Color>
+
+            <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundClicked" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundDisabled" Color="#F5F4F4"/>
+
+            <SolidColorBrush x:Key="SliderPlayedBackground" Color="#000000"/>
+            <SolidColorBrush x:Key="SliderRemainingBackground" Color="#40000000"/>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+    
+</ResourceDictionary>

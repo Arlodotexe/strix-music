@@ -51,7 +51,7 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="Border" BorderThickness="2" BorderBrush="White" CornerRadius="1000"
+                        <Border x:Name="Border" BorderThickness="2" BorderBrush="{ThemeResource Foreground}" CornerRadius="1000"
                                     Height="{TemplateBinding Width}" Width="{TemplateBinding Width}">
                             <ContentPresenter x:Name="ContentPresenter"
                                                 AutomationProperties.AccessibilityView="Raw"
@@ -160,7 +160,7 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <Border x:Name="Border" BorderThickness="2" BorderBrush="White" CornerRadius="1000"
+                            <Border x:Name="Border" BorderThickness="2" BorderBrush="{ThemeResource Foreground}" CornerRadius="1000"
                                     Height="{TemplateBinding Width}" Width="{TemplateBinding Width}">
                                 <Grid>
                                     <ContentPresenter x:Name="ContentPresenter"
@@ -538,45 +538,29 @@
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal">
-                                    <Storyboard>
-                                        <DoubleAnimation To=".5" Duration="0:0:0.2" Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource HyperlinkForeground}"/>
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="PointerOver">
-                                    <Storyboard>
-                                        <DoubleAnimation To="0.75" Duration="0:0:0.2" Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource HyperlinkForegroundHover}"/>
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <DoubleAnimation To="0.5" Duration="0:0:0.2" Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource HyperlinkForegroundClicked}"/>
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
-                                    <Storyboard>
-                                        <DoubleAnimation To="0.6" Duration="0:0:0.2" Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource HyperlinkForegroundDisabled}"/>
+                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <TextBlock x:Name="ContentPresenter" TextWrapping="Wrap" AutomationProperties.AccessibilityView="Raw" Text="{TemplateBinding Content}"
-                                          Foreground="White" FontWeight="Bold" FontSize="12" Opacity=".5"/>
+                                          Foreground="{ThemeResource HyperlinkForeground}" FontWeight="Bold" FontSize="12"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
