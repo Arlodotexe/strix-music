@@ -10,7 +10,7 @@ namespace Strix_Music
 {
     public sealed partial class SuperShell : UserControl
     {
-        private ISuperShellService _superShellService = Ioc.Default.GetService<ISuperShellService>();
+        private readonly ISuperShellService _superShellService = Ioc.Default.GetService<ISuperShellService>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperShell"/> class.

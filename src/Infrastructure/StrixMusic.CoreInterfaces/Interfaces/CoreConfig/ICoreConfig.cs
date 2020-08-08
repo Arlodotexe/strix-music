@@ -5,9 +5,5 @@
     /// </summary>
     public interface ICoreConfig
     {
-        /// <summary>
-        /// <inheritdoc cref="IFileConfig"/>
-        /// </summary>
-        IFileConfig? FileConfig { get; set; }
     }
 }

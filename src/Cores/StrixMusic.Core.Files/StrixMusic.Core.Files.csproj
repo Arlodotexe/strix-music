@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+	  <Nullable>enable</Nullable>
+	  <LangVersion>8.0</LangVersion>
+	  <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
@@ -16,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
   </ItemGroup>
 
 </Project>

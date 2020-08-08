@@ -114,8 +114,10 @@ namespace Strix_Music
 
         private ShellControl CreateShellControl()
         {
-            ShellControl shell = new ShellControl();
-            shell.DataContext = Ioc.Default.GetService<MainViewModel>();
+            ShellControl shell = new ShellControl
+            {
+                DataContext = Ioc.Default.GetService<MainViewModel>(),
+            };
             return shell;
         }
     }

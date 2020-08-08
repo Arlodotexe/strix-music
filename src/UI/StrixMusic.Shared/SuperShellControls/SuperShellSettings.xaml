@@ -17,7 +17,7 @@
                   SelectionChanged="ComboBox_SelectionChanged"/>
 
             <TextBlock Text="Cores" FontSize="24" Margin="0,15,0,0" />
-            <Button Content="Select a folder" Click="" />
+            <Button Content="Select a folder" Click="ButtonFolderSelect_Clicked" />
         </StackPanel>
     </Grid>
 </UserControl>

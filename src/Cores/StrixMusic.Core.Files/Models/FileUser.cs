@@ -43,7 +43,7 @@ namespace StrixMusic.Core.Files.Models
         public IReadOnlyList<Uri> Url => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Region { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string? Region { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public ICore SourceCore { get; set; }

@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Strix_Music.Services;
 using StrixMusic.Core.Dummy;
 using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Services;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
@@ -22,7 +23,7 @@ namespace StrixMusic.Shared
                 services.AddSingleton<ISettingsService, SettingsService>();
                 services.AddSingleton<ITextStorageService, TextStorageService>();
                 services.AddSingleton<ISuperShellService, SuperShellService>();
-
+                services.AddSingleton<IFileSystemService, FileSystemService>();
                 services.AddSingleton<ICore, DummyCore>();
 
                 services.AddSingleton<MainViewModel>();

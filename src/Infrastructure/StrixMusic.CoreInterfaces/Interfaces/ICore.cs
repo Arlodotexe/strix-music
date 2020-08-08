@@ -1,7 +1,7 @@
-﻿using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -48,7 +48,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Emits when the library changes.
         /// </summary>
-        event EventHandler<IPlayableCollectionGroup>? LibraryChanged;
+        event EventHandler<IPlayableCollectionGroup> LibraryChanged;
 
         /// <summary>
         /// Gets the recently played tracks for this core.
@@ -59,7 +59,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Emits when the recently played tracks change.
         /// </summary>
-        event EventHandler<IPlayableCollectionGroup>? RecentlyPlayedChanged;
+        event EventHandler<IPlayableCollectionGroup> RecentlyPlayedChanged;
 
         /// <summary>
         /// Used to browse and discover new music.

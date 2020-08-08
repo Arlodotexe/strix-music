@@ -2,26 +2,23 @@
 using System.IO;
 using StrixMusic.CoreInterfaces.Interfaces.MediaPlayback;
 
-namespace StrixMusic.CoreInterfaces.Models
+namespace StrixMusic.CoreInterfaces.Models.MediaPlayback
 {
-    /// <summary>
-    /// Defines configuration for a single PlayReady-enabled playback source.
-    /// </summary>
-    public class PlayReadyMediaSourceConfig : IMediaSourceConfig
+    /// <inheritdoc/>
+    public class MediaSourceConfig : IMediaSourceConfig
     {
         /// <summary>
-        /// Constructs a new <see cref="PlayReadyMediaSourceConfig"/>
+        /// Constructs a new <see cref="MediaSourceConfig"/>
         /// </summary>
         /// <param name="id"><inheritdoc cref="Id"/></param>
         /// <param name="licenseAcquisitionUri"><inheritdoc cref="LicenseAcquisitionUri"/></param>
         /// <param name="mediaSourceUri"><inheritdoc cref="MediaSourceUri"/></param>
         /// <param name="expirationDate"><inheritdoc cref="ExpirationDate"/></param>
-        public PlayReadyMediaSourceConfig(string id, Uri licenseAcquisitionUri, Uri mediaSourceUri, DateTime expirationDate)
+        public MediaSourceConfig(string id, Uri mediaSourceUri, DateTime expirationDate)
         {
             Id = id;
             MediaSourceUri = mediaSourceUri;
             ExpirationDate = expirationDate;
-            LicenseAcquisitionUri = licenseAcquisitionUri;
         }
 
         /// <summary>
@@ -29,11 +26,10 @@ namespace StrixMusic.CoreInterfaces.Models
         /// </summary>
         /// <param name="id"><inheritdoc cref="Id"/></param>
         /// <param name="licenseAcquisitionUri"><inheritdoc cref="LicenseAcquisitionUri"/></param>
-        public PlayReadyMediaSourceConfig(string id, Stream fileStream, Uri licenseAcquisitionUri)
+        public MediaSourceConfig(string id, Stream fileStream)
         {
             Id = id;
             FileStreamSource = fileStream;
-            LicenseAcquisitionUri = licenseAcquisitionUri;
         }
 
         /// <inheritdoc/>
@@ -47,10 +43,5 @@ namespace StrixMusic.CoreInterfaces.Models
 
         /// <inheritdoc/>
         public Stream? FileStreamSource { get; }
-
-        /// <summary>
-        /// The URI used to acquire the PlayReady license.
-        /// </summary>
-        public Uri LicenseAcquisitionUri { get; }
     }
 }

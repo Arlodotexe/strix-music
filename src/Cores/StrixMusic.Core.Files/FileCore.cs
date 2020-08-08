@@ -12,6 +12,13 @@ namespace StrixMusic.Core.Files
     /// </summary>
     public class FileCore : ICore
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCore"/> class.
+        /// </summary>
+        public FileCore()
+        {
+        }
+
         /// <inheritdoc/>
         public ICoreConfig CoreConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -22,16 +29,16 @@ namespace StrixMusic.Core.Files
         public IUser User { get => new FileUser(this); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
-        public event EventHandler<IDevice> DeviceAdded;
+        public event EventHandler<IDevice>? DeviceAdded;
 
         /// <inheritdoc/>
-        public event EventHandler<IDevice> DeviceRemoved;
+        public event EventHandler<IDevice>? DeviceRemoved;
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableCollectionGroup> LibraryChanged;
+        public event EventHandler<IPlayableCollectionGroup>? LibraryChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableCollectionGroup> RecentlyPlayedChanged;
+        public event EventHandler<IPlayableCollectionGroup>? RecentlyPlayedChanged;
 
         /// <inheritdoc/>
         public IAsyncEnumerable<IDevice> GetDevicesAsync()

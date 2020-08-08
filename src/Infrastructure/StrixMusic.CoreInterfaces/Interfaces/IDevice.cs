@@ -18,7 +18,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// </summary>
         string Name { get; set; }
 
-        /// <summary> 
+        /// <summary>
         /// The source core which created the object.
         /// </summary>
         public ICore SourceCore { get; set; }

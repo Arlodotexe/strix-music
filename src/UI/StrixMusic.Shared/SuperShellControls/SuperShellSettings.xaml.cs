@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.Settings.Enums;
+using StrixMusic.Services.StorageService;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -52,11 +54,35 @@ namespace Strix_Music.SuperShellControls
             Ioc.Default.GetService<ISettingsService>().SetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell), newPreferredSkin);
         }
 
-        private async void ButtonFolderSelect_Clicked(object sender, EventArgs e)
+        private async void ButtonFolderSelect_Clicked(object sender, RoutedEventArgs e)
         {
-            var musicLib = Windows.Storage.KnownFolders.MusicLibrary;
+            var fileSystemSvc = Ioc.Default.GetService<IFileSystemService>();
 
-            
+            await fileSystemSvc.PickFolder();
+
+            fileSystemSvc.FolderScanStarted += FileSystemSvc_FolderScanStarted;
+            fileSystemSvc.FolderDeepScanCompleted += FileSystemSvc_FolderDeepScanCompleted;
+            fileSystemSvc.FileScanStarted += FileSystemSvc_FileScanStarted;
+        }
+
+        private void FileSystemSvc_FolderDeepScanCompleted(object sender, StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData e)
+        {
+            Debug.WriteLine($"Deep scan of folder {e.Name} completed");
+        }
+
+        private void FileSystemSvc_FileScanStarted(object sender, StrixMusic.CoreInterfaces.Interfaces.Storage.IFileData e)
+        {
+            Debug.WriteLine($"Scanning file {e.Name}");
+        }
+
+        private void FileSystemSvc_FolderScanStarted(object sender, Progress<StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData> e)
+        {
+            e.ProgressChanged += E_ProgressChanged;
+        }
+
+        private void E_ProgressChanged(object sender, StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData e)
+        {
+            Debug.WriteLine($"Found {e.TotalFileCount} files in {e.Name}");
         }
 
         /// <summary>

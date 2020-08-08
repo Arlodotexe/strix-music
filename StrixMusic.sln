@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Services", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Core.Dummy", "src\Cores\StrixMusic.Core.Dummy\StrixMusic.Core.Dummy.csproj", "{60F40D66-AD18-4822-B4BC-2535DC32AC85}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Core.Files", "src\Cores\StrixMusic.Core.Files\StrixMusic.Core.Files.csproj", "{DBF0C623-33CF-4DB6-BB3B-353045678A70}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.CoreInterfaces", "src\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj", "{60EE2300-F562-416C-9458-DBEA41389D8B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.ViewModels", "src\Infrastructure\StrixMusix.ViewModels\StrixMusic.ViewModels.csproj", "{40522958-E5AD-4494-8C45-2BAF83399499}"
@@ -41,8 +43,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shell.Strix", "src\UI\StrixMusic.Shell.Strix\StrixMusic.Shell.Strix.csproj", "{1ACEBD69-E023-4917-B32E-F83A314A4809}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shell.Zune", "src\UI\StrixMusic.Shell.Zune\StrixMusic.Shell.Zune.csproj", "{C6B68A93-C3F0-4018-A1BE-0AD2ADE4EAD4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Core.Files", "StrixMusic.Core.Files\StrixMusic.Core.Files.csproj", "{DBF0C623-33CF-4DB6-BB3B-353045678A70}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
