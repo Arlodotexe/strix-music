@@ -12,6 +12,9 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
+            <Image Source="ms-appx:///StrixMusic.Shell.Zune/Assets/Quickplay-Background.png" Width="1009" Height="720"
+                   HorizontalAlignment="Center" VerticalAlignment="Top" Stretch="UniformToFill" Grid.RowSpan="2"/>
+
             <Grid>
                 <Grid>
                     <Border BorderBrush="#80FFFFFF" BorderThickness="3" Width="24" Height="24" CornerRadius="16" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="40,12,-32,0">
