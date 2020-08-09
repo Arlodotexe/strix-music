@@ -23,19 +23,19 @@ namespace StrixMusic.Services.StorageService
         }
 
         /// <inheritdoc/>
-        public event EventHandler<IFolderData> FolderScanStarted;
+        public event EventHandler<IFolderData>? FolderScanStarted;
 
         /// <inheritdoc/>
-        public event EventHandler<IFolderData> FolderDeepScanCompleted;
+        public event EventHandler<IFolderData>? FolderDeepScanCompleted;
 
         /// <inheritdoc/>
-        public event EventHandler<IFolderData> FolderScanCompleted;
+        public event EventHandler<IFolderData>? FolderScanCompleted;
 
         /// <inheritdoc/>
-        public event EventHandler<FileScanStateEventArgs> FileScanStarted;
+        public event EventHandler<FileScanStateEventArgs>? FileScanStarted;
 
         /// <inheritdoc/>
-        public event EventHandler<FileScanStateEventArgs> FileScanCompleted;
+        public event EventHandler<FileScanStateEventArgs>? FileScanCompleted;
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IFolderData>> GetPickedFolders()

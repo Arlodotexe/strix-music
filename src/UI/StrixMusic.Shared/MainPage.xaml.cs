@@ -80,17 +80,23 @@ namespace StrixMusic
 
         private void FileSystemSvc_FolderDeepScanCompleted(object sender, StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData e)
         {
+#if !__ANDROID__
             Debug.WriteLine($"Deep scan of folder {e.Name} completed");
+#endif
         }
 
         private void FileSystemSvc_FileScanStarted(object sender, FileScanStateEventArgs e)
         {
+#if !__ANDROID__
             Debug.WriteLine($"Scanning file {e.FileData.Name}");
+#endif
         }
 
         private void FileSystemSvc_FolderScanStarted(object sender, StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData e)
         {
+#if !__ANDROID__
             Debug.WriteLine($"Scanning folder {e.Name}");
+#endif
         }
 
         private async void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)
