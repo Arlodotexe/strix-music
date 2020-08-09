@@ -9,7 +9,18 @@
     xmlns:local="using:StrixMusic.Shell.Zune.Controls"
     x:Name="RootControl" RequestedTheme="Dark">
 
-    <Grid Background="{ThemeResource ZuneBackground}">
+    <UserControl.Resources>
+        <Storyboard x:Name="EnterLightTheme">
+            <DoubleAnimation Storyboard.TargetName="LightBackground" Storyboard.TargetProperty="Opacity"
+                             Duration="0:0:0.5" To="1"/>
+        </Storyboard>
+        <Storyboard x:Name="LeaveLightTheme">
+            <DoubleAnimation Storyboard.TargetName="LightBackground" Storyboard.TargetProperty="Opacity"
+                             Duration="0:0:.5" To="0"/>
+        </Storyboard>
+    </UserControl.Resources>
+    
+    <Grid Background="{ThemeResource ZuneDarkBackground}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="auto"/>
@@ -18,6 +29,8 @@
         <Image Source="ms-appx:///StrixMusic.Shell.Zune/Assets/Quickplay-Background.png" Width="1009" Height="720"
                    HorizontalAlignment="Center" VerticalAlignment="Top" Stretch="UniformToFill" Grid.RowSpan="2"/>
 
+        <Rectangle x:Name="LightBackground" Fill="{ThemeResource ZuneLightBackgroundColor}" Opacity="0" Grid.RowSpan="2"/>
+        
         <Grid>
             <Grid>
                 <Button Style="{StaticResource ZuneButton}" Width="24" Margin="40,12,-32,0"
