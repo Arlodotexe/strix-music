@@ -7,7 +7,7 @@
     mc:Ignorable="d"
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:local="using:StrixMusic.Shell.Zune.Controls"
-    x:Name="RootControl">
+    x:Name="RootControl" RequestedTheme="Dark">
 
     <Grid Background="{ThemeResource ZuneBackground}">
         <Grid.RowDefinitions>
