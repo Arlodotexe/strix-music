@@ -10,7 +10,7 @@ namespace StrixMusic.Core.Dummy.Models
     /// <summary>
     /// A generic list of <see cref="DummyArtist"/>
     /// </summary>
-    public class ArtistCollection : IPlayableCollectionGroup
+    public class ArtistCollection : IPlayableCollectionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ArtistCollection"/> class.
@@ -51,7 +51,7 @@ namespace StrixMusic.Core.Dummy.Models
         public ITrack? PlayingTrack => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public int Count { get => Items?.Count() ?? 0; set => throw new NotImplementedException(); }
+        public int TotalItemsCount { get => Items?.Count() ?? 0; set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }

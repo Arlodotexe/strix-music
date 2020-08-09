@@ -18,7 +18,7 @@
 
     <DataTemplate x:Key="StrixPlayableCollectionListTemplate" x:DataType="interfaces:IPlayableCollectionGroup">
         <GridView Padding="16" ItemContainerStyle="{StaticResource PlayableCollectionGridItemStyle}"
-                  ItemsSource="{x:Bind Items}" ItemTemplateSelector="{StaticResource PlayableCollectionGroupSelector}"
+                  ItemTemplateSelector="{StaticResource PlayableCollectionGroupSelector}"
                   SelectionMode="None" IsItemClickEnabled="True">
         </GridView>
     </DataTemplate>

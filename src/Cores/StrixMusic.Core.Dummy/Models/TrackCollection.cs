@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using StrixMusic.Core.Dummy.Implementations;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -60,6 +61,9 @@ namespace StrixMusic.Core.Dummy.Models
         public int TotalCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public int TotalTrackCount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        /// <inheritdoc/>
         public void Play()
         {
             throw new NotImplementedException();
@@ -67,6 +71,12 @@ namespace StrixMusic.Core.Dummy.Models
 
         /// <inheritdoc/>
         public void Pause()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateItems(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

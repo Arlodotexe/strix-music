@@ -58,7 +58,8 @@ namespace StrixMusic.Services.StorageService
         /// <inheritdoc/>
         public Task Init()
         {
-            throw new NotImplementedException();
+            // TODO
+            return Task.CompletedTask;
         }
     }
 }

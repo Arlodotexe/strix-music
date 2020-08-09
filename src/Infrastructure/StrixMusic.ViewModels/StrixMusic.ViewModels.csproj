@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\stylecop.json" Link="stylecop.json" />
+    <None Include="..\..\..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
     <ProjectReference Include="..\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
     <ProjectReference Include="..\StrixMusic.Services\StrixMusic.Services.csproj" />
   </ItemGroup>

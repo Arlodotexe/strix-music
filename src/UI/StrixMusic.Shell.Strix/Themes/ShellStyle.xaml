@@ -72,7 +72,7 @@
                 </local:Drawer.TopBarContent>
                 <local:Drawer.MainContent>
                     <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}">
-                        <default:HomeControl DataContext="{x:Bind PageContent}"/>
+                        <default:HomeControl />
                     </Grid>
                 </local:Drawer.MainContent>
                 <local:Drawer.BottomBarSecondaryContent>

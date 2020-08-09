@@ -21,16 +21,16 @@
     <DataTemplate x:Key="StrixHomeTemplate" x:DataType="bindables:BindableLibrary">
         <UserControl>
             <Grid>
-                <Pivot ItemsSource="{x:Bind Library.Items, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
+                <!--<Pivot ItemsSource="{x:Bind Library.Items, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
                     <Pivot.LeftHeader>
                         <TextBlock Grid.Column="1" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0"/>
                     </Pivot.LeftHeader>
                     <Pivot.HeaderTemplate>
                         <DataTemplate x:DataType="interfaces:IPlayableCollectionBase">
-                            <TextBlock Text="{x:Bind Name}"/>
+                            <TextBlock />
                         </DataTemplate>
                     </Pivot.HeaderTemplate>
-                    <!--<PivotItem Header="Overview">
+                    --><!--<PivotItem Header="Overview">
                     </PivotItem>
                     <PivotItem Header="Playlists">
                         <default:PlayableCollectionListControl/>
@@ -43,8 +43,8 @@
                     </PivotItem>
                     <PivotItem Header="Tracks">
                         <default:TrackListControl/>
-                    </PivotItem>-->
-                </Pivot>
+                    </PivotItem>--><!--
+                </Pivot>-->
             </Grid>
         </UserControl>
     </DataTemplate>

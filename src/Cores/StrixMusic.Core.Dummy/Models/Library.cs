@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using StrixMusic.Core.Dummy.Implementations;
 using StrixMusic.Core.Dummy.Models;
 using StrixMusic.CoreInterfaces.Enums;
@@ -11,7 +12,7 @@ namespace StrixMusic.Core.Dummy
     /// <summary>
     /// The root type for the Library stored in JSON.
     /// </summary>
-    public class Library : IPlayableCollectionGroup
+    public class Library : ILibrary
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Library"/> class.
@@ -57,7 +58,7 @@ namespace StrixMusic.Core.Dummy
         public ITrack? PlayingTrack => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public int Count { get => Items?.Count() ?? 0; set => throw new NotImplementedException(); }
+        public int TotalItemsCount { get => Items?.Count() ?? 0; set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public ICore SourceCore => DummyCore!;
@@ -68,6 +69,30 @@ namespace StrixMusic.Core.Dummy
         public DummyCore? DummyCore { get; set; }
 
         /// <inheritdoc/>
+        public IReadOnlyList<IArtist> Artists => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public int TotalArtistsCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IReadOnlyList<IAlbum> Albums => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public int TotalAlbumsCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IReadOnlyList<ITrack> Tracks => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public int TotalTracksCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IReadOnlyList<IPlaylist> Playlists => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public int TotalPlaylistCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public void Play()
         {
             throw new NotImplementedException();
@@ -75,6 +100,30 @@ namespace StrixMusic.Core.Dummy
 
         /// <inheritdoc/>
         public void Pause()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateArtists(int limit, int offset = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateAlbums(int limit, int offset = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateTracks(int limit, int offset = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulatePlaylists(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

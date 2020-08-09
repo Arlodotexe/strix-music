@@ -18,7 +18,7 @@
 
             <TextBlock Text="" Margin="16,0"/> <!--Track Number-->
             <TextBlock Text="{x:Bind Title}" Grid.Column="1"/>
-            <TextBlock Text="{x:Bind Artist.Name}" Grid.Column="2"/>
+            <TextBlock Grid.Column="2"/>
             <TextBlock Text="{x:Bind Album.Name}" Grid.Column="3"/>
             <TextBlock Text="" Margin="16,0" Grid.Column="4"/> <!--Year-->
             <TextBlock Text="" Margin="16,0" Grid.Column="5"/> <!--Duration-->

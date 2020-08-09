@@ -67,13 +67,13 @@
 
                     <Rectangle Grid.RowSpan="2" Margin="32">
                         <Rectangle.Fill>
-                            <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Album.CoverImageUri)}"/>
+                            <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(CoverImageUri)}"/>
                         </Rectangle.Fill>
                     </Rectangle>
 
                     <StackPanel Grid.Column="1" Margin="0,32,0,0">
-                        <TextBlock Text="{x:Bind Album.Name}" FontSize="32" FontWeight="SemiBold"/>
-                        <TextBlock Text="{x:Bind Album.Artist.Name}" Margin="0,4,0,0"/>
+                        <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold"/>
+                        <TextBlock Margin="0,4,0,0"/>
                         <TextBlock Text="2010" Opacity=".5"/>
                     </StackPanel>
                     <StackPanel x:Name="QuickActions" Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Margin="16,0,0,32" VerticalAlignment="Bottom">

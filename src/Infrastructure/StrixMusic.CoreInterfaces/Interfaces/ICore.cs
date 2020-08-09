@@ -30,36 +30,16 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         IAsyncEnumerable<IDevice> GetDevicesAsync();
 
         /// <summary>
-        /// Fires when a new device appears.
-        /// </summary>
-        event EventHandler<IDevice> DeviceAdded;
-
-        /// <summary>
-        /// Fires when a device dissapears.
-        /// </summary>
-        event EventHandler<IDevice> DeviceRemoved;
-
-        /// <summary>
         /// Gets the library for the user on this core.
         /// </summary>
         /// <returns>A task representing the async operation. Returns <see cref="ISearchResults"/> containing multiple.</returns>
-        Task<IPlayableCollectionGroup> GetLibraryAsync();
-
-        /// <summary>
-        /// Emits when the library changes.
-        /// </summary>
-        event EventHandler<IPlayableCollectionGroup> LibraryChanged;
+        Task<ILibrary> GetLibraryAsync();
 
         /// <summary>
         /// Gets the recently played tracks for this core.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. </returns>
-        Task<IPlayableCollectionGroup> GetRecentlyPlayedAsync();
-
-        /// <summary>
-        /// Emits when the recently played tracks change.
-        /// </summary>
-        event EventHandler<IPlayableCollectionGroup> RecentlyPlayedChanged;
+        Task<IRecentlyPlayed> GetRecentlyPlayedAsync();
 
         /// <summary>
         /// Used to browse and discover new music.
@@ -80,5 +60,14 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <param name="query">Search query</param>
         /// <returns>Suggested completed queries.</returns>
         IAsyncEnumerable<string> GetSearchAutoComplete(string query);
+
+        /// <summary>
+        /// Initializes the <see cref="ICore"/> asyncronously.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task Init();
+
+        /// <inheritdoc />
+        public CoreState CoreState { get; }
     }
 }

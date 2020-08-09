@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using StrixMusic.Core.Dummy.Implementations;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -10,7 +10,7 @@ namespace StrixMusic.Core.Dummy.Models
     /// <summary>
     /// A generic collection of <see cref="DummyAlbum"/>s.
     /// </summary>
-    public class AlbumCollection : IPlayableCollectionGroup
+    public class AlbumCollection : IPlayableCollectionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumCollection"/> class.
@@ -42,7 +42,7 @@ namespace StrixMusic.Core.Dummy.Models
         public string Description => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public int Count { get => Items?.Count() ?? 0; set => throw new NotImplementedException(); }
+        public int TotalItemsCount { get => Items?.Count() ?? 0; set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public IUserProfile? Owner => throw new NotImplementedException();

@@ -6,7 +6,7 @@
     x:Class="StrixMusic.Shell.Default.Themes.TrackListStyle">
 
     <DataTemplate x:Key="DefaultTrackList" x:DataType="interfaces:IPlaylist">
-        <ListView ItemsSource="{x:Bind Tracks}" ItemContainerStyle="{StaticResource TrackListItemStyle}" Margin="32" HorizontalAlignment="Stretch">
+        <ListView ItemContainerStyle="{StaticResource TrackListItemStyle}" Margin="32" HorizontalAlignment="Stretch">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <local:TrackControl/>

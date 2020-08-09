@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Extensions;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services.Settings;
 using StrixMusic.ViewModels.Bindables;
@@ -14,7 +16,6 @@ namespace StrixMusic.ViewModels
     /// </summary>
     public class MainViewModel : ObservableRecipient
     {
-        private BindableLibrary? _pageContent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
@@ -22,28 +23,24 @@ namespace StrixMusic.ViewModels
         /// <param name="settings"></param>
         public MainViewModel(ISettingsService settings)
         {
-            IEnumerable<ICore> loadedCores = Ioc.Default.GetServices<ICore>();
-            InitializeCores(loadedCores);
+            IEnumerable<ICore> cores = Ioc.Default.GetServices<ICore>();
+
+            _ = InitializeCores(cores);
         }
 
-        private async void InitializeCores(IEnumerable<ICore> loadedCores)
+        private async Task InitializeCores(IEnumerable<ICore> coresToLoad)
         {
-            foreach (ICore core in loadedCores)
+            await coresToLoad.InParallel(core => Task.Run(core.Init));
+
+            foreach (ICore core in coresToLoad)
             {
-                Library = await core.GetLibraryAsync();
+                var library = await core.GetLibraryAsync();
             }
-
-            PageContent = new BindableLibrary(Library!);
-            //PageContent = new BindableAlbum(((Library!.Items[1] ! as IPlayableCollectionGroup) !.Items[1] as IAlbum) !);
         }
 
-        /// <summary>
-        /// The DataContext to be bound to the Shell's ContentPresenter.
-        /// </summary>
-        public BindableLibrary? PageContent
+        private async Task LoadLibrary(IEnumerable<ICore> cores)
         {
-            get => _pageContent;
-            set => SetProperty(ref _pageContent, value);
+
         }
 
         /// <summary>
@@ -59,17 +56,17 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// The consolidated music library across all cores.
         /// </summary>
-        public IPlayableCollectionGroup? Library { get; set; }
+        public BindableCollectionGroup? Library { get; set; }
 
         /// <summary>
         /// The consolidated recently played items across all cores.
         /// </summary>
-        public IPlayableCollectionGroup? RecentlyPlayed { get; set; }
+        public BindableCollectionGroup? RecentlyPlayed { get; set; }
 
         /// <summary>
         /// Used to browse and discovered new music.
         /// </summary>
-        public ObservableCollection<IPlayableCollectionGroup>? Discoverables { get; }
+        public ObservableCollection<BindableCollectionGroup>? Discoverables { get; }
 
         /// <summary>
         /// Search results.
@@ -84,6 +81,6 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// Autocomplete for the current search query.
         /// </summary>
-        public IEnumerable<string>? SearchSuggestions { get; set; }
+        public ObservableCollection<string>? SearchSuggestions { get; set; }
     }
 }
