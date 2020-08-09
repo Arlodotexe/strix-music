@@ -404,7 +404,7 @@
                     <Rectangle Stroke="#80FFFFFF" StrokeThickness="2" Grid.Row="1" Grid.Column="1" Margin="4"/>
                     <Rectangle Stroke="#80FFFFFF" StrokeThickness="2" Grid.Row="0" Grid.Column="2" Margin="4"
                        Grid.ColumnSpan="3" Grid.RowSpan="2"/>
-                    <Rectangle Stroke="#80FFFFFF" Grid.Row="3" Grid.Column="4" Margin="4"/>
+                    <Rectangle Stroke="#80FFFFFF" StrokeThickness="2" Grid.Row="3" Grid.Column="4" Margin="4"/>
                     <TextBlock Text="pins" FontWeight="Light" FontSize="52" HorizontalAlignment="Right"
                         Grid.ColumnSpan="100" Margin="0,-52,16,0" Opacity=".5"/>
                 </Grid>
@@ -472,7 +472,7 @@
 
         <ScrollViewer x:Name="RecScroller" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden"
                       VerticalScrollMode="Disabled" IsHorizontalRailEnabled="True" Canvas.ZIndex="0">
-            <Grid x:Name="Recommendations" Margin="0,60,0,0" HorizontalAlignment="Center" Height="200" VerticalAlignment="Top">
+            <Grid x:Name="Recommendations" Margin="0,60,0,0" HorizontalAlignment="Center" Height="200" VerticalAlignment="Top" Opacity=".5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
