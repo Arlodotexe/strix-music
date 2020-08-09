@@ -45,7 +45,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:ShellControl">
-                        <ContentControl ContentTemplate="{StaticResource DefaultShellTemplate}" VerticalContentAlignment="Stretch"/>
+                        <ContentControl ContentTemplate="{StaticResource DefaultShellTemplate}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
