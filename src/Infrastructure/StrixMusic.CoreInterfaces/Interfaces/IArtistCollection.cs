@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
@@ -17,11 +18,16 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Populates a set of <see cref="IArtist.Albums"/> into the collection.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PopulateArtists(int limit, int offset = 0);
+        Task PopulateArtistsAsync(int limit, int offset = 0);
 
         /// <summary>
-        /// The total number of artists in this collection.
+        /// The total number of available <see cref="Artists"/>.
         /// </summary>
         int TotalArtistsCount { get; }
+
+        /// <summary>
+        /// Fires when <see cref="Artists"/> changes.
+        /// </summary>
+        event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
     }
 }

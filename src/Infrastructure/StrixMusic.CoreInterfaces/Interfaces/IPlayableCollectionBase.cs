@@ -12,28 +12,13 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     public interface IPlayableCollectionBase : IPlayable
     {
         /// <summary>
-        /// The source core which created the parent.
-        /// </summary>
-        public ICore SourceCore { get; }
-
-        /// <summary>
         /// An external link related to the collection.
         /// </summary>
-        Uri Url { get; }
+        Uri? Url { get; }
 
         /// <summary>
         /// Owner of the collection.
         /// </summary>
         IUserProfile? Owner { get; }
-
-        /// <summary>
-        /// If the collection is currently playing, this will represent the time in milliseconds that the song is currently playing.
-        /// </summary>
-        PlaybackState State { get; }
-
-        /// <summary>
-        /// If the collection is currently playing, this will represent the currently playing <see cref="ITrack"/>.
-        /// </summary>
-        ITrack? PlayingTrack { get; }
     }
 }

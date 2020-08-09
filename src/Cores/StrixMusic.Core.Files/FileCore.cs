@@ -74,13 +74,13 @@ namespace StrixMusic.Core.Files
         }
 
         /// <inheritdoc/>
-        public Task<ISearchResults> GetSearchResults(string query)
+        public Task<ISearchResults> GetSearchResultsAsync(string query)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task Init()
+        public Task InitAsync()
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using StrixMusic.CoreInterfaces.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -7,6 +10,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// </summary>
     public interface IPlayable
     {
+        /// <summary>
+        /// The source core which created the parent.
+        /// </summary>
+        public ICore SourceCore { get; }
+
         /// <summary>
         /// The ID of the playable item.
         /// </summary>
@@ -27,14 +35,24 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// </summary>
         string? Description { get; }
 
+        /// <inheritdoc cref="Enums.PlaybackState"/>
+        PlaybackState PlaybackState { get; }
+
         /// <summary>
         /// Attempts to play the item, or resumes playback if already playing.
         /// </summary>
-        void Play();
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task PlayAsync();
 
         /// <summary>
         /// Attempts to pause the item.
         /// </summary>
-        void Pause();
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task PauseAsync();
+
+        /// <summary>
+        /// Fires when <see cref="PlaybackState"/> changes.
+        /// </summary>
+        event EventHandler<PlaybackState>? PlaybackStateChanged;
     }
 }

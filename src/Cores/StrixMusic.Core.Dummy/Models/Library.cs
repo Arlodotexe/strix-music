@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using StrixMusic.Core.Dummy.Implementations;
 using StrixMusic.Core.Dummy.Models;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -52,13 +53,13 @@ namespace StrixMusic.Core.Dummy
         public IUserProfile? Owner => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public PlaybackState State => throw new NotImplementedException();
+        public PlaybackState PlaybackState => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public ITrack? PlayingTrack => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public int TotalItemsCount { get => Items?.Count() ?? 0; set => throw new NotImplementedException(); }
+        public int TotalChildrenCount { get => Items?.Count() ?? 0; set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public ICore SourceCore => DummyCore!;
@@ -93,10 +94,29 @@ namespace StrixMusic.Core.Dummy
         public int TotalPlaylistCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IReadOnlyList<IPlayableCollectionGroup> SubItems => throw new NotImplementedException();
+        public IReadOnlyList<IPlayableCollectionGroup> Children => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public IReadOnlyList<IPlayableCollectionGroup>? MergedFrom => throw new NotImplementedException();
+
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc/>
         public void Play()
@@ -111,31 +131,43 @@ namespace StrixMusic.Core.Dummy
         }
 
         /// <inheritdoc/>
-        public Task PopulateArtists(int limit, int offset = 0)
+        public Task PopulateArtistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateAlbums(int limit, int offset = 0)
+        public Task PopulateAlbumsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateTracks(int limit, int offset = 0)
+        public Task PopulateTracksAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulatePlaylists(int limit, int offset = 0)
+        public Task PopulatePlaylistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateItems(int limit, int offset = 0)
+        public Task PopulateChildrenAsync(int limit, int offset = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PlayAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PauseAsync()
         {
             throw new NotImplementedException();
         }

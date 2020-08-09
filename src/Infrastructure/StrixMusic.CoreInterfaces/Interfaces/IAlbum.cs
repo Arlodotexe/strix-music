@@ -33,6 +33,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Populates a set of <see cref="IAlbum.Tracks"/> into the collection.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PopulateTracks(int limit, int offset = 0);
+        Task PopulateTracksAsync(int limit, int offset = 0);
     }
 }

@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Linq;
 using StrixMusic.CoreInterfaces.Interfaces;
 
-namespace StrixMusic.ViewModels.Mergers
+namespace StrixMusic.ViewModels
 {
-    /// <summary>
-    /// Helps merge ILibraries.
-    /// </summary>
-    public class LibraryMerger
+    public static partial class Mergers
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LibraryMerger"/> class.
+        /// Marges multiple <see cref="ILibrary"/> into one.
         /// </summary>
-        /// <param name="libraries">The libraries to merge</param>
-        public LibraryMerger(params ILibrary[] libraries)
+        /// <param name="libraries">The libraries to merge.</param>
+        /// <returns><inheritdoc cref="ILibrary"/></returns>
+        public static ILibrary MergeLibrary(params ILibrary[] libraries)
         {
-
+            // TODO
+            return libraries.First();
         }
     }
 }

@@ -9,10 +9,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     public interface ITrack : IPlayable
     {
         /// <summary>
-        /// The core which created the parent.
-        /// </summary>
-        public ICore Core { get; }
-        /// <summary>
         /// An external link related to the track.
         /// </summary>
         Uri? Url { get; }
@@ -50,7 +46,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Number of the times this track has been played.
         /// </summary>
-        int PlayCount { get; }
+        int? PlayCount { get; }
 
         /// <summary>
         /// The language this track is spoken in.

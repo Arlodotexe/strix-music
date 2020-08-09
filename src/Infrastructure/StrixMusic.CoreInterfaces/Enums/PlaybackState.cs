@@ -5,7 +5,7 @@
     /// </summary>
     public enum PlaybackState
     {
-        Unloaded,
+        None,
         Playing,
         Paused,
         Queued,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using StrixMusic.Core.Dummy.Implementations;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -43,7 +44,7 @@ namespace StrixMusic.Core.Dummy.Models
         public IUserProfile? Owner => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public PlaybackState State => throw new NotImplementedException();
+        public PlaybackState PlaybackState => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public int TrackCount { get => Tracks?.Count() ?? 0; set => throw new NotImplementedException(); }
@@ -61,22 +62,28 @@ namespace StrixMusic.Core.Dummy.Models
         public int TotalCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public int TotalTrackCount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int TotalTracksCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public void Play()
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public Task PopulateTracksAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public void Pause()
+        public Task PlayAsync()
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateItems(int limit, int offset = 0)
+        public Task PauseAsync()
         {
             throw new NotImplementedException();
         }

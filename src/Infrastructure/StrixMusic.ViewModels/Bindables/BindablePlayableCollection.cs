@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -32,7 +33,7 @@ namespace StrixMusic.ViewModels.Bindables
         public IReadOnlyList<IImage> Images => _playableCollectionBase.Images;
 
         /// <inheritdoc/>
-        public Uri Url => _playableCollectionBase.Url;
+        public Uri? Url => _playableCollectionBase.Url;
 
         /// <inheritdoc/>
         public string? Description => _playableCollectionBase.Description;
@@ -41,21 +42,32 @@ namespace StrixMusic.ViewModels.Bindables
         public IUserProfile? Owner => _playableCollectionBase.Owner;
 
         /// <inheritdoc/>
-        public PlaybackState State => _playableCollectionBase.State;
+        public PlaybackState PlaybackState => _playableCollectionBase.PlaybackState;
 
         /// <inheritdoc/>
-        public ITrack? PlayingTrack => _playableCollectionBase.PlayingTrack;
-
-        /// <inheritdoc/>
-        public void Pause()
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
-            _playableCollectionBase.Pause();
+            add
+            {
+                _playableCollectionBase.PlaybackStateChanged += value;
+            }
+
+            remove
+            {
+                _playableCollectionBase.PlaybackStateChanged -= value;
+            }
         }
 
         /// <inheritdoc/>
-        public void Play()
+        public Task PauseAsync()
         {
-            _playableCollectionBase.Play();
+            return _playableCollectionBase.PauseAsync();
+        }
+
+        /// <inheritdoc/>
+        public Task PlayAsync()
+        {
+            return _playableCollectionBase.PlayAsync();
         }
     }
 }

@@ -9,6 +9,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     public interface IUserProfile
     {
         /// <summary>
+        /// The source core which created the parent.
+        /// </summary>
+        public ICore SourceCore { get; set; }
+
+        /// <summary>
         /// Identifier for the user
         /// </summary>
         string Id { get; }
@@ -50,10 +55,5 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// The user's country or region of origin.
         /// </summary>
         string? Region { get; set; }
-
-        /// <summary>
-        /// The source core which created the parent.
-        /// </summary>
-        public ICore SourceCore { get; set; }
     }
 }
