@@ -23,7 +23,7 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         [JsonProperty("title")]
-        public string Title { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         public IArtist Artist => DummyArtist!;
@@ -57,7 +57,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public DateTime? DatePublished => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IReadOnlyList<string> Genre => throw new NotImplementedException();
+        public IReadOnlyList<string> Genres => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public int? TrackNumber => throw new NotImplementedException();
@@ -90,5 +90,17 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         IReadOnlyList<IArtist> ITrack.Artist => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public void Pause()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public void Play()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

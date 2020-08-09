@@ -6,18 +6,12 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Metadata about a track.
     /// </summary>
-    public interface ITrack
+    public interface ITrack : IPlayable
     {
         /// <summary>
-        /// Id for the track.
+        /// The core which created the parent.
         /// </summary>
-        string Id { get; }
-
-        /// <summary>
-        /// Images for the track.
-        /// </summary>
-        IReadOnlyList<IImage> Images { get; }
-
+        public ICore Core { get; }
         /// <summary>
         /// An external link related to the track.
         /// </summary>
@@ -27,11 +21,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Identifies which type of track this is (song, podcast, etc).
         /// </summary>
         string Type { get; }
-
-        /// <summary>
-        /// Name of the track.
-        /// </summary>
-        string Title { get; }
 
         /// <summary>
         /// A list of <see cref="IArtist"/>s that this track was created by.
@@ -51,7 +40,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// A list of <see cref="string"/> describing the genres for this track.
         /// </summary>
-        IReadOnlyList<string>? Genre { get; }
+        IReadOnlyList<string>? Genres { get; }
 
         /// <summary>
         /// Position in a set, usually the album.
@@ -82,15 +71,5 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// How long the track is in.
         /// </summary>
         TimeSpan Duration { get; }
-
-        /// <summary>
-        /// Provides comments about the track.
-        /// </summary>
-        string? Description { get; }
-
-        /// <summary>
-        /// The core which created the parent.
-        /// </summary>
-        public ICore Core { get; }
     }
 }

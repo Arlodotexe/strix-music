@@ -93,6 +93,12 @@ namespace StrixMusic.Core.Dummy
         public int TotalPlaylistCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public IReadOnlyList<IPlayableCollectionGroup> SubItems => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IReadOnlyList<IPlayableCollectionGroup>? MergedFrom => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public void Play()
         {
             throw new NotImplementedException();
@@ -124,6 +130,12 @@ namespace StrixMusic.Core.Dummy
 
         /// <inheritdoc/>
         public Task PopulatePlaylists(int limit, int offset = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateItems(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

@@ -74,6 +74,15 @@ namespace StrixMusic.ViewModels.Bindables
         public int TotalPlaylistCount => _library.TotalPlaylistCount;
 
         /// <inheritdoc/>
+        public IReadOnlyList<IPlayableCollectionGroup> SubItems => _library.SubItems;
+
+        /// <inheritdoc/>
+        public int TotalItemsCount => _library.TotalItemsCount;
+
+        /// <inheritdoc/>
+        public IReadOnlyList<IPlayableCollectionGroup>? MergedFrom => _library.MergedFrom;
+
+        /// <inheritdoc/>
         public void Pause()
         {
             _library.Pause();
@@ -96,5 +105,11 @@ namespace StrixMusic.ViewModels.Bindables
 
         /// <inheritdoc/>
         public Task PopulatePlaylists(int limit, int offset) => _library.PopulatePlaylists(limit, offset);
+
+        /// <inheritdoc/>
+        public Task PopulateItems(int limit, int offset = 0)
+        {
+            return _library.PopulateItems(limit, offset);
+        }
     }
 }

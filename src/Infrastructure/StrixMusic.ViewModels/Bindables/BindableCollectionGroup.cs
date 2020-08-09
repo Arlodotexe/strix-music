@@ -67,7 +67,7 @@ namespace StrixMusic.ViewModels.Bindables
                 var sortingKey = decideItemCombine?.Invoke(collection) ?? string.Empty;
 
                 if (_sortedPlayableCollections.TryGetValue(sortingKey, out List<IPlayableCollectionBase> value))
-                    value.Add(collection);  
+                    value.Add(collection);
                 else
                     _sortedPlayableCollections.Add(sortingKey, new List<IPlayableCollectionBase>() { collection });
             }
