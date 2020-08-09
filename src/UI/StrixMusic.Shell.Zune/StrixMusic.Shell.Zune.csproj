@@ -33,6 +33,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Assets\Quickplay-Background.png" />
+		<None Remove="Controls\QuickplayContent.xaml" />
 		<None Remove="Controls\ZuneShell.xaml" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Resources.xaml" />
@@ -42,6 +43,7 @@
 		<None Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<UpToDateCheckInput Remove="Controls\QuickplayContent.xaml" />
 		<UpToDateCheckInput Remove="Controls\ZuneShell.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
 		<UpToDateCheckInput Remove="Resources.xaml" />
@@ -64,5 +66,10 @@
 		<Compile Update="Themes\ShellStyle.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Controls\QuickplayContent.xaml">
+	    <SubType>Designer</SubType>
+	  </Page>
 	</ItemGroup>
 </Project>
