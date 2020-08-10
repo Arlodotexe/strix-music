@@ -5,6 +5,7 @@
     xmlns:local="using:StrixMusic.SuperShellControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:StrixMusic.Models"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -13,8 +14,14 @@
         <StackPanel>
             <!-- TODO: Destroy and replace with the default settings control -->
             <TextBlock Text="Skins" FontSize="24" />
-            <ComboBox Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="{x:Bind CurrentSkin}"
-                  SelectionChanged="ComboBox_SelectionChanged"/>
+            <ComboBox x:Name="ShellSelector" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
+                  SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="model:ShellModel">
+                        <TextBlock Text="{x:Bind DisplayName}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <TextBlock Text="Cores" FontSize="24" Margin="0,15,0,0" />
             <Button Content="Select a folder" Click="ButtonFolderSelect_Clicked" />

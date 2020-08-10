@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Helpers;
+using StrixMusic.Models;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.StorageService;
 using Windows.UI.Xaml;
@@ -14,6 +15,8 @@ namespace StrixMusic.SuperShellControls
 {
     public sealed partial class SuperShellSettings : UserControl
     {
+        private bool _loadingShells = true;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperShellSettings"/> class.
         /// </summary>
@@ -32,23 +35,42 @@ namespace StrixMusic.SuperShellControls
 
         private async Task InitSkins()
         {
-            foreach (string name in Constants.Shells.LoadedShells)
+            // Gets the preferred shell's assmebly name
+            var preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
+
+            // Gets the list of loaded shells.
+            foreach (ShellModel shell in Constants.Shells.LoadedShells)
             {
-                Skins.Add(name);
+                Skins.Add(shell);
+
+                // Mark the current shell selected or Default Shell as the backup.
+                if (shell.DisplayName == Constants.Shells.DefaultShellDisplayName || shell.AssemblyName == preferredShell)
+                {
+                    ShellSelector.SelectedItem = shell;
+                }
             }
 
-            CurrentSkin = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
-
-            Bindings.Update();
+            // Declares loading finished.
+            _loadingShells = false;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var newPreferredSkin = e.AddedItems.FirstOrDefault()?.ToString();
-            if (newPreferredSkin == null)
+            // Returns if the shell list is still initializing.
+            if (_loadingShells)
+            {
                 return;
+            }
 
-            Ioc.Default.GetService<ISettingsService>().SetValue<string>(nameof(SettingsKeys.PreferredShell), newPreferredSkin);
+            // Gets the selected preferred skin.
+            ShellModel? newPreferredSkin = ShellSelector.SelectedItem as ShellModel;
+            if (newPreferredSkin == null)
+            {
+                return;
+            }
+
+            // Saves the assembly name.
+            Ioc.Default.GetService<ISettingsService>().SetValue<string>(nameof(SettingsKeys.PreferredShell), newPreferredSkin.AssemblyName);
         }
 
         private async void ButtonFolderSelect_Clicked(object sender, RoutedEventArgs e)
@@ -61,11 +83,6 @@ namespace StrixMusic.SuperShellControls
         /// <summary>
         /// The labels for the skins that the user can choose from.
         /// </summary>
-        public ObservableCollection<string> Skins { get; set; } = new ObservableCollection<string>();
-
-        /// <summary>
-        /// The skin that the app is currently using.
-        /// </summary>
-        public string CurrentSkin { get; set; } = "Loading...";
+        public ObservableCollection<ShellModel> Skins { get; set; } = new ObservableCollection<ShellModel>();
     }
 }

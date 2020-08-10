@@ -133,7 +133,7 @@ namespace StrixMusic
                     if (shellMatch.Success)
                     {
                         // Skips removing the default ResourceDictionary.
-                        if (shellMatch.Groups[1].Value == Constants.Shells.DefaultShellName)
+                        if (shellMatch.Groups[1].Value == Constants.Shells.DefaultShellAssemblyName)
                             continue;
 
                         App.Current.Resources.MergedDictionaries.Remove(dict);
@@ -145,12 +145,12 @@ namespace StrixMusic
                 var preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
 
                 // Makes sure the saved shell is valid, falls back to Default.
-                if (!Constants.Shells.LoadedShells.Contains(preferredShell))
+                if (!Constants.Shells.LoadedShells.Any(x => x.AssemblyName == preferredShell))
                 {
-                    preferredShell = Constants.Shells.DefaultShellName;
+                    preferredShell = Constants.Shells.DefaultShellAssemblyName;
                 }
 
-                if (preferredShell != Constants.Shells.DefaultShellName)
+                if (preferredShell != Constants.Shells.DefaultShellAssemblyName)
                 {
                     // Loads the preferred shell
                     var resourcePath = $"{Constants.ResourcesPrefix}{Constants.Shells.ShellNamespacePrefix}.{preferredShell}/{Constants.Shells.ShellResourcesSuffix}";

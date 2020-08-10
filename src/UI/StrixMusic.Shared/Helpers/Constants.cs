@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using StrixMusic.Models;
+using StrixMusic.Shell.Default.Assembly;
 
 namespace StrixMusic.Helpers
 {
@@ -21,7 +23,7 @@ namespace StrixMusic.Helpers
         /// </summary>
         public static class Shells
         {
-            private static IEnumerable<string>? _loadedShells = null;
+            private static List<ShellModel>? _loadedShells = null;
 
             /// <summary>
             /// The <see cref="Regex"/> to determine if an assembly is a shell by the fullname.
@@ -36,7 +38,12 @@ namespace StrixMusic.Helpers
             /// <summary>
             /// The name of the DefaultShell.
             /// </summary>
-            public const string DefaultShellName = "Default";
+            public const string DefaultShellAssemblyName = "Default";
+
+            /// <summary>
+            /// The name of the DefaultShell.
+            /// </summary>
+            public const string DefaultShellDisplayName = "Default Shell";
 
             /// <summary>
             /// The namespace before a shell.
@@ -49,26 +56,37 @@ namespace StrixMusic.Helpers
             public const string ShellResourcesSuffix = "Resources.xaml";
 
             /// <summary>
-            /// Gets the loaded shells in the <see cref="Assembly"/>.
+            /// Gets the loaded shells in the <see cref="Assembly"/> AssemblyName and DisplayName.
             /// </summary>
-            public static IEnumerable<string> LoadedShells
+            public static IEnumerable<ShellModel> LoadedShells
             {
                 get
                 {
                     if (_loadedShells == null)
                     {
-                        List<string> loadedShells = new List<string>();
+                        List<ShellModel> loadedShells = new List<ShellModel>();
                         Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
                         foreach (Assembly assembly in assemblies)
                         {
+                            // Check if the assembly name is shell.
                             Match match = Regex.Match(assembly.FullName, ShellAssemblyRegex);
                             if (match.Success)
                             {
-                                loadedShells.Add(match.Groups[1].Value);
+                                // Default shellname is the namespace.
+                                string displayName = match.Groups[1].Value;
+
+                                // Check for the ShellName attribute and rip the displayname.
+                                ShellName shellName = assembly.GetCustomAttribute<ShellName>();
+                                if (shellName != null)
+                                {
+                                    displayName = shellName.ShellDisplayName;
+                                }
+
+                                loadedShells.Add(new ShellModel(match.Groups[1].Value, displayName));
                             }
                         }
 
-                        _loadedShells = loadedShells.AsEnumerable();
+                        _loadedShells = loadedShells;
                     }
 
                     return _loadedShells!;
