@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
@@ -14,7 +15,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         IReadOnlyList<ITrack> Tracks { get; }
 
         /// <summary>
-        /// The total number of top tracks in this collection.
+        /// The total number of available <see cref="Tracks"/>.
         /// </summary>
         int TotalTracksCount { get; }
 
@@ -22,6 +23,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Populates a set of <see cref="IArtist.TopTracks"/> into the collection.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PopulateTracks(int limit, int offset = 0);
+        Task PopulateTracksAsync(int limit, int offset = 0);
+
+        /// <summary>
+        /// Fires when <see cref="Tracks"/> changes.
+        /// </summary>
+        event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
     }
 }

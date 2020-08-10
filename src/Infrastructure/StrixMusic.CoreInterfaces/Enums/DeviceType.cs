@@ -10,7 +10,8 @@ namespace StrixMusic.CoreInterfaces.Enums
     public enum DeviceType
     {
         Local,
-        Spotify,
+        Remote,
+        Bluetooth,
         DLNA,
         Chromecast,
     }

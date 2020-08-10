@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Extensions;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services.Settings;
@@ -16,6 +18,7 @@ namespace StrixMusic.ViewModels
     /// </summary>
     public class MainViewModel : ObservableRecipient
     {
+        private readonly IReadOnlyList<ICore> _cores;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
@@ -23,45 +26,46 @@ namespace StrixMusic.ViewModels
         /// <param name="settings"></param>
         public MainViewModel(ISettingsService settings)
         {
-            IEnumerable<ICore> cores = Ioc.Default.GetServices<ICore>();
+            LoadLibraryCommand = new AsyncRelayCommand(LoadLibraryAsync);
+            LoadDevicesCommand = new AsyncRelayCommand(LoadDevicesAsync);
 
-            _ = InitializeCores(cores);
+            Devices = new ObservableCollection<IDevice>();
+
+            _cores = Ioc.Default.GetServices<ICore>().ToArray();
+
+            _ = InitializeCores(_cores);
         }
 
         private async Task InitializeCores(IEnumerable<ICore> coresToLoad)
         {
-            await coresToLoad.InParallel(core => Task.Run(core.Init));
+            await coresToLoad.InParallel(core => Task.Run(core.InitAsync));
 
-            foreach (ICore core in coresToLoad)
-            {
-                var library = await core.GetLibraryAsync();
-            }
-        }
+            var recentlyPlayed = await coresToLoad.InParallel(core => Task.Run(core.GetRecentlyPlayedAsync));
+            var mergedRecentlyPlayed = Mergers.MergeRecentlyPlayed(recentlyPlayed);
 
-        private async Task LoadLibrary(IEnumerable<ICore> cores)
-        {
-
+            var discoverables = await coresToLoad.InParallel(core => Task.Run(core.GetDiscoverablesAsync));
+            var mergedDiscoverables = Mergers.MergePlayableCollectionGroups(discoverables);
         }
 
         /// <summary>
-        /// A consolidated list of all users in the app
+        /// A consolidated list of all users in the app.
         /// </summary>
         public ObservableCollection<IUser>? Users { get; }
 
         /// <summary>
         /// All available devices.
         /// </summary>
-        public ObservableCollection<IDevice>? Devices { get; }
+        public ObservableCollection<IDevice> Devices { get; }
 
         /// <summary>
         /// The consolidated music library across all cores.
         /// </summary>
-        public BindableCollectionGroup? Library { get; set; }
+        public BindableLibrary? Library { get; set; }
 
         /// <summary>
         /// The consolidated recently played items across all cores.
         /// </summary>
-        public BindableCollectionGroup? RecentlyPlayed { get; set; }
+        public IRecentlyPlayed? RecentlyPlayed { get; set; }
 
         /// <summary>
         /// Used to browse and discovered new music.
@@ -82,5 +86,31 @@ namespace StrixMusic.ViewModels
         /// Autocomplete for the current search query.
         /// </summary>
         public ObservableCollection<string>? SearchSuggestions { get; set; }
+
+        /// <summary>
+        /// Loads the <see cref="Library"/> into the view model.
+        /// </summary>
+        public IAsyncRelayCommand LoadLibraryCommand { get; }
+
+        private async Task<ILibrary> LoadLibraryAsync()
+        {
+            var libs = await _cores.InParallel(core => Task.Run(core.GetLibraryAsync)).ConfigureAwait(false);
+            var mergedLibrary = Mergers.MergeLibrary(libs);
+
+            return mergedLibrary;
+        }
+
+        /// <summary>
+        /// Loads the <see cref="Devices"/> into the view model.
+        /// </summary>
+        public IAsyncRelayCommand LoadDevicesCommand { get; }
+
+        private async Task<IAsyncEnumerable<IDevice>> LoadDevicesAsync()
+        {
+            var devices = await _cores.InParallel(core => Task.Run(core.GetDevicesAsync));
+            var mergedDevices = Mergers.MergeDevices(devices);
+
+            return mergedDevices;
+        }
     }
 }

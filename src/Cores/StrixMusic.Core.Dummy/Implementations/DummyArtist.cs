@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -43,7 +44,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public IUserProfile Owner => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public PlaybackState State => throw new NotImplementedException();
+        public PlaybackState PlaybackState => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public ITrack PlayingTrack => throw new NotImplementedException();
@@ -86,6 +87,19 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// <inheritdoc/>
         public int TotalTracksCount => throw new NotImplementedException();
 
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
         /// <inheritdoc/>
         public void Play()
         {
@@ -100,19 +114,31 @@ namespace StrixMusic.Core.Dummy.Implementations
         }
 
         /// <inheritdoc/>
-        public Task PopulateAlbums(int limit, int offset = 0)
+        public Task PopulateAlbumsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateArtists(int limit, int offset = 0)
+        public Task PopulateArtistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateTracks(int limit, int offset = 0)
+        public Task PopulateTracksAsync(int limit, int offset = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PlayAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PauseAsync()
         {
             throw new NotImplementedException();
         }

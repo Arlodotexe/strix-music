@@ -8,10 +8,13 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Describes a core.
     /// </summary>
-    public interface ICore
+    public partial interface ICore
     {
         /// <inheritdoc cref="ICoreConfig" />
         public ICoreConfig CoreConfig { get; set; }
+
+        /// <inheritdoc cref="CoreConfig.CoreState" />
+        public CoreState CoreState { get; }
 
         /// <summary>
         /// The name of the core.
@@ -32,7 +35,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Gets the library for the user on this core.
         /// </summary>
-        /// <returns>A task representing the async operation. Returns <see cref="ISearchResults"/> containing multiple.</returns>
+        /// <returns>A task representing the async operation. Returns <see cref="ILibrary"/> containing the library for this core.</returns>
         Task<ILibrary> GetLibraryAsync();
 
         /// <summary>
@@ -48,26 +51,43 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         IAsyncEnumerable<IPlayableCollectionGroup>? GetDiscoverablesAsync();
 
         /// <summary>
-        /// Gets search results for a given query.
-        /// </summary>
-        /// <param name="query">The search query.</param>
-        /// <returns>A task representing the async operation. Returns <see cref="ISearchResults"/> containing multiple.</returns>
-        Task<ISearchResults> GetSearchResults(string query);
-
-        /// <summary>
         /// Given a query, return suggested completed queries.
         /// </summary>
         /// <param name="query">Search query</param>
         /// <returns>Suggested completed queries.</returns>
-        IAsyncEnumerable<string> GetSearchAutoComplete(string query);
+        Task<IAsyncEnumerable<string>> GetSearchAutoCompleteAsync(string query);
+
+        /// <summary>
+        /// Gets search results for a given query.
+        /// </summary>
+        /// <param name="query">The search query.</param>
+        /// <returns>A task representing the async operation. Returns <see cref="ISearchResults"/> containing multiple.</returns>
+        Task<ISearchResults> GetSearchResultsAsync(string query);
 
         /// <summary>
         /// Initializes the <see cref="ICore"/> asyncronously.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task Init();
+        Task InitAsync();
 
-        /// <inheritdoc />
-        public CoreState CoreState { get; }
+        /// <summary>
+        /// Fires when the <see cref="CoreState"/> has changed.
+        /// </summary>
+        event EventHandler<CoreState>? CoreStateChanged;
+
+        /// <summary>
+        /// Fires when the collection of devices is updated.
+        /// </summary>
+        event EventHandler<CollectionChangedEventArgs<IDevice>>? DevicesChanged;
+
+        /// <summary>
+        /// Fires when the auto-completed suggested for a search is changed.
+        /// </summary>
+        event EventHandler<CollectionChangedEventArgs<IAsyncEnumerable<string>>>? SearchAutoCompleteChanged;
+
+        /// <summary>
+        /// Fires when the <see cref="SearchResults"/> has changed.
+        /// </summary>
+        event EventHandler<ISearchResults>? SearchResultsChanged;
     }
 }

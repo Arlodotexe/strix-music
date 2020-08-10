@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
@@ -9,24 +10,24 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     public interface IPlayableCollectionGroup : IPlayableCollectionBase, IPlaylistCollection, ITrackCollection, IAlbumCollection, IArtistCollection
     {
         /// <summary>
-        /// The <see cref="IPlayableCollectionBase"/>s in this Group.
+        /// The <see cref="IPlayableCollectionBase"/>s in this collection group.
         /// </summary>
-        IReadOnlyList<IPlayableCollectionGroup> SubItems { get; }
+        IReadOnlyList<IPlayableCollectionGroup> Children { get; }
 
         /// <summary>
-        /// The number of <see cref="SubItems"/> in this collection.
+        /// The total number of available <see cref="Children"/>.
         /// </summary>
-        int TotalItemsCount { get; }
+        int TotalChildrenCount { get; }
 
         /// <summary>
-        /// Populates a set of <see cref="SubItems"/> into the collection.
+        /// Populates a set of <see cref="Children"/> into the collection.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PopulateItems(int limit, int offset = 0);
+        Task PopulateChildrenAsync(int limit, int offset = 0);
 
         /// <summary>
-        /// The source collections that this was merged from. Null is the collection wasn't merged.
+        /// Fires when <see cref="Children"/> changes.
         /// </summary>
-        IReadOnlyList<IPlayableCollectionGroup>? MergedFrom { get; }
+        event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> ChildrenChanged;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StrixMusic.Core.Dummy.Implementations;
 using StrixMusic.CoreInterfaces.Enums;
@@ -52,10 +53,13 @@ namespace StrixMusic.Core.Dummy.Deserialization
         public IUserProfile? Owner => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public PlaybackState State => throw new NotImplementedException();
+        public PlaybackState PlaybackState => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public ITrack? PlayingTrack => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc/>
         public void Pause()
@@ -64,7 +68,19 @@ namespace StrixMusic.Core.Dummy.Deserialization
         }
 
         /// <inheritdoc/>
+        public Task PauseAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
         public void Play()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PlayAsync()
         {
             throw new NotImplementedException();
         }

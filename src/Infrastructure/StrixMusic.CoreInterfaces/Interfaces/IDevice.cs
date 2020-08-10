@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using StrixMusic.CoreInterfaces.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
@@ -8,6 +9,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// </summary>
     public interface IDevice
     {
+        /// <summary>
+        /// The source core which created the object.
+        /// </summary>
+        public ICore SourceCore { get; set; }
+
         /// <summary>
         /// Identifies the device
         /// </summary>
@@ -19,11 +25,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         string Name { get; set; }
 
         /// <summary>
-        /// The source core which created the object.
-        /// </summary>
-        public ICore SourceCore { get; set; }
-
-        /// <summary>
         /// If true, the device is currently active and playing audio.
         /// </summary>
         bool IsActive { get; set; }
@@ -32,6 +33,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// The currently playing collection.
         /// </summary>
         IPlayableCollectionBase PlaybackContext { get; set; }
+
+        /// <summary>
+        /// The currently playing <see cref="ITrack"/>.
+        /// </summary>
+        ITrack? NowPlaying { get; set; }
 
         /// <summary>
         /// The amount of time that has passed since a song has started.
@@ -51,7 +57,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         RepeatState RepeatState { get; set; }
 
         /// <summary>
-        /// The volume of the device. If null, the volume cannot be changed.
+        /// The volume of the device (0-1). If null, the volume cannot be changed.
         /// </summary>
         double? VolumePercent { get; set; }
 
@@ -66,45 +72,102 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Resume the device if in the state <see cref="Enums.PlaybackState.Paused"/>.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Not a reserved keyword.")]
-        void Resume();
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task ResumeAsync();
 
         /// <summary>
         /// Pauses the device if in the state <see cref="Enums.PlaybackState.Playing"/>
         /// </summary>
-        void Pause();
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task PauseAsync();
 
         /// <summary>
         /// Advances to the next track. If there is no next track, playback is paused.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Not a reserved keyword.")]
-        void Next();
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task NextAsync();
 
         /// <summary>
         /// Goes to the previous track.
         /// </summary>
-        void Previous();
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task PreviousAsync();
 
         /// <summary>
         /// Seeks the track to a given timestamp.
         /// </summary>
         /// <param name="position">Time in milliseconds to seek the song to.</param>
         /// <returns><see langword="true"/> if the <see cref="ITrack"/> was seeked to successfully, <see langword="false"/> otherwise.</returns>
-        bool Seek(long position);
+        Task SeekAsync(long position);
+
+        /// <summary>
+        /// Changes the volume
+        /// </summary>
+        /// <param name="volume">The volume of the device.</param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task ChangeVolumeAsync(double volume);
 
         /// <summary>
         /// Toggles shuffle on or off.
         /// </summary>
-        void ToggleShuffle();
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task ToggleShuffleAsync();
 
         /// <summary>
         /// Asks the device to toggle to the next repeat state.
         /// </summary>
-        void ToggleRepeat();
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task ToggleRepeatAsync();
 
         /// <summary>
         /// Switches to this device.
         /// </summary>
-        void SwitchTo();
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task SwitchToAsync();
+
+        /// <summary>
+        /// Fires when <see cref="IsActive"/> changes.
+        /// </summary>
+        event EventHandler<bool>? IsActiveChanged;
+
+        /// <summary>
+        /// Fires when <see cref="PlaybackContext"/> changes.
+        /// </summary>
+        event EventHandler<IPlayableCollectionBase> PlaybackContextChanged;
+
+        /// <summary>
+        /// Fires when <see cref="NowPlaying"/> changes.
+        /// </summary>
+        event EventHandler<ITrack> NowPlayingChanged;
+
+        /// <summary>
+        /// Fires when <see cref="Position"/> changes.
+        /// </summary>
+        event EventHandler<TimeSpan> PositionChanged;
+
+        /// <summary>
+        /// Fires when <see cref="State"/> changes.
+        /// </summary>
+        event EventHandler<PlaybackState> StateChanged;
+
+        /// <summary>
+        /// Fires when <see cref="ShuffleState"/> changes.
+        /// </summary>
+        event EventHandler<bool?> ShuffleStateChanged;
+
+        /// <summary>
+        /// Fires when <see cref="RepeatState"/> changes.
+        /// </summary>
+        event EventHandler<RepeatState> RepeatStateChanged;
+
+        /// <summary>
+        /// Fires when <see cref="VolumePercent"/> changes.
+        /// </summary>
+        event EventHandler<double?> VolumePercentChanged;
+
+        /// <summary>
+        /// Fires when <see cref="PlaybackSpeed"/> changes.
+        /// </summary>
+        event EventHandler<double> PlaybackSpeedChanged;
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
+using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.Core.Dummy.Implementations
@@ -23,7 +25,7 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         [JsonProperty("title")]
-        public string Title { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         public IArtist Artist => DummyArtist!;
@@ -57,7 +59,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public DateTime? DatePublished => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IReadOnlyList<string> Genre => throw new NotImplementedException();
+        public IReadOnlyList<string> Genres => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public int? TrackNumber => throw new NotImplementedException();
@@ -81,14 +83,50 @@ namespace StrixMusic.Core.Dummy.Implementations
         public string Description => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public ICore Core => DummyCore!;
+        public ICore SourceCore => DummyCore!;
 
         /// <summary>
         /// The <see cref="DummyCore"/> where the <see cref="DummyTrack"/> is from.
         /// </summary>
         public DummyCore? DummyCore { get; set; }
 
+
+        /// <inheritdoc/>
+        public PlaybackState PlaybackState => throw new NotImplementedException();
+
         /// <inheritdoc/>
         IReadOnlyList<IArtist> ITrack.Artist => throw new NotImplementedException();
+
+
+        /// <inheritdoc/>
+        int? ITrack.PlayCount => throw new NotImplementedException();
+
+
+        /// <inheritdoc/>
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public void Pause()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PauseAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public void Play()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PlayAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

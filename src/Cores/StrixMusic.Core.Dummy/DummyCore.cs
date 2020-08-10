@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Core.Dummy.Deserialization;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 
@@ -35,6 +36,18 @@ namespace StrixMusic.Core.Dummy
         public event EventHandler<IPlayableCollectionGroup>? DiscoverableRemoved;
 
         /// <inheritdoc/>
+        public event EventHandler<CoreState>? CoreStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IDevice>>? DevicesChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IAsyncEnumerable<string>>>? SearchAutoCompleteChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<ISearchResults>? SearchResultsChanged;
+
+        /// <inheritdoc/>
         public IAsyncEnumerable<IDevice> GetDevicesAsync()
         {
             throw new NotImplementedException();
@@ -53,13 +66,19 @@ namespace StrixMusic.Core.Dummy
         }
 
         /// <inheritdoc/>
-        public Task<ISearchResults> GetSearchResults(string query)
+        public Task<IAsyncEnumerable<string>> GetSearchAutoCompleteAsync(string query)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task Init()
+        public Task<ISearchResults> GetSearchResultsAsync(string query)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task InitAsync()
         {
             throw new NotImplementedException();
         }

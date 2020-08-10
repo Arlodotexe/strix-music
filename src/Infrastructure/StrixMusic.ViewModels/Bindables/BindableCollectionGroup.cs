@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -14,35 +14,22 @@ namespace StrixMusic.ViewModels.Bindables
     public class BindableCollectionGroup : ObservableObject, IPlayableCollectionGroup
     {
         /// <summary>
-        /// An external evaluator that returns a key, used for grouping multiple collection groups.
-        /// </summary>
-        private readonly Func<IPlayableCollectionBase, string>? _decideItemCombine;
-
-        /// <summary>
         /// Backing field for the items. Is modified with merged items from all inputted collections.
         /// </summary>
         private readonly IList<IPlayableCollectionBase> _playableCollections = new List<IPlayableCollectionBase>();
 
         private readonly IPlayableCollectionGroup _collectionBase;
-        private readonly Dictionary<string, List<IPlayableCollectionBase>> _sortedPlayableCollections;
-        private int _totalItemsCount = 0;
 
-        /// <summary>
-        /// The sorted playable collections.
-        /// </summary>
-        public IReadOnlyDictionary<string, IReadOnlyList<IPlayableCollectionBase>> SortedPlayableCollections => (IReadOnlyDictionary<string, IReadOnlyList<IPlayableCollectionBase>>)_sortedPlayableCollections;
+        private int _totalItemsCount = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BindableCollectionGroup"/> class.
         /// </summary>
-        /// <param name="collectionBase">The base <see cref="IPlayableCollectionBase"/> containing properties about this class.</param>
+        /// <param name="collectionGroup">The base <see cref="IPlayableCollectionBase"/> containing properties about this class.</param>
         /// <param name="decideItemCombine">When called, return an item from <see cref="IPlayableCollectionBase"/> to use as a key when grouping items.</param>
-        public BindableCollectionGroup(IPlayableCollectionBase collectionBase, Func<IPlayableCollectionBase, string> decideItemCombine)
+        public BindableCollectionGroup(IPlayableCollectionGroup collectionGroup)
         {
-            _sortedPlayableCollections = new Dictionary<string, List<IPlayableCollectionBase>>();
-            _decideItemCombine = decideItemCombine;
-
-            _collectionBase = (IPlayableCollectionGroup)collectionBase;
+            _collectionBase = collectionGroup;
         }
 
         /// <summary>
@@ -51,30 +38,95 @@ namespace StrixMusic.ViewModels.Bindables
         /// <param name="collectionBase">The base <see cref="IPlayableCollectionBase"/> containing properties about this class.</param>
         public BindableCollectionGroup(IPlayableCollectionBase collectionBase)
         {
-            _sortedPlayableCollections = new Dictionary<string, List<IPlayableCollectionBase>>();
-
             _collectionBase = (IPlayableCollectionGroup)collectionBase;
         }
 
-        private void MergeCollectionGroups(IPlayableCollectionBase[] collections, Func<IPlayableCollectionBase, string>? decideItemCombine)
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> ChildrenChanged
         {
-            _totalItemsCount += collections.Count();
-
-            // Sort and combine the collections.
-            foreach (var collection in collections)
+            add
             {
-                // Externally defined value to sort by. If null, no sorting is done and they all land under the same key.
-                var sortingKey = decideItemCombine?.Invoke(collection) ?? string.Empty;
+                _collectionBase.ChildrenChanged += value;
+            }
 
-                if (_sortedPlayableCollections.TryGetValue(sortingKey, out List<IPlayableCollectionBase> value))
-                    value.Add(collection);  
-                else
-                    _sortedPlayableCollections.Add(sortingKey, new List<IPlayableCollectionBase>() { collection });
+            remove
+            {
+                _collectionBase.ChildrenChanged -= value;
             }
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<IPlayableCollectionBase> Items => _collectionBase.SubItems;
+        public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged
+        {
+            add
+            {
+                _collectionBase.PlaylistsChanged += value;
+            }
+
+            remove
+            {
+                _collectionBase.PlaylistsChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
+        {
+            add
+            {
+                _collectionBase.TracksChanged += value;
+            }
+
+            remove
+            {
+                _collectionBase.TracksChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged
+        {
+            add
+            {
+                _collectionBase.AlbumsChanged += value;
+            }
+
+            remove
+            {
+                _collectionBase.AlbumsChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged
+        {
+            add
+            {
+                _collectionBase.ArtistsChanged += value;
+            }
+
+            remove
+            {
+                _collectionBase.ArtistsChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
+        {
+            add
+            {
+                _collectionBase.PlaybackStateChanged += value;
+            }
+
+            remove
+            {
+                _collectionBase.PlaybackStateChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<IPlayableCollectionBase> Items => _collectionBase.Children;
 
         /// <inheritdoc/>
         public string Id => _collectionBase.Id;
@@ -89,7 +141,7 @@ namespace StrixMusic.ViewModels.Bindables
         public IReadOnlyList<IImage> Images => _collectionBase.Images;
 
         /// <inheritdoc/>
-        public Uri Url => _collectionBase.Url;
+        public Uri? Url => _collectionBase.Url;
 
         /// <inheritdoc/>
         public string? Description => _collectionBase.Description;
@@ -98,19 +150,13 @@ namespace StrixMusic.ViewModels.Bindables
         public IUserProfile? Owner => _collectionBase.Owner;
 
         /// <inheritdoc/>
-        public PlaybackState State => _collectionBase.State;
+        public PlaybackState PlaybackState => _collectionBase.PlaybackState;
 
         /// <inheritdoc/>
-        public ITrack? PlayingTrack => _collectionBase.PlayingTrack;
+        public int TotalChildrenCount => _totalItemsCount;
 
         /// <inheritdoc/>
-        public int TotalItemsCount => _totalItemsCount;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<IPlayableCollectionGroup>? MergedFrom => _collectionBase.MergedFrom;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<IPlayableCollectionGroup> SubItems => _collectionBase.SubItems;
+        public IReadOnlyList<IPlayableCollectionGroup> Children => _collectionBase.Children;
 
         /// <inheritdoc/>
         public IReadOnlyList<IPlaylist> Playlists => _collectionBase.Playlists;
@@ -137,56 +183,49 @@ namespace StrixMusic.ViewModels.Bindables
         public int TotalArtistsCount => _collectionBase.TotalArtistsCount;
 
         /// <inheritdoc/>
-        public void Pause()
+        public Task PauseAsync()
         {
-            _collectionBase.Pause();
+            return _collectionBase.PauseAsync();
         }
 
         /// <inheritdoc/>
-        public void Play()
+        public Task PlayAsync()
         {
-            _collectionBase.Play();
+            return _collectionBase.PlayAsync();
         }
 
         /// <inheritdoc/>
-        public Task PopulateItems(int limit, int offset)
+        public Task PopulateChildrenAsync(int limit, int offset)
         {
-
             for (int i = offset; i < limit; i++)
             {
-
-            }
-
-            foreach (var item in SortedPlayableCollections)
-            {
-
             }
 
             return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public Task PopulatePlaylists(int limit, int offset = 0)
+        public Task PopulatePlaylistsAsync(int limit, int offset = 0)
         {
-            return _collectionBase.PopulatePlaylists(limit, offset);
+            return _collectionBase.PopulatePlaylistsAsync(limit, offset);
         }
 
         /// <inheritdoc/>
-        public Task PopulateTracks(int limit, int offset = 0)
+        public Task PopulateTracksAsync(int limit, int offset = 0)
         {
-            return _collectionBase.PopulateTracks(limit, offset);
+            return _collectionBase.PopulateTracksAsync(limit, offset);
         }
 
         /// <inheritdoc/>
-        public Task PopulateAlbums(int limit, int offset = 0)
+        public Task PopulateAlbumsAsync(int limit, int offset = 0)
         {
-            return _collectionBase.PopulateAlbums(limit, offset);
+            return _collectionBase.PopulateAlbumsAsync(limit, offset);
         }
 
         /// <inheritdoc/>
-        public Task PopulateArtists(int limit, int offset = 0)
+        public Task PopulateArtistsAsync(int limit, int offset = 0)
         {
-            return _collectionBase.PopulateArtists(limit, offset);
+            return _collectionBase.PopulateArtistsAsync(limit, offset);
         }
     }
 }

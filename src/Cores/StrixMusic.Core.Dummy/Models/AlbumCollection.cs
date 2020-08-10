@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using StrixMusic.Core.Dummy.Implementations;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -48,13 +49,17 @@ namespace StrixMusic.Core.Dummy.Models
         public IUserProfile? Owner => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public PlaybackState State => throw new NotImplementedException();
+        public PlaybackState PlaybackState => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public ITrack? PlayingTrack => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
+
+
+        /// <inheritdoc/>
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc/>
         public void Play()
@@ -64,6 +69,18 @@ namespace StrixMusic.Core.Dummy.Models
 
         /// <inheritdoc/>
         public void Pause()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PlayAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PauseAsync()
         {
             throw new NotImplementedException();
         }

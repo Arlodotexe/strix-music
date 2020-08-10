@@ -46,7 +46,7 @@ namespace StrixMusic.ViewModels.Bindables
         public IReadOnlyList<IImage> Images => _album.Images;
 
         /// <inheritdoc/>
-        public Uri Url => _album.Url;
+        public Uri? Url => _album.Url;
 
         /// <inheritdoc/>
         public string? Description => _album.Description;
@@ -55,27 +55,38 @@ namespace StrixMusic.ViewModels.Bindables
         public IUserProfile? Owner => _album.Owner;
 
         /// <inheritdoc/>
-        public PlaybackState State => _album.State;
+        public PlaybackState PlaybackState => _album.PlaybackState;
 
         /// <inheritdoc/>
-        public ITrack? PlayingTrack => _album.PlayingTrack;
-
-        /// <inheritdoc/>
-        public void Pause()
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
-            _album.Pause();
+            add
+            {
+                _album.PlaybackStateChanged += value;
+            }
+
+            remove
+            {
+                _album.PlaybackStateChanged -= value;
+            }
         }
 
         /// <inheritdoc/>
-        public void Play()
+        public Task PauseAsync()
         {
-            _album.Play();
+            return _album.PauseAsync();
         }
 
         /// <inheritdoc/>
-        public Task PopulateTracks(int limit, int offset = 0)
+        public Task PlayAsync()
         {
-            return _album.PopulateTracks(limit, offset);
+            return _album.PlayAsync();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateTracksAsync(int limit, int offset = 0)
+        {
+            return _album.PopulateTracksAsync(limit, offset);
         }
     }
 }

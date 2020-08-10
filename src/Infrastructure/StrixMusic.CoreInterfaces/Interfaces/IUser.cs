@@ -7,9 +7,5 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// </summary>
     public interface IUser : IUserProfile
     {
-        /// <summary>
-        /// A list of devices that this user has access to.
-        /// </summary>
-        IReadOnlyList<IDevice> Devices { get; }
     }
 }
