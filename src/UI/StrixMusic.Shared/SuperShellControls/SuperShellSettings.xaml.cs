@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using StrixMusic.Helpers;
 using StrixMusic.Services.Settings;
-using StrixMusic.Services.Settings.Enums;
 using StrixMusic.Services.StorageService;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -32,25 +32,23 @@ namespace StrixMusic.SuperShellControls
 
         private async Task InitSkins()
         {
-            foreach (string name in Enum.GetNames(typeof(PreferredShell)))
+            foreach (string name in Constants.Shells.LoadedShells)
             {
                 Skins.Add(name);
             }
 
-            var preferredSkin = await Ioc.Default.GetService<ISettingsService>().GetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell));
-            CurrentSkin = Enum.GetName(typeof(PreferredShell), preferredSkin);
+            CurrentSkin = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
+
             Bindings.Update();
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectedItem = e.AddedItems.FirstOrDefault()?.ToString();
-            if (selectedItem == null)
+            var newPreferredSkin = e.AddedItems.FirstOrDefault()?.ToString();
+            if (newPreferredSkin == null)
                 return;
 
-            var newPreferredSkin = Enum.Parse(typeof(PreferredShell), selectedItem);
-
-            Ioc.Default.GetService<ISettingsService>().SetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell), newPreferredSkin);
+            Ioc.Default.GetService<ISettingsService>().SetValue<string>(nameof(SettingsKeys.PreferredShell), newPreferredSkin);
         }
 
         private async void ButtonFolderSelect_Clicked(object sender, RoutedEventArgs e)

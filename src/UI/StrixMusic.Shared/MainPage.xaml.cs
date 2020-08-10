@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using StrixMusic.Helpers;
 using StrixMusic.Services.Settings;
-using StrixMusic.Services.Settings.Enums;
 using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
 using StrixMusic.Shell.Default.Controls;
@@ -101,7 +105,7 @@ namespace StrixMusic
 
         private async void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)
         {
-            if (e.Key == nameof(PreferredShell))
+            if (e.Key == nameof(SettingsKeys.PreferredShell))
             {
                 await SetupPreferredShell();
             }
@@ -119,15 +123,17 @@ namespace StrixMusic
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                var shellNamespacePrefix = "StrixMusic.Shell";
-
+                // Removes the current shell.
                 ShellDisplay.Content = null;
 
+                // Removes old resource(s).
                 foreach (var dict in App.Current.Resources.MergedDictionaries)
                 {
-                    if (dict.Source.AbsoluteUri.Contains(shellNamespacePrefix))
+                    Match shellMatch = Regex.Match(dict.Source.AbsoluteUri, Constants.Shells.ShellResourceDictionaryRegex);
+                    if (shellMatch.Success)
                     {
-                        if (dict.Source.AbsoluteUri.Contains("Default"))
+                        // Skips removing the default ResourceDictionary.
+                        if (shellMatch.Groups[1].Value == Constants.Shells.DefaultShellName)
                             continue;
 
                         App.Current.Resources.MergedDictionaries.Remove(dict);
@@ -135,14 +141,20 @@ namespace StrixMusic
                     }
                 }
 
-                var preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<PreferredShell>(nameof(SettingsKeys.PreferredShell));
+                // Gets the preferred shell from settings.
+                var preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
 
-                if (preferredShell != PreferredShell.Default)
+                // Makes sure the saved shell is valid, falls back to Default.
+                if (!Constants.Shells.LoadedShells.Contains(preferredShell))
                 {
-                    var assemblyName = $"ms-appx:///{shellNamespacePrefix}.{preferredShell}/Resources.xaml";
+                    preferredShell = Constants.Shells.DefaultShellName;
+                }
 
-                    var resourceDictionary = new ResourceDictionary() { Source = new Uri(assemblyName) };
-
+                if (preferredShell != Constants.Shells.DefaultShellName)
+                {
+                    // Loads the preferred shell
+                    var resourcePath = $"{Constants.ResourcesPrefix}{Constants.Shells.ShellNamespacePrefix}.{preferredShell}/{Constants.Shells.ShellResourcesSuffix}";
+                    var resourceDictionary = new ResourceDictionary() { Source = new Uri(resourcePath) };
                     App.Current.Resources.MergedDictionaries.Add(resourceDictionary);
                 }
 

@@ -1,6 +1,4 @@
-﻿using StrixMusic.Services.Settings.Enums;
-
-namespace StrixMusic.Services.Settings
+﻿namespace StrixMusic.Services.Settings
 {
     /// <summary>
     /// A <see langword="class"/> containing keys for all settings throughout the main app.
@@ -11,8 +9,8 @@ namespace StrixMusic.Services.Settings
     public static class SettingsKeys
     {
         /// <summary>
-        /// Gets the default value for <see cref="Enums.PreferredShell"/> in settings.
+        /// Gets the default value for <see cref=""/> in settings.
         /// </summary>
-        public static readonly PreferredShell PreferredShell = PreferredShell.Default;
+        public static readonly string PreferredShell = "Default";
     }
 }
