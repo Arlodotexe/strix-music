@@ -26,8 +26,11 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Image Source="ms-appx:///StrixMusic.Shell.Zune/Assets/Quickplay-Background.png" Width="1009" Height="720"
-                   HorizontalAlignment="Center" VerticalAlignment="Top" Stretch="UniformToFill" Grid.RowSpan="2"/>
+        <Rectangle Width="1009" Height="720" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.RowSpan="2">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="ms-appx:///StrixMusic.Shell.Zune/Assets/Quickplay-Background.png" AlignmentY="Center"/>
+            </Rectangle.Fill>
+        </Rectangle>
 
         <Rectangle x:Name="LightBackground" Fill="{ThemeResource ZuneLightBackgroundColor}" Opacity="0" Grid.RowSpan="2"/>
         

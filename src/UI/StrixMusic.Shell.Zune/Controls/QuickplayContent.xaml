@@ -31,25 +31,25 @@
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.133333333" Duration="0:0:.4" To="1">
+                                             BeginTime="0:0:0.133" Duration="0:0:.4" To="1">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.133333333" Duration="0:0:.4" To="1">
+                                             BeginTime="0:0:0.133" Duration="0:0:.4" To="1">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.266666667" Duration="0:0:.4" To="1">
+                                             BeginTime="0:0:0.267" Duration="0:0:.4" To="1">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.266666667" Duration="0:0:.4" To="1">
+                                             BeginTime="0:0:0.267" Duration="0:0:.4" To="1">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseOut"/>
                                 </DoubleAnimation.EasingFunction>
@@ -61,13 +61,13 @@
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.133333333" Duration="0:0:.4" To="0">
+                                             BeginTime="0:0:0.133" Duration="0:0:.4" To="0">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseIn"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.266666667" Duration="0:0:.4" To="0">
+                                             BeginTime="0:0:0.267" Duration="0:0:.4" To="0">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseIn"/>
                                 </DoubleAnimation.EasingFunction>
@@ -199,25 +199,25 @@
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.133333333" Duration="0:0:.4" To=".5">
+                                             BeginTime="0:0:0.133" Duration="0:0:.4" To=".5">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.133333333" Duration="0:0:.4" To=".5">
+                                             BeginTime="0:0:0.133" Duration="0:0:.4" To=".5">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.266666667" Duration="0:0:.4" To=".5">
+                                             BeginTime="0:0:0.267" Duration="0:0:.4" To=".5">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseOut"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.266666667" Duration="0:0:.4" To=".5">
+                                             BeginTime="0:0:0.267" Duration="0:0:.4" To=".5">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseOut"/>
                                 </DoubleAnimation.EasingFunction>
@@ -229,13 +229,13 @@
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.133333333" Duration="0:0:.4" To="270">
+                                             BeginTime="0:0:0.133" Duration="0:0:.4" To="270">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseIn"/>
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.266666667" Duration="0:0:.4" To="270">
+                                             BeginTime="0:0:0.267" Duration="0:0:.4" To="270">
                                 <DoubleAnimation.EasingFunction>
                                     <ExponentialEase EasingMode="EaseIn"/>
                                 </DoubleAnimation.EasingFunction>

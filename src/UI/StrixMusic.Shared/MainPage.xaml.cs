@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -145,7 +143,7 @@ namespace StrixMusic
                 var preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
 
                 // Makes sure the saved shell is valid, falls back to Default.
-                if (!Constants.Shells.LoadedShells.Any(x => x.AssemblyName == preferredShell))
+                if (Constants.Shells.LoadedShells.All(x => x.AssemblyName != preferredShell))
                 {
                     preferredShell = Constants.Shells.DefaultShellAssemblyName;
                 }

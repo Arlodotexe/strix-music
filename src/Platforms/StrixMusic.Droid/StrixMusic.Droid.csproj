@@ -135,6 +135,10 @@
       <Project>{1acebd69-e023-4917-b32e-f83a314a4809}</Project>
       <Name>StrixMusic.Shell.Strix</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\UI\StrixMusic.Shell.Zune\StrixMusic.Shell.Zune.csproj">
+      <Project>{c6b68a93-c3f0-4018-a1be-0ad2ade4ead4}</Project>
+      <Name>StrixMusic.Shell.Zune</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\UI\StrixMusic.Shared\StrixMusic.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

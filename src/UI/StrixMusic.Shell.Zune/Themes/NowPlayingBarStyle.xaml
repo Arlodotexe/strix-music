@@ -18,7 +18,7 @@
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal">
-                                    <launchpad:ToggleContentButton Style="{StaticResource ZuneSmallToggleContentButton}" VerticalAlignment="Center" Margin="4,0" IsThreeState="True">
+                                    <launchpad:ToggleContentButton Style="{StaticResource ZuneSmallToggleContentButton}" VerticalAlignment="Center" IsThreeState="True">
                                         <FontIcon Glyph="&#xE1CD;" FontSize="20"/>
                                         <launchpad:ToggleContentButton.CheckedContent>
                                             <FontIcon Glyph="&#xE1CD;" FontSize="20"/>
@@ -27,11 +27,12 @@
                                             <FontIcon Glyph="&#xE1CC;" FontSize="20"/>
                                         </launchpad:ToggleContentButton.IndeterminateContent>
                                     </launchpad:ToggleContentButton>
-                                    <ToggleButton Style="{StaticResource ZuneSmallToggleButton}" VerticalAlignment="Center"  Margin="4,0,12,0">
+                                    <ToggleButton Style="{StaticResource ZuneSmallToggleButton}" Margin="-8,0,8,0" VerticalAlignment="Center">
                                         <FontIcon Glyph="&#xE8B1;" FontSize="20"/>
                                     </ToggleButton>
                                     <Button Style="{StaticResource ZuneButton}" Width="32">
-                                        <FontIcon Glyph="&#xE100;" FontSize="12"/>
+                                        <PathIcon Data="M 0 4.2357127 6.3582224 8.4666673 V 0.0047581 Z M 6.3417776 4.2309543 12.7 8.4619093 V 0 Z" Margin="-2,0,0,0"/>
+                                        <!--<FontIcon Glyph="&#xE100;" FontSize="12"/>-->
                                     </Button>
                                     <launchpad:ToggleContentButton Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42">
                                         <launchpad:ToggleContentButton.CheckedContent>
@@ -40,7 +41,8 @@
                                         <FontIcon Glyph="&#xE102;" FontSize="20"/>
                                     </launchpad:ToggleContentButton>
                                     <Button Style="{StaticResource ZuneButton}" Width="32">
-                                        <FontIcon Glyph="&#xE101;" FontSize="12"/>
+                                        <PathIcon Data="M 12.7 4.2357127 6.3417776 8.4666673 V 0.0047581 Z M 6.3582224 4.2309543 0 8.4619093 V 0 Z" Margin="2,0,0,0"/>
+                                        <!--<FontIcon Glyph="&#xE101;" FontSize="12"/>-->
                                     </Button>
                                     <Button Style="{StaticResource ZuneSmallButton}" VerticalAlignment="Center" Margin="12,0">
                                         <FontIcon Glyph="&#xF61F;" FontSize="20" FontWeight="Bold" Foreground="#DB0D94"/>
@@ -60,9 +62,10 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
-                                <controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">
-                                    <Rectangle Width="64" Height="64" Fill="#FF00FF"/>
-                                </controls:DropShadowPanel>
+                                <!--<controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">
+
+                                </controls:DropShadowPanel>-->
+                                <Rectangle Width="64" Height="64" Fill="#FF00FF"/>
                                 <TextBlock Text="Diplomat's Son" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5"/>
                                 <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5"/>
                                 <Slider Value="33" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"/>

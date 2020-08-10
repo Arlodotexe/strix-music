@@ -17,9 +17,11 @@ namespace StrixMusic.Shell.Zune.Controls
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+#if NETFX_CORE
             RootControl.RequestedTheme = Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light;
             Storyboard transition = Pivot.SelectedIndex == 0 ? LeaveLightTheme : EnterLightTheme;
             transition.Begin();
+#endif
         }
 
         private MainViewModel? ViewModel => DataContext as MainViewModel;
