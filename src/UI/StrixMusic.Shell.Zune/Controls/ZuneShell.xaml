@@ -41,7 +41,7 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,128,0">
                     <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                         <HyperlinkButton Content="SETTINGS" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12"/>
-                        <Rectangle Height="12" Width="2" Fill="White" Opacity=".5" Margin="8,3,8,0" VerticalAlignment="Top"/>
+                        <Rectangle Height="12" Width="2" Fill="{ThemeResource HyperlinkForeground}" Opacity=".5" Margin="8,3,8,0" VerticalAlignment="Top"/>
                         <HyperlinkButton Content="HELP" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12"/>
                     </StackPanel>
 

@@ -14,9 +14,19 @@
             <SolidColorBrush x:Key="Foreground" Color="#FFFFFF"/>
             <UI:Color x:Key="ForegroundColor">#FFFFFF</UI:Color>
 
+            <SolidColorBrush x:Key="ZuneButtonForeground" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundHover" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundPressed" Color="#B8B6B7"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundDisabled" Color="#342E33"/>
+
+            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="#A09D9F"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="#B8B6B7"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="#342E33"/>
+
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
-            <SolidColorBrush x:Key="HyperlinkForegroundClicked" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundPressed" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundDisabled" Color="#F5F4F4"/>
 
             <SolidColorBrush x:Key="SliderPlayedBackground" Color="#FFFFFF"/>
@@ -30,9 +40,19 @@
             <SolidColorBrush x:Key="Foreground" Color="#000000"/>
             <UI:Color x:Key="ForegroundColor">#000000</UI:Color>
 
+            <SolidColorBrush x:Key="ZuneButtonForeground" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundHover" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundPressed" Color="#CCCCCC"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundDisabled" Color="#D9D9D9"/>
+
+            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="#999999"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="#CCCCCC"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="#D9D9D9"/>
+
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
-            <SolidColorBrush x:Key="HyperlinkForegroundClicked" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundPressed" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundDisabled" Color="#F5F4F4"/>
 
             <SolidColorBrush x:Key="SliderPlayedBackground" Color="#000000"/>
@@ -48,9 +68,19 @@
             <SolidColorBrush x:Key="Foreground" Color="#000000"/>
             <UI:Color x:Key="ForegroundColor">#000000</UI:Color>
 
+            <SolidColorBrush x:Key="ZuneButtonForeground" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundHover" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundPressed" Color="#CCCCCC"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundDisabled" Color="#D9D9D9"/>
+
+            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="#999999"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="#CCCCCC"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="#D9D9D9"/>
+
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
-            <SolidColorBrush x:Key="HyperlinkForegroundClicked" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundPressed" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundDisabled" Color="#F5F4F4"/>
 
             <SolidColorBrush x:Key="SliderPlayedBackground" Color="#000000"/>
@@ -64,9 +94,19 @@
             <SolidColorBrush x:Key="Foreground" Color="#000000"/>
             <UI:Color x:Key="ForegroundColor">#000000</UI:Color>
 
+            <SolidColorBrush x:Key="ZuneButtonForegroundBrush" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundBrushHover" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundBrushPressed" Color="#CCCCCC"/>
+            <SolidColorBrush x:Key="ZuneButtonForegroundBrushDisabled" Color="#D9D9D9"/>
+
+            <SolidColorBrush x:Key="ZuneButtonBorderBrush" Color="#999999"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushHover" Color="#000000"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushPressed" Color="#CCCCCC"/>
+            <SolidColorBrush x:Key="ZuneButtonBorderBrushDisabled" Color="#D9D9D9"/>
+
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
-            <SolidColorBrush x:Key="HyperlinkForegroundClicked" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="HyperlinkForegroundPressed" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundDisabled" Color="#F5F4F4"/>
 
             <SolidColorBrush x:Key="SliderPlayedBackground" Color="#000000"/>
