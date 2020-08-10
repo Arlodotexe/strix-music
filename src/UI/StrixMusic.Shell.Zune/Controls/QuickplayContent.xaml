@@ -374,7 +374,7 @@
         </VisualStateManager.VisualStateGroups>
 
         <ScrollViewer x:Name="MainScroller" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden"
-                      VerticalScrollMode="Disabled" IsHorizontalRailEnabled="True" Canvas.ZIndex="0">
+                      VerticalScrollMode="Disabled" IsHorizontalRailEnabled="True" Canvas.ZIndex="1">
             <Grid x:Name="MainWrapper" VerticalAlignment="Top" Padding="0,60,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
