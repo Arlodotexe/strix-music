@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -39,7 +37,7 @@ namespace StrixMusic.SuperShellControls
             var preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
 
             // Gets the list of loaded shells.
-            foreach (ShellModel shell in Constants.Shells.LoadedShells)
+            foreach (ShellModel shell in Constants.Shells.LoadedShells.Values)
             {
                 Skins.Add(shell);
 

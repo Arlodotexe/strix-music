@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace StrixMusic.Shell.Zune.Controls
+namespace StrixMusic.Shell.ZuneDesktop.Controls
 {
     public sealed partial class ZuneShell : UserControl
     {

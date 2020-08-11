@@ -2,7 +2,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shell.Zune.Controls
+namespace StrixMusic.Shell.ZuneDesktop.Controls
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

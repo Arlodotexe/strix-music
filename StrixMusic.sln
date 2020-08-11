@@ -42,13 +42,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shell.Default", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shell.Strix", "src\UI\StrixMusic.Shell.Strix\StrixMusic.Shell.Strix.csproj", "{1ACEBD69-E023-4917-B32E-F83A314A4809}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shell.Zune", "src\UI\StrixMusic.Shell.Zune\StrixMusic.Shell.Zune.csproj", "{C6B68A93-C3F0-4018-A1BE-0AD2ADE4EAD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shell.ZuneDesktop", "src\UI\StrixMusic.Shell.Zune\StrixMusic.Shell.ZuneDesktop.csproj", "{C6B68A93-C3F0-4018-A1BE-0AD2ADE4EAD4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{D825BC4B-7DC6-4399-8573-C1741426B572}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LaunchPad", "src\Libs\LaunchPad\LaunchPad.csproj", "{BD87B98B-B958-43EC-B3BF-6058AFEDCDC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OwlCore", "src\Libs\OwlCore\OwlCore.csproj", "{184CD528-2959-4AA5-A691-0E161C04E9AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlCore", "src\Libs\OwlCore\OwlCore.csproj", "{184CD528-2959-4AA5-A691-0E161C04E9AD}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
