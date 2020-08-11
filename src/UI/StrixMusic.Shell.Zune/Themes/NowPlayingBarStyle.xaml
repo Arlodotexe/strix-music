@@ -11,7 +11,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="default:NowPlayingBarControl">
-                        <Grid Margin="42" VerticalAlignment="Bottom">
+                        <Grid Margin="28" VerticalAlignment="Bottom">
                             <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom">
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
@@ -52,7 +52,7 @@
                                 <TextBlock Text="VOLUME 50" Grid.Row="1" FontSize="10" FontWeight="Bold" Opacity=".5" HorizontalAlignment="Center" Margin="36,4,0,-8"/>
                             </Grid>
 
-                            <Grid HorizontalAlignment="Center" Width="400">
+                            <Grid HorizontalAlignment="Center" Width="400" VerticalAlignment="Bottom" Margin="0,0,0,-8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition/>
@@ -74,7 +74,7 @@
                                 <TextBlock Text="-2:25" Grid.Row="2" Grid.Column="2" Margin="12,0,0,0" FontSize="16" HorizontalAlignment="Right" FontWeight="Bold" Opacity=".5"/>
                             </Grid>
 
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,-23">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,-24">
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8EA;" Margin="8,0" FontSize="46" Opacity=".5"/>
                                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF000;" Margin="8,0" FontSize="46" Opacity=".5"/>
                             </StackPanel>

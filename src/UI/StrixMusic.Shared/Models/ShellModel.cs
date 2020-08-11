@@ -30,10 +30,5 @@ namespace StrixMusic.Models
         /// The display name for the Shell.
         /// </summary>
         public string DisplayName => _shellAttribute.DisplayName;
-
-        /// <summary>
-        /// The PreferredMinimumSize for the shell's containing window.
-        /// </summary>
-        public Size? PreferredMinimumSize => _shellAttribute.PreferredMinimumSize;
     }
 }

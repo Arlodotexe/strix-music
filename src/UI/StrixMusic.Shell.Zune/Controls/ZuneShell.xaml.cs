@@ -1,4 +1,7 @@
-﻿using StrixMusic.ViewModels;
+﻿using System;
+using StrixMusic.ViewModels;
+using Windows.Foundation;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -25,5 +28,15 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
         }
 
         private MainViewModel? ViewModel => DataContext as MainViewModel;
+
+        private async void RootControl_SizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            if (args.NewSize.Width < 800 && args.PreviousSize.Width > 800)
+            {
+                await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
+                ApplicationView.GetForCurrentView().TryResizeView(new Size(100, 300));
+                Overlay.Visibility = Visibility.Visible;
+            }
+        }
     }
 }
