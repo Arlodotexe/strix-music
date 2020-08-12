@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Extensions;
 using StrixMusic.CoreInterfaces.Interfaces;
-using StrixMusic.Services.Settings;
+using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 using StrixMusic.ViewModels.Bindables;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.ViewModels
 {
@@ -24,10 +24,12 @@ namespace StrixMusic.ViewModels
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
         /// <param name="settings"></param>
-        public MainViewModel(ISettingsService settings)
+        public MainViewModel()
         {
             LoadLibraryCommand = new AsyncRelayCommand(LoadLibraryAsync);
             LoadDevicesCommand = new AsyncRelayCommand(LoadDevicesAsync);
+            LoadRecentlyPlayedCommand = new AsyncRelayCommand(LoadRecentlyPlayedAsync);
+            LoadDiscoverablesCommand = new AsyncRelayCommand(LoadDiscoverablesAsync);
 
             Devices = new ObservableCollection<IDevice>();
 
@@ -40,11 +42,43 @@ namespace StrixMusic.ViewModels
         {
             await coresToLoad.InParallel(core => Task.Run(core.InitAsync));
 
-            var recentlyPlayed = await coresToLoad.InParallel(core => Task.Run(core.GetRecentlyPlayedAsync));
-            var mergedRecentlyPlayed = Mergers.MergeRecentlyPlayed(recentlyPlayed);
+            foreach (var core in coresToLoad)
+            {
+                AttachEvents(core);
+            }
+        }
 
-            var discoverables = await coresToLoad.InParallel(core => Task.Run(core.GetDiscoverablesAsync));
-            var mergedDiscoverables = Mergers.MergePlayableCollectionGroups(discoverables);
+        private void AttachEvents(ICore core)
+        {
+            core.DevicesChanged += Core_DevicesChanged;
+            core.CoreStateChanged += Core_CoreStateChanged;
+            core.SearchResultsChanged += Core_SearchResultsChanged;
+        }
+
+        private void Core_SearchResultsChanged(object sender, ISearchResults e)
+        {
+            if (sender is ICore core)
+            {
+              // todo: rethink merging search results / rethink storing search results per core.   
+            }
+        }
+
+        private void Core_CoreStateChanged(object sender, CoreState e)
+        {
+            // TODO - create a "bindable core" object with basic properties about the core (to be used in the UI), and save them in a list.
+        }
+
+        private void Core_DevicesChanged(object sender, CoreInterfaces.CollectionChangedEventArgs<IDevice> e)
+        {
+            foreach (var device in e.AddedItems)
+            {
+                Devices.Add(device);
+            }
+
+            foreach (var device in e.RemovedItems)
+            {
+                Devices.Remove(device);
+            }
         }
 
         /// <summary>
@@ -65,7 +99,7 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// The consolidated recently played items across all cores.
         /// </summary>
-        public IRecentlyPlayed? RecentlyPlayed { get; set; }
+        public BindableRecentlyPlayed RecentlyPlayed { get; set; } = new BindableRecentlyPlayed();
 
         /// <summary>
         /// Used to browse and discovered new music.
@@ -75,7 +109,7 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// Search results.
         /// </summary>
-        public ISearchResults? SearchResults { get; }
+        public BindableSearchResults SearchResults { get; } = new BindableSearchResults();
 
         /// <summary>
         /// Current search query.
@@ -86,6 +120,36 @@ namespace StrixMusic.ViewModels
         /// Autocomplete for the current search query.
         /// </summary>
         public ObservableCollection<string>? SearchSuggestions { get; set; }
+
+        /// <summary>
+        /// Loads the <see cref="RecentlyPlayed"/> into the view model.
+        /// </summary>
+        public IAsyncRelayCommand LoadRecentlyPlayedCommand { get; }
+
+        private async Task<BindableRecentlyPlayed> LoadRecentlyPlayedAsync()
+        {
+            var recents = await _cores.InParallel(core => Task.Run(core.GetRecentlyPlayedAsync)).ConfigureAwait(false);
+
+            // TODO: Re-evaluate. We might not need to merge them like this, just replace the existing items per core.
+            var mergedRecents = Mergers.MergeRecentlyPlayed(recents);
+
+            RecentlyPlayed = mergedRecents;
+
+            return mergedRecents;
+        }
+
+        /// <summary>
+        /// Loads the <see cref="RecentlyPlayed"/> into the view model.
+        /// </summary>
+        public IAsyncRelayCommand LoadDiscoverablesCommand { get; }
+
+        private async Task<IAsyncEnumerable<IPlayableCollectionGroup>?> LoadDiscoverablesAsync()
+        {
+            var discoverables = await _cores.InParallel(core => Task.Run(core.GetDiscoverablesAsync)).ConfigureAwait(false);
+            var mergedDiscoverables = Mergers.MergePlayableCollectionGroups(discoverables);
+
+            return mergedDiscoverables;
+        }
 
         /// <summary>
         /// Loads the <see cref="Library"/> into the view model.
