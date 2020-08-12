@@ -5,8 +5,8 @@
 		<!--<TargetFrameworks>uap10.0.16299</TargetFrameworks>-->
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
-		<RootNamespace>StrixMusic.Shell.Zune</RootNamespace>
-		<AssemblyName>StrixMusic.Shell.Zune</AssemblyName>
+		<RootNamespace>StrixMusic.Shell.ZuneDesktop</RootNamespace>
+		<AssemblyName>StrixMusic.Shell.ZuneDesktop</AssemblyName>
 		<Nullable>enable</Nullable>
 		<LangVersion>8.0</LangVersion>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
@@ -32,6 +32,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="Assets\Quickplay-Background.png" />
+		<None Remove="Controls\Overlay.xaml" />
 		<None Remove="Controls\QuickplayContent.xaml" />
 		<None Remove="Controls\ZuneShell.xaml" />
 		<None Remove="Preview.xaml" />
@@ -44,9 +45,11 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Remove="Assets\svg\Next.xaml" />
+	  <Page Remove="Assets\svg\Play.xaml" />
 	  <Page Remove="Assets\svg\Previous.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<UpToDateCheckInput Remove="Controls\Overlay.xaml" />
 		<UpToDateCheckInput Remove="Controls\QuickplayContent.xaml" />
 		<UpToDateCheckInput Remove="Controls\ZuneShell.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
@@ -68,15 +71,15 @@
 		<ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Update="Controls\Overlay.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
 		<Compile Update="Themes\ShellStyle.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Update="Controls\QuickplayContent.xaml">
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="Styles\Brushes - Copy.xaml">
 	    <SubType>Designer</SubType>
 	  </Page>
 	</ItemGroup>

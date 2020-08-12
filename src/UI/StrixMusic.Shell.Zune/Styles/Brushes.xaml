@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:UI="using:Windows.UI"
     xmlns:launchpad="using:LaunchPad.Controls"
-    xmlns:local="using:StrixMusic.Shell.Zune.Controls">
+    xmlns:local="using:StrixMusic.Shell.ZuneDesktop.Controls">
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Dark">

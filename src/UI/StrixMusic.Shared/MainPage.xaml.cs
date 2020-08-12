@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Helpers;
+using StrixMusic.Models;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
+using StrixMusic.Shell.Default.Assembly;
 using StrixMusic.Shell.Default.Controls;
 using StrixMusic.ViewModels;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -107,10 +110,10 @@ namespace StrixMusic
                 }
 
                 // Gets the preferred shell from settings.
-                var preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
+                string preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
 
                 // Makes sure the saved shell is valid, falls back to Default.
-                if (Constants.Shells.LoadedShells.All(x => x.AssemblyName != preferredShell))
+                if (!Constants.Shells.LoadedShells.ContainsKey(preferredShell))
                 {
                     preferredShell = Constants.Shells.DefaultShellAssemblyName;
                 }
