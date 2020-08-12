@@ -1,9 +1,10 @@
-﻿using System;
+﻿using StrixMusic.CoreInterfaces.Interfaces.Storage;
+using StrixMusic.UWP.Models;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.CoreInterfaces.Interfaces.Storage;
-using StrixMusic.UWP.Models;
 using Uno.Extensions;
 using Windows.Storage;
 
@@ -44,12 +45,11 @@ namespace StrixMusic.Models
         /// <inheritdoc />
         public int TotalFileCount { get; private set; } = 0;
 
-        /// <summary>
-        /// Scans and populates the immediate contents of the folder.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asyncronous operation.</returns>
-        public async Task ScanFolder()
+        /// <inheritdoc/>
+        public async Task ScanAsync()
         {
+            Debug.WriteLine($"Scanning folder {Name}");
+
             var files = await StorageFolder.GetFilesAsync();
             TotalFileCount = files.Count;
 
@@ -59,6 +59,35 @@ namespace StrixMusic.Models
             var folders = await StorageFolder.GetFoldersAsync();
             var foldersData = folders.Select(x => new FolderData(x));
             _folders.AddRange(foldersData);
+        }
+
+        /// <inheritdoc/>
+        public async Task DeepScanAsync()
+        {
+            Debug.WriteLine($"Deep scanning folder {Name}");
+
+            if (!Folders.Any())
+                await ScanAsync();
+
+            foreach (var file in Files)
+            {
+                await file.ScanMediaDataAsync();
+            }
+
+            foreach (var folder in Folders)
+            {
+                await folder.DeepScanAsync();
+            }
+
+            Debug.WriteLine($"Deep scan finished for folder {Name}");
+        }
+
+        /// <inheritdoc/>
+        public async Task<IFolderData> GetParentAsync()
+        {
+            var storageFolder = await StorageFolder.GetParentAsync();
+
+            return new FolderData(storageFolder);
         }
     }
 }

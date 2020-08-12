@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StrixMusic.CoreInterfaces.Interfaces.Storage
 {
@@ -32,5 +33,23 @@ namespace StrixMusic.CoreInterfaces.Interfaces.Storage
         /// The total number of files in this folder and all subfolders.
         /// </summary>
         public int TotalFileCount { get; }
+
+        /// <summary>
+        /// The parent folder that contains this file.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the parent folder.</returns>
+        Task<IFolderData> GetParentAsync();
+
+        /// <summary>
+        /// Scans and populates the immediate contents of the folder.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asyncronous operation.</returns>
+        public Task ScanAsync();
+
+        /// <summary>
+        /// Scans and populates the contents of the folder and all subfolders.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asyncronous operation.</returns>
+        public Task DeepScanAsync();
     }
 }

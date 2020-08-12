@@ -33,9 +33,21 @@ namespace StrixMusic.CoreInterfaces.Interfaces.Storage
         public IMusicFileProperties MusicProperties { get; set; }
 
         /// <summary>
+        /// The parent folder that contains this file.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the parent folder.</returns>
+        Task<IFolderData> GetParentAsync();
+
+        /// <summary>
         /// Opens and returns a stream to the file.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is a stream to the file.</returns>
-        Task<Stream> GetStream();
+        Task<Stream> GetStreamAsync();
+
+        /// <summary>
+        /// Populates the <see cref="MusicProperties"/>.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task ScanMediaDataAsync();
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using StrixMusic.CoreInterfaces.Interfaces.Storage;
 using StrixMusic.CoreInterfaces.Models.Storage;
+using StrixMusic.Models;
 using Windows.Storage;
 
 namespace StrixMusic.UWP.Models
@@ -40,12 +42,22 @@ namespace StrixMusic.UWP.Models
         /// <inheritdoc/>
         public IMusicFileProperties MusicProperties { get; set; } = new MusicFileProperties();
 
+        /// <inheritdoc/>
+        public async Task<IFolderData> GetParentAsync()
+        {
+            var storageFile = await StorageFile.GetParentAsync();
+
+            return new FolderData(storageFile);
+        }
+
         /// <summary>
         /// Populates the <see cref="MusicProperties"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task StartMediaScan()
+        public async Task ScanMediaDataAsync()
         {
+            Debug.WriteLine($"Scanning media for {Name}");
+
             var storageFileMusicProps = await StorageFile.Properties.GetMusicPropertiesAsync();
 
             var musicFileProps = new MusicFileProperties()
@@ -72,7 +84,7 @@ namespace StrixMusic.UWP.Models
         }
 
         /// <inheritdoc />
-        public Task<Stream> GetStream()
+        public Task<Stream> GetStreamAsync()
         {
             var stream = StorageFile.OpenStreamForReadAsync();
 
