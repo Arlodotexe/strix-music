@@ -23,15 +23,15 @@ namespace StrixMusic.Services.StorageService
 
         /// <inheritdoc/>
         public event EventHandler<FileScanStateEventArgs> FileScanCompleted;
-
+ 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IFolderData>> GetPickedFolders()
+        public Task<IReadOnlyList<IFolderData?>> GetPickedFolders()
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PickFolder()
+        public Task<IFolderData?> PickFolder()
         {
             throw new NotImplementedException();
         }
