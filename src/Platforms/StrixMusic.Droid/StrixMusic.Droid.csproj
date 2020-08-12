@@ -135,8 +135,8 @@
       <Project>{1acebd69-e023-4917-b32e-f83a314a4809}</Project>
       <Name>StrixMusic.Shell.Strix</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\StrixMusic.Shell.Zune\StrixMusic.Shell.ZuneDesktop.csproj">
-      <Project>{c6b68a93-c3f0-4018-a1be-0ad2ade4ead4}</Project>
+    <ProjectReference Include="..\..\UI\StrixMusic.Shell.ZuneDesktop\StrixMusic.Shell.ZuneDesktop.csproj">
+      <Project>{29e800df-b67c-46c9-b4a4-c8a2cba0597f}</Project>
       <Name>StrixMusic.Shell.ZuneDesktop</Name>
     </ProjectReference>
   </ItemGroup>

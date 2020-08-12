@@ -29,7 +29,7 @@
 
         <Rectangle Width="1009" Height="720" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.RowSpan="2">
             <Rectangle.Fill>
-                <ImageBrush ImageSource="ms-appx:///StrixMusic.Shell.Zune/Assets/Quickplay-Background.png" AlignmentY="Center"/>
+                <ImageBrush ImageSource="ms-appx:///StrixMusic.Shell.ZuneDesktop/Assets/Quickplay-Background.png" AlignmentY="Center"/>
             </Rectangle.Fill>
         </Rectangle>
 
