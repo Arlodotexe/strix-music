@@ -50,7 +50,7 @@ namespace StrixMusic
             await Initialize();
             AttachEvents();
 
-            // Events must be attached before initializing this.
+            // Events must be attached before initializing if you want them to fire correctly.
             await Ioc.Default.GetService<IFileSystemService>().Init();
         }
 
@@ -62,12 +62,6 @@ namespace StrixMusic
         private void AttachEvents()
         {
             Ioc.Default.GetService<ISettingsService>().SettingChanged += SettingsService_SettingChanged;
-
-            var fileSystemSvc = Ioc.Default.GetService<IFileSystemService>();
-
-            fileSystemSvc.FolderScanStarted += FileSystemSvc_FolderScanStarted;
-            fileSystemSvc.FolderDeepScanCompleted += FileSystemSvc_FolderDeepScanCompleted;
-            fileSystemSvc.FileScanStarted += FileSystemSvc_FileScanStarted;
         }
 
         private void DetachEvents()
@@ -75,33 +69,6 @@ namespace StrixMusic
             Unloaded -= MainPage_Unloaded;
 
             Ioc.Default.GetService<ISettingsService>().SettingChanged -= SettingsService_SettingChanged;
-
-            var fileSystemSvc = Ioc.Default.GetService<IFileSystemService>();
-
-            fileSystemSvc.FolderScanStarted -= FileSystemSvc_FolderScanStarted;
-            fileSystemSvc.FolderDeepScanCompleted -= FileSystemSvc_FolderDeepScanCompleted;
-            fileSystemSvc.FileScanStarted -= FileSystemSvc_FileScanStarted;
-        }
-
-        private void FileSystemSvc_FolderDeepScanCompleted(object sender, StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData e)
-        {
-#if !__ANDROID__
-            Debug.WriteLine($"Deep scan of folder {e.Name} completed");
-#endif
-        }
-
-        private void FileSystemSvc_FileScanStarted(object sender, FileScanStateEventArgs e)
-        {
-#if !__ANDROID__
-            Debug.WriteLine($"Scanning file {e.FileData.Name}");
-#endif
-        }
-
-        private void FileSystemSvc_FolderScanStarted(object sender, StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData e)
-        {
-#if !__ANDROID__
-            Debug.WriteLine($"Scanning folder {e.Name}");
-#endif
         }
 
         private async void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)

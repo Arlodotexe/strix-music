@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.ViewModels.Bindables;
 
 namespace StrixMusic.ViewModels
 {
@@ -10,10 +11,10 @@ namespace StrixMusic.ViewModels
         /// </summary>
         /// <param name="recentlyPlayed">The recently played objects to merge.</param>
         /// <returns><inheritdoc cref="ILibrary"/></returns>
-        public static IRecentlyPlayed MergeRecentlyPlayed(params IRecentlyPlayed[] recentlyPlayed)
+        public static BindableRecentlyPlayed MergeRecentlyPlayed(params IRecentlyPlayed[] recentlyPlayed)
         {
             // TODO
-            return recentlyPlayed.FirstOrDefault();
+            return new BindableRecentlyPlayed();
         }
     }
 }

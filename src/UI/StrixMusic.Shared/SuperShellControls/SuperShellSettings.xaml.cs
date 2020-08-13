@@ -1,11 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Helpers;
 using StrixMusic.Models;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.StorageService;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -75,7 +75,10 @@ namespace StrixMusic.SuperShellControls
         {
             var fileSystemSvc = Ioc.Default.GetService<IFileSystemService>();
 
-            await fileSystemSvc.PickFolder();
+            var folder = await fileSystemSvc.PickFolder();
+
+            if (folder != null)
+                await folder.DeepScanAsync();
         }
 
         /// <summary>
