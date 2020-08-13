@@ -7,7 +7,6 @@
     mc:Ignorable="d"
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:local="using:StrixMusic.Shell.ZuneDesktop.Controls"
-    SizeChanged="RootControl_SizeChanged"
     x:Name="RootControl" RequestedTheme="Dark">
 
     <UserControl.Resources>
@@ -77,7 +76,5 @@
         </Grid>
 
         <default:NowPlayingBarControl Grid.Row="1"/>
-
-        <local:Overlay x:Name="Overlay" Grid.RowSpan="2" Visibility="Collapsed"/>
     </Grid>
 </UserControl>

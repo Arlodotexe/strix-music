@@ -50,6 +50,7 @@
                                                 Content="{TemplateBinding Content}"
                                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                 Padding="{TemplateBinding Padding}"
+                                                FontSize="{TemplateBinding FontSize}"
                                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                         </Border>
                     </Grid>
@@ -137,6 +138,7 @@
                                               Content="{TemplateBinding Content}"
                                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               Padding="{TemplateBinding Padding}"
+                                              FontSize="{TemplateBinding FontSize}"
                                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                                     <ContentPresenter x:Name="CheckedContentPresenter"
                                               AutomationProperties.AccessibilityView="Raw"
@@ -147,6 +149,7 @@
                                               Content="{TemplateBinding CheckedContent}"
                                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               Padding="{TemplateBinding Padding}"
+                                              FontSize="{TemplateBinding FontSize}"
                                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                               Visibility="Collapsed"/>
                                 </Grid>
@@ -299,6 +302,7 @@
                                                 Content="{TemplateBinding Content}"
                                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                 Padding="{TemplateBinding Padding}"
+                                                FontSize="{TemplateBinding FontSize}"
                                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Grid>
                 </ControlTemplate>
@@ -465,6 +469,7 @@
                                           Content="{TemplateBinding Content}"
                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           Padding="{TemplateBinding Padding}"
+                                          FontSize="{TemplateBinding FontSize}"
                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                         <ContentPresenter x:Name="CheckedContentPresenter"
                                           AutomationProperties.AccessibilityView="Raw"
@@ -476,6 +481,7 @@
                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           Padding="{TemplateBinding Padding}"
                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          FontSize="{TemplateBinding FontSize}"
                                           Foreground="#f854be"
                                           Visibility="Collapsed"/>
                         <ContentPresenter x:Name="IndeterminateContentPresenter"
@@ -487,6 +493,7 @@
                                           Content="{TemplateBinding IndeterminateContent}"
                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           Padding="{TemplateBinding Padding}"
+                                          FontSize="{TemplateBinding FontSize}"
                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                           Foreground="#f854be"
                                           Visibility="Collapsed"/>
