@@ -27,7 +27,7 @@
     <type fullname="StrixMusic.Shell.Strix*" />
   </assembly>
 
-  <assembly fullname="StrixMusic.Shell.Zune">
-    <type fullname="StrixMusic.Shell.Zune*" />
+  <assembly fullname="StrixMusic.Shell.ZuneDesktop">
+    <type fullname="StrixMusic.Shell.ZuneDesktop*" />
   </assembly>
 </linker>

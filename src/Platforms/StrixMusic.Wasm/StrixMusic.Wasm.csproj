@@ -48,8 +48,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.0.0-dev.1253" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.UI.WebAssembly" Version="3.0.0-dev.1253" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.0.5" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.UI.WebAssembly" Version="3.0.5" />
     <PackageReference Include="Uno.Wasm.Bootstrap" Version="1.4.0-dev.16" />
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.4.0-dev.16" />
   </ItemGroup>

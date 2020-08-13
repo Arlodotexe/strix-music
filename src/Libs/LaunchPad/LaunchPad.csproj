@@ -10,7 +10,7 @@
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.0.0-dev.1253" />
+    <PackageReference Include="Uno.UI" Version="3.0.5" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

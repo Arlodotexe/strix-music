@@ -19,7 +19,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
-    <PackageReference Include="Uno.UI" Version="3.0.0-dev.1253" />
+    <PackageReference Include="Uno.UI" Version="3.0.5" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
