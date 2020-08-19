@@ -15,8 +15,8 @@
       }
     },
     {
-      "name": ".NET Core Debug Uno Platform WebAssembly in Chrome",
-      "type": "pwa-chrome",
+      "name": ".NET Core Debug Uno Platform WebAssembly in Edge",
+      "type": "pwa-msedge",
       "request": "launch",
       "timeout": 30000,
       // If you have changed the default port / launch URL make sure to update the expectation below
