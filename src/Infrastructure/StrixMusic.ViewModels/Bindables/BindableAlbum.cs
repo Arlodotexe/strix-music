@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.CoreInterfaces.Enums;
@@ -21,8 +22,22 @@ namespace StrixMusic.ViewModels.Bindables
             _album = album;
         }
 
+        private void AttachEvents()
+        {
+
+        }
+
+        private void DetachEvents()
+        {
+
+        }
+
         /// <inheritdoc/>
-        public IReadOnlyList<ITrack> Tracks => _album.Tracks;
+        public ObservableCollection<ITrack> Tracks
+        {
+            get => _album.Tracks;
+            set => SetProperty(() => _album.Tracks, value);
+        }
 
         /// <inheritdoc/>
         public int TotalTrackCount => _album.TotalTrackCount;

@@ -8,7 +8,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Describes a core.
     /// </summary>
-    public partial interface ICore : IAsyncDisposable
+    public partial interface ICore
     {
         /// <inheritdoc cref="ICoreConfig" />
         public ICoreConfig CoreConfig { get; set; }
