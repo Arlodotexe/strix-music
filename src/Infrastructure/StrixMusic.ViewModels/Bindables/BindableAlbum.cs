@@ -9,7 +9,7 @@ using StrixMusic.CoreInterfaces.Interfaces;
 namespace StrixMusic.ViewModels.Bindables
 {
     /// <inheritdoc/>
-    public class BindableAlbum : ObservableObject, IAlbum
+    public class BindableAlbum : ObservableObject
     {
         private readonly IAlbum _album;
 
@@ -24,18 +24,23 @@ namespace StrixMusic.ViewModels.Bindables
 
         private void AttachEvents()
         {
-
+            _album.PlaybackStateChanged += Album_PlaybackStateChanged;
         }
 
         private void DetachEvents()
+        {
+            _album.PlaybackStateChanged -= Album_PlaybackStateChanged;
+        }
+
+        private void Album_PlaybackStateChanged(object sender, PlaybackState e)
         {
 
         }
 
         /// <inheritdoc/>
-        public ObservableCollection<ITrack> Tracks
+        public List<ITrack> Tracks
         {
-            get => _album.Tracks;
+            get => (List<ITrack>)_album.Tracks;
             set => SetProperty(() => _album.Tracks, value);
         }
 
@@ -70,7 +75,11 @@ namespace StrixMusic.ViewModels.Bindables
         public IUserProfile? Owner => _album.Owner;
 
         /// <inheritdoc/>
-        public PlaybackState PlaybackState => _album.PlaybackState;
+        public PlaybackState PlaybackState
+        {
+            get => _album.PlaybackState;
+            set => SetProperty(() => _album.PlaybackState, value);
+        }
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged
