@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.ViewModels.Bindables
 {
     /// <inheritdoc/>
-    public class BindableAlbum : ObservableObject
+    public class BindableAlbum : ObservableObject, IAlbum
     {
         private readonly IAlbum _album;
 
@@ -20,6 +21,11 @@ namespace StrixMusic.ViewModels.Bindables
         public BindableAlbum(IAlbum album)
         {
             _album = album;
+
+            PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
+            PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
+
+            AttachEvents();
         }
 
         private void AttachEvents()
@@ -32,15 +38,12 @@ namespace StrixMusic.ViewModels.Bindables
             _album.PlaybackStateChanged -= Album_PlaybackStateChanged;
         }
 
-        private void Album_PlaybackStateChanged(object sender, PlaybackState e)
-        {
-
-        }
+        private void Album_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
 
         /// <inheritdoc/>
-        public List<ITrack> Tracks
+        public IReadOnlyList<ITrack> Tracks
         {
-            get => (List<ITrack>)_album.Tracks;
+            get => _album.Tracks;
             set => SetProperty(() => _album.Tracks, value);
         }
 
@@ -95,22 +98,23 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
-        public Task PauseAsync()
-        {
-            return _album.PauseAsync();
-        }
+        /// <summary>
+        /// Attempts to pause the album, if playing.
+        /// </summary>
+        public IAsyncRelayCommand PauseAsyncCommand { get; }
 
         /// <inheritdoc/>
-        public Task PlayAsync()
-        {
-            return _album.PlayAsync();
-        }
+        public Task PauseAsync() => _album.PauseAsync();
+
+        /// <summary>
+        /// Attempts to play the album.
+        /// </summary>
+        public IAsyncRelayCommand PlayAsyncCommand { get; }
 
         /// <inheritdoc/>
-        public Task PopulateTracksAsync(int limit, int offset = 0)
-        {
-            return _album.PopulateTracksAsync(limit, offset);
-        }
+        public Task PlayAsync() => _album.PlayAsync();
+
+        /// <inheritdoc/>
+        public Task PopulateTracksAsync(int limit, int offset = 0) => _album.PopulateTracksAsync(limit, offset);
     }
 }

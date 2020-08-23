@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -6,10 +10,6 @@ using OwlCore.Extensions;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 using StrixMusic.ViewModels.Bindables;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StrixMusic.ViewModels
 {
