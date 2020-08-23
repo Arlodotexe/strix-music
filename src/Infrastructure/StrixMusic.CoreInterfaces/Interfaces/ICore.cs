@@ -8,7 +8,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Describes a core.
     /// </summary>
-    public partial interface ICore
+    public partial interface ICore : IAsyncDisposable
     {
         /// <inheritdoc cref="ICoreConfig" />
         public ICoreConfig CoreConfig { get; set; }
@@ -41,7 +41,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Gets the recently played tracks for this core.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation. </returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task<IRecentlyPlayed> GetRecentlyPlayedAsync();
 
         /// <summary>

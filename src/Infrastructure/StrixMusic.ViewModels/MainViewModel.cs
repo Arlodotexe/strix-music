@@ -44,6 +44,7 @@ namespace StrixMusic.ViewModels
 
             foreach (var core in coresToLoad)
             {
+                Users.Add(core.User);
                 AttachEvents(core);
             }
         }
@@ -55,16 +56,24 @@ namespace StrixMusic.ViewModels
             core.SearchResultsChanged += Core_SearchResultsChanged;
         }
 
+        private void DetachEvents(ICore core)
+        {
+            core.DevicesChanged -= Core_DevicesChanged;
+            core.CoreStateChanged -= Core_CoreStateChanged;
+            core.SearchResultsChanged -= Core_SearchResultsChanged;
+        }
+
         private void Core_SearchResultsChanged(object sender, ISearchResults e)
         {
             if (sender is ICore core)
             {
-              // todo: rethink merging search results / rethink storing search results per core.   
+                // todo: rethink merging search results / rethink storing search results per core.
             }
         }
 
         private void Core_CoreStateChanged(object sender, CoreState e)
         {
+
             // TODO - create a "bindable core" object with basic properties about the core (to be used in the UI), and save them in a list.
         }
 
@@ -82,9 +91,14 @@ namespace StrixMusic.ViewModels
         }
 
         /// <summary>
+        /// Contains data about the cores that are loaded.
+        /// </summary>
+        public ObservableCollection<BindableCoreData> BindableCores { get; } = new ObservableCollection<BindableCoreData>();
+
+        /// <summary>
         /// A consolidated list of all users in the app.
         /// </summary>
-        public ObservableCollection<IUser>? Users { get; }
+        public ObservableCollection<IUser> Users { get; } = new ObservableCollection<IUser>();
 
         /// <summary>
         /// All available devices.
@@ -104,7 +118,7 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// Used to browse and discovered new music.
         /// </summary>
-        public ObservableCollection<BindableCollectionGroup>? Discoverables { get; }
+        public ObservableCollection<BindableCollectionGroup>? Discoverables { get; } = new ObservableCollection<BindableCollectionGroup>();
 
         /// <summary>
         /// Search results.
