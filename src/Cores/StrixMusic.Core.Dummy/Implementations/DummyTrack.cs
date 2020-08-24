@@ -95,7 +95,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public PlaybackState PlaybackState => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        IReadOnlyList<IArtist> ITrack.Artist => throw new NotImplementedException();
+        IReadOnlyList<IArtist> ITrack.Artists => throw new NotImplementedException();
 
 
         /// <inheritdoc/>

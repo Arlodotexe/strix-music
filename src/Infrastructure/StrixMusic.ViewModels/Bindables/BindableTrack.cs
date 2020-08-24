@@ -32,7 +32,7 @@ namespace StrixMusic.ViewModels.Bindables
         public string Type => _track.Type;
 
         /// <inheritdoc/>
-        public ObservableCollection<IArtist> Artist => (ObservableCollection<IArtist>)_track.Artist;
+        public ObservableCollection<IArtist> Artists => (ObservableCollection<IArtist>)_track.Artists;
 
         /// <inheritdoc/>
         public IAlbum? Album => _track.Album;

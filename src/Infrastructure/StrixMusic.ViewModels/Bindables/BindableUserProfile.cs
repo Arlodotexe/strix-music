@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -26,7 +24,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public ICore SourceCore { get => _userProfile.SourceCore; set => _userProfile.SourceCore = value; }
+        public ICore SourceCore => _userProfile.SourceCore;
 
         /// <summary>
         /// <inheritdoc/>
@@ -66,6 +64,6 @@ namespace StrixMusic.ViewModels.Bindables
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public string? Region { get => _userProfile.Region; set => _userProfile.Region = value; }
+        public string? Region => _userProfile.Region;
     }
 }

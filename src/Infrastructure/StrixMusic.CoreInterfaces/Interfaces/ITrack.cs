@@ -21,7 +21,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// A list of <see cref="IArtist"/>s that this track was created by.
         /// </summary>
-        IReadOnlyList<IArtist> Artist { get; }
+        IReadOnlyList<IArtist> Artists { get; }
 
         /// <summary>
         /// An <see cref="IAlbum"/> object that this track belongs to.
