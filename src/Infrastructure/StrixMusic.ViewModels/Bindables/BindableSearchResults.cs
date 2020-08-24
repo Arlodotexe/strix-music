@@ -10,23 +10,36 @@ namespace StrixMusic.ViewModels.Bindables
     public class BindableSearchResults : ObservableObject
     {
         /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        private ISearchResults _searchResults;
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public BindableSearchResults(ISearchResults searchResults)
+        {
+            _searchResults = searchResults;
+        }
+
+        /// <summary>
         /// The Track search results across all cores.
         /// </summary>
-        public ObservableCollection<ITrackCollection> Tracks { get; } = new ObservableCollection<ITrackCollection>();
+        public ITrackCollection Tracks => _searchResults.Tracks;
 
         /// <summary>
         /// The Artists search results across all cores.
         /// </summary>
-        public ObservableCollection<IArtistCollection> Artists { get; } = new ObservableCollection<IArtistCollection>();
+        public IArtistCollection Artists => _searchResults.Artists;
 
         /// <summary>
         /// The Albums search results across all cores.
         /// </summary>
-        public ObservableCollection<IAlbumCollection> Albums { get; } = new ObservableCollection<IAlbumCollection>();
+        public IAlbumCollection Albums => _searchResults.Albums;
 
         /// <summary>
         /// The Playlists search results across all cores.
         /// </summary>
-        public ObservableCollection<IPlaylistCollection> Playlists { get; } = new ObservableCollection<IPlaylistCollection>();
+        public IPlaylistCollection Playlists => _searchResults.Playlists;
     }
 }

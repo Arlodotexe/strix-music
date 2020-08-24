@@ -67,5 +67,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// How long the track is in.
         /// </summary>
         TimeSpan Duration { get; }
+
     }
 }
