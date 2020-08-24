@@ -66,10 +66,6 @@ namespace StrixMusic.ViewModels.Bindables
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public string? Region
-        {
-            get => _userProfile.Region;
-            set => _userProfile.Region = value;
-        }
+        public string? Region => _userProfile.Region;
     }
 }
