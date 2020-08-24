@@ -11,7 +11,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// The source core which created the parent.
         /// </summary>
-        public ICore SourceCore { get; set; }
+        public ICore SourceCore { get; }
 
         /// <summary>
         /// Identifier for the user
