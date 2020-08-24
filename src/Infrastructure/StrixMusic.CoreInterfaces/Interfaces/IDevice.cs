@@ -12,62 +12,69 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// The source core which created the object.
         /// </summary>
-        public ICore SourceCore { get; set; }
+        public ICore SourceCore { get; }
 
         /// <summary>
         /// Identifies the device
         /// </summary>
-        string Id { get; set; }
+        string Id { get; }
 
         /// <summary>
         /// The displayed name of this device
         /// </summary>
-        string Name { get; set; }
+        string Name { get; }
 
         /// <summary>
         /// If true, the device is currently active and playing audio.
         /// </summary>
-        bool IsActive { get; set; }
+        bool IsActive { get; }
 
         /// <summary>
         /// The currently playing collection.
         /// </summary>
-        IPlayableCollectionBase PlaybackContext { get; set; }
+        IPlayableCollectionBase PlaybackContext { get; }
 
         /// <summary>
         /// The currently playing <see cref="ITrack"/>.
         /// </summary>
-        ITrack? NowPlaying { get; set; }
+        ITrack? NowPlaying { get; }
 
         /// <summary>
         /// The amount of time that has passed since a song has started.
         /// </summary>
         TimeSpan Position { get; }
 
-        /// <inheritdoc cref="PlaybackState"/>
-        PlaybackState State { get; }
+        /// <inheritdoc cref="Enums.PlaybackState"/>
+        PlaybackState PlaybackState { get; }
 
         /// <summary>
         /// True if the player is using a shuffled track list.
         /// </summary>
         /// <remarks>If null, the player cannot be shuffled.</remarks>
-        bool? ShuffleState { get; set; }
+        bool? ShuffleState { get; }
 
         /// <inheritdoc cref="Enums.RepeatState"/>
-        RepeatState RepeatState { get; set; }
+        RepeatState RepeatState { get; }
 
         /// <summary>
         /// The volume of the device (0-1). If null, the volume cannot be changed.
         /// </summary>
-        double? VolumePercent { get; set; }
+        double? VolumePercent { get; }
 
         /// <inheritdoc cref="Enums.DeviceType" />
-        DeviceType DeviceType { get; set; }
+        DeviceType DeviceType { get; }
 
         /// <summary>
-        /// The rate of the playback for the current track. If unknown, value is 1.
+        /// The rate of the playback for the current track. If the playback speed can't be changed, value is <see langword="null"/>
         /// </summary>
-        double PlaybackSpeed { get; set; }
+        double? PlaybackSpeed { get; }
+
+        /// <summary>
+        /// Attempts to change the playback speed.
+        /// </summary>
+        /// <param name="speed"></param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        Task ChangePlaybackSpeed(double speed);
 
         /// <summary>
         /// Resume the device if in the state <see cref="Enums.PlaybackState.Paused"/>.
@@ -146,9 +153,9 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         event EventHandler<TimeSpan> PositionChanged;
 
         /// <summary>
-        /// Fires when <see cref="State"/> changes.
+        /// Fires when <see cref="PlaybackState"/> changes.
         /// </summary>
-        event EventHandler<PlaybackState> StateChanged;
+        event EventHandler<PlaybackState> PlaybackStateChanged;
 
         /// <summary>
         /// Fires when <see cref="ShuffleState"/> changes.

@@ -8,18 +8,18 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     public interface IImage
     {
         /// <summary>
-        ///  Local or remote resource pointing to the image.
+        /// Local or remote resource pointing to the image.
         /// </summary>
-        Uri Uri { get; set; }
+        Uri Uri { get; }
 
         /// <summary>
         /// Height of the image.
         /// </summary>
-        double Height { get; set; }
+        double Height { get; }
 
         /// <summary>
         /// Width of the image.
         /// </summary>
-        double Width { get; set; }
+        double Width { get; }
     }
 }
