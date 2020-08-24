@@ -51,7 +51,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public ObservableCollection<IImage> Images => (ObservableCollection<IImage>)_userProfile.Images;
+        public ObservableCollection<IImage> Images => new ObservableCollection<IImage>(_userProfile.Images);
 
         /// <summary>
         /// <inheritdoc/>
@@ -61,7 +61,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public ObservableCollection<Uri>? Url => (ObservableCollection<Uri>?)_userProfile.Url;
+        public ObservableCollection<Uri>? Url => new ObservableCollection<Uri>(_userProfile.Url);
 
         /// <summary>
         /// <inheritdoc/>
