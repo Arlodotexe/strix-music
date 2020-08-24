@@ -19,8 +19,7 @@ namespace StrixMusic.ViewModels.Bindables
         private readonly IList<IPlayableCollectionBase> _playableCollections = new List<IPlayableCollectionBase>();
 
         private readonly IPlayableCollectionGroup _collectionBase;
-
-        private int _totalItemsCount = 0;
+        private int _totalItemsCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BindableCollectionGroup"/> class.

@@ -48,6 +48,12 @@ namespace StrixMusic.Core.Dummy
         public event EventHandler<ISearchResults>? SearchResultsChanged;
 
         /// <inheritdoc/>
+        public ValueTask DisposeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
         public IAsyncEnumerable<IDevice> GetDevicesAsync()
         {
             throw new NotImplementedException();

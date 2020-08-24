@@ -75,11 +75,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// <inheritdoc/>
         public int TotalRelatedArtistsCount => RelatedArtists.Count;
 
-        /// <inheritdoc/>
-        public IReadOnlyList<IArtist> Artists => throw new NotImplementedException();
 
-        /// <inheritdoc/>
-        public int TotalArtistsCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public IReadOnlyList<ITrack> Tracks => throw new NotImplementedException();
@@ -87,12 +83,11 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// <inheritdoc/>
         public int TotalTracksCount => throw new NotImplementedException();
 
-
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? RelatedArtistsChanged;
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
@@ -120,7 +115,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         }
 
         /// <inheritdoc/>
-        public Task PopulateArtistsAsync(int limit, int offset = 0)
+        public Task PopulateRelatedArtistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -11,7 +13,7 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// Contains bindable information about an <see cref="IArtist"/>
     /// </summary>
-    public class BindableArtist : ObservableObject, IArtist
+    public class BindableArtist : ObservableObject
     {
         private IArtist _artist;
 
@@ -22,22 +24,91 @@ namespace StrixMusic.ViewModels.Bindables
         public BindableArtist(IArtist artist)
         {
             _artist = artist;
+
+            PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
+            PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
+
+            Tracks = new ObservableCollection<ITrack>(_artist.Tracks);
+            Albums = new ObservableCollection<IAlbum>(_artist.Albums);
+            Artists = new ObservableCollection<IArtist>(_artist.RelatedArtists);
+
+            AttachEvents();
+        }
+
+        private void AttachEvents()
+        {
+            _artist.PlaybackStateChanged += Artist_PlaybackStateChanged;
+            _artist.TracksChanged += Artist_RelatedTracksChanged;
+            _artist.AlbumsChanged += Artist_AlbumsChanged;
+            _artist.RelatedArtistsChanged += Artist_RelatedArtistsChanged;
+        }
+
+        private void DetachEvents()
+        {
+            _artist.PlaybackStateChanged -= Artist_PlaybackStateChanged;
+            _artist.TracksChanged -= Artist_RelatedTracksChanged;
+            _artist.AlbumsChanged -= Artist_AlbumsChanged;
+            _artist.RelatedArtistsChanged -= Artist_RelatedArtistsChanged;
+        }
+
+        private void Artist_AlbumsChanged(object sender, CollectionChangedEventArgs<IAlbum> e)
+        {
+            foreach (var item in e.RemovedItems)
+            {
+                Albums.Remove(item);
+            }
+
+            foreach (var item in e.AddedItems)
+            {
+                Albums.Add(item);
+            }
+        }
+
+        private void Artist_RelatedArtistsChanged(object sender, CollectionChangedEventArgs<IArtist> e)
+        {
+            foreach (var item in e.RemovedItems)
+            {
+                Artists.Remove(item);
+            }
+
+            foreach (var item in e.AddedItems)
+            {
+                Artists.Add(item);
+            }
+        }
+
+        private void Artist_RelatedTracksChanged(object sender, CollectionChangedEventArgs<ITrack> e)
+        {
+            foreach (var item in e.RemovedItems)
+            {
+                Tracks.Remove(item);
+            }
+
+            foreach (var item in e.AddedItems)
+            {
+                Tracks.Add(item);
+            }
+        }
+
+        private void Artist_PlaybackStateChanged(object sender, PlaybackState e)
+        {
+            PlaybackState = e;
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<IAlbum> Albums => _artist.Albums;
+        public ObservableCollection<IAlbum> Albums { get; }
 
         /// <inheritdoc/>
         public int TotalAlbumsCount => _artist.TotalAlbumsCount;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IArtist> Artists => _artist.Artists;
+        public ObservableCollection<IArtist> Artists { get; }
 
         /// <inheritdoc/>
-        public int TotalArtistsCount => _artist.TotalArtistsCount;
+        public int TotalArtistsCount => _artist.TotalRelatedArtistsCount;
 
         /// <inheritdoc/>
-        public IReadOnlyList<ITrack> Tracks => _artist.Tracks;
+        public ObservableCollection<ITrack> Tracks { get; }
 
         /// <inheritdoc/>
         public int TotalTracksCount => _artist.TotalTracksCount;
@@ -64,7 +135,11 @@ namespace StrixMusic.ViewModels.Bindables
         public string? Description => _artist.Description;
 
         /// <inheritdoc/>
-        public PlaybackState PlaybackState => _artist.PlaybackState;
+        public PlaybackState PlaybackState
+        {
+            get => _artist.PlaybackState;
+            set => SetProperty(() => _artist.PlaybackState, value);
+        }
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged
@@ -85,12 +160,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             add
             {
-                _artist.ArtistsChanged += value;
+                _artist.RelatedArtistsChanged += value;
             }
 
             remove
             {
-                _artist.ArtistsChanged -= value;
+                _artist.RelatedArtistsChanged -= value;
             }
         }
 
@@ -122,11 +197,21 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
+        /// <summary>
+        /// Attempts to pause the artist, if playing.
+        /// </summary>
+        public IAsyncRelayCommand PauseAsyncCommand { get; }
+
         /// <inheritdoc/>
         public Task PauseAsync()
         {
             return _artist.PauseAsync();
         }
+
+        /// <summary>
+        /// Attempts to play the artist.
+        /// </summary>
+        public IAsyncRelayCommand PlayAsyncCommand { get; }
 
         /// <inheritdoc/>
         public Task PlayAsync()
@@ -143,7 +228,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// <inheritdoc/>
         public Task PopulateArtistsAsync(int limit, int offset = 0)
         {
-            return _artist.PopulateArtistsAsync(limit, offset);
+            return _artist.PopulateRelatedArtistsAsync(limit, offset);
         }
 
         /// <inheritdoc/>
