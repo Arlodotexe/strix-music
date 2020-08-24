@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -11,220 +13,312 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// A bindable wrapper of the <see cref="IPlayableCollectionGroup"/>.
     /// </summary>
-    public class BindableCollectionGroup : ObservableObject, IPlayableCollectionGroup
+    public class BindableCollectionGroup : ObservableObject
     {
-        /// <summary>
-        /// Backing field for the items. Is modified with merged items from all inputted collections.
-        /// </summary>
-        private readonly IList<IPlayableCollectionBase> _playableCollections = new List<IPlayableCollectionBase>();
-
-        private readonly IPlayableCollectionGroup _collectionBase;
-        private int _totalItemsCount;
+        private readonly IPlayableCollectionGroup _collectionGroupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BindableCollectionGroup"/> class.
         /// </summary>
         /// <param name="collectionGroup">The base <see cref="IPlayableCollectionBase"/> containing properties about this class.</param>
-        /// <param name="decideItemCombine">When called, return an item from <see cref="IPlayableCollectionBase"/> to use as a key when grouping items.</param>
         public BindableCollectionGroup(IPlayableCollectionGroup collectionGroup)
         {
-            _collectionBase = collectionGroup;
+            _collectionGroupBase = collectionGroup;
+
+            PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
+            PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
+
+            Tracks = new ObservableCollection<ITrack>(_collectionGroupBase.Tracks);
+            Playlists = new ObservableCollection<IPlaylist>(_collectionGroupBase.Playlists);
+            Albums = new ObservableCollection<IAlbum>(_collectionGroupBase.Albums);
+            Artists = new ObservableCollection<IArtist>(_collectionGroupBase.Artists);
+            Children = new ObservableCollection<IPlayableCollectionGroup>(_collectionGroupBase.Children);
+
+            AttachEvents();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BindableCollectionGroup"/> class.
-        /// </summary>
-        /// <param name="collectionBase">The base <see cref="IPlayableCollectionBase"/> containing properties about this class.</param>
-        public BindableCollectionGroup(IPlayableCollectionBase collectionBase)
+        private void AttachEvents()
         {
-            _collectionBase = (IPlayableCollectionGroup)collectionBase;
+            _collectionGroupBase.AlbumsChanged += CollectionGroupBase_AlbumsChanged;
+            _collectionGroupBase.ArtistsChanged += CollectionGroupBase_ArtistsChanged;
+            _collectionGroupBase.ChildrenChanged += CollectionGroupBase_ChildrenChanged;
+            _collectionGroupBase.PlaybackStateChanged += CollectionGroupBase_PlaybackStateChanged;
+            _collectionGroupBase.PlaylistsChanged += CollectionGroupBase_PlaylistsChanged;
+            _collectionGroupBase.TracksChanged += CollectionGroupBase_TracksChanged;
         }
 
-        /// <inheritdoc/>
+        private void DetachEvents()
+        {
+            _collectionGroupBase.AlbumsChanged -= CollectionGroupBase_AlbumsChanged;
+            _collectionGroupBase.ArtistsChanged -= CollectionGroupBase_ArtistsChanged;
+            _collectionGroupBase.ChildrenChanged -= CollectionGroupBase_ChildrenChanged;
+            _collectionGroupBase.PlaybackStateChanged -= CollectionGroupBase_PlaybackStateChanged;
+            _collectionGroupBase.PlaylistsChanged -= CollectionGroupBase_PlaylistsChanged;
+            _collectionGroupBase.TracksChanged -= CollectionGroupBase_TracksChanged;
+        }
+
+        private void CollectionGroupBase_TracksChanged(object sender, CollectionChangedEventArgs<ITrack> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Tracks.Add(item);
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Tracks.Remove(item);
+            }
+        }
+
+        private void CollectionGroupBase_PlaylistsChanged(object sender, CollectionChangedEventArgs<IPlaylist> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Playlists.Add(item);
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Playlists.Remove(item);
+            }
+        }
+
+        private void CollectionGroupBase_PlaybackStateChanged(object sender, PlaybackState e)
+        {
+            PlaybackState = e;
+        }
+
+        private void CollectionGroupBase_ChildrenChanged(object sender, CollectionChangedEventArgs<IPlayableCollectionGroup> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Children.Add(item);
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Children.Remove(item);
+            }
+        }
+
+        private void CollectionGroupBase_ArtistsChanged(object sender, CollectionChangedEventArgs<IArtist> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Artists.Add(item);
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Artists.Remove(item);
+            }
+        }
+
+        private void CollectionGroupBase_AlbumsChanged(object sender, CollectionChangedEventArgs<IAlbum> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Albums.Add(item);
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Albums.Remove(item);
+            }
+        }
+
+        /// <inheritdoc cref="IPlayableCollectionGroup.ChildrenChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> ChildrenChanged
         {
             add
             {
-                _collectionBase.ChildrenChanged += value;
+                _collectionGroupBase.ChildrenChanged += value;
             }
 
             remove
             {
-                _collectionBase.ChildrenChanged -= value;
+                _collectionGroupBase.ChildrenChanged -= value;
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlaylistCollection.PlaylistsChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged
         {
             add
             {
-                _collectionBase.PlaylistsChanged += value;
+                _collectionGroupBase.PlaylistsChanged += value;
             }
 
             remove
             {
-                _collectionBase.PlaylistsChanged -= value;
+                _collectionGroupBase.PlaylistsChanged -= value;
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrackCollection.TracksChanged"/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
         {
             add
             {
-                _collectionBase.TracksChanged += value;
+                _collectionGroupBase.TracksChanged += value;
             }
 
             remove
             {
-                _collectionBase.TracksChanged -= value;
+                _collectionGroupBase.TracksChanged -= value;
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAlbumCollection.AlbumsChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged
         {
             add
             {
-                _collectionBase.AlbumsChanged += value;
+                _collectionGroupBase.AlbumsChanged += value;
             }
 
             remove
             {
-                _collectionBase.AlbumsChanged -= value;
+                _collectionGroupBase.AlbumsChanged -= value;
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IArtistCollection.ArtistsChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged
         {
             add
             {
-                _collectionBase.ArtistsChanged += value;
+                _collectionGroupBase.ArtistsChanged += value;
             }
 
             remove
             {
-                _collectionBase.ArtistsChanged -= value;
+                _collectionGroupBase.ArtistsChanged -= value;
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.PlaybackState"/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add
             {
-                _collectionBase.PlaybackStateChanged += value;
+                _collectionGroupBase.PlaybackStateChanged += value;
             }
 
             remove
             {
-                _collectionBase.PlaybackStateChanged -= value;
+                _collectionGroupBase.PlaybackStateChanged -= value;
             }
         }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<IPlayableCollectionBase> Items => _collectionBase.Children;
+        /// <inheritdoc cref="IPlayableCollectionGroup.Children"/>
+        public ObservableCollection<IPlayableCollectionGroup> Children { get; }
 
-        /// <inheritdoc/>
-        public string Id => _collectionBase.Id;
+        /// <inheritdoc cref="IPlayable.Id"/>
+        public string Id => _collectionGroupBase.Id;
 
-        /// <inheritdoc/>
-        public ICore SourceCore => _collectionBase.SourceCore;
+        /// <inheritdoc cref="IPlayable.SourceCore"/>
+        public ICore SourceCore => _collectionGroupBase.SourceCore;
 
-        /// <inheritdoc/>
-        public string Name => _collectionBase.Name;
+        /// <inheritdoc cref="IPlayable.Name"/>
+        public string Name => _collectionGroupBase.Name;
 
-        /// <inheritdoc/>
-        public IReadOnlyList<IImage> Images => _collectionBase.Images;
+        /// <inheritdoc cref="IPlayable.Images"/>
+        public IReadOnlyList<IImage> Images => _collectionGroupBase.Images;
 
-        /// <inheritdoc/>
-        public Uri? Url => _collectionBase.Url;
+        /// <inheritdoc cref="IPlayable.Url"/>
+        public Uri? Url => _collectionGroupBase.Url;
 
-        /// <inheritdoc/>
-        public string? Description => _collectionBase.Description;
+        /// <inheritdoc cref="IPlayable.Description"/>
+        public string? Description => _collectionGroupBase.Description;
 
-        /// <inheritdoc/>
-        public IUserProfile? Owner => _collectionBase.Owner;
+        /// <inheritdoc cref="IPlayableCollectionBase.Owner"/>
+        public IUserProfile? Owner => _collectionGroupBase.Owner;
 
-        /// <inheritdoc/>
-        public PlaybackState PlaybackState => _collectionBase.PlaybackState;
+        /// <inheritdoc cref="IPlayable.PlaybackState"/>
+        public PlaybackState PlaybackState
+        {
+            get => _collectionGroupBase.PlaybackState;
+            set => SetProperty(() => _collectionGroupBase.PlaybackState, value);
+        }
 
-        /// <inheritdoc/>
-        public int TotalChildrenCount => _totalItemsCount;
+        /// <inheritdoc cref="IPlayableCollectionGroup.TotalChildrenCount"/>
+        public int TotalChildrenCount => _collectionGroupBase.TotalChildrenCount;
 
-        /// <inheritdoc/>
-        public IReadOnlyList<IPlayableCollectionGroup> Children => _collectionBase.Children;
+        /// <inheritdoc cref="IPlaylistCollection.Playlists"/>
+        public ObservableCollection<IPlaylist> Playlists { get; }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<IPlaylist> Playlists => _collectionBase.Playlists;
+        /// <inheritdoc cref="IPlaylistCollection.cou"/>
+        public int TotalPlaylistCount => _collectionGroupBase.TotalPlaylistCount;
 
-        /// <inheritdoc/>
-        public int TotalPlaylistCount => _collectionBase.TotalPlaylistCount;
+        /// <inheritdoc cref="ITrackCollection.Tracks"/>
+        public ObservableCollection<ITrack> Tracks { get; }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<ITrack> Tracks => _collectionBase.Tracks;
+        /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
+        public int TotalTracksCount => _collectionGroupBase.TotalTracksCount;
 
-        /// <inheritdoc/>
-        public int TotalTracksCount => _collectionBase.TotalTracksCount;
+        /// <inheritdoc cref="IAlbumCollection.Albums"/>
+        public ObservableCollection<IAlbum> Albums { get; }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<IAlbum> Albums => _collectionBase.Albums;
+        /// <inheritdoc cref="IAlbumCollection.TotalAlbumsCount"/>
+        public int TotalAlbumsCount => _collectionGroupBase.TotalAlbumsCount;
 
-        /// <inheritdoc/>
-        public int TotalAlbumsCount => _collectionBase.TotalAlbumsCount;
+        /// <inheritdoc cref="IArtistCollection.Artists"/>
+        public ObservableCollection<IArtist> Artists { get; }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<IArtist> Artists => _collectionBase.Artists;
+        /// <inheritdoc cref="IArtistCollection.TotalArtistsCount"/>
+        public int TotalArtistsCount => _collectionGroupBase.TotalArtistsCount;
 
-        /// <inheritdoc/>
-        public int TotalArtistsCount => _collectionBase.TotalArtistsCount;
+        /// <summary>
+        /// Attempts to a pause the collection (if playing).
+        /// </summary>
+        public IAsyncRelayCommand PauseAsyncCommand { get; }
 
         /// <inheritdoc/>
         public Task PauseAsync()
         {
-            return _collectionBase.PauseAsync();
+            return _collectionGroupBase.PauseAsync();
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Attempts to play the collection. Resumes if paused.
+        /// </summary>
+        public IAsyncRelayCommand PlayAsyncCommand { get; }
+
+        /// <inheritdoc cref="IPlayable.PlayAsync"/>
         public Task PlayAsync()
         {
-            return _collectionBase.PlayAsync();
+            return _collectionGroupBase.PlayAsync();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayableCollectionGroup.PopulateChildrenAsync(int, int)"/>
         public Task PopulateChildrenAsync(int limit, int offset)
         {
-            for (int i = offset; i < limit; i++)
-            {
-            }
-
-            return Task.CompletedTask;
+            return _collectionGroupBase.PopulateChildrenAsync(limit, offset);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlaylistCollection.PopulatePlaylistsAsync(int, int)"/>
         public Task PopulatePlaylistsAsync(int limit, int offset = 0)
         {
-            return _collectionBase.PopulatePlaylistsAsync(limit, offset);
+            return _collectionGroupBase.PopulatePlaylistsAsync(limit, offset);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
         public Task PopulateTracksAsync(int limit, int offset = 0)
         {
-            return _collectionBase.PopulateTracksAsync(limit, offset);
+            return _collectionGroupBase.PopulateTracksAsync(limit, offset);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAlbumCollection.PopulateAlbumsAsync(int, int)"/>
         public Task PopulateAlbumsAsync(int limit, int offset = 0)
         {
-            return _collectionBase.PopulateAlbumsAsync(limit, offset);
+            return _collectionGroupBase.PopulateAlbumsAsync(limit, offset);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IArtistCollection.PopulateArtistsAsync(int, int)"/>
         public Task PopulateArtistsAsync(int limit, int offset = 0)
         {
-            return _collectionBase.PopulateArtistsAsync(limit, offset);
+            return _collectionGroupBase.PopulateArtistsAsync(limit, offset);
         }
     }
 }
