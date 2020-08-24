@@ -32,7 +32,7 @@ namespace StrixMusic.ViewModels.Bindables
         public string Type => _track.Type;
 
         /// <inheritdoc/>
-        public ObservableCollection<IArtist> Artists => (ObservableCollection<IArtist>)_track.Artists;
+        public ObservableCollection<IArtist> Artist => new ObservableCollection<IArtist>(_track.Artist);
 
         /// <inheritdoc/>
         public IAlbum? Album => _track.Album;
@@ -41,7 +41,7 @@ namespace StrixMusic.ViewModels.Bindables
         public DateTime? DatePublished => _track.DatePublished;
 
         /// <inheritdoc/>
-        public ObservableCollection<string>? Genres => (ObservableCollection<string>?)_track.Genres;
+        public ObservableCollection<string>? Genres => new ObservableCollection<string>(_track.Genres);
 
         /// <inheritdoc/>
         public int? TrackNumber => _track.TrackNumber;
@@ -71,7 +71,7 @@ namespace StrixMusic.ViewModels.Bindables
         public string Name => _track.Name;
 
         /// <inheritdoc/>
-        public ObservableCollection<IImage> Images => (ObservableCollection<IImage>)_track.Images;
+        public ObservableCollection<IImage> Images => new ObservableCollection<IImage>(_track.Images);
 
         /// <inheritdoc/>
         public string? Description => _track.Description;
