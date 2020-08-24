@@ -113,7 +113,7 @@ namespace StrixMusic
                 string preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
 
                 // Makes sure the saved shell is valid, falls back to Default.
-                if (!Constants.Shells.LoadedShells.ContainsKey(preferredShell))
+                if (preferredShell == null || !Constants.Shells.LoadedShells.ContainsKey(preferredShell))
                 {
                     preferredShell = Constants.Shells.DefaultShellAssemblyName;
                 }
