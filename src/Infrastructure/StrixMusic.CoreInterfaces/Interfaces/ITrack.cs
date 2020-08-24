@@ -64,8 +64,53 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         bool IsExplicit { get; }
 
         /// <summary>
-        /// How long the track is in.
+        /// How long the track  is.
         /// </summary>
         TimeSpan Duration { get; }
+
+        /// <summary>
+        /// Fires when the <see cref="Artists"/> metadata changes.
+        /// </summary>
+        event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged;
+
+        /// <summary>
+        /// Fires when the <see cref="Genres"/> metadata changes.
+        /// </summary>
+        event EventHandler<CollectionChangedEventArgs<string>> GenresChanged;
+
+        /// <summary>
+        /// Fires when the <see cref="Album"/> metadata changes.
+        /// </summary>
+        event EventHandler<IAlbum?> AlbumChanged;
+
+        /// <summary>
+        /// Fires when the <see cref="DatePublished"/> metadata changes.
+        /// </summary>
+        event EventHandler<DateTime?> DatePublishedChanged;
+
+        /// <summary>
+        /// Fires when the <see cref="TrackNumber"/> metadata changes.
+        /// </summary>
+        event EventHandler<int?> TrackNumberChanged;
+
+        /// <summary>
+        /// Fires when the <see cref="PlayCount"/> metadata changes.
+        /// </summary>
+        event EventHandler<int?> PlayCountChanged;
+
+        /// <summary>
+        /// Fires when the <see cref="Language"/> metadata changes.
+        /// </summary>
+        event EventHandler<string?> LanguageChanged;
+
+        /// <summary>
+        /// Fires when the <see cref="Lyrics"/> metadata changes.
+        /// </summary>
+        event EventHandler<ILyrics?> LyricsChanged;
+
+        /// <summary>
+        /// Fires when the <see cref="IsExplicit"/> metadata changes.
+        /// </summary>
+        event EventHandler<bool> IsExplicitChanged;
     }
 }
