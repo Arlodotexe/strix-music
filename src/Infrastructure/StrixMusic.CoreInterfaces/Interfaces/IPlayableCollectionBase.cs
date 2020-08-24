@@ -12,12 +12,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     public interface IPlayableCollectionBase : IPlayable
     {
         /// <summary>
-        /// An external link related to the collection.
-        /// </summary>
-        Uri? Url { get; }
-
-        /// <summary>
-        /// Owner of the collection.
+        /// Owner of the playable item.
         /// </summary>
         IUserProfile? Owner { get; }
     }

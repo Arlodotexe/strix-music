@@ -21,6 +21,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         string Id { get; }
 
         /// <summary>
+        /// An external link related to the item.
+        /// </summary>
+        Uri? Url { get; }
+
+        /// <summary>
         /// Name of the playable item.
         /// </summary>
         string Name { get; }
