@@ -42,7 +42,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// The <see cref="DateTime"/> the user was born.
         /// </summary>
         /// <remarks>
-        /// If missing data, replace the day, month and/or year with part of 1/1/1970
+        /// If missing data, replace the day, month and/or year with part of 1/1/1970 
         /// </remarks>
         DateTime? Birthdate { get; }
 
