@@ -54,6 +54,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// The user's country or region of origin.
         /// </summary>
-        string? Region { get; set; }
+        string? Region { get; }
     }
 }

@@ -27,7 +27,7 @@ namespace StrixMusic.Core.Files.Models
         public TimeSpan Position => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public PlaybackState State => throw new NotImplementedException();
+        public PlaybackState PlaybackState => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public bool? ShuffleState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -60,7 +60,7 @@ namespace StrixMusic.Core.Files.Models
         public event EventHandler<TimeSpan>? PositionChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<PlaybackState>? StateChanged;
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc/>
         public event EventHandler<bool?>? ShuffleStateChanged;
