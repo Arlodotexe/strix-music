@@ -10,7 +10,7 @@ namespace StrixMusic.ViewModels.Bindables
     public class BindableSearchResults : BindableCollectionGroup
     {
         /// <summary>
-        /// <inheritdoc/>
+        /// Bindable wrapper for <see cref="ISearchResults"/>.
         /// </summary>
         public BindableSearchResults(ISearchResults searchResults)
             : base(searchResults)
