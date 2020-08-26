@@ -123,7 +123,7 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// Search results.
         /// </summary>
-        public BindableSearchResults SearchResults { get; } = new BindableSearchResults();
+      //  public BindableSearchResults SearchResults { get; } = new BindableSearchResults(); //How to initialize it? comment:Amaid
 
         /// <summary>
         /// Current search query.

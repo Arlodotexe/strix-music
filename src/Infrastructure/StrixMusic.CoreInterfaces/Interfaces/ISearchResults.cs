@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -26,5 +27,15 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// The playlists returned from search results.
         /// </summary>
         IPlaylistCollection Playlists { get; }
+
+        /// <summary>
+        /// The total number of pages of results.
+        /// </summary>
+        int NumberOfPages { get; }
+
+        /// <summary>
+        /// On page changed event
+        /// </summary>
+        event EventHandler<int> OnPageChanged;
     }
 }

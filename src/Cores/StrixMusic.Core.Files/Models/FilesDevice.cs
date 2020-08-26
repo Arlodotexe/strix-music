@@ -48,31 +48,117 @@ namespace StrixMusic.Core.Files.Models
         public ITrack? NowPlaying { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
-        public event EventHandler<bool>? IsActiveChanged;
+        double? IDevice.PlaybackSpeed => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public event EventHandler<IPlayableCollectionBase>? PlaybackContextChanged;
+        public event EventHandler<bool>? IsActiveChanged
+        {
+            add
+            {
+                IsActiveChanged += value;
+            }
+
+            remove
+            {
+                IsActiveChanged -= value;
+            }
+        }
 
         /// <inheritdoc/>
-        public event EventHandler<ITrack>? NowPlayingChanged;
+        public event EventHandler<IPlayableCollectionBase>? PlaybackContextChanged
+        {
+            add
+            {
+                PlaybackContextChanged += value;
+            }
+
+            remove
+            {
+                PlaybackContextChanged -= value;
+            }
+        }
 
         /// <inheritdoc/>
-        public event EventHandler<TimeSpan>? PositionChanged;
+        public event EventHandler<ITrack>? NowPlayingChanged
+        {
+            add
+            {
+                NowPlayingChanged += value;
+            }
+
+            remove
+            {
+                NowPlayingChanged -= value;
+            }
+        }
 
         /// <inheritdoc/>
-        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+        public event EventHandler<TimeSpan>? PositionChanged
+        {
+            add
+            {
+                PositionChanged += value;
+            }
+
+            remove
+            {
+                PositionChanged -= value;
+            }
+        }
 
         /// <inheritdoc/>
-        public event EventHandler<bool?>? ShuffleStateChanged;
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
+        {
+            add
+            {
+                PlaybackStateChanged += value;
+            }
+
+            remove
+            {
+                PlaybackStateChanged -= value;
+            }
+        }
 
         /// <inheritdoc/>
-        public event EventHandler<RepeatState>? RepeatStateChanged;
+        public event EventHandler<bool?>? ShuffleStateChanged
+        {
+            add
+            {
+                ShuffleStateChanged += value;
+            }
+
+            remove
+            {
+                ShuffleStateChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<RepeatState>? RepeatStateChanged
+        {
+            add
+            {
+                RepeatStateChanged += value;
+            }
+
+            remove
+            {
+                RepeatStateChanged -= value;
+            }
+        }
 
         /// <inheritdoc/>
         public event EventHandler<double?>? VolumePercentChanged;
 
         /// <inheritdoc/>
         public event EventHandler<double>? PlaybackSpeedChanged;
+
+        /// <inheritdoc/>
+        public Task ChangePlaybackSpeed(double speed)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc/>
         public Task ChangeVolumeAsync(double volume)
@@ -91,7 +177,6 @@ namespace StrixMusic.Core.Files.Models
         {
             throw new NotImplementedException();
         }
-
 
         /// <inheritdoc/>
         public Task PreviousAsync()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -104,6 +105,132 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged
+        {
+            add
+            {
+                ArtistsChanged += value;
+            }
+
+            remove
+            {
+                ArtistsChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<string>> GenresChanged
+        {
+            add
+            {
+                GenresChanged += value;
+            }
+
+            remove
+            {
+                GenresChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<IAlbum?> AlbumChanged
+        {
+            add
+            {
+                AlbumChanged += value;
+            }
+
+            remove
+            {
+                AlbumChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<DateTime?> DatePublishedChanged
+        {
+            add
+            {
+                DatePublishedChanged += value;
+            }
+
+            remove
+            {
+                DatePublishedChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<int?> TrackNumberChanged
+        {
+            add
+            {
+                TrackNumberChanged += value;
+            }
+
+            remove
+            {
+                TrackNumberChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<int?> PlayCountChanged
+        {
+            add
+            {
+                PlayCountChanged += value;
+            }
+
+            remove
+            {
+                PlayCountChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<string?> LanguageChanged
+        {
+            add
+            {
+                LanguageChanged += value;
+            }
+
+            remove
+            {
+                LanguageChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<ILyrics?> LyricsChanged
+        {
+            add
+            {
+                LyricsChanged += value;
+            }
+
+            remove
+            {
+                LyricsChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<bool> IsExplicitChanged
+        {
+            add
+            {
+                IsExplicitChanged += value;
+            }
+
+            remove
+            {
+                IsExplicitChanged -= value;
+            }
+        }
 
         /// <inheritdoc/>
         public void Pause()

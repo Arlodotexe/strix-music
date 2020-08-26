@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -93,9 +94,133 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <summary>
-        /// Attempts to play the track, if paused.
-        /// </summary>
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged
+        {
+            add
+            {
+                _track.ArtistsChanged += value;
+            }
+
+            remove
+            {
+                _track.ArtistsChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<string>> GenresChanged
+        {
+            add
+            {
+                _track.GenresChanged += value;
+            }
+
+            remove
+            {
+                _track.GenresChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<IAlbum?> AlbumChanged
+        {
+            add
+            {
+                _track.AlbumChanged += value;
+            }
+
+            remove
+            {
+                _track.AlbumChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<DateTime?> DatePublishedChanged
+        {
+            add
+            {
+                _track.DatePublishedChanged += value;
+            }
+
+            remove
+            {
+                _track.DatePublishedChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<int?> TrackNumberChanged
+        {
+            add
+            {
+                _track.TrackNumberChanged += value;
+            }
+
+            remove
+            {
+                _track.TrackNumberChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<int?> PlayCountChanged
+        {
+            add
+            {
+                _track.PlayCountChanged += value;
+            }
+
+            remove
+            {
+                _track.PlayCountChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<string?> LanguageChanged
+        {
+            add
+            {
+                _track.LanguageChanged += value;
+            }
+
+            remove
+            {
+                _track.LanguageChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<ILyrics?> LyricsChanged
+        {
+            add
+            {
+                _track.LyricsChanged += value;
+            }
+
+            remove
+            {
+                _track.LyricsChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<bool> IsExplicitChanged
+        {
+            add
+            {
+                _track.IsExplicitChanged += value;
+            }
+
+            remove
+            {
+                _track.IsExplicitChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
         public IAsyncRelayCommand PlayAsyncCommand { get; }
 
         /// <inheritdoc/>
@@ -108,6 +233,10 @@ namespace StrixMusic.ViewModels.Bindables
         /// Attempts to pause the track, if playing.
         /// </summary>
         public IAsyncRelayCommand PauseAsyncCommand { get; }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<IArtist> Artists => _track.Artists;
+
 
         /// <inheritdoc/>
         public Task PlayAsync()
