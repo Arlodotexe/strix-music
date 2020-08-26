@@ -91,17 +91,14 @@ namespace StrixMusic.Core.Dummy.Implementations
         /// </summary>
         public DummyCore? DummyCore { get; set; }
 
-
         /// <inheritdoc/>
         public PlaybackState PlaybackState => throw new NotImplementedException();
 
         /// <inheritdoc/>
         IReadOnlyList<IArtist> ITrack.Artists => throw new NotImplementedException();
 
-
         /// <inheritdoc/>
         int? ITrack.PlayCount => throw new NotImplementedException();
-
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
