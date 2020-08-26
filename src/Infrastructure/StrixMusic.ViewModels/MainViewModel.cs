@@ -51,21 +51,11 @@ namespace StrixMusic.ViewModels
         private void AttachEvents(ICore core)
         {
             core.DevicesChanged += Core_DevicesChanged;
-            core.SearchResultsChanged += Core_SearchResultsChanged;
         }
 
         private void DetachEvents(ICore core)
         {
             core.DevicesChanged -= Core_DevicesChanged;
-            core.SearchResultsChanged -= Core_SearchResultsChanged;
-        }
-
-        private void Core_SearchResultsChanged(object sender, ISearchResults e)
-        {
-            if (sender is ICore core)
-            {
-                // todo: add search results back proper
-            }
         }
 
         private void Core_DevicesChanged(object sender, CoreInterfaces.CollectionChangedEventArgs<IDevice> e)
@@ -99,12 +89,12 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// The consolidated music library across all cores.
         /// </summary>
-        public BindableLibrary? Library { get; set; }
+        public BindableLibrary? Library { get; private set; }
 
         /// <summary>
         /// The consolidated recently played items across all cores.
         /// </summary>
-        public BindableRecentlyPlayed RecentlyPlayed { get; set; } = new BindableRecentlyPlayed();
+        public BindableRecentlyPlayed? RecentlyPlayed { get; private set; }
 
         /// <summary>
         /// Used to browse and discovered new music.
@@ -116,14 +106,14 @@ namespace StrixMusic.ViewModels
         /// </summary>
         public IAsyncRelayCommand LoadRecentlyPlayedCommand { get; }
 
-        private async Task<BindableRecentlyPlayed> LoadRecentlyPlayedAsync()
+        private async Task<IRecentlyPlayed> LoadRecentlyPlayedAsync()
         {
             var recents = await _cores.InParallel(core => Task.Run(core.GetRecentlyPlayedAsync)).ConfigureAwait(false);
 
             // TODO: Re-evaluate. We might not need to merge them like this, just replace the existing items per core.
             var mergedRecents = Mergers.MergeRecentlyPlayed(recents);
 
-            RecentlyPlayed = mergedRecents;
+            RecentlyPlayed = new BindableRecentlyPlayed(mergedRecents);
 
             return mergedRecents;
         }

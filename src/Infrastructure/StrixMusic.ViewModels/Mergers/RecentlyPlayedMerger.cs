@@ -11,10 +11,10 @@ namespace StrixMusic.ViewModels
         /// </summary>
         /// <param name="recentlyPlayed">The recently played objects to merge.</param>
         /// <returns><inheritdoc cref="ILibrary"/></returns>
-        public static BindableRecentlyPlayed MergeRecentlyPlayed(params IRecentlyPlayed[] recentlyPlayed)
+        public static IRecentlyPlayed MergeRecentlyPlayed(params IRecentlyPlayed[] recentlyPlayed)
         {
             // TODO
-            return new BindableRecentlyPlayed();
+            return recentlyPlayed.First();
         }
     }
 }
