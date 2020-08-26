@@ -84,6 +84,9 @@ namespace StrixMusic.Core.Dummy.Implementations
         public int TotalTracksCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public TimeSpan Duration => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
 
         /// <inheritdoc/>
@@ -94,6 +97,48 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<string>? NameChanged
+        {
+            add
+            {
+                NameChanged += value;
+            }
+
+            remove
+            {
+                NameChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<string?> DescriptionChanged
+        {
+            add
+            {
+                NameChanged += value;
+            }
+
+            remove
+            {
+                NameChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<Uri?> UrlChanged
+        {
+            add
+            {
+                UrlChanged += value;
+            }
+
+            remove
+            {
+                UrlChanged -= value;
+            }
+        }
 
         /// <inheritdoc/>
         public void Play()

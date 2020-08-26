@@ -99,6 +99,9 @@ namespace StrixMusic.Core.Dummy
         /// <inheritdoc/>
         public IReadOnlyList<IPlayableCollectionGroup>? MergedFrom => throw new NotImplementedException();
 
+        /// <inheritdoc/>
+        public TimeSpan Duration => throw new NotImplementedException();
+
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
@@ -117,6 +120,48 @@ namespace StrixMusic.Core.Dummy
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<string>? NameChanged
+        {
+            add
+            {
+                NameChanged += value;
+            }
+
+            remove
+            {
+                NameChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<string?> DescriptionChanged
+        {
+            add
+            {
+                NameChanged += value;
+            }
+
+            remove
+            {
+                NameChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<Uri?> UrlChanged
+        {
+            add
+            {
+                UrlChanged += value;
+            }
+
+            remove
+            {
+                UrlChanged -= value;
+            }
+        }
 
         /// <inheritdoc/>
         public void Play()

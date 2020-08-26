@@ -83,6 +83,9 @@ namespace StrixMusic.Core.Dummy.Implementations
         public int TotalCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public TimeSpan Duration => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc/>
@@ -113,6 +116,48 @@ namespace StrixMusic.Core.Dummy.Implementations
         public Task PauseAsync()
         {
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<string>? NameChanged
+        {
+            add
+            {
+                NameChanged += value;
+            }
+
+            remove
+            {
+                NameChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<string?> DescriptionChanged
+        {
+            add
+            {
+                NameChanged += value;
+            }
+
+            remove
+            {
+                NameChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<Uri?> UrlChanged
+        {
+            add
+            {
+                UrlChanged += value;
+            }
+
+            remove
+            {
+                UrlChanged -= value;
+            }
         }
     }
 }

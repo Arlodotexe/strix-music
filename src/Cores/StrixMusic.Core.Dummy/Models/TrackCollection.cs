@@ -65,10 +65,58 @@ namespace StrixMusic.Core.Dummy.Models
         public int TotalTracksCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public ITrackCollection SuggestedTracks => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public TimeSpan Duration => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<string>? NameChanged
+        {
+            add
+            {
+                NameChanged += value;
+            }
+
+            remove
+            {
+                NameChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<string?> DescriptionChanged
+        {
+            add
+            {
+                NameChanged += value;
+            }
+
+            remove
+            {
+                NameChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<Uri?> UrlChanged
+        {
+            add
+            {
+                UrlChanged += value;
+            }
+
+            remove
+            {
+                UrlChanged -= value;
+            }
+        }
 
         /// <inheritdoc/>
         public Task PopulateTracksAsync(int limit, int offset = 0)

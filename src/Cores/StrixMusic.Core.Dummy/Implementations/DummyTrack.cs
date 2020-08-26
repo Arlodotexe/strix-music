@@ -104,6 +104,49 @@ namespace StrixMusic.Core.Dummy.Implementations
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc/>
+        public event EventHandler<string>? NameChanged
+        {
+            add
+            {
+                NameChanged += value;
+            }
+
+            remove
+            {
+                NameChanged += value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<string?> DescriptionChanged
+        {
+            add
+            {
+                DescriptionChanged += value;
+            }
+
+            remove
+            {
+                DescriptionChanged += value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<Uri?> UrlChanged
+        {
+
+            add
+            {
+                UrlChanged += value;
+            }
+
+            remove
+            {
+                UrlChanged += value;
+            }
+        }
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged
         {
             add
