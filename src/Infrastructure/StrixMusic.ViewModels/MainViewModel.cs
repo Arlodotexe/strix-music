@@ -8,7 +8,6 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Extensions;
 using StrixMusic.CoreInterfaces.Interfaces;
-using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 using StrixMusic.ViewModels.Bindables;
 
 namespace StrixMusic.ViewModels
@@ -31,7 +30,7 @@ namespace StrixMusic.ViewModels
             LoadRecentlyPlayedCommand = new AsyncRelayCommand(LoadRecentlyPlayedAsync);
             LoadDiscoverablesCommand = new AsyncRelayCommand(LoadDiscoverablesAsync);
 
-            Devices = new ObservableCollection<IDevice>();
+            Devices = new ObservableCollection<BindableDevice>();
 
             _cores = Ioc.Default.GetServices<ICore>().ToArray();
 
@@ -44,7 +43,7 @@ namespace StrixMusic.ViewModels
 
             foreach (var core in coresToLoad)
             {
-                Users.Add(core.User);
+                Users.Add(new BindableUserProfile(core.User));
                 AttachEvents(core);
             }
         }
@@ -52,14 +51,12 @@ namespace StrixMusic.ViewModels
         private void AttachEvents(ICore core)
         {
             core.DevicesChanged += Core_DevicesChanged;
-            core.CoreStateChanged += Core_CoreStateChanged;
             core.SearchResultsChanged += Core_SearchResultsChanged;
         }
 
         private void DetachEvents(ICore core)
         {
             core.DevicesChanged -= Core_DevicesChanged;
-            core.CoreStateChanged -= Core_CoreStateChanged;
             core.SearchResultsChanged -= Core_SearchResultsChanged;
         }
 
@@ -67,26 +64,20 @@ namespace StrixMusic.ViewModels
         {
             if (sender is ICore core)
             {
-                // todo: rethink merging search results / rethink storing search results per core.
+                // todo: add search results back proper
             }
-        }
-
-        private void Core_CoreStateChanged(object sender, CoreState e)
-        {
-
-            // TODO - create a "bindable core" object with basic properties about the core (to be used in the UI), and save them in a list.
         }
 
         private void Core_DevicesChanged(object sender, CoreInterfaces.CollectionChangedEventArgs<IDevice> e)
         {
             foreach (var device in e.AddedItems)
             {
-                Devices.Add(device);
+                Devices.Add(new BindableDevice(device));
             }
 
             foreach (var device in e.RemovedItems)
             {
-                Devices.Remove(device);
+                Devices.Remove(new BindableDevice(device));
             }
         }
 
@@ -98,12 +89,12 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// A consolidated list of all users in the app.
         /// </summary>
-        public ObservableCollection<IUser> Users { get; } = new ObservableCollection<IUser>();
+        public ObservableCollection<BindableUserProfile> Users { get; } = new ObservableCollection<BindableUserProfile>();
 
         /// <summary>
         /// All available devices.
         /// </summary>
-        public ObservableCollection<IDevice> Devices { get; }
+        public ObservableCollection<BindableDevice> Devices { get; }
 
         /// <summary>
         /// The consolidated music library across all cores.
@@ -160,6 +151,8 @@ namespace StrixMusic.ViewModels
             var libs = await _cores.InParallel(core => Task.Run(core.GetLibraryAsync)).ConfigureAwait(false);
             var mergedLibrary = Mergers.MergeLibrary(libs);
 
+            Library = new BindableLibrary(mergedLibrary);
+
             return mergedLibrary;
         }
 
@@ -172,6 +165,11 @@ namespace StrixMusic.ViewModels
         {
             var devices = await _cores.InParallel(core => Task.Run(core.GetDevicesAsync));
             var mergedDevices = Mergers.MergeDevices(devices);
+
+            await foreach (var device in mergedDevices)
+            {
+                Devices.Add(new BindableDevice(device));
+            }
 
             return mergedDevices;
         }

@@ -9,7 +9,7 @@ namespace StrixMusic.ViewModels
     public static partial class Mergers
     {
         /// <summary>
-        /// Marges multiple <see cref="IRecentlyPlayed"/> into one.
+        /// Marges multiple <see cref="IDevice"/> into one.
         /// </summary>
         /// <param name="devices">The devices to merge.</param>
         /// <returns><inheritdoc cref="ILibrary"/></returns>
