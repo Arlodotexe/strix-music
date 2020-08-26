@@ -26,14 +26,18 @@ namespace StrixMusic.ViewModels.Bindables
             _core.CoreStateChanged += Core_CoreStateChanged;
         }
 
-        private void Core_CoreStateChanged(object sender, CoreState e) => CoreState = e;
-
         private void DetachEvents()
         {
             _core.CoreStateChanged -= Core_CoreStateChanged;
         }
 
-        /// <inheritdoc cref="ICore" />
-        public CoreState CoreState { get => _core.CoreState; set => SetProperty(() => _core.CoreState, value); }
+        private void Core_CoreStateChanged(object sender, CoreState e) => CoreState = e;
+
+        /// <inheritdoc cref="ICore.CoreState" />
+        public CoreState CoreState
+        {
+            get => _core.CoreState;
+            set => SetProperty(() => _core.CoreState, value);
+        }
     }
 }

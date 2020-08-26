@@ -9,11 +9,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     public interface ITrack : IPlayable
     {
         /// <summary>
-        /// An external link related to the track.
-        /// </summary>
-        Uri? Url { get; }
-
-        /// <summary>
         /// Identifies which type of track this is (song, podcast, etc).
         /// </summary>
         string Type { get; }
