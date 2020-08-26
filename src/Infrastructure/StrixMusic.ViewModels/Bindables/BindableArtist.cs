@@ -41,6 +41,9 @@ namespace StrixMusic.ViewModels.Bindables
             _artist.TracksChanged += Artist_RelatedTracksChanged;
             _artist.AlbumsChanged += Artist_AlbumsChanged;
             _artist.RelatedArtistsChanged += Artist_RelatedArtistsChanged;
+            _artist.DescriptionChanged += Artist_DescriptionChanged;
+            _artist.NameChanged += Artist_NameChanged;
+            _artist.UrlChanged += Artist_UrlChanged;
         }
 
         private void DetachEvents()
@@ -49,6 +52,24 @@ namespace StrixMusic.ViewModels.Bindables
             _artist.TracksChanged -= Artist_RelatedTracksChanged;
             _artist.AlbumsChanged -= Artist_AlbumsChanged;
             _artist.RelatedArtistsChanged -= Artist_RelatedArtistsChanged;
+            _artist.DescriptionChanged -= Artist_DescriptionChanged;
+            _artist.NameChanged -= Artist_NameChanged;
+            _artist.UrlChanged -= Artist_UrlChanged;
+        }
+
+        private void Artist_UrlChanged(object sender, Uri? e)
+        {
+            Url = e;
+        }
+
+        private void Artist_NameChanged(object sender, string e)
+        {
+            Name = e;
+        }
+
+        private void Artist_DescriptionChanged(object sender, string? e)
+        {
+            Description = e;
         }
 
         private void Artist_AlbumsChanged(object sender, CollectionChangedEventArgs<IAlbum> e)
@@ -114,7 +135,11 @@ namespace StrixMusic.ViewModels.Bindables
         public int TotalTracksCount => _artist.TotalTracksCount;
 
         /// <inheritdoc cref="IPlayable.Url"/>
-        public Uri? Url => _artist.Url;
+        public Uri? Url
+        {
+            get => _artist.Url;
+            set => SetProperty(() => _artist.Url, value);
+        }
 
         /// <inheritdoc cref="IPlayableCollectionBase.Owner"/>
         public IUserProfile? Owner => _artist.Owner;
@@ -126,13 +151,21 @@ namespace StrixMusic.ViewModels.Bindables
         public string Id => _artist.Id;
 
         /// <inheritdoc cref="IPlayable.Name"/>
-        public string Name => _artist.Name;
+        public string Name
+        {
+            get => _artist.Name;
+            set => SetProperty(() => _artist.Name, value);
+        }
 
         /// <inheritdoc cref="IPlayable.Images"/>
         public IReadOnlyList<IImage> Images => _artist.Images;
 
         /// <inheritdoc cref="IPlayable.Description"/>
-        public string? Description => _artist.Description;
+        public string? Description
+        {
+            get => _artist.Description;
+            set => SetProperty(() => _artist.Description, value);
+        }
 
         /// <inheritdoc cref="IPlayable.PlaybackState"/>
         public PlaybackState PlaybackState
@@ -194,6 +227,48 @@ namespace StrixMusic.ViewModels.Bindables
             remove
             {
                 _artist.PlaybackStateChanged -= value;
+            }
+        }
+
+        /// <inheritdoc cref="IPlayable.NameChanged"/>
+        public event EventHandler<string>? NameChanged
+        {
+            add
+            {
+                _artist.NameChanged += value;
+            }
+
+            remove
+            {
+                _artist.NameChanged -= value;
+            }
+        }
+
+        /// <inheritdoc cref="IPlayable.DescriptionChanged"/>
+        public event EventHandler<string?> DescriptionChanged
+        {
+            add
+            {
+                _artist.DescriptionChanged += value;
+            }
+
+            remove
+            {
+                _artist.DescriptionChanged -= value;
+            }
+        }
+
+        /// <inheritdoc cref="IPlayable.UrlChanged"/>
+        public event EventHandler<Uri?> UrlChanged
+        {
+            add
+            {
+                _artist.UrlChanged += value;
+            }
+
+            remove
+            {
+                _artist.UrlChanged -= value;
             }
         }
 

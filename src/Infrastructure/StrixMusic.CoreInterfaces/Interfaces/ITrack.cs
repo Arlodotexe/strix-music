@@ -59,11 +59,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         bool IsExplicit { get; }
 
         /// <summary>
-        /// How long the track  is.
-        /// </summary>
-        TimeSpan Duration { get; }
-
-        /// <summary>
         /// Fires when the <see cref="Artists"/> metadata changes.
         /// </summary>
         event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged;

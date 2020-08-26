@@ -31,14 +31,38 @@ namespace StrixMusic.ViewModels.Bindables
         private void AttachEvents()
         {
             _album.PlaybackStateChanged += Album_PlaybackStateChanged;
+            _album.DescriptionChanged += Album_DescriptionChanged;
+            _album.NameChanged += Album_NameChanged;
+            _album.UrlChanged += Album_UrlChanged;
         }
 
         private void DetachEvents()
         {
             _album.PlaybackStateChanged -= Album_PlaybackStateChanged;
+            _album.DescriptionChanged -= Album_DescriptionChanged;
+            _album.NameChanged -= Album_NameChanged;
+            _album.UrlChanged -= Album_UrlChanged;
         }
 
-        private void Album_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+        private void Album_UrlChanged(object sender, Uri? e)
+        {
+            Url = e;
+        }
+
+        private void Album_NameChanged(object sender, string e)
+        {
+            Name = e;
+        }
+
+        private void Album_DescriptionChanged(object sender, string? e)
+        {
+            Description = e;
+        }
+
+        private void Album_PlaybackStateChanged(object sender, PlaybackState e)
+        {
+            PlaybackState = e;
+        }
 
         /// <inheritdoc/>
         public IReadOnlyList<ITrack> Tracks
@@ -63,16 +87,28 @@ namespace StrixMusic.ViewModels.Bindables
         public ICore SourceCore => _album.SourceCore;
 
         /// <inheritdoc/>
-        public string Name => _album.Name;
+        public string Name
+        {
+            get => _album.Name;
+            set => SetProperty(() => _album.Name, value);
+        }
 
         /// <inheritdoc/>
         public IReadOnlyList<IImage> Images => _album.Images;
 
         /// <inheritdoc/>
-        public Uri? Url => _album.Url;
+        public Uri? Url
+        {
+            get => _album.Url;
+            set => SetProperty(() => _album.Url, value);
+        }
 
         /// <inheritdoc/>
-        public string? Description => _album.Description;
+        public string? Description
+        {
+            get => _album.Description;
+            set => SetProperty(() => _album.Description, value);
+        }
 
         /// <inheritdoc/>
         public IUserProfile? Owner => _album.Owner;
@@ -98,6 +134,48 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
+        /// <inheritdoc/>
+        public event EventHandler<string>? NameChanged
+        {
+            add
+            {
+                _album.NameChanged += value;
+            }
+
+            remove
+            {
+                _album.NameChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<string?> DescriptionChanged
+        {
+            add
+            {
+                _album.DescriptionChanged += value;
+            }
+
+            remove
+            {
+                _album.DescriptionChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<Uri?> UrlChanged
+        {
+            add
+            {
+                _album.UrlChanged += value;
+            }
+
+            remove
+            {
+                _album.UrlChanged -= value;
+            }
+        }
+
         /// <summary>
         /// Attempts to pause the album, if playing.
         /// </summary>
@@ -110,6 +188,9 @@ namespace StrixMusic.ViewModels.Bindables
         /// Attempts to play the album.
         /// </summary>
         public IAsyncRelayCommand PlayAsyncCommand { get; }
+
+        /// <inheritdoc/>
+        public TimeSpan Duration => _album.Duration;
 
         /// <inheritdoc/>
         public Task PlayAsync() => _album.PlayAsync();

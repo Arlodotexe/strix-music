@@ -93,7 +93,7 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// Contains data about the cores that are loaded.
         /// </summary>
-        public ObservableCollection<BindableCoreData> BindableCores { get; } = new ObservableCollection<BindableCoreData>();
+        public ObservableCollection<BindableCoreData> BindableCoreData { get; } = new ObservableCollection<BindableCoreData>();
 
         /// <summary>
         /// A consolidated list of all users in the app.
@@ -119,21 +119,6 @@ namespace StrixMusic.ViewModels
         /// Used to browse and discovered new music.
         /// </summary>
         public ObservableCollection<BindableCollectionGroup>? Discoverables { get; } = new ObservableCollection<BindableCollectionGroup>();
-
-        /// <summary>
-        /// Search results.
-        /// </summary>
-        public BindableSearchResults SearchResults { get; }
-
-        /// <summary>
-        /// Current search query.
-        /// </summary>
-        public string SearchQuery { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Autocomplete for the current search query.
-        /// </summary>
-        public ObservableCollection<string>? SearchSuggestions { get; set; }
 
         /// <summary>
         /// Loads the <see cref="RecentlyPlayed"/> into the view model.

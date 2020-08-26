@@ -45,6 +45,9 @@ namespace StrixMusic.ViewModels.Bindables
             _collectionGroupBase.PlaybackStateChanged += CollectionGroupBase_PlaybackStateChanged;
             _collectionGroupBase.PlaylistsChanged += CollectionGroupBase_PlaylistsChanged;
             _collectionGroupBase.TracksChanged += CollectionGroupBase_TracksChanged;
+            _collectionGroupBase.DescriptionChanged += CollectionGroupBase_DescriptionChanged;
+            _collectionGroupBase.NameChanged += CollectionGroupBase_NameChanged;
+            _collectionGroupBase.UrlChanged += CollectionGroupBase_UrlChanged;
         }
 
         private void DetachEvents()
@@ -55,6 +58,24 @@ namespace StrixMusic.ViewModels.Bindables
             _collectionGroupBase.PlaybackStateChanged -= CollectionGroupBase_PlaybackStateChanged;
             _collectionGroupBase.PlaylistsChanged -= CollectionGroupBase_PlaylistsChanged;
             _collectionGroupBase.TracksChanged -= CollectionGroupBase_TracksChanged;
+            _collectionGroupBase.DescriptionChanged -= CollectionGroupBase_DescriptionChanged;
+            _collectionGroupBase.NameChanged -= CollectionGroupBase_NameChanged;
+            _collectionGroupBase.UrlChanged -= CollectionGroupBase_UrlChanged;
+        }
+
+        private void CollectionGroupBase_UrlChanged(object sender, Uri? e)
+        {
+            Url = e;
+        }
+
+        private void CollectionGroupBase_NameChanged(object sender, string e)
+        {
+            Name = e;
+        }
+
+        private void CollectionGroupBase_DescriptionChanged(object sender, string? e)
+        {
+            Description = e;
         }
 
         private void CollectionGroupBase_TracksChanged(object sender, CollectionChangedEventArgs<ITrack> e)
@@ -221,16 +242,28 @@ namespace StrixMusic.ViewModels.Bindables
         public ICore SourceCore => _collectionGroupBase.SourceCore;
 
         /// <inheritdoc cref="IPlayable.Name"/>
-        public string Name => _collectionGroupBase.Name;
+        public string Name
+        {
+            get => _collectionGroupBase.Name;
+            set => SetProperty(() => _collectionGroupBase.Name, value);
+        }
 
         /// <inheritdoc cref="IPlayable.Images"/>
         public IReadOnlyList<IImage> Images => _collectionGroupBase.Images;
 
         /// <inheritdoc cref="IPlayable.Url"/>
-        public Uri? Url => _collectionGroupBase.Url;
+        public Uri? Url
+        {
+            get => _collectionGroupBase.Url;
+            set => SetProperty(() => _collectionGroupBase.Url, value);
+        }
 
         /// <inheritdoc cref="IPlayable.Description"/>
-        public string? Description => _collectionGroupBase.Description;
+        public string? Description
+        {
+            get => _collectionGroupBase.Description;
+            set => SetProperty(() => _collectionGroupBase.Description, value);
+        }
 
         /// <inheritdoc cref="IPlayableCollectionBase.Owner"/>
         public IUserProfile? Owner => _collectionGroupBase.Owner;

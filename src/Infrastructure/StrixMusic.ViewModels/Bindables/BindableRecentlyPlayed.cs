@@ -9,24 +9,16 @@ namespace StrixMusic.ViewModels.Bindables
     /// </summary>
     public class BindableRecentlyPlayed : ObservableObject
     {
-        /// <summary>
-        /// The Track recently played across all cores.
-        /// </summary>
+        /// <inheritdoc cref="ISearchResults.Tracks"/>
         public ObservableCollection<ITrackCollection> Tracks { get; } = new ObservableCollection<ITrackCollection>();
 
-        /// <summary>
-        /// The Artists recently played across all cores.
-        /// </summary>
+        /// <inheritdoc cref="ISearchResults.Artists"/>
         public ObservableCollection<IArtistCollection> Artists { get; } = new ObservableCollection<IArtistCollection>();
 
-        /// <summary>
-        /// The Albums recently played across all cores.
-        /// </summary>
+        /// <inheritdoc cref="ISearchResults.Albums"/>
         public ObservableCollection<IAlbumCollection> Albums { get; } = new ObservableCollection<IAlbumCollection>();
 
-        /// <summary>
-        /// The Playlists recently played across all cores.
-        /// </summary>
+        /// <inheritdoc cref="ISearchResults.Playlists"/>
         public ObservableCollection<IPlaylistCollection> Playlists { get; } = new ObservableCollection<IPlaylistCollection>();
     }
 }
