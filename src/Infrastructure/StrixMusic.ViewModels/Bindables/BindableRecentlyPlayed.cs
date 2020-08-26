@@ -7,26 +7,15 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// Used to bind recently played across multiple cores to the View model.
     /// </summary>
-    public class BindableRecentlyPlayed : ObservableObject
+    public class BindableRecentlyPlayed : BindableCollectionGroup
     {
         /// <summary>
-        /// The Track recently played across all cores.
+        /// Initializes a new instance of the <see cref="BindableRecentlyPlayed"/> class.
         /// </summary>
-        public ObservableCollection<ITrackCollection> Tracks { get; } = new ObservableCollection<ITrackCollection>();
-
-        /// <summary>
-        /// The Artists recently played across all cores.
-        /// </summary>
-        public ObservableCollection<IArtistCollection> Artists { get; } = new ObservableCollection<IArtistCollection>();
-
-        /// <summary>
-        /// The Albums recently played across all cores.
-        /// </summary>
-        public ObservableCollection<IAlbumCollection> Albums { get; } = new ObservableCollection<IAlbumCollection>();
-
-        /// <summary>
-        /// The Playlists recently played across all cores.
-        /// </summary>
-        public ObservableCollection<IPlaylistCollection> Playlists { get; } = new ObservableCollection<IPlaylistCollection>();
+        /// <param name="recentlyPlayed">The <see cref="IRecentlyPlayed"/> to wrap.</param>
+        public BindableRecentlyPlayed(IRecentlyPlayed recentlyPlayed)
+            : base(recentlyPlayed)
+        {
+        }
     }
 }

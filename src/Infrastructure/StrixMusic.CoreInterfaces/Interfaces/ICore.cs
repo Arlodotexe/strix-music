@@ -84,10 +84,5 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Fires when the auto-completed suggested for a search is changed.
         /// </summary>
         event EventHandler<CollectionChangedEventArgs<IAsyncEnumerable<string>>>? SearchAutoCompleteChanged;
-
-        /// <summary>
-        /// Fires when the <see cref="SearchResults"/> has changed.
-        /// </summary>
-        event EventHandler<ISearchResults>? SearchResultsChanged;
     }
 }

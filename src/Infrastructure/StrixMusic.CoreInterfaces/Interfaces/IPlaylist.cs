@@ -5,5 +5,9 @@
     /// </summary>
     public interface IPlaylist : ITrackCollection
     {
+        /// <summary>
+        /// Suggested tracks that the user may want to add to this playlist.
+        /// </summary>
+        ITrackCollection SuggestedTracks { get; }
     }
 }

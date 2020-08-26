@@ -21,6 +21,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         string Id { get; }
 
         /// <summary>
+        /// An external link related to the item.
+        /// </summary>
+        Uri? Url { get; }
+
+        /// <summary>
         /// Name of the playable item.
         /// </summary>
         string Name { get; }
@@ -39,6 +44,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         PlaybackState PlaybackState { get; }
 
         /// <summary>
+        /// How long the playable item takes to complete playback.
+        /// </summary>
+        TimeSpan Duration { get; }
+
+        /// <summary>
         /// Attempts to play the item, or resumes playback if already playing.
         /// </summary>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
@@ -54,5 +64,20 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Fires when <see cref="PlaybackState"/> changes.
         /// </summary>
         event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <summary>
+        /// Fires when <see cref="Name"/> changes.
+        /// </summary>
+        event EventHandler<string>? NameChanged;
+
+        /// <summary>
+        /// Fires when <see cref="Description"/> changes.
+        /// </summary>
+        event EventHandler<string?> DescriptionChanged;
+
+        /// <summary>
+        /// Fires when <see cref="Url"/> changes.
+        /// </summary>
+        event EventHandler<Uri?> UrlChanged;
     }
 }

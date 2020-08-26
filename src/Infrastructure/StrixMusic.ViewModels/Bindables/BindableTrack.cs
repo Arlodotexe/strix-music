@@ -18,7 +18,10 @@ namespace StrixMusic.ViewModels.Bindables
     {
         private ITrack _track;
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Creates a bindable wrapper around an <see cref="ITrack"/>.
+        /// </summary>
+        /// <param name="track">The <see cref="ITrack"/> to wrap.</param>
         public BindableTrack(ITrack track)
         {
             _track = track;
@@ -26,43 +29,43 @@ namespace StrixMusic.ViewModels.Bindables
             PauseAsyncCommand = new AsyncRelayCommand(PlayAsync);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.Url"/>
         public Uri? Url => _track.Url;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrack.Type"/>
         public string Type => _track.Type;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrack.Artists"/>
         public ObservableCollection<IArtist> Artist => new ObservableCollection<IArtist>(_track.Artists);
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrack.Album"/>
         public IAlbum? Album => _track.Album;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrack.DatePublished"/>
         public DateTime? DatePublished => _track.DatePublished;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrack.Genres"/>
         public ObservableCollection<string>? Genres => new ObservableCollection<string>(_track.Genres);
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrack.TrackNumber"/>
         public int? TrackNumber => _track.TrackNumber;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrack.PlayCount"/>
         public int? PlayCount => _track.PlayCount;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrack.Language"/>
         public string? Language => _track.Language;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrack.Lyrics"/>
         public ILyrics? Lyrics => _track.Lyrics;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrack.IsExplicit"/>
         public bool IsExplicit => _track.IsExplicit;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.Duration"/>
         public TimeSpan Duration => _track.Duration;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.SourceCore"/>
         public ICore SourceCore => _track.SourceCore;
 
         /// <inheritdoc/>
