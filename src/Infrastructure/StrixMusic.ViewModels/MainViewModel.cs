@@ -74,7 +74,7 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// Contains data about the cores that are loaded.
         /// </summary>
-        public ObservableCollection<BindableCoreData> BindableCoreData { get; } = new ObservableCollection<BindableCoreData>();
+        public ObservableCollection<BindableCore> BindableCoreData { get; } = new ObservableCollection<BindableCore>();
 
         /// <summary>
         /// A consolidated list of all users in the app.
