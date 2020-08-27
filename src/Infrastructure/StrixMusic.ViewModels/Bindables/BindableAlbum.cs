@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -24,8 +24,9 @@ namespace StrixMusic.ViewModels.Bindables
             _album = album;
 
             Images = new ObservableCollection<IImage>(_album.Images);
-            Tracks = new ObservableCollection<ITrack>(_album.Tracks);
-            RelatedItems = new ObservableCollection<IPlayableCollectionGroup>(_album.RelatedItems);
+            Tracks = new ObservableCollection<BindableTrack>(_album.Tracks.Select(x => new BindableTrack(x)));
+            RelatedItems = new ObservableCollection<BindableCollectionGroup>(_album.RelatedItems.Select(x => new BindableCollectionGroup(x)));
+            Artist = new BindableArtist(_album.Artist);
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -59,12 +60,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Tracks.Add(item);
+                Tracks.Add(new BindableTrack(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Tracks.Remove(item);
+                Tracks.Remove(new BindableTrack(item));
             }
         }
 
@@ -72,12 +73,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                RelatedItems.Add(item);
+                RelatedItems.Add(new BindableCollectionGroup(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                RelatedItems.Remove(item);
+                RelatedItems.Remove(new BindableCollectionGroup(item));
             }
         }
 
@@ -115,17 +116,13 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="ITrackCollection.Tracks"/>
-        public ObservableCollection<ITrack> Tracks
-        {
-            get => _album.Tracks;
-            set => SetProperty(() => _album.Tracks, value);
-        }
+        public ObservableCollection<BindableTrack> Tracks { get; }
 
         /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
         public int TotalTrackCounts => _album.TotalTracksCount;
 
         /// <inheritdoc cref="IAlbum.Artist"/>
-        public IArtist Artist => _album.Artist;
+        public BindableArtist Artist { get; }
 
         /// <inheritdoc cref="IPlayable.Id"/>
         public string Id => _album.Id;
@@ -140,7 +137,7 @@ namespace StrixMusic.ViewModels.Bindables
         public string Name
         {
             get => _album.Name;
-            set => SetProperty(() => _album.Name, value);
+            private set => SetProperty(() => _album.Name, value);
         }
 
         /// <inheritdoc cref="IPlayable.Images"/>
@@ -150,21 +147,21 @@ namespace StrixMusic.ViewModels.Bindables
         public Uri? Url
         {
             get => _album.Url;
-            set => SetProperty(() => _album.Url, value);
+            private set => SetProperty(() => _album.Url, value);
         }
 
         /// <inheritdoc cref="IPlayable.Description"/>
         public string? Description
         {
             get => _album.Description;
-            set => SetProperty(() => _album.Description, value);
+            private set => SetProperty(() => _album.Description, value);
         }
 
         /// <inheritdoc cref="IPlayable.PlaybackState"/>
         public PlaybackState PlaybackState
         {
             get => _album.PlaybackState;
-            set => SetProperty(() => _album.PlaybackState, value);
+            private set => SetProperty(() => _album.PlaybackState, value);
         }
 
         /// <inheritdoc cref="IPlayable.PlaybackStateChanged"/>
@@ -282,7 +279,7 @@ namespace StrixMusic.ViewModels.Bindables
         public int TotalTracksCount => _album.TotalTracksCount;
 
         /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItems"/>
-        public ObservableCollection<IPlayableCollectionGroup> RelatedItems { get; }
+        public ObservableCollection<BindableCollectionGroup> RelatedItems { get; }
 
         /// <inheritdoc cref="IRelatedCollectionGroups.TotalRelatedItemsCount"/>
         public int TotalRelatedItemsCount => _album.TotalRelatedItemsCount;
@@ -293,7 +290,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
         public Task PopulateTracksAsync(int limit, int offset = 0) => _album.PopulateTracksAsync(limit, offset);
 
-       /// <inheritdoc cref="IRelatedCollectionGroups.PopulateRelatedItemsAsync(int, int)"/>
+        /// <inheritdoc cref="IRelatedCollectionGroups.PopulateRelatedItemsAsync(int, int)"/>
         public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
         {
             return _album.PopulateRelatedItemsAsync(limit, offset);

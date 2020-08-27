@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.ViewModels.Bindables
 {
@@ -28,11 +29,11 @@ namespace StrixMusic.ViewModels.Bindables
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
 
-            Tracks = new ObservableCollection<ITrack>(_collectionGroupBase.Tracks);
-            Playlists = new ObservableCollection<IPlaylist>(_collectionGroupBase.Playlists);
-            Albums = new ObservableCollection<IAlbum>(_collectionGroupBase.Albums);
-            Artists = new ObservableCollection<IArtist>(_collectionGroupBase.Artists);
-            Children = new ObservableCollection<IPlayableCollectionGroup>(_collectionGroupBase.Children);
+            Tracks = new ObservableCollection<BindableTrack>(_collectionGroupBase.Tracks.Select(x => new BindableTrack(x)));
+            Playlists = new ObservableCollection<BindablePlaylist>(_collectionGroupBase.Playlists.Select(x => new BindablePlaylist(x)));
+            Albums = new ObservableCollection<BindableAlbum>(_collectionGroupBase.Albums.Select(x => new BindableAlbum(x)));
+            Artists = new ObservableCollection<BindableArtist>(_collectionGroupBase.Artists.Select(x => new BindableArtist(x)));
+            Children = new ObservableCollection<BindableCollectionGroup>(_collectionGroupBase.Children.Select(x => new BindableCollectionGroup(x)));
 
             AttachEvents();
         }
@@ -82,12 +83,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Tracks.Add(item);
+                Tracks.Add(new BindableTrack(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Tracks.Remove(item);
+                Tracks.Remove(new BindableTrack(item));
             }
         }
 
@@ -95,12 +96,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Playlists.Add(item);
+                Playlists.Add(new BindablePlaylist(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Playlists.Remove(item);
+                Playlists.Remove(new BindablePlaylist(item));
             }
         }
 
@@ -113,12 +114,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Children.Add(item);
+                Children.Add(new BindableCollectionGroup(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Children.Remove(item);
+                Children.Remove(new BindableCollectionGroup(item));
             }
         }
 
@@ -126,12 +127,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Artists.Add(item);
+                Artists.Add(new BindableArtist(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Artists.Remove(item);
+                Artists.Remove(new BindableArtist(item));
             }
         }
 
@@ -139,12 +140,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Albums.Add(item);
+                Albums.Add(new BindableAlbum(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Albums.Remove(item);
+                Albums.Remove(new BindableAlbum(item));
             }
         }
 
@@ -233,7 +234,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IPlayableCollectionGroup.Children"/>
-        public ObservableCollection<IPlayableCollectionGroup> Children { get; }
+        public ObservableCollection<BindableCollectionGroup> Children { get; }
 
         /// <inheritdoc cref="IPlayable.Id"/>
         public string Id => _collectionGroupBase.Id;
@@ -245,7 +246,7 @@ namespace StrixMusic.ViewModels.Bindables
         public string Name
         {
             get => _collectionGroupBase.Name;
-            set => SetProperty(() => _collectionGroupBase.Name, value);
+            private set => SetProperty(() => _collectionGroupBase.Name, value);
         }
 
         /// <inheritdoc cref="IPlayable.Images"/>
@@ -255,49 +256,46 @@ namespace StrixMusic.ViewModels.Bindables
         public Uri? Url
         {
             get => _collectionGroupBase.Url;
-            set => SetProperty(() => _collectionGroupBase.Url, value);
+            private set => SetProperty(() => _collectionGroupBase.Url, value);
         }
 
         /// <inheritdoc cref="IPlayable.Description"/>
         public string? Description
         {
             get => _collectionGroupBase.Description;
-            set => SetProperty(() => _collectionGroupBase.Description, value);
+            private set => SetProperty(() => _collectionGroupBase.Description, value);
         }
-
-        /// <inheritdoc cref="IPlayableCollectionBase.Owner"/>
-        public IUserProfile? Owner => _collectionGroupBase.Owner;
 
         /// <inheritdoc cref="IPlayable.PlaybackState"/>
         public PlaybackState PlaybackState
         {
             get => _collectionGroupBase.PlaybackState;
-            set => SetProperty(() => _collectionGroupBase.PlaybackState, value);
+            private set => SetProperty(() => _collectionGroupBase.PlaybackState, value);
         }
 
         /// <inheritdoc cref="IPlayableCollectionGroup.TotalChildrenCount"/>
         public int TotalChildrenCount => _collectionGroupBase.TotalChildrenCount;
 
         /// <inheritdoc cref="IPlaylistCollection.Playlists"/>
-        public ObservableCollection<IPlaylist> Playlists { get; }
+        public ObservableCollection<BindablePlaylist> Playlists { get; }
 
         /// <inheritdoc cref="IPlaylistCollection.cou"/>
         public int TotalPlaylistCount => _collectionGroupBase.TotalPlaylistCount;
 
         /// <inheritdoc cref="ITrackCollection.Tracks"/>
-        public ObservableCollection<ITrack> Tracks { get; }
+        public ObservableCollection<BindableTrack> Tracks { get; }
 
         /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
         public int TotalTracksCount => _collectionGroupBase.TotalTracksCount;
 
         /// <inheritdoc cref="IAlbumCollection.Albums"/>
-        public ObservableCollection<IAlbum> Albums { get; }
+        public ObservableCollection<BindableAlbum> Albums { get; }
 
         /// <inheritdoc cref="IAlbumCollection.TotalAlbumsCount"/>
         public int TotalAlbumsCount => _collectionGroupBase.TotalAlbumsCount;
 
         /// <inheritdoc cref="IArtistCollection.Artists"/>
-        public ObservableCollection<IArtist> Artists { get; }
+        public ObservableCollection<BindableArtist> Artists { get; }
 
         /// <inheritdoc cref="IArtistCollection.TotalArtistsCount"/>
         public int TotalArtistsCount => _collectionGroupBase.TotalArtistsCount;

@@ -1,16 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace StrixMusic.ViewModels.Bindables
 {
     /// <summary>
     /// Contains information about a <see cref="IImage"/>
     /// </summary>
-    public class BindableDevice : ObservableObject, IDevice
+    public class BindableDevice : ObservableObject
     {
         private readonly IDevice _device;
 
@@ -21,6 +21,9 @@ namespace StrixMusic.ViewModels.Bindables
         public BindableDevice(IDevice device)
         {
             _device = device;
+
+            if (_device.NowPlaying != null)
+                NowPlaying = new BindableTrack(_device.NowPlaying);
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeed);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
@@ -99,7 +102,7 @@ namespace StrixMusic.ViewModels.Bindables
 
         private void Device_NowPlayingChanged(object sender, ITrack e)
         {
-            NowPlaying = e;
+            NowPlaying = new BindableTrack(e);
         }
 
         private void Device_IsActiveChanged(object sender, bool e)
@@ -107,82 +110,84 @@ namespace StrixMusic.ViewModels.Bindables
             IsActive = e;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.SourceCore"/>
         public ICore SourceCore => _device.SourceCore;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.Id"/>
         public string Id => _device.Id;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.Name"/>
         public string Name => _device.Name;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.IsActive"/>
         public bool IsActive
         {
             get => _device.IsActive;
-            set => SetProperty(() => _device.IsActive, value);
+            private set => SetProperty(() => _device.IsActive, value);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.PlaybackContext"/>
         public IPlayableCollectionBase PlaybackContext
         {
             get => _device.PlaybackContext;
-            set => SetProperty(() => _device.PlaybackContext, value);
+            private set => SetProperty(() => _device.PlaybackContext, value);
         }
 
-        /// <inheritdoc/>
-        public ITrack? NowPlaying
+        private BindableTrack? _nowPlaying;
+
+        /// <inheritdoc cref="IDevice.NowPlaying"/>
+        public BindableTrack? NowPlaying
         {
-            get => _device.NowPlaying;
-            set => SetProperty(() => _device.NowPlaying, value);
+            get => _nowPlaying;
+            private set => SetProperty(ref _nowPlaying, value);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.Position"/>
         public TimeSpan Position
         {
             get => _device.Position;
-            set => SetProperty(() => _device.Position, value);
+            private set => SetProperty(() => _device.Position, value);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.PlaybackState"/>
         public PlaybackState PlaybackState
         {
             get => _device.PlaybackState;
-            set => SetProperty(() => _device.PlaybackState, value);
+            private set => SetProperty(() => _device.PlaybackState, value);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.ShuffleState"/>
         public bool? ShuffleState
         {
             get => _device.ShuffleState;
-            set => SetProperty(() => _device.ShuffleState, value);
+            private set => SetProperty(() => _device.ShuffleState, value);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.RepeatState"/>
         public RepeatState RepeatState
         {
             get => _device.RepeatState;
-            set => SetProperty(() => _device.RepeatState, value);
+            private set => SetProperty(() => _device.RepeatState, value);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.SourceCore"/>
         public double? VolumePercent
         {
             get => _device.VolumePercent;
-            set => SetProperty(() => _device.VolumePercent, value);
+            private set => SetProperty(() => _device.VolumePercent, value);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.DeviceType"/>
         public DeviceType DeviceType => _device.DeviceType;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.PlaybackSpeed"/>
         public double? PlaybackSpeed
         {
             get => _device.PlaybackSpeed;
-            set => SetProperty(() => _device.PlaybackSpeed, value);
+            private set => SetProperty(() => _device.PlaybackSpeed, value);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.IsActiveChanged"/>
         public event EventHandler<bool>? IsActiveChanged
         {
             add
@@ -196,7 +201,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.PlaybackContextChanged"/>
         public event EventHandler<IPlayableCollectionBase> PlaybackContextChanged
         {
             add
@@ -210,7 +215,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.NowPlayingChanged"/>
         public event EventHandler<ITrack> NowPlayingChanged
         {
             add
@@ -224,7 +229,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.PositionChanged"/>
         public event EventHandler<TimeSpan> PositionChanged
         {
             add
@@ -238,7 +243,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.PlaybackStateChanged"/>
         public event EventHandler<PlaybackState> PlaybackStateChanged
         {
             add
@@ -252,7 +257,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.ShuffleStateChanged"/>
         public event EventHandler<bool?> ShuffleStateChanged
         {
             add
@@ -266,7 +271,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.RepeatStateChanged"/>
         public event EventHandler<RepeatState> RepeatStateChanged
         {
             add
@@ -280,7 +285,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.VolumePercentChanged"/>
         public event EventHandler<double?> VolumePercentChanged
         {
             add
@@ -294,7 +299,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.PlaybackSpeedChanged"/>
         public event EventHandler<double> PlaybackSpeedChanged
         {
             add
@@ -313,7 +318,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand<double> ChangePlaybackSpeedAsyncCommand { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.ChangePlaybackSpeed"/>
         public Task ChangePlaybackSpeed(double speed)
         {
             return _device.ChangePlaybackSpeed(speed);
@@ -324,7 +329,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand<double> ChangeVolumeAsyncCommand { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.ChangeVolumeAsync"/>
         public Task ChangeVolumeAsync(double volume)
         {
             return _device.ChangeVolumeAsync(volume);
@@ -335,7 +340,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand NextAsyncCommand { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.NextAsync"/>
         public Task NextAsync()
         {
             return _device.NextAsync();
@@ -346,7 +351,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand PauseAsyncCommand { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.PauseAsync"/>
         public Task PauseAsync()
         {
             return _device.PauseAsync();
@@ -357,7 +362,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand PreviousAsyncCommand { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.PreviousAsync"/>
         public Task PreviousAsync()
         {
             return _device.PreviousAsync();
@@ -368,7 +373,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand ResumeAsyncCommand { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.ResumeAsync"/>
         public Task ResumeAsync()
         {
             return _device.ResumeAsync();
@@ -379,7 +384,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand SeekAsyncCommand { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.SeekAsync"/>
         public Task SeekAsync(long position)
         {
             return _device.SeekAsync(position);
@@ -390,7 +395,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand SwitchToAsyncCommand { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.SwitchToAsync"/>
         public Task SwitchToAsync()
         {
             return _device.SwitchToAsync();
@@ -401,7 +406,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand ToggleRepeatCommandAsync { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.ToggleRepeatAsync"/>
         public Task ToggleRepeatAsync()
         {
             return _device.ToggleRepeatAsync();
@@ -412,7 +417,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand ToggleShuffleCommandAsync { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDevice.ToggleShuffleAsync"/>
         public Task ToggleShuffleAsync()
         {
             return _device.ToggleShuffleAsync();
