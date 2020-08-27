@@ -18,14 +18,14 @@ namespace StrixMusic.ViewModels.Bindables
         /// <summary>
         /// Initializes a new instance of the <see cref="BindableCore"/> class.
         /// </summary>
-        /// <param name="core"><inheritdoc cref="ICore"/></param>
+        /// <param name="core">The base <see cref="ICore"/></param>
         public BindableCore(ICore core)
         {
             _core = core;
             AttachEvents();
         }
 
-        /// <inheritdoc cref="Core.CoreStateChanged" />
+        /// <inheritdoc cref="ICore.CoreStateChanged" />
         public event EventHandler<CoreState>? CoreStateChanged
         {
             add
@@ -39,7 +39,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc cref="Core.DevicesChanged" />
+        /// <inheritdoc cref="ICore.DevicesChanged" />
         public event EventHandler<CollectionChangedEventArgs<IDevice>>? DevicesChanged
         {
             add
@@ -53,7 +53,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc cref="Core.SearchAutoCompleteChanged" />
+        /// <inheritdoc cref="ICore.SearchAutoCompleteChanged" />
         public event EventHandler<CollectionChangedEventArgs<IAsyncEnumerable<string>>>? SearchAutoCompleteChanged
         {
             add
@@ -67,7 +67,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc cref="Core.SearchAutoCompleteChanged" />
+        /// <inheritdoc cref="ICore.SearchAutoCompleteChanged" />
         private void AttachEvents()
         {
             _core.CoreStateChanged += Core_CoreStateChanged;
@@ -78,7 +78,7 @@ namespace StrixMusic.ViewModels.Bindables
             _core.CoreStateChanged -= Core_CoreStateChanged;
         }
 
-        /// <inheritdoc cref="Core.CoreState" />
+        /// <inheritdoc cref="ICore.CoreState" />
         private void Core_CoreStateChanged(object sender, CoreState e) => CoreState = e;
 
         /// <inheritdoc cref="_core" />
@@ -87,43 +87,43 @@ namespace StrixMusic.ViewModels.Bindables
             return _core.GetDevicesAsync();
         }
 
-        /// <inheritdoc cref="Core.GetLibraryAsync" />
+        /// <inheritdoc cref="ICore.GetLibraryAsync" />
         public Task<ILibrary> GetLibraryAsync()
         {
             return _core.GetLibraryAsync();
         }
 
-        /// <inheritdoc cref="Core.GetRecentlyPlayedAsync" />
+        /// <inheritdoc cref="ICore.GetRecentlyPlayedAsync" />
         public Task<IRecentlyPlayed> GetRecentlyPlayedAsync()
         {
             return _core.GetRecentlyPlayedAsync();
         }
 
-        /// <inheritdoc cref="Core.GetDiscoverablesAsync" />
+        /// <inheritdoc cref="ICore.GetDiscoverablesAsync" />
         public IAsyncEnumerable<IPlayableCollectionGroup>? GetDiscoverablesAsync()
         {
             return _core.GetDiscoverablesAsync();
         }
 
-        /// <inheritdoc cref="Core.GetSearchAutoCompleteAsync" />
+        /// <inheritdoc cref="ICore.GetSearchAutoCompleteAsync" />
         public Task<IAsyncEnumerable<string>> GetSearchAutoCompleteAsync(string query)
         {
             return _core.GetSearchAutoCompleteAsync(query);
         }
 
-        /// <inheritdoc cref="Core.GetSearchResultsAsync" />
+        /// <inheritdoc cref="ICore.GetSearchResultsAsync" />
         public Task<ISearchResults> GetSearchResultsAsync(string query)
         {
             return _core.GetSearchResultsAsync(query);
         }
 
-        /// <inheritdoc cref="Core.InitAsync" />
+        /// <inheritdoc cref="ICore.InitAsync" />
         public Task InitAsync()
         {
             return _core.InitAsync();
         }
 
-        /// <inheritdoc cref="Core.DisposeAsync" />
+        /// <inheritdoc cref="ICore.DisposeAsync" />
         public ValueTask DisposeAsync()
         {
             return _core.DisposeAsync();
@@ -136,13 +136,13 @@ namespace StrixMusic.ViewModels.Bindables
             set => SetProperty(() => _core.CoreState, value);
         }
 
-        /// <inheritdoc cref="Core.CoreConfig" />
+        /// <inheritdoc cref="ICore.CoreConfig" />
         public ICoreConfig CoreConfig { get => _core.CoreConfig; set => _core.CoreConfig = value; }
 
-        /// <inheritdoc cref="Core.Name" />
+        /// <inheritdoc cref="ICore.Name" />
         public string Name => _core.Name;
 
-        /// <inheritdoc cref="Core.User" />
+        /// <inheritdoc cref="ICore.User" />
         public IUser User => _core.User;
     }
 }

@@ -13,7 +13,10 @@ namespace StrixMusic.ViewModels.Bindables
     {
         private IUserProfile _userProfile;
 
-        /// <inheritdoc cref="IUserProfile"/>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BindableUserProfile"/> class.
+        /// </summary>
+        /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
         public BindableUserProfile(IUserProfile userProfile)
         {
             _userProfile = userProfile;
