@@ -31,7 +31,7 @@ namespace StrixMusic.ViewModels.Bindables
             Tracks = new ObservableCollection<BindableTrack>(_playlist.Tracks.Select(x => new BindableTrack(x)));
             Images = new ObservableCollection<IImage>(_playlist.Images);
             RelatedItems = new ObservableCollection<BindableCollectionGroup>(_playlist.RelatedItems.Select(x => new BindableCollectionGroup(x)));
-            SourceCore = new BindableCoreData(_playlist.SourceCore);
+            SourceCore = new BindableCore(_playlist.SourceCore);
 
             AttachEvents();
         }
@@ -127,7 +127,7 @@ namespace StrixMusic.ViewModels.Bindables
         public int TotalTracksCount => _playlist.TotalTracksCount;
 
         /// <inheritdoc cref="IPlayable.SourceCore"/>
-        public BindableCoreData SourceCore { get; }
+        public BindableCore SourceCore { get; }
 
         /// <inheritdoc cref="IPlayable.Id"/>
         public string Id => _playlist.Id;

@@ -32,7 +32,7 @@ namespace StrixMusic.ViewModels.Bindables
             Artists = new ObservableCollection<BindableArtist>(_track.Artists.Select(x => new BindableArtist(x)));
             Images = new ObservableCollection<IImage>(_track.Images);
             RelatedItems = new ObservableCollection<BindableCollectionGroup>(_track.RelatedItems.Select(x => new BindableCollectionGroup(x)));
-            SourceCore = new BindableCoreData(_track.SourceCore);
+            SourceCore = new BindableCore(_track.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -259,7 +259,7 @@ namespace StrixMusic.ViewModels.Bindables
         public TimeSpan Duration => _track.Duration;
 
         /// <inheritdoc cref="IPlayable.SourceCore"/>
-        public BindableCoreData SourceCore { get; }
+        public BindableCore SourceCore { get; }
 
         /// <inheritdoc cref="IPlayable.Id"/>
         public string Id => _track.Id;
