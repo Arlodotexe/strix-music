@@ -6,7 +6,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Metadata about a track.
     /// </summary>
-    public interface ITrack : IPlayable
+    public interface ITrack : IPlayable, IRelatedCollectionGroups
     {
         /// <summary>
         /// Identifies which type of track this is (song, podcast, etc).

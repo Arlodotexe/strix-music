@@ -11,9 +11,5 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <remarks>No <see langword="class"/> should ever directly implement this interface. The items in this collection, the count, and the method for getting them are defined in a child <see langword="interface" />.</remarks>
     public interface IPlayableCollectionBase : IPlayable
     {
-        /// <summary>
-        /// Owner of the playable item.
-        /// </summary>
-        IUserProfile? Owner { get; }
     }
 }

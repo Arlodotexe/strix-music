@@ -7,5 +7,9 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// </summary>
     public interface IUser : IUserProfile
     {
+        /// <summary>
+        /// This user's library.
+        /// </summary>
+        ILibrary Library { get; }
     }
 }

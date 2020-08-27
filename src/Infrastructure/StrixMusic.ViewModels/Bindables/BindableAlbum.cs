@@ -4,13 +4,14 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.ViewModels.Bindables
 {
     /// <inheritdoc/>
-    public class BindableAlbum : ObservableObject, IAlbum
+    public class BindableAlbum : ObservableObject
     {
         private readonly IAlbum _album;
 
@@ -21,6 +22,10 @@ namespace StrixMusic.ViewModels.Bindables
         public BindableAlbum(IAlbum album)
         {
             _album = album;
+
+            Images = new ObservableCollection<IImage>(_album.Images);
+            Tracks = new ObservableCollection<ITrack>(_album.Tracks);
+            RelatedItems = new ObservableCollection<IPlayableCollectionGroup>(_album.RelatedItems);
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -34,6 +39,9 @@ namespace StrixMusic.ViewModels.Bindables
             _album.DescriptionChanged += Album_DescriptionChanged;
             _album.NameChanged += Album_NameChanged;
             _album.UrlChanged += Album_UrlChanged;
+            _album.ImagesChanged += Album_ImagesChanged;
+            _album.RelatedItemsChanged += Album_RelatedItemsChanged;
+            _album.TracksChanged += Album_TracksChanged;
         }
 
         private void DetachEvents()
@@ -42,6 +50,48 @@ namespace StrixMusic.ViewModels.Bindables
             _album.DescriptionChanged -= Album_DescriptionChanged;
             _album.NameChanged -= Album_NameChanged;
             _album.UrlChanged -= Album_UrlChanged;
+            _album.ImagesChanged += Album_ImagesChanged;
+            _album.RelatedItemsChanged -= Album_RelatedItemsChanged;
+            _album.TracksChanged -= Album_TracksChanged;
+        }
+
+        private void Album_TracksChanged(object sender, CollectionChangedEventArgs<ITrack> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Tracks.Add(item);
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Tracks.Remove(item);
+            }
+        }
+
+        private void Album_RelatedItemsChanged(object sender, CollectionChangedEventArgs<IPlayableCollectionGroup> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                RelatedItems.Add(item);
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                RelatedItems.Remove(item);
+            }
+        }
+
+        private void Album_ImagesChanged(object sender, CollectionChangedEventArgs<IImage> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Images.Add(item);
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Images.Remove(item);
+            }
         }
 
         private void Album_UrlChanged(object sender, Uri? e)
@@ -64,63 +114,60 @@ namespace StrixMusic.ViewModels.Bindables
             PlaybackState = e;
         }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<ITrack> Tracks
+        /// <inheritdoc cref="ITrackCollection.Tracks"/>
+        public ObservableCollection<ITrack> Tracks
         {
             get => _album.Tracks;
             set => SetProperty(() => _album.Tracks, value);
         }
 
-        /// <inheritdoc/>
-        public int TotalTrackCount => _album.TotalTrackCount;
+        /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
+        public int TotalTrackCounts => _album.TotalTracksCount;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAlbum.Artist"/>
         public IArtist Artist => _album.Artist;
 
-        /// <inheritdoc/>
-        public Uri? CoverImageUri => _album.CoverImageUri;
-
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.Id"/>
         public string Id => _album.Id;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.SourceCore"/>
         public ICore SourceCore => _album.SourceCore;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.Duration"/>
+        public TimeSpan Duration => _album.Duration;
+
+        /// <inheritdoc cref="IPlayable.Name"/>
         public string Name
         {
             get => _album.Name;
             set => SetProperty(() => _album.Name, value);
         }
 
-        /// <inheritdoc/>
-        public IReadOnlyList<IImage> Images => _album.Images;
+        /// <inheritdoc cref="IPlayable.Images"/>
+        public ObservableCollection<IImage> Images { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.Url"/>
         public Uri? Url
         {
             get => _album.Url;
             set => SetProperty(() => _album.Url, value);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.Description"/>
         public string? Description
         {
             get => _album.Description;
             set => SetProperty(() => _album.Description, value);
         }
 
-        /// <inheritdoc/>
-        public IUserProfile? Owner => _album.Owner;
-
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.PlaybackState"/>
         public PlaybackState PlaybackState
         {
             get => _album.PlaybackState;
             set => SetProperty(() => _album.PlaybackState, value);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.PlaybackStateChanged"/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add
@@ -134,7 +181,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.NameChanged"/>
         public event EventHandler<string>? NameChanged
         {
             add
@@ -148,7 +195,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.DescriptionChanged"/>
         public event EventHandler<string?> DescriptionChanged
         {
             add
@@ -162,7 +209,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.UrlChanged"/>
         public event EventHandler<Uri?> UrlChanged
         {
             add
@@ -176,12 +223,54 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
+        /// <inheritdoc cref="IPlayable.ImagesChanged"/>
+        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged
+        {
+            add
+            {
+                _album.ImagesChanged += value;
+            }
+
+            remove
+            {
+                _album.ImagesChanged -= value;
+            }
+        }
+
+        /// <inheritdoc cref="ITrackCollection.TracksChanged"/>
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
+        {
+            add
+            {
+                _album.TracksChanged += value;
+            }
+
+            remove
+            {
+                _album.TracksChanged -= value;
+            }
+        }
+
+        /// <inheritdoc cref="ITrackCollection"/>
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged
+        {
+            add
+            {
+                _album.RelatedItemsChanged += value;
+            }
+
+            remove
+            {
+                _album.RelatedItemsChanged -= value;
+            }
+        }
+
         /// <summary>
         /// Attempts to pause the album, if playing.
         /// </summary>
         public IAsyncRelayCommand PauseAsyncCommand { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.PauseAsync"/>
         public Task PauseAsync() => _album.PauseAsync();
 
         /// <summary>
@@ -189,13 +278,25 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand PlayAsyncCommand { get; }
 
-        /// <inheritdoc/>
-        public TimeSpan Duration => _album.Duration;
+        /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
+        public int TotalTracksCount => _album.TotalTracksCount;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItems"/>
+        public ObservableCollection<IPlayableCollectionGroup> RelatedItems { get; }
+
+        /// <inheritdoc cref="IRelatedCollectionGroups.TotalRelatedItemsCount"/>
+        public int TotalRelatedItemsCount => _album.TotalRelatedItemsCount;
+
+        /// <inheritdoc cref="IPlayable.PlayAsync"/>
         public Task PlayAsync() => _album.PlayAsync();
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
         public Task PopulateTracksAsync(int limit, int offset = 0) => _album.PopulateTracksAsync(limit, offset);
+
+       /// <inheritdoc cref="IRelatedCollectionGroups.PopulateRelatedItemsAsync(int, int)"/>
+        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
+        {
+            return _album.PopulateRelatedItemsAsync(limit, offset);
+        }
     }
 }

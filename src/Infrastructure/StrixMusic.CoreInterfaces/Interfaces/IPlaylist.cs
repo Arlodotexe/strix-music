@@ -3,11 +3,11 @@
     /// <summary>
     /// Interface that represents a playlist.
     /// </summary>
-    public interface IPlaylist : ITrackCollection
+    public interface IPlaylist : ITrackCollection, IRelatedCollectionGroups
     {
         /// <summary>
-        /// Suggested tracks that the user may want to add to this playlist.
+        /// Owner of the playable item.
         /// </summary>
-        ITrackCollection SuggestedTracks { get; }
+        IUserProfile? Owner { get; }
     }
 }

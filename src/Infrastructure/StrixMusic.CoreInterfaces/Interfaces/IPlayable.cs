@@ -63,12 +63,12 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Fires when <see cref="PlaybackState"/> changes.
         /// </summary>
-        event EventHandler<PlaybackState>? PlaybackStateChanged;
+        event EventHandler<PlaybackState> PlaybackStateChanged;
 
         /// <summary>
         /// Fires when <see cref="Name"/> changes.
         /// </summary>
-        event EventHandler<string>? NameChanged;
+        event EventHandler<string> NameChanged;
 
         /// <summary>
         /// Fires when <see cref="Description"/> changes.
@@ -79,5 +79,10 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Fires when <see cref="Url"/> changes.
         /// </summary>
         event EventHandler<Uri?> UrlChanged;
+
+        /// <summary>
+        /// Fires when <see cref="Images"/> changes;
+        /// </summary>
+        event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
     }
 }
