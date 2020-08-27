@@ -127,7 +127,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IDevice.PlaybackContext"/>
-        public IPlayableCollectionBase PlaybackContext
+        public IPlayable PlaybackContext
         {
             get => _device.PlaybackContext;
             private set => SetProperty(() => _device.PlaybackContext, value);

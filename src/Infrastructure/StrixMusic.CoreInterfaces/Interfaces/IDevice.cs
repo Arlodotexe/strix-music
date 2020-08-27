@@ -30,9 +30,9 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         bool IsActive { get; }
 
         /// <summary>
-        /// The currently playing collection.
+        /// The context of the currently playing track.
         /// </summary>
-        IPlayableCollectionBase PlaybackContext { get; }
+        IPlayable PlaybackContext { get; }
 
         /// <summary>
         /// The currently playing <see cref="ITrack"/>.

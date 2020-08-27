@@ -26,6 +26,8 @@ namespace StrixMusic.ViewModels.Bindables
         {
             _collectionGroupBase = collectionGroup;
 
+            SourceCore = new BindableCoreData(_collectionGroupBase.SourceCore);
+
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
 
@@ -240,7 +242,7 @@ namespace StrixMusic.ViewModels.Bindables
         public string Id => _collectionGroupBase.Id;
 
         /// <inheritdoc cref="IPlayable.SourceCore"/>
-        public ICore SourceCore => _collectionGroupBase.SourceCore;
+        public BindableCoreData SourceCore { get; }
 
         /// <inheritdoc cref="IPlayable.Name"/>
         public string Name

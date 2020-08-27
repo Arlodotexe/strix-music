@@ -23,6 +23,8 @@ namespace StrixMusic.ViewModels.Bindables
         {
             _album = album;
 
+            SourceCore = new BindableCoreData(_album.SourceCore);
+
             Images = new ObservableCollection<IImage>(_album.Images);
             Tracks = new ObservableCollection<BindableTrack>(_album.Tracks.Select(x => new BindableTrack(x)));
             RelatedItems = new ObservableCollection<BindableCollectionGroup>(_album.RelatedItems.Select(x => new BindableCollectionGroup(x)));
@@ -128,7 +130,7 @@ namespace StrixMusic.ViewModels.Bindables
         public string Id => _album.Id;
 
         /// <inheritdoc cref="IPlayable.SourceCore"/>
-        public ICore SourceCore => _album.SourceCore;
+        public BindableCoreData SourceCore { get; }
 
         /// <inheritdoc cref="IPlayable.Duration"/>
         public TimeSpan Duration => _album.Duration;

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -26,10 +25,14 @@ namespace StrixMusic.ViewModels.Bindables
         {
             _track = track;
 
+            if (_track.Album != null)
+                Album = new BindableAlbum(_track.Album);
+
             Genres = new ObservableCollection<string>(_track.Genres);
-            Artists = new ObservableCollection<IArtist>(_track.Artists);
+            Artists = new ObservableCollection<BindableArtist>(_track.Artists.Select(x => new BindableArtist(x)));
             Images = new ObservableCollection<IImage>(_track.Images);
-            RelatedItems = new ObservableCollection<IPlayableCollectionGroup>(_track.RelatedItems);
+            RelatedItems = new ObservableCollection<BindableCollectionGroup>(_track.RelatedItems.Select(x => new BindableCollectionGroup(x)));
+            SourceCore = new BindableCoreData(_track.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -79,12 +82,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                RelatedItems.Add(item);
+                RelatedItems.Add(new BindableCollectionGroup(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                RelatedItems.Remove(item);
+                RelatedItems.Remove(new BindableCollectionGroup(item));
             }
         }
 
@@ -168,18 +171,21 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Artists.Add(item);
+                Artists.Add(new BindableArtist(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Artists.Remove(item);
+                Artists.Remove(new BindableArtist(item));
             }
         }
 
         private void Track_AlbumChanged(object sender, IAlbum? e)
         {
-            Album = e;
+            if (e != null)
+                Album = new BindableAlbum(e);
+            else
+                Album = null;
         }
 
         /// <inheritdoc cref="IPlayable.Url"/>
@@ -193,13 +199,15 @@ namespace StrixMusic.ViewModels.Bindables
         public string Type => _track.Type;
 
         /// <inheritdoc cref="ITrack.Artists"/>
-        public ObservableCollection<IArtist> Artists { get; }
+        public ObservableCollection<BindableArtist> Artists { get; }
+
+        private BindableAlbum? _album;
 
         /// <inheritdoc cref="ITrack.Album"/>
-        public IAlbum? Album
+        public BindableAlbum? Album
         {
-            get => _track.Album;
-            set => SetProperty(() => _track.Album, value);
+            get => _album;
+            set => SetProperty(ref _album, value);
         }
 
         /// <inheritdoc cref="ITrack.DatePublished"/>
@@ -251,7 +259,7 @@ namespace StrixMusic.ViewModels.Bindables
         public TimeSpan Duration => _track.Duration;
 
         /// <inheritdoc cref="IPlayable.SourceCore"/>
-        public ICore SourceCore => _track.SourceCore;
+        public BindableCoreData SourceCore { get; }
 
         /// <inheritdoc cref="IPlayable.Id"/>
         public string Id => _track.Id;
@@ -281,7 +289,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItems"/>
-        public ObservableCollection<IPlayableCollectionGroup> RelatedItems { get; }
+        public ObservableCollection<BindableCollectionGroup> RelatedItems { get; }
 
         /// <inheritdoc cref="IRelatedCollectionGroups.TotalRelatedItemsCount"/>
         public int TotalRelatedItemsCount => _track.TotalRelatedItemsCount;
