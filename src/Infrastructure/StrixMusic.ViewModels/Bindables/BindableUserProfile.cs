@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -16,9 +14,9 @@ namespace StrixMusic.ViewModels.Bindables
         private IUserProfile _userProfile;
 
         /// <summary>
-        /// <inheritdoc/>
+        /// Initializes a new instance of the <see cref="BindableUserProfile"/> class.
         /// </summary>
-        /// <param name="userProfile"></param>
+        /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
         public BindableUserProfile(IUserProfile userProfile)
         {
             _userProfile = userProfile;
@@ -26,54 +24,34 @@ namespace StrixMusic.ViewModels.Bindables
             Images = new ObservableCollection<IImage>(userProfile.Images);
         }
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.SourceCore"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.SourceCore"/>
         public ICore SourceCore => _userProfile.SourceCore;
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.Id"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.Id"/>
         public string Id => _userProfile.Id;
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.DisplayName"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.DisplayName"/>
         public string DisplayName => _userProfile.DisplayName;
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.FullName"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.FullName"/>
         public string? FullName => _userProfile.FullName;
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.Email"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.Email"/>
         public string? Email => _userProfile.Email;
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.Birthdate"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.Birthdate"/>
         public DateTime? Birthdate => _userProfile.Birthdate;
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.Images"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.Images"/>
         public ObservableCollection<IImage> Images { get; set; }
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.Url"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.Url"/>
         public ObservableCollection<Uri>? Url { get; set; }
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.Region"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.Region"/>
         public string? Region => _userProfile.Region;
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.DisplayNameChanged"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.DisplayNameChanged"/>
         public event EventHandler<CollectionChangedEventArgs<string>> DisplayNameChanged
         {
             add
@@ -87,9 +65,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.ImagesChanged"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.ImagesChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged
         {
             add
@@ -103,9 +79,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.BirthDateChanged"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.BirthDateChanged"/>
         public event EventHandler<CollectionChangedEventArgs<DateTime>> BirthDateChanged
         {
             add
@@ -119,9 +93,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.FullNameChanged"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.FullNameChanged"/>
         public event EventHandler<CollectionChangedEventArgs<DateTime>> FullNameChanged
         {
             add
@@ -135,9 +107,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.UrlChanged"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.UrlChanged"/>
         public event EventHandler<CollectionChangedEventArgs<DateTime>> UrlChanged
         {
             add
@@ -151,9 +121,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.RegionChanged"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.RegionChanged"/>
         public event EventHandler<CollectionChangedEventArgs<DateTime>> RegionChanged
         {
             add
@@ -167,9 +135,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <summary>
-        /// <inheritdoc cref="userProfile.EmailChanged"/>
-        /// </summary>
+        /// <inheritdoc cref="IUserProfile.EmailChanged"/>
         public event EventHandler<CollectionChangedEventArgs<DateTime>> EmailChanged
         {
             add

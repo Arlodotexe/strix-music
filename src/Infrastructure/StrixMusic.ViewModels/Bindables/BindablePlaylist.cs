@@ -28,6 +28,8 @@ namespace StrixMusic.ViewModels.Bindables
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
 
+            if (_playlist.Owner != null)
+                _owner = new BindableUserProfile(_playlist.Owner);
             Tracks = new ObservableCollection<BindableTrack>(_playlist.Tracks.Select(x => new BindableTrack(x)));
             Images = new ObservableCollection<IImage>(_playlist.Images);
             RelatedItems = new ObservableCollection<BindableCollectionGroup>(_playlist.RelatedItems.Select(x => new BindableCollectionGroup(x)));
@@ -41,6 +43,7 @@ namespace StrixMusic.ViewModels.Bindables
             _playlist.DescriptionChanged += Playlist_DescriptionChanged;
             _playlist.ImagesChanged += Playlist_ImagesChanged;
             _playlist.NameChanged += Playlist_NameChanged;
+            _playlist.OwnerChanged += Playlist_OwnerChanged;
             _playlist.PlaybackStateChanged += Playlist_PlaybackStateChanged;
             _playlist.RelatedItemsChanged += Playlist_RelatedItemsChanged;
             _playlist.TracksChanged += Playlist_TracksChanged;
@@ -52,6 +55,7 @@ namespace StrixMusic.ViewModels.Bindables
             _playlist.DescriptionChanged -= Playlist_DescriptionChanged;
             _playlist.ImagesChanged -= Playlist_ImagesChanged;
             _playlist.NameChanged -= Playlist_NameChanged;
+            _playlist.OwnerChanged -= Playlist_OwnerChanged;
             _playlist.PlaybackStateChanged -= Playlist_PlaybackStateChanged;
             _playlist.RelatedItemsChanged -= Playlist_RelatedItemsChanged;
             _playlist.TracksChanged -= Playlist_TracksChanged;
@@ -89,6 +93,11 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
+        private void Playlist_OwnerChanged(object sender, IUserProfile e)
+        {
+            Owner = new BindableUserProfile(e);
+        }
+
         private void Playlist_PlaybackStateChanged(object sender, PlaybackState e)
         {
             PlaybackState = e;
@@ -117,8 +126,13 @@ namespace StrixMusic.ViewModels.Bindables
             Description = e;
         }
 
+        private BindableUserProfile? _owner;
+
         /// <inheritdoc cref="IPlaylist.Owner"/>
-        public BindableUserProfile? Owner { get; }
+        public BindableUserProfile? Owner {
+            get => _owner;
+            set => SetProperty(ref _owner, value);
+        }
 
         /// <inheritdoc cref="ITrackCollection.Tracks"/>
         public ObservableCollection<BindableTrack> Tracks { get; }
@@ -171,6 +185,20 @@ namespace StrixMusic.ViewModels.Bindables
 
         /// <inheritdoc cref="IRelatedCollectionGroups.TotalRelatedItemsCount"/>
         public int TotalRelatedItemsCount => _playlist.TotalRelatedItemsCount;
+
+        /// <inheritdoc cref="IPlaylist.OwnerChanged"/>
+        public event EventHandler<IUserProfile> OwnerChanged
+        {
+            add
+            {
+                _playlist.OwnerChanged += value;
+            }
+
+            remove
+            {
+                _playlist.OwnerChanged -= value;
+            }
+        }
 
         /// <inheritdoc cref="ITrackCollection.TracksChanged"/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
