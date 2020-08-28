@@ -59,36 +59,36 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         ///  Fires when the <see cref="DisplayName"/> has changed.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<string>> DisplayNameChanged;
+        event EventHandler<CollectionChangedEventArgs<string>>? DisplayNameChanged;
 
         /// <summary>
         ///  Fires when the <see cref="ImagesChanged"/> has changed.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
+        event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
 
         /// <summary>
         ///  Fires when the <see cref="Birthdate"/> has changed.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<DateTime>> BirthDateChanged;
+        event EventHandler<CollectionChangedEventArgs<DateTime>>? BirthDateChanged;
 
         /// <summary>
         ///  Fires when the <see cref="FullName"/> has changed.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<DateTime>> FullNameChanged;
+        event EventHandler<CollectionChangedEventArgs<DateTime>>? FullNameChanged;
 
         /// <summary>
         ///  Fires when the <see cref="Url"/> has changed.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<DateTime>> UrlChanged;
+        event EventHandler<CollectionChangedEventArgs<DateTime>>? UrlChanged;
 
         /// <summary>
         ///  Fires when the <see cref="Region"/> has changed.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<DateTime>> RegionChanged;
+        event EventHandler<CollectionChangedEventArgs<DateTime>>? RegionChanged;
 
         /// <summary>
         ///  Fires when the <see cref="Email"/> has changed.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<DateTime>> EmailChanged;
+        event EventHandler<CollectionChangedEventArgs<DateTime>>? EmailChanged;
     }
 }

@@ -29,11 +29,12 @@ namespace StrixMusic.ViewModels
 
             LoadedCores = new ObservableCollection<BindableCore>();
             Users = new ObservableCollection<BindableUserProfile>();
+            PlaybackQueue = new ObservableCollection<BindableTrack>();
 
             _cores = Ioc.Default.GetServices<ICore>().ToArray();
 
-            GetSearchResultsAsyncCommand = new AsyncRelayCommand<string>(MultiSearchResultsAsync);
-            GetSearchAutoSuggestAsyncCommand = new RelayCommand<string>(MultiSearchSuggestions);
+            GetSearchResultsAsyncCommand = new AsyncRelayCommand<string>(GlobalSearchResultsAsync);
+            GetSearchAutoSuggestAsyncCommand = new RelayCommand<string>(GlobalSearchSuggestions);
 
             _ = InitializeCores(_cores);
         }
@@ -50,7 +51,21 @@ namespace StrixMusic.ViewModels
             }
         }
 
-        private void MultiSearchSuggestions(string query)
+        private void AttachEvents(ICore core)
+        {
+            core.DevicesChanged += Core_DevicesChanged;
+        }
+
+        private void DetachEvents(ICore core)
+        {
+            core.DevicesChanged -= Core_DevicesChanged;
+        }
+
+        /// <summary>
+        /// Gets search suggestions from all cores and asyncronously populate it into <see cref="SearchAutoComplete"/>.
+        /// </summary>
+        /// <param name="query">The query to search for.</param>
+        public void GlobalSearchSuggestions(string query)
         {
             SearchAutoComplete.Clear();
 
@@ -58,12 +73,18 @@ namespace StrixMusic.ViewModels
             {
                 await foreach (var item in await core.GetSearchAutoCompleteAsync(query))
                 {
-                    SearchAutoComplete.Add(item);
+                    if (!SearchAutoComplete.Contains(item))
+                        SearchAutoComplete.Add(item);
                 }
             });
         }
 
-        private async Task<ISearchResults> MultiSearchResultsAsync(string query)
+        /// <summary>
+        /// Performs a search on all loaded cores, and loads it into <see cref="SearchResults"/>.
+        /// </summary>
+        /// <param name="query">The query to search for.</param>
+        /// <returns>The merged search results.</returns>
+        public async Task<ISearchResults> GlobalSearchResultsAsync(string query)
         {
             var searchResults = await _cores.InParallel(core => Task.Run(() => core.GetSearchResultsAsync(query)));
 
@@ -73,16 +94,6 @@ namespace StrixMusic.ViewModels
             SearchResult = new BindableSearchResults(merged);
 
             return merged;
-        }
-
-        private void AttachEvents(ICore core)
-        {
-            core.DevicesChanged += Core_DevicesChanged;
-        }
-
-        private void DetachEvents(ICore core)
-        {
-            core.DevicesChanged -= Core_DevicesChanged;
         }
 
         private void Core_DevicesChanged(object sender, CoreInterfaces.CollectionChangedEventArgs<IDevice> e)
@@ -147,5 +158,10 @@ namespace StrixMusic.ViewModels
         /// The autocomplete strings for the search results.
         /// </summary>
         public ObservableCollection<string> SearchAutoComplete { get; private set; }
+
+        /// <summary>
+        /// The current playback queue. First item plays next.
+        /// </summary>
+        public ObservableCollection<BindableTrack> PlaybackQueue { get; }
     }
 }

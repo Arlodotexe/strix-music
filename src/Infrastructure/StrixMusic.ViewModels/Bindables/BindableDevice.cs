@@ -1,8 +1,12 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace StrixMusic.ViewModels.Bindables
@@ -24,6 +28,8 @@ namespace StrixMusic.ViewModels.Bindables
 
             if (_device.NowPlaying != null)
                 NowPlaying = new BindableTrack(_device.NowPlaying);
+
+            PlaybackQueue = new ObservableCollection<BindableTrack>(_device.PlaybackQueue.Select(x => new BindableTrack(x)));
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeed);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
@@ -50,6 +56,7 @@ namespace StrixMusic.ViewModels.Bindables
             _device.ShuffleStateChanged += Device_ShuffleStateChanged;
             _device.PlaybackStateChanged += Device_StateChanged;
             _device.VolumePercentChanged += Device_VolumePercentChanged;
+            _device.PlaybackQueueChanged += Device_PlaybackQueueChanged;
         }
 
         private void DetachEvents()
@@ -63,6 +70,20 @@ namespace StrixMusic.ViewModels.Bindables
             _device.ShuffleStateChanged -= Device_ShuffleStateChanged;
             _device.PlaybackStateChanged -= Device_StateChanged;
             _device.VolumePercentChanged -= Device_VolumePercentChanged;
+            _device.PlaybackQueueChanged -= Device_PlaybackQueueChanged;
+        }
+
+        private void Device_PlaybackQueueChanged(object sender, CollectionChangedEventArgs<ITrack> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                PlaybackQueue.Add(new BindableTrack(item));
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                PlaybackQueue.Remove(new BindableTrack(item));
+            }
         }
 
         private void Device_VolumePercentChanged(object sender, double? e)
@@ -132,6 +153,9 @@ namespace StrixMusic.ViewModels.Bindables
             get => _device.PlaybackContext;
             private set => SetProperty(() => _device.PlaybackContext, value);
         }
+
+        /// <inheritdoc cref="IDevice.PlaybackQueue"/>
+        public ObservableCollection<BindableTrack> PlaybackQueue { get; }
 
         private BindableTrack? _nowPlaying;
 
@@ -310,6 +334,20 @@ namespace StrixMusic.ViewModels.Bindables
             remove
             {
                 _device.PlaybackSpeedChanged -= value;
+            }
+        }
+
+        /// <inheritdoc cref="IDevice.PlaybackQueueChanged"/>
+        public event EventHandler<CollectionChangedEventArgs<ITrack>> PlaybackQueueChanged
+        {
+            add
+            {
+                _device.PlaybackQueueChanged += value;
+            }
+
+            remove
+            {
+                _device.PlaybackQueueChanged -= value;
             }
         }
 

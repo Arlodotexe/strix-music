@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -134,7 +135,7 @@ namespace StrixMusic.ViewModels.Bindables
             Lyrics = e;
         }
 
-        private void Track_LanguageChanged(object sender, string? e)
+        private void Track_LanguageChanged(object sender, CultureInfo? e)
         {
             Language = e;
         }
@@ -196,7 +197,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="ITrack.Type"/>
-        public string Type => _track.Type;
+        public TrackType Type => _track.Type;
 
         /// <inheritdoc cref="ITrack.Artists"/>
         public ObservableCollection<BindableArtist> Artists { get; }
@@ -235,7 +236,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="ITrack.Language"/>
-        public string? Language
+        public CultureInfo? Language
         {
             get => _track.Language;
             set => SetProperty(() => _track.Language, value);
@@ -393,7 +394,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="ITrack.LanguageChanged"/>
-        public event EventHandler<string?> LanguageChanged
+        public event EventHandler<CultureInfo?> LanguageChanged
         {
             add
             {
