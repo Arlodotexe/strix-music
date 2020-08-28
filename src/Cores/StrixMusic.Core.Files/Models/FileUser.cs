@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.Core.Files.Models
@@ -47,5 +48,29 @@ namespace StrixMusic.Core.Files.Models
 
         /// <inheritdoc/>
         public ICore SourceCore { get; set; }
+
+        /// <inheritdoc/>
+        public ILibrary Library => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<string>>? DisplayNameChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
+        
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<DateTime>>? BirthDateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<DateTime>>? FullNameChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<DateTime>>? UrlChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<DateTime>>? RegionChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<DateTime>> EmailChanged;
     }
 }

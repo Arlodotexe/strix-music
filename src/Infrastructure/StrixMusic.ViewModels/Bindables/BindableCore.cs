@@ -1,12 +1,12 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using StrixMusic.CoreInterfaces;
-using StrixMusic.CoreInterfaces.Interfaces;
-using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using StrixMusic.CoreInterfaces;
+using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 
 namespace StrixMusic.ViewModels.Bindables
 {

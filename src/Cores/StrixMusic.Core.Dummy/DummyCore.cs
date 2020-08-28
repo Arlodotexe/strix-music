@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using StrixMusic.Core.Dummy.Deserialization;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
@@ -22,6 +21,18 @@ namespace StrixMusic.Core.Dummy
 
         /// <inheritdoc/>
         public CoreState CoreState => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IReadOnlyList<IDevice> Devices => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public ILibrary Library => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IRecentlyPlayed RecentlyPlayed => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IPlayableCollectionGroup Discoverables => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public event EventHandler<IPlayableCollectionGroup>? LibraryChanged;
@@ -85,18 +96,6 @@ namespace StrixMusic.Core.Dummy
 
         /// <inheritdoc/>
         public Task InitAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        Task<ILibrary> ICore.GetLibraryAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        Task<IRecentlyPlayed> ICore.GetRecentlyPlayedAsync()
         {
             throw new NotImplementedException();
         }

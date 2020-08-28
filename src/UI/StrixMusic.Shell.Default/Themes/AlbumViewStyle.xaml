@@ -25,7 +25,7 @@
 
                 <Rectangle Grid.RowSpan="2" Margin="32">
                     <Rectangle.Fill>
-                        <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(CoverImageUri)}"/>
+                        <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
                     </Rectangle.Fill>
                 </Rectangle>
 

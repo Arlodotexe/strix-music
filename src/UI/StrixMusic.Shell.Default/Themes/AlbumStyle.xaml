@@ -15,7 +15,7 @@
             <!--<Rectangle Fill="#FF00FF" Width="128" Height="128"/>-->
             <Rectangle Width="128" Height="128">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(CoverImageUri)}"/>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
                 </Rectangle.Fill>
             </Rectangle>
             <StackPanel Grid.Row="1" Margin="0,8,0,0">

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -86,7 +87,25 @@ namespace StrixMusic.Core.Dummy.Implementations
         public TimeSpan Duration => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public int TotalTracksCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public int TotalRelatedItemsCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? RelatedItemsChanged;
 
         /// <inheritdoc/>
         public void Play()
@@ -114,6 +133,11 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         public Task PauseAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

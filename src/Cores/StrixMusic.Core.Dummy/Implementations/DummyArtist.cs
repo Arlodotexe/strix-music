@@ -87,6 +87,12 @@ namespace StrixMusic.Core.Dummy.Implementations
         public TimeSpan Duration => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public int TotalRelatedItemsCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
 
         /// <inheritdoc/>
@@ -97,6 +103,12 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
 
         /// <inheritdoc/>
         public event EventHandler<string>? NameChanged
@@ -179,6 +191,11 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         public Task PauseAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

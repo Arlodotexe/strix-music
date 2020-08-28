@@ -51,6 +51,9 @@ namespace StrixMusic.Core.Files.Models
         double? IDevice.PlaybackSpeed => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        IPlayable IDevice.PlaybackContext => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<bool>? IsActiveChanged
         {
             add

@@ -122,6 +122,9 @@ namespace StrixMusic.Core.Dummy
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
+
+        /// <inheritdoc/>
         public event EventHandler<string>? NameChanged
         {
             add

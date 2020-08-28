@@ -95,6 +95,12 @@ namespace StrixMusic.Core.Dummy.Implementations
         public PlaybackState PlaybackState => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public int TotalRelatedItemsCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         IReadOnlyList<IArtist> ITrack.Artists => throw new NotImplementedException();
 
         /// <inheritdoc/>
@@ -102,6 +108,12 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
 
         /// <inheritdoc/>
         public event EventHandler<string>? NameChanged
@@ -292,6 +304,12 @@ namespace StrixMusic.Core.Dummy.Implementations
 
         /// <inheritdoc/>
         public Task PlayAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

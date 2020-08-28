@@ -33,6 +33,18 @@ namespace StrixMusic.Core.Files
         public CoreState CoreState => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public IReadOnlyList<IDevice> Devices => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public ILibrary Library => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IRecentlyPlayed RecentlyPlayed => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IPlayableCollectionGroup Discoverables => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<IDevice>? DeviceAdded;
 
         /// <inheritdoc/>
@@ -104,10 +116,5 @@ namespace StrixMusic.Core.Files
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
-        Task<ILibrary> ICore.GetLibraryAsync()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
