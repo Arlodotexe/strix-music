@@ -108,7 +108,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? RelatedItemsChanged;
 
         /// <inheritdoc/>
         public event EventHandler<string>? NameChanged
@@ -195,6 +195,7 @@ namespace StrixMusic.Core.Dummy.Implementations
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();

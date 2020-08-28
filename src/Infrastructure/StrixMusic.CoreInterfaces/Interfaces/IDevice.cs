@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.CoreInterfaces.Enums;
 
@@ -28,6 +29,12 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// If true, the device is currently active and playing audio.
         /// </summary>
         bool IsActive { get; }
+
+        /// <summary>
+        /// The current playback queue.
+        /// </summary>
+        /// <remarks>When <see cref="Enums.DeviceType"/> is <see cref="DeviceType.Remote" />, this will override the internal playback queue.</remarks>
+        public IReadOnlyList<ITrack> PlaybackQueue { get; }
 
         /// <summary>
         /// The context of the currently playing track.
@@ -131,6 +138,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// </summary>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
         Task SwitchToAsync();
+
+        /// <summary>
+        /// Fires when <see cref="PlaybackQueue"/> changes.
+        /// </summary>
+        event EventHandler<CollectionChangedEventArgs<ITrack>>? PlaybackQueueChanged;
 
         /// <summary>
         /// Fires when <see cref="IsActive"/> changes.

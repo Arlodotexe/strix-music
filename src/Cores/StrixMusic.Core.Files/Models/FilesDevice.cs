@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -52,6 +54,9 @@ namespace StrixMusic.Core.Files.Models
 
         /// <inheritdoc/>
         IPlayable IDevice.PlaybackContext => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IReadOnlyList<ITrack> PlaybackQueue => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public event EventHandler<bool>? IsActiveChanged
@@ -156,6 +161,9 @@ namespace StrixMusic.Core.Files.Models
 
         /// <inheritdoc/>
         public event EventHandler<double>? PlaybackSpeedChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? PlaybackQueueChanged;
 
         /// <inheritdoc/>
         public Task ChangePlaybackSpeed(double speed)

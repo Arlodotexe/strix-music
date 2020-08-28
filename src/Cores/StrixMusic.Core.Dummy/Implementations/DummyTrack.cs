@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces;
@@ -22,7 +23,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public Uri Url => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Type => "song";
+        public TrackType Type => TrackType.Song;
 
         /// <inheritdoc/>
         [JsonProperty("title")]
@@ -69,7 +70,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public int PlayCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Language => throw new NotImplementedException();
+        public CultureInfo Language => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public ILyrics Lyrics => throw new NotImplementedException();
@@ -113,7 +114,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? RelatedItemsChanged;
 
         /// <inheritdoc/>
         public event EventHandler<string>? NameChanged
@@ -243,7 +244,7 @@ namespace StrixMusic.Core.Dummy.Implementations
         }
 
         /// <inheritdoc/>
-        public event EventHandler<string?> LanguageChanged
+        public event EventHandler<CultureInfo?> LanguageChanged
         {
             add
             {

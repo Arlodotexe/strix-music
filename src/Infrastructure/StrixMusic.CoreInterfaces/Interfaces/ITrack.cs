@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using StrixMusic.CoreInterfaces.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
 {
@@ -8,10 +10,8 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// </summary>
     public interface ITrack : IPlayable, IRelatedCollectionGroups
     {
-        /// <summary>
-        /// Identifies which type of track this is (song, podcast, etc).
-        /// </summary>
-        string Type { get; }
+        /// <inheritdoc cref="TrackType"/>
+        TrackType Type { get; }
 
         /// <summary>
         /// A list of <see cref="IArtist"/>s that this track was created by.
@@ -44,9 +44,10 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         int? PlayCount { get; }
 
         /// <summary>
-        /// The language this track is spoken in.
+        /// The language for this track.
         /// </summary>
-        string? Language { get; }
+        /// <remarks>If track has no spoken words (instrumental), value is <see cref="CultureInfo.InvariantCulture"/>. If unknown, value is <see langword="null"/>.</remarks>
+        CultureInfo? Language { get; }
 
         /// <summary>
         /// The lyrics for this track.
@@ -91,7 +92,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Fires when the <see cref="Language"/> metadata changes.
         /// </summary>
-        event EventHandler<string?> LanguageChanged;
+        event EventHandler<CultureInfo?> LanguageChanged;
 
         /// <summary>
         /// Fires when the <see cref="Lyrics"/> metadata changes.

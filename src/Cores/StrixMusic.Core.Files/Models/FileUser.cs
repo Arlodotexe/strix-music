@@ -57,7 +57,7 @@ namespace StrixMusic.Core.Files.Models
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
-        
+
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<DateTime>>? BirthDateChanged;
 
@@ -71,6 +71,6 @@ namespace StrixMusic.Core.Files.Models
         public event EventHandler<CollectionChangedEventArgs<DateTime>>? RegionChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<DateTime>> EmailChanged;
+        public event EventHandler<CollectionChangedEventArgs<DateTime>>? EmailChanged;
     }
 }
