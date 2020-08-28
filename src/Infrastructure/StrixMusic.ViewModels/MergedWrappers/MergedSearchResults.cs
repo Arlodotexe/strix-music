@@ -19,6 +19,7 @@ namespace StrixMusic.ViewModels.MergedWrappers
         private readonly List<ITrack> _tracks = new List<ITrack>();
         private readonly List<IAlbum> _albums = new List<IAlbum>();
         private readonly List<IArtist> _artists = new List<IArtist>();
+        private readonly List<IImage> _images = new List<IImage>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchResults"/> class.
@@ -26,27 +27,73 @@ namespace StrixMusic.ViewModels.MergedWrappers
         /// <param name="searchResults">The search results to merge.</param>
         public MergedSearchResults(ISearchResults[] searchResults)
         {
+            Sources = searchResults;
+
             // TODO: Use top preffered core.
-            _preferredSource = searchResults.First();
+            _preferredSource = Sources.First();
 
-            SourceCore = _preferredSource.SourceCore;
-            Id = _preferredSource.Id;
-            Url = _preferredSource.Url;
+            AttachPropertyChangedEvents(_preferredSource);
 
-            foreach (var item in searchResults)
+            foreach (var item in Sources)
             {
                 TotalChildrenCount += item.TotalChildrenCount;
                 TotalPlaylistCount += item.TotalPlaylistCount;
                 TotalTracksCount += item.TotalTracksCount;
                 TotalAlbumsCount += item.TotalAlbumsCount;
                 TotalArtistsCount += item.TotalArtistsCount;
+                Duration += item.Duration;
 
+                // todo: merge data as needed
                 _playlists.AddRange(item.Playlists);
-                _tracks.AddRange(item.Tracks);
+                _tracks.Union(item.Tracks);
                 _albums.AddRange(item.Albums);
                 _artists.AddRange(item.Artists);
+                _images.AddRange(item.Images);
+
+                AttachCollectionChangedEvents(item);
             }
         }
+
+        private void AttachCollectionChangedEvents(ISearchResults source)
+        {
+            source.ChildrenChanged += ChildrenChanged;
+            source.PlaylistsChanged += PlaylistsChanged;
+            source.TracksChanged += TracksChanged;
+            source.AlbumsChanged += AlbumsChanged;
+            source.ArtistsChanged += ArtistsChanged;
+        }
+
+        private void DetachCollectionChangedEvents(ISearchResults source)
+        {
+            source.ChildrenChanged -= ChildrenChanged;
+            source.PlaylistsChanged -= PlaylistsChanged;
+            source.TracksChanged -= TracksChanged;
+            source.AlbumsChanged -= AlbumsChanged;
+            source.ArtistsChanged -= ArtistsChanged;
+        }
+
+        private void AttachPropertyChangedEvents(ISearchResults source)
+        {
+            source.PlaybackStateChanged += PlaybackStateChanged;
+            source.ImagesChanged += ImagesChanged;
+            source.NameChanged += NameChanged;
+            source.DescriptionChanged += DescriptionChanged;
+            source.UrlChanged += UrlChanged;
+        }
+
+        private void DetachPropertyChangedEvents(ISearchResults source)
+        {
+            source.PlaybackStateChanged -= PlaybackStateChanged;
+            source.ImagesChanged -= ImagesChanged;
+            source.NameChanged -= NameChanged;
+            source.DescriptionChanged -= DescriptionChanged;
+            source.UrlChanged -= UrlChanged;
+        }
+
+        /// <summary>
+        /// The source data that went into this merged instance.
+        /// </summary>
+        public IReadOnlyList<ISearchResults> Sources { get; }
 
         private List<IPlayableCollectionGroup> _children = new List<IPlayableCollectionGroup>();
 
@@ -81,28 +128,28 @@ namespace StrixMusic.ViewModels.MergedWrappers
         public int TotalArtistsCount { get; } = 0;
 
         /// <inheritdoc/>
-        public ICore SourceCore { get; set; }
+        public ICore SourceCore => _preferredSource.SourceCore;
 
         /// <inheritdoc/>
-        public string Id { get; }
+        public string Id => _preferredSource.Id;
 
         /// <inheritdoc/>
-        public Uri? Url { get; }
+        public Uri? Url => _preferredSource.Url;
 
         /// <inheritdoc/>
-        public string Name => throw new NotImplementedException();
+        public string Name => _preferredSource.Name;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
+        public IReadOnlyList<IImage> Images => _images;
 
         /// <inheritdoc/>
-        public string? Description => throw new NotImplementedException();
+        public string? Description => _preferredSource.Description;
 
         /// <inheritdoc/>
-        public PlaybackState PlaybackState => throw new NotImplementedException();
+        public PlaybackState PlaybackState => _preferredSource.PlaybackState;
 
         /// <inheritdoc/>
-        public TimeSpan Duration => throw new NotImplementedException();
+        public TimeSpan Duration { get; } = new TimeSpan(0);
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
@@ -149,7 +196,23 @@ namespace StrixMusic.ViewModels.MergedWrappers
         /// <inheritdoc/>
         public Task PopulateAlbumsAsync(int limit, int offset = 0)
         {
-            throw new NotImplementedException();
+            // The plan for limit:
+            // Check how many items are left in each core.
+            // For the limit that was requested, get the number of items we can get per core (limitPerSource).
+            // The remainder gets pulled from the highest ranking preferred core, moving to the next highest ranking core if there are no remaining items.
+            var limitRemainder = limit % Sources.Count;
+            var limitPerSource = (limit - limitRemainder) / Sources.Count;
+
+            // The plan for offset:
+            // Todo
+            Parallel.ForEach(Sources, source =>
+            {
+                var remainingItems = source.TotalAlbumsCount - source.Albums.Count();
+
+                if (remainingItems > 0)
+                    source.PopulateAlbumsAsync(limitPerSource);
+            });
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
