@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Extensions;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.ViewModels.Bindables;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.ViewModels
 {
@@ -22,17 +22,18 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
-        /// <param name="settings"></param>
         public MainViewModel()
         {
-            LoadLibraryCommand = new AsyncRelayCommand(LoadLibraryAsync);
-            LoadDevicesCommand = new AsyncRelayCommand(LoadDevicesAsync);
-            LoadRecentlyPlayedCommand = new AsyncRelayCommand(LoadRecentlyPlayedAsync);
-            LoadDiscoverablesCommand = new AsyncRelayCommand(LoadDiscoverablesAsync);
-
             Devices = new ObservableCollection<BindableDevice>();
+            SearchAutoComplete = new ObservableCollection<string>();
+
+            LoadedCores = new ObservableCollection<BindableCore>();
+            Users = new ObservableCollection<BindableUserProfile>();
 
             _cores = Ioc.Default.GetServices<ICore>().ToArray();
+
+            GetSearchResultsAsyncCommand = new AsyncRelayCommand<string>(MultiSearchResultsAsync);
+            GetSearchAutoSuggestAsyncCommand = new RelayCommand<string>(MultiSearchSuggestions);
 
             _ = InitializeCores(_cores);
         }
@@ -44,8 +45,34 @@ namespace StrixMusic.ViewModels
             foreach (var core in coresToLoad)
             {
                 Users.Add(new BindableUserProfile(core.User));
+
                 AttachEvents(core);
             }
+        }
+
+        private void MultiSearchSuggestions(string query)
+        {
+            SearchAutoComplete.Clear();
+
+            Parallel.ForEach(_cores, async core =>
+            {
+                await foreach (var item in await core.GetSearchAutoCompleteAsync(query))
+                {
+                    SearchAutoComplete.Add(item);
+                }
+            });
+        }
+
+        private async Task<ISearchResults> MultiSearchResultsAsync(string query)
+        {
+            var searchResults = await _cores.InParallel(core => Task.Run(() => core.GetSearchResultsAsync(query)));
+
+            // TODO: Merge search results
+            var merged = searchResults.First();
+
+            SearchResult = new BindableSearchResults(merged);
+
+            return merged;
         }
 
         private void AttachEvents(ICore core)
@@ -74,12 +101,12 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// Contains data about the cores that are loaded.
         /// </summary>
-        public ObservableCollection<BindableCore> BindableCore { get; } = new ObservableCollection<BindableCore>();
+        public ObservableCollection<BindableCore> LoadedCores { get; }
 
         /// <summary>
         /// A consolidated list of all users in the app.
         /// </summary>
-        public ObservableCollection<BindableUserProfile> Users { get; } = new ObservableCollection<BindableUserProfile>();
+        public ObservableCollection<BindableUserProfile> Users { get; }
 
         /// <summary>
         /// All available devices.
@@ -99,69 +126,26 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// Used to browse and discovered new music.
         /// </summary>
-        public ObservableCollection<BindableCollectionGroup>? Discoverables { get; } = new ObservableCollection<BindableCollectionGroup>();
+        public BindableCollectionGroup? Discoverables { get; private set; }
 
         /// <summary>
-        /// Loads the <see cref="RecentlyPlayed"/> into the view model.
+        /// Gets search results for a query.
         /// </summary>
-        public IAsyncRelayCommand LoadRecentlyPlayedCommand { get; }
-
-        private async Task<IRecentlyPlayed> LoadRecentlyPlayedAsync()
-        {
-            var recents = await _cores.InParallel(core => Task.Run(core.GetRecentlyPlayedAsync)).ConfigureAwait(false);
-
-            // TODO: Re-evaluate. We might not need to merge them like this, just replace the existing items per core.
-            var mergedRecents = Mergers.MergeRecentlyPlayed(recents);
-
-            RecentlyPlayed = new BindableRecentlyPlayed(mergedRecents);
-
-            return mergedRecents;
-        }
+        public IAsyncRelayCommand<string> GetSearchResultsAsyncCommand { get; }
 
         /// <summary>
-        /// Loads the <see cref="RecentlyPlayed"/> into the view model.
+        /// Gets autocompleted suggestions for a search query.
         /// </summary>
-        public IAsyncRelayCommand LoadDiscoverablesCommand { get; }
-
-        private async Task<IAsyncEnumerable<IPlayableCollectionGroup>?> LoadDiscoverablesAsync()
-        {
-            var discoverables = await _cores.InParallel(core => Task.Run(core.GetDiscoverablesAsync)).ConfigureAwait(false);
-            var mergedDiscoverables = Mergers.MergePlayableCollectionGroups(discoverables);
-
-            return mergedDiscoverables;
-        }
+        public IRelayCommand<string> GetSearchAutoSuggestAsyncCommand { get; }
 
         /// <summary>
-        /// Loads the <see cref="Library"/> into the view model.
+        /// Contains search results.
         /// </summary>
-        public IAsyncRelayCommand LoadLibraryCommand { get; }
-
-        private async Task<ILibrary> LoadLibraryAsync()
-        {
-            var libs = await _cores.InParallel(core => Task.Run(core.GetLibraryAsync)).ConfigureAwait(false);
-            var mergedLibrary = Mergers.MergeLibrary(libs);
-
-            Library = new BindableLibrary(mergedLibrary);
-
-            return mergedLibrary;
-        }
+        public BindableSearchResults? SearchResult { get; private set; }
 
         /// <summary>
-        /// Loads the <see cref="Devices"/> into the view model.
+        /// The autocomplete strings for the search results.
         /// </summary>
-        public IAsyncRelayCommand LoadDevicesCommand { get; }
-
-        private async Task<IAsyncEnumerable<IDevice>> LoadDevicesAsync()
-        {
-            var devices = await _cores.InParallel(core => Task.Run(core.GetDevicesAsync));
-            var mergedDevices = Mergers.MergeDevices(devices);
-
-            await foreach (var device in mergedDevices)
-            {
-                Devices.Add(new BindableDevice(device));
-            }
-
-            return mergedDevices;
-        }
+        public ObservableCollection<string> SearchAutoComplete { get; private set; }
     }
 }

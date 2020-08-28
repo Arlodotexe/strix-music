@@ -28,7 +28,7 @@ namespace StrixMusic.ViewModels.Bindables
             Images = new ObservableCollection<IImage>(_album.Images);
             Tracks = new ObservableCollection<BindableTrack>(_album.Tracks.Select(x => new BindableTrack(x)));
             RelatedItems = new ObservableCollection<BindableCollectionGroup>(_album.RelatedItems.Select(x => new BindableCollectionGroup(x)));
-            Artist = new BindableArtist(_album.Artist);
+            _artist = new BindableArtist(_album.Artist);
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -123,8 +123,14 @@ namespace StrixMusic.ViewModels.Bindables
         /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
         public int TotalTrackCounts => _album.TotalTracksCount;
 
+        private BindableArtist _artist;
+
         /// <inheritdoc cref="IAlbum.Artist"/>
-        public BindableArtist Artist { get; }
+        public BindableArtist Artist
+        {
+            get => _artist;
+            set => SetProperty(ref _artist, value);
+        }
 
         /// <inheritdoc cref="IPlayable.Id"/>
         public string Id => _album.Id;
