@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.ViewModels.Bindables
 {
@@ -22,6 +24,12 @@ namespace StrixMusic.ViewModels.Bindables
         public BindableCore(ICore core)
         {
             _core = core;
+
+            Devices = new ObservableCollection<BindableDevice>(_core.Devices.Select(x => new BindableDevice(x)));
+            Library = new BindableLibrary(_core.Library);
+            RecentlyPlayed = new BindableRecentlyPlayed(_core.RecentlyPlayed);
+            Discoverables = new BindableCollectionGroup(_core.Discoverables);
+
             AttachEvents();
         }
 
@@ -54,56 +62,45 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="ICore.SearchAutoCompleteChanged" />
-        public event EventHandler<CollectionChangedEventArgs<IAsyncEnumerable<string>>>? SearchAutoCompleteChanged
-        {
-            add
-            {
-                _core.SearchAutoCompleteChanged += value;
-            }
-
-            remove
-            {
-                _core.SearchAutoCompleteChanged -= value;
-            }
-        }
-
-        /// <inheritdoc cref="ICore.SearchAutoCompleteChanged" />
         private void AttachEvents()
         {
             _core.CoreStateChanged += Core_CoreStateChanged;
+            _core.DevicesChanged += Core_DevicesChanged;
         }
 
         private void DetachEvents()
         {
             _core.CoreStateChanged -= Core_CoreStateChanged;
+            _core.DevicesChanged -= Core_DevicesChanged;
+        }
+
+        private void Core_DevicesChanged(object sender, CollectionChangedEventArgs<IDevice> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Devices.Add(new BindableDevice(item));
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Devices.Remove(new BindableDevice(item));
+            }
         }
 
         /// <inheritdoc cref="ICore.CoreState" />
         private void Core_CoreStateChanged(object sender, CoreState e) => CoreState = e;
 
-        /// <inheritdoc cref="_core" />
-        public IAsyncEnumerable<IDevice> GetDevicesAsync()
-        {
-            return _core.GetDevicesAsync();
-        }
+        /// <inheritdoc cref="ICore.Devices"/>
+        public ObservableCollection<BindableDevice> Devices { get; }
 
-        /// <inheritdoc cref="ICore.GetLibraryAsync" />
-        public Task<ILibrary> GetLibraryAsync()
-        {
-            return _core.GetLibraryAsync();
-        }
+        /// <inheritdoc cref="ICore.Library" />
+        public BindableLibrary Library { get; }
 
-        /// <inheritdoc cref="ICore.GetRecentlyPlayedAsync" />
-        public Task<IRecentlyPlayed> GetRecentlyPlayedAsync()
-        {
-            return _core.GetRecentlyPlayedAsync();
-        }
+        /// <inheritdoc cref="ICore.RecentlyPlayed" />
+        public BindableRecentlyPlayed RecentlyPlayed { get; }
 
-        /// <inheritdoc cref="ICore.GetDiscoverablesAsync" />
-        public IAsyncEnumerable<IPlayableCollectionGroup>? GetDiscoverablesAsync()
-        {
-            return _core.GetDiscoverablesAsync();
-        }
+        /// <inheritdoc cref="ICore.Discoverables" />
+        public BindableCollectionGroup Discoverables { get; }
 
         /// <inheritdoc cref="ICore.GetSearchAutoCompleteAsync" />
         public Task<IAsyncEnumerable<string>> GetSearchAutoCompleteAsync(string query)

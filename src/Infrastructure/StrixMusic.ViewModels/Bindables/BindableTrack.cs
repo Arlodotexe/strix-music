@@ -13,9 +13,9 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// Contains bindable information about an <see cref="ITrack"/>
     /// </summary>
-    public class BindableTrack : ObservableObject
+    public class BindableTrack : BindableMergeableObject<ITrack>
     {
-        private ITrack _track;
+        private readonly ITrack _track;
 
         /// <summary>
         /// Creates a bindable wrapper around an <see cref="ITrack"/>.

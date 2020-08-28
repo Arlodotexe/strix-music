@@ -6,19 +6,19 @@ using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
-namespace StrixMusic.ViewModels.Mergers
+namespace StrixMusic.ViewModels.MergedWrappers
 {
     /// <summary>
     /// A concrete class that merged multiple <see cref="ISearchResults"/>
     /// </summary>
     public class MergedSearchResults : ISearchResults
     {
-        private ISearchResults[] _searchResults;
+        private readonly ISearchResults _preferredSource;
 
-        private List<IPlaylist> _playlists = new List<IPlaylist>();
-        private List<ITrack> _tracks = new List<ITrack>();
-        private List<IAlbum> _albums = new List<IAlbum>();
-        private List<IArtist> _artists = new List<IArtist>();
+        private readonly List<IPlaylist> _playlists = new List<IPlaylist>();
+        private readonly List<ITrack> _tracks = new List<ITrack>();
+        private readonly List<IAlbum> _albums = new List<IAlbum>();
+        private readonly List<IArtist> _artists = new List<IArtist>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchResults"/> class.
@@ -26,7 +26,12 @@ namespace StrixMusic.ViewModels.Mergers
         /// <param name="searchResults">The search results to merge.</param>
         public MergedSearchResults(ISearchResults[] searchResults)
         {
-            _searchResults = searchResults;
+            // TODO: Use top preffered core.
+            _preferredSource = searchResults.First();
+
+            SourceCore = _preferredSource.SourceCore;
+            Id = _preferredSource.Id;
+            Url = _preferredSource.Url;
 
             foreach (var item in searchResults)
             {
@@ -76,13 +81,13 @@ namespace StrixMusic.ViewModels.Mergers
         public int TotalArtistsCount { get; } = 0;
 
         /// <inheritdoc/>
-        public ICore SourceCore => throw new NotImplementedException();
+        public ICore SourceCore { get; set; }
 
         /// <inheritdoc/>
-        public string Id => throw new NotImplementedException();
+        public string Id { get; }
 
         /// <inheritdoc/>
-        public Uri? Url => throw new NotImplementedException();
+        public Uri? Url { get; }
 
         /// <inheritdoc/>
         public string Name => throw new NotImplementedException();
@@ -100,7 +105,7 @@ namespace StrixMusic.ViewModels.Mergers
         public TimeSpan Duration => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> ChildrenChanged;
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
@@ -115,16 +120,16 @@ namespace StrixMusic.ViewModels.Mergers
         public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<PlaybackState> PlaybackStateChanged;
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<string> NameChanged;
+        public event EventHandler<string>? NameChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<string?> DescriptionChanged;
+        public event EventHandler<string?>? DescriptionChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<Uri?> UrlChanged;
+        public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
@@ -132,13 +137,13 @@ namespace StrixMusic.ViewModels.Mergers
         /// <inheritdoc/>
         public Task PauseAsync()
         {
-            throw new NotImplementedException();
+            return _preferredSource.PauseAsync();
         }
 
         /// <inheritdoc/>
         public Task PlayAsync()
         {
-            throw new NotImplementedException();
+            return _preferredSource.PlayAsync();
         }
 
         /// <inheritdoc/>

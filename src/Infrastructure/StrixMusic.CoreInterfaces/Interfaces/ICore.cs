@@ -37,7 +37,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         public ILibrary Library { get; }
 
         /// <summary>
-        /// Gets the recently played tracks for this core.
+        /// Gets the recently played items for this core.
         /// </summary>
         public IRecentlyPlayed RecentlyPlayed { get; }
 

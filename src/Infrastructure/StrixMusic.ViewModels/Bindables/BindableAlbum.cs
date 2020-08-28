@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
@@ -10,8 +9,10 @@ using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.ViewModels.Bindables
 {
-    /// <inheritdoc/>
-    public class BindableAlbum : ObservableObject
+    /// <summary>
+    /// Contains bindable information about an <see cref="IAlbum"/>.
+    /// </summary>
+    public class BindableAlbum : BindableMergeableObject<IAlbum>
     {
         private readonly IAlbum _album;
 
