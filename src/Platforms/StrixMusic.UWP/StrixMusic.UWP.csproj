@@ -165,10 +165,6 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.Dummy\StrixMusic.Core.Dummy.csproj">
-      <Project>{60f40d66-ad18-4822-b4bc-2535dc32ac85}</Project>
-      <Name>StrixMusic.Core.Dummy</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj">
       <Project>{60ee2300-f562-416c-9458-dbea41389d8b}</Project>
       <Name>StrixMusic.CoreInterfaces</Name>
