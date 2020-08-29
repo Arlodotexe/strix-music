@@ -11,7 +11,6 @@ namespace StrixMusic.Core.Mock.Models
 {
     public class MockTrack : ITrack
     {
-        #region
 
         private string _type;
         private List<IArtist> _artists = new List<IArtist>();
@@ -33,8 +32,6 @@ namespace StrixMusic.Core.Mock.Models
         private TimeSpan _duration;
         private List<IPlayableCollectionGroup> _relatedItems = new List<IPlayableCollectionGroup>();
         private int _totalRelatedItemsCount;
-
-        #endregion
 
         public string Type => _type;
 
