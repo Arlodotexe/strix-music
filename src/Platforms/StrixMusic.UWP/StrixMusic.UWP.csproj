@@ -13,7 +13,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm">
-      <Version>7.0.0-build.152</Version>
+      <Version>7.0.0-preview2</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
@@ -23,7 +23,7 @@
     <PackageReference Include="Uno.Diagnostics.Eventing">
       <Version>1.0.4</Version>
     </PackageReference>
-    <PackageReference Include="Uno.UI" Version="3.0.5" />
+    <PackageReference Include="Uno.UI" Version="3.0.12" />
   </ItemGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -165,6 +165,14 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\StrixMusic.Core.Mock\StrixMusic.Core.Mock.csproj">
+      <Project>{f3c5efd0-dbdc-41e0-874e-46ddfe5c3410}</Project>
+      <Name>StrixMusic.Core.Mock</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Core.Files\StrixMusic.Core.Files.csproj">
+      <Project>{dbf0c623-33cf-4db6-bb3b-353045678a70}</Project>
+      <Name>StrixMusic.Core.Files</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj">
       <Project>{60ee2300-f562-416c-9458-dbea41389d8b}</Project>
       <Name>StrixMusic.CoreInterfaces</Name>
