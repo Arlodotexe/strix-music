@@ -9,7 +9,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Library.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

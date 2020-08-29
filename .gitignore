@@ -204,3 +204,6 @@ FakesAssemblies/
 # Custom ignores
 gallery.xml
 project.lock.json
+/src/Cores/Strix.Core.Test
+/Test.Console.App
+/StrixMusic.Core.Test

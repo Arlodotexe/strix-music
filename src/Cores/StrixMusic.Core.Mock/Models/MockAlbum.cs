@@ -6,27 +6,45 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.Mock.Implementations
+namespace StrixMusic.Core.Mock.Models
 {
     public class MockAlbum : IAlbum
     {
-        public IArtist Artist => throw new NotImplementedException();
+        #region Fields
 
-        public IReadOnlyList<ITrack> Tracks => throw new NotImplementedException();
+        private IArtist _artist;
+        private List<ITrack> _tracks = new List<ITrack>();
+        private int _totalTracksCount;
+        private ICore _sourceCore;
+        private string _id;
+        private Uri _url;
+        private string _name;
+        private List<IImage> _images = new List<IImage>();
+        private string _description;
+        private List<IPlayableCollectionGroup> _relatedItems = new List<IPlayableCollectionGroup>();
+        private int _totalRelatedItemsCount;
+        private int _duration;
+        private PlaybackState _playbackState;
 
-        public int TotalTracksCount => throw new NotImplementedException();
+        #endregion
 
-        public ICore SourceCore => throw new NotImplementedException();
+        public IArtist Artist => _artist;
 
-        public string Id => throw new NotImplementedException();
+        public IReadOnlyList<ITrack> Tracks => _tracks;
 
-        public Uri Url => throw new NotImplementedException();
+        public int TotalTracksCount => _totalTracksCount;
 
-        public string Name => throw new NotImplementedException();
+        public ICore SourceCore => _sourceCore;
 
-        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
+        public string Id => _id;
 
-        public string Description => throw new NotImplementedException();
+        public Uri Url => _url;
+
+        public string Name => _name;
+
+        public IReadOnlyList<IImage> Images => _images;
+
+        public string Description => _description;
 
         public PlaybackState PlaybackState => throw new NotImplementedException();
 
@@ -34,7 +52,7 @@ namespace StrixMusic.Core.Mock.Implementations
 
         public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => throw new NotImplementedException();
 
-        public int TotalRelatedItemsCount => throw new NotImplementedException();
+        public int TotalRelatedItemsCount => _totalRelatedItemsCount;
 
         public event EventHandler<CollectionChangedEventArgs<ITrack>> TracksChanged;
         public event EventHandler<PlaybackState> PlaybackStateChanged;

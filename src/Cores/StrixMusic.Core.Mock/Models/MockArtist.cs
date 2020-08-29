@@ -6,37 +6,55 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.Mock.Implementations
+namespace StrixMusic.Core.Mock.Models
 {
     public class MockArtist : IArtist
     {
-        public IReadOnlyList<IAlbum> Albums => throw new NotImplementedException();
+        #region Fields
 
-        public int TotalAlbumsCount => throw new NotImplementedException();
+        private List<IAlbum> _albums = new List<IAlbum>();
+        private List<ITrack> _itracks = new List<ITrack>();
+        private List<IImage> _images = new List<IImage>();
+        private List<IPlayableCollectionGroup> _relatedItems = new List<IPlayableCollectionGroup>();
+        private string _id;
+        private Uri _url;
+        private string _name;
+        private string _description;
+        private TimeSpan _duration;
+        private PlaybackState _playbackState;
+        private TimeSpan _timeSpan;
+        private int _totalTracksCount;
+        private int _totalAlbumCount;
 
-        public IReadOnlyList<ITrack> Tracks => throw new NotImplementedException();
+        #endregion
 
-        public int TotalTracksCount => throw new NotImplementedException();
+        public IReadOnlyList<IAlbum> Albums => _albums;
+
+        public int TotalAlbumsCount => _totalTracksCount;
+
+        public IReadOnlyList<ITrack> Tracks => _itracks;
+
+        public int TotalTracksCount => _totalTracksCount;
 
         public ICore SourceCore => throw new NotImplementedException();
 
-        public string Id => throw new NotImplementedException();
+        public string Id => _id;
 
-        public Uri Url => throw new NotImplementedException();
+        public Uri Url => _url;
 
-        public string Name => throw new NotImplementedException();
+        public string Name => _name;
 
-        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
+        public IReadOnlyList<IImage> Images => _images;
 
-        public string Description => throw new NotImplementedException();
+        public string Description => _description;
 
-        public PlaybackState PlaybackState => throw new NotImplementedException();
+        public PlaybackState PlaybackState => _playbackState;
 
-        public TimeSpan Duration => throw new NotImplementedException();
+        public TimeSpan Duration => _duration;
 
-        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => throw new NotImplementedException();
+        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => _relatedItems;
 
-        public int TotalRelatedItemsCount => throw new NotImplementedException();
+        public int TotalRelatedItemsCount => _totalTracksCount;
 
         public event EventHandler<CollectionChangedEventArgs<IAlbum>> AlbumsChanged;
         public event EventHandler<CollectionChangedEventArgs<ITrack>> TracksChanged;

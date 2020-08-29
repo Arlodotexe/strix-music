@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using StrixMusic.Core.Mock.Implementations;
+using StrixMusic.Core.Mock.Models;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
