@@ -1,21 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Core.Files;
 using StrixMusic.Helpers;
-using StrixMusic.Models;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
-using StrixMusic.Shell.Default.Assembly;
 using StrixMusic.Shell.Default.Controls;
 using StrixMusic.ViewModels;
+using System;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -82,9 +76,6 @@ namespace StrixMusic
 
         private async Task Initialize()
         {
-            // Load shells
-            Ioc.Default.GetService<FileCore>();
-
             // TODO: Remove or replace.
             await SetupPreferredShell();
 
