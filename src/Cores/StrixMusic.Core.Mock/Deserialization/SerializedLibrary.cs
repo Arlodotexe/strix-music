@@ -1,15 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using StrixMusic.Core.Mock.Models;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StrixMusic.Core.Mock.Deserialization
 {
+    /// <summary>
+    /// The lists of tracks in the dummy core's library.
+    /// </summary>
     public class SerializedLibrary : IPlayableCollectionBase
     {
         /// <summary>

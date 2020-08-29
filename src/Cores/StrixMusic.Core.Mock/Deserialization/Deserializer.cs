@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using StrixMusic.Core.Mock.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Newtonsoft.Json;
 using StrixMusic.Core.Mock.Deserialization;
+using StrixMusic.Core.Mock.Models;
 
 namespace StrixMusic.Core.Mock.Deserialization
 {
@@ -24,6 +24,7 @@ namespace StrixMusic.Core.Mock.Deserialization
             var lib = JsonConvert.DeserializeObject<SerializedLibrary>(resource);
             return GraphLibrary(lib);
         }
+
         private static SerializedLibrary GraphLibrary(SerializedLibrary library)
         {
             var test = library.Albums;
