@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using StrixMusic.Core.Files;
 using StrixMusic.Helpers;
 using StrixMusic.Models;
 using StrixMusic.Services.Settings;
@@ -81,6 +82,9 @@ namespace StrixMusic
 
         private async Task Initialize()
         {
+            // Load shells
+            Ioc.Default.GetService<FileCore>();
+
             // TODO: Remove or replace.
             await SetupPreferredShell();
 

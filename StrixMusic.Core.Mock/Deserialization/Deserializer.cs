@@ -29,22 +29,22 @@ namespace StrixMusic.Core.Mock.Deserialization
             var albums = new Dictionary<string, MockAlbum>();
             var tracks = new Dictionary<string, MockTrack>();
 
-            foreach (var artist in library.Artists!)
+            foreach (var artist in library.Artists)
             {
                 artists.Add(artist.Id, artist);
             }
 
-            foreach (var album in library.Albums!)
+            foreach (var album in library.Albums)
             {
                 albums.Add(album.Id, album);
-                album.Artist = artists[album.Id];
-                album.Artist.Albums.Add(album);
+                album.MockArtist = artists[album.Id];
+                album.MockArtist.MockAlbums.Add(album);
             }
 
-            foreach (var track in library.Tracks!)
+            foreach (var track in library.Tracks)
             {
                 tracks.Add(track.Id, track);
-                track.Album = albums[track.AlbumId];
+                track.MockAlbum = albums[track.AlbumId];
                 track.DummyArtist = artists[track.ArtistId];
             }
 

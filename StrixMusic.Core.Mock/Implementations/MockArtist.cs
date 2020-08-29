@@ -10,7 +10,9 @@ namespace StrixMusic.Core.Mock.Implementations
 {
     public class MockArtist : IArtist
     {
-        public IReadOnlyList<IAlbum> Albums => throw new NotImplementedException();
+        public IReadOnlyList<IAlbum> Albums => MockAlbums;
+
+        public List<MockAlbum> MockAlbums { get; set; }
 
         public int TotalAlbumsCount => throw new NotImplementedException();
 
@@ -47,12 +49,12 @@ namespace StrixMusic.Core.Mock.Implementations
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
         public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
 
-        public Task PauseAsync()
+        public Task PlayAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task PlayAsync()
+        public Task PauseAsync()
         {
             throw new NotImplementedException();
         }

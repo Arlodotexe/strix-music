@@ -1,8 +1,10 @@
-﻿using StrixMusic.CoreInterfaces;
+﻿using Newtonsoft.Json;
+using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,7 +16,12 @@ namespace StrixMusic.Core.Mock.Implementations
 
         public IReadOnlyList<IArtist> Artists => throw new NotImplementedException();
 
-        public IAlbum Album => throw new NotImplementedException();
+        public IAlbum Album => Album;
+
+        [JsonProperty("album_id")]
+        public string AlbumId { get; set; }
+
+        public MockAlbum MockAlbum { get; set; }
 
         public DateTime? DatePublished => throw new NotImplementedException();
 
@@ -50,13 +57,17 @@ namespace StrixMusic.Core.Mock.Implementations
 
         public int TotalRelatedItemsCount => throw new NotImplementedException();
 
+        TrackType ITrack.Type => throw new NotImplementedException();
+
+        CultureInfo ITrack.Language => throw new NotImplementedException();
+
         public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged;
         public event EventHandler<CollectionChangedEventArgs<string>> GenresChanged;
         public event EventHandler<IAlbum> AlbumChanged;
         public event EventHandler<DateTime?> DatePublishedChanged;
         public event EventHandler<int?> TrackNumberChanged;
         public event EventHandler<int?> PlayCountChanged;
-        public event EventHandler<string> LanguageChanged;
+        public event EventHandler<CultureInfo> LanguageChanged;
         public event EventHandler<ILyrics> LyricsChanged;
         public event EventHandler<bool> IsExplicitChanged;
         public event EventHandler<PlaybackState> PlaybackStateChanged;
@@ -66,12 +77,12 @@ namespace StrixMusic.Core.Mock.Implementations
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
         public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
 
-        public Task PauseAsync()
+        public Task PlayAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task PlayAsync()
+        public Task PauseAsync()
         {
             throw new NotImplementedException();
         }
