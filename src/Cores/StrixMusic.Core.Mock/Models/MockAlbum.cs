@@ -25,12 +25,26 @@ namespace StrixMusic.Core.Mock.Models
         private int _duration;
         private PlaybackState _playbackState;
 
+        /// <summary>
+        /// Init MockAlbum
+        /// </summary>
+        public MockAlbum()
+        {
+            _totalTracksCount = 10;
+            _id = "33";
+            _url = new Uri("http://test.com");
+            _name = "Test name";
+            _description = "Test description";
+            _totalRelatedItemsCount = 23;
+            _playbackState = PlaybackState.None;
+        }
+
         /// <inheritdoc cref="IAlbum.Artist"/>
         public IArtist Artist => _artist;
 
         /// <inheritdoc cref="IAlbum.Tracks"/>
         public IReadOnlyList<ITrack> Tracks => _tracks;
-     
+
         /// <inheritdoc cref="IAlbum.TotalTracksCount"/>
         public int TotalTracksCount => _totalTracksCount;
 
@@ -111,7 +125,14 @@ namespace StrixMusic.Core.Mock.Models
         /// <inheritdoc cref="IAlbum.PopulateTracksAsync"/>
         public Task PopulateTracksAsync(int limit, int offset = 0)
         {
-            throw new NotImplementedException();
+            _tracks = new List<ITrack>()
+            {
+                new MockTrack(),
+                new MockTrack(),
+                new MockTrack(),
+                new MockTrack(),
+            };
+            return Task.CompletedTask;
         }
     }
 }

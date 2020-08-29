@@ -20,14 +20,16 @@ namespace StrixMusic.Core.Mock.Deserialization
         /// <returns>The <see cref="SerializedLibrary"/> of the DummyCore.</returns>
         public static SerializedLibrary DeserializeLibrary()
         {
-            var resource = File.ReadAllText("Library.json");
+            var resource = GetManifestResourceString(Assembly.GetExecutingAssembly(), "Strix.Music.Core.Library.json");
             var lib = JsonConvert.DeserializeObject<SerializedLibrary>(resource);
-            return GraphLibrary(lib);
+            return lib;
         }
 
         private static SerializedLibrary GraphLibrary(SerializedLibrary library)
         {
-            var test = library.Albums;
+            var artists = new Dictionary<string, MockArtist>();
+            var albums = new Dictionary<string, MockAlbum>();
+            var tracks = new Dictionary<string, MockTrack>();
             return library;
         }
 

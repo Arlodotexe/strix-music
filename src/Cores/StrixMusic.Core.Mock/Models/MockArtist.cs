@@ -25,6 +25,20 @@ namespace StrixMusic.Core.Mock.Models
         private int _totalTracksCount;
         private int _totalAlbumCount;
 
+        ///<summary>
+        /// Init Artist
+        /// </summary>
+        public MockArtist()
+        {
+            _url = new Uri("http://test.com");
+            _name = "Test artist name";
+            _description = "test description";
+            _duration = TimeSpan.FromMilliseconds(90000);
+            _playbackState = PlaybackState.None;
+            _totalAlbumCount = 12;
+            _totalAlbumCount = 44;
+        }
+
         /// <inheritdoc cref="IAlbum.Albums"/>
         public IReadOnlyList<IAlbum> Albums => _albums;
 

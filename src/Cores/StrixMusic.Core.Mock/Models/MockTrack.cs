@@ -33,6 +33,20 @@ namespace StrixMusic.Core.Mock.Models
         private List<IPlayableCollectionGroup> _relatedItems = new List<IPlayableCollectionGroup>();
         private int _totalRelatedItemsCount;
 
+        ///<summary>
+        /// Init Track
+        /// </summary>
+        public MockTrack()
+        {
+            _playCount = 10;
+            _language = "en";
+            _isExplicit = false;
+            _id = "45";
+            _url = new Uri("http://test.com");
+            _playCount = 12;
+            _duration = TimeSpan.FromMinutes(1);
+        }
+
         /// <inheritdoc cref="ITrack.Type"/>
         public string Type => _type;
 
@@ -85,13 +99,13 @@ namespace StrixMusic.Core.Mock.Models
         public PlaybackState PlaybackState => _playBackState;
 
         /// <inheritdoc cref="ITrack.Duration"/>
-        public TimeSpan Duration =>_duration;
+        public TimeSpan Duration => _duration;
 
         /// <inheritdoc cref="ITrack.RelatedItems"/>
         public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => _relatedItems;
 
         /// <inheritdoc cref="ITrack.TotalRelatedItemsCount"/>
-        public int TotalRelatedItemsCount =>_totalRelatedItemsCount;
+        public int TotalRelatedItemsCount => _totalRelatedItemsCount;
 
         /// <inheritdoc cref="ITrack.Type"/>
         TrackType ITrack.Type => throw new NotImplementedException();

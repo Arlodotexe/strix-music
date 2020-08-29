@@ -6,6 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Library.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Library.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\..\..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
@@ -19,12 +29,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Library.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
