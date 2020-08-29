@@ -20,7 +20,7 @@
     <DataTemplate x:Key="DefaultHomeTemplate" x:DataType="bindables:BindableLibrary">
         <UserControl>
             <Grid>
-                <!--<Pivot ItemsSource="{x:Bind Items, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
+                <Pivot ItemsSource="{x:Bind Children, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
                     <Pivot.Title>
                         <TextBlock Text="Home"/>
                     </Pivot.Title>
@@ -29,7 +29,7 @@
                             <TextBlock Text="{x:Bind Name}"/>
                         </DataTemplate>
                     </Pivot.HeaderTemplate>
-                    --><!--<PivotItem Header="Overview">
+                    <!--<PivotItem Header="Overview">
                     </PivotItem>
                     <PivotItem Header="Songs">
                         <local:TrackListControl/>
@@ -39,8 +39,8 @@
                     </PivotItem>
                     <PivotItem Header="Artists">
                         <local:PlayableCollectionListControl/>
-                    </PivotItem>--><!--
-                </Pivot>-->
+                    </PivotItem>-->
+                </Pivot>
             </Grid>
         </UserControl>
     </DataTemplate>

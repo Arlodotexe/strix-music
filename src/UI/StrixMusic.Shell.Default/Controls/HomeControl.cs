@@ -13,6 +13,6 @@ namespace StrixMusic.Shell.Default.Controls
             this.DefaultStyleKey = typeof(HomeControl);
         }
 
-        private BindableCollectionGroup? ViewModel => DataContext as BindableCollectionGroup;
+        private BindableLibrary? ViewModel => DataContext as BindableLibrary;
     }
 }

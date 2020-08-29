@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Core.Dummy;
+using StrixMusic.Core.Files;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services;
 using StrixMusic.Services.Settings;
@@ -24,7 +24,7 @@ namespace StrixMusic.Shared
                 services.AddSingleton<ISuperShellService, SuperShellService>();
                 services.AddSingleton<IFileSystemService, FileSystemService>();
 
-                // services.AddSingleton<ICore, DummyCore>();
+                //services.AddSingleton<ICore, FileCore>();
                 services.AddSingleton<MainViewModel>();
             });
         }
