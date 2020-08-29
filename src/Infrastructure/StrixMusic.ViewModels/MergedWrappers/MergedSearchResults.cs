@@ -44,6 +44,7 @@ namespace StrixMusic.ViewModels.MergedWrappers
                 Duration += item.Duration;
 
                 // todo: merge data as needed
+                // todo 2: Don't do this. Cores shouldn't supply data unless it's requested, otherwise we'd have data scattered around.
                 _playlists.AddRange(item.Playlists);
                 _tracks.Union(item.Tracks);
                 _albums.AddRange(item.Albums);
@@ -194,25 +195,27 @@ namespace StrixMusic.ViewModels.MergedWrappers
         }
 
         /// <inheritdoc/>
-        public Task PopulateAlbumsAsync(int limit, int offset = 0)
+        public async Task PopulateAlbumsAsync(int limit, int offset = 0)
         {
-            // The plan for limit:
+            // The items in this Merged source are its own thing once we merge it, so any offset / limit passed here are completely disregarding the original source
+
+            // For offset
+            // Create a new collection that contains all data from the merged sources, even for data we don't have. Store the original offset of each and get it as needed.
+
+            // For limit:
             // Check how many items are left in each core.
             // For the limit that was requested, get the number of items we can get per core (limitPerSource).
             // The remainder gets pulled from the highest ranking preferred core, moving to the next highest ranking core if there are no remaining items.
             var limitRemainder = limit % Sources.Count;
             var limitPerSource = (limit - limitRemainder) / Sources.Count;
 
-            // The plan for offset:
-            // Todo
-            Parallel.ForEach(Sources, source =>
+            Parallel.ForEach(Sources, async source =>
             {
                 var remainingItems = source.TotalAlbumsCount - source.Albums.Count();
 
                 if (remainingItems > 0)
-                    source.PopulateAlbumsAsync(limitPerSource);
+                    await source.PopulateAlbumsAsync(limitPerSource);
             });
-            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
