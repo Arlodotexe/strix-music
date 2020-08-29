@@ -128,7 +128,8 @@ namespace StrixMusic.ViewModels.Bindables
         private BindableUserProfile? _owner;
 
         /// <inheritdoc cref="IPlaylist.Owner"/>
-        public BindableUserProfile? Owner {
+        public BindableUserProfile? Owner 
+        {
             get => _owner;
             set => SetProperty(ref _owner, value);
         }

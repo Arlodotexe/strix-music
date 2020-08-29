@@ -1,15 +1,14 @@
-﻿using StrixMusic.CoreInterfaces;
-using StrixMusic.CoreInterfaces.Enums;
-using StrixMusic.CoreInterfaces.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using StrixMusic.CoreInterfaces;
+using StrixMusic.CoreInterfaces.Enums;
+using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.ViewModels.MergedWrappers
 {
-
     /// <summary>
     /// A concrete class that merged multiple <see cref="ISearchResults"/>
     /// </summary>
@@ -39,7 +38,6 @@ namespace StrixMusic.ViewModels.MergedWrappers
         private void Item_ArtistsChanged(object sender, CollectionChangedEventArgs<IArtist> e)
         {
             // TODO: Handle merging
-
             foreach (var item in e.AddedItems)
             {
                 _artists.Add(item);

@@ -195,7 +195,7 @@ namespace StrixMusic.ViewModels.MergedWrappers
         }
 
         /// <inheritdoc/>
-        public async Task PopulateAlbumsAsync(int limit, int offset = 0)
+        public Task PopulateAlbumsAsync(int limit, int offset = 0)
         {
             // The items in this Merged source are its own thing once we merge it, so any offset / limit passed here are completely disregarding the original source
 
@@ -216,6 +216,8 @@ namespace StrixMusic.ViewModels.MergedWrappers
                 if (remainingItems > 0)
                     await source.PopulateAlbumsAsync(limitPerSource);
             });
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
