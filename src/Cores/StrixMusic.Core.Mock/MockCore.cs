@@ -46,7 +46,6 @@ namespace StrixMusic.Core.Mock
 
         public Task InitAsync()
         {
-           
             return Task.CompletedTask;
         }
     }
