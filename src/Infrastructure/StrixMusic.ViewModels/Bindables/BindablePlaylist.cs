@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace StrixMusic.ViewModels.Bindables
                 _owner = new BindableUserProfile(_playlist.Owner);
             Tracks = new ObservableCollection<BindableTrack>(_playlist.Tracks.Select(x => new BindableTrack(x)));
             Images = new ObservableCollection<IImage>(_playlist.Images);
-            RelatedItems = new ObservableCollection<BindableCollectionGroup>(_playlist.RelatedItems.Select(x => new BindableCollectionGroup(x)));
+            RelatedItems = new BindableCollectionGroup(_playlist.RelatedItems);
             SourceCore = new BindableCore(_playlist.SourceCore);
 
             AttachEvents();
@@ -44,7 +45,6 @@ namespace StrixMusic.ViewModels.Bindables
             _playlist.NameChanged += Playlist_NameChanged;
             _playlist.OwnerChanged += Playlist_OwnerChanged;
             _playlist.PlaybackStateChanged += Playlist_PlaybackStateChanged;
-            _playlist.RelatedItemsChanged += Playlist_RelatedItemsChanged;
             _playlist.TracksChanged += Playlist_TracksChanged;
             _playlist.UrlChanged += Playlist_UrlChanged;
         }
@@ -56,7 +56,6 @@ namespace StrixMusic.ViewModels.Bindables
             _playlist.NameChanged -= Playlist_NameChanged;
             _playlist.OwnerChanged -= Playlist_OwnerChanged;
             _playlist.PlaybackStateChanged -= Playlist_PlaybackStateChanged;
-            _playlist.RelatedItemsChanged -= Playlist_RelatedItemsChanged;
             _playlist.TracksChanged -= Playlist_TracksChanged;
             _playlist.UrlChanged -= Playlist_UrlChanged;
         }
@@ -76,19 +75,6 @@ namespace StrixMusic.ViewModels.Bindables
             foreach (var item in e.RemovedItems)
             {
                 Tracks.Remove(new BindableTrack(item));
-            }
-        }
-
-        private void Playlist_RelatedItemsChanged(object sender, CollectionChangedEventArgs<IPlayableCollectionGroup> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                RelatedItems.Add(new BindableCollectionGroup(item));
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                RelatedItems.Remove(new BindableCollectionGroup(item));
             }
         }
 
@@ -181,10 +167,7 @@ namespace StrixMusic.ViewModels.Bindables
         public TimeSpan Duration => _playlist.Duration;
 
         /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItems"/>
-        public ObservableCollection<BindableCollectionGroup> RelatedItems { get; }
-
-        /// <inheritdoc cref="IRelatedCollectionGroups.TotalRelatedItemsCount"/>
-        public int TotalRelatedItemsCount => _playlist.TotalRelatedItemsCount;
+        public BindableCollectionGroup RelatedItems { get; }
 
         /// <inheritdoc cref="IPlaylist.OwnerChanged"/>
         public event EventHandler<IUserProfile> OwnerChanged
@@ -284,20 +267,6 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItemsChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged
-        {
-            add
-            {
-                _playlist.RelatedItemsChanged += value;
-            }
-
-            remove
-            {
-                _playlist.RelatedItemsChanged -= value;
-            }
-        }
-
         /// <summary>
         /// Attempts to pause the playlist.
         /// </summary>
@@ -320,14 +289,8 @@ namespace StrixMusic.ViewModels.Bindables
             return _playlist.PlayAsync();
         }
 
-        /// <inheritdoc cref="IRelatedCollectionGroups.PopulateRelatedItemsAsync/>
-        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
-        {
-            return _playlist.PopulateRelatedItemsAsync(limit, offset);
-        }
-
         /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync"/>
-        public Task PopulateTracksAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             return _playlist.PopulateTracksAsync(limit, offset);
         }

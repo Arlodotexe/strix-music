@@ -195,17 +195,15 @@ namespace StrixMusic.ViewModels.MergedWrappers
         }
 
         /// <inheritdoc/>
-        public Task PopulateAlbumsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
             // The items in this Merged source are its own thing once we merge it, so any offset / limit passed here are completely disregarding the original source
 
-            // For offset
             // Create a new collection that contains all data from the merged sources, even for data we don't have. Store the original offset of each and get it as needed.
 
-            // For limit:
-            // Check how many items are left in each core.
-            // For the limit that was requested, get the number of items we can get per core (limitPerSource).
-            // The remainder gets pulled from the highest ranking preferred core, moving to the next highest ranking core if there are no remaining items.
+            // Two ways of sorting the data:
+            // Alternating until all sources run out
+            // In order by rank
             var limitRemainder = limit % Sources.Count;
             var limitPerSource = (limit - limitRemainder) / Sources.Count;
 
@@ -217,29 +215,29 @@ namespace StrixMusic.ViewModels.MergedWrappers
                     await source.PopulateAlbumsAsync(limitPerSource);
             });
 
-            return Task.CompletedTask;
+            return Task.FromResult(Albums);
         }
 
         /// <inheritdoc/>
-        public Task PopulateArtistsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateChildrenAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulatePlaylistsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateTracksAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

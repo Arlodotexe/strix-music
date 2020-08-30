@@ -20,10 +20,10 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         int TotalTracksCount { get; }
 
         /// <summary>
-        /// Populates a set of <see cref="IArtist.TopTracks"/> into the collection.
+        /// Populates a set of <see cref="ITrack"/> into <see cref="Tracks"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PopulateTracksAsync(int limit, int offset = 0);
+        Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0);
 
         /// <summary>
         /// Fires when <see cref="Tracks"/> changes.

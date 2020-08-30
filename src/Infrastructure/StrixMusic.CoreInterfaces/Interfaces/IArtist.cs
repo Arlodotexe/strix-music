@@ -7,7 +7,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Interface representing an artist.
     /// </summary>
-    public interface IArtist : IAlbumCollection, ITrackCollection, IRelatedCollectionGroups
+    public interface IArtist : IAlbumCollection, ITrackCollection
     {
+        /// <summary>
+        /// A <see cref="IPlayable"/> of items related to this item.
+        /// </summary>
+        IPlayableCollectionGroup RelatedItems { get; }
     }
 }

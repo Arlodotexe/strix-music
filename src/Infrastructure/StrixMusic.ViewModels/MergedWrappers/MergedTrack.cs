@@ -104,10 +104,7 @@ namespace StrixMusic.ViewModels.MergedWrappers
         public TimeSpan Duration => _preferredSource.Duration;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => _preferredSource.RelatedItems;
-
-        /// <inheritdoc/>
-        public int TotalRelatedItemsCount => _preferredSource.TotalRelatedItemsCount;
+        public IPlayableCollectionGroup RelatedItems => _preferredSource.RelatedItems;
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged
@@ -306,20 +303,6 @@ namespace StrixMusic.ViewModels.MergedWrappers
         }
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged
-        {
-            add
-            {
-                _preferredSource.RelatedItemsChanged += value;
-            }
-
-            remove
-            {
-                _preferredSource.RelatedItemsChanged -= value;
-            }
-        }
-
-        /// <inheritdoc/>
         public Task PauseAsync()
         {
             return _preferredSource.PauseAsync();
@@ -329,12 +312,6 @@ namespace StrixMusic.ViewModels.MergedWrappers
         public Task PlayAsync()
         {
             return _preferredSource.PlayAsync();
-        }
-
-        /// <inheritdoc/>
-        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
-        {
-            return _preferredSource.PopulateRelatedItemsAsync(limit, offset);
         }
 
         /// <summary>

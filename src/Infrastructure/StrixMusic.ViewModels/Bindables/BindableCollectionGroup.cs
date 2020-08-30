@@ -325,31 +325,31 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IPlayableCollectionGroup.PopulateChildrenAsync(int, int)"/>
-        public Task PopulateChildrenAsync(int limit, int offset)
+        public Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset)
         {
             return _collectionGroupBase.PopulateChildrenAsync(limit, offset);
         }
 
         /// <inheritdoc cref="IPlaylistCollection.PopulatePlaylistsAsync(int, int)"/>
-        public Task PopulatePlaylistsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
         {
             return _collectionGroupBase.PopulatePlaylistsAsync(limit, offset);
         }
 
         /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
-        public Task PopulateTracksAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             return _collectionGroupBase.PopulateTracksAsync(limit, offset);
         }
 
         /// <inheritdoc cref="IAlbumCollection.PopulateAlbumsAsync(int, int)"/>
-        public Task PopulateAlbumsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
             return _collectionGroupBase.PopulateAlbumsAsync(limit, offset);
         }
 
         /// <inheritdoc cref="IArtistCollection.PopulateArtistsAsync(int, int)"/>
-        public Task PopulateArtistsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
         {
             return _collectionGroupBase.PopulateArtistsAsync(limit, offset);
         }
