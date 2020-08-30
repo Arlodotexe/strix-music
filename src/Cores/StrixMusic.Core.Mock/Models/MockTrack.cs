@@ -3,188 +3,139 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.Core.Mock.Models
 {
-    /// <inheritdoc cref="ITrack"/>
+    /// <inheritdoc />
     public class MockTrack : ITrack
     {
-        private string _type;
-        private List<IArtist> _artists = new List<IArtist>();
-        private IAlbum _albums;
-        private DateTime? _datePublished;
-        private List<string> _genres = new List<string>();
-        private int? _trackNumber;
-        private int? _playCount;
-        private string _language;
-        private ILyrics _lyrics;
-        private bool _isExplicit;
-        private ICore _sourceCore;
-        private string _id;
-        private Uri _url;
-        private string _name;
-        private List<IImage> _images = new List<IImage>();
-        private string _description;
-        private PlaybackState _playBackState;
-        private TimeSpan _duration;
-        private List<IPlayableCollectionGroup> _relatedItems = new List<IPlayableCollectionGroup>();
-        private int _totalRelatedItemsCount;
+        /// <inheritdoc/>
+        [JsonProperty("id")]
+        public string Id { get; set; } = string.Empty;
 
-        ///<summary>
-        /// Init Track
-        /// </summary>
-        public MockTrack()
-        {
-            _playCount = 10;
-            _language = "en";
-            _isExplicit = false;
-            _id = "45";
-            _url = new Uri("http://test.com");
-            _playCount = 12;
-            _duration = TimeSpan.FromMinutes(1);
-        }
+        /// <inheritdoc/>
+        [JsonProperty("title")]
+        public string TitleStr { get; set; } = string.Empty;
 
-        /// <inheritdoc cref="ITrack.Type"/>
-        public string Type => _type;
+        /// <inheritdoc/>
+        public TrackType Type => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.Artists"/>
-        public IReadOnlyList<IArtist> Artists => _artists;
+        /// <inheritdoc/>
+        public IReadOnlyList<IArtist> Artists => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.Album"/>
-        public IAlbum Album => _albums;
+        /// <inheritdoc/>
+        public IAlbum Album => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.DatePublished"/>
-        public DateTime? DatePublished => _datePublished;
+        /// <inheritdoc/>
+        public DateTime? DatePublished => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.Genres"/>
-        public IReadOnlyList<string> Genres => _genres;
+        /// <inheritdoc/>
+        public IReadOnlyList<string> Genres => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.TrackNumber"/>
-        public int? TrackNumber => _trackNumber;
+        /// <inheritdoc/>
+        public int? TrackNumber => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.PlayCount"/>
-        public int? PlayCount => _playCount;
+        /// <inheritdoc/>
+        public int? PlayCount => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.Language"/>
-        public string Language => _language;
+        /// <inheritdoc/>
+        public CultureInfo Language => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.Lyrics"/>
-        public ILyrics Lyrics => _lyrics;
+        /// <inheritdoc/>
+        public ILyrics Lyrics => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.IsExplicit"/>
-        public bool IsExplicit => _isExplicit;
+        /// <inheritdoc/>
+        public bool IsExplicit => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.SourceCore"/>
-        public ICore SourceCore => _sourceCore;
+        /// <inheritdoc/>
+        public ICore SourceCore => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.Id"/>
-        public string Id => _id;
+        /// <inheritdoc/>
+        public Uri Url => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.Url"/>
-        public Uri Url => _url;
+        /// <inheritdoc/>
+        public string Name => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.Name"/>
-        public string Name => _name;
+        /// <inheritdoc/>
+        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.Images"/>
-        public IReadOnlyList<IImage> Images => _images;
+        /// <inheritdoc/>
+        public string Description => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.Description"/>
-        public string Description => _description;
+        /// <inheritdoc/>
+        public PlaybackState PlaybackState => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.PlaybackState"/>
-        public PlaybackState PlaybackState => _playBackState;
+        /// <inheritdoc/>
+        public TimeSpan Duration => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.Duration"/>
-        public TimeSpan Duration => _duration;
+        /// <inheritdoc/>
+        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.RelatedItems"/>
-        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => _relatedItems;
+        /// <inheritdoc/>
+        public int TotalRelatedItemsCount => throw new NotImplementedException();
 
-        /// <inheritdoc cref="ITrack.TotalRelatedItemsCount"/>
-        public int TotalRelatedItemsCount => _totalRelatedItemsCount;
-
-        /// <inheritdoc cref="ITrack.Type"/>
-        TrackType ITrack.Type => throw new NotImplementedException();
-
-        /// <inheritdoc cref="ITrack.Language"/>
-        CultureInfo ITrack.Language => throw new NotImplementedException();
-
-        /// <inheritdoc cref="ITrack.ArtistsChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged;
 
-        /// <inheritdoc cref="ITrack.GenresChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<string>> GenresChanged;
 
-        /// <inheritdoc cref="ITrack.AlbumChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<IAlbum> AlbumChanged;
 
-        /// <inheritdoc cref="ITrack.DatePublishedChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<DateTime?> DatePublishedChanged;
 
-        /// <inheritdoc cref="ITrack.TrackNumberChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<int?> TrackNumberChanged;
 
-        /// <inheritdoc cref="ITrack.PlayCountChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<int?> PlayCountChanged;
 
-        /// <inheritdoc cref="ITrack.LanguageChanged"/>
-        public event EventHandler<string> LanguageChanged;
+        /// <inheritdoc/>
+        public event EventHandler<CultureInfo> LanguageChanged;
 
-        /// <inheritdoc cref="ITrack.LyricsChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<ILyrics> LyricsChanged;
 
-        /// <inheritdoc cref="ITrack.IsExplicitChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<bool> IsExplicitChanged;
 
-        /// <inheritdoc cref="ITrack.PlaybackStateChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<PlaybackState> PlaybackStateChanged;
 
-        /// <inheritdoc cref="ITrack.NameChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<string> NameChanged;
 
-        /// <inheritdoc cref="ITrack.DescriptionChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<string> DescriptionChanged;
 
-        /// <inheritdoc cref="ITrack.UrlChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<Uri> UrlChanged;
 
-        /// <inheritdoc cref="ITrack.ImagesChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
 
-        /// <inheritdoc cref="ITrack.RelatedItemsChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
 
-        /// <inheritdoc cref="ITrack.LanguageChanged"/>
-        event EventHandler<CultureInfo> ITrack.LanguageChanged
-        {
-            add
-            {
-                throw new NotImplementedException();
-            }
-
-            remove
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        /// <inheritdoc cref="ITrack.PauseAsync"/>
+        /// <inheritdoc/>
         public Task PauseAsync()
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="ITrack.PlayAsync"/>
+        /// <inheritdoc/>
         public Task PlayAsync()
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="ITrack.PopulateRelatedItemsAsync"/>
+        /// <inheritdoc/>
         public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
