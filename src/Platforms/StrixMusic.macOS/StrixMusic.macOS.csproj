@@ -102,17 +102,13 @@
     <ImageAsset Include="Assets.xcassets\unologo.imageset\unoplatform.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\StrixMusic.Core.Mock\StrixMusic.Core.Mock.csproj">
-      <Project>{f3c5efd0-dbdc-41e0-874e-46ddfe5c3410}</Project>
-      <Name>StrixMusic.Core.Mock</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.Dummy\StrixMusic.Core.Dummy.csproj">
-      <Project>{60f40d66-ad18-4822-b4bc-2535dc32ac85}</Project>
-      <Name>StrixMusic.Core.Dummy</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.Files\StrixMusic.Core.Files.csproj">
       <Project>{dbf0c623-33cf-4db6-bb3b-353045678a70}</Project>
       <Name>StrixMusic.Core.Files</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Core.Mock\StrixMusic.Core.Mock.csproj">
+      <Project>{d0618335-d56c-419d-b9fa-98e475338efc}</Project>
+      <Name>StrixMusic.Core.Mock</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj">
       <Project>{60ee2300-f562-416c-9458-dbea41389d8b}</Project>
