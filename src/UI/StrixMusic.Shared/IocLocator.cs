@@ -24,8 +24,8 @@ namespace StrixMusic.Shared
                 var textStorageService = new TextStorageService();
                 var settingsService = new DefaultSettingsService(textStorageService);
 
-                services.AddSingleton<ISettingsService>(settingsService);
                 services.AddSingleton<ITextStorageService>(textStorageService);
+                services.AddSingleton<ISettingsService>(settingsService);
                 services.AddSingleton<ISuperShellService, SuperShellService>();
                 services.AddSingleton<IFileSystemService, FileSystemService>();
 

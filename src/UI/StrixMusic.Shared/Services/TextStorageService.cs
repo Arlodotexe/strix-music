@@ -35,15 +35,27 @@ namespace StrixMusic.Services
         /// <inheritdoc />
         public async Task<bool> FileExistsAsync(string filename, string path)
         {
+            StorageFolder pathHandle;
             try
             {
-                var file = await _localFolder.GetFileAsync(path + filename);
-                return file != null;
+                pathHandle = await _localFolder.GetFolderAsync(path);
+            }
+            catch (Exception)
+            {
+                pathHandle = await _localFolder.CreateFolderAsync(path);
+            }
+
+            StorageFile fileHandle;
+            try
+            {
+                fileHandle = await pathHandle.GetFileAsync(filename);
             }
             catch (Exception)
             {
                 return false;
             }
+
+            return fileHandle != null;
         }
 
         /// <inheritdoc />
@@ -64,16 +76,27 @@ namespace StrixMusic.Services
         /// <inheritdoc />
         public async Task<string> GetValueAsync(string filename, string path)
         {
+            StorageFolder pathHandle;
             try
             {
-                var file = await _localFolder.GetFileAsync(path + filename);
-                var value = await FileIO.ReadTextAsync(file);
-                return value;
+                pathHandle = await _localFolder.GetFolderAsync(path);
             }
             catch (Exception)
             {
-                return null!;
+                pathHandle = await _localFolder.CreateFolderAsync(path);
             }
+
+            StorageFile fileHandle;
+            try
+            {
+                fileHandle = await pathHandle.GetFileAsync(filename);
+            }
+            catch (Exception)
+            {
+                fileHandle = await pathHandle.CreateFileAsync(filename);
+            }
+
+            return await FileIO.ReadTextAsync(fileHandle);
         }
 
         /// <inheritdoc />
@@ -140,7 +163,7 @@ namespace StrixMusic.Services
             }
             catch (Exception)
             {
-                fileHandle = await _localFolder.CreateFileAsync(filename);
+                fileHandle = await pathHandle.CreateFileAsync(filename);
             }
 
             await FileIO.WriteTextAsync(fileHandle, value);
