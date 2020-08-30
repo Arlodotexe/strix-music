@@ -93,7 +93,7 @@ namespace StrixMusic.Services.Settings
             Task.Run(async () =>
             {
                 // Store the new value
-                if (!await _textStorageService.FileExistsAsync(key))
+                if (!await _textStorageService.FileExistsAsync(key, identifier))
                 {
                     await _textStorageService.SetValueAsync(key, serialized, identifier);
                     SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
@@ -109,7 +109,7 @@ namespace StrixMusic.Services.Settings
         /// <inheritdoc/>
         public virtual async Task<T> GetValue<T>(string key, string identifier, bool fallback = false)
         {
-            string result = await _textStorageService.GetValueAsync(key);
+            string result = await _textStorageService.GetValueAsync(key, identifier);
 
             T obj;
             try
@@ -137,6 +137,6 @@ namespace StrixMusic.Services.Settings
         public abstract string Id { get; }
 
         /// <inheritdoc cref="ISettingsService.SettingChanged"/>
-        public virtual event EventHandler<SettingChangedEventArgs>? SettingChanged;
+        public event EventHandler<SettingChangedEventArgs>? SettingChanged;
     }
 }

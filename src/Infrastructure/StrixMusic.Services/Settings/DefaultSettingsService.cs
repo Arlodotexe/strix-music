@@ -24,8 +24,5 @@ namespace StrixMusic.Services.Settings
 
         /// <inheritdoc/>
         public override string Id => "Default";
-
-        /// <inheritdoc/>
-        public override event EventHandler<SettingChangedEventArgs>? SettingChanged;
     }
 }
