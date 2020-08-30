@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
+using MetaBrainz.MusicBrainz;
 using Newtonsoft.Json;
 using StrixMusic.Core.Mock.Deserialization;
 using StrixMusic.Core.Mock.Models;
@@ -18,21 +20,19 @@ namespace StrixMusic.Core.Mock.Deserialization
         /// Deserializes and sets up the DummyCore <see cref="SerializedLibrary"/>.
         /// </summary>
         /// <returns>The <see cref="SerializedLibrary"/> of the DummyCore.</returns>
-        public static SerializedLibrary DeserializeLibrary()
+        public static async Task<SerializedLibrary> DeserializeLibrary()
         {
-            var resource = GetManifestResourceString(Assembly.GetExecutingAssembly(), "Strix.Music.Core.Library.json");
-            var lib = JsonConvert.DeserializeObject<SerializedLibrary>(resource);
-            return lib;
+            try
+            {
+                var resource = GetManifestResourceString(Assembly.GetExecutingAssembly(), "StrixMusic.Core.Mock.Library.json");
+                var lib = JsonConvert.DeserializeObject<SerializedLibrary>(resource);
+                return lib;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
         }
-
-        private static SerializedLibrary GraphLibrary(SerializedLibrary library)
-        {
-            var artists = new Dictionary<string, MockArtist>();
-            var albums = new Dictionary<string, MockAlbum>();
-            var tracks = new Dictionary<string, MockTrack>();
-            return library;
-        }
-
         /// <summary>
         /// Gets an Embedded Resource as a <see cref="string"/>.
         /// </summary>

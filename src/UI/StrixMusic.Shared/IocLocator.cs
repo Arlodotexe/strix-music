@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Core.Files;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services;
 using StrixMusic.Services.Settings;

@@ -2,122 +2,120 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.Core.Mock.Models
 {
-    /// <inheritdoc cref="IAlbum"/>
+    /// <inheritdoc />
     public class MockArtist : IArtist
     {
-        private List<IAlbum> _albums = new List<IAlbum>();
-        private List<ITrack> _itracks = new List<ITrack>();
-        private List<IImage> _images = new List<IImage>();
-        private string _id;
-        private Uri _url;
-        private string _name;
-        private string _description;
-        private TimeSpan _duration;
-        private PlaybackState _playbackState;
-        private TimeSpan _timeSpan;
-        private int _totalTracksCount;
-        private int _totalAlbumCount;
+        /// <inheritdoc/>
+        [JsonProperty("id")]
+        public string IdJson { get; set; } = string.Empty;
 
-        ///<summary>
-        /// Init Artist
-        /// </summary>
-        public MockArtist()
-        {
-            _url = new Uri("http://test.com");
-            _name = "Test artist name";
-            _description = "test description";
-            _duration = TimeSpan.FromMilliseconds(90000);
-            _playbackState = PlaybackState.None;
-            _totalAlbumCount = 12;
-            _totalAlbumCount = 44;
-        }
+        /// <inheritdoc/>
+        [JsonProperty("name")]
+        public string NameJson { get; set; } = string.Empty;
 
-        /// <inheritdoc cref="IAlbum.Albums"/>
-        public IReadOnlyList<IAlbum> Albums => _albums;
+        /// <inheritdoc/>
+        [JsonProperty("album_ids")]
+        public List<string>? AlbumIdsJson { get; set; }
 
-        /// <inheritdoc cref="IAlbum.TotalAlbumsCount"/>
-        public int TotalAlbumsCount => _totalTracksCount;
+        /// <inheritdoc/>
+        public IReadOnlyList<IAlbum> Albums => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.Tracks"/>
-        public IReadOnlyList<ITrack> Tracks => _itracks;
+        /// <inheritdoc/>
+        public int TotalAlbumsCount => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.TotalTracksCount"/>
-        public int TotalTracksCount => _totalTracksCount;
+        /// <inheritdoc/>
+        public IReadOnlyList<ITrack> Tracks => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.SourceCore"/>
+        /// <inheritdoc/>
+        public int TotalTracksCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public ICore SourceCore => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.Id"/>
-        public string Id => _id;
+        /// <inheritdoc/>
+        public string Id => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.Url"/>
-        public Uri Url => _url;
+        /// <inheritdoc/>
+        public Uri Url => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.Name"/>
-        public string Name => _name;
+        /// <inheritdoc/>
+        public string Name => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.Images"/>
-        public IReadOnlyList<IImage> Images => _images;
+        /// <inheritdoc/>
+        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.Description"/>
-        public string Description => _description;
+        /// <inheritdoc/>
+        public string Description => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.PlaybackState"/>
-        public PlaybackState PlaybackState => _playbackState;
+        /// <inheritdoc/>
+        public PlaybackState PlaybackState => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.Duration"/>
-        public TimeSpan Duration => _duration;
+        /// <inheritdoc/>
+        public TimeSpan Duration => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.RelatedItems"/>
-        public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
+        /// <inheritdoc/>
+        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => throw new NotImplementedException();
 
-        /// <inheritdoc cref="IAlbum.AlbumsChanged"/>
+        /// <inheritdoc/>
+        public int TotalRelatedItemsCount => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IAlbum>> AlbumsChanged;
 
-        /// <inheritdoc cref="IAlbum.TracksChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>> TracksChanged;
 
-        /// <inheritdoc cref="IAlbum.PlaybackStateChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<PlaybackState> PlaybackStateChanged;
 
-        /// <inheritdoc cref="IAlbum.NameChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<string> NameChanged;
 
-        /// <inheritdoc cref="IAlbum.DescriptionChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<string> DescriptionChanged;
 
-        /// <inheritdoc cref="IAlbum.UrlChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<Uri> UrlChanged;
 
-        /// <inheritdoc cref="IAlbum.ImagesChanged"/>
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
 
-        /// <inheritdoc cref="IAlbum.PauseAsync"/>
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
+
+        /// <inheritdoc/>
         public Task PauseAsync()
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IAlbum.PlayAsync"/>
+        /// <inheritdoc/>
         public Task PlayAsync()
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IAlbum.PopulateAlbumsAsync"/>
-        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
+        /// <inheritdoc/>
+        public Task PopulateAlbumsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IAlbum.PopulateTracksAsync"/>
-        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
+        /// <inheritdoc/>
+        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateTracksAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
