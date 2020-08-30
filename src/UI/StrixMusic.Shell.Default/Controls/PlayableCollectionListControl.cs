@@ -4,6 +4,9 @@ namespace StrixMusic.Shell.Default.Controls
 {
     public sealed partial class PlayableCollectionListControl : Control
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlayableCollectionListControl"/> class.
+        /// </summary>
         public PlayableCollectionListControl()
         {
             this.DefaultStyleKey = typeof(PlayableCollectionListControl);

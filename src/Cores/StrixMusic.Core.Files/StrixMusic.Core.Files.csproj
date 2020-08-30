@@ -7,6 +7,10 @@
 	  <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\jjask\source\repos\Strix-Music\src\Cores\StrixMusic.Core.Files\StrixMusic.Core.Files.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="FileCore.cs" />
   </ItemGroup>

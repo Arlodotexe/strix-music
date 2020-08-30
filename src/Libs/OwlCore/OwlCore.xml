@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OwlCore</name>
+    </assembly>
+    <members>
+        <member name="M:OwlCore.Extensions.AsyncExtensions.InParallel``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Threading.Tasks.Task})">
+            <summary>
+            Runs a specific task in parallel from a list of <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type to operate on.</typeparam>
+            <param name="items">The source items.</param>
+            <param name="func">Returns the task to run in parallel from <typeparamref name="T"/>.</param>
+            <returns>A task representing the completion of all tasks.</returns>
+        </member>
+        <member name="M:OwlCore.Extensions.AsyncExtensions.InParallel``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Threading.Tasks.Task{``1}})">
+            <summary>
+            Runs a specific task in parallel from a list of <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type to operate on.</typeparam>
+            <typeparam name="T2">The return type.</typeparam>
+            <param name="items">The source items.</param>
+            <param name="func">Returns the task to run in parallel from <typeparamref name="T"/>.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the completion of all tasks. The result is an array of all the returned values.</returns>
+        </member>
+    </members>
+</doc>

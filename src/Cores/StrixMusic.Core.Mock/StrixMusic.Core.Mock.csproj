@@ -5,6 +5,10 @@
 	<LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\jjask\source\repos\Strix-Music\src\Cores\StrixMusic.Core.Mock\StrixMusic.Core.Mock.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Library.json" />
   </ItemGroup>

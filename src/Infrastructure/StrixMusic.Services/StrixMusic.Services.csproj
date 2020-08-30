@@ -8,6 +8,10 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\jjask\source\repos\Strix-Music\src\Infrastructure\StrixMusic.Services\StrixMusic.Services.xml</DocumentationFile>
+  </PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview2" />
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

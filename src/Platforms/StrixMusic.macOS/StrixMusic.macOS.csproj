@@ -39,6 +39,7 @@
     </XamMacArch>
     <NoWarn>
     </NoWarn>
+    <DocumentationFile>bin\Debug\StrixMusic.macOS.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugSymbols>false</DebugSymbols>

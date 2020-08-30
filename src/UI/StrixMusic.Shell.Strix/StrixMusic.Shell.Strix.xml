@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StrixMusic.Shell.Strix</name>
+    </assembly>
+    <members>
+        <member name="T:StrixMusic.Shell.Strix.Controls.Drawer">
+            <summary>
+            A Drawer used as the root of the Shell.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.Shell.Strix.Controls.Drawer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.Shell.Strix.Controls.Drawer"/> class.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.Shell.Strix.Controls.Drawer.TopBarContent">
+            <summary>
+            Gets or sets UIElement to always show as top bar.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.Shell.Strix.Controls.Drawer.BottomBarContent">
+            <summary>
+            Gets or sets UIElement to always show as bottom bar.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.Shell.Strix.Controls.Drawer.BottomBarSecondaryContent">
+            <summary>
+            Gets or sets UIElement to always show as secondary bottom bar.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.Shell.Strix.Controls.Drawer.MainContent">
+            <summary>
+            Gets or sets UIElement to always show as main content.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.Shell.Strix.Themes.AlbumStyle.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.Shell.Strix.Themes.AlbumStyle"/> class.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.Shell.Strix.Themes.AlbumViewStyle.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.Shell.Strix.Themes.AlbumStyle"/> class.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.Shell.Strix.Themes.HomeStyle.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.Shell.Strix.Themes.HomeStyle"/> class.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.Shell.Strix.Themes.PlayableCollectionListStyle.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.Shell.Strix.Themes.PlayableCollectionListStyle"/> class.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.Shell.Strix.Themes.ShellStyle.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.Shell.Strix.Themes.ShellStyle"/> class.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.Shell.Strix.GlobalStaticResources">
+            <summary>
+            Contains all the static resources defined for the application
+            </summary>
+        </member>
+    </members>
+</doc>

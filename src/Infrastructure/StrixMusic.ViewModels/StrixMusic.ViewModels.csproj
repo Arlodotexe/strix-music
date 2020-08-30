@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\jjask\source\repos\Strix-Music\src\Infrastructure\StrixMusic.ViewModels\StrixMusic.ViewModels.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

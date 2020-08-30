@@ -1,0 +1,1198 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StrixMusic.CoreInterfaces</name>
+    </assembly>
+    <members>
+        <member name="T:StrixMusic.CoreInterfaces.Enums.DeviceType">
+            <summary>
+            Describes the type of device used for playback.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Enums.PlaybackState">
+            <summary>
+            Current playback state.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Enums.RepeatState">
+            <summary>
+            How songs will repeat in their context.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Enums.TrackType">
+            <summary>
+            Used to identify which variant of track this is.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.CollectionChangedEventArgs`1">
+            <summary>
+            Event args containing info about a changed collection.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.CollectionChangedEventArgs`1.#ctor(System.Collections.Generic.IReadOnlyList{`0},System.Collections.Generic.IReadOnlyList{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.CoreInterfaces.CollectionChangedEventArgs`1"/> class.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.CollectionChangedEventArgs`1.AddedItems">
+            <summary>
+            The items that were added to the collection.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.CollectionChangedEventArgs`1.RemovedItems">
+            <summary>
+            The items that were removed from the collection.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.CoreConfig.CoreState">
+            <summary>
+            The state of a <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ICore"/>.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.CoreConfig.ICoreConfig">
+            <summary>
+            Provides various methods of configuring a core.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.CoreConfig.ICoreConfig.Services">
+            <summary>
+            The services for this instance of the core.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IAlbum">
+            <summary>
+            Interface representing an album.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IAlbum.Artist">
+            <summary>
+            An <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IArtist"/> object that this album was created by.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IAlbum.RelatedItems">
+            <summary>
+            A <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IPlayable"/> of items related to this item.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection">
+            <summary>
+            An album collection.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.Albums">
+            <summary>
+            A collection of albums.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.TotalAlbumsCount">
+            <summary>
+            The total number of available <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.Albums"/>.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.PopulateAlbumsAsync(System.Int32,System.Int32)">
+            <summary>
+            Populates the <see cref="!:IArtist.Albums"/> in the collection.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.AlbumsChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.Albums"/> changes.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IArtist">
+            <summary>
+            Interface representing an artist.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IArtist.RelatedItems">
+            <summary>
+            A <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup"/> of items related to this item.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IArtistCollection">
+            <summary>
+            A collection of artists.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IArtistCollection.Artists">
+            <summary>
+            The artists in the library.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IArtistCollection.PopulateArtistsAsync(System.Int32,System.Int32)">
+            <summary>
+            Populates a set of <see cref="!:IArtist.Albums"/> into the collection.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IArtistCollection.TotalArtistsCount">
+            <summary>
+            The total number of available <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IArtistCollection.Artists"/>.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IArtistCollection.ArtistsChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IArtistCollection.Artists"/> changes.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.ICore">
+            <summary>
+            Describes a core.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ICore.CoreConfig">
+            <inheritdoc cref="T:StrixMusic.CoreInterfaces.Interfaces.CoreConfig.ICoreConfig" />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ICore.CoreState">
+            <inheritdoc cref="T:StrixMusic.CoreInterfaces.Interfaces.CoreConfig.CoreState" />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ICore.InstanceId">
+            <summary>
+            Identifies this instance of the core.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ICore.Name">
+            <summary>
+            The name of the core.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ICore.User">
+            <summary>
+            Represents the user that is authenticated with this core.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ICore.Devices">
+            <summary>
+            The available devices.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ICore.Library">
+            <summary>
+            Gets the library for the user on this core.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ICore.RecentlyPlayed">
+            <summary>
+            Gets the recently played items for this core.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ICore.Discoverables">
+            <summary>
+            Used to browse and discover new music.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.ICore.GetSearchAutoCompleteAsync(System.String)">
+            <summary>
+            Given a query, return suggested completed queries.
+            </summary>
+            <param name="query">Search query</param>
+            <returns>Suggested completed queries.</returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.ICore.GetSearchResultsAsync(System.String)">
+            <summary>
+            Gets search results for a given query.
+            </summary>
+            <param name="query">The search query.</param>
+            <returns>A task representing the async operation. Returns <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ISearchResults"/> containing multiple.</returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.ICore.InitAsync">
+            <summary>
+            Initializes the <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ICore"/> asyncronously.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ICore.CoreStateChanged">
+            <summary>
+            Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ICore.CoreState"/> has changed.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ICore.DevicesChanged">
+            <summary>
+            Fires when the collection of devices is updated.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IDevice">
+            <summary>
+            Represents a device that a user can connect to for playback
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.SourceCore">
+            <summary>
+            The source core which created the object.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.Id">
+            <summary>
+            Identifies the device
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.Name">
+            <summary>
+            The displayed name of this device
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.IsActive">
+            <summary>
+            If true, the device is currently active and playing audio.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackQueue">
+            <summary>
+            The current playback queue.
+            </summary>
+            <remarks>When <see cref="T:StrixMusic.CoreInterfaces.Enums.DeviceType"/> is <see cref="F:StrixMusic.CoreInterfaces.Enums.DeviceType.Remote" />, this will override the internal playback queue.</remarks>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackContext">
+            <summary>
+            The context of the currently playing track.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.NowPlaying">
+            <summary>
+            The currently playing <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ITrack"/>.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.Position">
+            <summary>
+            The amount of time that has passed since a song has started.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackState">
+            <inheritdoc cref="T:StrixMusic.CoreInterfaces.Enums.PlaybackState"/>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.ShuffleState">
+            <summary>
+            True if the player is using a shuffled track list.
+            </summary>
+            <remarks>If null, the player cannot be shuffled.</remarks>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.RepeatState">
+            <inheritdoc cref="T:StrixMusic.CoreInterfaces.Enums.RepeatState"/>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.VolumePercent">
+            <summary>
+            The volume of the device (0-1). If null, the volume cannot be changed.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.DeviceType">
+            <inheritdoc cref="T:StrixMusic.CoreInterfaces.Enums.DeviceType" />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackSpeed">
+            <summary>
+            The rate of the playback for the current track. If the playback speed can't be changed, value is <see langword="null"/>
+            </summary>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.ChangePlaybackSpeed(System.Double)">
+            <summary>
+            Attempts to change the playback speed.
+            </summary>
+            <param name="speed"></param>
+            <returns><placeholder>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</placeholder></returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.ResumeAsync">
+            <summary>
+            Resume the device if in the state <see cref="F:StrixMusic.CoreInterfaces.Enums.PlaybackState.Paused"/>.
+            </summary>
+            <returns><placeholder>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</placeholder></returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.PauseAsync">
+            <summary>
+            Pauses the device if in the state <see cref="F:StrixMusic.CoreInterfaces.Enums.PlaybackState.Playing"/>
+            </summary>
+            <returns><placeholder>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</placeholder></returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.NextAsync">
+            <summary>
+            Advances to the next track. If there is no next track, playback is paused.
+            </summary>
+            <returns><placeholder>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</placeholder></returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.PreviousAsync">
+            <summary>
+            Goes to the previous track.
+            </summary>
+            <returns><placeholder>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</placeholder></returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.SeekAsync(System.Int64)">
+            <summary>
+            Seeks the track to a given timestamp.
+            </summary>
+            <param name="position">Time in milliseconds to seek the song to.</param>
+            <returns><see langword="true"/> if the <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ITrack"/> was seeked to successfully, <see langword="false"/> otherwise.</returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.ChangeVolumeAsync(System.Double)">
+            <summary>
+            Changes the volume
+            </summary>
+            <param name="volume">The volume of the device.</param>
+            <returns><placeholder>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</placeholder></returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.ToggleShuffleAsync">
+            <summary>
+            Toggles shuffle on or off.
+            </summary>
+            <returns><placeholder>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</placeholder></returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.ToggleRepeatAsync">
+            <summary>
+            Asks the device to toggle to the next repeat state.
+            </summary>
+            <returns><placeholder>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</placeholder></returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.SwitchToAsync">
+            <summary>
+            Switches to this device.
+            </summary>
+            <returns><placeholder>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</placeholder></returns>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackQueueChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackQueue"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.IsActiveChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.IsActive"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackContextChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackContext"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.NowPlayingChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.NowPlaying"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.PositionChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.Position"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackStateChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackState"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.ShuffleStateChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.ShuffleState"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.RepeatStateChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.RepeatState"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.VolumePercentChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.VolumePercent"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackSpeedChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackSpeed"/> changes.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IImage">
+            <summary>
+            Contains details about an image.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IImage.Uri">
+            <summary>
+            Local or remote resource pointing to the image.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IImage.Height">
+            <summary>
+            Height of the image.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IImage.Width">
+            <summary>
+            Width of the image.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.ILibrary">
+            <summary>
+            Contains a music library.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.ILyrics">
+            <summary>
+            Interface representing lyrics for a <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ITrack"/>.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ILyrics.TimedLyrics">
+            <summary>
+            Timestamped lyrics. The Key is a point in the song, and the value is the lyric at that position.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ILyrics.TextLyrics">
+            <summary>
+            A simple text wall containing all the lyrics for this song.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ILyrics.Track">
+            <summary>
+            The track that these lyrics belong to.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IPlayable">
+            <summary>
+            Represents an item that can be played.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.SourceCore">
+            <summary>
+            The source core which created the parent.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Id">
+            <summary>
+            The ID of the playable item.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Url">
+            <summary>
+            An external link related to the item.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Name">
+            <summary>
+            Name of the playable item.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Images">
+            <summary>
+            Cover images for the item.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Description">
+            <summary>
+            Provides comments about the item.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackState">
+            <inheritdoc cref="T:StrixMusic.CoreInterfaces.Enums.PlaybackState"/>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Duration">
+            <summary>
+            How long the playable item takes to complete playback.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlayAsync">
+            <summary>
+            Attempts to play the item, or resumes playback if already playing.
+            </summary>
+            <returns><placeholder>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</placeholder></returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PauseAsync">
+            <summary>
+            Attempts to pause the item.
+            </summary>
+            <returns><placeholder>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</placeholder></returns>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackStateChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackState"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.NameChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Name"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.DescriptionChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Description"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.UrlChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Url"/> changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.ImagesChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Images"/> changes;
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionBase">
+            <summary>
+            Interface representing a collection of playable items.
+            </summary>
+            <remarks>No <see langword="class"/> should ever directly implement this interface. The items in this collection, the count, and the method for getting them are defined in a child <see langword="interface" />.</remarks>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup">
+            <summary>
+            Represents multiple playable collections that are grouped together under a single context.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup.Children">
+            <summary>
+            The <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionBase"/>s in this collection group.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup.TotalChildrenCount">
+            <summary>
+            The total number of available <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup.Children"/>.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup.PopulateChildrenAsync(System.Int32,System.Int32)">
+            <summary>
+            Populates a set of <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup.Children"/> into the collection.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup.ChildrenChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup.Children"/> changes.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IPlaylist">
+            <summary>
+            Interface that represents a playlist.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlaylist.Owner">
+            <summary>
+            Owner of the playable item.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IPlaylist.OwnerChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlaylist.Owner"/> changes.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlaylist.RelatedItems">
+            <summary>
+            A <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IPlayable"/> of items related to this item.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IPlaylistCollection">
+            <summary>
+            A playlist collection.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlaylistCollection.Playlists">
+            <summary>
+            The playlists in the library.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IPlaylistCollection.TotalPlaylistCount">
+            <summary>
+            The total number of available <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlaylistCollection.Playlists"/>.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.IPlaylistCollection.PopulatePlaylistsAsync(System.Int32,System.Int32)">
+            <summary>
+            Populates the <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IPlaylist"/> in the collection.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IPlaylistCollection.PlaylistsChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlaylistCollection.Playlists"/> changes.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IRecentlyPlayed">
+            <summary>
+            Contains recently played items.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.ISearchResults">
+            <summary>
+            Interface that represents search results.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.ITrack">
+            <summary>
+            Metadata about a track.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Type">
+            <inheritdoc cref="T:StrixMusic.CoreInterfaces.Enums.TrackType"/>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Artists">
+            <summary>
+            A list of <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IArtist"/>s that this track was created by.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Album">
+            <summary>
+            An <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IAlbum"/> object that this track belongs to.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.DatePublished">
+            <summary>
+            The date the track was released.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Genres">
+            <summary>
+            A list of <see cref="T:System.String"/> describing the genres for this track.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.TrackNumber">
+            <summary>
+            Position in a set, usually the album.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.PlayCount">
+            <summary>
+            Number of the times this track has been played.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Language">
+            <summary>
+            The language for this track.
+            </summary>
+            <remarks>If track has no spoken words (instrumental), value is <see cref="P:System.Globalization.CultureInfo.InvariantCulture"/>. If unknown, value is <see langword="null"/>.</remarks>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Lyrics">
+            <summary>
+            The lyrics for this track.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.IsExplicit">
+            <summary>
+            If this track contains explicit language.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.RelatedItems">
+            <summary>
+            A <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IPlayable"/> of items related to this item.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.ArtistsChanged">
+            <summary>
+            Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Artists"/> metadata changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.GenresChanged">
+            <summary>
+            Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Genres"/> metadata changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.AlbumChanged">
+            <summary>
+            Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Album"/> metadata changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.DatePublishedChanged">
+            <summary>
+            Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.DatePublished"/> metadata changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.TrackNumberChanged">
+            <summary>
+            Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.TrackNumber"/> metadata changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.PlayCountChanged">
+            <summary>
+            Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.PlayCount"/> metadata changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.LanguageChanged">
+            <summary>
+            Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Language"/> metadata changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.LyricsChanged">
+            <summary>
+            Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Lyrics"/> metadata changes.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.IsExplicitChanged">
+            <summary>
+            Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.IsExplicit"/> metadata changes.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection">
+            <summary>
+            A track collection.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.Tracks">
+            <summary>
+            The tracks for this artists. If unknown, returns the most listened to tracks for this user. Can be empty.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.TotalTracksCount">
+            <summary>
+            The total number of available <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.Tracks"/>.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.PopulateTracksAsync(System.Int32,System.Int32)">
+            <summary>
+            Populates a set of <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ITrack"/> into <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.Tracks"/>.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.TracksChanged">
+            <summary>
+            Fires when <see cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.Tracks"/> changes.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IUser">
+            <summary>
+            Represents a user that is authenticated with a core and interacts with the app.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IUser.Library">
+            <summary>
+            This user's library.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.IUserProfile">
+            <summary>
+            Describes a generic profile.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.SourceCore">
+            <summary>
+            The source core which created the parent.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Id">
+            <summary>
+            Identifier for the user
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.DisplayName">
+            <summary>
+            Username shown to the user or others
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.FullName">
+            <summary>
+            The user's full name
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Email">
+            <summary>
+            The user's email
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Images">
+            <summary>
+            Profile images or other images related to this user.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Birthdate">
+            <summary>
+            The <see cref="T:System.DateTime"/> the user was born.
+            </summary>
+            <remarks>
+            If missing data, replace the day, month and/or year with part of 1/1/1970.
+            </remarks>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Url">
+            <summary>
+            Links to the users' profile(s).
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Region">
+            <summary>
+            The user's country or region of origin.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.DisplayNameChanged">
+            <summary>
+             Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.DisplayName"/> has changed.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.ImagesChanged">
+            <summary>
+             Fires when the <see cref="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.ImagesChanged"/> has changed.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.BirthDateChanged">
+            <summary>
+             Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Birthdate"/> has changed.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.FullNameChanged">
+            <summary>
+             Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.FullName"/> has changed.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.UrlChanged">
+            <summary>
+             Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Url"/> has changed.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.RegionChanged">
+            <summary>
+             Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Region"/> has changed.
+            </summary>
+        </member>
+        <member name="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.EmailChanged">
+            <summary>
+             Fires when the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Email"/> has changed.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaPlayer">
+            <summary>
+            A simple media player that can play an audio track.
+            </summary>
+            <remarks>Only plays one track at a time, and can cache other tracks ahead of time.</remarks>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaPlayer.Play(System.String)">
+            <summary>
+            Plays a preloaded track.
+            </summary>
+            <param name="id">The ID that was registered during preload.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asyncronous operation.</returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaPlayer.Play(StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaSourceConfig)">
+            <summary>
+            Plays a track.
+            </summary>
+            <param name="config">The source configuration for this track.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asyncronous operation.</returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaPlayer.Preload(StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaSourceConfig)">
+            <summary>
+            Preloads a track given a config.
+            </summary>
+            <param name="config"></param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asyncronous operation.</returns>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaSourceConfig">
+            <summary>
+            Defines configuration for a single PlayReady-enabled playback source.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaSourceConfig.Id">
+            <summary>
+            An identifier for this source.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaSourceConfig.MediaSourceUri">
+            <summary>
+            A Uri representing a media source.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaSourceConfig.FileStreamSource">
+            <summary>
+            A stream to a media file to be played.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaSourceConfig.ExpirationDate">
+            <summary>
+            The <see cref="T:System.DateTime"/> that this source config expires, if applicable.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IPlayReadyMediaPlayer">
+            <summary>
+            A PlayReady enabled <see cref="T:StrixMusic.CoreInterfaces.Interfaces.MediaPlayback.IMediaPlayer"/>.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.Storage.IFileData">
+            <summary>
+            Holds information about a file
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IFileData.Path">
+            <summary>
+            The path to the file.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IFileData.Name">
+            <summary>
+            The name of the file, without the extension.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IFileData.DisplayName">
+            <summary>
+            The user-friendly name for this file.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IFileData.FileExtension">
+            <summary>
+            The file extension.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IFileData.MusicProperties">
+            <inheritdoc cref="T:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties"/>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.Storage.IFileData.GetParentAsync">
+            <summary>
+            The parent folder that contains this file.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation. Value is the parent folder.</returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.Storage.IFileData.GetStreamAsync">
+            <summary>
+            Opens and returns a stream to the file.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation. Value is a stream to the file.</returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.Storage.IFileData.ScanMediaDataAsync">
+            <summary>
+            Populates the <see cref="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IFileData.MusicProperties"/>.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData">
+            <summary>
+            Holds information about a folder
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData.Files">
+            <summary>
+            The files contained in this folder.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData.Folders">
+            <summary>
+            The folders contained in this folder.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData.Name">
+            <summary>
+            The name of the folder.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData.Path">
+            <summary>
+            The path to the folder.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData.TotalFileCount">
+            <summary>
+            The total number of files in this folder and all subfolders.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData.GetParentAsync">
+            <summary>
+            The parent folder that contains this file.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation. Value is the parent folder.</returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData.ScanAsync">
+            <summary>
+            Scans and populates the immediate contents of the folder.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asyncronous operation.</returns>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Interfaces.Storage.IFolderData.DeepScanAsync">
+            <summary>
+            Scans and populates the contents of the folder and all subfolders.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asyncronous operation.</returns>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties">
+            <summary>
+            Contains the music-related properties for a file or folder.
+            </summary>
+            <remarks>Adapted from <see href="https://docs.microsoft.com/en-us/uwp/api/Windows.Storage.FileProperties.MusicProperties?view=winrt-19041"/></remarks>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Album">
+            <summary>
+            Gets or sets the name of the album that contains the song.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.AlbumArtist">
+            <summary>
+            Gets or sets the name of the album artist of the song.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Artist">
+            <summary>
+            Gets the artists that contributed to the song.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Bitrate">
+            <summary>
+            Gets the bit rate of the sogn file.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Composers">
+            <summary>
+            Gets the composers of the song.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Conductors">
+            <summary>
+            Gets the conductors of the song.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Duration">
+            <summary>
+            Gets the duration of the song in milliseconds.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Genre">
+            <summary>
+            Gets the names of music genres that the song belongs to.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Producers">
+            <summary>
+            Gets the producers of the song.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Publisher">
+            <summary>
+            Gets or sets the publisher of the song.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Rating">
+            <summary>
+            Gets or sets the rating associated with a music file.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Subtitle">
+            <summary>
+            Gets or sets the subtitle of the song.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Title">
+            <summary>
+            Gets or sets the title of the song.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.TrackNumber">
+            <summary>
+            Gets or sets the track number of the song on the song's album.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Writers">
+            <summary>
+            Gets the songwriters.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties.Year">
+            <summary>
+            Gets or sets the year that the song was released.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig.#ctor(System.String,System.Uri,System.DateTime)">
+            <summary>
+            Constructs a new <see cref="T:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig"/>
+            </summary>
+            <param name="id"><inheritdoc cref="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig.Id"/></param>
+            <param name="licenseAcquisitionUri"><inheritdoc cref="!:LicenseAcquisitionUri"/></param>
+            <param name="mediaSourceUri"><inheritdoc cref="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig.MediaSourceUri"/></param>
+            <param name="expirationDate"><inheritdoc cref="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig.ExpirationDate"/></param>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig.#ctor(System.String,System.IO.Stream)">
+            <summary>
+            Constructs a new <see cref="T:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig"/>
+            </summary>
+            <param name="id"><inheritdoc cref="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig.Id"/></param>
+            <param name="licenseAcquisitionUri"><inheritdoc cref="!:LicenseAcquisitionUri"/></param>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig.Id">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig.MediaSourceUri">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig.ExpirationDate">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig.FileStreamSource">
+            <inheritdoc/>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig">
+            <summary>
+            Defines configuration for a single PlayReady-enabled playback source.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.#ctor(System.String,System.Uri,System.Uri,System.DateTime)">
+            <summary>
+            Constructs a new <see cref="T:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig"/>
+            </summary>
+            <param name="id"><inheritdoc cref="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.Id"/></param>
+            <param name="licenseAcquisitionUri"><inheritdoc cref="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.LicenseAcquisitionUri"/></param>
+            <param name="mediaSourceUri"><inheritdoc cref="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.MediaSourceUri"/></param>
+            <param name="expirationDate"><inheritdoc cref="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.ExpirationDate"/></param>
+        </member>
+        <member name="M:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.#ctor(System.String,System.IO.Stream,System.Uri)">
+            <summary>
+            Constructs a new <see cref="T:StrixMusic.CoreInterfaces.Models.MediaPlayback.MediaSourceConfig"/>
+            </summary>
+            <param name="id"><inheritdoc cref="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.Id"/></param>
+            <param name="licenseAcquisitionUri"><inheritdoc cref="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.LicenseAcquisitionUri"/></param>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.Id">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.MediaSourceUri">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.ExpirationDate">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.FileStreamSource">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.MediaPlayback.PlayReadyMediaSourceConfig.LicenseAcquisitionUri">
+            <summary>
+            The URI used to acquire the PlayReady license.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties">
+            <inheritdoc cref="T:StrixMusic.CoreInterfaces.Interfaces.Storage.IMusicFileProperties" />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Album">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.AlbumArtist">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Artist">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Bitrate">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Composers">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Conductors">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Duration">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Genre">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Producers">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Publisher">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Rating">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Subtitle">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Title">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.TrackNumber">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Writers">
+            <inheritdoc />
+        </member>
+        <member name="P:StrixMusic.CoreInterfaces.Models.Storage.MusicFileProperties.Year">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

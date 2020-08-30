@@ -1,0 +1,1188 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StrixMusic.ViewModels</name>
+    </assembly>
+    <members>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableAlbum">
+            <summary>
+            Contains bindable information about an <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IAlbum"/>.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableAlbum.#ctor(StrixMusic.CoreInterfaces.Interfaces.IAlbum)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.Bindables.BindableAlbum"/> class.
+            </summary>
+            <param name="album"><inheritdoc cref="T:StrixMusic.CoreInterfaces.Interfaces.IAlbum"/></param>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.Tracks">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.Tracks"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.TotalTrackCounts">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.TotalTracksCount"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.Artist">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IAlbum.Artist"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.Id">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Id"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.SourceCore">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.SourceCore"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.Duration">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Duration"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.Name">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Name"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.Images">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Images"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.Url">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Url"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.Description">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Description"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.PlaybackState">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackState"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableAlbum.PlaybackStateChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackStateChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableAlbum.NameChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.NameChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableAlbum.DescriptionChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.DescriptionChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableAlbum.UrlChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.UrlChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableAlbum.ImagesChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.ImagesChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableAlbum.TracksChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.TracksChanged"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.PauseAsyncCommand">
+            <summary>
+            Attempts to pause the album, if playing.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableAlbum.PauseAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PauseAsync"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.PlayAsyncCommand">
+            <summary>
+            Attempts to play the album.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.TotalTracksCount">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.TotalTracksCount"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableAlbum.RelatedItems">
+            <inheritdoc cref="!:IRelatedCollectionGroups.RelatedItems"/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableAlbum.PlayAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlayAsync"/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableAlbum.PopulateTracksAsync(System.Int32,System.Int32)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.PopulateTracksAsync(System.Int32,System.Int32)"/>
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableArtist">
+            <summary>
+            Contains bindable information about an <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IArtist"/>.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableArtist.#ctor(StrixMusic.CoreInterfaces.Interfaces.IArtist)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.Bindables.BindableArtist"/> class.
+            </summary>
+            <param name="artist">The <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IArtist"/> to wrap.</param>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.Albums">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.Albums"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.TotalAlbumsCount">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.TotalAlbumsCount"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.Tracks">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.Tracks"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.TotalTracksCount">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.TotalTracksCount"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.Url">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Url"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.SourceCore">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.SourceCore"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.Id">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Id"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.Name">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Name"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.Images">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Images"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.Description">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Description"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.PlaybackState">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackState"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableArtist.AlbumsChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.AlbumsChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableArtist.TracksChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.TracksChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableArtist.PlaybackStateChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackStateChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableArtist.NameChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.NameChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableArtist.DescriptionChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.DescriptionChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableArtist.UrlChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.UrlChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableArtist.ImagesChanged">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Images"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.PauseAsyncCommand">
+            <summary>
+            Attempts to pause the artist, if playing.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableArtist.PauseAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PauseAsync"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.PlayAsyncCommand">
+            <summary>
+            Attempts to play the artist.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.Duration">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Duration" />
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableArtist.RelatedItems">
+            <inheritdoc cref="!:IRelatedCollectionGroups.RelatedItems"/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableArtist.PlayAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlayAsync"/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableArtist.PopulateAlbumsAsync(System.Int32,System.Int32)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.PopulateAlbumsAsync(System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableArtist.PopulateTracksAsync(System.Int32,System.Int32)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.PopulateTracksAsync(System.Int32,System.Int32)"/>
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableCollectionGroup">
+            <summary>
+            A bindable wrapper of the <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup"/>.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.#ctor(StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.Bindables.BindableCollectionGroup"/> class.
+            </summary>
+            <param name="collectionGroup">The base <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionBase"/> containing properties about this class.</param>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.ChildrenChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup.ChildrenChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PlaylistsChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlaylistCollection.PlaylistsChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.TracksChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.TracksChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.AlbumsChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.AlbumsChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.ArtistsChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IArtistCollection.ArtistsChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PlaybackStateChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackStateChanged"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.Children">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup.Children"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.Id">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Id"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.SourceCore">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.SourceCore"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.Name">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Name"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.Images">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Images"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.Url">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Url"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.Description">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Description"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PlaybackState">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackState"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.TotalChildrenCount">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup.TotalChildrenCount"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.Playlists">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlaylistCollection.Playlists"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.TotalPlaylistCount">
+            <inheritdoc cref="!:IPlaylistCollection.cou"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.Tracks">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.Tracks"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.TotalTracksCount">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.TotalTracksCount"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.Albums">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.Albums"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.TotalAlbumsCount">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.TotalAlbumsCount"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.Artists">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IArtistCollection.Artists"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.TotalArtistsCount">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IArtistCollection.TotalArtistsCount"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PauseAsyncCommand">
+            <summary>
+            Attempts to a pause the collection (if playing).
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PauseAsync">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PlayAsyncCommand">
+            <summary>
+            Attempts to play the collection. Resumes if paused.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PlayAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlayAsync"/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PopulateChildrenAsync(System.Int32,System.Int32)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IPlayableCollectionGroup.PopulateChildrenAsync(System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PopulatePlaylistsAsync(System.Int32,System.Int32)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IPlaylistCollection.PopulatePlaylistsAsync(System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PopulateTracksAsync(System.Int32,System.Int32)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.PopulateTracksAsync(System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PopulateAlbumsAsync(System.Int32,System.Int32)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IAlbumCollection.PopulateAlbumsAsync(System.Int32,System.Int32)"/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCollectionGroup.PopulateArtistsAsync(System.Int32,System.Int32)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IArtistCollection.PopulateArtistsAsync(System.Int32,System.Int32)"/>
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableCore">
+            <summary>
+            Contains information about a <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ICore"/>
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCore.#ctor(StrixMusic.CoreInterfaces.Interfaces.ICore)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.Bindables.BindableCore"/> class.
+            </summary>
+            <param name="core">The base <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ICore"/></param>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableCore.CoreStateChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ICore.CoreStateChanged" />
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableCore.DevicesChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ICore.DevicesChanged" />
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCore.AttachEvents">
+            <inheritdoc cref="!:ICore.SearchAutoCompleteChanged" />
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCore.Core_CoreStateChanged(System.Object,StrixMusic.CoreInterfaces.Interfaces.CoreConfig.CoreState)">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ICore.CoreState" />
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCore.Devices">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ICore.Devices"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCore.Library">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ICore.Library" />
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCore.RecentlyPlayed">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ICore.RecentlyPlayed" />
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCore.Discoverables">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ICore.Discoverables" />
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCore.GetSearchAutoCompleteAsync(System.String)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.ICore.GetSearchAutoCompleteAsync(System.String)" />
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCore.GetSearchResultsAsync(System.String)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.ICore.GetSearchResultsAsync(System.String)" />
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCore.InitAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.ICore.InitAsync" />
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableCore.DisposeAsync">
+            <inheritdoc cref="!:ICore.DisposeAsync" />
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCore.CoreState">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ICore.CoreState" />
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCore.CoreConfig">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ICore.CoreConfig" />
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCore.Name">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ICore.Name" />
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableCore.User">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ICore.User" />
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableDevice">
+            <summary>
+            Contains information about a <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IImage"/>
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableDevice.#ctor(StrixMusic.CoreInterfaces.Interfaces.IDevice)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.Bindables.BindableDevice"/> class.
+            </summary>
+            <param name="image">The base <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IDevice"/></param>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.SourceCore">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.SourceCore"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.Id">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.Id"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.Name">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.Name"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.IsActive">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.IsActive"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.PlaybackContext">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackContext"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.PlaybackQueue">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackQueue"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.NowPlaying">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.NowPlaying"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.Position">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.Position"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.PlaybackState">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackState"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.ShuffleState">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.ShuffleState"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.RepeatState">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.RepeatState"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.VolumePercent">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.SourceCore"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.DeviceType">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.DeviceType"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.PlaybackSpeed">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackSpeed"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableDevice.IsActiveChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.IsActiveChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableDevice.PlaybackContextChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackContextChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableDevice.NowPlayingChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.NowPlayingChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableDevice.PositionChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.PositionChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableDevice.PlaybackStateChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackStateChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableDevice.ShuffleStateChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.ShuffleStateChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableDevice.RepeatStateChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.RepeatStateChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableDevice.VolumePercentChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.VolumePercentChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableDevice.PlaybackSpeedChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackSpeedChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableDevice.PlaybackQueueChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IDevice.PlaybackQueueChanged"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.ChangePlaybackSpeedAsyncCommand">
+            <summary>
+            Attempts to change playback speed.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableDevice.ChangePlaybackSpeed(System.Double)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.ChangePlaybackSpeed(System.Double)"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.ChangeVolumeAsyncCommand">
+            <summary>
+            Attempts to change volume.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableDevice.ChangeVolumeAsync(System.Double)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.ChangeVolumeAsync(System.Double)"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.NextAsyncCommand">
+            <summary>
+            Attempts to skip to the next track in the queue.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableDevice.NextAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.NextAsync"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.PauseAsyncCommand">
+            <summary>
+            Attempts to pause the device.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableDevice.PauseAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.PauseAsync"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.PreviousAsyncCommand">
+            <summary>
+            Attempts to move back to the previous track in the queue.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableDevice.PreviousAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.PreviousAsync"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.ResumeAsyncCommand">
+            <summary>
+            Attempts to pause the device.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableDevice.ResumeAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.ResumeAsync"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.SeekAsyncCommand">
+            <summary>
+            Attempts to seek the currently playing track on the device. Does not alter playback state.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableDevice.SeekAsync(System.Int64)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.SeekAsync(System.Int64)"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.SwitchToAsyncCommand">
+            <summary>
+            Attempts to switch playback to this device.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableDevice.SwitchToAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.SwitchToAsync"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.ToggleRepeatCommandAsync">
+            <summary>
+            Attempts to toggle the repeat state for this device.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableDevice.ToggleRepeatAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.ToggleRepeatAsync"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableDevice.ToggleShuffleCommandAsync">
+            <summary>
+            Attempts to change the shuffle state for this device.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableDevice.ToggleShuffleAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IDevice.ToggleShuffleAsync"/>
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableLibrary">
+            <summary>
+            A bindable wrapper of the <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ILibrary"/>.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableLibrary.#ctor(StrixMusic.CoreInterfaces.Interfaces.ILibrary)">
+            <summary>
+            Creates a new instance of the <see cref="T:StrixMusic.ViewModels.Bindables.BindableLibrary"/> class.
+            </summary>
+            <param name="library">The <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ILibrary"/> to wrap.</param>
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableMergeableObject`1">
+            <summary>
+            A base class containing the implementation for handling merged data.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableMergeableObject`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.Bindables.BindableMergeableObject`1"/> class.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableMergeableObject`1.AddMergedData(`0)">
+            <summary>
+            Adds a matched, less preferred version of the this item from a different data source.
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableMergeableObject`1.MergedData">
+            <summary>
+            A collection of matched, less preferred versions of this item from other sources.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindablePlaylist">
+            <summary>
+            A bindable wrapper for <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IPlaylist"/>.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindablePlaylist.#ctor(StrixMusic.CoreInterfaces.Interfaces.IPlaylist)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.Bindables.BindablePlaylist"/> class.
+            </summary>
+            <param name="playlist">The <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IPlaylist"/> to wrap.</param>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.Owner">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlaylist.Owner"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.Tracks">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.Tracks"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.TotalTracksCount">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.TotalTracksCount"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.SourceCore">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.SourceCore"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.Id">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Id"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.Url">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Url"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.Name">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Name"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.Images">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Images"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.Description">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Description"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.PlaybackState">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackState"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.Duration">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Duration"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.RelatedItems">
+            <inheritdoc cref="!:IRelatedCollectionGroups.RelatedItems"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindablePlaylist.OwnerChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlaylist.OwnerChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindablePlaylist.TracksChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.TracksChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindablePlaylist.PlaybackStateChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackStateChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindablePlaylist.NameChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.NameChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindablePlaylist.DescriptionChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.DescriptionChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindablePlaylist.UrlChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.UrlChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindablePlaylist.ImagesChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.ImagesChanged"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.PauseAsyncCommand">
+            <summary>
+            Attempts to pause the playlist.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindablePlaylist.PauseAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PauseAsync"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindablePlaylist.PlayAsyncCommand">
+            <summary>
+            Attempts to play the playlist.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindablePlaylist.PlayAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlayAsync"/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindablePlaylist.PopulateTracksAsync(System.Int32,System.Int32)">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.ITrackCollection.PopulateTracksAsync(System.Int32,System.Int32)"/>
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableRecentlyPlayed">
+            <summary>
+            Used to bind recently played across multiple cores to the View model.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableRecentlyPlayed.#ctor(StrixMusic.CoreInterfaces.Interfaces.IRecentlyPlayed)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.Bindables.BindableRecentlyPlayed"/> class.
+            </summary>
+            <param name="recentlyPlayed">The <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IRecentlyPlayed"/> to wrap.</param>
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableSearchResults">
+            <summary>
+            Used to bind search results across multiple cores to the View model.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableSearchResults.#ctor(StrixMusic.CoreInterfaces.Interfaces.ISearchResults)">
+            <summary>
+            Bindable wrapper for <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ISearchResults"/>.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableTrack">
+            <summary>
+            Contains bindable information about an <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ITrack"/>
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableTrack.#ctor(StrixMusic.CoreInterfaces.Interfaces.ITrack)">
+            <summary>
+            Creates a bindable wrapper around an <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ITrack"/>.
+            </summary>
+            <param name="track">The <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ITrack"/> to wrap.</param>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Url">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Url"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Type">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Type"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Artists">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Artists"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Album">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Album"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.DatePublished">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.DatePublished"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Genres">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Genres"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.TrackNumber">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.TrackNumber"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.PlayCount">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.PlayCount"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Language">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Language"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Lyrics">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.Lyrics"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.IsExplicit">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.ITrack.IsExplicit"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Duration">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Duration"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.SourceCore">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.SourceCore"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Id">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Id"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Name">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Name"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Images">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Images"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.Description">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.Description"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.PlaybackState">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackState"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.RelatedItems">
+            <inheritdoc cref="!:IRelatedCollectionGroups.RelatedItems"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.PlaybackStateChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlaybackStateChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.ArtistsChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.ArtistsChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.GenresChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.GenresChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.AlbumChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.AlbumChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.DatePublishedChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.DatePublishedChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.TrackNumberChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.TrackNumberChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.PlayCountChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.PlayCountChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.LanguageChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.LanguageChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.LyricsChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.LyricsChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.IsExplicitChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.ITrack.IsExplicitChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.NameChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.NameChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.DescriptionChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.DescriptionChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.UrlChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.UrlChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableTrack.ImagesChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IPlayable.ImagesChanged"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.PauseAsyncCommand">
+            <summary>
+            Attempts to pause the track, if playing.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableTrack.PauseAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PauseAsync"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableTrack.PlayAsyncCommand">
+            <summary>
+            Attempts to play the track.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableTrack.PlayAsync">
+            <inheritdoc cref="M:StrixMusic.CoreInterfaces.Interfaces.IPlayable.PlayAsync"/>
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableUser">
+            <summary>
+            Contains bindable information about an <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IUser"/>
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableUser.#ctor(StrixMusic.CoreInterfaces.Interfaces.IUser)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.Bindables.BindableUser"/> class.
+            </summary>
+            <param name="userProfile">The <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IUser"/> to wrap.</param>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableUser.Library">
+            <inheritdoc cref="T:StrixMusic.CoreInterfaces.Interfaces.ILibrary"/>
+        </member>
+        <member name="T:StrixMusic.ViewModels.Bindables.BindableUserProfile">
+            <summary>
+            Contains bindable information about an <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IUserProfile"/>
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.Bindables.BindableUserProfile.#ctor(StrixMusic.CoreInterfaces.Interfaces.IUserProfile)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.Bindables.BindableUserProfile"/> class.
+            </summary>
+            <param name="userProfile">The base <see cref="T:StrixMusic.CoreInterfaces.Interfaces.IUserProfile"/></param>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableUserProfile.SourceCore">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.SourceCore"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableUserProfile.Id">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Id"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableUserProfile.DisplayName">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.DisplayName"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableUserProfile.FullName">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.FullName"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableUserProfile.Email">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Email"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableUserProfile.Birthdate">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Birthdate"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableUserProfile.Images">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Images"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableUserProfile.Url">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Url"/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.Bindables.BindableUserProfile.Region">
+            <inheritdoc cref="P:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.Region"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableUserProfile.DisplayNameChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.DisplayNameChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableUserProfile.ImagesChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.ImagesChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableUserProfile.BirthDateChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.BirthDateChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableUserProfile.FullNameChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.FullNameChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableUserProfile.UrlChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.UrlChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableUserProfile.RegionChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.RegionChanged"/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.Bindables.BindableUserProfile.EmailChanged">
+            <inheritdoc cref="E:StrixMusic.CoreInterfaces.Interfaces.IUserProfile.EmailChanged"/>
+        </member>
+        <member name="T:StrixMusic.ViewModels.MainViewModel">
+            <summary>
+            The MainViewModel used throughout the app
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MainViewModel.#ctor(System.Collections.Generic.IEnumerable{StrixMusic.CoreInterfaces.Interfaces.ICore})">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.MainViewModel"/> class.
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MainViewModel.GlobalSearchSuggestions(System.String)">
+            <summary>
+            Gets search suggestions from all cores and asyncronously populate it into <see cref="P:StrixMusic.ViewModels.MainViewModel.SearchAutoComplete"/>.
+            </summary>
+            <param name="query">The query to search for.</param>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MainViewModel.GlobalSearchResultsAsync(System.String)">
+            <summary>
+            Performs a search on all loaded cores, and loads it into <see cref="!:SearchResults"/>.
+            </summary>
+            <param name="query">The query to search for.</param>
+            <returns>The merged search results.</returns>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MainViewModel.LoadedCores">
+            <summary>
+            Contains data about the cores that are loaded.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MainViewModel.Users">
+            <summary>
+            A consolidated list of all users in the app.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MainViewModel.Devices">
+            <summary>
+            All available devices.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MainViewModel.Library">
+            <summary>
+            The consolidated music library across all cores.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MainViewModel.RecentlyPlayed">
+            <summary>
+            The consolidated recently played items across all cores.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MainViewModel.Discoverables">
+            <summary>
+            Used to browse and discovered new music.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MainViewModel.GetSearchResultsAsyncCommand">
+            <summary>
+            Gets search results for a query.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MainViewModel.GetSearchAutoSuggestAsyncCommand">
+            <summary>
+            Gets autocompleted suggestions for a search query.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MainViewModel.SearchResult">
+            <summary>
+            Contains search results.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MainViewModel.SearchAutoComplete">
+            <summary>
+            The autocomplete strings for the search results.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MainViewModel.PlaybackQueue">
+            <summary>
+            The current playback queue. First item plays next.
+            </summary>
+        </member>
+        <member name="T:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults">
+            <summary>
+            A concrete class that merged multiple <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ISearchResults"/>
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.#ctor(StrixMusic.CoreInterfaces.Interfaces.ISearchResults[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults"/> class.
+            </summary>
+            <param name="searchResults">The search results to merge.</param>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Sources">
+            <summary>
+            The source data that went into this merged instance.
+            </summary>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Children">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.TotalChildrenCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Playlists">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.TotalPlaylistCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Tracks">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.TotalTracksCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Albums">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.TotalAlbumsCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Artists">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.TotalArtistsCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.SourceCore">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Id">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Url">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Images">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.PlaybackState">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.Duration">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.ChildrenChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.PlaylistsChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.TracksChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.AlbumsChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.ArtistsChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.PlaybackStateChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.NameChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.DescriptionChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.UrlChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.ImagesChanged">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.PauseAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.PlayAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.PopulateAlbumsAsync(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.PopulateArtistsAsync(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.PopulateChildrenAsync(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.PopulatePlaylistsAsync(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults.PopulateTracksAsync(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:StrixMusic.ViewModels.MergedWrappers.MergedTrack">
+            <summary>
+            A concrete class that merged multiple <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ISearchResults"/>
+            </summary>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedTrack.#ctor(StrixMusic.CoreInterfaces.Interfaces.ITrack[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:StrixMusic.ViewModels.MergedWrappers.MergedSearchResults"/> class.
+            </summary>
+            <param name="tracks">The <see cref="T:StrixMusic.CoreInterfaces.Interfaces.ITrack"/>s to merge together.</param>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Type">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Artists">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Album">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.DatePublished">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Genres">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.TrackNumber">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.PlayCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Language">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Lyrics">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.IsExplicit">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.SourceCore">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Id">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Url">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Images">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.PlaybackState">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Duration">
+            <inheritdoc/>
+        </member>
+        <member name="P:StrixMusic.ViewModels.MergedWrappers.MergedTrack.RelatedItems">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.ArtistsChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.GenresChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.AlbumChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.DatePublishedChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.TrackNumberChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.PlayCountChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.LanguageChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.LyricsChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.IsExplicitChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.PlaybackStateChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.NameChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.DescriptionChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.UrlChanged">
+            <inheritdoc/>
+        </member>
+        <member name="E:StrixMusic.ViewModels.MergedWrappers.MergedTrack.ImagesChanged">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedTrack.PauseAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedTrack.PlayAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Equals(StrixMusic.CoreInterfaces.Interfaces.ITrack)">
+            <summary>
+            Indicates whether the current item can be merged with another item of the same type.
+            </summary>
+            <param name="other">The item to check against.</param>
+            <returns><see langword="True"/> if the item can be merged, otherwise <see langword="false"/></returns>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedTrack.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:StrixMusic.ViewModels.MergedWrappers.MergedTrack.GetHashCode">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

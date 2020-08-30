@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LaunchPad</name>
+    </assembly>
+    <members>
+        <member name="T:LaunchPad.Controls.ToggleContentButton">
+            <summary>
+            A <see cref="T:Windows.UI.Xaml.Controls.Primitives.ToggleButton"/> that can change content when toggled.
+            </summary>
+        </member>
+        <member name="F:LaunchPad.Controls.ToggleContentButton.CheckContentProperty">
+            <summary>
+            A <see cref="T:Windows.UI.Xaml.DependencyProperty"/> for the <see cref="P:LaunchPad.Controls.ToggleContentButton.CheckedContent"/> property.
+            </summary>
+        </member>
+        <member name="F:LaunchPad.Controls.ToggleContentButton.IndeterminateContentProperty">
+            <summary>
+            A <see cref="T:Windows.UI.Xaml.DependencyProperty"/> for the <see cref="P:LaunchPad.Controls.ToggleContentButton.IndeterminateContent"/> property.
+            </summary>
+        </member>
+        <member name="M:LaunchPad.Controls.ToggleContentButton.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:LaunchPad.Controls.ToggleContentButton"/> class.
+            </summary>
+        </member>
+        <member name="P:LaunchPad.Controls.ToggleContentButton.CheckedContent">
+            <summary>
+            The <see cref="T:System.Object"/> the <see cref="T:LaunchPad.Controls.ToggleContentButton"/> shows when checked.
+            </summary>
+        </member>
+        <member name="P:LaunchPad.Controls.ToggleContentButton.IndeterminateContent">
+            <summary>
+            The <see cref="T:System.Object"/> the <see cref="T:LaunchPad.Controls.ToggleContentButton"/> shows when indeterminate.
+            </summary>
+        </member>
+        <member name="T:LaunchPad.GlobalStaticResources">
+            <summary>
+            Contains all the static resources defined for the application
+            </summary>
+        </member>
+    </members>
+</doc>
