@@ -44,9 +44,9 @@ namespace StrixMusic.Services.Settings
         }
 
         /// <inheritdoc/>
-        public virtual Task<T> GetValue<T>(string key, bool fallback = true)
+        public virtual Task<T> GetValue<T>(string key)
         {
-            return GetValue<T>(key, Id, fallback);
+            return GetValue<T>(key, Id);
         }
 
         /// <inheritdoc/>
@@ -107,7 +107,7 @@ namespace StrixMusic.Services.Settings
         }
 
         /// <inheritdoc/>
-        public virtual async Task<T> GetValue<T>(string key, string identifier, bool fallback = false)
+        public virtual async Task<T> GetValue<T>(string key, string identifier)
         {
             string result = await _textStorageService.GetValueAsync(key, identifier);
 
@@ -124,8 +124,7 @@ namespace StrixMusic.Services.Settings
             // Try to get the setting value
             if (!(obj is T))
             {
-                if (fallback) return default!;
-                throw new InvalidOperationException($"The setting {key} doesn't exist");
+                return (T)SettingsKeysType.GetField(key).GetValue(null);
             }
 
             return obj!;
@@ -135,6 +134,11 @@ namespace StrixMusic.Services.Settings
         /// Identifies this settings instance.
         /// </summary>
         public abstract string Id { get; }
+
+        /// <summary>
+        /// The Type used to hold settings keys and default value for this implementation of the Settings Service.
+        /// </summary>
+        public virtual Type SettingsKeysType { get; } = typeof(SettingsKeys);
 
         /// <inheritdoc cref="ISettingsService.SettingChanged"/>
         public event EventHandler<SettingChangedEventArgs>? SettingChanged;
