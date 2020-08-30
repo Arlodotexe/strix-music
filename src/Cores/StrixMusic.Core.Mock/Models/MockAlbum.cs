@@ -73,6 +73,9 @@ namespace StrixMusic.Core.Mock.Models
         IReadOnlyList<ITrack> ITrackCollection.Tracks => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        IPlayableCollectionGroup IAlbum.RelatedItems => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>> TracksChanged;
 
         /// <inheritdoc/>
@@ -113,6 +116,12 @@ namespace StrixMusic.Core.Mock.Models
 
         /// <inheritdoc/>
         public Task PopulateTracksAsync(int limit, int offset = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        Task<IReadOnlyList<ITrack>> ITrackCollection.PopulateTracksAsync(int limit, int offset)
         {
             throw new NotImplementedException();
         }

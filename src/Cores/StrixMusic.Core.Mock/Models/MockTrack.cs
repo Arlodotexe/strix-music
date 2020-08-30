@@ -79,6 +79,9 @@ namespace StrixMusic.Core.Mock.Models
         public int TotalRelatedItemsCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        IPlayableCollectionGroup ITrack.RelatedItems => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged;
 
         /// <inheritdoc/>
