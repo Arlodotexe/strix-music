@@ -12,6 +12,7 @@ namespace StrixMusic.Core.Mock.Models
     /// <inheritdoc cref="IAlbum"/>
     public class MockAlbum : IAlbum
     {
+        private IReadOnlyList<ITrack> _track;
 
         /// <inheritdoc/>
         [JsonProperty("id")]
@@ -23,11 +24,7 @@ namespace StrixMusic.Core.Mock.Models
 
         /// <inheritdoc/>
         [JsonIgnore]
-        public IReadOnlyList<MockTrack> Tracks => DummyTracks;
-
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public List<MockTrack> DummyTracks { get; set; } = new List<MockTrack>();
+        public List<ITrack> TracksJson { get; set; } = new List<ITrack>();
 
         /// <inheritdoc/>
         [JsonProperty("track_ids")]
@@ -43,13 +40,13 @@ namespace StrixMusic.Core.Mock.Models
         public ICore SourceCore => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Id => throw new NotImplementedException();
+        public string Id => IdJson;
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Name => throw new NotImplementedException();
+        public string Name => NameJson;
 
         /// <inheritdoc/>
         public IReadOnlyList<IImage> Images => throw new NotImplementedException();
@@ -64,13 +61,10 @@ namespace StrixMusic.Core.Mock.Models
         public TimeSpan Duration => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public IReadOnlyList<ITrack> Tracks => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        IReadOnlyList<ITrack> ITrackCollection.Tracks => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        IPlayableCollectionGroup IAlbum.RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>> TracksChanged;
@@ -103,15 +97,10 @@ namespace StrixMusic.Core.Mock.Models
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        Task<IReadOnlyList<ITrack>> ITrackCollection.PopulateTracksAsync(int limit, int offset)
-        {
-            throw new NotImplementedException();
+            _track = TracksJson;
+            return Task.FromResult(_track);
         }
     }
 }

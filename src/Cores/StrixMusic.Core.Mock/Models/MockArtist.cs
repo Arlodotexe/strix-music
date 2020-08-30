@@ -14,7 +14,7 @@ namespace StrixMusic.Core.Mock.Models
     {
         /// <inheritdoc/>
         [JsonProperty("id")]
-        public string IdJson { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         [JsonProperty("name")]
@@ -40,7 +40,7 @@ namespace StrixMusic.Core.Mock.Models
         public ICore SourceCore => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Id => throw new NotImplementedException();
+        public string IdJson => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();
@@ -62,8 +62,6 @@ namespace StrixMusic.Core.Mock.Models
 
         /// <inheritdoc/>
         public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
-
-        IPlayableCollectionGroup IArtist.RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IAlbum>> AlbumsChanged;
@@ -99,25 +97,13 @@ namespace StrixMusic.Core.Mock.Models
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        Task<IReadOnlyList<IAlbum>> IAlbumCollection.PopulateAlbumsAsync(int limit, int offset)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        Task<IReadOnlyList<ITrack>> ITrackCollection.PopulateTracksAsync(int limit, int offset)
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
         {
             throw new NotImplementedException();
         }

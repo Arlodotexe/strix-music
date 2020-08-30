@@ -19,7 +19,7 @@ namespace StrixMusic.Core.Mock.Models
 
         /// <inheritdoc/>
         [JsonProperty("title")]
-        public string TitleStr { get; set; } = string.Empty;
+        public string TitleJson { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         public TrackType Type => throw new NotImplementedException();
@@ -58,7 +58,7 @@ namespace StrixMusic.Core.Mock.Models
         public Uri Url => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Name => throw new NotImplementedException();
+        public string Name => TitleJson;
 
         /// <inheritdoc/>
         public IReadOnlyList<IImage> Images => throw new NotImplementedException();
@@ -74,9 +74,6 @@ namespace StrixMusic.Core.Mock.Models
 
         /// <inheritdoc/>
         public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        IPlayableCollectionGroup ITrack.RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged;
