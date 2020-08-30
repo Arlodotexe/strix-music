@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services;
@@ -16,12 +19,26 @@ namespace StrixMusic.Shared
     {
         static IocLocator()
         {
-            Ioc.Default.ConfigureServices(services =>
+            Ioc.Default.ConfigureServices(async services =>
             {
-                services.AddSingleton<ISettingsService, SettingsService>();
-                services.AddSingleton<ITextStorageService, TextStorageService>();
+                var textStorageService = new TextStorageService();
+                var settingsService = new DefaultSettingsService(textStorageService);
+
+                services.AddSingleton<ISettingsService>(settingsService);
+                services.AddSingleton<ITextStorageService>(textStorageService);
                 services.AddSingleton<ISuperShellService, SuperShellService>();
                 services.AddSingleton<IFileSystemService, FileSystemService>();
+
+                // Todo: If coreRegistry is null, show out of box setup page.
+                var coreRegistry = await settingsService.GetValue<Dictionary<string, Type>>(nameof(SettingsKeys.CoreRegistry));
+
+                if (coreRegistry != null)
+                {
+                    var cores = coreRegistry.Select(x => (ICore)Activator.CreateInstance(x.Value, x.Key));
+
+                    services.AddSingleton(cores);
+                }
+
                 services.AddSingleton<MainViewModel>();
             });
         }

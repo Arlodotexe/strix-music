@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StrixMusic.Services.Settings
+﻿namespace StrixMusic.Services.Settings
 {
     /// <summary>
     /// Holds information about a changed setting.

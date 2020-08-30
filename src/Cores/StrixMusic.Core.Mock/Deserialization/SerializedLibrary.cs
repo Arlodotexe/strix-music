@@ -48,31 +48,31 @@ namespace StrixMusic.Core.Mock.Deserialization
         }
 
         /// <inheritdoc/>
-        public override Task PopulateAlbumsAsync(int limit, int offset = 0)
+        public override Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override Task PopulateArtistsAsync(int limit, int offset = 0)
+        public override Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override Task PopulateChildrenAsync(int limit, int offset = 0)
+        public override Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override Task PopulatePlaylistsAsync(int limit, int offset = 0)
+        public override Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override Task PopulateTracksAsync(int limit, int offset = 0)
+        public override Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

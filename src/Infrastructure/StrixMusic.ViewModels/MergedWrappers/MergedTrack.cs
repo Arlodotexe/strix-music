@@ -14,9 +14,9 @@ namespace StrixMusic.ViewModels.MergedWrappers
     /// </summary>
     public class MergedTrack : ITrack, IEquatable<ITrack>
     {
-        private ITrack _preferredSource;
+        private readonly List<IArtist> _artists = new List<IArtist>();
 
-        private List<IArtist> _artists = new List<IArtist>();
+        private ITrack _preferredSource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchResults"/> class.

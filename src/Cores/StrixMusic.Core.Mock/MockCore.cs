@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using StrixMusic.Core.Mock.Deserialization;
 using StrixMusic.Core.Mock.Models;
@@ -15,6 +14,15 @@ namespace StrixMusic.Core.Mock
     /// </summary>
     public class MockCore : ICore
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MockCore"/> class.
+        /// </summary>
+        /// <param name="instanceId"></param>
+        public MockCore(string instanceId)
+        {
+            InstanceId = instanceId;
+        }
+
         /// <inheritdoc/>
         public SerializedLibrary _serializedLibaray { get; set; }
 
@@ -43,6 +51,9 @@ namespace StrixMusic.Core.Mock
         public IPlayableCollectionGroup Discoverables => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public string InstanceId { get; }
+
+        /// <inheritdoc/>
         public event EventHandler<CoreState> CoreStateChanged;
 
         /// <inheritdoc/>
@@ -69,7 +80,8 @@ namespace StrixMusic.Core.Mock
         /// <inheritdoc/>
         public async Task InitAsync()
         {
-            _serializedLibaray = await Deserializer.DeserializeLibrary();
+            // commented out, wasn't compiling.
+            // _serializedLibaray = await Deserializer.DeserializeLibrary();
         }
     }
 }

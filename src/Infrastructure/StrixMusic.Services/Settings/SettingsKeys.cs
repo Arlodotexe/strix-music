@@ -1,4 +1,7 @@
-﻿namespace StrixMusic.Services.Settings
+﻿using System;
+using System.Collections.Generic;
+
+namespace StrixMusic.Services.Settings
 {
     /// <summary>
     /// A <see langword="class"/> containing keys for all settings throughout the main app.
@@ -12,5 +15,10 @@
         /// Gets the default value for <see cref=""/> in settings.
         /// </summary>
         public static readonly string PreferredShell = "Default";
+
+        /// <summary>
+        /// Stored information about the cores that have been configured.
+        /// </summary>
+        public static readonly Dictionary<string, Type> CoreRegistry = new Dictionary<string, Type>();
     }
 }

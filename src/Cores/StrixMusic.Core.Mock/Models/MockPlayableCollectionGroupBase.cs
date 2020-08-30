@@ -111,31 +111,31 @@ namespace StrixMusic.Core.Mock.Models
         }
 
         /// <inheritdoc />
-        public virtual Task PopulateAlbumsAsync(int limit, int offset = 0)
+        public virtual Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public virtual Task PopulateArtistsAsync(int limit, int offset = 0)
+        public virtual Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public virtual Task PopulateChildrenAsync(int limit, int offset = 0)
+        public virtual Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public virtual Task PopulatePlaylistsAsync(int limit, int offset = 0)
+        public virtual Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public virtual Task PopulateTracksAsync(int limit, int offset = 0)
+        public virtual Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

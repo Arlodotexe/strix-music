@@ -134,7 +134,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="ICore.CoreConfig" />
-        public ICoreConfig CoreConfig { get => _core.CoreConfig; set => _core.CoreConfig = value; }
+        public ICoreConfig CoreConfig => _core.CoreConfig;
 
         /// <inheritdoc cref="ICore.Name" />
         public string Name => _core.Name;

@@ -77,6 +77,34 @@ namespace StrixMusic.Services
         }
 
         /// <inheritdoc />
+        public async Task RemoveAll()
+        {
+            // TODO: https://dev.azure.com/arloappx/Strix-Music/_sprints/taskboard/Strix-Music%20Team/Strix-Music/Sprint%202?workitem=232.
+            var items = await _localFolder.GetItemsAsync();
+
+            foreach (var item in items)
+            {
+                await item.DeleteAsync();
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task RemoveByPathAsync(string path)
+        {
+            StorageFolder pathHandle;
+            try
+            {
+                pathHandle = await _localFolder.GetFolderAsync(path);
+            }
+            catch (Exception)
+            {
+                pathHandle = await _localFolder.CreateFolderAsync(path);
+            }
+
+            await pathHandle.DeleteAsync();
+        }
+
+        /// <inheritdoc />
         public async Task SetValueAsync(string filename, string value)
         {
             StorageFile fileHandle;
@@ -95,10 +123,20 @@ namespace StrixMusic.Services
         /// <inheritdoc />
         public async Task SetValueAsync(string filename, string value, string path)
         {
+            StorageFolder pathHandle;
+            try
+            {
+                pathHandle = await _localFolder.GetFolderAsync(path);
+            }
+            catch (Exception)
+            {
+                pathHandle = await _localFolder.CreateFolderAsync(path);
+            }
+
             StorageFile fileHandle;
             try
             {
-                fileHandle = await _localFolder.GetFileAsync(filename);
+                fileHandle = await pathHandle.GetFileAsync(filename);
             }
             catch (Exception)
             {

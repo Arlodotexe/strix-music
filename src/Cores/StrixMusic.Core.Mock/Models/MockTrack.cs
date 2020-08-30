@@ -73,10 +73,7 @@ namespace StrixMusic.Core.Mock.Models
         public TimeSpan Duration => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public int TotalRelatedItemsCount => throw new NotImplementedException();
+        public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc/>
         IPlayableCollectionGroup ITrack.RelatedItems => throw new NotImplementedException();
@@ -124,9 +121,6 @@ namespace StrixMusic.Core.Mock.Models
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
-
-        /// <inheritdoc/>
         public Task PauseAsync()
         {
             throw new NotImplementedException();
@@ -134,12 +128,6 @@ namespace StrixMusic.Core.Mock.Models
 
         /// <inheritdoc/>
         public Task PlayAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

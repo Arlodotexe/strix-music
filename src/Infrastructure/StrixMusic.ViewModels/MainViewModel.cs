@@ -2,9 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Extensions;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -17,21 +15,21 @@ namespace StrixMusic.ViewModels
     /// </summary>
     public class MainViewModel : ObservableRecipient
     {
-        private readonly IReadOnlyList<ICore> _cores;
+        private readonly IEnumerable<ICore> _cores;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
-        public MainViewModel()
+        public MainViewModel(IEnumerable<ICore> cores)
         {
+            _cores = cores;
+
             Devices = new ObservableCollection<BindableDevice>();
             SearchAutoComplete = new ObservableCollection<string>();
 
             LoadedCores = new ObservableCollection<BindableCore>();
             Users = new ObservableCollection<BindableUserProfile>();
             PlaybackQueue = new ObservableCollection<BindableTrack>();
-
-            _cores = Ioc.Default.GetServices<ICore>().ToArray();
 
             GetSearchResultsAsyncCommand = new AsyncRelayCommand<string>(GlobalSearchResultsAsync);
             GetSearchAutoSuggestAsyncCommand = new RelayCommand<string>(GlobalSearchSuggestions);

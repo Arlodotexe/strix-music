@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Helpers;
 using StrixMusic.Services.Settings;
@@ -6,9 +9,6 @@ using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
 using StrixMusic.Shell.Default.Controls;
 using StrixMusic.ViewModels;
-using System;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -56,7 +56,9 @@ namespace StrixMusic
 
         private void AttachEvents()
         {
-            Ioc.Default.GetService<ISettingsService>().SettingChanged += SettingsService_SettingChanged;
+            var settingsSvc = Ioc.Default.GetService<ISettingsService>();
+
+            settingsSvc.SettingChanged += SettingsService_SettingChanged;
         }
 
         private void DetachEvents()
