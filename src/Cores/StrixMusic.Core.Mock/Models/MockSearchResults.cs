@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using StrixMusic.Core.Mock.Deserialization;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -14,11 +15,16 @@ namespace StrixMusic.Core.Mock.Models
         private IReadOnlyList<ITrack> _tracks;
         private IReadOnlyList<IAlbum> _albums;
         private IReadOnlyList<IArtist> _artists;
+        private SerializedLibrary _serializedLibrary;
 
         /// <inheritdoc/>
-        public MockSearchResults()
+        public MockSearchResults(IPlayableCollectionGroup playableCollectionGroup)
         {
+            _serializedLibrary = playableCollectionGroup as SerializedLibrary;
         }
+
+        /// <inheritdoc/>
+        public SerializedLibrary SerializedLibrary => _serializedLibrary;
 
         /// <inheritdoc/>
         public IReadOnlyList<IPlayableCollectionGroup> Children => throw new NotImplementedException();
@@ -119,13 +125,15 @@ namespace StrixMusic.Core.Mock.Models
         /// <inheritdoc/>
         public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
-            throw new NotImplementedException();
+            _albums = _serializedLibrary.AlbumJson;
+            return Task.FromResult(_albums);
         }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
         {
-            throw new NotImplementedException();
+            _artists = _serializedLibrary.ArtistJson;
+            return Task.FromResult(_artists);
         }
 
         /// <inheritdoc/>
@@ -143,7 +151,8 @@ namespace StrixMusic.Core.Mock.Models
         /// <inheritdoc/>
         public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
-            throw new NotImplementedException();
+            _tracks = _serializedLibrary.TracksJson;
+            return Task.FromResult(_tracks);
         }
     }
 }

@@ -139,5 +139,35 @@ namespace StrixMusic.Core.Mock.Models
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        Task<IReadOnlyList<IAlbum>> IAlbumCollection.PopulateAlbumsAsync(int limit, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        Task<IReadOnlyList<IArtist>> IArtistCollection.PopulateArtistsAsync(int limit, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        Task<IReadOnlyList<IPlayableCollectionGroup>> IPlayableCollectionGroup.PopulateChildrenAsync(int limit, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        Task<IReadOnlyList<IPlaylist>> IPlaylistCollection.PopulatePlaylistsAsync(int limit, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        Task<IReadOnlyList<ITrack>> ITrackCollection.PopulateTracksAsync(int limit, int offset)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

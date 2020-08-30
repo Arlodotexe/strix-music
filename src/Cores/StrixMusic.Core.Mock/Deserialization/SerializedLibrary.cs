@@ -21,19 +21,19 @@ namespace StrixMusic.Core.Mock.Deserialization
         /// The lists of tracks in the dummy core's library.
         /// </summary>
         [JsonProperty("tracks")]
-        public List<MockTrack>? TracksInfo { get; set; }
+        public List<MockTrack>? TracksJson { get; set; }
 
         /// <summary>
         /// The lists of albums in the dummy core's library.
         /// </summary>
         [JsonProperty("albums")]
-        public List<MockAlbum>? AlbumsInfo { get; set; }
+        public List<MockAlbum>? AlbumJson { get; set; }
 
         /// <summary>
         /// The lists of artists in the dummy core's library.
         /// </summary>
         [JsonProperty("artists")]
-        public List<MockArtist>? ArtistsInfo { get; set; }
+        public List<MockArtist>? ArtistJson { get; set; }
 
         /// <inheritdoc/>
         public override Task PauseAsync()

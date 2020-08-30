@@ -74,8 +74,7 @@ namespace StrixMusic.Core.Mock
         /// <inheritdoc/>
         public Task<ISearchResults> GetSearchResultsAsync(string query)
         {
-            ISearchResults searchResults = new MockSearchResults();
-            return (Task<ISearchResults>)searchResults;
+            return Task.FromResult(new MockSearchResults(_serializedLibaray) as ISearchResults);
         }
 
         /// <inheritdoc/>
