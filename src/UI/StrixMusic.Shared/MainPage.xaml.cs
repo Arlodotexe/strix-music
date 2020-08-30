@@ -56,7 +56,9 @@ namespace StrixMusic
 
         private void AttachEvents()
         {
-            Ioc.Default.GetService<ISettingsService>().SettingChanged += SettingsService_SettingChanged;
+            var settingsSvc = Ioc.Default.GetService<ISettingsService>();
+
+            settingsSvc.SettingChanged += SettingsService_SettingChanged;
         }
 
         private void DetachEvents()

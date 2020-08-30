@@ -2,6 +2,9 @@
 // Sergio's GitHub: https://github.com/Sergio0694
 // Legere: https://www.microsoft.com/store/apps/9PHJRVCSKVJZ
 
+using System;
+using StrixMusic.Services.StorageService;
+
 namespace StrixMusic.Services.Settings
 {
     /// <summary>
@@ -10,7 +13,19 @@ namespace StrixMusic.Services.Settings
     /// </summary>
     public class DefaultSettingsService : SettingsServiceBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultSettingsService"/> class.
+        /// </summary>
+        /// <param name="textStorageService">The text storage service to be used by this instance.</param>
+        public DefaultSettingsService(ITextStorageService textStorageService)
+            : base(textStorageService)
+        {
+        }
+
         /// <inheritdoc/>
         public override string Id => "Default";
+
+        /// <inheritdoc/>
+        public override event EventHandler<SettingChangedEventArgs>? SettingChanged;
     }
 }

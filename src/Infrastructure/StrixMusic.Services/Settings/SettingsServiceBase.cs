@@ -18,11 +18,23 @@ namespace StrixMusic.Services.Settings
     /// </summary>
     public abstract class SettingsServiceBase : ISettingsService
     {
+        private readonly ITextStorageService _textStorageService;
+
         /// <summary>
         /// A service to store and retrieve settings throughout the app.
         /// </summary>
         public SettingsServiceBase()
         {
+            _textStorageService = Ioc.Default.GetService<ITextStorageService>();
+        }
+
+        /// <summary>
+        /// A service to store and retrieve settings throughout the app.
+        /// </summary>
+        /// <param name="textStorageService">The text storage service to be used by this instance.</param>
+        public SettingsServiceBase(ITextStorageService textStorageService)
+        {
+            _textStorageService = textStorageService;
         }
 
         /// <inheritdoc/>
@@ -40,13 +52,13 @@ namespace StrixMusic.Services.Settings
         /// <inheritdoc/>
         public virtual Task ResetToDefaults()
         {
-            return Ioc.Default.GetService<ITextStorageService>().RemoveAll();
+            return _textStorageService.RemoveAll();
         }
 
         /// <inheritdoc/>
         public virtual Task ResetToDefaults(string identifier)
         {
-            return Ioc.Default.GetService<ITextStorageService>().RemoveByPathAsync(identifier);
+            return _textStorageService.RemoveByPathAsync(identifier);
         }
 
         /// <inheritdoc/>
@@ -81,14 +93,14 @@ namespace StrixMusic.Services.Settings
             Task.Run(async () =>
             {
                 // Store the new value
-                if (!await Ioc.Default.GetService<ITextStorageService>().FileExistsAsync(key))
+                if (!await _textStorageService.FileExistsAsync(key))
                 {
-                    await Ioc.Default.GetService<ITextStorageService>().SetValueAsync(key, serialized, identifier);
+                    await _textStorageService.SetValueAsync(key, serialized, identifier);
                     SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
                 }
                 else if (overwrite)
                 {
-                    await Ioc.Default.GetService<ITextStorageService>().SetValueAsync(key, serialized, identifier);
+                    await _textStorageService.SetValueAsync(key, serialized, identifier);
                     SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
                 }
             });
@@ -97,7 +109,7 @@ namespace StrixMusic.Services.Settings
         /// <inheritdoc/>
         public virtual async Task<T> GetValue<T>(string key, string identifier, bool fallback = false)
         {
-            string result = await Ioc.Default.GetService<ITextStorageService>().GetValueAsync(key);
+            string result = await _textStorageService.GetValueAsync(key);
 
             T obj;
             try
@@ -125,6 +137,6 @@ namespace StrixMusic.Services.Settings
         public abstract string Id { get; }
 
         /// <inheritdoc cref="ISettingsService.SettingChanged"/>
-        public event EventHandler<SettingChangedEventArgs>? SettingChanged;
+        public virtual event EventHandler<SettingChangedEventArgs>? SettingChanged;
     }
 }
