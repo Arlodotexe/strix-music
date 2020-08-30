@@ -23,7 +23,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// Populates the <see cref="IPlaylist"/> in the collection.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PopulatePlaylistsAsync(int limit, int offset = 0);
+        Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0);
 
         /// <summary>
         /// Fires when <see cref="Playlists"/> changes.

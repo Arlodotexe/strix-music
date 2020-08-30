@@ -32,7 +32,7 @@ namespace StrixMusic.ViewModels.Bindables
             Genres = new ObservableCollection<string>(_track.Genres);
             Artists = new ObservableCollection<BindableArtist>(_track.Artists.Select(x => new BindableArtist(x)));
             Images = new ObservableCollection<IImage>(_track.Images);
-            RelatedItems = new ObservableCollection<BindableCollectionGroup>(_track.RelatedItems.Select(x => new BindableCollectionGroup(x)));
+            RelatedItems = new BindableCollectionGroup(_track.RelatedItems);
             SourceCore = new BindableCore(_track.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -57,7 +57,6 @@ namespace StrixMusic.ViewModels.Bindables
             _track.TrackNumberChanged += Track_TrackNumberChanged;
             _track.UrlChanged += Track_UrlChanged;
             _track.ImagesChanged += Track_ImagesChanged;
-            _track.RelatedItemsChanged += Track_RelatedItemsChanged;
         }
 
         private void DetachEvents()
@@ -76,20 +75,6 @@ namespace StrixMusic.ViewModels.Bindables
             _track.TrackNumberChanged -= Track_TrackNumberChanged;
             _track.UrlChanged -= Track_UrlChanged;
             _track.ImagesChanged -= Track_ImagesChanged;
-            _track.RelatedItemsChanged -= Track_RelatedItemsChanged;
-        }
-
-        private void Track_RelatedItemsChanged(object sender, CollectionChangedEventArgs<IPlayableCollectionGroup> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                RelatedItems.Add(new BindableCollectionGroup(item));
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                RelatedItems.Remove(new BindableCollectionGroup(item));
-            }
         }
 
         private void Track_ImagesChanged(object sender, CollectionChangedEventArgs<IImage> e)
@@ -290,10 +275,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItems"/>
-        public ObservableCollection<BindableCollectionGroup> RelatedItems { get; }
-
-        /// <inheritdoc cref="IRelatedCollectionGroups.TotalRelatedItemsCount"/>
-        public int TotalRelatedItemsCount => _track.TotalRelatedItemsCount;
+        public BindableCollectionGroup RelatedItems { get; }
 
         /// <inheritdoc cref="IPlayable.PlaybackStateChanged"/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged
@@ -491,20 +473,6 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItemsChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged
-        {
-            add
-            {
-                _track.RelatedItemsChanged += value;
-            }
-
-            remove
-            {
-                _track.RelatedItemsChanged -= value;
-            }
-        }
-
         /// <summary>
         /// Attempts to pause the track, if playing.
         /// </summary>
@@ -525,12 +493,6 @@ namespace StrixMusic.ViewModels.Bindables
         public Task PlayAsync()
         {
             return _track.PlayAsync();
-        }
-
-        /// <inheritdoc cref="IRelatedCollectionGroups.PopulateRelatedItemsAsync(int, int)"/>
-        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
-        {
-            return _track.PopulateRelatedItemsAsync(limit, offset);
         }
     }
 }

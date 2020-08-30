@@ -1,10 +1,10 @@
-﻿using StrixMusic.CoreInterfaces;
-using StrixMusic.CoreInterfaces.Enums;
-using StrixMusic.CoreInterfaces.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using StrixMusic.CoreInterfaces;
+using StrixMusic.CoreInterfaces.Enums;
+using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.Core.Mock.Models
 {
@@ -143,31 +143,31 @@ namespace StrixMusic.Core.Mock.Models
         }
 
         /// <inheritdoc/>
-        public Task PopulateAlbumsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateArtistsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateChildrenAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulatePlaylistsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateTracksAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

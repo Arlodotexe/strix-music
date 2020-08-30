@@ -20,8 +20,6 @@ namespace StrixMusic.Core.Mock.Models
         private string _name;
         private List<IImage> _images = new List<IImage>();
         private string _description;
-        private List<IPlayableCollectionGroup> _relatedItems = new List<IPlayableCollectionGroup>();
-        private int _totalRelatedItemsCount;
         private int _duration;
         private PlaybackState _playbackState;
 
@@ -35,7 +33,6 @@ namespace StrixMusic.Core.Mock.Models
             _url = new Uri("http://test.com");
             _name = "Test name";
             _description = "Test description";
-            _totalRelatedItemsCount = 23;
             _playbackState = PlaybackState.None;
         }
 
@@ -76,12 +73,7 @@ namespace StrixMusic.Core.Mock.Models
         public TimeSpan Duration => throw new NotImplementedException();
 
         /// <inheritdoc cref="IAlbum.RelatedItems"/>
-        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => throw new NotImplementedException();
-
-        /// <summary>
-        /// <inheritdoc cref="IAlbum.TotalRelatedItemsCount"/>
-        /// </summary>
-        public int TotalRelatedItemsCount => _totalRelatedItemsCount;
+        public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc cref="IAlbum.TracksChanged"/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>> TracksChanged;
@@ -101,9 +93,6 @@ namespace StrixMusic.Core.Mock.Models
         /// <inheritdoc cref="IAlbum.ImagesChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
 
-        /// <inheritdoc cref="IAlbum.RelatedItemsChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
-
         /// <inheritdoc cref="IAlbum.PauseAsync"/>
         public Task PauseAsync()
         {
@@ -116,14 +105,8 @@ namespace StrixMusic.Core.Mock.Models
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="IAlbum.PopulateRelatedItemsAsync"/>
-        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <inheritdoc cref="IAlbum.PopulateTracksAsync"/>
-        public Task PopulateTracksAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             _tracks = new List<ITrack>()
             {
@@ -132,7 +115,7 @@ namespace StrixMusic.Core.Mock.Models
                 new MockTrack(),
                 new MockTrack(),
             };
-            return Task.CompletedTask;
+            return Task.FromResult(Tracks);
         }
     }
 }

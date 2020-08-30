@@ -30,7 +30,6 @@ namespace StrixMusic.Core.Mock.Models
         private string _description;
         private PlaybackState _playBackState;
         private TimeSpan _duration;
-        private List<IPlayableCollectionGroup> _relatedItems = new List<IPlayableCollectionGroup>();
         private int _totalRelatedItemsCount;
 
         ///<summary>
@@ -102,7 +101,7 @@ namespace StrixMusic.Core.Mock.Models
         public TimeSpan Duration => _duration;
 
         /// <inheritdoc cref="ITrack.RelatedItems"/>
-        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => _relatedItems;
+        public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc cref="ITrack.TotalRelatedItemsCount"/>
         public int TotalRelatedItemsCount => _totalRelatedItemsCount;
@@ -155,9 +154,6 @@ namespace StrixMusic.Core.Mock.Models
         /// <inheritdoc cref="ITrack.ImagesChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
 
-        /// <inheritdoc cref="ITrack.RelatedItemsChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
-
         /// <inheritdoc cref="ITrack.LanguageChanged"/>
         event EventHandler<CultureInfo> ITrack.LanguageChanged
         {
@@ -180,12 +176,6 @@ namespace StrixMusic.Core.Mock.Models
 
         /// <inheritdoc cref="ITrack.PlayAsync"/>
         public Task PlayAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="ITrack.PopulateRelatedItemsAsync"/>
-        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

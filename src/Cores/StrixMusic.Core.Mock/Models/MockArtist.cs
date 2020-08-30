@@ -14,7 +14,6 @@ namespace StrixMusic.Core.Mock.Models
         private List<IAlbum> _albums = new List<IAlbum>();
         private List<ITrack> _itracks = new List<ITrack>();
         private List<IImage> _images = new List<IImage>();
-        private List<IPlayableCollectionGroup> _relatedItems = new List<IPlayableCollectionGroup>();
         private string _id;
         private Uri _url;
         private string _name;
@@ -76,10 +75,7 @@ namespace StrixMusic.Core.Mock.Models
         public TimeSpan Duration => _duration;
 
         /// <inheritdoc cref="IAlbum.RelatedItems"/>
-        public IReadOnlyList<IPlayableCollectionGroup> RelatedItems => _relatedItems;
-
-        /// <inheritdoc cref="IAlbum.TotalRelatedItemsCount"/>
-        public int TotalRelatedItemsCount => _totalTracksCount;
+        public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc cref="IAlbum.AlbumsChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IAlbum>> AlbumsChanged;
@@ -102,10 +98,6 @@ namespace StrixMusic.Core.Mock.Models
         /// <inheritdoc cref="IAlbum.ImagesChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
 
-        /// <inheritdoc cref="IAlbum.RelatedItemsChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> RelatedItemsChanged;
-
-
         /// <inheritdoc cref="IAlbum.PauseAsync"/>
         public Task PauseAsync()
         {
@@ -119,19 +111,13 @@ namespace StrixMusic.Core.Mock.Models
         }
 
         /// <inheritdoc cref="IAlbum.PopulateAlbumsAsync"/>
-        public Task PopulateAlbumsAsync(int limit, int offset = 0)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc cref="IAlbum.PopulateRelatedItemsAsync"/>
-        public Task PopulateRelatedItemsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc cref="IAlbum.PopulateTracksAsync"/>
-        public Task PopulateTracksAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }

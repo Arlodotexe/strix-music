@@ -8,7 +8,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     /// <summary>
     /// Metadata about a track.
     /// </summary>
-    public interface ITrack : IPlayable, IRelatedCollectionGroups
+    public interface ITrack : IPlayable
     {
         /// <inheritdoc cref="TrackType"/>
         TrackType Type { get; }
@@ -58,6 +58,11 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// If this track contains explicit language.
         /// </summary>
         bool IsExplicit { get; }
+
+        /// <summary>
+        /// A <see cref="IPlayable"/> of items related to this item.
+        /// </summary>
+        IPlayableCollectionGroup RelatedItems { get; }
 
         /// <summary>
         /// Fires when the <see cref="Artists"/> metadata changes.

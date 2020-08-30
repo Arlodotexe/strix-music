@@ -195,7 +195,7 @@ namespace StrixMusic.ViewModels.MergedWrappers
         }
 
         /// <inheritdoc/>
-        public Task PopulateAlbumsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
             // The items in this Merged source are its own thing once we merge it, so any offset / limit passed here are completely disregarding the original source
 
@@ -215,29 +215,29 @@ namespace StrixMusic.ViewModels.MergedWrappers
                     await source.PopulateAlbumsAsync(limitPerSource);
             });
 
-            return Task.CompletedTask;
+            return Task.FromResult(Albums);
         }
 
         /// <inheritdoc/>
-        public Task PopulateArtistsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateChildrenAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulatePlaylistsAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task PopulateTracksAsync(int limit, int offset = 0)
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
         }
