@@ -20,7 +20,7 @@ namespace StrixMusic.Services.StorageService
         /// </summary>
         /// <param name="filename">The name of the file (including the file extension).</param>
         /// <param name="value">The value to be stored.</param>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder>.</returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation..</returns>
         Task SetValueAsync(string filename, string value);
 
         /// <summary>
@@ -40,6 +40,19 @@ namespace StrixMusic.Services.StorageService
         /// <param name="path">A relative path (separated by forward slashes), to save the file in a subfolder.</param>
         /// <returns>The <see cref="Task"/> representing the asyncronous operation.</returns>
         Task SetValueAsync(string filename, string value, string path);
+
+        /// <summary>
+        /// Removes all stored data associated with an <param name="identifier"/>.
+        /// </summary>
+        /// <param name="identifier">The identifier to lookup.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task RemoveByPathAsync(string path);
+
+        /// <summary>
+        /// Removes all saved settings.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task RemoveAll();
 
         /// <summary>
         /// Checks if the file exists.

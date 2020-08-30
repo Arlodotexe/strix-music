@@ -38,7 +38,7 @@ namespace StrixMusic.Services.Settings
         /// <param name="value">The value to assign to the setting key.</param>
         /// <param name="identifier">Identifies a unique version of this settings key.</param>
         /// <param name="overwrite">Indicates whether or not to overwrite the setting, if it already exists.</param>
-        void SetValue<T>(string key, object? value, Type identifier, bool overwrite = true);
+        void SetValue<T>(string key, object? value, string identifier, bool overwrite = true);
 
         /// <summary>
         /// Reads a value from the current <see cref="IServiceProvider"/> instance and returns its casting in the right type.
@@ -48,18 +48,20 @@ namespace StrixMusic.Services.Settings
         /// <param name="identifier">Identifies a unique version of this settings key.</param>
         /// <param name="fallback">If true, the method returns the default <typeparamref name="T"/> value in case of failure.</param>
         /// <returns>A <see cref="Task{T}"/> that represents the value for the storage <paramref name="key"/> with the <paramref name="identifier"/>.</returns>
-        Task<T> GetValue<T>(string key, Type identifier, bool fallback = false);
+        Task<T> GetValue<T>(string key, string identifier, bool fallback = false);
 
         /// <summary>
         /// Deletes all the existing setting values.
         /// </summary>
-        void ResetToDefaults();
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ResetToDefaults();
 
         /// <summary>
-        /// Deletes all the existing setting values.
+        /// Deletes all the existing setting values for a given <paramref name="identifier"/>.
         /// </summary>
         /// <param name="identifier">Identifies a unique settings store.</param>
-        void ResetToDefaults(Type identifier);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ResetToDefaults(string identifier);
 
         /// <summary>
         /// Fires when a setting has changed.

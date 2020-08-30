@@ -12,47 +12,45 @@ using StrixMusic.Services.StorageService;
 
 namespace StrixMusic.Services.Settings
 {
+
     /// <summary>
     /// A <see langword="class"/> that handles the local app settings.
     /// </summary>
-    public class SettingsService : ISettingsService
+    public abstract class SettingsServiceBase : ISettingsService
     {
         /// <summary>
         /// A service to store and retrieve settings throughout the app.
         /// </summary>
-        public SettingsService()
+        public SettingsServiceBase()
         {
         }
 
         /// <inheritdoc/>
-        public void SetValue<T>(string key, object? value, bool overwrite = true)
+        public virtual void SetValue<T>(string key, object? value, bool overwrite = true)
         {
-            SetValue<T>(key, value, typeof(SettingsService), overwrite);
+            SetValue<T>(key, value, Id, overwrite);
         }
 
         /// <inheritdoc/>
-        public Task<T> GetValue<T>(string key, bool fallback = true)
+        public virtual Task<T> GetValue<T>(string key, bool fallback = true)
         {
-            return GetValue<T>(key, typeof(SettingsService), fallback);
+            return GetValue<T>(key, Id, fallback);
         }
 
         /// <inheritdoc/>
-        public void ResetToDefaults()
+        public virtual Task ResetToDefaults()
         {
-            throw new NotImplementedException();
+            return Ioc.Default.GetService<ITextStorageService>().RemoveAll();
         }
 
         /// <inheritdoc/>
-        public void ResetToDefaults(Type identifier)
+        public virtual Task ResetToDefaults(string identifier)
         {
-            foreach (var prop in identifier.GetProperties())
-            {
-                SetValue<object>(prop.Name, null);
-            }
+            return Ioc.Default.GetService<ITextStorageService>().RemoveByPathAsync(identifier);
         }
 
         /// <inheritdoc/>
-        public void SetValue<T>(string key, object? value, Type identifier, bool overwrite = true)
+        public virtual void SetValue<T>(string key, object? value, string identifier, bool overwrite = true)
         {
             // Serialize the value
 
@@ -85,19 +83,19 @@ namespace StrixMusic.Services.Settings
                 // Store the new value
                 if (!await Ioc.Default.GetService<ITextStorageService>().FileExistsAsync(key))
                 {
-                    await Ioc.Default.GetService<ITextStorageService>().SetValueAsync(key, serialized, nameof(identifier));
+                    await Ioc.Default.GetService<ITextStorageService>().SetValueAsync(key, serialized, identifier);
                     SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
                 }
                 else if (overwrite)
                 {
-                    await Ioc.Default.GetService<ITextStorageService>().SetValueAsync(key, serialized, nameof(identifier));
+                    await Ioc.Default.GetService<ITextStorageService>().SetValueAsync(key, serialized, identifier);
                     SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
                 }
             });
         }
 
         /// <inheritdoc/>
-        public async Task<T> GetValue<T>(string key, Type identifier, bool fallback = false)
+        public virtual async Task<T> GetValue<T>(string key, string identifier, bool fallback = false)
         {
             string result = await Ioc.Default.GetService<ITextStorageService>().GetValueAsync(key);
 
@@ -120,6 +118,11 @@ namespace StrixMusic.Services.Settings
 
             return obj!;
         }
+
+        /// <summary>
+        /// Identifies this settings instance.
+        /// </summary>
+        public abstract string Id { get; }
 
         /// <inheritdoc cref="ISettingsService.SettingChanged"/>
         public event EventHandler<SettingChangedEventArgs>? SettingChanged;

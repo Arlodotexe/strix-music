@@ -20,6 +20,7 @@ namespace StrixMusic.ViewModels.MergedWrappers
         private readonly List<IAlbum> _albums = new List<IAlbum>();
         private readonly List<IArtist> _artists = new List<IArtist>();
         private readonly List<IImage> _images = new List<IImage>();
+        private readonly List<IPlayableCollectionGroup> _children = new List<IPlayableCollectionGroup>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchResults"/> class.
@@ -95,8 +96,6 @@ namespace StrixMusic.ViewModels.MergedWrappers
         /// The source data that went into this merged instance.
         /// </summary>
         public IReadOnlyList<ISearchResults> Sources { get; }
-
-        private List<IPlayableCollectionGroup> _children = new List<IPlayableCollectionGroup>();
 
         /// <inheritdoc/>
         public IReadOnlyList<IPlayableCollectionGroup> Children => _children;

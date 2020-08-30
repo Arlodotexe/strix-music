@@ -19,12 +19,12 @@ namespace StrixMusic.Shared
         {
             Ioc.Default.ConfigureServices(services =>
             {
-                services.AddSingleton<ISettingsService, SettingsService>();
+                services.AddSingleton<DefaultSettingsService>();
                 services.AddSingleton<ITextStorageService, TextStorageService>();
                 services.AddSingleton<ISuperShellService, SuperShellService>();
                 services.AddSingleton<IFileSystemService, FileSystemService>();
 
-                //services.AddSingleton<ICore, FileCore>();
+                // services.AddSingleton<ICore, FileCore>();
                 services.AddSingleton<MainViewModel>();
             });
         }

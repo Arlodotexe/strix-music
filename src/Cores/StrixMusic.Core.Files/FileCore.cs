@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.Files.Models;
+using StrixMusic.Core.Files.Services;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
@@ -16,18 +18,22 @@ namespace StrixMusic.Core.Files
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCore"/> class.
         /// </summary>
-        public FileCore()
+        public FileCore(string instanceId)
         {
+            InstanceId = instanceId;
+
+            CoreConfig = new FileCoreConfig(this);
+            User = new FileUser(this);
         }
 
         /// <inheritdoc/>
-        public ICoreConfig CoreConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ICoreConfig CoreConfig { get; }
 
         /// <inheritdoc/>
         public string Name => nameof(FileCore);
 
         /// <inheritdoc/>
-        public IUser User { get => new FileUser(this); set => throw new NotImplementedException(); }
+        public IUser User { get; }
 
         /// <inheritdoc/>
         public CoreState CoreState => throw new NotImplementedException();
@@ -43,6 +49,9 @@ namespace StrixMusic.Core.Files
 
         /// <inheritdoc/>
         public IPlayableCollectionGroup Discoverables => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public string InstanceId { get; }
 
         /// <inheritdoc/>
         public event EventHandler<IDevice>? DeviceAdded;
@@ -113,8 +122,7 @@ namespace StrixMusic.Core.Files
         /// <inheritdoc/>
         public Task InitAsync()
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
-
     }
 }

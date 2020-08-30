@@ -11,10 +11,15 @@ namespace StrixMusic.CoreInterfaces.Interfaces
     public partial interface ICore : IAsyncDisposable
     {
         /// <inheritdoc cref="ICoreConfig" />
-        public ICoreConfig CoreConfig { get; set; }
+        public ICoreConfig CoreConfig { get; }
 
         /// <inheritdoc cref="CoreConfig.CoreState" />
         public CoreState CoreState { get; }
+
+        /// <summary>
+        /// Identifies this instance of the core.
+        /// </summary>
+        public string InstanceId { get; }
 
         /// <summary>
         /// The name of the core.

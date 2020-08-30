@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using StrixMusic.Core.Mock.Models;
 using StrixMusic.CoreInterfaces;
@@ -14,6 +13,15 @@ namespace StrixMusic.Core.Mock
     /// </summary>
     public class MockCore : ICore
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MockCore"/> class.
+        /// </summary>
+        /// <param name="instanceId"></param>
+        public MockCore(string instanceId)
+        {
+            InstanceId = instanceId;
+        }
+
         /// <inheritdoc/>
         public ICoreConfig CoreConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -37,6 +45,9 @@ namespace StrixMusic.Core.Mock
 
         /// <inheritdoc/>
         public IPlayableCollectionGroup Discoverables => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public string InstanceId { get; }
 
         /// <inheritdoc/>
         public event EventHandler<CoreState> CoreStateChanged;
