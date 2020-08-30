@@ -81,7 +81,8 @@ namespace StrixMusic.Core.Mock
         /// <inheritdoc/>
         public async Task InitAsync()
         {
-            _serializedLibaray = await Deserializer.DeserializeLibrary();
+            // commented out, wasn't compiling.
+            // _serializedLibaray = await Deserializer.DeserializeLibrary();
         }
     }
 }

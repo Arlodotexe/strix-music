@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="stylecop.json" />
+    <Compile Remove="FileCore.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
+    <None Include="FileCore.cs" />
   </ItemGroup>
 
   <ItemGroup>
