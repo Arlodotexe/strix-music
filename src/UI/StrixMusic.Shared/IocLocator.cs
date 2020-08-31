@@ -5,10 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services;
+using StrixMusic.Services.Navigation;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
 using StrixMusic.ViewModels;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shared
 {
@@ -28,6 +30,7 @@ namespace StrixMusic.Shared
                 services.AddSingleton<ISettingsService>(settingsService);
                 services.AddSingleton<ISuperShellService, SuperShellService>();
                 services.AddSingleton<IFileSystemService, FileSystemService>();
+                services.AddSingleton<INavigationService<Control>, NavigationService>();
 
                 // Todo: If coreRegistry is null, show out of box setup page.
                 var coreRegistry = await settingsService.GetValue<Dictionary<string, Type>>(nameof(SettingsKeys.CoreRegistry));
