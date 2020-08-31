@@ -8,6 +8,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Extensions;
 using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Services.Navigation;
 using StrixMusic.ViewModels.Bindables;
 
 namespace StrixMusic.ViewModels

@@ -86,7 +86,7 @@ namespace StrixMusic.Core.Mock.Models
         public Uri Url => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Name => throw new NotImplementedException();
+        public string Name => "Mock Results";
 
         /// <inheritdoc/>
         public IReadOnlyList<IImage> Images => throw new NotImplementedException();

@@ -2,6 +2,9 @@
      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
      xmlns:local="using:StrixMusic.Shell.Default.Controls"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:Quarrel.Xaml.Behaviors"
      xmlns:selectors="using:StrixMusic.Shell.Default.TemplateSelectors"
      xmlns:viewmodels="using:StrixMusic.ViewModels"
      x:Class="StrixMusic.Shell.Default.Themes.ShellStyle">
@@ -12,23 +15,24 @@
                 <RowDefinition/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <NavigationView>
+            <NavigationView SelectionChanged="NavigationView_SelectionChanged" Loaded="NavigationView_Loaded">
+                <NavigationView.AutoSuggestBox>
+                    <AutoSuggestBox x:Name="AutoSuggest" QuerySubmitted="AutoSuggestBox_QuerySubmitted"/>
+                </NavigationView.AutoSuggestBox>
                 <NavigationView.MenuItems>
-                    <NavigationViewItem Content="Home">
+                    <NavigationViewItem Content="Home" Tag="HomeItem">
                         <NavigationViewItem.Icon>
                             <FontIcon Glyph="&#xE10F;"/>
                         </NavigationViewItem.Icon>
                     </NavigationViewItem>
-                    <NavigationViewItem Icon="Clock" Content="Recently Played"/>
-                    <NavigationViewItem Content="Now Playing">
+                    <NavigationViewItem Icon="Clock" Content="Recently Played" Tag="RecentlyPlayedItem"/>
+                    <NavigationViewItem Content="Now Playing" Tag="NowPlayingItem">
                         <NavigationViewItem.Icon>
                             <FontIcon Glyph="&#xF61F;"/>
                         </NavigationViewItem.Icon>
                     </NavigationViewItem>
                     <NavigationViewItemSeparator/>
                 </NavigationView.MenuItems>
-                <local:SearchViewControl/>
-                <!--<ContentPresenter ContentTemplateSelector="{StaticResource RootPageSelector}" DataContext="{x:Bind PageContent, Mode=OneWay}"/>-->
             </NavigationView>
             <local:NowPlayingBarControl Grid.Row="1"/>
         </Grid>
