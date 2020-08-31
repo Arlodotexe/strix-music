@@ -14,10 +14,6 @@
   <assembly fullname="StrixMusic.Services">
     <type fullname="StrixMusic.Services*" />
   </assembly>
-  
-  <assembly fullname="StrixMusic.Core.Dummy">
-    <type fullname="StrixMusic.Core.Dummy*" />
-  </assembly>
 
   <assembly fullname="StrixMusic.Shell.Default">
     <type fullname="StrixMusic.Shell.Default*" />

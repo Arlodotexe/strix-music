@@ -15,7 +15,7 @@
 		<DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-	  <DocumentationFile>C:\Users\jjask\source\repos\Strix-Music\src\UI\StrixMusic.Shell.ZuneDesktop\StrixMusic.Shell.ZuneDesktop.xml</DocumentationFile>
+	  <DocumentationFile>StrixMusic.Shell.ZuneDesktop.xml</DocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview2" />

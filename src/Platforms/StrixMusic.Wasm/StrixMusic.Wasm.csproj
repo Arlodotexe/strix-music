@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\jjask\source\repos\Strix-Music\src\Platforms\StrixMusic.Wasm\StrixMusic.Wasm.xml</DocumentationFile>
+    <DocumentationFile>StrixMusic.Wasm.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.png" />
