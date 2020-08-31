@@ -55,7 +55,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <MtouchExtraArgs>--setenv=MONO_LOG_LEVEL=debug --setenv=MONO_LOG_MASK=gc --setenv=MONO_GC_PARAMS=soft-heap-limit=512m,nursery-size=64m,evacuation-threshold=66,major=marksweep,concurrent-sweep</MtouchExtraArgs>
-    <DocumentationFile>bin\iPhone\Debug\StrixMusic.xml</DocumentationFile>
+    <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -71,6 +71,7 @@
     <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
     <BuildIpa>true</BuildIpa>
     <MtouchExtraArgs>--setenv=MONO_GC_PARAMS=soft-heap-limit=512m,nursery-size=64m,evacuation-threshold=66,major=marksweep,concurrent-sweep</MtouchExtraArgs>
+    <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>none</DebugType>

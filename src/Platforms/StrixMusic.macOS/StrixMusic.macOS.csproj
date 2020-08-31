@@ -63,6 +63,7 @@
     </XamMacArch>
     <NoWarn>
     </NoWarn>
+    <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

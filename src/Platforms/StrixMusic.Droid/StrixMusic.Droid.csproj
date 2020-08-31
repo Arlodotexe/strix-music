@@ -40,7 +40,7 @@
     <EnableLLVM>false</EnableLLVM>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
-    <DocumentationFile>bin\Debug\Strix-Music.Droid.xml</DocumentationFile>
+    <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>portable</DebugType>
@@ -58,6 +58,7 @@
     <AotAssemblies>true</AotAssemblies>
     <EnableLLVM>true</EnableLLVM>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
+    <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
