@@ -34,6 +34,7 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Controls\Internal\Shell.xaml" />
     <None Remove="Resources.xaml" />
     <None Remove="Themes\AlbumStyle.xaml" />
     <None Remove="Themes\AlbumViewStyle.xaml" />
@@ -48,6 +49,7 @@
     <None Remove="Themes\TrackStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <UpToDateCheckInput Remove="Controls\Internal\Shell.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Themes\AlbumStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\AlbumViewStyle.xaml" />
