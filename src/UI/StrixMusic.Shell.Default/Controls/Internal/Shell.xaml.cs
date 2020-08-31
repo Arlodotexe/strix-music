@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Services.Navigation;
@@ -39,12 +40,25 @@ namespace StrixMusic.Shell.Default.Controls.Internal
         private void NavigationService_NavigationRequested(object sender, Control e)
         {
             MainContent.Content = e;
+
+            // This isn't great, but there should only be 4 items
+            Type controlType = e.GetType();
+            bool containsValue = false;
+            foreach (var value in _pagesMapping.Values)
+            {
+                containsValue = containsValue || (value == controlType);
+            }
+
+            if (!containsValue)
+            {
+                NavView.SelectedItem = null;
+            }
         }
 
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             NavigationViewItemBase navi = (args.SelectedItem as NavigationViewItemBase)!;
-            if (!_pagesMapping.ContainsKey(navi))
+            if (navi == null || !_pagesMapping.ContainsKey(navi))
             {
                 return;
             }
