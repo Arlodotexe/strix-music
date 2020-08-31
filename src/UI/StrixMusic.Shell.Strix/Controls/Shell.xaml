@@ -71,8 +71,9 @@
             </Grid>
         </local:Drawer.TopBarContent>
         <local:Drawer.MainContent>
-            <Border x:Name="MainContent" Background="{ThemeResource AcrylicContentBackgroundBrush}" >
-            </Border>
+            <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}">
+                <ContentControl x:Name="MainContent"/>
+            </Grid>
         </local:Drawer.MainContent>
         <local:Drawer.BottomBarSecondaryContent>
             <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}">

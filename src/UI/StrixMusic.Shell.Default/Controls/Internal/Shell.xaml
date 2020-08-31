@@ -30,6 +30,7 @@
                 </NavigationViewItem>
                 <NavigationViewItemSeparator/>
             </NavigationView.MenuItems>
+            <ContentControl x:Name="MainContent"/>
         </NavigationView>
         <local:NowPlayingBarControl Grid.Row="1"/>
     </Grid>

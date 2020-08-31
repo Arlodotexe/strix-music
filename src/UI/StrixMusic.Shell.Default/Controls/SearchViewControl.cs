@@ -20,7 +20,7 @@ namespace StrixMusic.Shell.Default.Controls
 
         private async void SearchViewControl_DataContextChanged(Windows.UI.Xaml.DependencyObject sender, Windows.UI.Xaml.DataContextChangedEventArgs args)
         {
-            await ViewModel!.GlobalSearchResultsAsync(_query);
+            //await ViewModel!.GlobalSearchResultsAsync(_query);
         }
 
         /// <summary>
