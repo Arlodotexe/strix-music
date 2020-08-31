@@ -21,6 +21,7 @@
     <DataTemplate x:Key="StrixHomeTemplate" x:DataType="observables:ObservableLibrary">
         <UserControl>
             <Grid>
+                <TextBlock Text="Home Page"/>
                 <!--<Pivot ItemsSource="{x:Bind Library.Items, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
                     <Pivot.LeftHeader>
                         <TextBlock Grid.Column="1" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0"/>

@@ -24,7 +24,13 @@ namespace StrixMusic.Services
             }
             else
             {
-                NavigationRequested?.Invoke(this, (Control)Activator.CreateInstance(type, args));
+                if (args != null)
+                {
+                    NavigationRequested?.Invoke(this, (Control)Activator.CreateInstance(type, args));
+                } else
+                {
+                    NavigationRequested?.Invoke(this, (Control)Activator.CreateInstance(type));
+                }
             }
         }
 
