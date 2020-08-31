@@ -14,7 +14,7 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// Contains bindable information about an <see cref="ITrack"/>
     /// </summary>
-    public class BindableTrack : BindableMergeableObject<ITrack>
+    public class ObservableTrack : ObservableMergeableObject<ITrack>
     {
         private readonly ITrack _track;
 
@@ -22,18 +22,18 @@ namespace StrixMusic.ViewModels.Bindables
         /// Creates a bindable wrapper around an <see cref="ITrack"/>.
         /// </summary>
         /// <param name="track">The <see cref="ITrack"/> to wrap.</param>
-        public BindableTrack(ITrack track)
+        public ObservableTrack(ITrack track)
         {
             _track = track;
 
             if (_track.Album != null)
-                Album = new BindableAlbum(_track.Album);
+                Album = new ObservableAlbum(_track.Album);
 
             Genres = new ObservableCollection<string>(_track.Genres);
-            Artists = new ObservableCollection<BindableArtist>(_track.Artists.Select(x => new BindableArtist(x)));
+            Artists = new ObservableCollection<ObservableArtist>(_track.Artists.Select(x => new ObservableArtist(x)));
             Images = new ObservableCollection<IImage>(_track.Images);
-            RelatedItems = new BindableCollectionGroup(_track.RelatedItems);
-            SourceCore = new BindableCore(_track.SourceCore);
+            RelatedItems = new ObservableCollectionGroup(_track.RelatedItems);
+            SourceCore = new ObservableCore(_track.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -157,19 +157,19 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Artists.Add(new BindableArtist(item));
+                Artists.Add(new ObservableArtist(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Artists.Remove(new BindableArtist(item));
+                Artists.Remove(new ObservableArtist(item));
             }
         }
 
         private void Track_AlbumChanged(object sender, IAlbum? e)
         {
             if (e != null)
-                Album = new BindableAlbum(e);
+                Album = new ObservableAlbum(e);
             else
                 Album = null;
         }
@@ -185,12 +185,12 @@ namespace StrixMusic.ViewModels.Bindables
         public TrackType Type => _track.Type;
 
         /// <inheritdoc cref="ITrack.Artists"/>
-        public ObservableCollection<BindableArtist> Artists { get; }
+        public ObservableCollection<ObservableArtist> Artists { get; }
 
-        private BindableAlbum? _album;
+        private ObservableAlbum? _album;
 
         /// <inheritdoc cref="ITrack.Album"/>
-        public BindableAlbum? Album
+        public ObservableAlbum? Album
         {
             get => _album;
             set => SetProperty(ref _album, value);
@@ -245,7 +245,7 @@ namespace StrixMusic.ViewModels.Bindables
         public TimeSpan Duration => _track.Duration;
 
         /// <inheritdoc cref="IPlayable.SourceCore"/>
-        public BindableCore SourceCore { get; }
+        public ObservableCore SourceCore { get; }
 
         /// <inheritdoc cref="IPlayable.Id"/>
         public string Id => _track.Id;
@@ -275,7 +275,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItems"/>
-        public BindableCollectionGroup RelatedItems { get; }
+        public ObservableCollectionGroup RelatedItems { get; }
 
         /// <inheritdoc cref="IPlayable.PlaybackStateChanged"/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged

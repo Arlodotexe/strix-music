@@ -14,22 +14,22 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// Contains information about a <see cref="IImage"/>
     /// </summary>
-    public class BindableDevice : ObservableObject
+    public class ObservableDevice : ObservableObject
     {
         private readonly IDevice _device;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BindableDevice"/> class.
+        /// Initializes a new instance of the <see cref="ObservableDevice"/> class.
         /// </summary>
         /// <param name="image">The base <see cref="IDevice"/></param>
-        public BindableDevice(IDevice device)
+        public ObservableDevice(IDevice device)
         {
             _device = device;
 
             if (_device.NowPlaying != null)
-                NowPlaying = new BindableTrack(_device.NowPlaying);
+                NowPlaying = new ObservableTrack(_device.NowPlaying);
 
-            PlaybackQueue = new ObservableCollection<BindableTrack>(_device.PlaybackQueue.Select(x => new BindableTrack(x)));
+            PlaybackQueue = new ObservableCollection<ObservableTrack>(_device.PlaybackQueue.Select(x => new ObservableTrack(x)));
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeed);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
@@ -77,12 +77,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                PlaybackQueue.Add(new BindableTrack(item));
+                PlaybackQueue.Add(new ObservableTrack(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                PlaybackQueue.Remove(new BindableTrack(item));
+                PlaybackQueue.Remove(new ObservableTrack(item));
             }
         }
 
@@ -123,7 +123,7 @@ namespace StrixMusic.ViewModels.Bindables
 
         private void Device_NowPlayingChanged(object sender, ITrack e)
         {
-            NowPlaying = new BindableTrack(e);
+            NowPlaying = new ObservableTrack(e);
         }
 
         private void Device_IsActiveChanged(object sender, bool e)
@@ -155,12 +155,12 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IDevice.PlaybackQueue"/>
-        public ObservableCollection<BindableTrack> PlaybackQueue { get; }
+        public ObservableCollection<ObservableTrack> PlaybackQueue { get; }
 
-        private BindableTrack? _nowPlaying;
+        private ObservableTrack? _nowPlaying;
 
         /// <inheritdoc cref="IDevice.NowPlaying"/>
-        public BindableTrack? NowPlaying
+        public ObservableTrack? NowPlaying
         {
             get => _nowPlaying;
             private set => SetProperty(ref _nowPlaying, value);

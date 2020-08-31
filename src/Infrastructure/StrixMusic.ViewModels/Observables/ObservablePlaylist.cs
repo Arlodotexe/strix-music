@@ -13,15 +13,15 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// A bindable wrapper for <see cref="IPlaylist"/>.
     /// </summary>
-    public class BindablePlaylist : BindableMergeableObject<IPlaylist>
+    public class ObservablePlaylist : ObservableMergeableObject<IPlaylist>
     {
         private readonly IPlaylist _playlist;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BindablePlaylist"/> class.
+        /// Initializes a new instance of the <see cref="ObservablePlaylist"/> class.
         /// </summary>
         /// <param name="playlist">The <see cref="IPlaylist"/> to wrap.</param>
-        public BindablePlaylist(IPlaylist playlist)
+        public ObservablePlaylist(IPlaylist playlist)
         {
             _playlist = playlist;
 
@@ -29,11 +29,11 @@ namespace StrixMusic.ViewModels.Bindables
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
 
             if (_playlist.Owner != null)
-                _owner = new BindableUserProfile(_playlist.Owner);
-            Tracks = new ObservableCollection<BindableTrack>(_playlist.Tracks.Select(x => new BindableTrack(x)));
+                _owner = new ObservableUserProfile(_playlist.Owner);
+            Tracks = new ObservableCollection<ObservableTrack>(_playlist.Tracks.Select(x => new ObservableTrack(x)));
             Images = new ObservableCollection<IImage>(_playlist.Images);
-            RelatedItems = new BindableCollectionGroup(_playlist.RelatedItems);
-            SourceCore = new BindableCore(_playlist.SourceCore);
+            RelatedItems = new ObservableCollectionGroup(_playlist.RelatedItems);
+            SourceCore = new ObservableCore(_playlist.SourceCore);
 
             AttachEvents();
         }
@@ -69,18 +69,18 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Tracks.Add(new BindableTrack(item));
+                Tracks.Add(new ObservableTrack(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Tracks.Remove(new BindableTrack(item));
+                Tracks.Remove(new ObservableTrack(item));
             }
         }
 
         private void Playlist_OwnerChanged(object sender, IUserProfile e)
         {
-            Owner = new BindableUserProfile(e);
+            Owner = new ObservableUserProfile(e);
         }
 
         private void Playlist_PlaybackStateChanged(object sender, PlaybackState e)
@@ -111,23 +111,23 @@ namespace StrixMusic.ViewModels.Bindables
             Description = e;
         }
 
-        private BindableUserProfile? _owner;
+        private ObservableUserProfile? _owner;
 
         /// <inheritdoc cref="IPlaylist.Owner"/>
-        public BindableUserProfile? Owner 
+        public ObservableUserProfile? Owner 
         {
             get => _owner;
             set => SetProperty(ref _owner, value);
         }
 
         /// <inheritdoc cref="ITrackCollection.Tracks"/>
-        public ObservableCollection<BindableTrack> Tracks { get; }
+        public ObservableCollection<ObservableTrack> Tracks { get; }
 
         /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
         public int TotalTracksCount => _playlist.TotalTracksCount;
 
         /// <inheritdoc cref="IPlayable.SourceCore"/>
-        public BindableCore SourceCore { get; }
+        public ObservableCore SourceCore { get; }
 
         /// <inheritdoc cref="IPlayable.Id"/>
         public string Id => _playlist.Id;
@@ -167,7 +167,7 @@ namespace StrixMusic.ViewModels.Bindables
         public TimeSpan Duration => _playlist.Duration;
 
         /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItems"/>
-        public BindableCollectionGroup RelatedItems { get; }
+        public ObservableCollectionGroup RelatedItems { get; }
 
         /// <inheritdoc cref="IPlaylist.OwnerChanged"/>
         public event EventHandler<IUserProfile> OwnerChanged

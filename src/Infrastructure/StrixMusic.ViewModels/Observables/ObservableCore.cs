@@ -13,22 +13,22 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// Contains information about a <see cref="ICore"/>
     /// </summary>
-    public class BindableCore : ObservableObject
+    public class ObservableCore : ObservableObject
     {
         private readonly ICore _core;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BindableCore"/> class.
+        /// Initializes a new instance of the <see cref="ObservableCore"/> class.
         /// </summary>
         /// <param name="core">The base <see cref="ICore"/></param>
-        public BindableCore(ICore core)
+        public ObservableCore(ICore core)
         {
             _core = core;
 
-            Devices = new ObservableCollection<BindableDevice>(_core.Devices.Select(x => new BindableDevice(x)));
-            Library = new BindableLibrary(_core.Library);
-            RecentlyPlayed = new BindableRecentlyPlayed(_core.RecentlyPlayed);
-            Discoverables = new BindableCollectionGroup(_core.Discoverables);
+            Devices = new ObservableCollection<ObservableDevice>(_core.Devices.Select(x => new ObservableDevice(x)));
+            Library = new ObservableLibrary(_core.Library);
+            RecentlyPlayed = new ObservableRecentlyPlayed(_core.RecentlyPlayed);
+            Discoverables = new ObservableCollectionGroup(_core.Discoverables);
 
             AttachEvents();
         }
@@ -78,12 +78,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Devices.Add(new BindableDevice(item));
+                Devices.Add(new ObservableDevice(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Devices.Remove(new BindableDevice(item));
+                Devices.Remove(new ObservableDevice(item));
             }
         }
 
@@ -91,16 +91,16 @@ namespace StrixMusic.ViewModels.Bindables
         private void Core_CoreStateChanged(object sender, CoreState e) => CoreState = e;
 
         /// <inheritdoc cref="ICore.Devices"/>
-        public ObservableCollection<BindableDevice> Devices { get; }
+        public ObservableCollection<ObservableDevice> Devices { get; }
 
         /// <inheritdoc cref="ICore.Library" />
-        public BindableLibrary Library { get; }
+        public ObservableLibrary Library { get; }
 
         /// <inheritdoc cref="ICore.RecentlyPlayed" />
-        public BindableRecentlyPlayed RecentlyPlayed { get; }
+        public ObservableRecentlyPlayed RecentlyPlayed { get; }
 
         /// <inheritdoc cref="ICore.Discoverables" />
-        public BindableCollectionGroup Discoverables { get; }
+        public ObservableCollectionGroup Discoverables { get; }
 
         /// <inheritdoc cref="ICore.GetSearchAutoCompleteAsync" />
         public Task<IAsyncEnumerable<string>> GetSearchAutoCompleteAsync(string query)

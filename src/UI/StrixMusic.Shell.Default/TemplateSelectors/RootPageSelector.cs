@@ -20,7 +20,7 @@ namespace StrixMusic.Shell.Default.TemplateSelectors
         {
             switch (item)
             {
-                case BindableCollectionGroup _:
+                case ObservableCollectionGroup _:
                     return HomeControlTemplate!;
                 default:
                     return HomeControlTemplate!;

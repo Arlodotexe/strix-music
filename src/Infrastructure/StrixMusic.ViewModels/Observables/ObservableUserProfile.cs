@@ -9,15 +9,15 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// Contains bindable information about an <see cref="IUserProfile"/>
     /// </summary>
-    public class BindableUserProfile : ObservableObject
+    public class ObservableUserProfile : ObservableObject
     {
         private IUserProfile _userProfile;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BindableUserProfile"/> class.
+        /// Initializes a new instance of the <see cref="ObservableUserProfile"/> class.
         /// </summary>
         /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
-        public BindableUserProfile(IUserProfile userProfile)
+        public ObservableUserProfile(IUserProfile userProfile)
         {
             _userProfile = userProfile;
             Url = new ObservableCollection<Uri>(userProfile.Url);

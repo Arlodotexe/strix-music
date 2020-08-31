@@ -13,27 +13,27 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// Contains bindable information about an <see cref="IArtist"/>.
     /// </summary>
-    public class BindableArtist : BindableMergeableObject<IArtist>
+    public class ObservableArtist : ObservableMergeableObject<IArtist>
     {
         private readonly IArtist _artist;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BindableArtist"/> class.
+        /// Initializes a new instance of the <see cref="ObservableArtist"/> class.
         /// </summary>
         /// <param name="artist">The <see cref="IArtist"/> to wrap.</param>
-        public BindableArtist(IArtist artist)
+        public ObservableArtist(IArtist artist)
         {
             _artist = artist;
 
-            SourceCore = new BindableCore(_artist.SourceCore);
+            SourceCore = new ObservableCore(_artist.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
 
-            Tracks = new ObservableCollection<BindableTrack>(_artist.Tracks.Select(x => new BindableTrack(x)));
-            Albums = new ObservableCollection<BindableAlbum>(_artist.Albums.Select(x => new BindableAlbum(x)));
+            Tracks = new ObservableCollection<ObservableTrack>(_artist.Tracks.Select(x => new ObservableTrack(x)));
+            Albums = new ObservableCollection<ObservableAlbum>(_artist.Albums.Select(x => new ObservableAlbum(x)));
             Images = new ObservableCollection<IImage>(_artist.Images);
-            RelatedItems = new BindableCollectionGroup(_artist.RelatedItems);
+            RelatedItems = new ObservableCollectionGroup(_artist.RelatedItems);
 
             AttachEvents();
         }
@@ -92,12 +92,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.RemovedItems)
             {
-                Albums.Remove(new BindableAlbum(item));
+                Albums.Remove(new ObservableAlbum(item));
             }
 
             foreach (var item in e.AddedItems)
             {
-                Albums.Add(new BindableAlbum(item));
+                Albums.Add(new ObservableAlbum(item));
             }
         }
 
@@ -105,12 +105,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.RemovedItems)
             {
-                Tracks.Remove(new BindableTrack(item));
+                Tracks.Remove(new ObservableTrack(item));
             }
 
             foreach (var item in e.AddedItems)
             {
-                Tracks.Add(new BindableTrack(item));
+                Tracks.Add(new ObservableTrack(item));
             }
         }
 
@@ -120,13 +120,13 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IAlbumCollection.Albums"/>
-        public ObservableCollection<BindableAlbum> Albums { get; }
+        public ObservableCollection<ObservableAlbum> Albums { get; }
 
         /// <inheritdoc cref="IAlbumCollection.TotalAlbumsCount"/>
         public int TotalAlbumsCount => _artist.TotalAlbumsCount;
 
         /// <inheritdoc cref="ITrackCollection.Tracks"/>
-        public ObservableCollection<BindableTrack> Tracks { get; }
+        public ObservableCollection<ObservableTrack> Tracks { get; }
 
         /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
         public int TotalTracksCount => _artist.TotalTracksCount;
@@ -139,7 +139,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IPlayable.SourceCore"/>
-        public BindableCore SourceCore { get; }
+        public ObservableCore SourceCore { get; }
 
         /// <inheritdoc cref="IPlayable.Id"/>
         public string Id => _artist.Id;
@@ -286,7 +286,7 @@ namespace StrixMusic.ViewModels.Bindables
         public TimeSpan Duration => _artist.Duration;
 
         /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItems"/>
-        public BindableCollectionGroup RelatedItems { get; }
+        public ObservableCollectionGroup RelatedItems { get; }
 
         /// <inheritdoc cref="IPlayable.PlayAsync"/>
         public Task PlayAsync()

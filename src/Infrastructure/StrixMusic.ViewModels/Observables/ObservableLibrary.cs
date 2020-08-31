@@ -13,13 +13,13 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// A bindable wrapper of the <see cref="ILibrary"/>.
     /// </summary>
-    public class BindableLibrary : BindableCollectionGroup
+    public class ObservableLibrary : ObservableCollectionGroup
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="BindableLibrary"/> class.
+        /// Creates a new instance of the <see cref="ObservableLibrary"/> class.
         /// </summary>
         /// <param name="library">The <see cref="ILibrary"/> to wrap.</param>
-        public BindableLibrary(ILibrary library)
+        public ObservableLibrary(ILibrary library)
             : base(library)
         {
         }

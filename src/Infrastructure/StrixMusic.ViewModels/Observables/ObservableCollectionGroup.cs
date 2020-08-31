@@ -14,28 +14,28 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// A bindable wrapper of the <see cref="IPlayableCollectionGroup"/>.
     /// </summary>
-    public class BindableCollectionGroup : ObservableObject
+    public class ObservableCollectionGroup : ObservableObject
     {
         private readonly IPlayableCollectionGroup _collectionGroupBase;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BindableCollectionGroup"/> class.
+        /// Initializes a new instance of the <see cref="ObservableCollectionGroup"/> class.
         /// </summary>
         /// <param name="collectionGroup">The base <see cref="IPlayableCollectionBase"/> containing properties about this class.</param>
-        public BindableCollectionGroup(IPlayableCollectionGroup collectionGroup)
+        public ObservableCollectionGroup(IPlayableCollectionGroup collectionGroup)
         {
             _collectionGroupBase = collectionGroup;
 
-            SourceCore = new BindableCore(_collectionGroupBase.SourceCore);
+            SourceCore = new ObservableCore(_collectionGroupBase.SourceCore);
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
 
-            Tracks = new ObservableCollection<BindableTrack>(_collectionGroupBase.Tracks.Select(x => new BindableTrack(x)));
-            Playlists = new ObservableCollection<BindablePlaylist>(_collectionGroupBase.Playlists.Select(x => new BindablePlaylist(x)));
-            Albums = new ObservableCollection<BindableAlbum>(_collectionGroupBase.Albums.Select(x => new BindableAlbum(x)));
-            Artists = new ObservableCollection<BindableArtist>(_collectionGroupBase.Artists.Select(x => new BindableArtist(x)));
-            Children = new ObservableCollection<BindableCollectionGroup>(_collectionGroupBase.Children.Select(x => new BindableCollectionGroup(x)));
+            Tracks = new ObservableCollection<ObservableTrack>(_collectionGroupBase.Tracks.Select(x => new ObservableTrack(x)));
+            Playlists = new ObservableCollection<ObservablePlaylist>(_collectionGroupBase.Playlists.Select(x => new ObservablePlaylist(x)));
+            Albums = new ObservableCollection<ObservableAlbum>(_collectionGroupBase.Albums.Select(x => new ObservableAlbum(x)));
+            Artists = new ObservableCollection<ObservableArtist>(_collectionGroupBase.Artists.Select(x => new ObservableArtist(x)));
+            Children = new ObservableCollection<ObservableCollectionGroup>(_collectionGroupBase.Children.Select(x => new ObservableCollectionGroup(x)));
 
             AttachEvents();
         }
@@ -85,12 +85,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Tracks.Add(new BindableTrack(item));
+                Tracks.Add(new ObservableTrack(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Tracks.Remove(new BindableTrack(item));
+                Tracks.Remove(new ObservableTrack(item));
             }
         }
 
@@ -98,12 +98,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Playlists.Add(new BindablePlaylist(item));
+                Playlists.Add(new ObservablePlaylist(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Playlists.Remove(new BindablePlaylist(item));
+                Playlists.Remove(new ObservablePlaylist(item));
             }
         }
 
@@ -116,12 +116,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Children.Add(new BindableCollectionGroup(item));
+                Children.Add(new ObservableCollectionGroup(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Children.Remove(new BindableCollectionGroup(item));
+                Children.Remove(new ObservableCollectionGroup(item));
             }
         }
 
@@ -129,12 +129,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Artists.Add(new BindableArtist(item));
+                Artists.Add(new ObservableArtist(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Artists.Remove(new BindableArtist(item));
+                Artists.Remove(new ObservableArtist(item));
             }
         }
 
@@ -142,12 +142,12 @@ namespace StrixMusic.ViewModels.Bindables
         {
             foreach (var item in e.AddedItems)
             {
-                Albums.Add(new BindableAlbum(item));
+                Albums.Add(new ObservableAlbum(item));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Albums.Remove(new BindableAlbum(item));
+                Albums.Remove(new ObservableAlbum(item));
             }
         }
 
@@ -236,13 +236,13 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IPlayableCollectionGroup.Children"/>
-        public ObservableCollection<BindableCollectionGroup> Children { get; }
+        public ObservableCollection<ObservableCollectionGroup> Children { get; }
 
         /// <inheritdoc cref="IPlayable.Id"/>
         public string Id => _collectionGroupBase.Id;
 
         /// <inheritdoc cref="IPlayable.SourceCore"/>
-        public BindableCore SourceCore { get; }
+        public ObservableCore SourceCore { get; }
 
         /// <inheritdoc cref="IPlayable.Name"/>
         public string Name
@@ -279,25 +279,25 @@ namespace StrixMusic.ViewModels.Bindables
         public int TotalChildrenCount => _collectionGroupBase.TotalChildrenCount;
 
         /// <inheritdoc cref="IPlaylistCollection.Playlists"/>
-        public ObservableCollection<BindablePlaylist> Playlists { get; }
+        public ObservableCollection<ObservablePlaylist> Playlists { get; }
 
         /// <inheritdoc cref="IPlaylistCollection.cou"/>
         public int TotalPlaylistCount => _collectionGroupBase.TotalPlaylistCount;
 
         /// <inheritdoc cref="ITrackCollection.Tracks"/>
-        public ObservableCollection<BindableTrack> Tracks { get; }
+        public ObservableCollection<ObservableTrack> Tracks { get; }
 
         /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
         public int TotalTracksCount => _collectionGroupBase.TotalTracksCount;
 
         /// <inheritdoc cref="IAlbumCollection.Albums"/>
-        public ObservableCollection<BindableAlbum> Albums { get; }
+        public ObservableCollection<ObservableAlbum> Albums { get; }
 
         /// <inheritdoc cref="IAlbumCollection.TotalAlbumsCount"/>
         public int TotalAlbumsCount => _collectionGroupBase.TotalAlbumsCount;
 
         /// <inheritdoc cref="IArtistCollection.Artists"/>
-        public ObservableCollection<BindableArtist> Artists { get; }
+        public ObservableCollection<ObservableArtist> Artists { get; }
 
         /// <inheritdoc cref="IArtistCollection.TotalArtistsCount"/>
         public int TotalArtistsCount => _collectionGroupBase.TotalArtistsCount;

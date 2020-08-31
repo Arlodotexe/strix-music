@@ -5,19 +5,19 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// Contains bindable information about an <see cref="IUser"/>
     /// </summary>
-    public class BindableUser : BindableUserProfile
+    public class ObservableUser : ObservableUserProfile
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BindableUser"/> class.
+        /// Initializes a new instance of the <see cref="ObservableUser"/> class.
         /// </summary>
         /// <param name="userProfile">The <see cref="IUser"/> to wrap.</param>
-        public BindableUser(IUser user)
+        public ObservableUser(IUser user)
             : base(user)
         {
-            Library = new BindableLibrary(user.Library);
+            Library = new ObservableLibrary(user.Library);
         }
 
         /// <inheritdoc cref="ILibrary"/>
-        public BindableLibrary Library { get; }
+        public ObservableLibrary Library { get; }
     }
 }

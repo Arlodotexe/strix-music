@@ -6,12 +6,12 @@ namespace StrixMusic.ViewModels.Bindables
     /// <summary>
     /// A base class containing the implementation for handling merged data.
     /// </summary>
-    public class BindableMergeableObject<T> : ObservableObject
+    public class ObservableMergeableObject<T> : ObservableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BindableMergeableObject{T}"/> class.
+        /// Initializes a new instance of the <see cref="ObservableMergeableObject{T}"/> class.
         /// </summary>
-        public BindableMergeableObject()
+        public ObservableMergeableObject()
         {
             _mergedData = new ObservableCollection<T>();
             MergedData = new ReadOnlyObservableCollection<T>(_mergedData);
