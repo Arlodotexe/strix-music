@@ -22,6 +22,16 @@ namespace StrixMusic.Shell.Default.Controls
                 typeof(ProgressSliderControl),
                 new PropertyMetadata(100)); // 10 milliseconds
 
+        /// <summary>
+        /// <see cref="DependencyProperty"/> for the <see cref="UpdateFrequency"/> property.
+        /// </summary>
+        public static readonly DependencyProperty IsAdvancingProperty =
+            DependencyProperty.Register(
+                nameof(IsAdvancing),
+                typeof(bool),
+                typeof(ProgressSliderControl),
+                new PropertyMetadata(true));
+
         private DispatcherTimer _updateIntervalTimer = new DispatcherTimer();
 
         /// <summary>
@@ -31,6 +41,26 @@ namespace StrixMusic.Shell.Default.Controls
             : base()
         {
             UpdateTimer();
+        }
+
+        /// <summary>
+        /// Gets or sets the whether or not the slider is self advancing.
+        /// </summary>
+        public bool IsAdvancing
+        {
+            get => (bool)GetValue(IsAdvancingProperty);
+            set
+            {
+                SetValue(IsAdvancingProperty, value);
+                if (value)
+                {
+                    ResumeTimer();
+                }
+                else
+                {
+                    PauseTimer();
+                }
+            }
         }
 
         /// <summary>
@@ -59,6 +89,16 @@ namespace StrixMusic.Shell.Default.Controls
             _updateIntervalTimer.Stop();
             _updateIntervalTimer.Interval = new TimeSpan(UpdateFrequency);
             _updateIntervalTimer.Start();
+        }
+
+        private void ResumeTimer()
+        {
+            _updateIntervalTimer.Start();
+        }
+
+        private void PauseTimer()
+        {
+            _updateIntervalTimer.Stop();
         }
 
         private void UpdateSliderValue()
