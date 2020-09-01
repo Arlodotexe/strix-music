@@ -45,7 +45,7 @@
                             <TextBlock Text="Now Playing" VerticalAlignment="Center" Margin="8,0,0,0"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="HomeButton" Grid.Column="1" Style="{StaticResource TopBarButton}" Click="NavButtonClicked">
+                    <Button x:Name="HomeTopButton" Grid.Column="1" Style="{StaticResource TopBarButton}" Click="NavButtonClicked">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xE10F;"/>
                             <TextBlock Text="Home" VerticalAlignment="Center" Margin="8,0,0,0"/>
@@ -102,7 +102,7 @@
                             <TextBlock Text="Recent" FontSize="8"/>
                         </StackPanel>
                     </Button>
-                    <Button Grid.Column="2" Style="{StaticResource GenericBarButton}">
+                    <Button x:Name="HomeBottomButton" Grid.Column="2" Style="{StaticResource GenericBarButton}" Click="NavButtonClicked">
                         <StackPanel>
                             <FontIcon Glyph="&#xE10F;"/>
                             <TextBlock Text="Home" FontSize="8"/>
