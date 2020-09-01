@@ -19,7 +19,7 @@ namespace StrixMusic.Shell.Default.Controls
                 nameof(UpdateFrequency),
                 typeof(long),
                 typeof(ProgressSliderControl),
-                new PropertyMetadata(100l)); // 10 milliseconds
+                new PropertyMetadata(50L)); // 100 milliseconds
 
         /// <summary>
         /// <see cref="DependencyProperty"/> for the <see cref="UpdateFrequency"/> property.
@@ -32,6 +32,7 @@ namespace StrixMusic.Shell.Default.Controls
                 new PropertyMetadata(true));
 
         private DispatcherTimer _updateIntervalTimer = new DispatcherTimer();
+        private DateTime _startTime = DateTime.Now;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProgressSliderControl"/> class.
@@ -39,6 +40,7 @@ namespace StrixMusic.Shell.Default.Controls
         public ProgressSliderControl()
             : base()
         {
+            ValueChanged += (s, e) => _startTime = DateTime.Now - TimeSpan.FromMilliseconds(Value);
             _updateIntervalTimer.Tick += (s, e) => UpdateSliderValue();
             UpdateTimer();
         }
@@ -67,7 +69,7 @@ namespace StrixMusic.Shell.Default.Controls
         /// Gets or sets the frequency with which the slider should move forward.
         /// </summary>
         /// <remarks>
-        /// ticks (100 nanoseconds)
+        /// Milliseconds
         /// </remarks>
         public long UpdateFrequency
         {
@@ -87,12 +89,13 @@ namespace StrixMusic.Shell.Default.Controls
         private void UpdateTimer()
         {
             _updateIntervalTimer.Stop();
-            _updateIntervalTimer.Interval = new TimeSpan(UpdateFrequency);
-            _updateIntervalTimer.Start();
+            _updateIntervalTimer.Interval = TimeSpan.FromMilliseconds(UpdateFrequency);
+            ResumeTimer();
         }
 
         private void ResumeTimer()
         {
+            _startTime = DateTime.Now - TimeSpan.FromMilliseconds(Value);
             _updateIntervalTimer.Start();
         }
 
@@ -103,7 +106,7 @@ namespace StrixMusic.Shell.Default.Controls
 
         private void UpdateSliderValue()
         {
-            Value += UpdateFrequency;
+            Value = (DateTime.Now - _startTime).TotalMilliseconds;
         }
     }
 }
