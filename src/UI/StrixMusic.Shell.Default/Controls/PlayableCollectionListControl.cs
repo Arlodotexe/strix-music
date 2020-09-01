@@ -1,7 +1,11 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using StrixMusic.CoreInterfaces.Interfaces;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls
 {
+    /// <summary>
+    /// A Templated <see cref="Control"/> for displaying a list of any Observable implementing <see cref="IPlayableCollectionGroup"/>.
+    /// </summary>
     public sealed partial class PlayableCollectionListControl : Control
     {
         /// <summary>
