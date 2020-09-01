@@ -46,5 +46,10 @@ namespace StrixMusic.Shell.Strix.Controls
         {
             _navigationService!.NavigateTo(_pagesMapping[(sender as Button) !]);
         }
+
+        private void SearchButtonClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            _navigationService!.NavigateTo(typeof(SearchViewControl), SearchTextBox.Text);
+        }
     }
 }

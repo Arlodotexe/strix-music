@@ -26,8 +26,8 @@
                     <Button Style="{StaticResource GenericBarButton}">
                         <SymbolIcon Symbol="Contact"/>
                     </Button>
-                    <TextBox Grid.Column="1" Style="{StaticResource TextBoxStyle}" FontSize="24"/>
-                    <Button Grid.Column="2" Style="{StaticResource GenericBarButton}">
+                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Style="{StaticResource TextBoxStyle}" FontSize="24"/>
+                    <Button Grid.Column="2" Style="{StaticResource GenericBarButton}" Click="SearchButtonClicked">
                         <SymbolIcon Symbol="Find"/>
                     </Button>
                 </Grid>
