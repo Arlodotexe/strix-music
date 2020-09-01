@@ -68,7 +68,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock Text="1:08" Grid.Column="0" Margin="16,0" VerticalAlignment="Center"/>
-                                    <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="36" Style="{StaticResource MediaSlider}"/>
+                                    <local:ProgressSliderControl Grid.Column="1" Minimum="0" Maximum="2800000" Value="0" Style="{StaticResource MediaSlider}"/>
                                     <TextBlock Text="4:40" Grid.Column="2" Margin="16,0" VerticalAlignment="Center"/>
                                 </Grid>
 

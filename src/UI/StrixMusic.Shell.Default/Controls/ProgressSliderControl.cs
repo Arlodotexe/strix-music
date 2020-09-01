@@ -6,11 +6,10 @@ using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls
 {
-
     /// <summary>
     /// A slider that can automatically update the tick position.
     /// </summary>
-    public class ProgressSliderControl : Slider
+    public partial class ProgressSliderControl : Slider
     {
         /// <summary>
         /// <see cref="DependencyProperty"/> for the <see cref="UpdateFrequency"/> property.
@@ -18,9 +17,9 @@ namespace StrixMusic.Shell.Default.Controls
         public static readonly DependencyProperty UpdateFrequencyProperty =
             DependencyProperty.Register(
                 nameof(UpdateFrequency),
-                typeof(int),
+                typeof(long),
                 typeof(ProgressSliderControl),
-                new PropertyMetadata(100)); // 10 milliseconds
+                new PropertyMetadata(100l)); // 10 milliseconds
 
         /// <summary>
         /// <see cref="DependencyProperty"/> for the <see cref="UpdateFrequency"/> property.
@@ -40,6 +39,7 @@ namespace StrixMusic.Shell.Default.Controls
         public ProgressSliderControl()
             : base()
         {
+            _updateIntervalTimer.Tick += (s, e) => UpdateSliderValue();
             UpdateTimer();
         }
 
