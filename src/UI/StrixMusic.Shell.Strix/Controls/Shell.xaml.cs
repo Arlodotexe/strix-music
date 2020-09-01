@@ -26,7 +26,8 @@ namespace StrixMusic.Shell.Strix.Controls
             _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
             _pagesMapping = new Dictionary<Button, Type>
             {
-                [HomeButton] = typeof(HomeControl),
+                [HomeTopButton] = typeof(HomeControl),
+                [HomeBottomButton] = typeof(HomeControl),
             };
         }
 
