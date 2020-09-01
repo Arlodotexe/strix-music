@@ -26,8 +26,8 @@
                     <Button Style="{StaticResource GenericBarButton}">
                         <SymbolIcon Symbol="Contact"/>
                     </Button>
-                    <TextBox Grid.Column="1" Style="{StaticResource TextBoxStyle}" FontSize="24"/>
-                    <Button Grid.Column="2" Style="{StaticResource GenericBarButton}">
+                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Style="{StaticResource TextBoxStyle}" FontSize="24"/>
+                    <Button Grid.Column="2" Style="{StaticResource GenericBarButton}" Click="SearchButtonClicked">
                         <SymbolIcon Symbol="Find"/>
                     </Button>
                 </Grid>
@@ -71,8 +71,9 @@
             </Grid>
         </local:Drawer.TopBarContent>
         <local:Drawer.MainContent>
-            <Border x:Name="MainContent" Background="{ThemeResource AcrylicContentBackgroundBrush}" >
-            </Border>
+            <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}">
+                <ContentControl x:Name="MainContent"/>
+            </Grid>
         </local:Drawer.MainContent>
         <local:Drawer.BottomBarSecondaryContent>
             <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}">

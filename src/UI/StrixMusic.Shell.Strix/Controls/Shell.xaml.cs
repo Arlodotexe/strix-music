@@ -14,7 +14,7 @@ namespace StrixMusic.Shell.Strix.Controls
     public sealed partial class Shell : UserControl
     {
         private readonly IReadOnlyDictionary<Button, Type> _pagesMapping;
-        private INavigationService<Control> _navigationService;
+        private INavigationService<Control>? _navigationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Shell"/> class.
@@ -22,28 +22,34 @@ namespace StrixMusic.Shell.Strix.Controls
         public Shell()
         {
             this.InitializeComponent();
-            _navigationService = Ioc.Default.GetService<INavigationService<Control>>();
-            RegisterPages();
-            _navigationService.NavigationRequested += NavigationService_NavigationRequested;
+            SetupIoc();
+            _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
             _pagesMapping = new Dictionary<Button, Type>
             {
                 [HomeButton] = typeof(HomeControl),
             };
         }
 
-        private void RegisterPages()
+        private void SetupIoc()
         {
+            StrixShellIoc.Initialize();
+            _navigationService = StrixShellIoc.Ioc.GetService<INavigationService<Control>>();
             _navigationService!.RegisterCommonPage(typeof(HomeControl));
         }
 
         private void NavigationService_NavigationRequested(object sender, Control e)
         {
-            MainContent.Child = e;
+            MainContent.Content = e;
         }
 
         private void NavButtonClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            _navigationService.NavigateTo(_pagesMapping[(sender as Button) !]);
+            _navigationService!.NavigateTo(_pagesMapping[(sender as Button) !]);
+        }
+
+        private void SearchButtonClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            _navigationService!.NavigateTo(typeof(SearchViewControl), SearchTextBox.Text);
         }
     }
 }
