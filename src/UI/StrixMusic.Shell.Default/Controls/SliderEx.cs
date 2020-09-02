@@ -9,7 +9,7 @@ namespace StrixMusic.Shell.Default.Controls
     /// An extended <see cref="Slider"/> that has events for the Slider is modifed by the user.
     /// </summary>
     /// <remarks>
-    /// Stolen from StackOverflow
+    /// Partially stolen from StackOverflow:
     /// https://stackoverflow.com/questions/48833441/how-do-i-listen-to-uwp-xaml-slider-manipulation-start-end-events
     /// </remarks>
     public partial class SliderEx : Slider
@@ -28,6 +28,14 @@ namespace StrixMusic.Shell.Default.Controls
         /// The <see cref="Slider"/> has value has changed as a result of the user.
         /// </summary>
         public event EventHandler? SliderManipulationMoved;
+
+        /// <summary>
+        /// Gets the value remaining on the Slider.
+        /// </summary>
+        public double Remaining
+        {
+            get => Maximum - Value;
+        }
 
         private bool IsSliderBeingManpulated
         {
@@ -79,20 +87,21 @@ namespace StrixMusic.Shell.Default.Controls
 
         private void SliderContainer_PointerMoved(
             object sender,
-            Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+            PointerRoutedEventArgs e)
         {
             this.InvokeMove();
         }
 
         private void SliderContainer_PointerReleased(
             object sender,
-            Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+            PointerRoutedEventArgs e)
         {
             this.SetContainerHeld(false);
         }
 
-        private void SliderContainer_PointerPressed(object sender,
-            Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void SliderContainer_PointerPressed(
+            object sender,
+            PointerRoutedEventArgs e)
         {
             this.SetContainerHeld(true);
         }
