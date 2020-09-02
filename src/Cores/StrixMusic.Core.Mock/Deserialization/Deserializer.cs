@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using MetaBrainz.MusicBrainz;
 using Newtonsoft.Json;
 using StrixMusic.Core.Mock.Deserialization;
 using StrixMusic.Core.Mock.Models;
