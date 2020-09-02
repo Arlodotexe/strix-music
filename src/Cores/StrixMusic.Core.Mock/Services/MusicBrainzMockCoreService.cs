@@ -10,7 +10,7 @@ namespace StrixMusic.Core.Mock.Services
     /// <inheritdoc />
     public class MusicBrainzMockCoreService : IMockCoreService
     {
-        private MusicBrainzClient _musicBrainzClient;
+        //private MusicBrainzClient _musicBrainzClient;
 
         /// <inheritdoc />
         public MusicBrainzMockCoreService()
