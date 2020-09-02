@@ -273,7 +273,6 @@
                                    Margin="16,0"
                                    VerticalAlignment="Center"/>
 
-
                         <Grid x:Name="SliderContainer" Background="{ThemeResource SliderContainerBackground}"
                                   Control.IsTemplateFocusTarget="True" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
 
