@@ -22,6 +22,8 @@ namespace StrixMusic
         public App()
         {
             ConfigureFilters(global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
+            // TODO: Debate location.
+            new IocLocator();
 
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
@@ -73,9 +75,6 @@ namespace StrixMusic
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
-
-            // TODO: Debate location.
-            new IocLocator();
         }
 
         /// <summary>

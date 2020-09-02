@@ -26,9 +26,8 @@ namespace StrixMusic.Services.Settings
         /// </summary>
         /// <typeparam name="T">The type of the object to retrieve.</typeparam>
         /// <param name="key">The key associated to the requested object.</param>
-        /// <param name="fallback">If true, the method returns the default <typeparamref name="T"/> value in case of failure.</param>
         /// <returns>A <see cref="Task{T}"/> that represents the value for the storage <paramref name="key"/>.</returns>
-        Task<T> GetValue<T>(string key, bool fallback = false);
+        Task<T> GetValue<T>(string key);
 
         /// <summary>
         /// Assigns a value to a settings key.
@@ -46,9 +45,8 @@ namespace StrixMusic.Services.Settings
         /// <typeparam name="T">The type of the object to retrieve.</typeparam>
         /// <param name="key">The key associated to the requested object.</param>
         /// <param name="identifier">Identifies a unique version of this settings key.</param>
-        /// <param name="fallback">If true, the method returns the default <typeparamref name="T"/> value in case of failure.</param>
         /// <returns>A <see cref="Task{T}"/> that represents the value for the storage <paramref name="key"/> with the <paramref name="identifier"/>.</returns>
-        Task<T> GetValue<T>(string key, string identifier, bool fallback = false);
+        Task<T> GetValue<T>(string key, string identifier);
 
         /// <summary>
         /// Deletes all the existing setting values.

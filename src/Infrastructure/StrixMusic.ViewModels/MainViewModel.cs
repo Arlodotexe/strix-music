@@ -6,6 +6,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Extensions;
 using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Services.Navigation;
 using StrixMusic.ViewModels.Bindables;
 
 namespace StrixMusic.ViewModels
@@ -24,12 +25,12 @@ namespace StrixMusic.ViewModels
         {
             _cores = cores;
 
-            Devices = new ObservableCollection<BindableDevice>();
+            Devices = new ObservableCollection<ObservableDevice>();
             SearchAutoComplete = new ObservableCollection<string>();
 
-            LoadedCores = new ObservableCollection<BindableCore>();
-            Users = new ObservableCollection<BindableUserProfile>();
-            PlaybackQueue = new ObservableCollection<BindableTrack>();
+            LoadedCores = new ObservableCollection<ObservableCore>();
+            Users = new ObservableCollection<ObservableUserProfile>();
+            PlaybackQueue = new ObservableCollection<ObservableTrack>();
 
             GetSearchResultsAsyncCommand = new AsyncRelayCommand<string>(GlobalSearchResultsAsync);
             GetSearchAutoSuggestAsyncCommand = new RelayCommand<string>(GlobalSearchSuggestions);
@@ -43,7 +44,7 @@ namespace StrixMusic.ViewModels
 
             foreach (var core in coresToLoad)
             {
-                Users.Add(new BindableUserProfile(core.User));
+                Users.Add(new ObservableUserProfile(core.User));
 
                 AttachEvents(core);
             }
@@ -89,7 +90,7 @@ namespace StrixMusic.ViewModels
             // TODO: Merge search results
             var merged = searchResults.First();
 
-            SearchResult = new BindableSearchResults(merged);
+            SearchResult = new ObservableSearchResults(merged);
 
             return merged;
         }
@@ -98,44 +99,44 @@ namespace StrixMusic.ViewModels
         {
             foreach (var device in e.AddedItems)
             {
-                Devices.Add(new BindableDevice(device));
+                Devices.Add(new ObservableDevice(device));
             }
 
             foreach (var device in e.RemovedItems)
             {
-                Devices.Remove(new BindableDevice(device));
+                Devices.Remove(new ObservableDevice(device));
             }
         }
 
         /// <summary>
         /// Contains data about the cores that are loaded.
         /// </summary>
-        public ObservableCollection<BindableCore> LoadedCores { get; }
+        public ObservableCollection<ObservableCore> LoadedCores { get; }
 
         /// <summary>
         /// A consolidated list of all users in the app.
         /// </summary>
-        public ObservableCollection<BindableUserProfile> Users { get; }
+        public ObservableCollection<ObservableUserProfile> Users { get; }
 
         /// <summary>
         /// All available devices.
         /// </summary>
-        public ObservableCollection<BindableDevice> Devices { get; }
+        public ObservableCollection<ObservableDevice> Devices { get; }
 
         /// <summary>
         /// The consolidated music library across all cores.
         /// </summary>
-        public BindableLibrary? Library { get; private set; }
+        public ObservableLibrary? Library { get; private set; }
 
         /// <summary>
         /// The consolidated recently played items across all cores.
         /// </summary>
-        public BindableRecentlyPlayed? RecentlyPlayed { get; private set; }
+        public ObservableRecentlyPlayed? RecentlyPlayed { get; private set; }
 
         /// <summary>
         /// Used to browse and discovered new music.
         /// </summary>
-        public BindableCollectionGroup? Discoverables { get; private set; }
+        public ObservableCollectionGroup? Discoverables { get; private set; }
 
         /// <summary>
         /// Gets search results for a query.
@@ -150,7 +151,7 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// Contains search results.
         /// </summary>
-        public BindableSearchResults? SearchResult { get; private set; }
+        public ObservableSearchResults? SearchResult { get; private set; }
 
         /// <summary>
         /// The autocomplete strings for the search results.
@@ -160,6 +161,6 @@ namespace StrixMusic.ViewModels
         /// <summary>
         /// The current playback queue. First item plays next.
         /// </summary>
-        public ObservableCollection<BindableTrack> PlaybackQueue { get; }
+        public ObservableCollection<ObservableTrack> PlaybackQueue { get; }
     }
 }

@@ -4,12 +4,15 @@
     xmlns:local="using:StrixMusic.Shell.Default.Controls"
     xmlns:bindables="using:StrixMusic.ViewModels.Bindables"
     xmlns:converters="using:StrixMusic.Converters"
+     xmlns:viewmodels="using:StrixMusic.ViewModels"
     x:Class="StrixMusic.Shell.Default.Themes.SearchViewStyle">
 
-    <DataTemplate x:Key="DefaultSearchViewTemplate" x:DataType="bindables:BindableSearchResults">
-        <Grid>
-            <TextBlock Text="Search results for &quot;Query&quot;"/>
-        </Grid>
+    <DataTemplate x:Key="DefaultSearchViewTemplate" x:DataType="viewmodels:MainViewModel">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Search results for &quot;"/>
+            <TextBlock Text="{x:Bind SearchResult.Name, Mode=OneWay}"/>
+            <TextBlock Text="&quot;"/>
+        </StackPanel>
     </DataTemplate>
 
     <Style x:Key="DefaultSearchViewControlStyle" TargetType="local:SearchViewControl">

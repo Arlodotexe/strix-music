@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:local="using:StrixMusic.Shell.Strix.Controls"
+    xmlns:converters="using:StrixMusic.Shell.Default.Converters"
     xmlns:themes="using:StrixMusic.Shell.Strix.Themes"
     xmlns:dthemes="using:StrixMusic.Shell.Default.Themes">
     <ResourceDictionary.MergedDictionaries>
@@ -39,6 +40,8 @@
                 <ControlTemplate TargetType="Slider">
                     <Grid Margin="{TemplateBinding Padding}">
                         <Grid.Resources>
+                            <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
+
                             <Style x:Key="SliderThumbStyle" TargetType="Thumb">
                                 <Setter Property="BorderThickness" Value="0" />
                                 <Setter Property="Background" x:Name="SliderThumbBackground"
@@ -52,6 +55,11 @@
                                 </Setter>
                             </Style>
                         </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
@@ -236,14 +244,33 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <ContentPresenter x:Name="HeaderContentPresenter"
-                                              ContentTemplate="{TemplateBinding HeaderTemplate}"
-                                              Content="{TemplateBinding Header}"
-                                              FontWeight="{ThemeResource SliderHeaderThemeFontWeight}"
-                                              Foreground="{ThemeResource SliderHeaderForeground}"
-                                              Margin="{ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap"
-                                              Visibility="Collapsed" x:DeferLoadStrategy="Lazy" CornerRadius="100"/>
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                          Content="{TemplateBinding Header}"
+                                          FontWeight="{ThemeResource SliderHeaderThemeFontWeight}"
+                                          Foreground="{ThemeResource SliderHeaderForeground}"
+                                          Margin="{ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap"
+                                          Visibility="Collapsed" x:DeferLoadStrategy="Lazy" CornerRadius="100"
+                                          Grid.ColumnSpan="3"/>
+
+                        <!--Value-->
+                        <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LongToTimeSpanTextConverter}, Path=Value, UpdateSourceTrigger=PropertyChanged}"
+                                   Foreground="{ThemeResource SliderHeaderForeground}"
+                                   Grid.Column="0"
+                                   Grid.Row="1"
+                                   Margin="16,0"
+                                   VerticalAlignment="Center"/>
+
+                        <!--Length-->
+                        <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LongToTimeSpanTextConverter}, Path=Maximum, UpdateSourceTrigger=PropertyChanged}"
+                                   Foreground="{ThemeResource SliderHeaderForeground}"
+                                   Grid.Column="2"
+                                   Grid.Row="1"
+                                   Margin="16,0"
+                                   VerticalAlignment="Center"/>
+
+
                         <Grid x:Name="SliderContainer" Background="{ThemeResource SliderContainerBackground}"
-                                  Control.IsTemplateFocusTarget="True" Grid.Row="1">
+                                  Control.IsTemplateFocusTarget="True" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
 
                             <Grid x:Name="HorizontalTemplate">
                                 <Grid.ColumnDefinitions>
@@ -257,49 +284,49 @@
                                     <RowDefinition Height="18" />
                                 </Grid.RowDefinitions>
 
-
+                                <!--True Background-->
                                 <Border CornerRadius="2"
-                                                Grid.ColumnSpan="3"
-                                                Grid.Row="1">
+                                        Grid.ColumnSpan="3"
+                                        Grid.Row="1">
                                     <Rectangle x:Name="HorizontalTrackRect" Grid.ColumnSpan="3" 
                                                Fill="{TemplateBinding Background}"
                                                Height="5" Grid.Row="1" />
                                 </Border>
-
-
+                                
+                                <!--Background behind thumb-->
                                 <Border CornerRadius="2,0,0,2" Grid.Row="1">
                                     <Rectangle x:Name="HorizontalDecreaseRect"
                                                Fill="{StaticResource SystemControlBackgroundAccentBrush}" Grid.Row="1" />
                                 </Border>
-
+                                
+                                <!--Tickbar-->
                                 <TickBar x:Name="TopTickBar"
-                                                     Fill="{ThemeResource SliderTickBarFill}"
-                                                     Height="Auto"
-                                                     Visibility="Collapsed"
-                                                     Grid.ColumnSpan="3" 
-                                                     Margin="0,0,0,4" 
-                                                     VerticalAlignment="Bottom" />
-
+                                         Fill="{ThemeResource SliderTickBarFill}"
+                                         Height="Auto"
+                                         Visibility="Collapsed"
+                                         Grid.ColumnSpan="3" 
+                                         Margin="0,0,0,4" 
+                                         VerticalAlignment="Bottom" />
                                 <TickBar x:Name="HorizontalInlineTickBar"
-                                             Fill="{ThemeResource SliderInlineTickBarFill}"
-                                             Height="Auto" 
-                                             Visibility="Collapsed"
-                                             Grid.ColumnSpan="3" 
-                                             Grid.Row="1" />
-
+                                         Fill="{ThemeResource SliderInlineTickBarFill}"
+                                         Height="Auto" 
+                                         Visibility="Collapsed"
+                                         Grid.ColumnSpan="3" 
+                                         Grid.Row="1" />
                                 <TickBar x:Name="BottomTickBar"
-                                                    Grid.ColumnSpan="3"
-                                                    Margin="0,0,0,0"
-                                                    Grid.Row="2"
-                                                    VerticalAlignment="Top"
-                                                    Fill="{ThemeResource SliderTickBarFill}"
-                                                    Height="Auto"
-                                                    Visibility="Collapsed" />
+                                         Grid.ColumnSpan="3"
+                                         Margin="0,0,0,0"
+                                         Grid.Row="2"
+                                         VerticalAlignment="Top"
+                                         Fill="{ThemeResource SliderTickBarFill}"
+                                         Height="Auto"
+                                         Visibility="Collapsed" />
 
+                                <!--Thumb-->
                                 <Thumb x:Name="HorizontalThumb" AutomationProperties.AccessibilityView="Raw"
-                                           Grid.Column="1" DataContext="{TemplateBinding Value}"
-                                           FocusVisualMargin="-14,-6,-14,-6" Height="17.5" Grid.RowSpan="3" Grid.Row="0"
-                                           Style="{StaticResource SliderThumbStyle}" Width="17.5" />
+                                       Grid.Column="1" DataContext="{TemplateBinding Value}"
+                                       FocusVisualMargin="-14,-6,-14,-6" Height="17.5" Grid.RowSpan="3" Grid.Row="0"
+                                       Style="{StaticResource SliderThumbStyle}" Width="17.5" />
                             </Grid>
                             <Grid x:Name="VerticalTemplate" MinWidth="44" Visibility="Collapsed">
                                 <Grid.ColumnDefinitions>

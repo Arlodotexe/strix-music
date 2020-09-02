@@ -5,10 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.Services;
+using StrixMusic.Services.Navigation;
 using StrixMusic.Services.Settings;
 using StrixMusic.Services.StorageService;
 using StrixMusic.Services.SuperShell;
 using StrixMusic.ViewModels;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shared
 {

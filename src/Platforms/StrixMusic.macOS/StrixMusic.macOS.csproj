@@ -39,6 +39,7 @@
     </XamMacArch>
     <NoWarn>
     </NoWarn>
+    <DocumentationFile>bin\Debug\StrixMusic.macOS.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugSymbols>false</DebugSymbols>
@@ -62,6 +63,7 @@
     </XamMacArch>
     <NoWarn>
     </NoWarn>
+    <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -118,9 +120,9 @@
       <Project>{c5ce5911-1c37-4650-a1e9-4f1062534394}</Project>
       <Name>StrixMusic.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ViewModels.csproj">
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ObservableModels.csproj">
       <Project>{40522958-e5ad-4494-8c45-2baf83399499}</Project>
-      <Name>StrixMusic.ViewModels</Name>
+      <Name>StrixMusic.ObservableModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj">
       <Project>{1b218c58-e2b0-441e-a406-ee8ae87a009e}</Project>

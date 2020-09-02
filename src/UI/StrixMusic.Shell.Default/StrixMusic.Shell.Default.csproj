@@ -13,6 +13,12 @@
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
@@ -20,6 +26,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
+    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="6.1.0-build.191.gc988bdd4ff" />
+    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
     <PackageReference Include="Uno.UI" Version="3.0.12" />
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +40,7 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Controls\Internal\Shell.xaml" />
     <None Remove="Resources.xaml" />
     <None Remove="Themes\AlbumStyle.xaml" />
     <None Remove="Themes\AlbumViewStyle.xaml" />
@@ -46,6 +55,7 @@
     <None Remove="Themes\TrackStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <UpToDateCheckInput Remove="Controls\Internal\Shell.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Themes\AlbumStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\AlbumViewStyle.xaml" />
@@ -61,7 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ViewModels.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ObservableModels.csproj" />
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -92,5 +102,13 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
+      <Version>6.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>6.1.1</Version>
+    </PackageReference>
   </ItemGroup>
 </Project>

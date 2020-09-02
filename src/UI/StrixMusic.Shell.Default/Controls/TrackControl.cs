@@ -1,7 +1,11 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using StrixMusic.ViewModels.Bindables;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls
 {
+    /// <summary>
+    /// A Templated <see cref="Control"/> for showing an <see cref="ObservableTrack"/> in a list.
+    /// </summary>
     public sealed partial class TrackControl : Control
     {
         /// <summary>

@@ -7,16 +7,12 @@
 	<type fullname="System.Linq.Expressions*" />
   </assembly>
 
-  <assembly fullname="StrixMusic.ViewModels">
-    <type fullname="StrixMusic.ViewModels*" />
+  <assembly fullname="StrixMusic.ObservableModels">
+    <type fullname="StrixMusic.ObservableModels*" />
   </assembly>
 
   <assembly fullname="StrixMusic.Services">
     <type fullname="StrixMusic.Services*" />
-  </assembly>
-  
-  <assembly fullname="StrixMusic.Core.Dummy">
-    <type fullname="StrixMusic.Core.Dummy*" />
   </assembly>
 
   <assembly fullname="StrixMusic.Shell.Default">

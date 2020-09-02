@@ -18,6 +18,12 @@
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.png" />
   </ItemGroup>
@@ -59,7 +65,7 @@
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.Mock\StrixMusic.Core.Mock.csproj" />
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ViewModels.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ObservableModels.csproj" />
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Strix\StrixMusic.Shell.Strix.csproj" />

@@ -40,6 +40,7 @@
     <EnableLLVM>false</EnableLLVM>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
+    <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>portable</DebugType>
@@ -57,6 +58,7 @@
     <AotAssemblies>true</AotAssemblies>
     <EnableLLVM>true</EnableLLVM>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
+    <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -126,9 +128,9 @@
       <Project>{C5CE5911-1C37-4650-A1E9-4F1062534394}</Project>
       <Name>StrixMusic.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ViewModels.csproj">
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ObservableModels.csproj">
       <Project>{40522958-e5ad-4494-8c45-2baf83399499}</Project>
-      <Name>StrixMusic.ViewModels</Name>
+      <Name>StrixMusic.ObservableModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj">
       <Project>{bd87b98b-b958-43ec-b3bf-6058afedcdc6}</Project>

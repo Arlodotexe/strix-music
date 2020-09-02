@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:local="using:StrixMusic.Shell.Strix.Controls"
-    xmlns:bindables="using:StrixMusic.ViewModels.Bindables"
+    xmlns:observables="using:StrixMusic.ViewModels.Bindables"
     xmlns:interfaces="using:StrixMusic.CoreInterfaces.Interfaces"
     xmlns:selectors="using:StrixMusic.Shell.Default.TemplateSelectors"
     x:Class="StrixMusic.Shell.Strix.Themes.HomeStyle">
@@ -18,9 +18,10 @@
                                  TrackListTemplate="{StaticResource TrackListTemplate}"
                                  PlayableCollectionGroupTemplate="{StaticResource PlayableCollectionGroupTemplate}"/>
 
-    <DataTemplate x:Key="StrixHomeTemplate" x:DataType="bindables:BindableLibrary">
+    <DataTemplate x:Key="StrixHomeTemplate" x:DataType="observables:ObservableLibrary">
         <UserControl>
             <Grid>
+                <TextBlock Text="Home Page"/>
                 <!--<Pivot ItemsSource="{x:Bind Library.Items, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
                     <Pivot.LeftHeader>
                         <TextBlock Grid.Column="1" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0"/>

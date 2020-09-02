@@ -56,6 +56,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\x86\Debug\StrixMusic.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -68,6 +69,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -181,9 +183,9 @@
       <Project>{c5ce5911-1c37-4650-a1e9-4f1062534394}</Project>
       <Name>StrixMusic.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ViewModels.csproj">
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.ViewModels\StrixMusic.ObservableModels.csproj">
       <Project>{40522958-e5ad-4494-8c45-2baf83399499}</Project>
-      <Name>StrixMusic.ViewModels</Name>
+      <Name>StrixMusic.ObservableModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj">
       <Project>{bd87b98b-b958-43ec-b3bf-6058afedcdc6}</Project>
