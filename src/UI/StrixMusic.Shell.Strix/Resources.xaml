@@ -35,6 +35,11 @@
         <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
         <Setter Property="FocusVisualMargin" Value="-7,0,-7,0" />
         <Setter Property="IsFocusEngagementEnabled" Value="True" />
+        <Setter Property="ThumbToolTipValueConverter">
+            <Setter.Value>
+                <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Slider">
