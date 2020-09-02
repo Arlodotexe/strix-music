@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace StrixMusic.Shell.Default.Controls
 {
@@ -40,6 +39,16 @@ namespace StrixMusic.Shell.Default.Controls
         public ProgressSliderControl()
             : base()
         {
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            // TODO: Pause value while changing thumb position
+            //Thumb thumb = this.FindChild<Thumb>();
+            //thumb.DragStarted += (s, e) => PauseTimer();
+            //thumb.DragCompleted += (s, e) => ResumeTimer();
             ValueChanged += (s, e) => _startTime = DateTime.Now - TimeSpan.FromMilliseconds(Value);
             _updateIntervalTimer.Tick += (s, e) => UpdateSliderValue();
             UpdateTimer();
