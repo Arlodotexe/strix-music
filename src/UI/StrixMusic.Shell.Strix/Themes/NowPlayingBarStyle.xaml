@@ -62,7 +62,7 @@
                                     <Rectangle Fill="#FF00FF" Width="80" Height="80" Margin="8"/>
                                 </Grid>
 
-                                <default:ProgressSliderControl x:Name="slider" VerticalAlignment="Center" Grid.Column="1" Minimum="0" Maximum="280000" Value="36" Style="{StaticResource MediaSlider}"/>
+                                <default:ProgressSliderControl x:Name="slider" VerticalAlignment="Center" Grid.Column="1" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"/>
 
                                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                                     <Button Style="{StaticResource MediaButton}">

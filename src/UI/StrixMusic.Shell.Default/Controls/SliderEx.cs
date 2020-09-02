@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
@@ -14,6 +15,16 @@ namespace StrixMusic.Shell.Default.Controls
     /// </remarks>
     public partial class SliderEx : Slider
     {
+        /// <summary>
+        /// <see cref="DependencyProperty"/> for the <see cref="Remaining"/> property.
+        /// </summary>
+        public static readonly DependencyProperty RemainingProperty =
+            DependencyProperty.Register(
+                nameof(Remaining),
+                typeof(bool),
+                typeof(ProgressSliderControl),
+                new PropertyMetadata(true));
+
         /// <summary>
         /// The <see cref="Slider"/> has begun being manipulation by the user.
         /// </summary>
@@ -34,7 +45,8 @@ namespace StrixMusic.Shell.Default.Controls
         /// </summary>
         public double Remaining
         {
-            get => Maximum - Value;
+            get => (double)GetValue(RemainingProperty);
+            private set => SetValue(RemainingProperty, value);
         }
 
         private bool IsSliderBeingManpulated
@@ -83,6 +95,13 @@ namespace StrixMusic.Shell.Default.Controls
                     new PointerEventHandler(this.SliderContainer_PointerMoved),
                     true);
             }
+        }
+
+        /// <inheritdoc/>
+        protected override void OnValueChanged(double oldValue, double newValue)
+        {
+            base.OnValueChanged(oldValue, newValue);
+            Remaining = Maximum - newValue;
         }
 
         private void SliderContainer_PointerMoved(
