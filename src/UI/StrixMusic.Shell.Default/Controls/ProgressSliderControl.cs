@@ -8,7 +8,7 @@ namespace StrixMusic.Shell.Default.Controls
     /// <summary>
     /// A slider that can automatically update the tick position.
     /// </summary>
-    public partial class ProgressSliderControl : Slider
+    public partial class ProgressSliderControl : SliderEx
     {
         /// <summary>
         /// <see cref="DependencyProperty"/> for the <see cref="UpdateFrequency"/> property.
@@ -45,10 +45,9 @@ namespace StrixMusic.Shell.Default.Controls
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
-            // TODO: Pause value while changing thumb position
-            //Thumb thumb = this.FindChild<Thumb>();
-            //thumb.DragStarted += (s, e) => PauseTimer();
-            //thumb.DragCompleted += (s, e) => ResumeTimer();
+
+            SliderManipulationStarted += (s, e) => PauseTimer();
+            SliderManipulationCompleted += (s, e) => ResumeTimer();
             ValueChanged += (s, e) => _startTime = DateTime.Now - TimeSpan.FromMilliseconds(Value);
             _updateIntervalTimer.Tick += (s, e) => UpdateSliderValue();
             UpdateTimer();
