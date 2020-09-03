@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Core.Mock.Deserialization;
 using StrixMusic.Core.Mock.Models;
+using StrixMusic.Core.Mock.Services;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
@@ -24,7 +25,7 @@ namespace StrixMusic.Core.Mock
         }
 
         /// <inheritdoc/>
-        public SerializedLibrary _serializedLibaray { get; set; }
+        public MockLibrary _serializedLibaray { get; set; }
 
         /// <inheritdoc/>
         public ICoreConfig CoreConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -80,7 +81,7 @@ namespace StrixMusic.Core.Mock
         /// <inheritdoc/>
         public async Task InitAsync()
         {
-            _serializedLibaray = await Deserializer.DeserializeLibrary();
+            _serializedLibaray = await MusicBrainzMockCoreService.GetInstance().GetLibraryAsync();
         }
     }
 }

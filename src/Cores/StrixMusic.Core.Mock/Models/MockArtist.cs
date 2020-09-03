@@ -18,7 +18,7 @@ namespace StrixMusic.Core.Mock.Models
 
         /// <inheritdoc/>
         [JsonProperty("name")]
-        public string NameJson { get; set; } = string.Empty;
+        public string MockName { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         [JsonProperty("album_ids")]
