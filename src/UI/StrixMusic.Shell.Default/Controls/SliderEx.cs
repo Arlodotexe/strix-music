@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
@@ -9,11 +10,21 @@ namespace StrixMusic.Shell.Default.Controls
     /// An extended <see cref="Slider"/> that has events for the Slider is modifed by the user.
     /// </summary>
     /// <remarks>
-    /// Stolen from StackOverflow
+    /// Partially stolen from StackOverflow:
     /// https://stackoverflow.com/questions/48833441/how-do-i-listen-to-uwp-xaml-slider-manipulation-start-end-events
     /// </remarks>
     public partial class SliderEx : Slider
     {
+        /// <summary>
+        /// <see cref="DependencyProperty"/> for the <see cref="Remaining"/> property.
+        /// </summary>
+        public static readonly DependencyProperty RemainingProperty =
+            DependencyProperty.Register(
+                nameof(Remaining),
+                typeof(bool),
+                typeof(ProgressSliderControl),
+                new PropertyMetadata(true));
+
         /// <summary>
         /// The <see cref="Slider"/> has begun being manipulation by the user.
         /// </summary>
@@ -28,6 +39,15 @@ namespace StrixMusic.Shell.Default.Controls
         /// The <see cref="Slider"/> has value has changed as a result of the user.
         /// </summary>
         public event EventHandler? SliderManipulationMoved;
+
+        /// <summary>
+        /// Gets the value remaining on the Slider.
+        /// </summary>
+        public double Remaining
+        {
+            get => (double)GetValue(RemainingProperty);
+            private set => SetValue(RemainingProperty, value);
+        }
 
         private bool IsSliderBeingManpulated
         {
@@ -77,22 +97,30 @@ namespace StrixMusic.Shell.Default.Controls
             }
         }
 
+        /// <inheritdoc/>
+        protected override void OnValueChanged(double oldValue, double newValue)
+        {
+            base.OnValueChanged(oldValue, newValue);
+            Remaining = Maximum - newValue;
+        }
+
         private void SliderContainer_PointerMoved(
             object sender,
-            Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+            PointerRoutedEventArgs e)
         {
             this.InvokeMove();
         }
 
         private void SliderContainer_PointerReleased(
             object sender,
-            Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+            PointerRoutedEventArgs e)
         {
             this.SetContainerHeld(false);
         }
 
-        private void SliderContainer_PointerPressed(object sender,
-            Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void SliderContainer_PointerPressed(
+            object sender,
+            PointerRoutedEventArgs e)
         {
             this.SetContainerHeld(true);
         }

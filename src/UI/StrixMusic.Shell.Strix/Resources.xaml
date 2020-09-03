@@ -16,6 +16,7 @@
         <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
         <themes:PlayableCollectionListStyle/>
         <themes:ShellStyle/>
+        <themes:SettingsViewStyle/>
         <!--<ResourceDictionary Source="Themes/TrackListStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Themes/TrackStyle.xaml"/>-->
         <dthemes:TrackListStyle/>
@@ -35,6 +36,11 @@
         <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
         <Setter Property="FocusVisualMargin" Value="-7,0,-7,0" />
         <Setter Property="IsFocusEngagementEnabled" Value="True" />
+        <Setter Property="ThumbToolTipValueConverter">
+            <Setter.Value>
+                <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Slider">
@@ -267,7 +273,6 @@
                                    Grid.Row="1"
                                    Margin="16,0"
                                    VerticalAlignment="Center"/>
-
 
                         <Grid x:Name="SliderContainer" Background="{ThemeResource SliderContainerBackground}"
                                   Control.IsTemplateFocusTarget="True" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
@@ -557,4 +562,3 @@
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
     </Style>
 </ResourceDictionary>
-    

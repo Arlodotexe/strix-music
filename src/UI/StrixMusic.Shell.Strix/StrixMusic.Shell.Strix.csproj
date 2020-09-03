@@ -49,6 +49,7 @@
     <None Remove="Themes\HomeStyle.xaml" />
     <None Remove="Themes\NowPlayingBarStyle.xaml" />
     <None Remove="Themes\PlayableCollectionListStyle.xaml" />
+    <None Remove="Themes\SettingsViewStyle.xaml" />
     <None Remove="Themes\ShellStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +65,7 @@
     <UpToDateCheckInput Remove="Themes\HomeStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\NowPlayingBarStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\PlayableCollectionListStyle.xaml" />
+    <UpToDateCheckInput Remove="Themes\SettingsViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +87,9 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Themes\PlayableCollectionListStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Themes\SettingsViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Themes\ShellStyle.xaml.cs">

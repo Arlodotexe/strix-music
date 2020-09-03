@@ -60,26 +60,23 @@
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF000;" Margin="8,0" FontSize="46" Opacity=".5"/>
                                 </StackPanel>
 
-                                <Grid x:Name="NowPlaying" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Width="400" VerticalAlignment="Bottom" Margin="0,0,0,-8">
+                                <Grid x:Name="NowPlaying" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Width="400" Height="64" VerticalAlignment="Bottom" Margin="0,0,0,-8">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="64"/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
+                                        <RowDefinition Height="auto"/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
 
                                     <!--<controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">
-
-                                </controls:DropShadowPanel>-->
+                                    </controls:DropShadowPanel>-->
+                                    
                                     <Rectangle x:Name="AlbumCover" Width="64" Height="64" Fill="#FF00FF" Grid.RowSpan="3" VerticalAlignment="Center"/>
                                     <TextBlock Text="Diplomat's Son" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5"/>
                                     <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5"/>
-                                    <Slider Value="33" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"/>
-                                    <TextBlock Text="0:57" Grid.Row="2" Grid.Column="2" Margin="12,0,0,0" FontSize="16" FontWeight="Bold"/>
-                                    <TextBlock Text="-2:25" Grid.Row="2" Grid.Column="2" Margin="12,0,0,0" FontSize="16" HorizontalAlignment="Right" FontWeight="Bold" Opacity=".5"/>
+                                    <default:ProgressSliderControl Maximum="280000"  Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"/>
                                 </Grid>
 
                                 <Grid Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom">

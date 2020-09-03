@@ -12,7 +12,7 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <NavigationView x:Name="NavView" SelectionChanged="NavigationView_SelectionChanged">
+        <NavigationView x:Name="NavView" ItemInvoked="NavView_ItemInvoked" >
             <NavigationView.AutoSuggestBox>
                 <AutoSuggestBox x:Name="AutoSuggest" QuerySubmitted="AutoSuggestBox_QuerySubmitted"/>
             </NavigationView.AutoSuggestBox>

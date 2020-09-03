@@ -11,7 +11,12 @@ namespace StrixMusic.Services.Navigation
         /// <summary>
         /// Raised when a navigation is requested.
         /// </summary>
-        event EventHandler<T> NavigationRequested;
+        event EventHandler<NavigateEventArgs<T>> NavigationRequested;
+
+        /// <summary>
+        /// Raised when a back navigation is requested
+        /// </summary>
+        event EventHandler BackRequested;
 
         /// <summary>
         /// Registers a page to have its state cached.
@@ -27,13 +32,20 @@ namespace StrixMusic.Services.Navigation
         /// Raises the <see cref="NavigationRequested"/> event based on the arguments
         /// </summary>
         /// <param name="type">The type of the page to navigate to.</param>
+        /// <param name="overlay">Whether or not the page is an overlay.</param>
         /// <param name="args">The arguments for creating the page object.</param>
-        void NavigateTo(Type type, object? args = null);
+        void NavigateTo(Type type, bool overlay = false, object? args = null);
 
         /// <summary>
         /// Raises the <see cref="NavigationRequested"/> event based on the arguments
         /// </summary>
         /// <param name="type">The page object to navigate to.</param>
-        void NavigateTo(T type);
+        /// <param name="overlay">Whether or not the page is an overlay.</param>
+        void NavigateTo(T type, bool overlay = false);
+
+        /// <summary>
+        /// Raises the <see cref="BackRequested"/> event
+        /// </summary>
+        void GoBack();
     }
 }

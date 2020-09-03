@@ -8,120 +8,155 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <local:Drawer>
-        <local:Drawer.TopBarContent>
-            <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}" Height="96" Margin="0,12,0,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+    <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="OverlayStates">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="OverlayClosed" To="OverlayOpened"/>
+                    <VisualTransition From="OverlayOpened" To="OverlayClosed">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="OverlayContainer" Storyboard.TargetProperty="Opacity"
+                                             From="1" To="0" Duration="0:0:0.3"/>
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="OverlayClosed">
+                    <VisualState.Setters>
+                        <Setter Target="OverlayContainer.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="OverlayOpened">
+                    <VisualState.Setters>
+                        <Setter Target="OverlayContainer.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                    <VisualState.Storyboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="OverlayContainer" Storyboard.TargetProperty="Opacity"
+                                             From="0" To="1" Duration="0:0:0.3"/>
+                        </Storyboard>
+                    </VisualState.Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <local:Drawer>
+            <local:Drawer.TopBarContent>
+                <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}" Height="96" Margin="0,12,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
 
-                <Grid HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="64"/>
-                        <ColumnDefinition Width="600"/>
-                        <ColumnDefinition Width="64"/>
-                    </Grid.ColumnDefinitions>
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="64"/>
+                            <ColumnDefinition Width="600"/>
+                            <ColumnDefinition Width="64"/>
+                        </Grid.ColumnDefinitions>
 
-                    <Button Style="{StaticResource GenericBarButton}">
-                        <SymbolIcon Symbol="Contact"/>
-                    </Button>
-                    <TextBox x:Name="SearchTextBox" Grid.Column="1" Style="{StaticResource TextBoxStyle}" FontSize="24"/>
-                    <Button Grid.Column="2" Style="{StaticResource GenericBarButton}" Click="SearchButtonClicked">
-                        <SymbolIcon Symbol="Find"/>
-                    </Button>
-                </Grid>
-
-                <Grid Grid.Row="1" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Style="{StaticResource TopBarButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xF61F;"/>
-                            <TextBlock Text="Now Playing" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="HomeTopButton" Grid.Column="1" Style="{StaticResource TopBarButton}" Click="NavButtonClicked">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE10F;"/>
-                            <TextBlock Text="Home" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Grid.Column="2" Style="{StaticResource TopBarButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <SymbolIcon Symbol="Clock"/>
-                            <TextBlock Text="Recent" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Grid.Column="3" Style="{StaticResource TopBarButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xEB44;"/>
-                            <TextBlock Text="Browse" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                        </StackPanel>
-                    </Button>
-                </Grid>
-
-                <Button Grid.Row="1" HorizontalAlignment="Right" Style="{StaticResource GenericBarButton}" Width="48" Margin="0,0,32,0">
-                    <SymbolIcon Symbol="Setting"/>
-                </Button>
-            </Grid>
-        </local:Drawer.TopBarContent>
-        <local:Drawer.MainContent>
-            <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}">
-                <ContentControl x:Name="MainContent"/>
-            </Grid>
-        </local:Drawer.MainContent>
-        <local:Drawer.BottomBarSecondaryContent>
-            <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}">
-                <default:NowPlayingBarControl/>
-            </Grid>
-        </local:Drawer.BottomBarSecondaryContent>
-        <local:Drawer.BottomBarContent>
-            <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Style="{StaticResource GenericBarButton}">
-                        <StackPanel>
-                            <FontIcon Glyph="&#xF61F;"/>
-                            <TextBlock Text="Now Playing" FontSize="8"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Grid.Column="1" Style="{StaticResource GenericBarButton}">
-                        <StackPanel>
-                            <SymbolIcon Symbol="Clock"/>
-                            <TextBlock Text="Recent" FontSize="8"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="HomeBottomButton" Grid.Column="2" Style="{StaticResource GenericBarButton}" Click="NavButtonClicked">
-                        <StackPanel>
-                            <FontIcon Glyph="&#xE10F;"/>
-                            <TextBlock Text="Home" FontSize="8"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Grid.Column="3" Style="{StaticResource GenericBarButton}">
-                        <StackPanel>
-                            <FontIcon Glyph="&#xEB44;"/>
-                            <TextBlock Text="Browse" FontSize="8"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Grid.Column="4" Style="{StaticResource GenericBarButton}">
-                        <StackPanel>
+                        <Button Style="{StaticResource GenericBarButton}">
+                            <SymbolIcon Symbol="Contact"/>
+                        </Button>
+                        <TextBox x:Name="SearchTextBox" Grid.Column="1" Style="{StaticResource TextBoxStyle}" FontSize="24"/>
+                        <Button Grid.Column="2" Style="{StaticResource GenericBarButton}" Click="SearchButtonClicked">
                             <SymbolIcon Symbol="Find"/>
-                            <TextBlock Text="Search" FontSize="8"/>
-                        </StackPanel>
+                        </Button>
+                    </Grid>
+
+                    <Grid Grid.Row="1" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Style="{StaticResource TopBarButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xF61F;"/>
+                                <TextBlock Text="Now Playing" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="HomeTopButton" Grid.Column="1" Style="{StaticResource TopBarButton}" Click="NavButtonClicked">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE10F;"/>
+                                <TextBlock Text="Home" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="2" Style="{StaticResource TopBarButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Clock"/>
+                                <TextBlock Text="Recent" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="3" Style="{StaticResource TopBarButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xEB44;"/>
+                                <TextBlock Text="Browse" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+
+                    <Button x:Name="SettingsButton" Grid.Row="1" HorizontalAlignment="Right" Style="{StaticResource GenericBarButton}" Width="48" Margin="0,0,32,0" Click="SettingsButtonClick">
+                        <SymbolIcon Symbol="Setting"/>
                     </Button>
                 </Grid>
-            </Grid>
-        </local:Drawer.BottomBarContent>
-    </local:Drawer>
+            </local:Drawer.TopBarContent>
+            <local:Drawer.MainContent>
+                <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}">
+                    <ContentControl x:Name="MainContent"/>
+                </Grid>
+            </local:Drawer.MainContent>
+            <local:Drawer.BottomBarSecondaryContent>
+                <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}">
+                    <default:NowPlayingBarControl/>
+                </Grid>
+            </local:Drawer.BottomBarSecondaryContent>
+            <local:Drawer.BottomBarContent>
+                <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Style="{StaticResource GenericBarButton}">
+                            <StackPanel>
+                                <FontIcon Glyph="&#xF61F;"/>
+                                <TextBlock Text="Now Playing" FontSize="8"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="1" Style="{StaticResource GenericBarButton}">
+                            <StackPanel>
+                                <SymbolIcon Symbol="Clock"/>
+                                <TextBlock Text="Recent" FontSize="8"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="HomeBottomButton" Grid.Column="2" Style="{StaticResource GenericBarButton}" Click="NavButtonClicked">
+                            <StackPanel>
+                                <FontIcon Glyph="&#xE10F;"/>
+                                <TextBlock Text="Home" FontSize="8"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="3" Style="{StaticResource GenericBarButton}">
+                            <StackPanel>
+                                <FontIcon Glyph="&#xEB44;"/>
+                                <TextBlock Text="Browse" FontSize="8"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="4" Style="{StaticResource GenericBarButton}">
+                            <StackPanel>
+                                <SymbolIcon Symbol="Find"/>
+                                <TextBlock Text="Search" FontSize="8"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </local:Drawer.BottomBarContent>
+        </local:Drawer>
+        <Border x:Name="OverlayContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Background="{ThemeResource AcrylicContentBackgroundBrush}" Visibility="Collapsed">
+            <ContentControl x:Name="OverlayContent"/>
+        </Border>
+    </Grid>
 </UserControl>

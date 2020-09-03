@@ -19,9 +19,9 @@
                                             <VisualState.Setters>
                                                 <!--<Setter Target="sliderGrid.Visibility" Value="Collapsed"/>-->
                                                 <Setter Target="sliderRow.Height" Value="48"/>
-                                                <Setter Target="sliderGrid.(Grid.Row)" Value="1"/>
-                                                <Setter Target="sliderGrid.(Grid.Column)" Value="0"/>
-                                                <Setter Target="sliderGrid.(Grid.ColumnSpan)" Value="3"/>
+                                                <Setter Target="slider.(Grid.Row)" Value="1"/>
+                                                <Setter Target="slider.(Grid.Column)" Value="0"/>
+                                                <Setter Target="slider.(Grid.ColumnSpan)" Value="3"/>
                                             </VisualState.Setters>
                                         </VisualState>
                                         <VisualState x:Name="Large">
@@ -31,9 +31,9 @@
                                             <VisualState.Setters>
                                                 <!--<Setter Target="sliderGrid.Visibility" Value="Visible"/>-->
                                                 <Setter Target="sliderRow.Height" Value="0"/>
-                                                <Setter Target="sliderGrid.(Grid.Row)" Value="0"/>
-                                                <Setter Target="sliderGrid.(Grid.Column)" Value="1"/>
-                                                <Setter Target="sliderGrid.(Grid.ColumnSpan)" Value="1"/>
+                                                <Setter Target="slider.(Grid.Row)" Value="0"/>
+                                                <Setter Target="slider.(Grid.Column)" Value="1"/>
+                                                <Setter Target="slider.(Grid.ColumnSpan)" Value="1"/>
                                             </VisualState.Setters>
                                         </VisualState>
                                     </VisualStateGroup>
@@ -60,17 +60,7 @@
                                     <Rectangle Fill="#FF00FF" Width="96" Height="96"/>
                                 </Grid>
 
-                                <Grid x:Name="sliderGrid" Grid.Column="1" VerticalAlignment="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="auto"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Text="1:08" Grid.Column="0" Margin="16,0" VerticalAlignment="Center"/>
-                                    <local:ProgressSliderControl Grid.Column="1" Minimum="0" Maximum="2800000" Value="0" Style="{StaticResource MediaSlider}"/>
-                                    <TextBlock Text="4:40" Grid.Column="2" Margin="16,0" VerticalAlignment="Center"/>
-                                </Grid>
+                                <local:ProgressSliderControl x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"/>
 
                                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                                     <Button Style="{StaticResource MediaButton}">
