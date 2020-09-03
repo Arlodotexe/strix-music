@@ -16,6 +16,7 @@
         <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
         <themes:PlayableCollectionListStyle/>
         <themes:ShellStyle/>
+        <themes:SettingsViewStyle/>
         <!--<ResourceDictionary Source="Themes/TrackListStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Themes/TrackStyle.xaml"/>-->
         <dthemes:TrackListStyle/>
@@ -561,4 +562,3 @@
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
     </Style>
 </ResourceDictionary>
-    

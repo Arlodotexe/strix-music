@@ -25,12 +25,19 @@ namespace StrixMusic.Shell.Strix.Controls
             this.InitializeComponent();
             SetupIoc();
             _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
+            _navigationService!.BackRequested += Shell_BackRequested;
             _pagesMapping = new Dictionary<Button, Type>
             {
                 [HomeTopButton] = typeof(HomeControl),
                 [HomeBottomButton] = typeof(HomeControl),
                 [SettingsButton] = typeof(SettingsViewControl),
             };
+        }
+
+        private void Shell_BackRequested(object sender, EventArgs e)
+        {
+            // TODO: Pop the stack if the overlay is not open
+            VisualStateManager.GoToState(this, nameof(OverlayClosed), true);
         }
 
         private void SetupIoc()

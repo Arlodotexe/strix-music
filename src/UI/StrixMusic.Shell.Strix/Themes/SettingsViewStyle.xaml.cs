@@ -1,4 +1,7 @@
-﻿using Windows.UI.Xaml;
+﻿using Microsoft.Extensions.DependencyInjection;
+using StrixMusic.Services.Navigation;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Strix.Themes
 {
@@ -14,7 +17,8 @@ namespace StrixMusic.Shell.Strix.Themes
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Close Overlay
+            INavigationService<Control> navigationService = StrixShellIoc.Ioc.GetService<INavigationService<Control>>();
+            navigationService.GoBack();
         }
     }
 }

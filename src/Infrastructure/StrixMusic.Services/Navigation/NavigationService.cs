@@ -14,6 +14,9 @@ namespace StrixMusic.Services.Navigation
         public event EventHandler<NavigateEventArgs<T>>? NavigationRequested;
 
         /// <inheritdoc/>
+        public event EventHandler? BackRequested;
+
+        /// <inheritdoc/>
         public void NavigateTo(Type type, bool overlay = false, object? args = null)
         {
             T page;
@@ -48,6 +51,12 @@ namespace StrixMusic.Services.Navigation
         public void RegisterCommonPage(Type type)
         {
             _registeredPages.Add(type, (T)Activator.CreateInstance(type));
+        }
+
+        /// <inheritdoc/>
+        public void GoBack()
+        {
+            BackRequested?.Invoke(this, null);
         }
     }
 }
