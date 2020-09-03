@@ -24,8 +24,8 @@ namespace StrixMusic.Shell.Default.Controls.Internal
             _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
             _pagesMapping = new Dictionary<string, Type>
             {
-                { nameof(HomeItem), typeof(HomeControl) },
-                { "SettingsNavPaneItem", typeof(SettingsViewControl) },
+                { "Home", typeof(HomeControl) },
+                { "SettingsViewControl", typeof(SettingsViewControl) },
             };
         }
 
@@ -44,8 +44,8 @@ namespace StrixMusic.Shell.Default.Controls.Internal
             }
 
             // This isn't great, but there should only be 4 items
-            Type controlType = e.GetType();
-            bool containsValue = false;
+            Type controlType = e.Page.GetType();
+            bool containsValue = controlType == typeof(SettingsViewControl);
             foreach (var value in _pagesMapping.Values)
             {
                 containsValue = containsValue || (value == controlType);
@@ -57,20 +57,26 @@ namespace StrixMusic.Shell.Default.Controls.Internal
             }
         }
 
-        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            NavigationViewItemBase navi = (args.SelectedItem as NavigationViewItemBase) !;
-            if (navi == null || !_pagesMapping.ContainsKey(navi!.Name))
+            _navigationService!.NavigateTo(typeof(SearchViewControl), false, args.QueryText);
+        }
+
+        private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            if (args.IsSettingsInvoked)
+            {
+                _navigationService!.NavigateTo(_pagesMapping[nameof(SettingsViewControl)]);
+                return;
+            }
+
+            string invokedItemString = (args.InvokedItem as string)!;
+            if (invokedItemString == null || !_pagesMapping.ContainsKey(invokedItemString))
             {
                 return;
             }
 
-            _navigationService!.NavigateTo(_pagesMapping[navi!.Name]);
-        }
-
-        private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-        {
-            _navigationService!.NavigateTo(typeof(SearchViewControl), false, args.QueryText);
+            _navigationService!.NavigateTo(_pagesMapping[invokedItemString]);
         }
     }
 }
