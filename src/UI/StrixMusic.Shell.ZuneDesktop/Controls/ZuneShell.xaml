@@ -70,7 +70,7 @@
                 </PivotItem>
                 <PivotItem Header="collection">
                 </PivotItem>
-                <PivotItem Header="marketplace">
+                <PivotItem Header="browse">
                 </PivotItem>
             </Pivot>
         </Grid>
