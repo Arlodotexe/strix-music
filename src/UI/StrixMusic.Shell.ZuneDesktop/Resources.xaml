@@ -108,9 +108,9 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="18" />
+                                    <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="18" />
+                                    <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
 
                                 <Border Grid.ColumnSpan="3"
@@ -119,7 +119,6 @@
                                                Fill="{ThemeResource SliderRemainingBackground}"
                                                Height="5" Grid.Row="1" />
                                 </Border>
-
 
                                 <Border Grid.Row="1">
                                     <Rectangle x:Name="HorizontalDecreaseRect"
