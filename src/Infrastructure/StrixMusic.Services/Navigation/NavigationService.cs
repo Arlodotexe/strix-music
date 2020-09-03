@@ -33,14 +33,14 @@ namespace StrixMusic.Services.Navigation
                 }
             }
 
-            NavigateEventArgs<T> eventArgs = new NavigateEventArgs<T>(page);
+            NavigateEventArgs<T> eventArgs = new NavigateEventArgs<T>(page, overlay);
             NavigationRequested?.Invoke(this, eventArgs);
         }
 
         /// <inheritdoc/>
         public void NavigateTo(T page, bool overlay = false)
         {
-            NavigateEventArgs<T> eventArgs = new NavigateEventArgs<T>(page);
+            NavigateEventArgs<T> eventArgs = new NavigateEventArgs<T>(page, overlay);
             NavigationRequested?.Invoke(this, eventArgs);
         }
 
