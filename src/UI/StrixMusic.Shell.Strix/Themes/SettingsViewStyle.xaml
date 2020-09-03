@@ -8,7 +8,7 @@
     xmlns:selectors="using:StrixMusic.Shell.Strix.TemplateSelectors"
     x:Class="StrixMusic.Shell.Strix.Themes.SettingsViewStyle">
 
-    <DataTemplate x:Key="DefaultSettingsViewTemplate" x:DataType="observables:ObservableLibrary">
+    <DataTemplate x:Key="StrixSettingsViewTemplate" x:DataType="observables:ObservableLibrary">
         <UserControl>
             <Grid>
                 <Pivot ItemsSource="{x:Bind Children, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
@@ -25,18 +25,18 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="DefaultSettingsViewControlStyle" TargetType="default:SettingsViewControl">
+    <Style x:Key="StrixSettingsViewControlStyle" TargetType="default:SettingsViewControl">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="default:SettingsViewControl">
-                        <ContentControl ContentTemplate="{StaticResource DefaultSettingsViewTemplate}"/>
+                        <ContentControl ContentTemplate="{StaticResource StrixSettingsViewTemplate}"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultSettingsViewControlStyle}" TargetType="default:SettingsViewControl"/>
+    <Style BasedOn="{StaticResource StrixSettingsViewControlStyle}" TargetType="default:SettingsViewControl"/>
 
 </ResourceDictionary>

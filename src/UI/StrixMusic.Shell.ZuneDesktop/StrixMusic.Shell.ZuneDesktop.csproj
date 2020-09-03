@@ -47,6 +47,7 @@
 		<None Remove="Styles\Brushes.xaml" />
 		<None Remove="Styles\ButtonStyles.xaml" />
 		<None Remove="Themes\NowPlayingBarStyle.xaml" />
+		<None Remove="Themes\SettingsViewStyle.xaml" />
 		<None Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
@@ -63,6 +64,7 @@
 		<UpToDateCheckInput Remove="Styles\Brushes.xaml" />
 		<UpToDateCheckInput Remove="Styles\ButtonStyles.xaml" />
 		<UpToDateCheckInput Remove="Themes\NowPlayingBarStyle.xaml" />
+		<UpToDateCheckInput Remove="Themes\SettingsViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
@@ -76,6 +78,9 @@
 		<ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Update="Themes\SettingsViewStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
 		<Compile Update="Themes\ShellStyle.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
