@@ -13,6 +13,7 @@
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
         <themes:PlayableCollectionListStyle/>
         <themes:SearchViewStyle/>
+        <themes:SettingsViewStyle/>
         <themes:ShellStyle/>
         <themes:TrackListStyle/>
         <themes:TrackStyle/>

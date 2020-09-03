@@ -38,9 +38,9 @@ namespace StrixMusic.Shell.Strix.Controls
             _navigationService!.RegisterCommonPage(typeof(HomeControl));
         }
 
-        private void NavigationService_NavigationRequested(object sender, Control e)
+        private void NavigationService_NavigationRequested(object sender, NavigateEventArgs<Control> e)
         {
-            MainContent.Content = e;
+            MainContent.Content = e.Page;
         }
 
         private void NavButtonClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -50,7 +50,7 @@ namespace StrixMusic.Shell.Strix.Controls
 
         private void SearchButtonClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            _navigationService!.NavigateTo(typeof(SearchViewControl), SearchTextBox.Text);
+            _navigationService!.NavigateTo(typeof(SearchViewControl), false, SearchTextBox.Text);
         }
     }
 }
