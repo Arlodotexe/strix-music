@@ -8,12 +8,12 @@ using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
-namespace StrixMusic.Core.Mock.Deserialization
+namespace StrixMusic.Core.Mock.Models
 {
     /// <summary>
     /// The lists of tracks in the dummy core's library.
     /// </summary>
-    public class SerializedLibrary : MockPlayableCollectionGroupBase
+    public class MockLibrary : MockPlayableCollectionGroupBase
     {
         // Json will be here properites here.
 

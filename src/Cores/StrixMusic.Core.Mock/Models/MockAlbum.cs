@@ -16,7 +16,7 @@ namespace StrixMusic.Core.Mock.Models
 
         /// <inheritdoc/>
         [JsonProperty("id")]
-        public string IdJson { get; set; } = string.Empty;
+        public string MockId { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         [JsonProperty("name")]
@@ -25,6 +25,10 @@ namespace StrixMusic.Core.Mock.Models
         /// <inheritdoc/>
         [JsonIgnore]
         public List<ITrack> TracksJson { get; set; } = new List<ITrack>();
+
+        /// <inheritdoc/>
+        [JsonProperty("description")]
+        public string MockDescription { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         [JsonProperty("track_ids")]
@@ -40,7 +44,7 @@ namespace StrixMusic.Core.Mock.Models
         public ICore SourceCore => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Id => IdJson;
+        public string Id => MockId;
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();
@@ -52,7 +56,7 @@ namespace StrixMusic.Core.Mock.Models
         public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Description => throw new NotImplementedException();
+        public string Description => MockDescription;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => throw new NotImplementedException();

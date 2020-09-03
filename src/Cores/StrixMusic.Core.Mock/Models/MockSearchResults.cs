@@ -15,16 +15,16 @@ namespace StrixMusic.Core.Mock.Models
         private IReadOnlyList<ITrack> _tracks;
         private IReadOnlyList<IAlbum> _albums;
         private IReadOnlyList<IArtist> _artists;
-        private SerializedLibrary _serializedLibrary;
+        private MockLibrary _serializedLibrary;
 
         /// <inheritdoc/>
         public MockSearchResults(IPlayableCollectionGroup playableCollectionGroup)
         {
-            _serializedLibrary = playableCollectionGroup as SerializedLibrary;
+            _serializedLibrary = playableCollectionGroup as MockLibrary;
         }
 
         /// <inheritdoc/>
-        public SerializedLibrary SerializedLibrary => _serializedLibrary;
+        public MockLibrary SerializedLibrary => _serializedLibrary;
 
         /// <inheritdoc/>
         public IReadOnlyList<IPlayableCollectionGroup> Children => throw new NotImplementedException();

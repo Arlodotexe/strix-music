@@ -1,7 +1,10 @@
-﻿using StrixMusic.CoreInterfaces.Interfaces;
+﻿using StrixMusic.Core.Mock.Deserialization;
+using StrixMusic.Core.Mock.Models;
+using StrixMusic.CoreInterfaces.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Core.Mock.Services
 {
@@ -13,13 +16,16 @@ namespace StrixMusic.Core.Mock.Services
         /// <summary>
         /// This method returns the artist
         /// </summary>
-        /// <returns >IReadOnlyList<IArtist></returns>
-        public IReadOnlyList<IArtist> GetArtist();
+        Task<IReadOnlyList<IArtist>> GetArtistsAsync();
 
         /// <summary>
         /// This method returns the artist
         /// </summary>
-        /// <returns >IReadOnlyList<IAlbum></returns>
-        public IReadOnlyList<IAlbum> GetRelease();
+        Task<IReadOnlyList<IAlbum>> GetAlbumsAsync();
+
+        /// <summary>
+        /// This method returns the library
+        /// </summary>
+        Task<MockLibrary> GetLibraryAsync();
     }
 }
