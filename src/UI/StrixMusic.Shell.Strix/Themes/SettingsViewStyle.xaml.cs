@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Services.Navigation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml;
 
 namespace StrixMusic.Shell.Strix.Themes
 {
@@ -13,12 +10,6 @@ namespace StrixMusic.Shell.Strix.Themes
         public SettingsViewStyle()
         {
             this.InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            INavigationService<Control> navigationService = StrixShellIoc.Ioc.GetService<INavigationService<Control>>();
-            navigationService.GoBack();
         }
     }
 }

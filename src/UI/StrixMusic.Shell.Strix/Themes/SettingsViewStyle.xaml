@@ -12,9 +12,6 @@
         <UserControl>
             <Grid>
                 <Pivot ItemsSource="{x:Bind Children, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
-                    <Pivot.LeftHeader>
-                        <Button Content="Go Back" VerticalAlignment="Top" HorizontalAlignment="Left" Click="Button_Click"/>
-                    </Pivot.LeftHeader>
                     <Pivot.Title>
                         <TextBlock Text="Settings"/>
                     </Pivot.Title>

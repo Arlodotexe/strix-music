@@ -11,23 +11,34 @@
     <Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="OverlayStates">
-                <VisualStateGroup.Transitions>
-                    <VisualTransition From="OverlayClosed" To="OverlayOpened"/>
-                    <VisualTransition From="OverlayOpened" To="OverlayClosed">
+                <!--<VisualStateGroup.Transitions>
+                    <VisualTransition From="OverlayClosed"/>
+                    <VisualTransition To="OverlayClosed">
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetName="OverlayContainer" Storyboard.TargetProperty="Opacity"
                                              From="1" To="0" Duration="0:0:0.3"/>
                         </Storyboard>
                     </VisualTransition>
-                </VisualStateGroup.Transitions>
-                <VisualState x:Name="OverlayClosed">
-                    <VisualState.Setters>
-                        <Setter Target="OverlayContainer.Visibility" Value="Collapsed"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="OverlayOpened">
+                </VisualStateGroup.Transitions>-->
+                <VisualState x:Name="OverlayClosed"/>
+                <VisualState x:Name="OverlayOpenedFullScreen">
                     <VisualState.Setters>
                         <Setter Target="OverlayContainer.Visibility" Value="Visible"/>
+                        <Setter Target="FullScreenOverlayBackButton.Visibility" Value="Visible"/>
+                    </VisualState.Setters> 
+                    <VisualState.Storyboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="OverlayContainer" Storyboard.TargetProperty="Opacity"
+                                             From="0" To="1" Duration="0:0:0.3"/>
+                        </Storyboard>
+                    </VisualState.Storyboard>
+                </VisualState>
+                <VisualState x:Name="OverlayOpenedPadded">
+                    <VisualState.Setters>
+                        <Setter Target="OverlayContainer.Visibility" Value="Visible"/>
+                        <Setter Target="OverlayBorder.BorderThickness" Value="2"/>
+                        <Setter Target="OverlayBorder.Margin" Value="128, 96, 128, 48"/>
+                        <Setter Target="GeneralOverlayBackButton.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                     <VisualState.Storyboard>
                         <Storyboard>
@@ -154,9 +165,25 @@
                 </Grid>
             </local:Drawer.BottomBarContent>
         </local:Drawer>
-        <Border x:Name="OverlayContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                Background="{ThemeResource AcrylicContentBackgroundBrush}" Visibility="Collapsed">
-            <ContentControl x:Name="OverlayContent"/>
-        </Border>
+        <Grid x:Name="OverlayContainer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
+            <Rectangle Fill="Black" Opacity=".5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Border x:Name="OverlayBorder"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Background="{ThemeResource AcrylicContentBackgroundBrush}"
+                    BorderBrush="{ThemeResource SystemControlHighlightAccentBrush}"
+                    BorderThickness="0">
+                <Grid>
+                    <Button x:Name="FullScreenOverlayBackButton" Visibility="Collapsed" VerticalAlignment="Top" Click="GoBack"
+                        Background="{ThemeResource SystemControlHighlightAccentBrush}" BorderThickness="0" Width="48">
+                        <SymbolIcon Symbol="Back"/>
+                    </Button>
+                    <Button x:Name="GeneralOverlayBackButton" Visibility="Collapsed"
+                            VerticalAlignment="Top" Click="GoBack" Width="48" Height="48" Margin="0,-48,0,0">
+                        <SymbolIcon Symbol="Back"/>
+                    </Button>
+                    <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>
