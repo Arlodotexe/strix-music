@@ -11,6 +11,15 @@
     <Grid>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="OverlayStates">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="OverlayClosed" To="OverlayOpened"/>
+                    <VisualTransition From="OverlayOpened" To="OverlayClosed">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="OverlayContainer" Storyboard.TargetProperty="Opacity"
+                                             From="1" To="0" Duration="0:0:0.3"/>
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
                 <VisualState x:Name="OverlayClosed">
                     <VisualState.Setters>
                         <Setter Target="OverlayContainer.Visibility" Value="Collapsed"/>
@@ -20,6 +29,12 @@
                     <VisualState.Setters>
                         <Setter Target="OverlayContainer.Visibility" Value="Visible"/>
                     </VisualState.Setters>
+                    <VisualState.Storyboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="OverlayContainer" Storyboard.TargetProperty="Opacity"
+                                             From="0" To="1" Duration="0:0:0.3"/>
+                        </Storyboard>
+                    </VisualState.Storyboard>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
