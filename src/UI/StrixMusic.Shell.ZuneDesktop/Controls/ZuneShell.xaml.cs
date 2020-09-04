@@ -27,12 +27,15 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
             _navigationService!.BackRequested += ZuneShell_BackRequested;
         }
 
+        private MainViewModel? ViewModel => DataContext as MainViewModel;
+
         private void ZuneShell_NavigationRequested(object sender, NavigateEventArgs<Control> e)
         {
             if (e.Page is SettingsViewControl)
             {
                 SettingsOverlay.Visibility = Visibility.Visible;
                 MainContent.Visibility = Visibility.Collapsed;
+                NowPlayingBar.Visibility = Visibility.Collapsed;
                 RequestTheme(ElementTheme.Light);
             }
         }
@@ -43,6 +46,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
             // Instead of just closing settings
             SettingsOverlay.Visibility = Visibility.Collapsed;
             MainContent.Visibility = Visibility.Visible;
+            NowPlayingBar.Visibility = Visibility.Visible;
             RequestTheme();
         }
 
@@ -68,8 +72,6 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
             ZuneDesktopShellIoc.Initialize();
             _navigationService = ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>();
         }
-
-        private MainViewModel? ViewModel => DataContext as MainViewModel;
 
         private void SettingsLinkClicked(object sender, RoutedEventArgs e)
         {

@@ -11,7 +11,17 @@
     <DataTemplate x:Key="ZuneDesktopSettingsViewTemplate" x:DataType="observables:ObservableLibrary">
         <UserControl>
             <Grid>
-                <TextBlock Text="settings" FontSize="24" Margin="44,36"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="settings" FontSize="24" FontWeight="Light" Margin="44,36"/>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                            Margin="48,32" Grid.Row="1">
+                    <Button Content="OK" Margin="2,0" Click="SaveClicked"/>
+                    <Button Content="CANCEL" Margin="2,0,0,0" Click="CancelClicked"/>
+                </StackPanel>
             </Grid>
         </UserControl>
     </DataTemplate>
@@ -21,7 +31,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="default:SettingsViewControl">
-                        <ContentControl ContentTemplate="{StaticResource ZuneDesktopSettingsViewTemplate}"/>
+                        <ContentControl ContentTemplate="{StaticResource ZuneDesktopSettingsViewTemplate}"
+                                        VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
