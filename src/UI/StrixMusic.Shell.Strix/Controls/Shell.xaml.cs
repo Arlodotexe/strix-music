@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Services.Navigation;
 using StrixMusic.Shell.Default.Controls;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -12,7 +13,7 @@ namespace StrixMusic.Shell.Strix.Controls
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Shell : UserControl
+    public sealed partial class Shell : ShellControl
     {
         private readonly IReadOnlyDictionary<Button, Type> _pagesMapping;
         private readonly IReadOnlyDictionary<Type, string> _overlayTypeMapping;
@@ -38,6 +39,15 @@ namespace StrixMusic.Shell.Strix.Controls
             {
                 { typeof(SettingsViewControl), nameof(OverlayOpenedPadded) },
             };
+        }
+
+        /// <inheritdoc/>
+        protected override void SetupTitleBar()
+        {
+            base.SetupTitleBar();
+#if NETFX_CORE
+            Window.Current.SetTitleBar(CustomTitleBar);
+#endif
         }
 
         private void Shell_BackRequested(object sender, EventArgs e)

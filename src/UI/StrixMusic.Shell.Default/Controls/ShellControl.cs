@@ -1,24 +1,35 @@
-﻿using StrixMusic.ViewModels;
+﻿using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls
 {
-    /// <summary>
-    /// A Templated <see cref="Control"/> for the root UIElemnt of any shell.
-    /// </summary>
-    public sealed partial class ShellControl : Control
+    public abstract partial class ShellControl : UserControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellControl"/> class.
         /// </summary>
         public ShellControl()
         {
-            this.DefaultStyleKey = typeof(ShellControl);
+            Loaded += ShellControl_Loaded;
+        }
+
+        private void ShellControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            Loaded -= ShellControl_Loaded;
+            SetupTitleBar();
         }
 
         /// <summary>
-        /// The <see cref="MainViewModel"/> for the app.
+        /// Sets properties of the taskbar for showing this shell.
         /// </summary>
-        public MainViewModel? ViewModel => DataContext as MainViewModel;
+        protected virtual void SetupTitleBar()
+        {
+#if NETFX_CORE
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonBackgroundColor = null;
+#endif
+        }
     }
 }

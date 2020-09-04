@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using Windows.ApplicationModel.Core;
+using Windows.UI.Xaml;
 
 namespace StrixMusic.Shell.ZuneDesktop.Themes
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.Mock.Deserialization;
 using StrixMusic.Core.Mock.Models;
 using StrixMusic.Core.Mock.Services;
@@ -15,6 +16,7 @@ namespace StrixMusic.Core.Mock
     /// </summary>
     public class MockCore : ICore
     {
+        private ServiceProvider _serviceProvider;
         /// <summary>
         /// Initializes a new instance of the <see cref="MockCore"/> class.
         /// </summary>
@@ -22,13 +24,14 @@ namespace StrixMusic.Core.Mock
         public MockCore(string instanceId)
         {
             InstanceId = instanceId;
+            CoreConfig = new MockCoreConfig(this);
         }
 
         /// <inheritdoc/>
         public MockLibrary _serializedLibaray { get; set; }
 
         /// <inheritdoc/>
-        public ICoreConfig CoreConfig { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ICoreConfig CoreConfig { get; }
 
         /// <inheritdoc/>
         public CoreState CoreState => throw new NotImplementedException();
@@ -81,7 +84,8 @@ namespace StrixMusic.Core.Mock
         /// <inheritdoc/>
         public async Task InitAsync()
         {
-            _serializedLibaray = await MusicBrainzMockCoreService.GetInstance().GetLibraryAsync();
+            var service = CoreConfig.Services.BuildServiceProvider().GetService(typeof(JsonMockCoreDataService)) as JsonMockCoreDataService;
+            _serializedLibaray = await service.GetLibraryAsync();
         }
     }
 }

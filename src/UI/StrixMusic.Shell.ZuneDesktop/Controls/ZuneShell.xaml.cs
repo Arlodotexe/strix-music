@@ -4,7 +4,9 @@ using StrixMusic.Services.Navigation;
 using StrixMusic.Shell.Default.Controls;
 using StrixMusic.Shell.Strix;
 using StrixMusic.ViewModels;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -12,7 +14,7 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace StrixMusic.Shell.ZuneDesktop.Controls
 {
-    public sealed partial class ZuneShell : UserControl
+    public sealed partial class ZuneShell : ShellControl
     {
         private INavigationService<Control>? _navigationService;
 
@@ -25,6 +27,18 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
             SetupIoc();
             _navigationService!.NavigationRequested += ZuneShell_NavigationRequested;
             _navigationService!.BackRequested += ZuneShell_BackRequested;
+        }
+
+        /// <inheritdoc/>
+        protected override void SetupTitleBar()
+        {
+#if NETFX_CORE
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+            Window.Current.SetTitleBar(CustomTitleBar);
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
+            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+#endif
         }
 
         private MainViewModel? ViewModel => DataContext as MainViewModel;

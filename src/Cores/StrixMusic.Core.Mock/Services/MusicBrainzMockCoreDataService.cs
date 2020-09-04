@@ -7,40 +7,40 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Hqub.MusicBrainz.API.Entities.Collections;
+using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.Mock.Models;
 using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Services.Settings;
 
 namespace StrixMusic.Core.Mock.Services
 {
-    /// We don't need this @amaid, see chat logs.
     /// <inheritdoc />
-    public class MusicBrainzMockCoreService : IMockCoreService
+    public class MusicBrainzMockCoreDataService : SettingsServiceBase, IMockCoreDataService
     {
-        // No singletons!!
-        // private MusicBrainzClient _musicBrainzClient;
-        private static MusicBrainzMockCoreService _instance;
+        private static MusicBrainzMockCoreDataService _instance;
+        private MusicBrainzClient _musicBrainzClient;
+
+        /// <inheritdoc/>
+        public override string Id { get; }
+
+        /// <inheritdoc/>
+        public IServiceCollection Services => throw new NotImplementedException();
 
         /// <summary>
         /// Init MusicBrainzClient
         /// </summary>
-        private MusicBrainzMockCoreService()
+        public MusicBrainzMockCoreDataService(string instanceId)
         {
-            // _musicBrainzClient = new MusicBrainzClient();
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+            _musicBrainzClient = new MusicBrainzClient();
+            Id = instanceId;
         }
 
-        /// <inheritdoc />
-        public static MusicBrainzMockCoreService GetInstance()
-        {
-            if (_instance == null)
-                _instance = new MusicBrainzMockCoreService();
-            return _instance;
-        }
 
         /// <inheritdoc />
         public async Task<IReadOnlyList<IArtist>> GetArtistsAsync()
         {
-            /*var lst = new List<IArtist>();
+            var lst = new List<IArtist>();
             var artistList = await _musicBrainzClient.Artists.SearchAsync("*", 1000);
             return artistList.Items.Select(c =>
              {
@@ -49,32 +49,28 @@ namespace StrixMusic.Core.Mock.Services
                      MockName = c.Name,
                      Id = c.Id,
                  };
-             }).ToList();*/
-
-            return null;
+             }).ToList();
         }
 
         /// <inheritdoc />
         public async Task<IReadOnlyList<IAlbum>> GetAlbumsAsync()
         {
-            /* var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1000);
-             return releases.Items.Select(c =>
-             {
-                 return new MockAlbum()
-                 {
-                     MockId = c.Id,
-                     NameJson = c.Title,
-                     MockDescription = c.TextRepresentation.Script
-                 };
-             }).ToList();*/
-
-            return null;
+            var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1000);
+            return releases.Items.Select(c =>
+            {
+                return new MockAlbum()
+                {
+                    MockId = c.Id,
+                    NameJson = c.Title,
+                    MockDescription = c.TextRepresentation.Script
+                };
+            }).ToList();
         }
 
         /// <inheritdoc />
         public async Task<IReadOnlyList<ITrack>> GetTracks()
         {
-            //var releases = await _musicBrainzClient.Recordings.SearchAsync("*", 1000);
+            var releases = await _musicBrainzClient.Recordings.SearchAsync("*", 1000);
             return null;
         }
 

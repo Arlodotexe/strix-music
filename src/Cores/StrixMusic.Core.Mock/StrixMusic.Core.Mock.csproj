@@ -43,6 +43,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\StrixMusic.CoreInterfaces\StrixMusic.CoreInterfaces.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\StrixMusic.Services\StrixMusic.Services.csproj" />
   </ItemGroup>
 
 </Project>

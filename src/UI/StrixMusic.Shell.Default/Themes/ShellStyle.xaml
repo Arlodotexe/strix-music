@@ -10,11 +10,11 @@
     xmlns:internal="using:StrixMusic.Shell.Default.Controls.Internal"
     x:Class="StrixMusic.Shell.Default.Themes.ShellStyle">
 
-    <Style x:Key="DefaultShellControlStyle" TargetType="local:ShellControl">
+    <Style x:Key="DefaultShellContainerStyle" TargetType="local:ShellContainer">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:ShellControl">
+                    <ControlTemplate TargetType="local:ShellContainer">
                         <internal:Shell/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -22,6 +22,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultShellControlStyle}" TargetType="local:ShellControl"/>
+    <Style BasedOn="{StaticResource DefaultShellContainerStyle}" TargetType="local:ShellContainer"/>
 
 </ResourceDictionary>

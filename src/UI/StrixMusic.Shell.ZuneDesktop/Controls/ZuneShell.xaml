@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<default:ShellControl
     x:Class="StrixMusic.Shell.ZuneDesktop.Controls.ZuneShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -43,16 +43,18 @@
             </Rectangle>
         </Grid>
 
+        <Grid x:Name="CustomTitleBar" Background="Transparent" Height="64" VerticalAlignment="Top"/>
+
         <Grid x:Name="MainContent">
             <!--Settings | Help and Sign In-->
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,128,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,160,0">
                 <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                     <HyperlinkButton Content="SETTINGS" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12" Click="SettingsLinkClicked"/>
                     <Rectangle Height="12" Width="2" Fill="{ThemeResource HyperlinkForeground}" Opacity=".5" Margin="8,3,8,0" VerticalAlignment="Top"/>
                     <HyperlinkButton Content="HELP" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="128,0,0,0">
+                <StackPanel Orientation="Horizontal" Margin="96,0,0,0">
                     <HyperlinkButton Content="SIGN IN" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="20" Margin="0,8,8,0"/>
                     <Rectangle Fill="#FF00FF" Height="48" Width="48" HorizontalAlignment="Right"/>
                 </StackPanel>
@@ -94,4 +96,4 @@
 
         <default:NowPlayingBarControl Grid.Row="1" x:Name="NowPlayingBar"/>
     </Grid>
-</UserControl>
+</default:ShellControl>

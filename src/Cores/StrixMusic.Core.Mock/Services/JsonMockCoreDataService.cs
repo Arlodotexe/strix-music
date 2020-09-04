@@ -4,10 +4,12 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using StrixMusic.Core.Mock.Deserialization;
 using StrixMusic.Core.Mock.Models;
 using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Services.Settings;
 
 namespace StrixMusic.Core.Mock.Services
 {
@@ -15,21 +17,21 @@ namespace StrixMusic.Core.Mock.Services
     /// <summary>
     /// Service to get mock json data
     /// </summary>
-    public class MockJsonService : IMockCoreService
+    public class JsonMockCoreDataService : SettingsServiceBase, IMockCoreDataService
     {
-        private static MockJsonService _instance;
-
-        private MockJsonService()
+        /// <summary>
+        /// Init
+        /// </summary>
+        public JsonMockCoreDataService(string instanceId)
         {
+            Id = instanceId;
         }
 
-        /// <inheritdoc />
-        public static MockJsonService GetInstance()
-        {
-            if (_instance == null)
-                _instance = new MockJsonService();
-            return _instance;
-        }
+        /// <inheritdoc/>
+        public IServiceCollection Services => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public override string Id { get; }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IAlbum>> GetAlbumsAsync()

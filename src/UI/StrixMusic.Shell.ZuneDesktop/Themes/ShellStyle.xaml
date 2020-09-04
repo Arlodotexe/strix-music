@@ -10,12 +10,12 @@
     <DataTemplate x:Key="ZuneShellTemplate" x:DataType="viewmodels:MainViewModel">
         <controls:ZuneShell/>
     </DataTemplate>
-    
-    <Style x:Key="ZuneShellControlStyle" TargetType="default:ShellControl">
+
+    <Style x:Key="ZuneShellContainerStyle" TargetType="default:ShellContainer">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:ShellControl">
+                    <ControlTemplate TargetType="default:ShellContainer">
                         <ContentControl ContentTemplate="{StaticResource ZuneShellTemplate}"
                                         VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -24,6 +24,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource ZuneShellControlStyle}" TargetType="default:ShellControl"/>
+    <Style BasedOn="{StaticResource ZuneShellContainerStyle}" TargetType="default:ShellContainer"/>
 
 </ResourceDictionary>
