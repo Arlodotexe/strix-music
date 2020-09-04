@@ -81,7 +81,7 @@ namespace StrixMusic.Core.Mock
         /// <inheritdoc/>
         public async Task InitAsync()
         {
-            _serializedLibaray = await MusicBrainzMockCoreService.GetInstance().GetLibraryAsync();
+          //_serializedLibaray = await MusicBrainzMockCoreDataService.GetInstance().GetLibraryAsync();
         }
     }
 }
