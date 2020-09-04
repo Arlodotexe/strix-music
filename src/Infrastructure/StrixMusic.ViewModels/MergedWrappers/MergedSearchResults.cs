@@ -56,6 +56,19 @@ namespace StrixMusic.ViewModels.MergedWrappers
             }
         }
 
+        public event EventHandler<TimeSpan>? DurationChanged
+        {
+            add
+            {
+                _preferredSource.DurationChanged += value;
+            }
+
+            remove
+            {
+                _preferredSource.DurationChanged -= value;
+            }
+        }
+
         private void AttachCollectionChangedEvents(ISearchResults source)
         {
             source.ChildrenChanged += ChildrenChanged;
@@ -152,6 +165,24 @@ namespace StrixMusic.ViewModels.MergedWrappers
         public TimeSpan Duration { get; } = new TimeSpan(0);
 
         /// <inheritdoc/>
+        public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsPauseAsyncSupported => _preferredSource.IsPauseAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeNameAsyncSupported => _preferredSource.IsChangeNameAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeImagesAsyncSupported => _preferredSource.IsChangeImagesAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
 
         /// <inheritdoc/>
@@ -239,6 +270,30 @@ namespace StrixMusic.ViewModels.MergedWrappers
         public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeNameAsync(string name)
+        {
+            return _preferredSource.ChangeNameAsync(name);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
+        {
+            return _preferredSource.ChangeImagesAsync(images);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDescriptionAsync(string? description)
+        {
+            return _preferredSource.ChangeDescriptionAsync(description);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDurationAsync(TimeSpan duration)
+        {
+            return _preferredSource.ChangeDurationAsync(duration);
         }
     }
 }

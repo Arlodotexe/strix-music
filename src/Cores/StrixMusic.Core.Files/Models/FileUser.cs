@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Threading.Tasks;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -44,13 +46,34 @@ namespace StrixMusic.Core.Files.Models
         public IReadOnlyList<Uri> Urls => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string? Region { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public CultureInfo Region { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public ICore SourceCore { get; set; }
 
         /// <inheritdoc/>
         public ILibrary Library => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeDisplayNameSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeImagesAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeBirthDateAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeFullNameAsyncAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeUrlsAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeRegionAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeEmailAsyncSupported => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<string>>? DisplayNameChanged;
@@ -62,15 +85,57 @@ namespace StrixMusic.Core.Files.Models
         public event EventHandler<CollectionChangedEventArgs<DateTime>>? BirthDateChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<DateTime>>? FullNameChanged;
+        public event EventHandler<string?>? FullNameChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<DateTime>>? UrlsChanged;
+        public event EventHandler<CollectionChangedEventArgs<Uri>>? UrlsChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<DateTime>>? RegionChanged;
+        public event EventHandler<CultureInfo>? RegionChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<DateTime>>? EmailChanged;
+        public event EventHandler<string?>? EmailChanged;
+
+        /// <inheritdoc/>
+        public Task ChangeBirthDateAsync(DateTime birthdate)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDisplayNameAsync(string displayName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeEmailAsync(string? email)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeFullNameAsync(string fullname)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeRegionAsync(CultureInfo region)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeUrlsAsync(IReadOnlyList<Uri> urls)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

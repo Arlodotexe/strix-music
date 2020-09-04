@@ -13,8 +13,6 @@ namespace StrixMusic.Core.Mock.Models
     public class MockPlayableCollectionGroupBase : IPlayableCollectionGroup
     {
         /// <inheritdoc />
-
-        /// <inheritdoc />
         public IReadOnlyList<IPlayableCollectionGroup> Children => throw new NotImplementedException();
 
         /// <inheritdoc />
@@ -68,6 +66,24 @@ namespace StrixMusic.Core.Mock.Models
         /// <inheritdoc />
         public TimeSpan Duration => throw new NotImplementedException();
 
+        /// <inheritdoc/>
+        public bool IsPlayAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsPauseAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeNameAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeImagesAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeDescriptionAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeDurationAsyncSupported => throw new NotImplementedException();
+
         /// <inheritdoc />
         public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> ChildrenChanged;
 
@@ -97,6 +113,33 @@ namespace StrixMusic.Core.Mock.Models
 
         /// <inheritdoc />
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<TimeSpan> DurationChanged;
+
+        /// <inheritdoc/>
+        public Task ChangeDescriptionAsync(string description)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDurationAsync(TimeSpan duration)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public virtual Task PauseAsync()
