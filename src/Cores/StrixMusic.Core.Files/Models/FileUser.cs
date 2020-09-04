@@ -41,7 +41,7 @@ namespace StrixMusic.Core.Files.Models
         public DateTime? Birthdate => null;
 
         /// <inheritdoc/>
-        public IReadOnlyList<Uri> Url => throw new NotImplementedException();
+        public IReadOnlyList<Uri> Urls => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public string? Region { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -65,7 +65,7 @@ namespace StrixMusic.Core.Files.Models
         public event EventHandler<CollectionChangedEventArgs<DateTime>>? FullNameChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<DateTime>>? UrlChanged;
+        public event EventHandler<CollectionChangedEventArgs<DateTime>>? UrlsChanged;
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<DateTime>>? RegionChanged;

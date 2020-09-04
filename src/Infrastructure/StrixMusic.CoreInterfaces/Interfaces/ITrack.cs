@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using StrixMusic.CoreInterfaces.Enums;
 
 namespace StrixMusic.CoreInterfaces.Interfaces
@@ -63,6 +64,102 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// A <see cref="IPlayable"/> of items related to this item.
         /// </summary>
         IPlayableCollectionGroup RelatedItems { get; }
+
+        /// <summary>
+        /// If true, <see cref="ChangeArtistsAsync(IReadOnlyList{IArtist}?)"/> is supported.
+        /// </summary>
+        bool IsChangeArtistsAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="ChangeAlbumAsync(IAlbum?)"/> is supported.
+        /// </summary>
+        bool IsChangeAlbumAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="ChangeDatePublishedAsync(DateTime)"/> is supported.
+        /// </summary>
+        bool IsChangeDatePublishedAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="ChangeGenresAsync(IReadOnlyList{string}?)"/> is supported.
+        /// </summary>
+        bool IsChangeGenresAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="ChangeTrackNumberAsync(int?)"/> is supported.
+        /// </summary>
+        bool IsChangeTrackNumberAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="ChangeLanguageAsync(CultureInfo)"/> is supported.
+        /// </summary>
+        bool IsChangeLanguageAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="ChangeLyricsAsync(ILyrics?)"/> is supported.
+        /// </summary>
+        bool IsChangeLyricsAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="ChangeIsExplicitAsync(bool)"/> is supported.
+        /// </summary>
+        bool IsChangeIsExplicitAsyncSupported { get; }
+
+        /// <summary>
+        /// Changes the <see cref="Artists"/> for this track.
+        /// </summary>
+        /// <param name="artists">Artist</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ChangeArtistsAsync(IReadOnlyList<IArtist>? artists);
+
+        /// <summary>
+        /// Changes the <see cref="Album"/> for this track.
+        /// </summary>
+        /// <param name="albums">The new album.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ChangeAlbumAsync(IAlbum? albums);
+
+        /// <summary>
+        /// Changes the <see cref="DatePublished"/> for this track.
+        /// </summary>
+        /// <param name="datePublished">The new date the track was published.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ChangeDatePublishedAsync(DateTime datePublished);
+
+        /// <summary>
+        /// Change the <see cref="Genres"/> for this track.
+        /// </summary>
+        /// <param name="genres">The new genres.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ChangeGenresAsync(IReadOnlyList<string>? genres);
+
+        /// <summary>
+        /// Changes the <see cref="TrackNumber"/> on this track.
+        /// </summary>
+        /// <param name="trackNumber">The new track number.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ChangeTrackNumberAsync(int? trackNumber);
+
+        /// <summary>
+        /// Changes the <see cref="Language"/> for this track.
+        /// </summary>
+        /// <param name="language">The new language for this track.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ChangeLanguageAsync(CultureInfo language);
+
+        /// <summary>
+        /// Changes the <see cref="Lyrics"/> for this track.
+        /// </summary>
+        /// <param name="lyrics">The new lyrics data.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ChangeLyricsAsync(ILyrics? lyrics);
+
+        /// <summary>
+        /// Changes the <see cref="IsExplicit"/> for this track.
+        /// </summary>
+        /// <param name="isExplicit">The new value.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ChangeIsExplicitAsync(bool isExplicit);
 
         /// <summary>
         /// Fires when the <see cref="Artists"/> metadata changes.

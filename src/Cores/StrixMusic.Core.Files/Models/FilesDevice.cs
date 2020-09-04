@@ -166,7 +166,7 @@ namespace StrixMusic.Core.Files.Models
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? PlaybackQueueChanged;
 
         /// <inheritdoc/>
-        public Task ChangePlaybackSpeed(double speed)
+        public Task ChangePlaybackSpeedAsync(double speed)
         {
             throw new NotImplementedException();
         }

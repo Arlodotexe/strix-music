@@ -20,7 +20,7 @@ namespace StrixMusic.ViewModels.Bindables
         public ObservableUserProfile(IUserProfile userProfile)
         {
             _userProfile = userProfile;
-            Url = new ObservableCollection<Uri>(userProfile.Url);
+            Url = new ObservableCollection<Uri>(userProfile.Urls);
             Images = new ObservableCollection<IImage>(userProfile.Images);
         }
 
@@ -45,7 +45,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// <inheritdoc cref="IUserProfile.Images"/>
         public ObservableCollection<IImage> Images { get; set; }
 
-        /// <inheritdoc cref="IUserProfile.Url"/>
+        /// <inheritdoc cref="IUserProfile.Urls"/>
         public ObservableCollection<Uri>? Url { get; set; }
 
         /// <inheritdoc cref="IUserProfile.Region"/>
@@ -107,17 +107,17 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc cref="IUserProfile.UrlChanged"/>
+        /// <inheritdoc cref="IUserProfile.UrlsChanged"/>
         public event EventHandler<CollectionChangedEventArgs<DateTime>> UrlChanged
         {
             add
             {
-                _userProfile.UrlChanged += value;
+                _userProfile.UrlsChanged += value;
             }
 
             remove
             {
-                _userProfile.UrlChanged -= value;
+                _userProfile.UrlsChanged -= value;
             }
         }
 

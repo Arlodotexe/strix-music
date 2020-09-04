@@ -356,10 +356,10 @@ namespace StrixMusic.ViewModels.Bindables
         /// </summary>
         public IAsyncRelayCommand<double> ChangePlaybackSpeedAsyncCommand { get; }
 
-        /// <inheritdoc cref="IDevice.ChangePlaybackSpeed"/>
+        /// <inheritdoc cref="IDevice.ChangePlaybackSpeedAsync"/>
         public Task ChangePlaybackSpeed(double speed)
         {
-            return _device.ChangePlaybackSpeed(speed);
+            return _device.ChangePlaybackSpeedAsync(speed);
         }
 
         /// <summary>

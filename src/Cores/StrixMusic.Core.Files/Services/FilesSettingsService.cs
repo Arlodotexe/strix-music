@@ -1,4 +1,5 @@
-﻿using StrixMusic.Services.Settings;
+﻿using StrixMusic.Core.Files;
+using StrixMusic.Services.Settings;
 
 namespace StrixMusic.Core.Files.Services
 {

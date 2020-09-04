@@ -13,11 +13,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         IUserProfile? Owner { get; }
 
         /// <summary>
-        /// Fires when <see cref="Owner"/> changes.
-        /// </summary>
-        event EventHandler<IUserProfile>? OwnerChanged;
-
-        /// <summary>
         /// A <see cref="IPlayable"/> of items related to this item.
         /// </summary>
         IPlayableCollectionGroup RelatedItems { get; }
