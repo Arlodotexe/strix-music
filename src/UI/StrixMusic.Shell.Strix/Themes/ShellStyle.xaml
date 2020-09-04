@@ -6,11 +6,11 @@
     xmlns:viewmodels="using:StrixMusic.ViewModels"
     x:Class="StrixMusic.Shell.Strix.Themes.ShellStyle">
 
-    <Style x:Key="StrixShellControlStyle" TargetType="default:ShellControl">
+    <Style x:Key="StrixShellContainerStyle" TargetType="default:ShellContainer">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:ShellControl">
+                    <ControlTemplate TargetType="default:ShellContainer">
                         <local:Shell/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -18,6 +18,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixShellControlStyle}" TargetType="default:ShellControl"/>
+    <Style BasedOn="{StaticResource StrixShellContainerStyle}" TargetType="default:ShellContainer"/>
 
 </ResourceDictionary>

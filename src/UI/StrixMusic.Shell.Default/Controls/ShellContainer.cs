@@ -4,16 +4,16 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Shell.Default.Controls
 {
     /// <summary>
-    /// A Templated <see cref="Control"/> for the root UIElemnt of any shell.
+    /// A Templated <see cref="Control"/> for the root container of any shell.
     /// </summary>
-    public sealed partial class ShellControl : Control
+    public sealed partial class ShellContainer : Control
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ShellControl"/> class.
+        /// Initializes a new instance of the <see cref="ShellContainer"/> class.
         /// </summary>
-        public ShellControl()
+        public ShellContainer()
         {
-            this.DefaultStyleKey = typeof(ShellControl);
+            this.DefaultStyleKey = typeof(ShellContainer);
         }
 
         /// <summary>

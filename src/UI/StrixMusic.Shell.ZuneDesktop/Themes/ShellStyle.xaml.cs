@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using Windows.ApplicationModel.Core;
+using Windows.UI.Xaml;
 
 namespace StrixMusic.Shell.ZuneDesktop.Themes
 {
@@ -10,6 +11,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Themes
         public ShellStyle()
         {
             this.InitializeComponent();
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
         }
     }
 }

@@ -30,6 +30,10 @@
             <SolidColorBrush x:Key="ZuneTextButtonForeground" Color="#373A3D"/>
             <SolidColorBrush x:Key="ZuneTextButtonBorderBrush" Color="#C7CACA"/>
 
+            <SolidColorBrush x:Key="ZuneSmallUnselectedPivotHeaderItemBrush" Color="#828689"/>
+            <SolidColorBrush x:Key="ZuneSmallUnselectedHoverPivotHeaderItemBrush" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#000000"/>
+
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundPressed" Color="#B1B4B6"/>
@@ -61,6 +65,10 @@
 
             <SolidColorBrush x:Key="ZuneTextButtonForeground" Color="#373A3D"/>
             <SolidColorBrush x:Key="ZuneTextButtonBorderBrush" Color="#C7CACA"/>
+
+            <SolidColorBrush x:Key="ZuneSmallUnselectedPivotHeaderItemBrush" Color="#828689"/>
+            <SolidColorBrush x:Key="ZuneSmallUnselectedHoverPivotHeaderItemBrush" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#000000"/>
 
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
@@ -95,6 +103,10 @@
             <SolidColorBrush x:Key="ZuneTextButtonForeground" Color="#373A3D"/>
             <SolidColorBrush x:Key="ZuneTextButtonBorderBrush" Color="#C7CACA"/>
 
+            <SolidColorBrush x:Key="ZuneSmallUnselectedPivotHeaderItemBrush" Color="#828689"/>
+            <SolidColorBrush x:Key="ZuneSmallUnselectedHoverPivotHeaderItemBrush" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#000000"/>
+
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundPressed" Color="#B1B4B6"/>
@@ -126,6 +138,10 @@
 
             <SolidColorBrush x:Key="ZuneTextButtonForeground" Color="#373A3D"/>
             <SolidColorBrush x:Key="ZuneTextButtonBorderBrush" Color="#C7CACA"/>
+
+            <SolidColorBrush x:Key="ZuneSmallUnselectedPivotHeaderItemBrush" Color="#828689"/>
+            <SolidColorBrush x:Key="ZuneSmallUnselectedHoverPivotHeaderItemBrush" Color="#B1B4B6"/>
+            <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#000000"/>
 
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>

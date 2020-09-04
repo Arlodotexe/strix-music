@@ -127,9 +127,9 @@ namespace StrixMusic
             });
         }
 
-        private ShellControl CreateShellControl()
+        private ShellContainer CreateShellControl()
         {
-            ShellControl shell = new ShellControl
+            ShellContainer shell = new ShellContainer
             {
                 DataContext = Ioc.Default.GetService<MainViewModel>(),
             };
