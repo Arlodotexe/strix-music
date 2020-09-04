@@ -1,6 +1,7 @@
 ﻿using StrixMusic.Core.Mock.Deserialization;
 using StrixMusic.Core.Mock.Models;
 using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +12,7 @@ namespace StrixMusic.Core.Mock.Services
     /// <summary>
     /// Service to get mock data
     /// </summary>
-    public interface IMockCoreDataService
+    public interface IMockCoreDataService : ICoreConfig
     {
         /// <summary>
         /// This method returns the artist

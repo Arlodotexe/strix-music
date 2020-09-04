@@ -7,33 +7,35 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Hqub.MusicBrainz.API.Entities.Collections;
+using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.Mock.Models;
 using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Services.Settings;
 
 namespace StrixMusic.Core.Mock.Services
 {
     /// <inheritdoc />
-    public class MusicBrainzMockCoreDataService : IMockCoreDataService
+    public class MusicBrainzMockCoreDataService : SettingsServiceBase, IMockCoreDataService
     {
         private static MusicBrainzMockCoreDataService _instance;
         private MusicBrainzClient _musicBrainzClient;
 
+        /// <inheritdoc/>
+        public override string Id { get; }
+
+        /// <inheritdoc/>
+        public IServiceCollection Services => throw new NotImplementedException();
+
         /// <summary>
         /// Init MusicBrainzClient
         /// </summary>
-        private MusicBrainzMockCoreDataService()
+        public MusicBrainzMockCoreDataService(string instanceId)
         {
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
             _musicBrainzClient = new MusicBrainzClient();
+            Id = instanceId;
         }
 
-        /// <inheritdoc />
-        public static MusicBrainzMockCoreDataService GetInstance()
-        {
-            if (_instance == null)
-                _instance = new MusicBrainzMockCoreDataService();
-            return _instance;
-        }
 
         /// <inheritdoc />
         public async Task<IReadOnlyList<IArtist>> GetArtistsAsync()
