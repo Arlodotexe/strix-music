@@ -38,6 +38,8 @@
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<None Remove="Assets\Backgrounds\Phoenstrix-Uncropped.png" />
+		<None Remove="Assets\Backgrounds\Phoenstrix.png" />
 		<None Remove="Assets\Quickplay-Background.png" />
 		<None Remove="Controls\QuickplayContent.xaml" />
 		<None Remove="Controls\ZuneShell.xaml" />
@@ -47,6 +49,7 @@
 		<None Remove="Styles\Brushes.xaml" />
 		<None Remove="Styles\ButtonStyles.xaml" />
 		<None Remove="Themes\NowPlayingBarStyle.xaml" />
+		<None Remove="Themes\SettingsViewStyle.xaml" />
 		<None Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
@@ -63,9 +66,12 @@
 		<UpToDateCheckInput Remove="Styles\Brushes.xaml" />
 		<UpToDateCheckInput Remove="Styles\ButtonStyles.xaml" />
 		<UpToDateCheckInput Remove="Themes\NowPlayingBarStyle.xaml" />
+		<UpToDateCheckInput Remove="Themes\SettingsViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+	  <SplashScreen Include="Assets\Backgrounds\Phoenstrix-Uncropped.png" />
+	  <Content Include="Assets\Backgrounds\Phoenstrix.png" />
 	  <Content Include="Assets\Quickplay-Background.png" />
 	</ItemGroup>
 	<ItemGroup>
@@ -76,6 +82,9 @@
 		<ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Update="Themes\SettingsViewStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
 		<Compile Update="Themes\ShellStyle.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
 		</Compile>

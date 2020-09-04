@@ -59,6 +59,66 @@
         </Setter>
     </Style>
 
+    <Style x:Key="ZuneTextButton" TargetType="Button">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="MinWidth" Value="84"/>
+        <Setter Property="MinHeight" Value="24"/>
+        <Setter Property="MaxHeight" Value="24"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="RootGrid" Background="Transparent">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Target="TintIndicator.Opacity" Value="0"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="TintIndicator.Opacity" Value=".1"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="TintIndicator.Opacity" Value=".05"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="Border" BorderThickness="2" BorderBrush="{ThemeResource ZuneTextButtonBorderBrush}" CornerRadius="4"
+                                Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" MinHeight="{TemplateBinding MinHeight}" MinWidth="{TemplateBinding MinWidth}">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                    <GradientStop Color="#F7F7F7" Offset="0.0" />
+                                    <GradientStop Color="#DFDFDF" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Grid>
+                                <Rectangle x:Name="TintIndicator" Fill="Black" Opacity="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                <ContentPresenter x:Name="ContentPresenter"
+                                                  AutomationProperties.AccessibilityView="Raw"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                  Content="{TemplateBinding Content}"
+                                                  Foreground="{ThemeResource ZuneTextButtonForeground}"
+                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Padding="{TemplateBinding Padding}"
+                                                  FontSize="{TemplateBinding FontSize}"
+                                                  FontWeight="{TemplateBinding FontWeight}"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="ZuneToggleContentButtonStyle" TargetType="launchpad:ToggleContentButton">
         <Style.Setters>
             <Setter Property="Padding" Value="0"/>

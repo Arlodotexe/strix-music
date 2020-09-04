@@ -14,6 +14,7 @@
         <!--<themes:HomeStyle/>-->
         <!--<themes:PlayableCollectionListStyle/>-->
         <themes:ShellStyle/>
+        <themes:SettingsViewStyle/>
         <!--<ResourceDictionary Source="Themes/TrackListStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Themes/TrackStyle.xaml"/>-->
         <dthemes:TrackListStyle/>

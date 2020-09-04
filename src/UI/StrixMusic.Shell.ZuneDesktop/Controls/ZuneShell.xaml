@@ -9,61 +9,58 @@
     xmlns:local="using:StrixMusic.Shell.ZuneDesktop.Controls"
     x:Name="RootControl" RequestedTheme="Dark">
 
+    
     <UserControl.Resources>
-        <Storyboard x:Name="EnterLightTheme">
-            <DoubleAnimation Storyboard.TargetName="LightBackground" Storyboard.TargetProperty="Opacity"
-                             Duration="0:0:0.5" To="1"/>
+        <Storyboard x:Name="EnterDarkTheme">
+            <DoubleAnimation Storyboard.TargetName="DarkBackground" Storyboard.TargetProperty="Opacity"
+                             Duration="0:0:0.3" To="1"/>
         </Storyboard>
-        <Storyboard x:Name="LeaveLightTheme">
-            <DoubleAnimation Storyboard.TargetName="LightBackground" Storyboard.TargetProperty="Opacity"
-                             Duration="0:0:.5" To="0"/>
+        <Storyboard x:Name="LeaveDarkTheme">
+            <DoubleAnimation Storyboard.TargetName="DarkBackground" Storyboard.TargetProperty="Opacity"
+                             Duration="0:0:0.3" To="0"/>
         </Storyboard>
     </UserControl.Resources>
-    
-    <Grid Background="{ThemeResource ZuneDarkBackground}">
+
+    <Grid Background="{ThemeResource ZuneLightBackground}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Rectangle Width="1009" Height="720" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.RowSpan="2">
+        <Rectangle x:Name="BackgroundImage" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity=".1" Grid.RowSpan="2">
             <Rectangle.Fill>
-                <ImageBrush ImageSource="ms-appx:///StrixMusic.Shell.ZuneDesktop/Assets/Quickplay-Background.png" AlignmentY="Center"/>
+                <ImageBrush ImageSource="ms-appx:///StrixMusic.Shell.ZuneDesktop/Assets/Backgrounds/Phoenstrix.png" AlignmentX="Right" Stretch="Uniform"/>
             </Rectangle.Fill>
         </Rectangle>
 
-        <Rectangle x:Name="LightBackground" Fill="{ThemeResource ZuneLightBackgroundColor}" Opacity="0" Grid.RowSpan="2"/>
-        
-        <Grid>
-            <Grid>
-                <Button Style="{StaticResource ZuneButton}" Width="24" Margin="40,12,-32,0"
-                        Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" >
-                    <FontIcon Glyph="&#xE0A6;" FontSize="12"/>
-                </Button>
-                
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,128,0">
-                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                        <HyperlinkButton Content="SETTINGS" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12"/>
-                        <Rectangle Height="12" Width="2" Fill="{ThemeResource HyperlinkForeground}" Opacity=".5" Margin="8,3,8,0" VerticalAlignment="Top"/>
-                        <HyperlinkButton Content="HELP" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12"/>
-                    </StackPanel>
+        <Grid x:Name="DarkBackground" Grid.RowSpan="2" Opacity="0">
+            <Rectangle Fill="{ThemeResource ZuneDarkBackgroundColor}"/>
 
-                    <StackPanel Orientation="Horizontal" Margin="128,0,0,0">
-                        <HyperlinkButton Content="SIGN IN" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="20" Margin="0,8,8,0"/>
-                        <Rectangle Fill="#FF00FF" Height="48" Width="48" HorizontalAlignment="Right"/>
-                    </StackPanel>
+            <Rectangle Width="1009" Height="720" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="ms-appx:///StrixMusic.Shell.ZuneDesktop/Assets/Quickplay-Background.png" AlignmentY="Center"/>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Grid>
+
+        <Grid x:Name="MainContent">
+            <!--Settings | Help and Sign In-->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,128,0">
+                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                    <HyperlinkButton Content="SETTINGS" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12" Click="SettingsLinkClicked"/>
+                    <Rectangle Height="12" Width="2" Fill="{ThemeResource HyperlinkForeground}" Opacity=".5" Margin="8,3,8,0" VerticalAlignment="Top"/>
+                    <HyperlinkButton Content="HELP" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12"/>
                 </StackPanel>
-            </Grid>
+
+                <StackPanel Orientation="Horizontal" Margin="128,0,0,0">
+                    <HyperlinkButton Content="SIGN IN" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="20" Margin="0,8,8,0"/>
+                    <Rectangle Fill="#FF00FF" Height="48" Width="48" HorizontalAlignment="Right"/>
+                </StackPanel>
+            </StackPanel>
+
             <Pivot x:Name="Pivot" Margin="0,24,0,0" SelectionChanged="Pivot_SelectionChanged">
                 <Pivot.LeftHeader>
-                    <Rectangle VerticalAlignment="Stretch" Width="16" Margin="0,0,16,-8">
-                        <Rectangle.Fill>
-                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                <GradientStop Color="#F10EA0" Offset="0.0" />
-                                <GradientStop Color="#E95214" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Rectangle.Fill>
-                    </Rectangle>
+                    <Grid Width="32"/>
                 </Pivot.LeftHeader>
                 <PivotItem Header="quickplay">
                     <local:QuickplayContent/>
@@ -75,6 +72,26 @@
             </Pivot>
         </Grid>
 
-        <default:NowPlayingBarControl Grid.Row="1"/>
+        <!--SettingsOverlay-->
+        <default:SettingsViewControl x:Name="SettingsOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+
+        <!--Back Button-->
+        <Button Style="{StaticResource ZuneButton}" Width="24" Margin="40,12,-32,0"
+                VerticalAlignment="Top" HorizontalAlignment="Left"
+                Click="RequestBack">
+            <FontIcon Glyph="&#xE0A6;" FontSize="12"/>
+        </Button>
+
+        <!--ZuneBar-->
+        <Rectangle Width="16" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="#F10EA0" Offset="0.0" />
+                    <GradientStop Color="#E95214" Offset="1.0" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <default:NowPlayingBarControl Grid.Row="1" x:Name="NowPlayingBar"/>
     </Grid>
 </UserControl>

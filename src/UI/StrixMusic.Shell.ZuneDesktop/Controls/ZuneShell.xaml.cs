@@ -1,4 +1,8 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using StrixMusic.Services.Navigation;
+using StrixMusic.Shell.Default.Controls;
+using StrixMusic.Shell.Strix;
 using StrixMusic.ViewModels;
 using Windows.Foundation;
 using Windows.UI.ViewManagement;
@@ -10,21 +14,73 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
 {
     public sealed partial class ZuneShell : UserControl
     {
+        private INavigationService<Control>? _navigationService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneShell"/> class.
         /// </summary>
         public ZuneShell()
         {
             this.InitializeComponent();
+            SetupIoc();
+            _navigationService!.NavigationRequested += ZuneShell_NavigationRequested;
+            _navigationService!.BackRequested += ZuneShell_BackRequested;
+        }
+
+        private MainViewModel? ViewModel => DataContext as MainViewModel;
+
+        private void ZuneShell_NavigationRequested(object sender, NavigateEventArgs<Control> e)
+        {
+            if (e.Page is SettingsViewControl)
+            {
+                SettingsOverlay.Visibility = Visibility.Visible;
+                MainContent.Visibility = Visibility.Collapsed;
+                NowPlayingBar.Visibility = Visibility.Collapsed;
+                RequestTheme(ElementTheme.Light);
+            }
+        }
+
+        private void ZuneShell_BackRequested(object sender, EventArgs e)
+        {
+            // TODO: Dyanmic back navigation
+            // Instead of just closing settings
+            SettingsOverlay.Visibility = Visibility.Collapsed;
+            MainContent.Visibility = Visibility.Visible;
+            NowPlayingBar.Visibility = Visibility.Visible;
+            RequestTheme();
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            RootControl.RequestedTheme = Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light;
-            Storyboard transition = Pivot.SelectedIndex == 0 ? LeaveLightTheme : EnterLightTheme;
+            RequestTheme(Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light);
+        }
+
+        private void RequestTheme(ElementTheme theme = ElementTheme.Default)
+        {
+            if (theme == ElementTheme.Default)
+            {
+                theme = Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light;
+            }
+
+            RootControl.RequestedTheme = theme;
+            Storyboard transition = theme == ElementTheme.Dark ? EnterDarkTheme : LeaveDarkTheme;
             transition.Begin();
         }
 
-        private MainViewModel? ViewModel => DataContext as MainViewModel;
+        private void SetupIoc()
+        {
+            ZuneDesktopShellIoc.Initialize();
+            _navigationService = ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>();
+        }
+
+        private void SettingsLinkClicked(object sender, RoutedEventArgs e)
+        {
+            _navigationService!.NavigateTo(typeof(SettingsViewControl));
+        }
+
+        private void RequestBack(object sender, RoutedEventArgs e)
+        {
+            _navigationService!.GoBack();
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace StrixMusic.Shell.Strix.Controls
     public sealed partial class Shell : UserControl
     {
         private readonly IReadOnlyDictionary<Button, Type> _pagesMapping;
+        private readonly IReadOnlyDictionary<Type, string> _overlayTypeMapping;
         private INavigationService<Control>? _navigationService;
 
         /// <summary>
@@ -31,6 +32,11 @@ namespace StrixMusic.Shell.Strix.Controls
                 [HomeTopButton] = typeof(HomeControl),
                 [HomeBottomButton] = typeof(HomeControl),
                 [SettingsButton] = typeof(SettingsViewControl),
+            };
+
+            _overlayTypeMapping = new Dictionary<Type, string>
+            {
+                { typeof(SettingsViewControl), nameof(OverlayOpenedPadded) },
             };
         }
 
@@ -59,17 +65,17 @@ namespace StrixMusic.Shell.Strix.Controls
             }
         }
 
-        private void NavButtonClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void NavButtonClicked(object sender, RoutedEventArgs e)
         {
             _navigationService!.NavigateTo(_pagesMapping[(sender as Button) !]);
         }
 
-        private void SettingsButtonClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            _navigationService!.NavigateTo(_pagesMapping[(sender as Button)!], true);
+            _navigationService!.NavigateTo(_pagesMapping[(sender as Button) !], true);
         }
 
-        private void SearchButtonClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void SearchButtonClicked(object sender, RoutedEventArgs e)
         {
             _navigationService!.NavigateTo(typeof(SearchViewControl), false, SearchTextBox.Text);
         }
@@ -79,7 +85,12 @@ namespace StrixMusic.Shell.Strix.Controls
             OverlayContent.Content = page;
 
             // TODO: Different overlay VisualStates dependant on overlay types
-            VisualStateManager.GoToState(this, nameof(OverlayOpened), true);
+            VisualStateManager.GoToState(this, _overlayTypeMapping[page.GetType()], true);
+        }
+
+        private void GoBack(object sender, RoutedEventArgs e)
+        {
+            _navigationService!.GoBack();
         }
     }
 }

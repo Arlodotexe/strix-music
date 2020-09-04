@@ -12,12 +12,12 @@ namespace StrixMusic.Shell.Default
     internal static class DefaultShellIoc
     {
         /// <summary>
-        /// An Ioc for only the StrixShell.
+        /// An Ioc for only the DefaultShell.
         /// </summary>
         internal static Ioc Ioc { get; private set; } = new Ioc();
 
         /// <summary>
-        /// Initializes the services for the Default shell.
+        /// Initializes the services for the DefaultShell.
         /// </summary>
         internal static void Initialize()
         {
