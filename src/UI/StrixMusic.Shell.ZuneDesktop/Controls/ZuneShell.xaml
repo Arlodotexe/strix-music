@@ -12,11 +12,11 @@
     <UserControl.Resources>
         <Storyboard x:Name="EnterDarkTheme">
             <DoubleAnimation Storyboard.TargetName="DarkBackground" Storyboard.TargetProperty="Opacity"
-                             Duration="0:0:0.5" To="1"/>
+                             Duration="0:0:0.3" To="1"/>
         </Storyboard>
         <Storyboard x:Name="LeaveDarkTheme">
             <DoubleAnimation Storyboard.TargetName="DarkBackground" Storyboard.TargetProperty="Opacity"
-                             Duration="0:0:.5" To="0"/>
+                             Duration="0:0:0.3" To="0"/>
         </Storyboard>
     </UserControl.Resources>
 
@@ -25,6 +25,12 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+
+        <Rectangle x:Name="BackgroundImage" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity=".1">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="ms-appx:///StrixMusic.Shell.ZuneDesktop/Assets/Backgrounds/Phoenstrix.png" AlignmentX="Right" Stretch="Uniform"/>
+            </Rectangle.Fill>
+        </Rectangle>
 
         <Grid x:Name="DarkBackground" Grid.RowSpan="2" Opacity="0">
             <Rectangle Fill="{ThemeResource ZuneDarkBackgroundColor}"/>
@@ -66,11 +72,11 @@
         </Grid>
 
         <!--SettingsOverlay-->
-        <default:SettingsViewControl x:Name="SettingsOverlay" Visibility="Collapsed"/>
+        <default:SettingsViewControl x:Name="SettingsOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
         <!--Back Button-->
         <Button Style="{StaticResource ZuneButton}" Width="24" Margin="40,12,-32,0"
-                Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left"
+                VerticalAlignment="Top" HorizontalAlignment="Left"
                 Click="RequestBack">
             <FontIcon Glyph="&#xE0A6;" FontSize="12"/>
         </Button>
@@ -85,6 +91,6 @@
             </Rectangle.Fill>
         </Rectangle>
 
-        <default:NowPlayingBarControl Grid.Row="1"/>
+        <default:NowPlayingBarControl Grid.Row="1" x:Name="NowPlayingBar"/>
     </Grid>
 </UserControl>
