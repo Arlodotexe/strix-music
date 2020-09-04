@@ -216,7 +216,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Fires when <see cref="ShuffleState"/> changes.
         /// </summary>
-        event EventHandler<bool?> ShuffleStateChanged;
+        event EventHandler<bool> ShuffleStateChanged;
 
         /// <summary>
         /// Fires when <see cref="RepeatState"/> changes.
@@ -226,7 +226,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Fires when <see cref="VolumePercent"/> changes.
         /// </summary>
-        event EventHandler<double?> VolumePercentChanged;
+        event EventHandler<double> VolumePercentChanged;
 
         /// <summary>
         /// Fires when <see cref="PlaybackSpeed"/> changes.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Interfaces;
@@ -20,7 +21,8 @@ namespace StrixMusic.ViewModels.Bindables
         public ObservableUserProfile(IUserProfile userProfile)
         {
             _userProfile = userProfile;
-            Url = new ObservableCollection<Uri>(userProfile.Urls);
+
+            Urls = new ObservableCollection<Uri>(userProfile.Urls);
             Images = new ObservableCollection<IImage>(userProfile.Images);
         }
 
@@ -46,10 +48,31 @@ namespace StrixMusic.ViewModels.Bindables
         public ObservableCollection<IImage> Images { get; set; }
 
         /// <inheritdoc cref="IUserProfile.Urls"/>
-        public ObservableCollection<Uri>? Url { get; set; }
+        public ObservableCollection<Uri>? Urls { get; set; }
 
         /// <inheritdoc cref="IUserProfile.Region"/>
-        public string? Region => _userProfile.Region;
+        public CultureInfo? Region => _userProfile.Region;
+
+        /// <inheritdoc cref="IUserProfile.IsChangeDisplayNameSupported"/>
+        public bool IsChangeDisplayNameSupported { get; }
+
+        /// <inheritdoc cref="IUserProfile.IsChangeImagesAsyncSupported"/>
+        public bool IsChangeImagesAsyncSupported { get; }
+
+        /// <inheritdoc cref="IUserProfile.IsChangeBirthDateAsyncSupported"/>
+        public bool IsChangeBirthDateAsyncSupported { get; }
+
+        /// <inheritdoc cref="IUserProfile.IsChangeFullNameAsyncAsyncSupported"/>
+        public bool IsChangeFullNameAsyncAsyncSupported { get; }
+
+        /// <inheritdoc cref="IUserProfile.IsChangeUrlsAsyncSupported"/>
+        public bool IsChangeUrlsAsyncSupported { get; }
+
+        /// <inheritdoc cref="IUserProfile.IsChangeRegionAsyncSupported"/>
+        public bool IsChangeRegionAsyncSupported { get; }
+
+        /// <inheritdoc cref="IUserProfile.IsChangeEmailAsyncSupported"/>
+        public bool IsChangeEmailAsyncSupported { get; }
 
         /// <inheritdoc cref="IUserProfile.DisplayNameChanged"/>
         public event EventHandler<CollectionChangedEventArgs<string>> DisplayNameChanged
@@ -94,7 +117,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IUserProfile.FullNameChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<DateTime>> FullNameChanged
+        public event EventHandler<string> FullNameChanged
         {
             add
             {
@@ -108,7 +131,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IUserProfile.UrlsChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<DateTime>> UrlChanged
+        public event EventHandler<CollectionChangedEventArgs<Uri>> UrlChanged
         {
             add
             {
@@ -122,7 +145,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IUserProfile.RegionChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<DateTime>> RegionChanged
+        public event EventHandler<CultureInfo> RegionChanged
         {
             add
             {
@@ -136,7 +159,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IUserProfile.EmailChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<DateTime>> EmailChanged
+        public event EventHandler<string?> EmailChanged
         {
             add
             {

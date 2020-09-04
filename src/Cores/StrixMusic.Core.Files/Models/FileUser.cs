@@ -85,7 +85,7 @@ namespace StrixMusic.Core.Files.Models
         public event EventHandler<CollectionChangedEventArgs<DateTime>>? BirthDateChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<string?>? FullNameChanged;
+        public event EventHandler<string>? FullNameChanged;
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<Uri>>? UrlsChanged;

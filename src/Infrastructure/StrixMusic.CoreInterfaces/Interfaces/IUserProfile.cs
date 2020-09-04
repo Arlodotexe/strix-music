@@ -160,7 +160,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Fires when the <see cref="FullName"/> has changed.
         /// </summary>
-        event EventHandler<string?>? FullNameChanged;
+        event EventHandler<string>? FullNameChanged;
 
         /// <summary>
         /// Fires when the <see cref="Urls"/> has changed.

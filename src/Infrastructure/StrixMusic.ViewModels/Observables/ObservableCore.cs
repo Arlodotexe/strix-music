@@ -61,7 +61,6 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <inheritdoc cref="ICore.SearchAutoCompleteChanged" />
         private void AttachEvents()
         {
             _core.CoreStateChanged += Core_CoreStateChanged;
@@ -103,27 +102,19 @@ namespace StrixMusic.ViewModels.Bindables
         public ObservableCollectionGroup Discoverables { get; }
 
         /// <inheritdoc cref="ICore.GetSearchAutoCompleteAsync" />
-        public Task<IAsyncEnumerable<string>> GetSearchAutoCompleteAsync(string query)
-        {
-            return _core.GetSearchAutoCompleteAsync(query);
-        }
+        public Task<IAsyncEnumerable<string>> GetSearchAutoCompleteAsync(string query) => _core.GetSearchAutoCompleteAsync(query);
 
         /// <inheritdoc cref="ICore.GetSearchResultsAsync" />
-        public Task<ISearchResults> GetSearchResultsAsync(string query)
-        {
-            return _core.GetSearchResultsAsync(query);
-        }
+        public Task<ISearchResults> GetSearchResultsAsync(string query) => _core.GetSearchResultsAsync(query);
 
         /// <inheritdoc cref="ICore.InitAsync" />
-        public Task InitAsync()
-        {
-            return _core.InitAsync();
-        }
+        public Task InitAsync() => _core.InitAsync();
 
-        /// <inheritdoc cref="ICore.DisposeAsync" />
-        public ValueTask DisposeAsync()
+        /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
+        public async ValueTask DisposeAsync()
         {
-            return _core.DisposeAsync();
+            await _core.DisposeAsync();
+            DetachEvents();
         }
 
         /// <inheritdoc cref="ICore.CoreState" />

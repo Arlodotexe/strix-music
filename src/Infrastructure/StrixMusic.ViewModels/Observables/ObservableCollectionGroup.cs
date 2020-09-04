@@ -30,6 +30,10 @@ namespace StrixMusic.ViewModels.Bindables
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
+            ChangeImagesAsyncCommand = new AsyncRelayCommand<IReadOnlyList<IImage>>(ChangeImagesAsync);
+            ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
+            ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
             Tracks = new ObservableCollection<ObservableTrack>(_collectionGroupBase.Tracks.Select(x => new ObservableTrack(x)));
             Playlists = new ObservableCollection<ObservablePlaylist>(_collectionGroupBase.Playlists.Select(x => new ObservablePlaylist(x)));
@@ -235,6 +239,20 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
+        /// <inheritdoc cref="IPlayable.DurationChanged"/>
+        public event EventHandler<TimeSpan>? DurationChanged
+        {
+            add
+            {
+                _collectionGroupBase.DurationChanged += value;
+            }
+
+            remove
+            {
+                _collectionGroupBase.DurationChanged -= value;
+            }
+        }
+
         /// <inheritdoc cref="IPlayableCollectionGroup.Children"/>
         public ObservableCollection<ObservableCollectionGroup> Children { get; }
 
@@ -281,7 +299,7 @@ namespace StrixMusic.ViewModels.Bindables
         /// <inheritdoc cref="IPlaylistCollection.Playlists"/>
         public ObservableCollection<ObservablePlaylist> Playlists { get; }
 
-        /// <inheritdoc cref="IPlaylistCollection.cou"/>
+        /// <inheritdoc cref="IPlaylistCollection.TotalPlaylistCount"/>
         public int TotalPlaylistCount => _collectionGroupBase.TotalPlaylistCount;
 
         /// <inheritdoc cref="ITrackCollection.Tracks"/>
@@ -302,56 +320,67 @@ namespace StrixMusic.ViewModels.Bindables
         /// <inheritdoc cref="IArtistCollection.TotalArtistsCount"/>
         public int TotalArtistsCount => _collectionGroupBase.TotalArtistsCount;
 
-        /// <summary>
-        /// Attempts to a pause the collection (if playing).
-        /// </summary>
-        public IAsyncRelayCommand PauseAsyncCommand { get; }
-
         /// <inheritdoc/>
-        public Task PauseAsync()
-        {
-            return _collectionGroupBase.PauseAsync();
-        }
+        public Task PauseAsync() => _collectionGroupBase.PauseAsync();
+
+        /// <inheritdoc cref="IPlayable.PlayAsync"/>
+        public Task PlayAsync() => _collectionGroupBase.PlayAsync();
+
+        /// <inheritdoc cref="IPlayable.ChangeNameAsync"/>
+        public Task ChangeNameAsync(string name) => _collectionGroupBase.ChangeNameAsync(name);
+
+        /// <inheritdoc cref="IPlayable.ChangeImagesAsync"/>
+        public Task ChangeImagesAsync(IReadOnlyList<IImage> images) => _collectionGroupBase.ChangeImagesAsync(images);
+
+        /// <inheritdoc cref="IPlayable.ChangeDescriptionAsync"/>
+        public Task ChangeDescriptionAsync(string? description) => _collectionGroupBase.ChangeDescriptionAsync(description);
+
+        /// <inheritdoc cref="IPlayable.ChangeDurationAsync"/>
+        public Task ChangeDurationAsync(TimeSpan duration) => _collectionGroupBase.ChangeDurationAsync(duration);
+
+        /// <inheritdoc cref="IPlayableCollectionGroup.PopulateChildrenAsync(int, int)"/>
+        public Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset) => _collectionGroupBase.PopulateChildrenAsync(limit, offset);
+
+        /// <inheritdoc cref="IPlaylistCollection.PopulatePlaylistsAsync(int, int)"/>
+        public Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0) => _collectionGroupBase.PopulatePlaylistsAsync(limit, offset);
+
+        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0) => _collectionGroupBase.PopulateTracksAsync(limit, offset);
+
+        /// <inheritdoc cref="IAlbumCollection.PopulateAlbumsAsync(int, int)"/>
+        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0) => _collectionGroupBase.PopulateAlbumsAsync(limit, offset);
+
+        /// <inheritdoc cref="IArtistCollection.PopulateArtistsAsync(int, int)"/>
+        public Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0) => _collectionGroupBase.PopulateArtistsAsync(limit, offset);
 
         /// <summary>
-        /// Attempts to play the collection. Resumes if paused.
+        /// Attempts to play the album.
         /// </summary>
         public IAsyncRelayCommand PlayAsyncCommand { get; }
 
-        /// <inheritdoc cref="IPlayable.PlayAsync"/>
-        public Task PlayAsync()
-        {
-            return _collectionGroupBase.PlayAsync();
-        }
+        /// <summary>
+        /// Attempts to pause the album, if playing.
+        /// </summary>
+        public IAsyncRelayCommand PauseAsyncCommand { get; }
 
-        /// <inheritdoc cref="IPlayableCollectionGroup.PopulateChildrenAsync(int, int)"/>
-        public Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset)
-        {
-            return _collectionGroupBase.PopulateChildrenAsync(limit, offset);
-        }
+        /// <summary>
+        /// Attempts to change the name of the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
 
-        /// <inheritdoc cref="IPlaylistCollection.PopulatePlaylistsAsync(int, int)"/>
-        public Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
-        {
-            return _collectionGroupBase.PopulatePlaylistsAsync(limit, offset);
-        }
+        /// <summary>
+        /// Attempts to change the images for the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeImagesAsyncCommand { get; }
 
-        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
-        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
-        {
-            return _collectionGroupBase.PopulateTracksAsync(limit, offset);
-        }
+        /// <summary>
+        /// Attempts to change the description of the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeDescriptionAsyncCommand { get; }
 
-        /// <inheritdoc cref="IAlbumCollection.PopulateAlbumsAsync(int, int)"/>
-        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
-        {
-            return _collectionGroupBase.PopulateAlbumsAsync(limit, offset);
-        }
-
-        /// <inheritdoc cref="IArtistCollection.PopulateArtistsAsync(int, int)"/>
-        public Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
-        {
-            return _collectionGroupBase.PopulateArtistsAsync(limit, offset);
-        }
+        /// <summary>
+        /// Attempts to change the duration of the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
     }
 }

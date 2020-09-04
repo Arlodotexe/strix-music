@@ -150,7 +150,7 @@ namespace StrixMusic.Core.Files.Models
         }
 
         /// <inheritdoc/>
-        public event EventHandler<bool?>? ShuffleStateChanged
+        public event EventHandler<bool>? ShuffleStateChanged
         {
             add
             {
@@ -178,7 +178,7 @@ namespace StrixMusic.Core.Files.Models
         }
 
         /// <inheritdoc/>
-        public event EventHandler<double?>? VolumePercentChanged;
+        public event EventHandler<double>? VolumePercentChanged;
 
         /// <inheritdoc/>
         public event EventHandler<double>? PlaybackSpeedChanged;
@@ -246,6 +246,7 @@ namespace StrixMusic.Core.Files.Models
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public Task SeekAsync(TimeSpan position)
         {
             throw new NotImplementedException();

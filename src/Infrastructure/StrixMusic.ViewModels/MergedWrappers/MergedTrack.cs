@@ -145,6 +145,7 @@ namespace StrixMusic.ViewModels.MergedWrappers
         /// <inheritdoc/>
         public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
 
+        /// <inheritdoc/>
         public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc/>

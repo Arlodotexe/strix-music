@@ -31,12 +31,12 @@ namespace StrixMusic.ViewModels.Bindables
 
             PlaybackQueue = new ObservableCollection<ObservableTrack>(_device.PlaybackQueue.Select(x => new ObservableTrack(x)));
 
-            ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeed);
+            ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             NextAsyncCommand = new AsyncRelayCommand(NextAsync);
             PreviousAsyncCommand = new AsyncRelayCommand(PreviousAsync);
-            SeekAsyncCommand = new AsyncRelayCommand<long>(SeekAsync);
+            SeekAsyncCommand = new AsyncRelayCommand<TimeSpan>(SeekAsync);
             ChangeVolumeAsyncCommand = new AsyncRelayCommand<double>(ChangeVolumeAsync);
             ToggleShuffleCommandAsync = new AsyncRelayCommand(ToggleShuffleAsync);
             ToggleRepeatCommandAsync = new AsyncRelayCommand(ToggleRepeatAsync);
@@ -86,7 +86,7 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        private void Device_VolumePercentChanged(object sender, double? e)
+        private void Device_VolumePercentChanged(object sender, double e)
         {
             VolumePercent = e;
         }
@@ -96,7 +96,7 @@ namespace StrixMusic.ViewModels.Bindables
             PlaybackState = e;
         }
 
-        private void Device_ShuffleStateChanged(object sender, bool? e)
+        private void Device_ShuffleStateChanged(object sender, bool e)
         {
             ShuffleState = e;
         }
@@ -181,7 +181,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IDevice.ShuffleState"/>
-        public bool? ShuffleState
+        public bool ShuffleState
         {
             get => _device.ShuffleState;
             private set => SetProperty(() => _device.ShuffleState, value);
@@ -195,7 +195,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IDevice.SourceCore"/>
-        public double? VolumePercent
+        public double VolumePercent
         {
             get => _device.VolumePercent;
             private set => SetProperty(() => _device.VolumePercent, value);
@@ -282,7 +282,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IDevice.ShuffleStateChanged"/>
-        public event EventHandler<bool?> ShuffleStateChanged
+        public event EventHandler<bool> ShuffleStateChanged
         {
             add
             {
@@ -310,7 +310,7 @@ namespace StrixMusic.ViewModels.Bindables
         }
 
         /// <inheritdoc cref="IDevice.VolumePercentChanged"/>
-        public event EventHandler<double?> VolumePercentChanged
+        public event EventHandler<double> VolumePercentChanged
         {
             add
             {
@@ -351,21 +351,11 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <summary>
-        /// Attempts to change playback speed.
-        /// </summary>
-        public IAsyncRelayCommand<double> ChangePlaybackSpeedAsyncCommand { get; }
-
         /// <inheritdoc cref="IDevice.ChangePlaybackSpeedAsync"/>
-        public Task ChangePlaybackSpeed(double speed)
+        public Task ChangePlaybackSpeedAsync(double speed)
         {
             return _device.ChangePlaybackSpeedAsync(speed);
         }
-
-        /// <summary>
-        /// Attempts to change volume.
-        /// </summary>
-        public IAsyncRelayCommand<double> ChangeVolumeAsyncCommand { get; }
 
         /// <inheritdoc cref="IDevice.ChangeVolumeAsync"/>
         public Task ChangeVolumeAsync(double volume)
@@ -373,21 +363,11 @@ namespace StrixMusic.ViewModels.Bindables
             return _device.ChangeVolumeAsync(volume);
         }
 
-        /// <summary>
-        /// Attempts to skip to the next track in the queue.
-        /// </summary>
-        public IAsyncRelayCommand NextAsyncCommand { get; }
-
         /// <inheritdoc cref="IDevice.NextAsync"/>
         public Task NextAsync()
         {
             return _device.NextAsync();
         }
-
-        /// <summary>
-        /// Attempts to pause the device.
-        /// </summary>
-        public IAsyncRelayCommand PauseAsyncCommand { get; }
 
         /// <inheritdoc cref="IDevice.PauseAsync"/>
         public Task PauseAsync()
@@ -395,21 +375,11 @@ namespace StrixMusic.ViewModels.Bindables
             return _device.PauseAsync();
         }
 
-        /// <summary>
-        /// Attempts to move back to the previous track in the queue.
-        /// </summary>
-        public IAsyncRelayCommand PreviousAsyncCommand { get; }
-
         /// <inheritdoc cref="IDevice.PreviousAsync"/>
         public Task PreviousAsync()
         {
             return _device.PreviousAsync();
         }
-
-        /// <summary>
-        /// Attempts to pause the device.
-        /// </summary>
-        public IAsyncRelayCommand ResumeAsyncCommand { get; }
 
         /// <inheritdoc cref="IDevice.ResumeAsync"/>
         public Task ResumeAsync()
@@ -417,21 +387,11 @@ namespace StrixMusic.ViewModels.Bindables
             return _device.ResumeAsync();
         }
 
-        /// <summary>
-        /// Attempts to seek the currently playing track on the device. Does not alter playback state.
-        /// </summary>
-        public IAsyncRelayCommand SeekAsyncCommand { get; }
-
         /// <inheritdoc cref="IDevice.SeekAsync"/>
-        public Task SeekAsync(long position)
+        public Task SeekAsync(TimeSpan position)
         {
             return _device.SeekAsync(position);
         }
-
-        /// <summary>
-        /// Attempts to switch playback to this device.
-        /// </summary>
-        public IAsyncRelayCommand SwitchToAsyncCommand { get; }
 
         /// <inheritdoc cref="IDevice.SwitchToAsync"/>
         public Task SwitchToAsync()
@@ -439,26 +399,66 @@ namespace StrixMusic.ViewModels.Bindables
             return _device.SwitchToAsync();
         }
 
-        /// <summary>
-        /// Attempts to toggle the repeat state for this device.
-        /// </summary>
-        public IAsyncRelayCommand ToggleRepeatCommandAsync { get; }
-
         /// <inheritdoc cref="IDevice.ToggleRepeatAsync"/>
         public Task ToggleRepeatAsync()
         {
             return _device.ToggleRepeatAsync();
         }
 
-        /// <summary>
-        /// Attempts to change the shuffle state for this device.
-        /// </summary>
-        public IAsyncRelayCommand ToggleShuffleCommandAsync { get; }
-
         /// <inheritdoc cref="IDevice.ToggleShuffleAsync"/>
         public Task ToggleShuffleAsync()
         {
             return _device.ToggleShuffleAsync();
         }
+
+        /// <summary>
+        /// Attempts to change playback speed.
+        /// </summary>
+        public IAsyncRelayCommand<double> ChangePlaybackSpeedAsyncCommand { get; }
+
+        /// <summary>
+        /// Attempts to change the shuffle state for this device.
+        /// </summary>
+        public IAsyncRelayCommand ToggleShuffleCommandAsync { get; }
+
+        /// <summary>
+        /// Attempts to toggle the repeat state for this device.
+        /// </summary>
+        public IAsyncRelayCommand ToggleRepeatCommandAsync { get; }
+
+        /// <summary>
+        /// Attempts to switch playback to this device.
+        /// </summary>
+        public IAsyncRelayCommand SwitchToAsyncCommand { get; }
+
+        /// <summary>
+        /// Attempts to seek the currently playing track on the device. Does not alter playback state.
+        /// </summary>
+        public IAsyncRelayCommand SeekAsyncCommand { get; }
+
+        /// <summary>
+        /// Attempts to pause the device.
+        /// </summary>
+        public IAsyncRelayCommand ResumeAsyncCommand { get; }
+
+        /// <summary>
+        /// Attempts to move back to the previous track in the queue.
+        /// </summary>
+        public IAsyncRelayCommand PreviousAsyncCommand { get; }
+
+        /// <summary>
+        /// Attempts to pause the device.
+        /// </summary>
+        public IAsyncRelayCommand PauseAsyncCommand { get; }
+
+        /// <summary>
+        /// Attempts to skip to the next track in the queue.
+        /// </summary>
+        public IAsyncRelayCommand NextAsyncCommand { get; }
+
+        /// <summary>
+        /// Attempts to change volume.
+        /// </summary>
+        public IAsyncRelayCommand<double> ChangeVolumeAsyncCommand { get; }
     }
 }

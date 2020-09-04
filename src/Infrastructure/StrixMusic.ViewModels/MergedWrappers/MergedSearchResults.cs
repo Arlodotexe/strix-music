@@ -56,6 +56,7 @@ namespace StrixMusic.ViewModels.MergedWrappers
             }
         }
 
+        /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged
         {
             add
