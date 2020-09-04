@@ -174,4 +174,73 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
     </Style>
+    
+    <Style x:Key="SmallPivotItemStyle" TargetType="PivotHeaderItem">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Padding" Value="4,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PivotHeaderItem">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition From="Unselected" To="UnselectedLocked" GeneratedDuration="0:0:0.33" />
+                                    <VisualTransition From="UnselectedLocked" To="Unselected" GeneratedDuration="0:0:0.33" />
+                                </VisualStateGroup.Transitions>
+
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="HeaderText.Foreground" Value="{StaticResource ZuneSmallUnselectedPivotHeaderItemBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Unselected">
+                                    <VisualState.Setters>
+                                        <Setter Target="HeaderText.Foreground" Value="{StaticResource ZuneSmallUnselectedPivotHeaderItemBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="UnselectedLocked">
+                                    <VisualState.Setters>
+                                        <Setter Target="SelectedPipe.Visibility" Value="Collapsed" />
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="HeaderText.Foreground" Value="{StaticResource ZuneSmallSelectedPivotHeaderItemBrush}" />
+                                        <Setter Target="HeaderText.FontWeight" Value="Black" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="UnselectedPointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="HeaderText.Foreground" Value="{StaticResource ZuneSmallUnselectedHoverPivotHeaderItemBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="SelectedPointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="HeaderText.Foreground" Value="{StaticResource ZuneSmallSelectedPivotHeaderItemBrush}" />
+                                        <Setter Target="HeaderText.FontWeight" Value="Black" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="UnselectedPressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="HeaderText.Foreground" Value="{StaticResource ZuneSmallUnselectedPivotHeaderItemBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="SelectedPressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="HeaderText.Foreground" Value="{StaticResource ZuneSmallSelectedPivotHeaderItemBrush}" />
+                                        <Setter Target="HeaderText.FontWeight" Value="Black" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                        </VisualStateManager.VisualStateGroups>
+                        <TextBlock x:Name="HeaderText" Text="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}" Foreground="{StaticResource ZuneSmallUnselectedPivotHeaderItemBrush}" Padding="{TemplateBinding Padding}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

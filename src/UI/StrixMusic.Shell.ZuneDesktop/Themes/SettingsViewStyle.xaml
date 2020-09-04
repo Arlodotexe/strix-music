@@ -12,13 +12,30 @@
         <UserControl>
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
+                <!--Header-->
                 <TextBlock Text="settings" FontSize="24" FontWeight="Light" Margin="44,36"/>
 
+                <Pivot Grid.Row="1" Margin="0,-36,0,0">
+                    <Pivot.Resources>
+                        <Style TargetType="PivotHeaderItem" BasedOn="{StaticResource SmallPivotItemStyle}"/>
+                    </Pivot.Resources>
+                    <Pivot.LeftHeader>
+                        <Grid Width="42"/>
+                    </Pivot.LeftHeader>
+                    <PivotItem Header="DISPLAY">
+                        <Grid/>
+                    </PivotItem>
+                    <PivotItem Header="BEHAVIOR" IsEnabled="False"/>
+                    <PivotItem Header="CORES" IsEnabled="False"/>
+                </Pivot>
+
+                <!--Action Buttons-->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
-                            Margin="48,32" Grid.Row="1">
+                            Margin="48,32" Grid.Row="2">
                     <Button Content="OK" Margin="2,0" Style="{StaticResource ZuneTextButton}" Click="SaveClicked"/>
                     <Button Content="CANCEL" Style="{StaticResource ZuneTextButton}" Margin="2,0,0,0" Click="CancelClicked"/>
                 </StackPanel>
