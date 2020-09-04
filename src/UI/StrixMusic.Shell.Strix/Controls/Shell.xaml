@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<default:ShellControl
     x:Class="StrixMusic.Shell.Strix.Controls.Shell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -186,4 +186,4 @@
             </Border>
         </Grid>
     </Grid>
-</UserControl>
+</default:ShellControl>

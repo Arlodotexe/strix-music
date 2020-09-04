@@ -9,7 +9,7 @@ namespace StrixMusic.Shell.Default.Controls.Internal
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Shell : UserControl
+    public sealed partial class Shell : ShellControl
     {
         private readonly IReadOnlyDictionary<string, Type> _pagesMapping;
         private INavigationService<Control>? _navigationService;

@@ -11,7 +11,6 @@ namespace StrixMusic.Shell.ZuneDesktop.Themes
         public ShellStyle()
         {
             this.InitializeComponent();
-            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
         }
     }
 }
