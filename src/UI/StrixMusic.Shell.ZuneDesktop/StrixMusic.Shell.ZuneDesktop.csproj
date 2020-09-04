@@ -38,6 +38,7 @@
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<None Remove="Assets\Backgrounds\Phoenstrix-Uncropped.png" />
 		<None Remove="Assets\Backgrounds\Phoenstrix.png" />
 		<None Remove="Assets\Quickplay-Background.png" />
 		<None Remove="Controls\QuickplayContent.xaml" />
@@ -69,6 +70,7 @@
 		<UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+	  <SplashScreen Include="Assets\Backgrounds\Phoenstrix-Uncropped.png" />
 	  <Content Include="Assets\Backgrounds\Phoenstrix.png" />
 	  <Content Include="Assets\Quickplay-Background.png" />
 	</ItemGroup>

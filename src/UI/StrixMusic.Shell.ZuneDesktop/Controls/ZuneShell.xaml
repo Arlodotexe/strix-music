@@ -9,6 +9,7 @@
     xmlns:local="using:StrixMusic.Shell.ZuneDesktop.Controls"
     x:Name="RootControl" RequestedTheme="Dark">
 
+    
     <UserControl.Resources>
         <Storyboard x:Name="EnterDarkTheme">
             <DoubleAnimation Storyboard.TargetName="DarkBackground" Storyboard.TargetProperty="Opacity"
@@ -26,7 +27,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Rectangle x:Name="BackgroundImage" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity=".1">
+        <Rectangle x:Name="BackgroundImage" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity=".1" Grid.RowSpan="2">
             <Rectangle.Fill>
                 <ImageBrush ImageSource="ms-appx:///StrixMusic.Shell.ZuneDesktop/Assets/Backgrounds/Phoenstrix.png" AlignmentX="Right" Stretch="Uniform"/>
             </Rectangle.Fill>
