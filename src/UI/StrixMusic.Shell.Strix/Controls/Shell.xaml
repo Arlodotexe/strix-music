@@ -51,11 +51,13 @@
         </VisualStateManager.VisualStateGroups>
         <local:Drawer>
             <local:Drawer.TopBarContent>
-                <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}" Height="96" Margin="0,12,0,0">
+                <Grid Background="{ThemeResource AcrylicBarBackgroundBrush}" Height="96">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
+                    
+                    <Grid x:Name="CustomTitleBar" Background="Transparent" Grid.RowSpan="2"/>
 
                     <Grid HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>

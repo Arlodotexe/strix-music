@@ -33,6 +33,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
         protected override void SetupTitleBar()
         {
 #if NETFX_CORE
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             Window.Current.SetTitleBar(CustomTitleBar);
             ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.ButtonBackgroundColor = Colors.Transparent;

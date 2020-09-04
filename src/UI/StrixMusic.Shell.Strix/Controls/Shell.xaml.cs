@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Services.Navigation;
 using StrixMusic.Shell.Default.Controls;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -37,6 +39,15 @@ namespace StrixMusic.Shell.Strix.Controls
             {
                 { typeof(SettingsViewControl), nameof(OverlayOpenedPadded) },
             };
+        }
+
+        /// <inheritdoc/>
+        protected override void SetupTitleBar()
+        {
+            base.SetupTitleBar();
+#if NETFX_CORE
+            Window.Current.SetTitleBar(CustomTitleBar);
+#endif
         }
 
         private void Shell_BackRequested(object sender, EventArgs e)
