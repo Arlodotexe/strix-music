@@ -8,7 +8,10 @@
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Dark">
             <SolidColorBrush x:Key="ZuneBackground" Color="#11090F"/>
+            <UI:Color x:Key="ZuneBackgroundColor">#11090F</UI:Color>
             <SolidColorBrush x:Key="ZuneDarkBackground" Color="#11090F"/>
+            <UI:Color x:Key="ZuneDarkBackgroundColor">#11090F</UI:Color>
+            <SolidColorBrush x:Key="ZuneLightBackground" Color="#FFFFFF"/>
             <UI:Color x:Key="ZuneLightBackgroundColor">#FFFFFF</UI:Color>
 
             <SolidColorBrush x:Key="Foreground" Color="#FFFFFF"/>
@@ -34,7 +37,10 @@
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush x:Key="ZuneBackground" Color="#FFFFFF"/>
+            <UI:Color x:Key="ZuneBackgroundColor">#FFFFFF</UI:Color>
             <SolidColorBrush x:Key="ZuneDarkBackground" Color="#11090F"/>
+            <UI:Color x:Key="ZuneDarkBackgroundColor">#11090F</UI:Color>
+            <SolidColorBrush x:Key="ZuneLightBackground" Color="#FFFFFF"/>
             <UI:Color x:Key="ZuneLightBackgroundColor">#FFFFFF</UI:Color>
 
             <SolidColorBrush x:Key="Foreground" Color="#000000"/>
@@ -58,11 +64,13 @@
             <SolidColorBrush x:Key="SliderPlayedBackground" Color="#000000"/>
             <SolidColorBrush x:Key="SliderRemainingBackground" Color="#40000000"/>
         </ResourceDictionary>
-        
-        
+
         <ResourceDictionary x:Key="Default">
             <SolidColorBrush x:Key="ZuneBackground" Color="#11090F"/>
+            <UI:Color x:Key="ZuneBackgroundColor">#11090F</UI:Color>
             <SolidColorBrush x:Key="ZuneDarkBackground" Color="#11090F"/>
+            <UI:Color x:Key="ZuneDarkBackgroundColor">#11090F</UI:Color>
+            <SolidColorBrush x:Key="ZuneLightBackground" Color="#FFFFFF"/>
             <UI:Color x:Key="ZuneLightBackgroundColor">#FFFFFF</UI:Color>
 
             <SolidColorBrush x:Key="Foreground" Color="#000000"/>
@@ -88,8 +96,11 @@
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="ZuneBackground" Color="#FFFFFF"/>
+            <UI:Color x:Key="ZuneBackgroundColor">#FFFFFF</UI:Color>
             <SolidColorBrush x:Key="ZuneDarkBackground" Color="#11090F"/>
-            <UI:Color x:Key="ZuneLightBackgroundColor">#000000</UI:Color>
+            <UI:Color x:Key="ZuneDarkBackgroundColor">#11090F</UI:Color>
+            <SolidColorBrush x:Key="ZuneLightBackground" Color="#FFFFFF"/>
+            <UI:Color x:Key="ZuneLightBackgroundColor">#FFFFFF</UI:Color>
 
             <SolidColorBrush x:Key="Foreground" Color="#000000"/>
             <UI:Color x:Key="ForegroundColor">#000000</UI:Color>
