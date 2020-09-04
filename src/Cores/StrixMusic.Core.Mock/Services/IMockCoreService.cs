@@ -11,7 +11,7 @@ namespace StrixMusic.Core.Mock.Services
     /// <summary>
     /// Service to get mock data
     /// </summary>
-    public interface IMockCoreService
+    public interface IMockCoreDataService
     {
         /// <summary>
         /// This method returns the artist

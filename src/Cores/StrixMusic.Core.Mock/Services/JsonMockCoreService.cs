@@ -15,19 +15,19 @@ namespace StrixMusic.Core.Mock.Services
     /// <summary>
     /// Service to get mock json data
     /// </summary>
-    public class MockJsonService : IMockCoreService
+    public class JsonMockCoreService : IMockCoreDataService
     {
-        private static MockJsonService _instance;
+        private static JsonMockCoreService _instance;
 
-        private MockJsonService()
+        private JsonMockCoreService()
         {
         }
 
         /// <inheritdoc />
-        public static MockJsonService GetInstance()
+        public static JsonMockCoreService GetInstance()
         {
             if (_instance == null)
-                _instance = new MockJsonService();
+                _instance = new JsonMockCoreService();
             return _instance;
         }
 

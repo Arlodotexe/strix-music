@@ -13,25 +13,25 @@ using StrixMusic.CoreInterfaces.Interfaces;
 namespace StrixMusic.Core.Mock.Services
 {
     /// <inheritdoc />
-    public class MusicBrainzMockCoreService : IMockCoreService
+    public class MusicBrainzMockCoreDataService : IMockCoreDataService
     {
-        private static MusicBrainzMockCoreService _instance;
+        private static MusicBrainzMockCoreDataService _instance;
         private MusicBrainzClient _musicBrainzClient;
 
         /// <summary>
         /// Init MusicBrainzClient
         /// </summary>
-        private MusicBrainzMockCoreService()
+        private MusicBrainzMockCoreDataService()
         {
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
             _musicBrainzClient = new MusicBrainzClient();
         }
 
         /// <inheritdoc />
-        public static MusicBrainzMockCoreService GetInstance()
+        public static MusicBrainzMockCoreDataService GetInstance()
         {
             if (_instance == null)
-                _instance = new MusicBrainzMockCoreService();
+                _instance = new MusicBrainzMockCoreDataService();
             return _instance;
         }
 
