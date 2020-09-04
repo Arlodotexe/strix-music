@@ -12,19 +12,21 @@ using StrixMusic.CoreInterfaces.Interfaces;
 
 namespace StrixMusic.Core.Mock.Services
 {
+    /// We don't need this @amaid, see chat logs.
     /// <inheritdoc />
     public class MusicBrainzMockCoreService : IMockCoreService
     {
+        // No singletons!!
+        // private MusicBrainzClient _musicBrainzClient;
         private static MusicBrainzMockCoreService _instance;
-        private MusicBrainzClient _musicBrainzClient;
 
         /// <summary>
         /// Init MusicBrainzClient
         /// </summary>
         private MusicBrainzMockCoreService()
         {
+            // _musicBrainzClient = new MusicBrainzClient();
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
-            _musicBrainzClient = new MusicBrainzClient();
         }
 
         /// <inheritdoc />
@@ -38,7 +40,7 @@ namespace StrixMusic.Core.Mock.Services
         /// <inheritdoc />
         public async Task<IReadOnlyList<IArtist>> GetArtistsAsync()
         {
-            var lst = new List<IArtist>();
+            /*var lst = new List<IArtist>();
             var artistList = await _musicBrainzClient.Artists.SearchAsync("*", 1000);
             return artistList.Items.Select(c =>
              {
@@ -47,28 +49,32 @@ namespace StrixMusic.Core.Mock.Services
                      MockName = c.Name,
                      Id = c.Id,
                  };
-             }).ToList();
+             }).ToList();*/
+
+            return null;
         }
 
         /// <inheritdoc />
         public async Task<IReadOnlyList<IAlbum>> GetAlbumsAsync()
         {
-            var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1000);
-            return releases.Items.Select(c =>
-            {
-                return new MockAlbum()
-                {
-                    MockId = c.Id,
-                    NameJson = c.Title,
-                    MockDescription = c.TextRepresentation.Script
-                };
-            }).ToList();
+            /* var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1000);
+             return releases.Items.Select(c =>
+             {
+                 return new MockAlbum()
+                 {
+                     MockId = c.Id,
+                     NameJson = c.Title,
+                     MockDescription = c.TextRepresentation.Script
+                 };
+             }).ToList();*/
+
+            return null;
         }
 
         /// <inheritdoc />
         public async Task<IReadOnlyList<ITrack>> GetTracks()
         {
-            var releases = await _musicBrainzClient.Recordings.SearchAsync("*", 1000);
+            //var releases = await _musicBrainzClient.Recordings.SearchAsync("*", 1000);
             return null;
         }
 
