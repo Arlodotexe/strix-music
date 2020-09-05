@@ -62,7 +62,7 @@ namespace StrixMusic.Core.Mock.Services
                 {
                     MockId = c.Id,
                     NameJson = c.Title,
-                    MockDescription = c.TextRepresentation.Script
+                    MockDescription = c.TextRepresentation.Script,
                 };
             }).ToList();
         }
@@ -70,8 +70,15 @@ namespace StrixMusic.Core.Mock.Services
         /// <inheritdoc />
         public async Task<IReadOnlyList<ITrack>> GetTracks()
         {
-            var releases = await _musicBrainzClient.Recordings.SearchAsync("*", 1000);
-            return null;
+            var recordings = await _musicBrainzClient.Recordings.SearchAsync("*", 1000);
+            return recordings.Items.Select(c =>
+            {
+                return new MockTrack()
+                {
+                    TitleJson = c.Title,
+                    Id = c.Id,
+                };
+            }).ToList();
         }
 
         /// <inheritdoc/>
