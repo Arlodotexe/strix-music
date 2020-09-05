@@ -40,6 +40,7 @@
 	<ItemGroup>
 		<None Remove="Assets\Backgrounds\Bloom.png" />
 		<None Remove="Assets\Backgrounds\Bubbles.png" />
+		<None Remove="Assets\Backgrounds\Cells.png" />
 		<None Remove="Assets\Backgrounds\Meadow.png" />
 		<None Remove="Assets\Backgrounds\Phoenstrix-Uncropped.png" />
 		<None Remove="Assets\Backgrounds\RobotOwl.png" />
@@ -74,9 +75,11 @@
 		<UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+	  <SplashScreen Include="Assets\Backgrounds\Cells.png" />
 	  <SplashScreen Include="Assets\Backgrounds\Phoenstrix-Uncropped.png" />
 	  <Content Include="Assets\Backgrounds\Bloom.png" />
 	  <Content Include="Assets\Backgrounds\Bubbles.png" />
+	  <Content Include="Assets\Backgrounds\Cells.png" />
 	  <Content Include="Assets\Backgrounds\Meadow.png" />
 	  <Content Include="Assets\Backgrounds\RobotOwl.png" />
 	  <Content Include="Assets\Backgrounds\Shards.png" />
