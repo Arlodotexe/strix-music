@@ -79,6 +79,17 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
             RootControl.RequestedTheme = theme;
             Storyboard transition = theme == ElementTheme.Dark ? EnterDarkTheme : LeaveDarkTheme;
             transition.Begin();
+
+            if (theme == ElementTheme.Dark)
+            {
+                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                titleBar.ButtonForegroundColor = Colors.White;
+            }
+            else
+            {
+                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                titleBar.ButtonForegroundColor = Colors.Black;
+            }
         }
 
         private void SetupIoc()
