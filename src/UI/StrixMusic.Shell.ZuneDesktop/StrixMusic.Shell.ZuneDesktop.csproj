@@ -42,9 +42,9 @@
 		<None Remove="Assets\Backgrounds\Bubbles.png" />
 		<None Remove="Assets\Backgrounds\Cells.png" />
 		<None Remove="Assets\Backgrounds\Meadow.png" />
-		<None Remove="Assets\Backgrounds\Phoenstrix-Uncropped.png" />
 		<None Remove="Assets\Backgrounds\RobotOwl.png" />
 		<None Remove="Assets\Backgrounds\Shards.png" />
+		<None Remove="Assets\Backgrounds\Wired.png" />
 		<None Remove="Assets\Quickplay-Background.png" />
 		<None Remove="Controls\QuickplayContent.xaml" />
 		<None Remove="Controls\ZuneShell.xaml" />
@@ -75,8 +75,7 @@
 		<UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <SplashScreen Include="Assets\Backgrounds\Cells.png" />
-	  <SplashScreen Include="Assets\Backgrounds\Phoenstrix-Uncropped.png" />
+	  <Content Include="Assets\Backgrounds\Wired.png" />
 	  <Content Include="Assets\Backgrounds\Bloom.png" />
 	  <Content Include="Assets\Backgrounds\Bubbles.png" />
 	  <Content Include="Assets\Backgrounds\Cells.png" />
