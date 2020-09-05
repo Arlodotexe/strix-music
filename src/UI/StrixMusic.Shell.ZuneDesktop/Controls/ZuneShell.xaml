@@ -29,7 +29,7 @@
 
         <Rectangle x:Name="BackgroundImage" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Opacity=".1" Grid.RowSpan="2">
             <Rectangle.Fill>
-                <ImageBrush ImageSource="ms-appx:///StrixMusic.Shell.ZuneDesktop/Assets/Backgrounds/Phoenstrix.png" AlignmentX="Right" Stretch="Uniform"/>
+                <ImageBrush ImageSource="ms-appx:///StrixMusic.Shell.ZuneDesktop/Assets/Backgrounds/RobotOwl.png" AlignmentX="Right" Stretch="UniformToFill"/>
             </Rectangle.Fill>
         </Rectangle>
 

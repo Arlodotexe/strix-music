@@ -38,8 +38,10 @@
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<None Remove="Assets\Backgrounds\Bloom.png" />
 		<None Remove="Assets\Backgrounds\Phoenstrix-Uncropped.png" />
-		<None Remove="Assets\Backgrounds\Phoenstrix.png" />
+		<None Remove="Assets\Backgrounds\RobotOwl.png" />
+		<None Remove="Assets\Backgrounds\Shards.png" />
 		<None Remove="Assets\Quickplay-Background.png" />
 		<None Remove="Controls\QuickplayContent.xaml" />
 		<None Remove="Controls\ZuneShell.xaml" />
@@ -71,7 +73,9 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <SplashScreen Include="Assets\Backgrounds\Phoenstrix-Uncropped.png" />
-	  <Content Include="Assets\Backgrounds\Phoenstrix.png" />
+	  <Content Include="Assets\Backgrounds\Bloom.png" />
+	  <Content Include="Assets\Backgrounds\RobotOwl.png" />
+	  <Content Include="Assets\Backgrounds\Shards.png" />
 	  <Content Include="Assets\Quickplay-Background.png" />
 	</ItemGroup>
 	<ItemGroup>
