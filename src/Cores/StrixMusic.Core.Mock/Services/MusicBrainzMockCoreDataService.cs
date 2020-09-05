@@ -68,7 +68,7 @@ namespace StrixMusic.Core.Mock.Services
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyList<ITrack>> GetTracks()
+        public async Task<IReadOnlyList<ITrack>> GetTracksAsync()
         {
             var recordings = await _musicBrainzClient.Recordings.SearchAsync("*", 1000);
             return recordings.Items.Select(c =>
@@ -88,7 +88,8 @@ namespace StrixMusic.Core.Mock.Services
             {
                 AlbumJson = (List<MockAlbum>)await GetAlbumsAsync(),
                 ArtistJson = (List<MockArtist>)await GetArtistsAsync(),
-            };
-        }
+                TracksJson = (List<MockTrack>)await GetTracksAsync();
+        };
     }
+}
 }
