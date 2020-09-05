@@ -88,7 +88,7 @@ namespace StrixMusic.Core.Mock.Services
             {
                 AlbumJson = (List<MockAlbum>)await GetAlbumsAsync(),
                 ArtistJson = (List<MockArtist>)await GetArtistsAsync(),
-                TracksJson = (List<MockTrack>)await GetTracksAsync();
+                TracksJson = (List<MockTrack>)await GetTracksAsync(),
         };
     }
 }
