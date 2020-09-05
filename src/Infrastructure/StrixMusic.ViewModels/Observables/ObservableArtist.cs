@@ -29,6 +29,10 @@ namespace StrixMusic.ViewModels.Bindables
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
+            ChangeImagesAsyncCommand = new AsyncRelayCommand<IReadOnlyList<IImage>>(ChangeImagesAsync);
+            ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
+            ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
             Tracks = new ObservableCollection<ObservableTrack>(_artist.Tracks.Select(x => new ObservableTrack(x)));
             Albums = new ObservableCollection<ObservableAlbum>(_artist.Albums.Select(x => new ObservableAlbum(x)));
@@ -114,6 +118,20 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
+        /// <inheritdoc cref="IPlayable.DurationChanged"/>
+        public event EventHandler<TimeSpan>? DurationChanged
+        {
+            add
+            {
+                _artist.DurationChanged += value;
+            }
+
+            remove
+            {
+                _artist.DurationChanged -= value;
+            }
+        }
+
         private void Artist_PlaybackStateChanged(object sender, PlaybackState e)
         {
             PlaybackState = e;
@@ -166,6 +184,48 @@ namespace StrixMusic.ViewModels.Bindables
         {
             get => _artist.PlaybackState;
             private set => SetProperty(() => _artist.PlaybackState, value);
+        }
+
+        /// <inheritdoc cref="IPlayable.IsPlayAsyncSupported"/>
+        public bool IsPlayAsyncSupported
+        {
+            get => _artist.IsPlayAsyncSupported;
+            set => SetProperty(() => _artist.IsPlayAsyncSupported, value);
+        }
+
+        /// <inheritdoc cref="IPlayable.IsPauseAsyncSupported"/>
+        public bool IsPauseAsyncSupported
+        {
+            get => _artist.IsPauseAsyncSupported;
+            set => SetProperty(() => _artist.IsPauseAsyncSupported, value);
+        }
+
+        /// <inheritdoc cref="IPlayable.IsChangeNameAsyncSupported"/>
+        public bool IsChangeNameAsyncSupported
+        {
+            get => _artist.IsChangeNameAsyncSupported;
+            set => SetProperty(() => _artist.IsChangeNameAsyncSupported, value);
+        }
+
+        /// <inheritdoc cref="IPlayable.IsChangeImagesAsyncSupported"/>
+        public bool IsChangeImagesAsyncSupported
+        {
+            get => _artist.IsChangeImagesAsyncSupported;
+            set => SetProperty(() => _artist.IsChangeImagesAsyncSupported, value);
+        }
+
+        /// <inheritdoc cref="IPlayable.IsChangeDescriptionAsyncSupported"/>
+        public bool IsChangeDescriptionAsyncSupported
+        {
+            get => _artist.IsChangeDescriptionAsyncSupported;
+            set => SetProperty(() => _artist.IsChangeDescriptionAsyncSupported, value);
+        }
+
+        /// <inheritdoc cref="IPlayable.IsChangeDurationAsyncSupported"/>
+        public bool IsChangeDurationAsyncSupported
+        {
+            get => _artist.IsChangeDurationAsyncSupported;
+            set => SetProperty(() => _artist.IsChangeDurationAsyncSupported, value);
         }
 
         /// <inheritdoc cref="IAlbumCollection.AlbumsChanged"/>
@@ -266,44 +326,64 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <summary>
-        /// Attempts to pause the artist, if playing.
-        /// </summary>
-        public IAsyncRelayCommand PauseAsyncCommand { get; }
+        /// <inheritdoc cref="IPlayable.PlayAsync"/>
+        public Task PlayAsync() => _artist.PlayAsync();
 
         /// <inheritdoc cref="IPlayable.PauseAsync"/>
-        public Task PauseAsync()
-        {
-            return _artist.PauseAsync();
-        }
+        public Task PauseAsync() => _artist.PauseAsync();
+
+        /// <inheritdoc cref="IPlayable.Duration" />
+        public TimeSpan Duration => _artist.Duration;
+
+        /// <inheritdoc cref="IArtist.RelatedItems"/>
+        public ObservableCollectionGroup RelatedItems { get; }
+
+        /// <inheritdoc cref="IPlayable.ChangeNameAsync"/>
+        public Task ChangeNameAsync(string name) => _artist.ChangeNameAsync(name);
+
+        /// <inheritdoc cref="IPlayable.ChangeImagesAsync"/>
+        public Task ChangeImagesAsync(IReadOnlyList<IImage> images) => _artist.ChangeImagesAsync(images);
+
+        /// <inheritdoc cref="IPlayable.ChangeDescriptionAsync"/>
+        public Task ChangeDescriptionAsync(string? description) => _artist.ChangeDescriptionAsync(description);
+
+        /// <inheritdoc cref="IPlayable.ChangeDurationAsync"/>
+        public Task ChangeDurationAsync(TimeSpan duration) => _artist.ChangeDurationAsync(duration);
+
+        /// <inheritdoc cref="IAlbumCollection.PopulateAlbumsAsync(int, int)"/>
+        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0) => _artist.PopulateAlbumsAsync(limit, offset);
+
+        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0) => _artist.PopulateTracksAsync(limit, offset);
 
         /// <summary>
         /// Attempts to play the artist.
         /// </summary>
         public IAsyncRelayCommand PlayAsyncCommand { get; }
 
-        /// <inheritdoc cref="IPlayable.Duration" />
-        public TimeSpan Duration => _artist.Duration;
+        /// <summary>
+        /// Attempts to pause the artist, if playing.
+        /// </summary>
+        public IAsyncRelayCommand PauseAsyncCommand { get; }
 
-        /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItems"/>
-        public ObservableCollectionGroup RelatedItems { get; }
+        /// <summary>
+        /// Attempts to change the name of the artist, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
 
-        /// <inheritdoc cref="IPlayable.PlayAsync"/>
-        public Task PlayAsync()
-        {
-            return _artist.PlayAsync();
-        }
+        /// <summary>
+        /// Attempts to change the images for the artist, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeImagesAsyncCommand { get; }
 
-        /// <inheritdoc cref="IAlbumCollection.PopulateAlbumsAsync(int, int)"/>
-        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
-        {
-            return _artist.PopulateAlbumsAsync(limit, offset);
-        }
+        /// <summary>
+        /// Attempts to change the description of the artist, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeDescriptionAsyncCommand { get; }
 
-        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
-        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
-        {
-            return _artist.PopulateTracksAsync(limit, offset);
-        }
+        /// <summary>
+        /// Attempts to change the duration of the artist, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
     }
 }

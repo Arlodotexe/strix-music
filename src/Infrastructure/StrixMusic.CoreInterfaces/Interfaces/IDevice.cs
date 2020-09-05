@@ -16,12 +16,12 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         public ICore SourceCore { get; }
 
         /// <summary>
-        /// Identifies the device
+        /// Identifies the device.
         /// </summary>
         string Id { get; }
 
         /// <summary>
-        /// The displayed name of this device
+        /// The displayed name of this device.
         /// </summary>
         string Name { get; }
 
@@ -57,86 +57,130 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// True if the player is using a shuffled track list.
         /// </summary>
-        /// <remarks>If null, the player cannot be shuffled.</remarks>
-        bool? ShuffleState { get; }
+        bool ShuffleState { get; }
 
         /// <inheritdoc cref="Enums.RepeatState"/>
         RepeatState RepeatState { get; }
 
         /// <summary>
-        /// The volume of the device (0-1). If null, the volume cannot be changed.
+        /// The volume of the device (0-1).
         /// </summary>
-        double? VolumePercent { get; }
+        double VolumePercent { get; }
 
         /// <inheritdoc cref="Enums.DeviceType" />
         DeviceType DeviceType { get; }
 
         /// <summary>
-        /// The rate of the playback for the current track. If the playback speed can't be changed, value is <see langword="null"/>
+        /// The rate of the playback for the current track.
         /// </summary>
-        double? PlaybackSpeed { get; }
+        double PlaybackSpeed { get; }
+
+        /// <summary>
+        /// If true, <see cref="ToggleShuffleAsync"/> is supported.
+        /// </summary>
+        bool IsShuffleStateChangedSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="ToggleRepeatAsync"/> is supported.
+        /// </summary>
+        bool IsRepeatStateChangedSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="ChangeVolumeAsync(double)"/> is supported.
+        /// </summary>
+        bool IsChangeVolumeAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="ChangePlaybackSpeedAsync(double)"/> is supported.
+        /// </summary>
+        bool IsChangePlaybackSpeedSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="ResumeAsync()"/> is supported.
+        /// </summary>
+        bool IsResumeAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="PauseAsync()"/> is supported.
+        /// </summary>
+        bool IsPauseAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="NextAsync()"/> is supported.
+        /// </summary>
+        bool IsNextAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="PreviousAsync()"/> is supported.
+        /// </summary>
+        bool IsPreviousAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="SeekAsync(TimeSpan)"/> is supported.
+        /// </summary>
+        bool IsSeekAsyncSupported { get; }
 
         /// <summary>
         /// Attempts to change the playback speed.
         /// </summary>
         /// <param name="speed"></param>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
-        Task ChangePlaybackSpeed(double speed);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ChangePlaybackSpeedAsync(double speed);
 
         /// <summary>
-        /// Resume the device if in the state <see cref="Enums.PlaybackState.Paused"/>.
+        /// Resume the device if in the state <see cref="PlaybackState.Paused"/>.
         /// </summary>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ResumeAsync();
 
         /// <summary>
-        /// Pauses the device if in the state <see cref="Enums.PlaybackState.Playing"/>
+        /// Pauses the device if in the state <see cref="PlaybackState.Playing"/>
         /// </summary>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task PauseAsync();
 
         /// <summary>
         /// Advances to the next track. If there is no next track, playback is paused.
         /// </summary>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task NextAsync();
 
         /// <summary>
         /// Goes to the previous track.
         /// </summary>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task PreviousAsync();
 
         /// <summary>
         /// Seeks the track to a given timestamp.
         /// </summary>
-        /// <param name="position">Time in milliseconds to seek the song to.</param>
+        /// <param name="position">Time to seek the song to.</param>
         /// <returns><see langword="true"/> if the <see cref="ITrack"/> was seeked to successfully, <see langword="false"/> otherwise.</returns>
-        Task SeekAsync(long position);
+        Task SeekAsync(TimeSpan position);
 
         /// <summary>
         /// Changes the volume
         /// </summary>
         /// <param name="volume">The volume of the device.</param>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ChangeVolumeAsync(double volume);
 
         /// <summary>
         /// Toggles shuffle on or off.
         /// </summary>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ToggleShuffleAsync();
 
         /// <summary>
         /// Asks the device to toggle to the next repeat state.
         /// </summary>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ToggleRepeatAsync();
 
         /// <summary>
         /// Switches to this device.
         /// </summary>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task SwitchToAsync();
 
         /// <summary>
@@ -172,7 +216,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Fires when <see cref="ShuffleState"/> changes.
         /// </summary>
-        event EventHandler<bool?> ShuffleStateChanged;
+        event EventHandler<bool> ShuffleStateChanged;
 
         /// <summary>
         /// Fires when <see cref="RepeatState"/> changes.
@@ -182,7 +226,7 @@ namespace StrixMusic.CoreInterfaces.Interfaces
         /// <summary>
         /// Fires when <see cref="VolumePercent"/> changes.
         /// </summary>
-        event EventHandler<double?> VolumePercentChanged;
+        event EventHandler<double> VolumePercentChanged;
 
         /// <summary>
         /// Fires when <see cref="PlaybackSpeed"/> changes.

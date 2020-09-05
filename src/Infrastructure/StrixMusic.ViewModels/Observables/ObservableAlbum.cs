@@ -34,6 +34,10 @@ namespace StrixMusic.ViewModels.Bindables
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
+            ChangeImagesAsyncCommand = new AsyncRelayCommand<IReadOnlyList<IImage>>(ChangeImagesAsync);
+            ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
+            ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
             AttachEvents();
         }
@@ -159,6 +163,48 @@ namespace StrixMusic.ViewModels.Bindables
             private set => SetProperty(() => _album.PlaybackState, value);
         }
 
+        /// <inheritdoc cref="IPlayable.IsPlayAsyncSupported"/>
+        public bool IsPlayAsyncSupported
+        {
+            get => _album.IsPlayAsyncSupported;
+            set => SetProperty(() => _album.IsPlayAsyncSupported, value);
+        }
+
+        /// <inheritdoc cref="IPlayable.IsPauseAsyncSupported"/>
+        public bool IsPauseAsyncSupported
+        {
+            get => _album.IsPauseAsyncSupported;
+            set => SetProperty(() => _album.IsPauseAsyncSupported, value);
+        }
+
+        /// <inheritdoc cref="IPlayable.IsChangeNameAsyncSupported"/>
+        public bool IsChangeNameAsyncSupported
+        {
+            get => _album.IsChangeNameAsyncSupported;
+            set => SetProperty(() => _album.IsChangeNameAsyncSupported, value);
+        }
+
+        /// <inheritdoc cref="IPlayable.IsChangeImagesAsyncSupported"/>
+        public bool IsChangeImagesAsyncSupported
+        {
+            get => _album.IsChangeImagesAsyncSupported;
+            set => SetProperty(() => _album.IsChangeImagesAsyncSupported, value);
+        }
+
+        /// <inheritdoc cref="IPlayable.IsChangeDescriptionAsyncSupported"/>
+        public bool IsChangeDescriptionAsyncSupported
+        {
+            get => _album.IsChangeDescriptionAsyncSupported;
+            set => SetProperty(() => _album.IsChangeDescriptionAsyncSupported, value);
+        }
+
+        /// <inheritdoc cref="IPlayable.IsChangeDurationAsyncSupported"/>
+        public bool IsChangeDurationAsyncSupported
+        {
+            get => _album.IsChangeDurationAsyncSupported;
+            set => SetProperty(() => _album.IsChangeDurationAsyncSupported, value);
+        }
+
         /// <inheritdoc cref="IPlayable.PlaybackStateChanged"/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
@@ -243,29 +289,75 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <summary>
-        /// Attempts to pause the album, if playing.
-        /// </summary>
-        public IAsyncRelayCommand PauseAsyncCommand { get; }
+        /// <inheritdoc cref="IPlayable.DurationChanged"/>
+        public event EventHandler<TimeSpan>? DurationChanged
+        {
+            add
+            {
+                _album.DurationChanged += value;
+            }
+
+            remove
+            {
+                _album.DurationChanged -= value;
+            }
+        }
 
         /// <inheritdoc cref="IPlayable.PauseAsync"/>
         public Task PauseAsync() => _album.PauseAsync();
+
+        /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
+        public int TotalTracksCount => _album.TotalTracksCount;
+
+        /// <inheritdoc cref="IAlbum.RelatedItems"/>
+        public ObservableCollectionGroup RelatedItems { get; }
+
+        /// <inheritdoc cref="IPlayable.PlayAsync"/>
+        public Task PlayAsync() => _album.PlayAsync();
+
+        /// <inheritdoc cref="IPlayable.ChangeNameAsync"/>
+        public Task ChangeNameAsync(string name) => _album.ChangeNameAsync(name);
+
+        /// <inheritdoc cref="IPlayable.ChangeImagesAsync"/>
+        public Task ChangeImagesAsync(IReadOnlyList<IImage> images) => _album.ChangeImagesAsync(images);
+
+        /// <inheritdoc cref="IPlayable.ChangeDescriptionAsync"/>
+        public Task ChangeDescriptionAsync(string? description) => _album.ChangeDescriptionAsync(description);
+
+        /// <inheritdoc cref="IPlayable.ChangeDurationAsync"/>
+        public Task ChangeDurationAsync(TimeSpan duration) => _album.ChangeDurationAsync(duration);
+
+        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0) => _album.PopulateTracksAsync(limit, offset);
 
         /// <summary>
         /// Attempts to play the album.
         /// </summary>
         public IAsyncRelayCommand PlayAsyncCommand { get; }
 
-        /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
-        public int TotalTracksCount => _album.TotalTracksCount;
+        /// <summary>
+        /// Attempts to pause the album, if playing.
+        /// </summary>
+        public IAsyncRelayCommand PauseAsyncCommand { get; }
 
-        /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItems"/>
-        public ObservableCollectionGroup RelatedItems { get; }
+        /// <summary>
+        /// Attempts to change the name of the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
 
-        /// <inheritdoc cref="IPlayable.PlayAsync"/>
-        public Task PlayAsync() => _album.PlayAsync();
+        /// <summary>
+        /// Attempts to change the images for the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeImagesAsyncCommand { get; }
 
-        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
-        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0) => _album.PopulateTracksAsync(limit, offset);
+        /// <summary>
+        /// Attempts to change the description of the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeDescriptionAsyncCommand { get; }
+
+        /// <summary>
+        /// Attempts to change the duration of the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
     }
 }

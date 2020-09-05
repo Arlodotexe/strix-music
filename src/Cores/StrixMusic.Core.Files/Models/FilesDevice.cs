@@ -23,7 +23,7 @@ namespace StrixMusic.Core.Files.Models
         public bool IsActive { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
-        public IPlayableCollectionBase PlaybackContext { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IPlayable PlaybackContext { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public TimeSpan Position => throw new NotImplementedException();
@@ -32,13 +32,13 @@ namespace StrixMusic.Core.Files.Models
         public PlaybackState PlaybackState => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public bool? ShuffleState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool ShuffleState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public RepeatState RepeatState { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
-        public double? VolumePercent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double VolumePercent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
         public DeviceType DeviceType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -50,13 +50,34 @@ namespace StrixMusic.Core.Files.Models
         public ITrack? NowPlaying { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <inheritdoc/>
-        double? IDevice.PlaybackSpeed => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        IPlayable IDevice.PlaybackContext => throw new NotImplementedException();
-
-        /// <inheritdoc/>
         public IReadOnlyList<ITrack> PlaybackQueue => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsShuffleStateChangedSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsRepeatStateChangedSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeVolumeAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangePlaybackSpeedSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsResumeAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsPauseAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsNextAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsPreviousAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsSeekAsyncSupported => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public event EventHandler<bool>? IsActiveChanged
@@ -129,7 +150,7 @@ namespace StrixMusic.Core.Files.Models
         }
 
         /// <inheritdoc/>
-        public event EventHandler<bool?>? ShuffleStateChanged
+        public event EventHandler<bool>? ShuffleStateChanged
         {
             add
             {
@@ -157,7 +178,7 @@ namespace StrixMusic.Core.Files.Models
         }
 
         /// <inheritdoc/>
-        public event EventHandler<double?>? VolumePercentChanged;
+        public event EventHandler<double>? VolumePercentChanged;
 
         /// <inheritdoc/>
         public event EventHandler<double>? PlaybackSpeedChanged;
@@ -166,7 +187,7 @@ namespace StrixMusic.Core.Files.Models
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? PlaybackQueueChanged;
 
         /// <inheritdoc/>
-        public Task ChangePlaybackSpeed(double speed)
+        public Task ChangePlaybackSpeedAsync(double speed)
         {
             throw new NotImplementedException();
         }
@@ -221,6 +242,12 @@ namespace StrixMusic.Core.Files.Models
 
         /// <inheritdoc/>
         public Task ToggleShuffleAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task SeekAsync(TimeSpan position)
         {
             throw new NotImplementedException();
         }

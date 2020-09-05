@@ -107,6 +107,48 @@ namespace StrixMusic.ViewModels.MergedWrappers
         public IPlayableCollectionGroup RelatedItems => _preferredSource.RelatedItems;
 
         /// <inheritdoc/>
+        public bool IsChangeArtistsAsyncSupported => _preferredSource.IsChangeArtistsAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeAlbumAsyncSupported => _preferredSource.IsChangeAlbumAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeDatePublishedAsyncSupported => _preferredSource.IsChangeDatePublishedAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeGenresAsyncSupported => _preferredSource.IsChangeGenresAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeTrackNumberAsyncSupported => _preferredSource.IsChangeTrackNumberAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeLanguageAsyncSupported => _preferredSource.IsChangeLanguageAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeLyricsAsyncSupported => _preferredSource.IsChangeLyricsAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeIsExplicitAsyncSupported => _preferredSource.IsChangeIsExplicitAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsPauseAsyncSupported => _preferredSource.IsPauseAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeNameAsyncSupported => _preferredSource.IsChangeNameAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeImagesAsyncSupported => _preferredSource.IsChangeImagesAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+
+        /// <inheritdoc/>
+        public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged
         {
             add
@@ -303,6 +345,20 @@ namespace StrixMusic.ViewModels.MergedWrappers
         }
 
         /// <inheritdoc/>
+        public event EventHandler<TimeSpan>? DurationChanged
+        {
+            add
+            {
+                _preferredSource.DurationChanged += value;
+            }
+
+            remove
+            {
+                _preferredSource.DurationChanged -= value;
+            }
+        }
+
+        /// <inheritdoc/>
         public Task PauseAsync()
         {
             return _preferredSource.PauseAsync();
@@ -334,5 +390,77 @@ namespace StrixMusic.ViewModels.MergedWrappers
 
         /// <inheritdoc/>
         public override int GetHashCode() => _preferredSource.Id.GetHashCode();
+
+        /// <inheritdoc/>
+        public Task ChangeArtistsAsync(IReadOnlyList<IArtist>? artists)
+        {
+            return _preferredSource.ChangeArtistsAsync(artists);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeAlbumAsync(IAlbum? albums)
+        {
+            return _preferredSource.ChangeAlbumAsync(albums);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDatePublishedAsync(DateTime datePublished)
+        {
+            return _preferredSource.ChangeDatePublishedAsync(datePublished);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeGenresAsync(IReadOnlyList<string>? genres)
+        {
+            return _preferredSource.ChangeGenresAsync(genres);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeTrackNumberAsync(int? trackNumber)
+        {
+            return _preferredSource.ChangeTrackNumberAsync(trackNumber);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeLanguageAsync(CultureInfo language)
+        {
+            return _preferredSource.ChangeLanguageAsync(language);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeLyricsAsync(ILyrics? lyrics)
+        {
+            return _preferredSource.ChangeLyricsAsync(lyrics);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeIsExplicitAsync(bool isExplicit)
+        {
+            return _preferredSource.ChangeIsExplicitAsync(isExplicit);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeNameAsync(string name)
+        {
+            return _preferredSource.ChangeNameAsync(name);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
+        {
+            return _preferredSource.ChangeImagesAsync(images);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDescriptionAsync(string? description)
+        {
+            return _preferredSource.ChangeDescriptionAsync(description);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDurationAsync(TimeSpan duration)
+        {
+            return _preferredSource.ChangeDurationAsync(duration);
+        }
     }
 }

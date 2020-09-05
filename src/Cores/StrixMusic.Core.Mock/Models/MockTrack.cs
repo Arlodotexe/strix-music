@@ -76,6 +76,48 @@ namespace StrixMusic.Core.Mock.Models
         public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc/>
+        public bool IsChangeArtistsAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeAlbumAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeDatePublishedAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeGenresAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeTrackNumberAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeLanguageAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeLyricsAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeIsExplicitAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsPlayAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsPauseAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeNameAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeImagesAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeDescriptionAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public bool IsChangeDurationAsyncSupported => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged;
 
         /// <inheritdoc/>
@@ -116,6 +158,81 @@ namespace StrixMusic.Core.Mock.Models
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<TimeSpan> DurationChanged;
+
+        /// <inheritdoc/>
+        public Task ChangeAlbumAsync(IAlbum albums)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeArtistsAsync(IReadOnlyList<IArtist> artists)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDatePublishedAsync(DateTime datePublished)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDescriptionAsync(string description)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDurationAsync(TimeSpan duration)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeGenresAsync(IReadOnlyList<string> genres)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeIsExplicitAsync(bool isExplicit)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeLanguageAsync(CultureInfo language)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeLyricsAsync(ILyrics lyrics)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeTrackNumberAsync(int? trackNumber)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc/>
         public Task PauseAsync()

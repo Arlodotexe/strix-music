@@ -27,9 +27,14 @@ namespace StrixMusic.ViewModels.Bindables
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
+            ChangeImagesAsyncCommand = new AsyncRelayCommand<IReadOnlyList<IImage>>(ChangeImagesAsync);
+            ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
+            ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
             if (_playlist.Owner != null)
                 _owner = new ObservableUserProfile(_playlist.Owner);
+
             Tracks = new ObservableCollection<ObservableTrack>(_playlist.Tracks.Select(x => new ObservableTrack(x)));
             Images = new ObservableCollection<IImage>(_playlist.Images);
             RelatedItems = new ObservableCollectionGroup(_playlist.RelatedItems);
@@ -43,7 +48,6 @@ namespace StrixMusic.ViewModels.Bindables
             _playlist.DescriptionChanged += Playlist_DescriptionChanged;
             _playlist.ImagesChanged += Playlist_ImagesChanged;
             _playlist.NameChanged += Playlist_NameChanged;
-            _playlist.OwnerChanged += Playlist_OwnerChanged;
             _playlist.PlaybackStateChanged += Playlist_PlaybackStateChanged;
             _playlist.TracksChanged += Playlist_TracksChanged;
             _playlist.UrlChanged += Playlist_UrlChanged;
@@ -54,7 +58,6 @@ namespace StrixMusic.ViewModels.Bindables
             _playlist.DescriptionChanged -= Playlist_DescriptionChanged;
             _playlist.ImagesChanged -= Playlist_ImagesChanged;
             _playlist.NameChanged -= Playlist_NameChanged;
-            _playlist.OwnerChanged -= Playlist_OwnerChanged;
             _playlist.PlaybackStateChanged -= Playlist_PlaybackStateChanged;
             _playlist.TracksChanged -= Playlist_TracksChanged;
             _playlist.UrlChanged -= Playlist_UrlChanged;
@@ -166,22 +169,8 @@ namespace StrixMusic.ViewModels.Bindables
         /// <inheritdoc cref="IPlayable.Duration"/>
         public TimeSpan Duration => _playlist.Duration;
 
-        /// <inheritdoc cref="IRelatedCollectionGroups.RelatedItems"/>
+        /// <inheritdoc cref="IPlaylist.RelatedItems"/>
         public ObservableCollectionGroup RelatedItems { get; }
-
-        /// <inheritdoc cref="IPlaylist.OwnerChanged"/>
-        public event EventHandler<IUserProfile> OwnerChanged
-        {
-            add
-            {
-                _playlist.OwnerChanged += value;
-            }
-
-            remove
-            {
-                _playlist.OwnerChanged -= value;
-            }
-        }
 
         /// <inheritdoc cref="ITrackCollection.TracksChanged"/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
@@ -267,32 +256,55 @@ namespace StrixMusic.ViewModels.Bindables
             }
         }
 
-        /// <summary>
-        /// Attempts to pause the playlist.
-        /// </summary>
-        public IAsyncRelayCommand PauseAsyncCommand { get; }
-
         /// <inheritdoc cref="IPlayable.PauseAsync"/>
-        public Task PauseAsync()
-        {
-            return _playlist.PauseAsync();
-        }
+        public Task PauseAsync() => _playlist.PauseAsync();
+
+        /// <inheritdoc cref="IPlayable.PlayAsync"/>
+        public Task PlayAsync() => _playlist.PlayAsync();
+
+        /// <inheritdoc cref="IPlayable.ChangeNameAsync"/>
+        public Task ChangeNameAsync(string name) => _playlist.ChangeNameAsync(name);
+
+        /// <inheritdoc cref="IPlayable.ChangeImagesAsync"/>
+        public Task ChangeImagesAsync(IReadOnlyList<IImage> images) => _playlist.ChangeImagesAsync(images);
+
+        /// <inheritdoc cref="IPlayable.ChangeDescriptionAsync"/>
+        public Task ChangeDescriptionAsync(string? description) => _playlist.ChangeDescriptionAsync(description);
+
+        /// <inheritdoc cref="IPlayable.ChangeDurationAsync"/>
+        public Task ChangeDurationAsync(TimeSpan duration) => _playlist.ChangeDurationAsync(duration);
+
+        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync"/>
+        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0) => _playlist.PopulateTracksAsync(limit, offset);
 
         /// <summary>
         /// Attempts to play the playlist.
         /// </summary>
         public IAsyncRelayCommand PlayAsyncCommand { get; }
 
-        /// <inheritdoc cref="IPlayable.PlayAsync"/>
-        public Task PlayAsync()
-        {
-            return _playlist.PlayAsync();
-        }
+        /// <summary>
+        /// Attempts to pause the playlist.
+        /// </summary>
+        public IAsyncRelayCommand PauseAsyncCommand { get; }
 
-        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync"/>
-        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
-        {
-            return _playlist.PopulateTracksAsync(limit, offset);
-        }
+        /// <summary>
+        /// Attempts to change the name of the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
+
+        /// <summary>
+        /// Attempts to change the images for the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeImagesAsyncCommand { get; }
+
+        /// <summary>
+        /// Attempts to change the description of the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeDescriptionAsyncCommand { get; }
+
+        /// <summary>
+        /// Attempts to change the duration of the album, if supported.
+        /// </summary>
+        public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
     }
 }
