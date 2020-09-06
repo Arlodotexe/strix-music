@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Resources;
 using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
 using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces.Interfaces;
 
@@ -12,6 +14,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// </summary>
     public class MusicBrainzLibrary : MusicBrainzCollectionGroupBase, ILibrary
     {
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzLibrary"/> class.
         /// </summary>
@@ -59,15 +62,29 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public override Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
+        public override async Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
-            throw new NotImplementedException();
+            var artists = await new MusicBrainzClient().Releases.SearchAsync("*", limit, offset);
+            var list = new List<IAlbum>();
+            foreach (var item in artists.Items)
+            {
+                list.Add(new MusicBrainzAlbum(item, SourceCore));
+            }
+
+            return list;
         }
 
         /// <inheritdoc/>
-        public override Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
+        public override async Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
         {
-            throw new NotImplementedException();
+            var artists = await new MusicBrainzClient().Artists.SearchAsync("*", limit, offset);
+            var list = new List<IArtist>();
+            foreach (var item in artists.Items)
+            {
+                list.Add(new MusicBrainzArtist(item, SourceCore));
+            }
+
+            return list;
         }
 
         /// <inheritdoc/>
@@ -83,9 +100,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public override Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
+        public async override Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
-            throw new NotImplementedException();
+            var recordings = await new MusicBrainzClient().Recordings.SearchAsync("*", limit, offset);
+            var list = new List<ITrack>();
+            foreach (var item in recordings.Items)
+            {
+                list.Add(new MusicBrainzTrack(item, SourceCore, new MusicBrainzAlbum(item.Releases.FirstOrDefault(), SourceCore, new MusicBrainzArtist(item.Releases.FirstOrDefault().Relations.FirstOrDefault().Artist, SourceCore))));
+            }
+
+            return list;
         }
     }
 }

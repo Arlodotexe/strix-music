@@ -1,55 +1,59 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Hqub.MusicBrainz.API.Entities;
+using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <inheritdoc cref="IAlbum"/>
     public class MusicBrainzAlbum : IAlbum
     {
-        /// <inheritdoc/>
-        [JsonProperty("id")]
-        public string MockId { get; set; } = string.Empty;
+        private readonly Release _release;
+
+        private readonly List<ITrack> _albums;
+
+        private readonly IArtist _artist;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MusicBrainzAlbum"/> class.
+        /// </summary>
+        /// <param name="release"></param>
+        /// <param name="sourceCore"></param>
+        public MusicBrainzAlbum(Release release, ICore sourceCore, IArtist artist)
+        {
+            SourceCore = sourceCore;
+            _release = release;
+            _artist = artist;
+            _albums = new List<ITrack>();
+        }
 
         /// <inheritdoc/>
-        [JsonProperty("name")]
-        public string NameJson { get; set; } = string.Empty;
-
-        /// <inheritdoc/>
-        [JsonProperty("description")]
-        public string MockDescription { get; set; } = string.Empty;
-
-        /// <inheritdoc/>
-        [JsonProperty("track_ids")]
-        public IEnumerable<string>? TrackIds { get; set; }
-
-        /// <inheritdoc/>
-        public IArtist Artist => throw new NotImplementedException();
+        public IArtist Artist => _artist;
 
         /// <inheritdoc/>
         public int TotalTracksCount => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public ICore SourceCore => throw new NotImplementedException();
+        public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public string Id => MockId;
+        public string Id => _release.Id;
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Name => NameJson;
+        public string Name => _release.Title;
 
         /// <inheritdoc/>
         public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Description => MockDescription;
+        public string Description => _release.TextRepresentation.Script;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => throw new NotImplementedException();

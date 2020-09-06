@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
+using Hqub.MusicBrainz.API.Entities;
 using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
@@ -13,6 +14,21 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// <inheritdoc />
     public class MusicBrainzTrack : ITrack
     {
+        private readonly Recording _recording;
+        private readonly IAlbum _album;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MusicBrainzTrack"/> class.
+        /// </summary>
+        /// <param name="recording"></param>
+        /// <param name="sourceCore"></param>
+        public MusicBrainzTrack(Recording recording, ICore sourceCore, IAlbum album)
+        {
+            SourceCore = sourceCore;
+            _recording = recording;
+            _album = album;
+        }
+
         /// <inheritdoc/>
         [JsonProperty("id")]
         public string Id { get; set; } = string.Empty;
@@ -21,6 +37,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         [JsonProperty("title")]
         public string TitleJson { get; set; } = string.Empty;
 
+
         /// <inheritdoc/>
         public TrackType Type => throw new NotImplementedException();
 
@@ -28,7 +45,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IReadOnlyList<IArtist> Artists => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IAlbum Album => throw new NotImplementedException();
+        public IAlbum Album => _album;
 
         /// <inheritdoc/>
         public DateTime? DatePublished => throw new NotImplementedException();
@@ -52,7 +69,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsExplicit => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public ICore SourceCore => throw new NotImplementedException();
+        public ICore SourceCore { get; }
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();
