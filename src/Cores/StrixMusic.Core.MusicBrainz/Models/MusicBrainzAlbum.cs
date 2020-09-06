@@ -1,37 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace StrixMusic.Core.Mock.Models
+namespace StrixMusic.Core.MusicBrainz.Models
 {
-    /// <inheritdoc />
-    public class MockArtist : IArtist
+    /// <inheritdoc cref="IAlbum"/>
+    public class MusicBrainzAlbum : IAlbum
     {
         /// <inheritdoc/>
         [JsonProperty("id")]
-        public string Id { get; set; } = string.Empty;
+        public string MockId { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         [JsonProperty("name")]
-        public string MockName { get; set; } = string.Empty;
+        public string NameJson { get; set; } = string.Empty;
 
         /// <inheritdoc/>
-        [JsonProperty("album_ids")]
-        public List<string>? AlbumIdsJson { get; set; }
+        [JsonProperty("description")]
+        public string MockDescription { get; set; } = string.Empty;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IAlbum> Albums => throw new NotImplementedException();
+        [JsonProperty("track_ids")]
+        public IEnumerable<string>? TrackIds { get; set; }
 
         /// <inheritdoc/>
-        public int TotalAlbumsCount => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public IReadOnlyList<ITrack> Tracks => throw new NotImplementedException();
+        public IArtist Artist => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public int TotalTracksCount => throw new NotImplementedException();
@@ -40,25 +37,28 @@ namespace StrixMusic.Core.Mock.Models
         public ICore SourceCore => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string IdJson => throw new NotImplementedException();
+        public string Id => MockId;
 
         /// <inheritdoc/>
         public Uri Url => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Name => throw new NotImplementedException();
+        public string Name => NameJson;
 
         /// <inheritdoc/>
         public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Description => throw new NotImplementedException();
+        public string Description => MockDescription;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public TimeSpan Duration => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public IReadOnlyList<ITrack> Tracks => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
@@ -82,31 +82,28 @@ namespace StrixMusic.Core.Mock.Models
         public bool IsChangeDurationAsyncSupported => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IAlbum>> AlbumsChanged;
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<ITrack>> TracksChanged;
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<PlaybackState> PlaybackStateChanged;
+        public event EventHandler<string>? NameChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<string> NameChanged;
+        public event EventHandler<string?>? DescriptionChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<string> DescriptionChanged;
+        public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<Uri> UrlChanged;
+        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
+        public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<TimeSpan> DurationChanged;
-
-        /// <inheritdoc/>
-        public Task ChangeDescriptionAsync(string description)
+        public Task ChangeDescriptionAsync(string? description)
         {
             throw new NotImplementedException();
         }
@@ -142,15 +139,9 @@ namespace StrixMusic.Core.Mock.Models
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
         public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new List<ITrack>() as IReadOnlyList<ITrack>);
         }
     }
 }

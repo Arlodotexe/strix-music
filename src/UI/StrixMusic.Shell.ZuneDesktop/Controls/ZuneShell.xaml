@@ -9,8 +9,7 @@
     xmlns:local="using:StrixMusic.Shell.ZuneDesktop.Controls"
     x:Name="RootControl" RequestedTheme="Dark">
 
-    
-    <UserControl.Resources>
+    <default:ShellControl.Resources>
         <Storyboard x:Name="EnterDarkTheme">
             <DoubleAnimation Storyboard.TargetName="DarkBackground" Storyboard.TargetProperty="Opacity"
                              Duration="0:0:0.3" To="1"/>
@@ -19,7 +18,7 @@
             <DoubleAnimation Storyboard.TargetName="DarkBackground" Storyboard.TargetProperty="Opacity"
                              Duration="0:0:0.3" To="0"/>
         </Storyboard>
-    </UserControl.Resources>
+    </default:ShellControl.Resources>
 
     <Grid Background="{ThemeResource ZuneLightBackground}">
         <Grid.RowDefinitions>

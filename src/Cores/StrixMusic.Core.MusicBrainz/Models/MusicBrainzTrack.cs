@@ -8,10 +8,10 @@ using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
-namespace StrixMusic.Core.Mock.Models
+namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <inheritdoc />
-    public class MockTrack : ITrack
+    public class MusicBrainzTrack : ITrack
     {
         /// <inheritdoc/>
         [JsonProperty("id")]
@@ -76,100 +76,100 @@ namespace StrixMusic.Core.Mock.Models
         public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public bool IsChangeArtistsAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeArtistsAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeAlbumAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeAlbumAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDatePublishedAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeDatePublishedAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeGenresAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeGenresAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeTrackNumberAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeTrackNumberAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeLanguageAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeLanguageAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeLyricsAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeLyricsAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeIsExplicitAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeIsExplicitAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => throw new NotImplementedException();
+        public bool IsPlayAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => throw new NotImplementedException();
+        public bool IsPauseAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeNameAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeNameAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeImagesAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeImagesAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDescriptionAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeDescriptionAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDurationAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged;
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<string>> GenresChanged;
+        public event EventHandler<CollectionChangedEventArgs<string>>? GenresChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<IAlbum> AlbumChanged;
+        public event EventHandler<IAlbum?>? AlbumChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<DateTime?> DatePublishedChanged;
+        public event EventHandler<DateTime?>? DatePublishedChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<int?> TrackNumberChanged;
+        public event EventHandler<int?>? TrackNumberChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<int?> PlayCountChanged;
+        public event EventHandler<int?>? PlayCountChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CultureInfo> LanguageChanged;
+        public event EventHandler<CultureInfo?>? LanguageChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<ILyrics> LyricsChanged;
+        public event EventHandler<ILyrics?>? LyricsChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<bool> IsExplicitChanged;
+        public event EventHandler<bool>? IsExplicitChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<PlaybackState> PlaybackStateChanged;
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<string> NameChanged;
+        public event EventHandler<string>? NameChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<string> DescriptionChanged;
+        public event EventHandler<string?>? DescriptionChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<Uri> UrlChanged;
+        public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
+        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<TimeSpan> DurationChanged;
+        public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc/>
-        public Task ChangeAlbumAsync(IAlbum albums)
+        public Task ChangeAlbumAsync(IAlbum? albums)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task ChangeArtistsAsync(IReadOnlyList<IArtist> artists)
+        public Task ChangeArtistsAsync(IReadOnlyList<IArtist>? artists)
         {
             throw new NotImplementedException();
         }
@@ -181,7 +181,7 @@ namespace StrixMusic.Core.Mock.Models
         }
 
         /// <inheritdoc/>
-        public Task ChangeDescriptionAsync(string description)
+        public Task ChangeDescriptionAsync(string? description)
         {
             throw new NotImplementedException();
         }
@@ -193,7 +193,7 @@ namespace StrixMusic.Core.Mock.Models
         }
 
         /// <inheritdoc/>
-        public Task ChangeGenresAsync(IReadOnlyList<string> genres)
+        public Task ChangeGenresAsync(IReadOnlyList<string>? genres)
         {
             throw new NotImplementedException();
         }
@@ -217,7 +217,7 @@ namespace StrixMusic.Core.Mock.Models
         }
 
         /// <inheritdoc/>
-        public Task ChangeLyricsAsync(ILyrics lyrics)
+        public Task ChangeLyricsAsync(ILyrics? lyrics)
         {
             throw new NotImplementedException();
         }

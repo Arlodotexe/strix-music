@@ -2,38 +2,49 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using StrixMusic.Core.Mock.Models;
+using StrixMusic.Core.MusicBrainz.Deserialization;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
-namespace StrixMusic.Core.Mock.Models
+namespace StrixMusic.Core.MusicBrainz.Models
 {
-    /// <summary>
-    /// The lists of tracks in the dummy core's library.
-    /// </summary>
-    public class MockLibrary : MockPlayableCollectionGroupBase
+    /// <inheritdoc/>
+    public class MusicBrainzSearchResults : MusicBrainzCollectionGroupBase, ISearchResults
     {
-        // Json will be here properites here.
-
         /// <summary>
-        /// The lists of tracks in the dummy core's library.
+        /// Initializes a new instance of the <see cref="MusicBrainzSearchResults"/> class.
         /// </summary>
-        [JsonProperty("tracks")]
-        public List<MockTrack>? TracksJson { get; set; }
+        /// <param name="sourceCore"></param>
+        /// <param name="playableCollectionGroup"></param>
+        public MusicBrainzSearchResults(ICore sourceCore)
+            : base(sourceCore)
+        {
+        }
 
-        /// <summary>
-        /// The lists of albums in the dummy core's library.
-        /// </summary>
-        [JsonProperty("albums")]
-        public List<MockAlbum>? AlbumJson { get; set; }
+        /// <inheritdoc/>
+        public override Task ChangeDescriptionAsync(string? description)
+        {
+            throw new NotImplementedException();
+        }
 
-        /// <summary>
-        /// The lists of artists in the dummy core's library.
-        /// </summary>
-        [JsonProperty("artists")]
-        public List<MockArtist>? ArtistJson { get; set; }
+        /// <inheritdoc/>
+        public override Task ChangeDurationAsync(TimeSpan duration)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public override Task ChangeImagesAsync(IReadOnlyList<IImage> images)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public override Task ChangeNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc/>
         public override Task PauseAsync()

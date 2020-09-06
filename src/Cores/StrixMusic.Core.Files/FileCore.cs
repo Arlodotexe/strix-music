@@ -24,7 +24,6 @@ namespace StrixMusic.Core.Files
 
             CoreConfig = new FileCoreConfig(this);
             User = new FileUser(this);
-
         }
 
         /// <inheritdoc/>

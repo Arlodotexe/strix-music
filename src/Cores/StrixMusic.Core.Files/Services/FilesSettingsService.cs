@@ -4,7 +4,7 @@ using StrixMusic.Services.Settings;
 namespace StrixMusic.Core.Files.Services
 {
     /// <summary>
-    /// Handles settings for the <see cref="FileCore"/>.
+    /// Handles settings for the <see cref="Files.FileCore"/>.
     /// </summary>
     public class FilesSettingsService : SettingsServiceBase
     {

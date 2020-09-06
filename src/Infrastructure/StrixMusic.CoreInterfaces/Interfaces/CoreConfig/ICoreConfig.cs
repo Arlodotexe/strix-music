@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
 
 namespace StrixMusic.CoreInterfaces.Interfaces.CoreConfig
 {
@@ -10,6 +10,6 @@ namespace StrixMusic.CoreInterfaces.Interfaces.CoreConfig
         /// <summary>
         /// The services for this instance of the core.
         /// </summary>
-        IServiceCollection Services { get; }
+        IServiceProvider Services { get; }
     }
 }

@@ -116,7 +116,7 @@
       <Project>{dbf0c623-33cf-4db6-bb3b-353045678a70}</Project>
       <Name>StrixMusic.Core.Files</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.Mock\StrixMusic.Core.Mock.csproj">
+    <ProjectReference Include="..\..\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj">
       <Project>{d0618335-d56c-419d-b9fa-98e475338efc}</Project>
       <Name>StrixMusic.Core.Mock</Name>
     </ProjectReference>
