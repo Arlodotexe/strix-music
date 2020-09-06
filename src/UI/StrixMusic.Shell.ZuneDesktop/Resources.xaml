@@ -177,7 +177,7 @@
     
     <Style x:Key="SmallPivotItemStyle" TargetType="PivotHeaderItem">
         <Setter Property="FontSize" Value="12"/>
-        <Setter Property="Padding" Value="4,0"/>
+        <Setter Property="Padding" Value="0,0,8,0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="PivotHeaderItem">
@@ -210,6 +210,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="HeaderText.Foreground" Value="{StaticResource ZuneSmallSelectedPivotHeaderItemBrush}" />
                                         <Setter Target="HeaderText.FontWeight" Value="Black" />
+                                        <Setter Target="HeaderText.CharacterSpacing" Value="0" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="UnselectedPointerOver">
@@ -221,6 +222,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="HeaderText.Foreground" Value="{StaticResource ZuneSmallSelectedPivotHeaderItemBrush}" />
                                         <Setter Target="HeaderText.FontWeight" Value="Black" />
+                                        <Setter Target="HeaderText.CharacterSpacing" Value="0" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="UnselectedPressed">
@@ -232,12 +234,13 @@
                                     <VisualState.Setters>
                                         <Setter Target="HeaderText.Foreground" Value="{StaticResource ZuneSmallSelectedPivotHeaderItemBrush}" />
                                         <Setter Target="HeaderText.FontWeight" Value="Black" />
+                                        <Setter Target="HeaderText.CharacterSpacing" Value="0" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
 
                         </VisualStateManager.VisualStateGroups>
-                        <TextBlock x:Name="HeaderText" Text="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}" Foreground="{StaticResource ZuneSmallUnselectedPivotHeaderItemBrush}" Padding="{TemplateBinding Padding}"/>
+                        <TextBlock x:Name="HeaderText" Text="{TemplateBinding Content}" CharacterSpacing="112" FontSize="{TemplateBinding FontSize}" Foreground="{StaticResource ZuneSmallUnselectedPivotHeaderItemBrush}" Padding="{TemplateBinding Padding}"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
