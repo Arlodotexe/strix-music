@@ -48,6 +48,7 @@
     <None Remove="Themes\ArtistViewStyle.xaml" />
     <None Remove="Themes\HomeStyle.xaml" />
     <None Remove="Themes\NowPlayingBarControl.xaml" />
+    <None Remove="Themes\NowPlayingViewStyle.xaml" />
     <None Remove="Themes\PlayableCollectionListStyle.xaml" />
     <None Remove="Themes\SearchViewStyle.xaml" />
     <None Remove="Themes\SettingsViewStyle.xaml" />
@@ -64,6 +65,7 @@
     <UpToDateCheckInput Remove="Themes\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\HomeStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\NowPlayingBarControl.xaml" />
+    <UpToDateCheckInput Remove="Themes\NowPlayingViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\PlayableCollectionListStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\SearchViewStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\SettingsViewStyle.xaml" />
@@ -77,6 +79,9 @@
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Themes\NowPlayingViewStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Themes\SettingsViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
