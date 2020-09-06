@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using StrixMusic.Core.Mock.Deserialization;
+using StrixMusic.Core.MusicBrainz.Deserialization;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
-namespace StrixMusic.Core.Mock.Models
+namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <inheritdoc/>
-    public class MockSearchResults : MockPlayableCollectionGroupBase, ISearchResults
+    public class MusicBrainzSearchResults : MusicBrainzCollectionGroupBase, ISearchResults
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MockSearchResults"/> class.
+        /// Initializes a new instance of the <see cref="MusicBrainzSearchResults"/> class.
         /// </summary>
         /// <param name="sourceCore"></param>
         /// <param name="playableCollectionGroup"></param>
-        public MockSearchResults(ICore sourceCore)
+        public MusicBrainzSearchResults(ICore sourceCore)
             : base(sourceCore)
         {
         }

@@ -8,21 +8,21 @@ using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
-namespace StrixMusic.Core.Mock.Models
+namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <inheritdoc />
-    public class MockArtist : IArtist
+    public class MusicBrainzArtist : IArtist
     {
         private readonly Artist _artist;
 
         private readonly List<IAlbum> _albums;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MockArtist"/> class.
+        /// Initializes a new instance of the <see cref="MusicBrainzArtist"/> class.
         /// </summary>
         /// <param name="artist"></param>
         /// <param name="sourceCore"></param>
-        public MockArtist(Artist artist, ICore sourceCore)
+        public MusicBrainzArtist(Artist artist, ICore sourceCore)
         {
             SourceCore = sourceCore;
             _artist = artist;

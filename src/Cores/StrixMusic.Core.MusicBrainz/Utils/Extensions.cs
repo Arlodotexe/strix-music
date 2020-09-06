@@ -5,15 +5,15 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using StrixMusic.Core.Mock.Deserialization;
-using StrixMusic.Core.Mock.Models;
+using StrixMusic.Core.MusicBrainz.Deserialization;
+using StrixMusic.Core.MusicBrainz.Models;
 
-namespace StrixMusic.Core.Mock.Deserialization
+namespace StrixMusic.Core.MusicBrainz.Deserialization
 {
     /// <summary>
     /// Deserializes the JSON library, then hooks references up by Ids.
     /// </summary>
-    public static class Extentions
+    public static class Extensions
     {
         /// <summary>
         /// Gets an Embedded Resource as a <see cref="string"/>.

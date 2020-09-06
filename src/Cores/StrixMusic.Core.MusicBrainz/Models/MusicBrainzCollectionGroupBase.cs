@@ -7,16 +7,16 @@ using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
-namespace StrixMusic.Core.Mock.Models
+namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <inheritdoc />
-    public abstract class MockPlayableCollectionGroupBase : IPlayableCollectionGroup
+    public abstract class MusicBrainzCollectionGroupBase : IPlayableCollectionGroup
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MockPlayableCollectionGroupBase"/> class.
+        /// Initializes a new instance of the <see cref="MusicBrainzCollectionGroupBase"/> class.
         /// </summary>
         /// <param name="sourceCore">The instance of the core this object was created in.</param>
-        public MockPlayableCollectionGroupBase(ICore sourceCore)
+        public MusicBrainzCollectionGroupBase(ICore sourceCore)
         {
             SourceCore = sourceCore;
         }

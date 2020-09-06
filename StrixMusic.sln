@@ -48,7 +48,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OwlCore", "src\Libs\OwlCore
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shell.ZuneDesktop", "src\UI\StrixMusic.Shell.ZuneDesktop\StrixMusic.Shell.ZuneDesktop.csproj", "{29E800DF-B67C-46C9-B4A4-C8A2CBA0597F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Core.Mock", "src\Cores\StrixMusic.Core.Mock\StrixMusic.Core.Mock.csproj", "{D0618335-D56C-419D-B9FA-98E475338EFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Core.MusicBrainz", "src\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj", "{D0618335-D56C-419D-B9FA-98E475338EFC}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

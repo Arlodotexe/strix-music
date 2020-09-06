@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.Mock.Models
+namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <inheritdoc cref="IAlbum"/>
-    public class MockAlbum : IAlbum
+    public class MusicBrainzAlbum : IAlbum
     {
         /// <inheritdoc/>
         [JsonProperty("id")]

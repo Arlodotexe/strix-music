@@ -30,7 +30,7 @@ namespace StrixMusic.Shared
                 services.AddSingleton<ISettingsService>(settingsService);
                 services.AddSingleton<ISuperShellService, SuperShellService>();
                 services.AddSingleton<IFileSystemService, FileSystemService>();
-         
+
                 // Todo: If coreRegistry is null, show out of box setup page.
                 var coreRegistry = await settingsService.GetValue<Dictionary<string, Type>>(nameof(SettingsKeys.CoreRegistry));
 

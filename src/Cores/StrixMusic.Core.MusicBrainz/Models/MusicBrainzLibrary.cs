@@ -5,18 +5,18 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StrixMusic.CoreInterfaces.Interfaces;
 
-namespace StrixMusic.Core.Mock.Models
+namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <summary>
     /// The lists of tracks in the dummy core's library.
     /// </summary>
-    public class MockLibrary : MockPlayableCollectionGroupBase, ILibrary
+    public class MusicBrainzLibrary : MusicBrainzCollectionGroupBase, ILibrary
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MockLibrary"/> class.
+        /// Initializes a new instance of the <see cref="MusicBrainzLibrary"/> class.
         /// </summary>
         /// <param name="sourceCore"></param>
-        public MockLibrary(ICore sourceCore)
+        public MusicBrainzLibrary(ICore sourceCore)
             : base(sourceCore)
         {
             SourceCore = sourceCore;

@@ -8,10 +8,10 @@ using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Enums;
 using StrixMusic.CoreInterfaces.Interfaces;
 
-namespace StrixMusic.Core.Mock.Models
+namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <inheritdoc />
-    public class MockTrack : ITrack
+    public class MusicBrainzTrack : ITrack
     {
         /// <inheritdoc/>
         [JsonProperty("id")]

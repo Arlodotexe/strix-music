@@ -4,20 +4,20 @@ using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 
-namespace StrixMusic.Core.Mock.Models
+namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <summary>
     /// MockCore config
     /// </summary>
-    public class MockCoreConfig : ICoreConfig
+    public class MusicBrainzCoreConfig : ICoreConfig
     {
         /// <inheritdoc/>
         public IServiceProvider Services { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MockCoreConfig"/> class.
+        /// Initializes a new instance of the <see cref="MusicBrainzCoreConfig"/> class.
         /// </summary>
-        public MockCoreConfig(ICore sourceCore)
+        public MusicBrainzCoreConfig(ICore sourceCore)
         {
             Services = ConfigureServices(sourceCore.InstanceId);
         }

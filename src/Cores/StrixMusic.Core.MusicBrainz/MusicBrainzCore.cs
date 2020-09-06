@@ -3,28 +3,28 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Core.Mock.Models;
+using StrixMusic.Core.MusicBrainz.Models;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 
-namespace StrixMusic.Core.Mock
+namespace StrixMusic.Core.MusicBrainz
 {
     /// <summary>
     /// Mock Core
     /// </summary>
-    public class MockCore : ICore
+    public class MusicBrainzCore : ICore
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MockCore"/> class.
+        /// Initializes a new instance of the <see cref="MusicBrainzCore"/> class.
         /// </summary>
         /// <param name="instanceId"></param>
-        public MockCore(string instanceId)
+        public MusicBrainzCore(string instanceId)
         {
             InstanceId = instanceId;
-            CoreConfig = new MockCoreConfig(this);
+            CoreConfig = new MusicBrainzCoreConfig(this);
 
-            Library = new MockLibrary(this);
+            Library = new MusicBrainzLibrary(this);
         }
 
         /// <inheritdoc/>
@@ -75,7 +75,7 @@ namespace StrixMusic.Core.Mock
         /// <inheritdoc/>
         public Task<ISearchResults> GetSearchResultsAsync(string query)
         {
-            return Task.FromResult(new MockSearchResults(this) as ISearchResults);
+            return Task.FromResult(new MusicBrainzSearchResults(this) as ISearchResults);
         }
 
         /// <inheritdoc/>
