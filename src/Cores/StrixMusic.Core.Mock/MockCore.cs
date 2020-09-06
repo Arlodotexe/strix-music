@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Core.Mock.Deserialization;
 using StrixMusic.Core.Mock.Models;
-using StrixMusic.Core.Mock.Services;
 using StrixMusic.CoreInterfaces;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
@@ -16,7 +15,6 @@ namespace StrixMusic.Core.Mock
     /// </summary>
     public class MockCore : ICore
     {
-        private ServiceProvider _serviceProvider;
         /// <summary>
         /// Initializes a new instance of the <see cref="MockCore"/> class.
         /// </summary>
@@ -25,10 +23,9 @@ namespace StrixMusic.Core.Mock
         {
             InstanceId = instanceId;
             CoreConfig = new MockCoreConfig(this);
-        }
 
-        /// <inheritdoc/>
-        public MockLibrary _serializedLibaray { get; set; }
+            Library = new MockLibrary(this);
+        }
 
         /// <inheritdoc/>
         public ICoreConfig CoreConfig { get; }
@@ -46,7 +43,7 @@ namespace StrixMusic.Core.Mock
         public IReadOnlyList<IDevice> Devices => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public ILibrary Library => throw new NotImplementedException();
+        public ILibrary Library { get; }
 
         /// <inheritdoc/>
         public IRecentlyPlayed RecentlyPlayed => throw new NotImplementedException();
@@ -58,10 +55,10 @@ namespace StrixMusic.Core.Mock
         public string InstanceId { get; }
 
         /// <inheritdoc/>
-        public event EventHandler<CoreState> CoreStateChanged;
+        public event EventHandler<CoreState>? CoreStateChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IDevice>> DevicesChanged;
+        public event EventHandler<CollectionChangedEventArgs<IDevice>>? DevicesChanged;
 
         /// <inheritdoc/>
         public ValueTask DisposeAsync()
@@ -78,14 +75,15 @@ namespace StrixMusic.Core.Mock
         /// <inheritdoc/>
         public Task<ISearchResults> GetSearchResultsAsync(string query)
         {
-            return Task.FromResult(new MockSearchResults(_serializedLibaray) as ISearchResults);
+            return Task.FromResult(new MockSearchResults(this) as ISearchResults);
         }
 
         /// <inheritdoc/>
-        public async Task InitAsync()
+        public Task InitAsync()
         {
-            var service = CoreConfig.Services.BuildServiceProvider().GetService(typeof(JsonMockCoreDataService)) as JsonMockCoreDataService;
-            _serializedLibaray = await service.GetLibraryAsync();
+            var service = CoreConfig.Services.GetService<MusicBrainzClient>();
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -10,8 +10,17 @@ using StrixMusic.CoreInterfaces.Interfaces;
 namespace StrixMusic.Core.Mock.Models
 {
     /// <inheritdoc />
-    public class MockPlayableCollectionGroupBase : IPlayableCollectionGroup
+    public abstract class MockPlayableCollectionGroupBase : IPlayableCollectionGroup
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MockPlayableCollectionGroupBase"/> class.
+        /// </summary>
+        /// <param name="sourceCore">The instance of the core this object was created in.</param>
+        public MockPlayableCollectionGroupBase(ICore sourceCore)
+        {
+            SourceCore = sourceCore;
+        }
+
         /// <inheritdoc />
         public IReadOnlyList<IPlayableCollectionGroup> Children => throw new NotImplementedException();
 
@@ -43,7 +52,7 @@ namespace StrixMusic.Core.Mock.Models
         public int TotalArtistsCount => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public ICore SourceCore => throw new NotImplementedException();
+        public ICore SourceCore { get; internal set; }
 
         /// <inheritdoc />
         public string Id => throw new NotImplementedException();
@@ -67,150 +76,87 @@ namespace StrixMusic.Core.Mock.Models
         public TimeSpan Duration => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => throw new NotImplementedException();
+        public virtual bool IsPlayAsyncSupported => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => throw new NotImplementedException();
+        public virtual bool IsPauseAsyncSupported => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public bool IsChangeNameAsyncSupported => throw new NotImplementedException();
+        public virtual bool IsChangeNameAsyncSupported => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public bool IsChangeImagesAsyncSupported => throw new NotImplementedException();
+        public virtual bool IsChangeImagesAsyncSupported => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public bool IsChangeDescriptionAsyncSupported => throw new NotImplementedException();
+        public virtual bool IsChangeDescriptionAsyncSupported => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public bool IsChangeDurationAsyncSupported => throw new NotImplementedException();
+        public virtual bool IsChangeDurationAsyncSupported => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> ChildrenChanged;
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IPlaylist>> PlaylistsChanged;
+        public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<ITrack>> TracksChanged;
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IAlbum>> AlbumsChanged;
+        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged;
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
 
         /// <inheritdoc />
-        public event EventHandler<PlaybackState> PlaybackStateChanged;
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc />
-        public event EventHandler<string> NameChanged;
+        public event EventHandler<string>? NameChanged;
 
         /// <inheritdoc />
-        public event EventHandler<string> DescriptionChanged;
+        public event EventHandler<string?>? DescriptionChanged;
 
         /// <inheritdoc />
-        public event EventHandler<Uri> UrlChanged;
+        public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged;
+        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<TimeSpan> DurationChanged;
+        public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc/>
-        public Task ChangeDescriptionAsync(string description)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task ChangeDescriptionAsync(string? description);
 
         /// <inheritdoc/>
-        public Task ChangeDurationAsync(TimeSpan duration)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task ChangeDurationAsync(TimeSpan duration);
 
         /// <inheritdoc/>
-        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task ChangeImagesAsync(IReadOnlyList<IImage> images);
 
         /// <inheritdoc/>
-        public Task ChangeNameAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task ChangeNameAsync(string name);
 
         /// <inheritdoc />
-        public virtual Task PauseAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task PauseAsync();
 
         /// <inheritdoc />
-        public virtual Task PlayAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task PlayAsync();
 
         /// <inheritdoc />
-        public virtual Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public virtual Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public virtual Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public virtual Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public virtual Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        Task<IReadOnlyList<IAlbum>> IAlbumCollection.PopulateAlbumsAsync(int limit, int offset)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        Task<IReadOnlyList<IArtist>> IArtistCollection.PopulateArtistsAsync(int limit, int offset)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        Task<IReadOnlyList<IPlayableCollectionGroup>> IPlayableCollectionGroup.PopulateChildrenAsync(int limit, int offset)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        Task<IReadOnlyList<IPlaylist>> IPlaylistCollection.PopulatePlaylistsAsync(int limit, int offset)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        Task<IReadOnlyList<ITrack>> ITrackCollection.PopulateTracksAsync(int limit, int offset)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0);
     }
 }

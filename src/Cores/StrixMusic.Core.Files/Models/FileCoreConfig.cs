@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.Files.Services;
 using StrixMusic.CoreInterfaces.Interfaces;
 using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
+using StrixMusic.Services.Settings;
 
 namespace StrixMusic.Core.Files
 {
@@ -11,28 +12,27 @@ namespace StrixMusic.Core.Files
     /// </summary>
     public class FileCoreConfig : ICoreConfig
     {
+        /// <inheritdoc/>
+        public IServiceProvider Services { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCoreConfig"/> class.
         /// </summary>
         public FileCoreConfig(ICore sourceCore)
         {
-            Services = new ServiceCollection();
-
-            ConfigureServices(sourceCore.InstanceId);
+            Services = ConfigureServices(sourceCore.InstanceId);
         }
-
-        /// <inheritdoc/>
-        public IServiceCollection Services { get; }
 
         /// <summary>
         /// Configures services for this instance of the core.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private Task ConfigureServices(string instanceId)
+        private ServiceProvider ConfigureServices(string instanceId)
         {
-            Services.Add(new ServiceDescriptor(typeof(FilesSettingsService), new FilesSettingsService(instanceId)));
+            IServiceCollection services = new ServiceCollection();
 
-            return Task.CompletedTask;
+            services.Add(new ServiceDescriptor(typeof(ISettingsService), new FilesSettingsService(instanceId)));
+
+            return services.BuildServiceProvider();
         }
     }
 }
