@@ -15,13 +15,12 @@ using StrixMusic.Services.Settings;
 namespace StrixMusic.Core.Mock.Services
 {
     /// <inheritdoc />
-    public class MusicBrainzMockCoreDataService : SettingsServiceBase, IMockCoreDataService
+    public class MusicBrainzMockCoreDataService :  IMockCoreDataService
     {
-        private static MusicBrainzMockCoreDataService _instance;
         private MusicBrainzClient _musicBrainzClient;
 
         /// <inheritdoc/>
-        public override string Id { get; }
+        public  string Id { get; }
 
         /// <inheritdoc/>
         public IServiceCollection Services => throw new NotImplementedException();

@@ -1,11 +1,11 @@
-﻿using StrixMusic.Core.Mock.Deserialization;
-using StrixMusic.Core.Mock.Models;
-using StrixMusic.CoreInterfaces.Interfaces;
-using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using StrixMusic.Core.Mock.Deserialization;
+using StrixMusic.Core.Mock.Models;
+using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
 
 namespace StrixMusic.Core.Mock.Services
 {

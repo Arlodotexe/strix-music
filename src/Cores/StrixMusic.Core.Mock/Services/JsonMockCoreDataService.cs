@@ -17,7 +17,7 @@ namespace StrixMusic.Core.Mock.Services
     /// <summary>
     /// Service to get mock json data
     /// </summary>
-    public class JsonMockCoreDataService : SettingsServiceBase, IMockCoreDataService
+    public class JsonMockCoreDataService : IMockCoreDataService
     {
         /// <summary>
         /// Init
@@ -31,7 +31,7 @@ namespace StrixMusic.Core.Mock.Services
         public IServiceCollection Services => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public override string Id { get; }
+        public string Id { get; }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IAlbum>> GetAlbumsAsync()
