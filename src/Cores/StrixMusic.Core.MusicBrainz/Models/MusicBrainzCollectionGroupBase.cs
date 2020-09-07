@@ -76,10 +76,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public virtual bool IsPlayAsyncSupported => throw new NotImplementedException();
+        public virtual bool IsPlayAsyncSupported => false;
 
         /// <inheritdoc/>
-        public virtual bool IsPauseAsyncSupported => throw new NotImplementedException();
+        public virtual bool IsPauseAsyncSupported => false;
 
         /// <inheritdoc/>
         public virtual bool IsChangeNameAsyncSupported => throw new NotImplementedException();
