@@ -9,10 +9,9 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using StrixMusic.CoreInterfaces.Interfaces.Storage;
-using StrixMusic.Services.StorageService;
+using StrixMusic.Sdk.Interfaces.Storage;
 
-namespace StrixMusic.Services.StorageService
+namespace StrixMusic.Sdk.Services.StorageService
 {
     /// <inheritdoc/>
     public class FileSystemService : IFileSystemService

@@ -1,9 +1,8 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Services.Navigation;
 using StrixMusic.Shell.Default.Controls;
 using StrixMusic.Shell.Strix;
-using StrixMusic.ViewModels;
+using StrixMusic.Sdk;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI;
@@ -11,6 +10,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
+using StrixMusic.Sdk.Services.Navigation;
 
 namespace StrixMusic.Shell.ZuneDesktop.Controls
 {

@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.CoreInterfaces.Interfaces.Storage;
-using StrixMusic.CoreInterfaces.Models.Storage;
+using StrixMusic.Sdk.Interfaces.Storage;
+using StrixMusic.Sdk.Models.Storage;
 using StrixMusic.Models;
 using Windows.Storage;
 

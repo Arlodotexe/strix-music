@@ -5,7 +5,7 @@ using System.Resources;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Newtonsoft.Json;
-using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

@@ -1,4 +1,4 @@
-﻿using StrixMusic.CoreInterfaces.Interfaces;
+﻿using StrixMusic.Sdk.Interfaces;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

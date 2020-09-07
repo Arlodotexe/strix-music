@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.CoreInterfaces.Interfaces;
-using StrixMusic.Services;
-using StrixMusic.Services.Navigation;
-using StrixMusic.Services.Settings;
-using StrixMusic.Services.StorageService;
-using StrixMusic.Services.SuperShell;
-using StrixMusic.ViewModels;
-using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk;
+using StrixMusic.Sdk.Interfaces;
+using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services.StorageService;
+using StrixMusic.Sdk.Services.SuperShell;
 
 namespace StrixMusic.Shared
 {

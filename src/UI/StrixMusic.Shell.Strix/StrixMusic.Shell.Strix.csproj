@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
+    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
     <ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
   </ItemGroup>
   <ItemGroup>

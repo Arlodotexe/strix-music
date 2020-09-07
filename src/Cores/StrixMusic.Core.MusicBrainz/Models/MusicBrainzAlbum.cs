@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Hqub.MusicBrainz.API.Entities;
 using Newtonsoft.Json;
-using StrixMusic.CoreInterfaces;
-using StrixMusic.CoreInterfaces.Enums;
-using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Sdk;
+using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.CoreInterfaces;
-using StrixMusic.CoreInterfaces.Enums;
-using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Sdk;
+using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -153,7 +153,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             // todo: add as needed;
             // _albums.Add();
-
             throw new NotImplementedException();
         }
 
@@ -161,7 +160,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
         {
             SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
-
 
             throw new NotImplementedException();
         }

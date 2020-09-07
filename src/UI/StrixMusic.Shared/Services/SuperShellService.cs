@@ -1,23 +1,23 @@
 ﻿using System;
-using StrixMusic.Services.SuperShell;
+using StrixMusic.Sdk.Services.SuperShell;
 using Windows.UI.Xaml;
 
-namespace StrixMusic.Services
+namespace StrixMusic.Sdk.Services
 {
     /// <inheritdoc cref="ISuperShellService"/>
     public class SuperShellService : ISuperShellService
     {
         /// <inheritdoc/>
-        public event EventHandler<SuperShellDisplays>? VisibilityChanged;
+        public event EventHandler<SuperShellDisplay>? VisibilityChanged;
 
         /// <inheritdoc />
         public void Hide()
         {
-            VisibilityChanged?.Invoke(this, SuperShellDisplays.Hidden);
+            VisibilityChanged?.Invoke(this, SuperShellDisplay.Hidden);
         }
 
         /// <inheritdoc />
-        public void Show(SuperShellDisplays shellDisplay)
+        public void Show(SuperShellDisplay shellDisplay)
         {
             VisibilityChanged?.Invoke(this, shellDisplay);
         }
