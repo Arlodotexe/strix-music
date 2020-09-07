@@ -23,7 +23,6 @@ namespace StrixMusic.Core.MusicBrainz
         {
             InstanceId = instanceId;
             CoreConfig = new MusicBrainzCoreConfig(this);
-
             Library = new MusicBrainzLibrary(this);
         }
 

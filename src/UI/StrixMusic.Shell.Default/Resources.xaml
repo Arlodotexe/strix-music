@@ -11,6 +11,7 @@
         <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
         <themes:HomeStyle/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
+        <themes:NowPlayingViewStyle/>
         <themes:PlayableCollectionListStyle/>
         <themes:SearchViewStyle/>
         <themes:SettingsViewStyle/>
