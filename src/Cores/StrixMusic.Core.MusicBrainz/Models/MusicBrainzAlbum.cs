@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Hqub.MusicBrainz.API.Entities;
 using Newtonsoft.Json;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
