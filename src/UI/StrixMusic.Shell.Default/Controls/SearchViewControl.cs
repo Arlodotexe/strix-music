@@ -1,5 +1,5 @@
-﻿using StrixMusic.ViewModels;
-using StrixMusic.ViewModels.Bindables;
+﻿using StrixMusic.Sdk;
+using StrixMusic.Sdk.Observables;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls

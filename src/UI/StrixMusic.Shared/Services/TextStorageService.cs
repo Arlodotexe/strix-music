@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using StrixMusic.Services.StorageService;
+using StrixMusic.Sdk.Services.StorageService;
 using Windows.Storage;
 
-namespace StrixMusic.Services
+namespace StrixMusic.Sdk.Services
 {
     /// <inheritdoc cref="ITextStorageService"/>
     public class TextStorageService : ITextStorageService

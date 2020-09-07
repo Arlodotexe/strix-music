@@ -3,9 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Services.Navigation;
+using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Shell.Default.Controls;
-using StrixMusic.ViewModels;
+using StrixMusic.Sdk;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

@@ -4,8 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Helpers;
 using StrixMusic.Models;
-using StrixMusic.Services.Settings;
-using StrixMusic.Services.StorageService;
+using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services.StorageService;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

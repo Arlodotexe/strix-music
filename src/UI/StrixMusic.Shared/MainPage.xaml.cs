@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Helpers;
-using StrixMusic.Services.Settings;
-using StrixMusic.Services.StorageService;
-using StrixMusic.Services.SuperShell;
 using StrixMusic.Shell.Default.Controls;
-using StrixMusic.ViewModels;
+using StrixMusic.Sdk;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services.StorageService;
+using StrixMusic.Sdk.Services.SuperShell;
 
 namespace StrixMusic
 {
@@ -34,7 +34,7 @@ namespace StrixMusic
         /// </summary>
         public void Button_Click(object sender, RoutedEventArgs e)
         {
-            Ioc.Default.GetService<ISuperShellService>().Show(SuperShellDisplays.Settings);
+            Ioc.Default.GetService<ISuperShellService>().Show(Sdk.Services.SuperShell.SuperShellDisplay.Settings);
         }
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)

@@ -1,9 +1,8 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.Files.Services;
-using StrixMusic.CoreInterfaces.Interfaces;
-using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
-using StrixMusic.Services.Settings;
+using StrixMusic.Sdk.Interfaces;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Core.Files
 {

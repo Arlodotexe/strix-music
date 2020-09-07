@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using StrixMusic.CoreInterfaces;
-using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Sdk;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.Files.Models
 {

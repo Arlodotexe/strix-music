@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.Files.Models;
 using StrixMusic.Core.Files.Services;
-using StrixMusic.CoreInterfaces;
-using StrixMusic.CoreInterfaces.Interfaces;
-using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.Files
 {

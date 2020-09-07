@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:local="using:StrixMusic.Shell.Strix.Controls"
-    xmlns:observables="using:StrixMusic.ViewModels.Bindables"
-    xmlns:interfaces="using:StrixMusic.CoreInterfaces.Interfaces"
+    xmlns:observables="using:StrixMusic.Sdk.Observables"
+    xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
     xmlns:selectors="using:StrixMusic.Shell.Default.TemplateSelectors"
     x:Class="StrixMusic.Shell.Strix.Themes.HomeStyle">
 

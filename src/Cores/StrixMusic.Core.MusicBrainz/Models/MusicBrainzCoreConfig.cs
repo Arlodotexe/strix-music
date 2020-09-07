@@ -1,8 +1,7 @@
 ﻿using System;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.CoreInterfaces.Interfaces;
-using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

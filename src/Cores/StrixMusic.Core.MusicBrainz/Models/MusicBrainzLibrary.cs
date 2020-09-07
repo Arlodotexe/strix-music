@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Resources;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using StrixMusic.CoreInterfaces.Interfaces;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

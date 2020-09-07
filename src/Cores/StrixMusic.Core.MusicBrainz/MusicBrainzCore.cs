@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.MusicBrainz.Models;
-using StrixMusic.CoreInterfaces;
-using StrixMusic.CoreInterfaces.Interfaces;
-using StrixMusic.CoreInterfaces.Interfaces.CoreConfig;
+using StrixMusic.Sdk;
+using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz
 {

@@ -1,4 +1,4 @@
-﻿using StrixMusic.CoreInterfaces.Interfaces.Storage;
+﻿using StrixMusic.Sdk.Interfaces.Storage;
 using StrixMusic.UWP.Models;
 using System;
 using System.Collections.Generic;

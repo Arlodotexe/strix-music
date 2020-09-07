@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.CoreInterfaces.Interfaces.Storage;
+using StrixMusic.Sdk.Interfaces.Storage;
 using StrixMusic.Models;
 using StrixMusic.UWP.Models;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using StrixMusic.Sdk.Services.StorageService;
 
-namespace StrixMusic.Services.StorageService
+namespace StrixMusic.Sdk.Services.StorageService
 {
     /// <inheritdoc cref="IFileSystemService" />
     public class FileSystemService : IFileSystemService

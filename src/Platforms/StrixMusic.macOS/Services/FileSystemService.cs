@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using StrixMusic.CoreInterfaces.Interfaces.Storage;
-using StrixMusic.Services.StorageService;
+using StrixMusic.Sdk.Interfaces.Storage;
+using StrixMusic.Sdk.Services.StorageService;
 
-namespace StrixMusic.Services.StorageService
+namespace StrixMusic.Sdk.Services.StorageService
 {
     /// <inheritdoc/>
     public class FileSystemService : IFileSystemService

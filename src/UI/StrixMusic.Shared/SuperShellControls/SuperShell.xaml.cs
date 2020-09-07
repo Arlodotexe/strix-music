@@ -2,9 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.SuperShellControls;
-using StrixMusic.Services.SuperShell;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Services.SuperShell;
 
 namespace StrixMusic
 {
@@ -41,18 +41,18 @@ namespace StrixMusic
             _superShellService.VisibilityChanged += Value_VisibilityChanged;
         }
 
-        private void Value_VisibilityChanged(object sender, SuperShellDisplays e)
+        private void Value_VisibilityChanged(object sender, SuperShellDisplay e)
         {
             switch (e)
             {
-                case SuperShellDisplays.Hidden:
+                case SuperShellDisplay.Hidden:
                     this.Visibility = Visibility.Collapsed;
                     break;
-                case SuperShellDisplays.Settings:
+                case SuperShellDisplay.Settings:
                     this.Visibility = Visibility.Visible;
                     Presenter.Content = new SuperShellSettings();
                     break;
-                case SuperShellDisplays.Debug:
+                case SuperShellDisplay.Debug:
                     throw new NotImplementedException();
             }
         }

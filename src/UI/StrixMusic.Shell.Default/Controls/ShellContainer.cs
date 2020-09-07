@@ -1,4 +1,4 @@
-﻿using StrixMusic.ViewModels;
+﻿using StrixMusic.Sdk;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls
