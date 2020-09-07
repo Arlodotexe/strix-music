@@ -68,7 +68,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             var list = new List<IAlbum>();
             foreach (var item in artists.Items)
             {
-                list.Add(new MusicBrainzAlbum(item, SourceCore));
+               // list.Add(new MusicBrainzAlbum(item, SourceCore, new MusicBrainzArtist(null)));
             }
 
             return list;
