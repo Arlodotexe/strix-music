@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls.Internal
@@ -22,11 +24,22 @@ namespace StrixMusic.Shell.Default.Controls.Internal
             this.InitializeComponent();
             SetupIoc();
             _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
+            _navigationService!.BackRequested += Shell_BackRequested; ;
             _pagesMapping = new Dictionary<string, Type>
             {
                 { "Home", typeof(HomeControl) },
                 { "SettingsViewControl", typeof(SettingsViewControl) },
+                { "Now Playing", typeof(NowPlayingViewControl) },
             };
+        }
+
+        /// <inheritdoc/>
+        protected override void SetupTitleBar()
+        {
+            base.SetupTitleBar();
+            SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
+            currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            currentView.BackRequested += (s, e) => _navigationService!.GoBack();
         }
 
         private void SetupIoc()
@@ -34,6 +47,7 @@ namespace StrixMusic.Shell.Default.Controls.Internal
             DefaultShellIoc.Initialize();
             _navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>();
             _navigationService!.RegisterCommonPage(typeof(HomeControl));
+            _navigationService!.RegisterCommonPage(typeof(NowPlayingViewControl));
         }
 
         private void NavigationService_NavigationRequested(object sender, NavigateEventArgs<Control> e)
@@ -41,6 +55,11 @@ namespace StrixMusic.Shell.Default.Controls.Internal
             if (!e.IsOverlay)
             {
                 MainContent.Content = e.Page;
+            }
+            else
+            {
+                OverlayContent.Content = e.Page;
+                OverlayContent.Visibility = Visibility.Visible;
             }
 
             // This isn't great, but there should only be 4 items
@@ -55,6 +74,11 @@ namespace StrixMusic.Shell.Default.Controls.Internal
             {
                 NavView.SelectedItem = null;
             }
+        }
+
+        private void Shell_BackRequested(object sender, EventArgs e)
+        {
+            OverlayContent.Visibility = Visibility.Collapsed;
         }
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -76,7 +100,7 @@ namespace StrixMusic.Shell.Default.Controls.Internal
                 return;
             }
 
-            _navigationService!.NavigateTo(_pagesMapping[invokedItemString]);
+            _navigationService!.NavigateTo(_pagesMapping[invokedItemString], invokedItemString == "Now Playing");
         }
     }
 }

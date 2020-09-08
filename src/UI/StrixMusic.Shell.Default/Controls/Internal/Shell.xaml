@@ -23,7 +23,7 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem Icon="Clock" Content="Recently Played" Tag="RecentlyPlayedItem"/>
-                <NavigationViewItem Content="Now Playing" Tag="NowPlayingItem">
+                <NavigationViewItem x:Name="NowPlaying" Content="Now Playing">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xF61F;"/>
                     </NavigationViewItem.Icon>
@@ -33,5 +33,9 @@
             <ContentControl x:Name="MainContent"/>
         </NavigationView>
         <local:NowPlayingBarControl Grid.Row="1"/>
+
+        <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                        Visibility="Collapsed" Grid.RowSpan="2"/>
     </Grid>
 </local:ShellControl>

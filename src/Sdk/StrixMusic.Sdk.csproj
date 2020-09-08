@@ -7,6 +7,10 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup Label="DefaultDocumentation">
+    <DefaultDocumentationFolder>..\Docs\api\Sdk</DefaultDocumentationFolder>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
@@ -27,6 +31,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Label="Documentation" Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <PackageReference Include="DefaultDocumentation" Version="0.6.11" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

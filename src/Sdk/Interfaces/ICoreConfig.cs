@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StrixMusic.Sdk.Interfaces.AbstractUI;
+using System;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -11,5 +12,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// The services for this instance of the core.
         /// </summary>
         IServiceProvider Services { get; }
+
+        IAbstractUIElementGroup SettingsElements { get; }
     }
 }
