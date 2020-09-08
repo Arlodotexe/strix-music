@@ -51,13 +51,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public Uri Url => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Name => throw new NotImplementedException();
+        public string Name => _artist.Name;
 
         /// <inheritdoc/>
         public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Description => throw new NotImplementedException();
+        public string Description => _artist.SortName;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => throw new NotImplementedException();
