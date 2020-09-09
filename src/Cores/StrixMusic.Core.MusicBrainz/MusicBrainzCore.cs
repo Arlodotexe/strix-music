@@ -81,7 +81,6 @@ namespace StrixMusic.Core.MusicBrainz
         public Task InitAsync()
         {
             var service = CoreConfig.Services.GetService<MusicBrainzClient>();
-
             return Task.CompletedTask;
         }
     }

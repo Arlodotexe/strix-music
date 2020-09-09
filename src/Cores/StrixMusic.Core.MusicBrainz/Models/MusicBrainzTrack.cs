@@ -22,21 +22,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// </summary>
         /// <param name="recording"></param>
         /// <param name="sourceCore"></param>
+        /// <param name="album"></param>
         public MusicBrainzTrack(Recording recording, ICore sourceCore, IAlbum album)
         {
             SourceCore = sourceCore;
             _recording = recording;
             _album = album;
         }
-
-        /// <inheritdoc/>
-        [JsonProperty("id")]
-        public string Id { get; set; } = string.Empty;
-
-        /// <inheritdoc/>
-        [JsonProperty("title")]
-        public string TitleJson { get; set; } = string.Empty;
-
 
         /// <inheritdoc/>
         public TrackType Type => throw new NotImplementedException();
@@ -75,13 +67,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public Uri Url => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Name => TitleJson;
+        public string Name => _recording.Title;
 
         /// <inheritdoc/>
         public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public string Description => throw new NotImplementedException();
+        public string Description => _recording.Title;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => throw new NotImplementedException();
@@ -133,6 +125,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncSupported => false;
+
+        /// <inheritdoc/>
+        public string Id => _recording.Id;
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;

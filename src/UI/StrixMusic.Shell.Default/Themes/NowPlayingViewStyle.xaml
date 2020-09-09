@@ -9,8 +9,8 @@
 
     <DataTemplate x:Key="DefaultNowPlayingViewTemplate">
         <UserControl>
-            <Grid>
-                
+            <Grid Background="Black">
+                <Rectangle Width="100" Height="100"/>
             </Grid>
         </UserControl>
     </DataTemplate>
@@ -20,7 +20,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:NowPlayingViewControl">
-                        <ContentControl ContentTemplate="{StaticResource DefaultNowPlayingViewTemplate}"/>
+                        <ContentControl ContentTemplate="{StaticResource DefaultNowPlayingViewTemplate}"
+                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
