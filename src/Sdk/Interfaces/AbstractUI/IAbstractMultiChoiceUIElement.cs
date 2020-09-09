@@ -19,6 +19,9 @@ namespace StrixMusic.Sdk.Interfaces.AbstractUI
         /// <remarks>Must be specified on object creation, even if the item is just a prompt to choose something.</remarks>
         public IAbstractUIMetadata SelectedItem { get; }
 
+        /// <inheritdoc cref="AbstractMultiChoicePrefferedDisplayMode"/>
+        public AbstractMultiChoicePrefferedDisplayMode PrefferedDisplayMode { get; }
+
         /// <summary>
         /// Called to tell the core that the selected item has been changed.
         /// </summary>
