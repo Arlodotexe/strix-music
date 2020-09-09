@@ -93,6 +93,9 @@
             </Rectangle.Fill>
         </Rectangle>
 
+        <!--NowPlayingOverlay-->
+        <default:NowPlayingViewControl x:Name="NowPlayingOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+
         <default:NowPlayingBarControl Grid.Row="1" x:Name="NowPlayingBar"/>
     </Grid>
 </default:ShellControl>

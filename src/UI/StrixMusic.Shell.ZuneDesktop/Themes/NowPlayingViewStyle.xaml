@@ -1,0 +1,23 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StrixMusic.Shell.ZuneDesktop.Controls"
+    xmlns:default="using:StrixMusic.Shell.Default.Controls"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:launchpad="using:LaunchPad.Controls">
+
+    <Style x:Key="ZuneNowPlayingViewControlStyle" TargetType="default:NowPlayingViewControl">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="default:NowPlayingViewControl">
+                        <local:AlbumWall HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource ZuneNowPlayingViewControlStyle}" TargetType="default:NowPlayingViewControl"/>
+
+</ResourceDictionary>
