@@ -69,7 +69,7 @@ namespace StrixMusic.Sdk.Interfaces
         bool IsChangeImagesAsyncSupported { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeDescriptionAsync(string)"/> is supported.```
+        /// If true, <see cref="ChangeDescriptionAsync(string)"/> is supported.
         /// </summary>
         bool IsChangeDescriptionAsyncSupported { get; }
 
