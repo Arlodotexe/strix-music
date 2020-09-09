@@ -42,9 +42,9 @@
             </Rectangle>
         </Grid>
 
-        <Grid x:Name="CustomTitleBar" Background="Transparent" Height="64" VerticalAlignment="Top"/>
+        <Grid x:Name="CustomTitleBar" Background="Transparent" Height="64" VerticalAlignment="Top" Canvas.ZIndex="1"/>
 
-        <Grid x:Name="MainContent">
+        <Grid x:Name="MainContent" Canvas.ZIndex="1">
             <!--Settings | Help and Sign In-->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,160,0">
                 <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
