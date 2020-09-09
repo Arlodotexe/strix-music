@@ -22,7 +22,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// </summary>
         /// <param name="artist"></param>
         /// <param name="sourceCore"></param>
-        public MusicBrainzArtist(Artist artist, ICore sourceCore)
+        public MusicBrainzArtist(ICore sourceCore, Artist artist)
         {
             SourceCore = sourceCore;
             _artist = artist;

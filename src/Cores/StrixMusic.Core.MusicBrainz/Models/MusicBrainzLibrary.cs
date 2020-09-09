@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Resources;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
-using Hqub.MusicBrainz.API.Entities;
-using Newtonsoft.Json;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -15,7 +11,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// </summary>
     public class MusicBrainzLibrary : MusicBrainzCollectionGroupBase, ILibrary
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzLibrary"/> class.
         /// </summary>
@@ -67,11 +62,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var albums = await new MusicBrainzClient().Releases.SearchAsync("*", limit, offset);
             var list = new List<IAlbum>();
+
             foreach (var item in albums.Items)
             {
-                if (item.Relations != null)
-                    list.Add(new MusicBrainzAlbum(item, SourceCore, new MusicBrainzArtist(item.Relations.FirstOrDefault().Artist, SourceCore)));
-                else list.Add(new MusicBrainzAlbum(item, SourceCore, new MusicBrainzArtist(new Artist(), SourceCore)));
+                list.Add(new MusicBrainzAlbum(SourceCore, item));
             }
 
             return list;
@@ -84,7 +78,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             var list = new List<IArtist>();
             foreach (var item in artists.Items)
             {
-                list.Add(new MusicBrainzArtist(item, SourceCore));
+                list.Add(new MusicBrainzArtist(SourceCore, item));
             }
 
             return list;
@@ -107,20 +101,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var recordings = await new MusicBrainzClient().Recordings.SearchAsync("*", limit, offset);
             var list = new List<ITrack>();
+
             foreach (var item in recordings.Items)
             {
-                if (item.Releases != null && item.Relations != null)
-                {
-                    list.Add(new MusicBrainzTrack(item, SourceCore, new MusicBrainzAlbum(item.Releases.FirstOrDefault(), SourceCore, new MusicBrainzArtist(item.Releases.FirstOrDefault().Relations.FirstOrDefault().Artist, SourceCore))));
-                }
-                else if (item.Releases != null)
-                {
-                    list.Add(new MusicBrainzTrack(item, SourceCore, new MusicBrainzAlbum(item.Releases.FirstOrDefault(), SourceCore, new MusicBrainzArtist(new Artist(), SourceCore))));
-                }
-                else
-                {
-                    list.Add(new MusicBrainzTrack(item, SourceCore, new MusicBrainzAlbum(new Release(), SourceCore, new MusicBrainzArtist(new Artist(), SourceCore))));
-                }
+                var track = new MusicBrainzTrack(SourceCore, item);
+                list.Add(track);
             }
 
             return list;

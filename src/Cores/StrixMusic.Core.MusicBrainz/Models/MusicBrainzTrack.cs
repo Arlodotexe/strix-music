@@ -22,12 +22,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// </summary>
         /// <param name="recording"></param>
         /// <param name="sourceCore"></param>
-        /// <param name="album"></param>
-        public MusicBrainzTrack(Recording recording, ICore sourceCore, IAlbum album)
+        public MusicBrainzTrack(ICore sourceCore, Recording recording)
         {
             SourceCore = sourceCore;
             _recording = recording;
-            _album = album;
+            _album = new MusicBrainzAlbum(sourceCore, recording.Releases[0]);
         }
 
         /// <inheritdoc/>

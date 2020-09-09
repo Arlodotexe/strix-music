@@ -16,23 +16,23 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         private readonly List<ITrack> _albums;
 
-        private readonly IArtist _artist;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzAlbum"/> class.
         /// </summary>
         /// <param name="release"></param>
         /// <param name="sourceCore"></param>
-        public MusicBrainzAlbum(Release release, ICore sourceCore, IArtist artist)
+        public MusicBrainzAlbum(ICore sourceCore, Release release)
         {
             SourceCore = sourceCore;
             _release = release;
-            _artist = artist;
+
+            Artist = new MusicBrainzArtist(SourceCore, release.Relations[0].Artist);
+
             _albums = new List<ITrack>();
         }
 
         /// <inheritdoc/>
-        public IArtist Artist => _artist;
+        public IArtist Artist { get; private set; }
 
         /// <inheritdoc/>
         public int TotalTracksCount => throw new NotImplementedException();
