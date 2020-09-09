@@ -1,6 +1,6 @@
 #### [StrixMusic.Sdk](./index.md 'index')
-### [StrixMusic.Sdk.Interfaces.AbstractUI](./StrixMusic-Sdk-Interfaces-AbstractUI.md 'StrixMusic.Sdk.Interfaces.AbstractUI').[IAbstractUIMetadata](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIMetadata.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIMetadata')
-## IAbstractUIMetadata.IconCode Property
+### [StrixMusic.Sdk.Interfaces.AbstractUI](./StrixMusic-Sdk-Interfaces-AbstractUI.md 'StrixMusic.Sdk.Interfaces.AbstractUI').[IAbstractUIBase](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIBase.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIBase')
+## IAbstractUIBase.IconCode Property
 A hex code representing an icon from the Segoe MDL2 Assets to display with this item (optional).  
 ```csharp
 string? IconCode { get; }

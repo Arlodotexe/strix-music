@@ -4,9 +4,10 @@
 Represents a UI element that has a changeable boolean value. (Checkbox, Toggle Buttons, Switches, etc)  
 ```csharp
 public interface IAbstractBooleanUIElement :
-IAbstractUIMetadata
+IAbstractUIElement,
+IAbstractUIBase
 ```
-Implements [IAbstractUIMetadata](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIMetadata.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIMetadata')  
+Implements [IAbstractUIElement](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIElement.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIElement'), [IAbstractUIBase](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIBase.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIBase')  
 ### Properties
 - [Label](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractBooleanUIElement-Label.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractBooleanUIElement.Label')
 ### Methods

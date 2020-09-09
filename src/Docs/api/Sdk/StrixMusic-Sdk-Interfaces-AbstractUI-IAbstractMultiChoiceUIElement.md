@@ -4,9 +4,10 @@
 Presents a list of multiple choices to the user for selection.  
 ```csharp
 public interface IAbstractMultiChoiceUIElement :
-IAbstractUIMetadata
+IAbstractUIElement,
+IAbstractUIBase
 ```
-Implements [IAbstractUIMetadata](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIMetadata.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIMetadata')  
+Implements [IAbstractUIElement](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIElement.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIElement'), [IAbstractUIBase](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIBase.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIBase')  
 ### Properties
 - [Items](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractMultiChoiceUIElement-Items.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractMultiChoiceUIElement.Items')
 - [SelectedItem](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractMultiChoiceUIElement-SelectedItem.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractMultiChoiceUIElement.SelectedItem')

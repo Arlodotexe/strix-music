@@ -4,9 +4,10 @@
 Presents a link to the user.  
 ```csharp
 public interface IAbstractExternalUri :
-IAbstractUIMetadata
+IAbstractUIMetadata,
+IAbstractUIBase
 ```
-Implements [IAbstractUIMetadata](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIMetadata.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIMetadata')  
+Implements [IAbstractUIMetadata](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIMetadata.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIMetadata'), [IAbstractUIBase](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIBase.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIBase')  
 ### Remarks
 This can be displayed in the UI however it wants (Button, text link, Icons, custom, etc)  
 ### Properties

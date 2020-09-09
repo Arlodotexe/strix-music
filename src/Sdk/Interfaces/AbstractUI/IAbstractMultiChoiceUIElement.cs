@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Interfaces.AbstractUI
     /// <summary>
     /// Presents a list of multiple choices to the user for selection.
     /// </summary>
-    public interface IAbstractMultiChoiceUIElement : IAbstractUIMetadata
+    public interface IAbstractMultiChoiceUIElement : IAbstractUIElement
     {
         /// <summary>
         /// The list of items to be displayed in the UI.

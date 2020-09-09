@@ -4,8 +4,9 @@
 Presents markdown-formatted text to the user.  
 ```csharp
 public interface IAbstractRichTextBlock :
-IAbstractUIMetadata
+IAbstractUIElement,
+IAbstractUIBase
 ```
-Implements [IAbstractUIMetadata](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIMetadata.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIMetadata')  
+Implements [IAbstractUIElement](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIElement.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIElement'), [IAbstractUIBase](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIBase.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIBase')  
 ### Properties
 - [RichText](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractRichTextBlock-RichText.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractRichTextBlock.RichText')

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Interfaces;
+using StrixMusic.Sdk.Interfaces.AbstractUI;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -12,6 +14,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
     {
         /// <inheritdoc/>
         public IServiceProvider Services { get; private set; }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<IAbstractUIElementGroup> CoreDataUIElements => throw new NotImplementedException();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCoreConfig"/> class.

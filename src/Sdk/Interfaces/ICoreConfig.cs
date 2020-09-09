@@ -1,5 +1,6 @@
-﻿using StrixMusic.Sdk.Interfaces.AbstractUI;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using StrixMusic.Sdk.Interfaces.AbstractUI;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -13,6 +14,9 @@ namespace StrixMusic.Sdk.Interfaces
         /// </summary>
         IServiceProvider Services { get; }
 
-        IAbstractUIElementGroup SettingsElements { get; }
+        /// <summary>
+        /// Abstract UI elements that will be presented to the user for Settings, About, Legal notices, Donation links, etc.
+        /// </summary>
+        IReadOnlyList<IAbstractUIElementGroup> CoreDataUIElements { get; }
     }
 }

@@ -4,9 +4,10 @@
 Presents a text box to the user, with actions for saving any entered data.  
 ```csharp
 public interface IAbstractTextBox :
-IAbstractUIMetadata
+IAbstractUIElement,
+IAbstractUIBase
 ```
-Implements [IAbstractUIMetadata](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIMetadata.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIMetadata')  
+Implements [IAbstractUIElement](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIElement.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIElement'), [IAbstractUIBase](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIBase.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIBase')  
 ### Properties
 - [PlaceholderText](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractTextBox-PlaceholderText.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractTextBox.PlaceholderText')
 - [Value](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractTextBox-Value.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractTextBox.Value')

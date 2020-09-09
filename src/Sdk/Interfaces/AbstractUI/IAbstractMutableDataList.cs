@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.Interfaces.AbstractUI
     /// <summary>
     /// A <see cref="IAbstractDataList"/> that can be changed by the user.
     /// </summary>
-    public interface IAbstractMutableDataList : IAbstractDataList
+    public interface IAbstractMutableDataList : IAbstractUIElement
     {
         /// <summary>
         /// Called when the user wants to add a new item in the list. Behavior is defined by the core.

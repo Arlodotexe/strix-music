@@ -4,12 +4,10 @@
 Presents a list of metadata in a Grid or List.  
 ```csharp
 public interface IAbstractDataList :
-IAbstractUIMetadata
+IAbstractUIElement,
+IAbstractUIBase
 ```
-Derived  
-&#8627; [IAbstractMutableDataList](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractMutableDataList.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractMutableDataList')  
-
-Implements [IAbstractUIMetadata](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIMetadata.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIMetadata')  
+Implements [IAbstractUIElement](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIElement.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIElement'), [IAbstractUIBase](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractUIBase.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractUIBase')  
 ### Properties
 - [Items](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractDataList-Items.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractDataList.Items')
 - [PrefferedDisplayMode](./StrixMusic-Sdk-Interfaces-AbstractUI-IAbstractDataList-PrefferedDisplayMode.md 'StrixMusic.Sdk.Interfaces.AbstractUI.IAbstractDataList.PrefferedDisplayMode')

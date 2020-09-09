@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Interfaces.AbstractUI
     /// <summary>
     /// Presents a text box to the user, with actions for saving any entered data.
     /// </summary>
-    public interface IAbstractTextBox : IAbstractUIMetadata
+    public interface IAbstractTextBox : IAbstractUIElement
     {
         /// <summary>
         /// Placeholder text to show when the text box is empty.

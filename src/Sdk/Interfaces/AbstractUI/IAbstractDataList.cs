@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace StrixMusic.Sdk.Interfaces.AbstractUI
 {
     /// <summary>
-    /// A list of items to be shown to the user in a Grid or List
+    /// Presents a list of metadata in a Grid or List.
     /// </summary>
-    public interface IAbstractDataList : IAbstractUIMetadata
+    public interface IAbstractDataList : IAbstractUIElement
     {
         /// <summary>
         /// The items in this collection.
