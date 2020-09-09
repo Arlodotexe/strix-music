@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
-using Newtonsoft.Json;
+using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Interfaces;
@@ -13,7 +14,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
     public class MusicBrainzAlbum : IAlbum
     {
         private readonly Release _release;
-
+        private readonly MusicBrainzClient _musicBrainzClient;
         private readonly List<ITrack> _albums;
 
         /// <summary>
@@ -27,6 +28,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             _release = release;
 
             Artist = new MusicBrainzArtist(SourceCore, release.Relations[0].Artist);
+            _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
 
             _albums = new List<ITrack>();
         }

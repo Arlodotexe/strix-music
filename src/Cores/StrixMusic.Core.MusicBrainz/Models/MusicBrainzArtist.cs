@@ -14,7 +14,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
     public class MusicBrainzArtist : IArtist
     {
         private readonly Artist _artist;
-
+        private readonly MusicBrainzClient _musicBrainzClient;
         private readonly List<IAlbum> _albums;
 
         /// <summary>
@@ -27,6 +27,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             SourceCore = sourceCore;
             _artist = artist;
             _albums = new List<IAlbum>();
+            _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
         }
 
         /// <inheritdoc/>
@@ -149,18 +150,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset)
         {
-            SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
-
-            // todo: add as needed;
-            // _albums.Add();
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
         {
-            SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
-
             throw new NotImplementedException();
         }
     }

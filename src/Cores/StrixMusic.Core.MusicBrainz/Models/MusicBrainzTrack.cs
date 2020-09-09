@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
@@ -16,6 +18,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
     {
         private readonly Recording _recording;
         private readonly IAlbum _album;
+        private readonly MusicBrainzClient _musicBrainzClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzTrack"/> class.
@@ -27,6 +30,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             SourceCore = sourceCore;
             _recording = recording;
             _album = new MusicBrainzAlbum(sourceCore, recording.Releases[0]);
+            _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
         }
 
         /// <inheritdoc/>
