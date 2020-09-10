@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
+using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.MusicBrainz.Deserialization;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
@@ -12,14 +14,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// <inheritdoc/>
     public class MusicBrainzSearchResults : MusicBrainzCollectionGroupBase, ISearchResults
     {
+        private readonly MusicBrainzClient _musicBrainzClient;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzSearchResults"/> class.
         /// </summary>
         /// <param name="sourceCore"></param>
-        /// <param name="playableCollectionGroup"></param>
         public MusicBrainzSearchResults(ICore sourceCore)
             : base(sourceCore)
         {
+            _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
         }
 
         /// <inheritdoc/>
