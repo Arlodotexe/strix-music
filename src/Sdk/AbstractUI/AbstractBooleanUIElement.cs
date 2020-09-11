@@ -6,8 +6,19 @@ namespace StrixMusic.Sdk.AbstractUI
     /// <summary>
     /// Represents a UI element that has a changeable boolean value. (Checkbox, Toggle Buttons, Switches, etc)
     /// </summary>
-    public interface IAbstractBooleanUIElement : IAbstractUIElement
+    public abstract class AbstractBooleanUIElement : AbstractUIElement
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="AbstractBooleanUIElement"/>/
+        /// </summary>
+        /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
+        /// <param name="label"><inheritdoc cref="Label"/></param>
+        protected AbstractBooleanUIElement(string id, string? label)
+            : base(id)
+        {
+            Label = label;
+        }
+
         /// <summary>
         /// The label to display next to this UI element.
         /// </summary>
@@ -16,12 +27,12 @@ namespace StrixMusic.Sdk.AbstractUI
         /// <summary>
         /// Fires when the <see cref="Label"/> changes.
         /// </summary>
-        public event EventHandler<string> LabelChanged;
+        public abstract event EventHandler<string>? LabelChanged;
 
         /// <summary>
         /// Called when the user changes the state.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task ChangeState(bool newValue);
+        public abstract Task ChangeState(bool newValue);
     }
 }

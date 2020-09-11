@@ -17,7 +17,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IServiceProvider Services { get; private set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<IAbstractUIElementGroup> CoreDataUIElements => throw new NotImplementedException();
+        public IReadOnlyList<AbstractUIElementGroup> CoreDataUIElements => throw new NotImplementedException();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCoreConfig"/> class.

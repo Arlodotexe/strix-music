@@ -31,7 +31,7 @@ namespace StrixMusic.Sdk.MergedWrappers
         {
             Sources = searchResults;
 
-            // TODO: Use top preffered core.
+            // TODO: Use top Preferred core.
             _preferredSource = Sources[0];
 
             AttachPropertyChangedEvents(_preferredSource);

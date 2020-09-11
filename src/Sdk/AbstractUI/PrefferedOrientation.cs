@@ -1,12 +1,12 @@
 ﻿namespace StrixMusic.Sdk.AbstractUI
 {
     /// <summary>
-    /// The Preffered orientation for items in an <see cref="IAbstractUIElementGroup"/>.
+    /// The Preferred orientation for items in an <see cref="AbstractUIElementGroup"/>.
     /// </summary>
     /// <remarks>
     /// The UI may choose not to respect this.
     /// </remarks>
-    public enum PrefferedOrientation
+    public enum PreferredOrientation
     {
         /// <summary>
         /// Horizontal orientation.

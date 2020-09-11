@@ -1,10 +1,10 @@
 ﻿namespace StrixMusic.Sdk.AbstractUI
 {
     /// <summary>
-    /// The preferred display mode for a <see cref="IAbstractDataList"/>.
+    /// The preferred display mode for a <see cref="AbstractDataList"/>.
     /// </summary>
     /// <remarks>The UI may choose not to respect this.</remarks>
-    public enum AbstractDataListPrefferedDisplayMode
+    public enum AbstractDataListPreferredDisplayMode
     {
         /// <summary>
         /// Displays the items in a grid.
