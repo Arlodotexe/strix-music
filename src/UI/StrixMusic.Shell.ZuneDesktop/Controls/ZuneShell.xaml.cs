@@ -48,9 +48,19 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
             if (e.Page is SettingsViewControl)
             {
                 SettingsOverlay.Visibility = Visibility.Visible;
+                NowPlayingOverlay.Visibility = Visibility.Collapsed;
+                MainContent.Visibility = Visibility.Collapsed;
                 MainContent.Visibility = Visibility.Collapsed;
                 NowPlayingBar.Visibility = Visibility.Collapsed;
                 RequestTheme(ElementTheme.Light);
+            }
+            else if (e.Page is NowPlayingViewControl)
+            {
+                SettingsOverlay.Visibility = Visibility.Collapsed;
+                NowPlayingOverlay.Visibility = Visibility.Visible;
+                MainContent.Visibility = Visibility.Collapsed;
+                NowPlayingBar.Visibility = Visibility.Collapsed;
+                RequestTheme(ElementTheme.Dark);
             }
         }
 
@@ -59,6 +69,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
             // TODO: Dyanmic back navigation
             // Instead of just closing settings
             SettingsOverlay.Visibility = Visibility.Collapsed;
+            NowPlayingOverlay.Visibility = Visibility.Collapsed;
             MainContent.Visibility = Visibility.Visible;
             NowPlayingBar.Visibility = Visibility.Visible;
             RequestTheme();

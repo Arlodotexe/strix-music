@@ -10,7 +10,8 @@
         <!--<themes:AlbumViewStyle/>-->
         <!--<ResourceDictionary Source="Themes/ArtistStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>-->
-        <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
+        <themes:NowPlayingBarStyle/>
+        <themes:NowPlayingViewStyle/>
         <!--<themes:HomeStyle/>-->
         <!--<themes:PlayableCollectionListStyle/>-->
         <themes:ShellStyle/>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
+using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Sdk.Interfaces;
 using StrixMusic.Sdk.Interfaces.AbstractUI;
 
@@ -34,6 +35,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             IServiceCollection services = new ServiceCollection();
 
             services.Add(new ServiceDescriptor(typeof(MusicBrainzClient), new MusicBrainzClient()));
+            services.Add(new ServiceDescriptor(typeof(MusicBrainzCacheService), new MusicBrainzCacheService()));
 
             return services.BuildServiceProvider();
         }

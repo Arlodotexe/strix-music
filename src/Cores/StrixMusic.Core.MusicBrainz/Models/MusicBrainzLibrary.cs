@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
+using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -11,14 +12,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// </summary>
     public class MusicBrainzLibrary : MusicBrainzCollectionGroupBase, ILibrary
     {
+        private readonly MusicBrainzClient _musicBrainzClient;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzLibrary"/> class.
         /// </summary>
         /// <param name="sourceCore"></param>
+
         public MusicBrainzLibrary(ICore sourceCore)
             : base(sourceCore)
         {
             SourceCore = sourceCore;
+            _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
         }
 
         /// <inheritdoc/>
@@ -99,7 +104,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public async override Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
-            var recordings = await new MusicBrainzClient().Recordings.SearchAsync("*", limit, offset);
+            var recordings = await _musicBrainzClient.Recordings.SearchAsync("*", limit, offset);
             var list = new List<ITrack>();
 
             foreach (var item in recordings.Items)

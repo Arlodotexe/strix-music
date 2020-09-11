@@ -47,6 +47,7 @@
 		<None Remove="Assets\Backgrounds\Shards.png" />
 		<None Remove="Assets\Backgrounds\Wired.png" />
 		<None Remove="Assets\Quickplay-Background.png" />
+		<None Remove="Controls\AlbumWall.xaml" />
 		<None Remove="Controls\QuickplayContent.xaml" />
 		<None Remove="Controls\ZuneShell.xaml" />
 		<None Remove="Preview.xaml" />
@@ -55,6 +56,7 @@
 		<None Remove="Styles\Brushes.xaml" />
 		<None Remove="Styles\ButtonStyles.xaml" />
 		<None Remove="Themes\NowPlayingBarStyle.xaml" />
+		<None Remove="Themes\NowPlayingViewStyle.xaml" />
 		<None Remove="Themes\SettingsViewStyle.xaml" />
 		<None Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
@@ -64,6 +66,7 @@
 	  <Page Remove="Assets\svg\Previous.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<UpToDateCheckInput Remove="Controls\AlbumWall.xaml" />
 		<UpToDateCheckInput Remove="Controls\QuickplayContent.xaml" />
 		<UpToDateCheckInput Remove="Controls\ZuneShell.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
@@ -72,6 +75,7 @@
 		<UpToDateCheckInput Remove="Styles\Brushes.xaml" />
 		<UpToDateCheckInput Remove="Styles\ButtonStyles.xaml" />
 		<UpToDateCheckInput Remove="Themes\NowPlayingBarStyle.xaml" />
+		<UpToDateCheckInput Remove="Themes\NowPlayingViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Themes\SettingsViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
@@ -94,6 +98,12 @@
 		<ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Update="Themes\NowPlayingViewStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Themes\NowPlayingBarStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
 		<Compile Update="Themes\SettingsViewStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>

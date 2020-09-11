@@ -5,10 +5,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using StrixMusic.Core.MusicBrainz.Deserialization;
 using StrixMusic.Core.MusicBrainz.Models;
 
-namespace StrixMusic.Core.MusicBrainz.Deserialization
+namespace StrixMusic.Core.MusicBrainz.Utils
 {
     /// <summary>
     /// Deserializes the JSON library, then hooks references up by Ids.
