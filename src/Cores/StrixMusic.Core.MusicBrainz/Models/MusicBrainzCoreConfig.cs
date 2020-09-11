@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.MusicBrainz.Services;
+using StrixMusic.Sdk.AbstractUI;
 using StrixMusic.Sdk.Interfaces;
-using StrixMusic.Sdk.Interfaces.AbstractUI;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

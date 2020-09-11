@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Interfaces.AbstractUI
+﻿namespace StrixMusic.Sdk.AbstractUI
 {
     /// <summary>
     /// The base for all AbstractUI objects. Contains abstracted metadata.

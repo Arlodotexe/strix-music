@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StrixMusic.Sdk.Interfaces.AbstractUI
+namespace StrixMusic.Sdk.AbstractUI
 {
     /// <summary>
     /// Presents a link to the user.

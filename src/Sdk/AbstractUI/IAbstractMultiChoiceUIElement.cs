@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Sdk.Interfaces.AbstractUI
+namespace StrixMusic.Sdk.AbstractUI
 {
     /// <summary>
     /// Presents a list of multiple choices to the user for selection.

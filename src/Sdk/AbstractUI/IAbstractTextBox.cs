@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Sdk.Interfaces.AbstractUI
+namespace StrixMusic.Sdk.AbstractUI
 {
     /// <summary>
     /// Presents a text box to the user, with actions for saving any entered data.

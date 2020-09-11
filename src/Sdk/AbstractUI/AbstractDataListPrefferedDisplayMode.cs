@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Interfaces.AbstractUI
+﻿namespace StrixMusic.Sdk.AbstractUI
 {
     /// <summary>
     /// The preferred display mode for a <see cref="IAbstractDataList"/>.

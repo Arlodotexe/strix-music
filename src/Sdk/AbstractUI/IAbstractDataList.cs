@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using StrixMusic.Sdk.Events;
 
-namespace StrixMusic.Sdk.Interfaces.AbstractUI
+namespace StrixMusic.Sdk.AbstractUI
 {
     /// <summary>
     /// Presents a list of metadata in a Grid or List.

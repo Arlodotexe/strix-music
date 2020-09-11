@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using StrixMusic.Sdk.Interfaces.AbstractUI;
+using StrixMusic.Sdk.AbstractUI;
 
 namespace StrixMusic.Sdk.Interfaces
 {

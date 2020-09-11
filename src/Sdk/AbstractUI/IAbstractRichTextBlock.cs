@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Interfaces.AbstractUI
+﻿namespace StrixMusic.Sdk.AbstractUI
 {
     /// <summary>
     /// Presents markdown-formatted text to the user.

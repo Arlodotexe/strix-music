@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.Files.Services;
+using StrixMusic.Sdk.AbstractUI;
 using StrixMusic.Sdk.Interfaces;
-using StrixMusic.Sdk.Interfaces.AbstractUI;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Core.Files

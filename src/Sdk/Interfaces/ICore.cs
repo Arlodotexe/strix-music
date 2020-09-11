@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
 
 namespace StrixMusic.Sdk.Interfaces
 {

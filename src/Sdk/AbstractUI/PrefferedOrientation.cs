@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Interfaces.AbstractUI
+﻿namespace StrixMusic.Sdk.AbstractUI
 {
     /// <summary>
     /// The Preffered orientation for items in an <see cref="IAbstractUIElementGroup"/>.

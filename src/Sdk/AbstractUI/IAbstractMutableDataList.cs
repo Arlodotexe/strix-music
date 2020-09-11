@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace StrixMusic.Sdk.Interfaces.AbstractUI
+namespace StrixMusic.Sdk.AbstractUI
 {
     /// <summary>
     /// A <see cref="IAbstractDataList"/> that can be changed by the user.
