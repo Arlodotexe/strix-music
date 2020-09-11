@@ -1,0 +1,40 @@
+{
+    "metadata": [
+        {
+            "src": [
+                {
+                    "files": [
+                        "StrixMusic.UWP.sln"
+                    ],
+                    "exclude": [
+                        "**/api/**",
+                        "**/bin/**",
+                        "**/obj/**",
+                        "Docs/wwwroot/**"
+                    ]
+                }
+            ],
+            "dest": "Docs/api"
+        }
+    ],
+    "build": {
+        "content": [
+            {
+                "files": [
+                    "Docs/api/**.yml",
+                    "Docs/index.md",
+                    "Docs/toc.yml",
+                    "Docs/*.md"
+                ]
+            }
+        ],
+        "dest": "Docs/wwwroot",
+        "template": [
+            "default"
+        ],
+        "markdownEngineName": "markdig",
+        "noLangKeyword": false,
+        "cleanupCacheHistory": false,
+        "disableGitFeatures": false
+    }
+}

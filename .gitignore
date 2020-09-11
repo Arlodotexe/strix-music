@@ -204,3 +204,7 @@ FakesAssemblies/
 # Custom ignores
 gallery.xml
 project.lock.json
+
+/api/*.yml
+/api/.manifest
+/wwwroot/*
