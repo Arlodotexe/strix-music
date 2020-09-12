@@ -10,6 +10,6 @@
         /// <summary>
         /// The relationship queries needed when getting tracks from the API.
         /// </summary>
-        public static readonly string Recordings => "inc=" + string.Join(",", _recordingQueries);
+        public static string Recordings => "inc=" + string.Join(",", _recordingQueries);
     }
 }
