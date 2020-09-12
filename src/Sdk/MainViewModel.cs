@@ -73,7 +73,11 @@ namespace StrixMusic.Sdk
 
             Parallel.ForEach(_cores, async core =>
             {
-                await foreach (var item in await core.GetSearchAutoCompleteAsync(query))
+                var searchResults = await core.GetSearchAutoCompleteAsync(query);
+                if (searchResults == null)
+                    return;
+
+                foreach (var item in searchResults)
                 {
                     if (!SearchAutoComplete.Contains(item))
                         SearchAutoComplete.Add(item);

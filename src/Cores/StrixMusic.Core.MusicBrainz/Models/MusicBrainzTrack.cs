@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
-using Hqub.MusicBrainz.API;
+﻿using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -15,7 +16,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
     public class MusicBrainzTrack : ITrack
     {
         private readonly Recording _recording;
-        private readonly IAlbum _album;
         private readonly MusicBrainzClient _musicBrainzClient;
         private readonly List<IArtist> _artists;
 
@@ -28,8 +28,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             SourceCore = sourceCore;
             _recording = recording;
-            _album = new MusicBrainzAlbum(sourceCore, recording.Releases[0]);
             _artists = new List<IArtist>();
+            Album = new MusicBrainzAlbum(sourceCore, recording.Releases[0]);
 
             _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
         }
@@ -44,7 +44,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public int TotalArtistsCount => _recording.Credits.Count;
 
         /// <inheritdoc/>
-        public IAlbum Album => _album;
+        public IAlbum Album { get; }
 
         /// <inheritdoc/>
         public DateTime? DatePublished => throw new NotImplementedException();
@@ -77,19 +77,21 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Name => _recording.Title;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
+        public IReadOnlyList<IImage> Images => CreateImagesForRelease(_recording.Releases);
 
         /// <inheritdoc/>
         public string Description => _recording.Title;
 
         /// <inheritdoc/>
-        public PlaybackState PlaybackState => throw new NotImplementedException();
+        public PlaybackState PlaybackState => PlaybackState.None;
 
         /// <inheritdoc/>
-        public TimeSpan Duration => throw new NotImplementedException();
+        public TimeSpan Duration => _recording.Length != null
+                ? TimeSpan.FromMilliseconds(Convert.ToDouble(_recording.Length))
+                : TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? RelatedItems => throw new NotImplementedException();
+        public IPlayableCollectionGroup? RelatedItems => null;
 
         /// <inheritdoc/>
         public bool IsChangeArtistsAsyncSupported => false;
@@ -276,6 +278,21 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
 
             return _artists;
+        }
+
+        private IReadOnlyList<IImage> CreateImagesForRelease(IEnumerable<Release> releases)
+        {
+            var list = new List<IImage>();
+
+            foreach (var release in releases)
+            {
+                foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
+                {
+                    list.Add(new MusicBrainzImage(release.Id, item));
+                }
+            }
+
+            return list;
         }
     }
 }

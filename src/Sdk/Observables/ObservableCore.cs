@@ -90,7 +90,7 @@ namespace StrixMusic.Sdk.Observables
         public ObservableCollectionGroup Discoverables { get; }
 
         /// <inheritdoc cref="ICore.GetSearchAutoCompleteAsync" />
-        public Task<IAsyncEnumerable<string>> GetSearchAutoCompleteAsync(string query) => _core.GetSearchAutoCompleteAsync(query);
+        public Task<IReadOnlyList<string>?> GetSearchAutoCompleteAsync(string query) => _core.GetSearchAutoCompleteAsync(query);
 
         /// <inheritdoc cref="ICore.GetSearchResultsAsync" />
         public Task<ISearchResults> GetSearchResultsAsync(string query) => _core.GetSearchResultsAsync(query);

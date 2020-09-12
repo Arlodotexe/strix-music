@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
@@ -13,44 +10,65 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// <inheritdoc />
     public abstract class MusicBrainzCollectionGroupBase : IPlayableCollectionGroup
     {
+        /// <inheritdoc cref="Tracks"/>
+        protected List<ITrack> SourceTracks { get; }
+
+        /// <inheritdoc cref="Artists"/>
+        protected List<IArtist> SourceArtists { get; }
+
+        /// <inheritdoc cref="Albums"/>
+        protected List<IAlbum> SourceAlbums { get; }
+
+        /// <inheritdoc cref="Playlists"/>
+        protected List<IPlaylist> SourcePlaylists { get; }
+
+        /// <inheritdoc cref="Children"/>
+        protected List<IPlayableCollectionGroup> SourceChildren { get; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCollectionGroupBase"/> class.
         /// </summary>
         /// <param name="sourceCore">The instance of the core this object was created in.</param>
-        public MusicBrainzCollectionGroupBase(ICore sourceCore)
+        protected MusicBrainzCollectionGroupBase(ICore sourceCore)
         {
             SourceCore = sourceCore;
+
+            SourceTracks = new List<ITrack>();
+            SourceArtists = new List<IArtist>();
+            SourceAlbums = new List<IAlbum>();
+            SourcePlaylists = new List<IPlaylist>();
+            SourceChildren = new List<IPlayableCollectionGroup>();
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<IPlayableCollectionGroup> Children => throw new NotImplementedException();
+        public IReadOnlyList<IPlayableCollectionGroup> Children => SourceChildren;
 
         /// <inheritdoc />
-        public int TotalChildrenCount => throw new NotImplementedException();
+        public int TotalChildrenCount { get; internal set; }
 
         /// <inheritdoc />
-        public IReadOnlyList<IPlaylist> Playlists => throw new NotImplementedException();
+        public IReadOnlyList<IPlaylist> Playlists => SourcePlaylists;
 
         /// <inheritdoc />
-        public int TotalPlaylistCount => throw new NotImplementedException();
+        public int TotalPlaylistCount { get; internal set; }
 
         /// <inheritdoc />
-        public IReadOnlyList<ITrack> Tracks => throw new NotImplementedException();
+        public IReadOnlyList<ITrack> Tracks => SourceTracks;
 
         /// <inheritdoc />
-        public int TotalTracksCount => throw new NotImplementedException();
+        public int TotalTracksCount { get; internal set; }
 
         /// <inheritdoc />
         public IReadOnlyList<IAlbum> Albums => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public int TotalAlbumsCount => throw new NotImplementedException();
+        public int TotalAlbumsCount { get; internal set; }
 
         /// <inheritdoc />
         public IReadOnlyList<IArtist> Artists => throw new NotImplementedException();
 
         /// <inheritdoc />
-        public int TotalArtistsCount => throw new NotImplementedException();
+        public int TotalArtistsCount { get; internal set; }
 
         /// <inheritdoc />
         public ICore SourceCore { get; internal set; }
@@ -76,23 +94,23 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public TimeSpan Duration => throw new NotImplementedException();
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool IsPlayAsyncSupported => false;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual bool IsPauseAsyncSupported => false;
 
-        /// <inheritdoc/>
-        public virtual bool IsChangeNameAsyncSupported => throw new NotImplementedException();
+        /// <inheritdoc />
+        public virtual bool IsChangeNameAsyncSupported { get; }
+
+        /// <inheritdoc />
+        public virtual bool IsChangeImagesAsyncSupported { get; }
+
+        /// <inheritdoc />
+        public virtual bool IsChangeDescriptionAsyncSupported { get; }
 
         /// <inheritdoc/>
-        public virtual bool IsChangeImagesAsyncSupported => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public virtual bool IsChangeDescriptionAsyncSupported => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public virtual bool IsChangeDurationAsyncSupported => throw new NotImplementedException();
+        public virtual bool IsChangeDurationAsyncSupported { get; }
 
         /// <inheritdoc />
         public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
@@ -124,26 +142,44 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged;
 
-        /// <inheritdoc/>
-        public abstract Task ChangeDescriptionAsync(string? description);
-
-        /// <inheritdoc/>
-        public abstract Task ChangeDurationAsync(TimeSpan duration);
-
-        /// <inheritdoc/>
-        public abstract Task ChangeImagesAsync(IReadOnlyList<IImage> images);
-
-        /// <inheritdoc/>
-        public abstract Task ChangeNameAsync(string name);
+        /// <inheritdoc />
+        public virtual Task ChangeDescriptionAsync(string? description)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public abstract Task PauseAsync();
+        public virtual Task ChangeDurationAsync(TimeSpan duration)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public abstract Task PlayAsync();
+        public virtual Task ChangeImagesAsync(IReadOnlyList<IImage> images)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public virtual Task ChangeNameAsync(string name)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public virtual Task PauseAsync()
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public virtual Task PlayAsync()
+        {
+            throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
         public abstract Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0);

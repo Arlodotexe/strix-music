@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.Interfaces
     /// <summary>
     /// Represents multiple playable collections that are grouped together under a single context.
     /// </summary>
-    public interface IPlayableCollectionGroup : IPlayableCollectionBase, IPlaylistCollection, ITrackCollection, IAlbumCollection, IArtistCollection
+    public interface IPlayableCollectionGroup : IPlaylistCollection, ITrackCollection, IAlbumCollection, IArtistCollection
     {
         /// <summary>
         /// The <see cref="IPlayableCollectionBase"/>s in this collection group.
