@@ -10,15 +10,10 @@ namespace StrixMusic.Sdk.Interfaces
     /// <summary>
     /// Metadata about a track.
     /// </summary>
-    public interface ITrack : IPlayable
+    public interface ITrack : IArtistCollection
     {
         /// <inheritdoc cref="TrackType"/>
         TrackType Type { get; }
-
-        /// <summary>
-        /// A list of <see cref="IArtist"/>s that this track was created by.
-        /// </summary>
-        IReadOnlyList<IArtist> Artists { get; }
 
         /// <summary>
         /// An <see cref="IAlbum"/> object that this track belongs to.
@@ -107,7 +102,7 @@ namespace StrixMusic.Sdk.Interfaces
         bool IsChangeIsExplicitAsyncSupported { get; }
 
         /// <summary>
-        /// Changes the <see cref="Artists"/> for this track.
+        /// Changes the <see cref="IArtistCollection.Artists"/> for this track.
         /// </summary>
         /// <param name="artists">Artist</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -161,11 +156,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// <param name="isExplicit">The new value.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ChangeIsExplicitAsync(bool isExplicit);
-
-        /// <summary>
-        /// Fires when the <see cref="Artists"/> metadata changes.
-        /// </summary>
-        event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged;
 
         /// <summary>
         /// Fires when the <see cref="Genres"/> metadata changes.

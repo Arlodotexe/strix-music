@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
@@ -20,6 +17,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         private readonly Recording _recording;
         private readonly IAlbum _album;
         private readonly MusicBrainzClient _musicBrainzClient;
+        private readonly List<IArtist> _artists;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzTrack"/> class.
@@ -30,17 +28,20 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             SourceCore = sourceCore;
             _recording = recording;
+            _album = new MusicBrainzAlbum(sourceCore, recording.Releases[0]);
+            _artists = new List<IArtist>();
+
             _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
-            if (recording.Releases != null)
-                _album = new MusicBrainzAlbum(sourceCore, recording.Releases[0]);
-            else _album = new MusicBrainzAlbum(SourceCore, new Release());
         }
 
         /// <inheritdoc/>
         public TrackType Type => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IReadOnlyList<IArtist> Artists => throw new NotImplementedException();
+        public IReadOnlyList<IArtist> Artists => _artists;
+
+        /// <inheritdoc />
+        public int TotalArtistsCount => _recording.Credits.Count;
 
         /// <inheritdoc/>
         public IAlbum Album => _album;
@@ -262,6 +263,19 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public Task PlayAsync()
         {
             throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
+        {
+            var recording = await _musicBrainzClient.Recordings.GetAsync(Id, "artist-credits");
+
+            foreach (var item in recording.Credits)
+            {
+                _artists.Add(new MusicBrainzArtist(SourceCore, item.Artist));
+            }
+
+            return _artists;
         }
     }
 }
