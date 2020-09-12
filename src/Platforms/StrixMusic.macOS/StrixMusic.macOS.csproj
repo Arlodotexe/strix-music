@@ -133,7 +133,6 @@
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Services\FileSystemService.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Fonts\winjs-symbols.ttf">
