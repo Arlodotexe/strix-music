@@ -15,7 +15,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
     {
         private readonly Release _release;
         private readonly MusicBrainzClient _musicBrainzClient;
-        private readonly List<ITrack> _albums;
+        private readonly List<ITrack> _tracks;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzAlbum"/> class.
@@ -26,11 +26,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             SourceCore = sourceCore;
             _release = release;
-
             Artist = new MusicBrainzArtist(SourceCore, release.Relations[0].Artist);
             _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
-
-            _albums = new List<ITrack>();
+            _tracks = new List<ITrack>();
         }
 
         /// <inheritdoc/>
@@ -64,28 +62,28 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IReadOnlyList<ITrack> Tracks => throw new NotImplementedException();
+        public IReadOnlyList<ITrack> Tracks => _tracks;
 
         /// <inheritdoc/>
         public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => throw new NotImplementedException();
+        public bool IsPlayAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => throw new NotImplementedException();
+        public bool IsPauseAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeNameAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeNameAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeImagesAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeImagesAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDescriptionAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeDescriptionAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDurationAsyncSupported => throw new NotImplementedException();
+        public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
@@ -111,43 +109,53 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeNameAsync(string name)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PauseAsync()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PlayAsync()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
+        public async Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
         {
-            return Task.FromResult(new List<ITrack>() as IReadOnlyList<ITrack>);
+            var recordings = await _musicBrainzClient.Recordings.SearchAsync("*", limit, offset);
+            Parallel.ForEach(recordings, (recording) =>
+            {
+                Parallel.ForEach(recording.Releases, (release) =>
+                {
+                    if (release.Id == Id)
+                        _tracks.Add(new MusicBrainzTrack(SourceCore, recording));
+                });
+            });
+
+            return _tracks;
         }
     }
 }

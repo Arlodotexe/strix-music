@@ -29,8 +29,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             SourceCore = sourceCore;
             _recording = recording;
-            _album = new MusicBrainzAlbum(sourceCore, recording.Releases[0]);
             _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
+            if (recording.Releases != null)
+                _album = new MusicBrainzAlbum(sourceCore, recording.Releases[0]);
+            else _album = new MusicBrainzAlbum(SourceCore, new Release());
         }
 
         /// <inheritdoc/>
@@ -180,85 +182,85 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public Task ChangeAlbumAsync(IAlbum? albums)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeArtistsAsync(IReadOnlyList<IArtist>? artists)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeDatePublishedAsync(DateTime datePublished)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeGenresAsync(IReadOnlyList<string>? genres)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeIsExplicitAsync(bool isExplicit)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeLanguageAsync(CultureInfo language)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeLyricsAsync(ILyrics? lyrics)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeNameAsync(string name)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeTrackNumberAsync(int? trackNumber)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PauseAsync()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PlayAsync()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

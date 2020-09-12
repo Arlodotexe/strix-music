@@ -65,7 +65,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public override async Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
-            var albums = await new MusicBrainzClient().Releases.SearchAsync("*", limit, offset);
+            var albums = await _musicBrainzClient.Releases.SearchAsync("*", limit, offset);
             var list = new List<IAlbum>();
 
             foreach (var item in albums.Items)
@@ -79,7 +79,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public override async Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
         {
-            var artists = await new MusicBrainzClient().Artists.SearchAsync("*", limit, offset);
+            var artists = await _musicBrainzClient.Artists.SearchAsync("*", limit, offset);
             var list = new List<IArtist>();
             foreach (var item in artists.Items)
             {
