@@ -1,12 +1,12 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
-using StrixMusic.Sdk.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.Input;
+using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
 {
@@ -68,14 +68,14 @@ namespace StrixMusic.Sdk.Observables
 
         private void Artist_ImagesChanged(object sender, CollectionChangedEventArgs<IImage> e)
         {
-            foreach (var item in e.RemovedItems)
-            {
-                Images.Remove(item);
-            }
-
             foreach (var item in e.AddedItems)
             {
-                Images.Add(item);
+                Images.Insert(item.Index, item.Data);
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Images.RemoveAt(item.Index);
             }
         }
 
@@ -98,12 +98,12 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.RemovedItems)
             {
-                Albums.Remove(new ObservableAlbum(item));
+                Albums.RemoveAt(item.Index);
             }
 
             foreach (var item in e.AddedItems)
             {
-                Albums.Add(new ObservableAlbum(item));
+                Albums.Insert(item.Index, new ObservableAlbum(item.Data));
             }
         }
 
@@ -111,27 +111,21 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.RemovedItems)
             {
-                Tracks.Remove(new ObservableTrack(item));
+                Tracks.RemoveAt(item.Index);
             }
 
             foreach (var item in e.AddedItems)
             {
-                Tracks.Add(new ObservableTrack(item));
+                Tracks.Insert(item.Index, new ObservableTrack(item.Data));
             }
         }
 
         /// <inheritdoc cref="IPlayable.DurationChanged"/>
         public event EventHandler<TimeSpan>? DurationChanged
         {
-            add
-            {
-                _artist.DurationChanged += value;
-            }
+            add => _artist.DurationChanged += value;
 
-            remove
-            {
-                _artist.DurationChanged -= value;
-            }
+            remove => _artist.DurationChanged -= value;
         }
 
         private void Artist_PlaybackStateChanged(object sender, PlaybackState e)
@@ -233,99 +227,57 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc cref="IAlbumCollection.AlbumsChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged
         {
-            add
-            {
-                _artist.AlbumsChanged += value;
-            }
+            add => _artist.AlbumsChanged += value;
 
-            remove
-            {
-                _artist.AlbumsChanged -= value;
-            }
+            remove => _artist.AlbumsChanged -= value;
         }
 
         /// <inheritdoc cref="ITrackCollection.TracksChanged"/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
         {
-            add
-            {
-                _artist.TracksChanged += value;
-            }
+            add => _artist.TracksChanged += value;
 
-            remove
-            {
-                _artist.TracksChanged -= value;
-            }
+            remove => _artist.TracksChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.PlaybackStateChanged"/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
-            add
-            {
-                _artist.PlaybackStateChanged += value;
-            }
+            add => _artist.PlaybackStateChanged += value;
 
-            remove
-            {
-                _artist.PlaybackStateChanged -= value;
-            }
+            remove => _artist.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.NameChanged"/>
         public event EventHandler<string>? NameChanged
         {
-            add
-            {
-                _artist.NameChanged += value;
-            }
+            add => _artist.NameChanged += value;
 
-            remove
-            {
-                _artist.NameChanged -= value;
-            }
+            remove => _artist.NameChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.DescriptionChanged"/>
         public event EventHandler<string?> DescriptionChanged
         {
-            add
-            {
-                _artist.DescriptionChanged += value;
-            }
+            add => _artist.DescriptionChanged += value;
 
-            remove
-            {
-                _artist.DescriptionChanged -= value;
-            }
+            remove => _artist.DescriptionChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.UrlChanged"/>
         public event EventHandler<Uri?> UrlChanged
         {
-            add
-            {
-                _artist.UrlChanged += value;
-            }
+            add => _artist.UrlChanged += value;
 
-            remove
-            {
-                _artist.UrlChanged -= value;
-            }
+            remove => _artist.UrlChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.Images"/>
         public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged
         {
-            add
-            {
-                _artist.ImagesChanged += value;
-            }
+            add => _artist.ImagesChanged += value;
 
-            remove
-            {
-                _artist.ImagesChanged -= value;
-            }
+            remove => _artist.ImagesChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.PlayAsync"/>

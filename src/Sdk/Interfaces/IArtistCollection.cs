@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Interfaces
     public interface IArtistCollection : IPlayableCollectionBase
     {
         /// <summary>
-        /// The artists in the library.
+        /// The artists in the collection.
         /// </summary>
         IReadOnlyList<IArtist> Artists { get; }
 

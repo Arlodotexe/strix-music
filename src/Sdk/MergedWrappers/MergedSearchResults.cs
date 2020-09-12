@@ -60,15 +60,9 @@ namespace StrixMusic.Sdk.MergedWrappers
         /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged
         {
-            add
-            {
-                _preferredSource.DurationChanged += value;
-            }
+            add => _preferredSource.DurationChanged += value;
 
-            remove
-            {
-                _preferredSource.DurationChanged -= value;
-            }
+            remove => _preferredSource.DurationChanged -= value;
         }
 
         private void AttachCollectionChangedEvents(ISearchResults source)

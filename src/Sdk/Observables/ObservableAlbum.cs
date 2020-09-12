@@ -69,12 +69,12 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Tracks.Add(new ObservableTrack(item));
+                Tracks.Insert(item.Index, new ObservableTrack(item.Data));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Tracks.Remove(new ObservableTrack(item));
+                Tracks.RemoveAt(item.Index);
             }
         }
 
@@ -82,12 +82,12 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Images.Add(item);
+                Images.Insert(item.Index, item.Data);
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Images.Remove(item);
+                Images.RemoveAt(item.Index);
             }
         }
 
@@ -211,99 +211,57 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc cref="IPlayable.PlaybackStateChanged"/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
-            add
-            {
-                _album.PlaybackStateChanged += value;
-            }
+            add => _album.PlaybackStateChanged += value;
 
-            remove
-            {
-                _album.PlaybackStateChanged -= value;
-            }
+            remove => _album.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.NameChanged"/>
         public event EventHandler<string>? NameChanged
         {
-            add
-            {
-                _album.NameChanged += value;
-            }
+            add => _album.NameChanged += value;
 
-            remove
-            {
-                _album.NameChanged -= value;
-            }
+            remove => _album.NameChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.DescriptionChanged"/>
         public event EventHandler<string?> DescriptionChanged
         {
-            add
-            {
-                _album.DescriptionChanged += value;
-            }
+            add => _album.DescriptionChanged += value;
 
-            remove
-            {
-                _album.DescriptionChanged -= value;
-            }
+            remove => _album.DescriptionChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.UrlChanged"/>
         public event EventHandler<Uri?> UrlChanged
         {
-            add
-            {
-                _album.UrlChanged += value;
-            }
+            add => _album.UrlChanged += value;
 
-            remove
-            {
-                _album.UrlChanged -= value;
-            }
+            remove => _album.UrlChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.ImagesChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged
         {
-            add
-            {
-                _album.ImagesChanged += value;
-            }
+            add => _album.ImagesChanged += value;
 
-            remove
-            {
-                _album.ImagesChanged -= value;
-            }
+            remove => _album.ImagesChanged -= value;
         }
 
         /// <inheritdoc cref="ITrackCollection.TracksChanged"/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
         {
-            add
-            {
-                _album.TracksChanged += value;
-            }
+            add => _album.TracksChanged += value;
 
-            remove
-            {
-                _album.TracksChanged -= value;
-            }
+            remove => _album.TracksChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.DurationChanged"/>
         public event EventHandler<TimeSpan>? DurationChanged
         {
-            add
-            {
-                _album.DurationChanged += value;
-            }
+            add => _album.DurationChanged += value;
 
-            remove
-            {
-                _album.DurationChanged -= value;
-            }
+            remove => _album.DurationChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.PauseAsync"/>

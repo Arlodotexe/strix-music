@@ -6,7 +6,7 @@ using StrixMusic.Sdk.AbstractUI;
 using StrixMusic.Sdk.Interfaces;
 using StrixMusic.Sdk.Services.Settings;
 
-namespace StrixMusic.Core.Files
+namespace StrixMusic.Core.Files.Models
 {
     /// <summary>
     /// Configures the <see cref="FileCore"/>.

@@ -36,29 +36,17 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc cref="ICore.CoreStateChanged" />
         public event EventHandler<CoreState>? CoreStateChanged
         {
-            add
-            {
-                _core.CoreStateChanged += value;
-            }
+            add => _core.CoreStateChanged += value;
 
-            remove
-            {
-                _core.CoreStateChanged -= value;
-            }
+            remove => _core.CoreStateChanged -= value;
         }
 
         /// <inheritdoc cref="ICore.DevicesChanged" />
         public event EventHandler<CollectionChangedEventArgs<IDevice>>? DevicesChanged
         {
-            add
-            {
-                _core.DevicesChanged += value;
-            }
+            add => _core.DevicesChanged += value;
 
-            remove
-            {
-                _core.DevicesChanged -= value;
-            }
+            remove => _core.DevicesChanged -= value;
         }
 
         private void AttachEvents()
@@ -77,12 +65,12 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Devices.Add(new ObservableDevice(item));
+                Devices.Insert(item.Index, new ObservableDevice(item.Data));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Devices.Remove(new ObservableDevice(item));
+                Devices.RemoveAt(item.Index);
             }
         }
 

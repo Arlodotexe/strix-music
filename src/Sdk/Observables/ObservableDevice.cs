@@ -78,12 +78,12 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                PlaybackQueue.Add(new ObservableTrack(item));
+                PlaybackQueue.Insert(item.Index, new ObservableTrack(item.Data));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                PlaybackQueue.Remove(new ObservableTrack(item));
+                PlaybackQueue.RemoveAt(item.Index);
             }
         }
 
@@ -215,141 +215,81 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc cref="IDevice.IsActiveChanged"/>
         public event EventHandler<bool>? IsActiveChanged
         {
-            add
-            {
-                _device.IsActiveChanged += value;
-            }
+            add => _device.IsActiveChanged += value;
 
-            remove
-            {
-                _device.IsActiveChanged -= value;
-            }
+            remove => _device.IsActiveChanged -= value;
         }
 
         /// <inheritdoc cref="IDevice.PlaybackContextChanged"/>
         public event EventHandler<IPlayableCollectionBase> PlaybackContextChanged
         {
-            add
-            {
-                _device.PlaybackContextChanged += value;
-            }
+            add => _device.PlaybackContextChanged += value;
 
-            remove
-            {
-                _device.PlaybackContextChanged -= value;
-            }
+            remove => _device.PlaybackContextChanged -= value;
         }
 
         /// <inheritdoc cref="IDevice.NowPlayingChanged"/>
         public event EventHandler<ITrack> NowPlayingChanged
         {
-            add
-            {
-                _device.NowPlayingChanged += value;
-            }
+            add => _device.NowPlayingChanged += value;
 
-            remove
-            {
-                _device.NowPlayingChanged -= value;
-            }
+            remove => _device.NowPlayingChanged -= value;
         }
 
         /// <inheritdoc cref="IDevice.PositionChanged"/>
         public event EventHandler<TimeSpan> PositionChanged
         {
-            add
-            {
-                _device.PositionChanged += value;
-            }
+            add => _device.PositionChanged += value;
 
-            remove
-            {
-                _device.PositionChanged -= value;
-            }
+            remove => _device.PositionChanged -= value;
         }
 
         /// <inheritdoc cref="IDevice.PlaybackStateChanged"/>
         public event EventHandler<PlaybackState> PlaybackStateChanged
         {
-            add
-            {
-                _device.PlaybackStateChanged += value;
-            }
+            add => _device.PlaybackStateChanged += value;
 
-            remove
-            {
-                _device.PlaybackStateChanged -= value;
-            }
+            remove => _device.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc cref="IDevice.ShuffleStateChanged"/>
         public event EventHandler<bool> ShuffleStateChanged
         {
-            add
-            {
-                _device.ShuffleStateChanged += value;
-            }
+            add => _device.ShuffleStateChanged += value;
 
-            remove
-            {
-                _device.ShuffleStateChanged -= value;
-            }
+            remove => _device.ShuffleStateChanged -= value;
         }
 
         /// <inheritdoc cref="IDevice.RepeatStateChanged"/>
         public event EventHandler<RepeatState> RepeatStateChanged
         {
-            add
-            {
-                _device.RepeatStateChanged += value;
-            }
+            add => _device.RepeatStateChanged += value;
 
-            remove
-            {
-                _device.RepeatStateChanged -= value;
-            }
+            remove => _device.RepeatStateChanged -= value;
         }
 
         /// <inheritdoc cref="IDevice.VolumePercentChanged"/>
         public event EventHandler<double> VolumePercentChanged
         {
-            add
-            {
-                _device.VolumePercentChanged += value;
-            }
+            add => _device.VolumePercentChanged += value;
 
-            remove
-            {
-                _device.VolumePercentChanged -= value;
-            }
+            remove => _device.VolumePercentChanged -= value;
         }
 
         /// <inheritdoc cref="IDevice.PlaybackSpeedChanged"/>
         public event EventHandler<double> PlaybackSpeedChanged
         {
-            add
-            {
-                _device.PlaybackSpeedChanged += value;
-            }
+            add => _device.PlaybackSpeedChanged += value;
 
-            remove
-            {
-                _device.PlaybackSpeedChanged -= value;
-            }
+            remove => _device.PlaybackSpeedChanged -= value;
         }
 
         /// <inheritdoc cref="IDevice.PlaybackQueueChanged"/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>> PlaybackQueueChanged
         {
-            add
-            {
-                _device.PlaybackQueueChanged += value;
-            }
+            add => _device.PlaybackQueueChanged += value;
 
-            remove
-            {
-                _device.PlaybackQueueChanged -= value;
-            }
+            remove => _device.PlaybackQueueChanged -= value;
         }
 
         /// <inheritdoc cref="IDevice.ChangePlaybackSpeedAsync"/>

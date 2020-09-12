@@ -35,7 +35,11 @@ namespace StrixMusic.Sdk.MergedWrappers
 
             foreach (var item in tracks)
             {
+                // TODO: Don't populate here
                 _artists.AddRange(item.Artists);
+
+                // TODO: Deal with merged artists
+                TotalArtistsCount += item.TotalArtistsCount;
 
                 item.ArtistsChanged += Item_ArtistsChanged;
             }
@@ -46,12 +50,12 @@ namespace StrixMusic.Sdk.MergedWrappers
             // TODO: Handle merging
             foreach (var item in e.AddedItems)
             {
-                _artists.Add(item);
+                _artists.Insert(item.Index, item.Data);
             }
 
             foreach (var item in e.RemovedItems)
             {
-                _artists.Remove(item);
+                _artists.RemoveAt(item.Index);
             }
         }
 
@@ -60,6 +64,9 @@ namespace StrixMusic.Sdk.MergedWrappers
 
         /// <inheritdoc/>
         public IReadOnlyList<IArtist> Artists => _artists;
+
+        /// <inheritdoc/>
+        public int TotalArtistsCount { get; }
 
         /// <inheritdoc/>
         public IAlbum? Album => _preferredSource.Album;
@@ -155,213 +162,123 @@ namespace StrixMusic.Sdk.MergedWrappers
         public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged
         {
-            add
-            {
-                _preferredSource.ArtistsChanged += value;
-            }
+            add => _preferredSource.ArtistsChanged += value;
 
-            remove
-            {
-                _preferredSource.ArtistsChanged -= value;
-            }
+            remove => _preferredSource.ArtistsChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<string>> GenresChanged
         {
-            add
-            {
-                _preferredSource.GenresChanged += value;
-            }
+            add => _preferredSource.GenresChanged += value;
 
-            remove
-            {
-                _preferredSource.GenresChanged -= value;
-            }
+            remove => _preferredSource.GenresChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<IAlbum?> AlbumChanged
         {
-            add
-            {
-                _preferredSource.AlbumChanged += value;
-            }
+            add => _preferredSource.AlbumChanged += value;
 
-            remove
-            {
-                _preferredSource.AlbumChanged -= value;
-            }
+            remove => _preferredSource.AlbumChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<DateTime?> DatePublishedChanged
         {
-            add
-            {
-                _preferredSource.DatePublishedChanged += value;
-            }
+            add => _preferredSource.DatePublishedChanged += value;
 
-            remove
-            {
-                _preferredSource.DatePublishedChanged -= value;
-            }
+            remove => _preferredSource.DatePublishedChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<int?> TrackNumberChanged
         {
-            add
-            {
-                _preferredSource.TrackNumberChanged += value;
-            }
+            add => _preferredSource.TrackNumberChanged += value;
 
-            remove
-            {
-                _preferredSource.TrackNumberChanged -= value;
-            }
+            remove => _preferredSource.TrackNumberChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<int?> PlayCountChanged
         {
-            add
-            {
-                _preferredSource.PlayCountChanged += value;
-            }
+            add => _preferredSource.PlayCountChanged += value;
 
-            remove
-            {
-                _preferredSource.PlayCountChanged -= value;
-            }
+            remove => _preferredSource.PlayCountChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<CultureInfo?> LanguageChanged
         {
-            add
-            {
-                _preferredSource.LanguageChanged += value;
-            }
+            add => _preferredSource.LanguageChanged += value;
 
-            remove
-            {
-                _preferredSource.LanguageChanged -= value;
-            }
+            remove => _preferredSource.LanguageChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<ILyrics?> LyricsChanged
         {
-            add
-            {
-                _preferredSource.LyricsChanged += value;
-            }
+            add => _preferredSource.LyricsChanged += value;
 
-            remove
-            {
-                _preferredSource.LyricsChanged -= value;
-            }
+            remove => _preferredSource.LyricsChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<bool> IsExplicitChanged
         {
-            add
-            {
-                _preferredSource.IsExplicitChanged += value;
-            }
+            add => _preferredSource.IsExplicitChanged += value;
 
-            remove
-            {
-                _preferredSource.IsExplicitChanged -= value;
-            }
+            remove => _preferredSource.IsExplicitChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState> PlaybackStateChanged
         {
-            add
-            {
-                _preferredSource.PlaybackStateChanged += value;
-            }
+            add => _preferredSource.PlaybackStateChanged += value;
 
-            remove
-            {
-                _preferredSource.PlaybackStateChanged -= value;
-            }
+            remove => _preferredSource.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<string> NameChanged
         {
-            add
-            {
-                _preferredSource.NameChanged += value;
-            }
+            add => _preferredSource.NameChanged += value;
 
-            remove
-            {
-                _preferredSource.NameChanged -= value;
-            }
+            remove => _preferredSource.NameChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<string?> DescriptionChanged
         {
-            add
-            {
-                _preferredSource.DescriptionChanged += value;
-            }
+            add => _preferredSource.DescriptionChanged += value;
 
-            remove
-            {
-                _preferredSource.DescriptionChanged -= value;
-            }
+            remove => _preferredSource.DescriptionChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<Uri?> UrlChanged
         {
-            add
-            {
-                _preferredSource.UrlChanged += value;
-            }
+            add => _preferredSource.UrlChanged += value;
 
-            remove
-            {
-                _preferredSource.UrlChanged -= value;
-            }
+            remove => _preferredSource.UrlChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged
         {
-            add
-            {
-                _preferredSource.ImagesChanged += value;
-            }
+            add => _preferredSource.ImagesChanged += value;
 
-            remove
-            {
-                _preferredSource.ImagesChanged -= value;
-            }
+            remove => _preferredSource.ImagesChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged
         {
-            add
-            {
-                _preferredSource.DurationChanged += value;
-            }
+            add => _preferredSource.DurationChanged += value;
 
-            remove
-            {
-                _preferredSource.DurationChanged -= value;
-            }
+            remove => _preferredSource.DurationChanged -= value;
         }
 
         /// <inheritdoc/>
@@ -392,7 +309,7 @@ namespace StrixMusic.Sdk.MergedWrappers
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj) => Equals(obj);
+        public override bool Equals(object? obj) => Equals(obj as ITrack);
 
         /// <inheritdoc/>
         public override int GetHashCode() => _preferredSource.Id.GetHashCode();
@@ -467,6 +384,12 @@ namespace StrixMusic.Sdk.MergedWrappers
         public Task ChangeDurationAsync(TimeSpan duration)
         {
             return _preferredSource.ChangeDurationAsync(duration);
+        }
+
+        /// <inheritdoc/>
+        public Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -50,6 +50,11 @@ namespace StrixMusic.UWP.Models
             return new FolderData(storageFile);
         }
 
+        public async Task Delete()
+        {
+            await StorageFile.DeleteAsync();
+        }
+
         /// <summary>
         /// Populates the <see cref="MusicProperties"/>.
         /// </summary>

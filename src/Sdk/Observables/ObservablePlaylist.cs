@@ -75,12 +75,12 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Tracks.Add(new ObservableTrack(item));
+                Tracks.Insert(item.Index, new ObservableTrack(item.Data));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Tracks.Remove(new ObservableTrack(item));
+                Tracks.RemoveAt(item.Index);
             }
         }
 
@@ -103,12 +103,12 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Images.Add(item);
+                Images.Insert(item.Index, item.Data);
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Images.Remove(item);
+                Images.RemoveAt(item.Index);
             }
         }
 

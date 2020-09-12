@@ -11,20 +11,20 @@ namespace StrixMusic.Sdk.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionChangedEventArgs{T}"/> class.
         /// </summary>
-        public CollectionChangedEventArgs(IReadOnlyList<T>? addedItems, IReadOnlyList<T>? removedItems)
+        public CollectionChangedEventArgs(IReadOnlyList<CollectionChangedEventArgsItem<T>>? addedItems, IReadOnlyList<CollectionChangedEventArgsItem<T>>? removedItems)
         {
-            AddedItems = addedItems ?? Array.Empty<T>();
-            RemovedItems = removedItems ?? Array.Empty<T>();
+            AddedItems = addedItems ?? Array.Empty<CollectionChangedEventArgsItem<T>>();
+            RemovedItems = removedItems ?? Array.Empty<CollectionChangedEventArgsItem<T>>();
         }
 
         /// <summary>
         /// The items that were added to the collection.
         /// </summary>
-        public IReadOnlyList<T> AddedItems { get; }
+        public IReadOnlyList<CollectionChangedEventArgsItem<T>> AddedItems { get; }
 
         /// <summary>
         /// The items that were removed from the collection.
         /// </summary>
-        public IReadOnlyList<T> RemovedItems { get; }
+        public IReadOnlyList<CollectionChangedEventArgsItem<T>> RemovedItems { get; }
     }
 }

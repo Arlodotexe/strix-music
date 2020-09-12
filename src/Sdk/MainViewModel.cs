@@ -40,9 +40,12 @@ namespace StrixMusic.Sdk
 
         private async Task InitializeCores(IEnumerable<ICore> coresToLoad)
         {
-            await coresToLoad.InParallel(core => Task.Run(core.InitAsync));
+            // Handle possible multiple enumeration
+            var toLoad = coresToLoad as ICore[] ?? coresToLoad.ToArray();
 
-            foreach (var core in coresToLoad)
+            await toLoad.InParallel(core => Task.Run(core.InitAsync));
+
+            foreach (var core in toLoad)
             {
                 Users.Add(new ObservableUserProfile(core.User));
 
@@ -61,7 +64,7 @@ namespace StrixMusic.Sdk
         }
 
         /// <summary>
-        /// Gets search suggestions from all cores and asyncronously populate it into <see cref="SearchAutoComplete"/>.
+        /// Gets search suggestions from all cores and asynchronously populate it into <see cref="SearchAutoComplete"/>.
         /// </summary>
         /// <param name="query">The query to search for.</param>
         public void GlobalSearchSuggestions(string query)
@@ -90,21 +93,21 @@ namespace StrixMusic.Sdk
             // TODO: Merge search results
             var merged = searchResults.First();
 
-            SearchResult = new ObservableSearchResults(merged);
+            SearchResults = new ObservableSearchResults(merged);
 
             return merged;
         }
 
         private void Core_DevicesChanged(object sender, CollectionChangedEventArgs<IDevice> e)
         {
-            foreach (var device in e.AddedItems)
+            foreach (var item in e.AddedItems)
             {
-                Devices.Add(new ObservableDevice(device));
+                Devices.RemoveAt(item.Index);
             }
 
-            foreach (var device in e.RemovedItems)
+            foreach (var item in e.RemovedItems)
             {
-                Devices.Remove(new ObservableDevice(device));
+                Devices.RemoveAt(item.Index);
             }
         }
 
@@ -144,19 +147,19 @@ namespace StrixMusic.Sdk
         public IAsyncRelayCommand<string> GetSearchResultsAsyncCommand { get; }
 
         /// <summary>
-        /// Gets autocompleted suggestions for a search query.
+        /// Gets autocomplete suggestions for a search query.
         /// </summary>
         public IRelayCommand<string> GetSearchAutoSuggestAsyncCommand { get; }
 
         /// <summary>
         /// Contains search results.
         /// </summary>
-        public ObservableSearchResults? SearchResult { get; private set; }
+        public ObservableSearchResults? SearchResults { get; private set; }
 
         /// <summary>
         /// The autocomplete strings for the search results.
         /// </summary>
-        public ObservableCollection<string> SearchAutoComplete { get; private set; }
+        public ObservableCollection<string> SearchAutoComplete { get; }
 
         /// <summary>
         /// The current playback queue. First item plays next.

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
@@ -90,12 +89,12 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Tracks.Add(new ObservableTrack(item));
+                Tracks.Insert(item.Index, new ObservableTrack(item.Data));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Tracks.Remove(new ObservableTrack(item));
+                Tracks.RemoveAt(item.Index);
             }
         }
 
@@ -103,12 +102,12 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Playlists.Add(new ObservablePlaylist(item));
+                Playlists.Insert(item.Index, new ObservablePlaylist(item.Data));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Playlists.Remove(new ObservablePlaylist(item));
+                Playlists.RemoveAt(item.Index);
             }
         }
 
@@ -121,12 +120,12 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Children.Add(new ObservableCollectionGroup(item));
+                Children.Insert(item.Index, new ObservableCollectionGroup(item.Data));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Children.Remove(new ObservableCollectionGroup(item));
+                Children.RemoveAt(item.Index);
             }
         }
 
@@ -134,12 +133,12 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Artists.Add(new ObservableArtist(item));
+                Artists.Insert(item.Index, new ObservableArtist(item.Data));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Artists.Remove(new ObservableArtist(item));
+                Artists.RemoveAt(item.Index);
             }
         }
 
@@ -147,111 +146,69 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Albums.Add(new ObservableAlbum(item));
+                Albums.Insert(item.Index, new ObservableAlbum(item.Data));
             }
 
             foreach (var item in e.RemovedItems)
             {
-                Albums.Remove(new ObservableAlbum(item));
+                Albums.RemoveAt(item.Index);
             }
         }
 
         /// <inheritdoc cref="IPlayableCollectionGroup.ChildrenChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> ChildrenChanged
         {
-            add
-            {
-                _collectionGroupBase.ChildrenChanged += value;
-            }
+            add => _collectionGroupBase.ChildrenChanged += value;
 
-            remove
-            {
-                _collectionGroupBase.ChildrenChanged -= value;
-            }
+            remove => _collectionGroupBase.ChildrenChanged -= value;
         }
 
         /// <inheritdoc cref="IPlaylistCollection.PlaylistsChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged
         {
-            add
-            {
-                _collectionGroupBase.PlaylistsChanged += value;
-            }
+            add => _collectionGroupBase.PlaylistsChanged += value;
 
-            remove
-            {
-                _collectionGroupBase.PlaylistsChanged -= value;
-            }
+            remove => _collectionGroupBase.PlaylistsChanged -= value;
         }
 
         /// <inheritdoc cref="ITrackCollection.TracksChanged"/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
         {
-            add
-            {
-                _collectionGroupBase.TracksChanged += value;
-            }
+            add => _collectionGroupBase.TracksChanged += value;
 
-            remove
-            {
-                _collectionGroupBase.TracksChanged -= value;
-            }
+            remove => _collectionGroupBase.TracksChanged -= value;
         }
 
         /// <inheritdoc cref="IAlbumCollection.AlbumsChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged
         {
-            add
-            {
-                _collectionGroupBase.AlbumsChanged += value;
-            }
+            add => _collectionGroupBase.AlbumsChanged += value;
 
-            remove
-            {
-                _collectionGroupBase.AlbumsChanged -= value;
-            }
+            remove => _collectionGroupBase.AlbumsChanged -= value;
         }
 
         /// <inheritdoc cref="IArtistCollection.ArtistsChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged
         {
-            add
-            {
-                _collectionGroupBase.ArtistsChanged += value;
-            }
+            add => _collectionGroupBase.ArtistsChanged += value;
 
-            remove
-            {
-                _collectionGroupBase.ArtistsChanged -= value;
-            }
+            remove => _collectionGroupBase.ArtistsChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.PlaybackStateChanged"/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
-            add
-            {
-                _collectionGroupBase.PlaybackStateChanged += value;
-            }
+            add => _collectionGroupBase.PlaybackStateChanged += value;
 
-            remove
-            {
-                _collectionGroupBase.PlaybackStateChanged -= value;
-            }
+            remove => _collectionGroupBase.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.DurationChanged"/>
         public event EventHandler<TimeSpan>? DurationChanged
         {
-            add
-            {
-                _collectionGroupBase.DurationChanged += value;
-            }
+            add => _collectionGroupBase.DurationChanged += value;
 
-            remove
-            {
-                _collectionGroupBase.DurationChanged -= value;
-            }
+            remove => _collectionGroupBase.DurationChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayableCollectionGroup.Children"/>
@@ -321,7 +278,7 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc cref="IArtistCollection.TotalArtistsCount"/>
         public int TotalArtistsCount => _collectionGroupBase.TotalArtistsCount;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPlayable.PauseAsync"/>
         public Task PauseAsync() => _collectionGroupBase.PauseAsync();
 
         /// <inheritdoc cref="IPlayable.PlayAsync"/>
