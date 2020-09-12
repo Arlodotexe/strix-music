@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Extensions;
+using OwlCore.Extensions.AsyncExtensions;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 using StrixMusic.Sdk.Observables;

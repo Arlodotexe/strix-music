@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk;
+using OwlCore.Extensions.DateTimeExtensions;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
@@ -51,6 +52,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Name => _release.Title;
 
         /// <inheritdoc/>
+        public DateTime? DatePublished => CreateReleaseDate(_release.Date);
+
+        /// <inheritdoc/>
         public IReadOnlyList<IImage> Images => throw new NotImplementedException();
 
         /// <inheritdoc/>
@@ -81,6 +85,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeImagesAsyncSupported => false;
 
         /// <inheritdoc/>
+        public bool IsChangeDatePublishedAsyncSupported => false;
+
+        /// <inheritdoc/>
         public bool IsChangeDescriptionAsyncSupported => false;
 
         /// <inheritdoc/>
@@ -102,6 +109,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc/>
+        public event EventHandler<DateTime?>? DatePublishedChanged;
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
 
         /// <inheritdoc/>
@@ -121,6 +131,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDatePublishedAsync(DateTime datePublished)
         {
             throw new NotSupportedException();
         }
@@ -157,6 +173,26 @@ namespace StrixMusic.Core.MusicBrainz.Models
             });
 
             return _tracks;
+        }
+
+        private DateTime CreateReleaseDate(string musicBrainzDate)
+        {
+            var dateParts = musicBrainzDate.Split('-');
+
+            var date = default(DateTime);
+
+            foreach (var (item, index) in dateParts.Select((value, index) => (value, index)))
+            {
+                date = index switch
+                {
+                    0 => date.ChangeYear(Convert.ToInt32(item)),
+                    1 => date.ChangeMonth(Convert.ToInt32(item)),
+                    2 => date.ChangeDay(Convert.ToInt32(item)),
+                    _ => date
+                };
+            }
+
+            return date;
         }
     }
 }

@@ -1,14 +1,14 @@
-﻿using Hqub.MusicBrainz.API;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -29,13 +29,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
             SourceCore = sourceCore;
             _recording = recording;
             _artists = new List<IArtist>();
-            Album = new MusicBrainzAlbum(sourceCore, recording.Releases[0]);
+            Album = new MusicBrainzAlbum(sourceCore, recording.Releases.FirstOrDefault(x => x.Status == "Official") ?? recording.Releases.First());
 
             _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
         }
 
         /// <inheritdoc/>
-        public TrackType Type => throw new NotImplementedException();
+        public TrackType Type => TrackType.Song;
 
         /// <inheritdoc/>
         public IReadOnlyList<IArtist> Artists => _artists;
@@ -45,9 +45,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public IAlbum Album { get; }
-
-        /// <inheritdoc/>
-        public DateTime? DatePublished => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public IReadOnlyList<string> Genres => throw new NotImplementedException();
@@ -100,9 +97,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeAlbumAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDatePublishedAsyncSupported => false;
-
-        /// <inheritdoc/>
         public bool IsChangeGenresAsyncSupported => false;
 
         /// <inheritdoc/>
@@ -148,9 +142,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<IAlbum?>? AlbumChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<DateTime?>? DatePublishedChanged;
-
-        /// <inheritdoc/>
         public event EventHandler<int?>? TrackNumberChanged;
 
         /// <inheritdoc/>
@@ -191,12 +182,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public Task ChangeArtistsAsync(IReadOnlyList<IArtist>? artists)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeDatePublishedAsync(DateTime datePublished)
         {
             throw new NotSupportedException();
         }
