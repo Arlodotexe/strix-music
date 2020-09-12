@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace StrixMusic.Sdk
+namespace StrixMusic.Sdk.Events
 {
     /// <summary>
     /// Event args containing info about a changed collection.

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 using StrixMusic.Sdk.Observables;
 
@@ -94,7 +95,7 @@ namespace StrixMusic.Sdk
             return merged;
         }
 
-        private void Core_DevicesChanged(object sender, Sdk.CollectionChangedEventArgs<IDevice> e)
+        private void Core_DevicesChanged(object sender, CollectionChangedEventArgs<IDevice> e)
         {
             foreach (var device in e.AddedItems)
             {

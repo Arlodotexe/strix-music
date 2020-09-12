@@ -6,6 +6,7 @@ using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models

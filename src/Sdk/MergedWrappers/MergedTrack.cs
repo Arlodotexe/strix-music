@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.MergedWrappers
@@ -16,7 +17,7 @@ namespace StrixMusic.Sdk.MergedWrappers
     {
         private readonly List<IArtist> _artists = new List<IArtist>();
 
-        private ITrack _preferredSource;
+        private readonly ITrack _preferredSource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchResults"/> class.
@@ -29,7 +30,7 @@ namespace StrixMusic.Sdk.MergedWrappers
                 throw new ArgumentNullException(nameof(tracks));
             }
 
-            // TODO: Use top preffered core.
+            // TODO: Use top Preferred core.
             _preferredSource = tracks.First();
 
             foreach (var item in tracks)

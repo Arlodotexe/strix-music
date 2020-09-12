@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.MergedWrappers
@@ -30,7 +31,7 @@ namespace StrixMusic.Sdk.MergedWrappers
         {
             Sources = searchResults;
 
-            // TODO: Use top preffered core.
+            // TODO: Use top Preferred core.
             _preferredSource = Sources[0];
 
             AttachPropertyChangedEvents(_preferredSource);

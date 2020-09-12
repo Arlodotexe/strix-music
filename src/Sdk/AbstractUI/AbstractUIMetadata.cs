@@ -1,0 +1,17 @@
+﻿namespace StrixMusic.Sdk.AbstractUI
+{
+    /// <summary>
+    /// Abstracted metadata that can be displayed inside of certain <see cref="AbstractUIElement"/>s.
+    /// </summary>
+    public abstract class AbstractUIMetadata : AbstractUIBase
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref="AbstractUIMetadata"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        protected AbstractUIMetadata(string id)
+            : base(id)
+        {
+        }
+    }
+}
