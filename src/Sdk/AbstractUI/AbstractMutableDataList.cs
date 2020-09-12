@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.AbstractUI
     /// <summary>
     /// A <see cref="AbstractDataList"/> that can be changed by the user.
     /// </summary>
-    public abstract class AbstractMutableDataList : AbstractUIElement
+    public abstract class AbstractMutableDataList : AbstractDataList
     {
         /// <summary>
         /// Creates a new instance of <see cref="AbstractMutableDataList"/>.

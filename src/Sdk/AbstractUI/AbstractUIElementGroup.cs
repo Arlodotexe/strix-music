@@ -10,14 +10,14 @@ namespace StrixMusic.Sdk.AbstractUI
     /// Recommended to create a new <see cref="AbstractUIElementGroup"/> inside of <see cref="Items"/> for each section (Settings, About, etc).
     /// You can then create <see cref="AbstractUIElementGroup"/>s inside of each of these to group your settings, "About" data, etc.
     /// </remarks>
-    public abstract class AbstractUIElementGroup : AbstractUIElement
+    public class AbstractUIElementGroup : AbstractUIElement
     {
         /// <summary>
         /// Creates a new instance of an <see cref="AbstractUIElementGroup"/>.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="preferredOrientation"></param>
-        protected AbstractUIElementGroup(string id, PreferredOrientation preferredOrientation)
+        public AbstractUIElementGroup(string id, PreferredOrientation preferredOrientation)
             : base(id)
         {
             Items = Array.Empty<AbstractUIElement>();

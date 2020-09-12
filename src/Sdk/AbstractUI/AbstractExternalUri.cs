@@ -6,14 +6,14 @@ namespace StrixMusic.Sdk.AbstractUI
     /// Presents a link to the user.
     /// </summary>
     /// <remarks>This can be displayed in the UI however it wants (Button, text link, Icons, custom, etc)</remarks>
-    public abstract class AbstractExternalUri : AbstractUIMetadata
+    public class AbstractExternalUri : AbstractUIMetadata
     {
         /// <summary>
         /// Creates a new instance of <see cref="AbstractExternalUri"/>.
         /// </summary>
         /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
         /// <param name="externalUri"><inheritdoc cref="ExternalUri"/></param>
-        protected AbstractExternalUri(string id, Uri externalUri)
+        public AbstractExternalUri(string id, Uri externalUri)
             : base(id)
         {
             ExternalUri = externalUri;
