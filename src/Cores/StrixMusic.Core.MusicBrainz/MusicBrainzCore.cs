@@ -16,6 +16,8 @@ namespace StrixMusic.Core.MusicBrainz
     /// </summary>
     public class MusicBrainzCore : ICore
     {
+        private readonly MusicBrainzClient _musicBrainzClient;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCore"/> class.
         /// </summary>
@@ -24,7 +26,12 @@ namespace StrixMusic.Core.MusicBrainz
         {
             InstanceId = instanceId;
             CoreConfig = new MusicBrainzCoreConfig(this);
+
+            // The library created here won't be used by the UI.
+            // The UI isn't loaded until InitAsync is called, where we set up the actual library.
             Library = new MusicBrainzLibrary(this);
+
+            _musicBrainzClient = CoreConfig.Services.GetService<MusicBrainzClient>();
         }
 
         /// <inheritdoc/>
@@ -43,7 +50,7 @@ namespace StrixMusic.Core.MusicBrainz
         public IReadOnlyList<IDevice> Devices => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public ILibrary Library { get; }
+        public ILibrary Library { get; private set; }
 
         /// <inheritdoc/>
         public IRecentlyPlayed RecentlyPlayed => throw new NotImplementedException();
@@ -63,26 +70,49 @@ namespace StrixMusic.Core.MusicBrainz
         /// <inheritdoc/>
         public ValueTask DisposeAsync()
         {
-            throw new NotImplementedException();
+            return default;
         }
 
         /// <inheritdoc/>
-        public Task<IAsyncEnumerable<string>> GetSearchAutoCompleteAsync(string query)
+        public Task<IReadOnlyList<string>?> GetSearchAutoCompleteAsync(string query)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<IReadOnlyList<string>?>(default);
         }
 
         /// <inheritdoc/>
-        public Task<ISearchResults> GetSearchResultsAsync(string query)
+        public async Task<ISearchResults> GetSearchResultsAsync(string query)
         {
-            return Task.FromResult(new MusicBrainzSearchResults(this) as ISearchResults);
+            var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*", 1);
+            var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1);
+            var artists = await _musicBrainzClient.Artists.SearchAsync("*", 1);
+
+            var results = new MusicBrainzSearchResults(this, query)
+            {
+                TotalTracksCount = recordings.Count,
+                TotalAlbumsCount = releases.Count,
+                TotalArtistsCount = artists.Count,
+                TotalPlaylistCount = 0,
+                TotalChildrenCount = 0,
+            };
+
+            return results;
         }
 
         /// <inheritdoc/>
-        public Task InitAsync()
+        public async Task InitAsync()
         {
-            var service = CoreConfig.Services.GetService<MusicBrainzClient>();
-            return Task.CompletedTask;
+            var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*", 1);
+            var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1);
+            var artists = await _musicBrainzClient.Artists.SearchAsync("*", 1);
+
+            Library = new MusicBrainzLibrary(this)
+            {
+                TotalTracksCount = recordings.Count,
+                TotalAlbumsCount = releases.Count,
+                TotalArtistsCount = artists.Count,
+                TotalPlaylistCount = 0,
+                TotalChildrenCount = 0,
+            };
         }
     }
 }

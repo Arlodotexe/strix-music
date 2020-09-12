@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Interfaces
     /// <summary>
     /// Describes a core.
     /// </summary>
-    public partial interface ICore : IAsyncDisposable
+    public interface ICore : IAsyncDisposable
     {
         /// <inheritdoc cref="ICoreConfig" />
         public ICoreConfig CoreConfig { get; }
@@ -57,7 +57,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// </summary>
         /// <param name="query">Search query</param>
         /// <returns>Suggested completed queries.</returns>
-        public Task<IAsyncEnumerable<string>> GetSearchAutoCompleteAsync(string query);
+        public Task<IReadOnlyList<string>?> GetSearchAutoCompleteAsync(string query);
 
         /// <summary>
         /// Gets search results for a given query.

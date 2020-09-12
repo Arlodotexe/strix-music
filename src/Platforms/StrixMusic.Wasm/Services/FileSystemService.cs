@@ -48,6 +48,24 @@ namespace StrixMusic.Sdk.Services.StorageService
         }
 
         /// <inheritdoc/>
+        public Task<bool> FileExistsAsync(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> DirectoryExistsAsync(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<IFolderData> CreateDirectoryAsync(string folderName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
         public Task Init()
         {
             throw new NotImplementedException();

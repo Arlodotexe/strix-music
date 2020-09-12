@@ -3,7 +3,7 @@
 namespace StrixMusic.Sdk.Interfaces
 {
     /// <summary>
-    /// Interface that represents search results.
+    /// Represents search results.
     /// </summary>
     public interface ISearchResults : IPlayableCollectionGroup
     {

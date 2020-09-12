@@ -29,42 +29,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public override Task ChangeDescriptionAsync(string? description)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override Task ChangeDurationAsync(TimeSpan duration)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override Task ChangeImagesAsync(IReadOnlyList<IImage> images)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override Task ChangeNameAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override Task PauseAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override Task PlayAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
         public override async Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
             var albums = await _musicBrainzClient.Releases.SearchAsync("*", limit, offset);
@@ -82,25 +46,20 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override async Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
         {
             var artists = await _musicBrainzClient.Artists.SearchAsync("*", limit, offset);
-            var list = new List<IArtist>();
-            foreach (var item in artists.Items)
-            {
-                list.Add(new MusicBrainzArtist(SourceCore, item));
-            }
 
-            return list;
+            return artists.Items.Select(item => new MusicBrainzArtist(SourceCore, item)).Cast<IArtist>().ToList();
         }
 
         /// <inheritdoc/>
         public override Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<IReadOnlyList<IPlayableCollectionGroup>>(new List<IPlayableCollectionGroup>());
         }
 
         /// <inheritdoc/>
         public override Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<IReadOnlyList<IPlaylist>>(new List<IPlaylist>());
         }
 
         /// <inheritdoc/>
