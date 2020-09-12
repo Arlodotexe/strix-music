@@ -15,16 +15,5 @@ namespace StrixMusic.Shell.ZuneDesktop.Themes
         {
             this.InitializeComponent();
         }
-
-        private void SaveClicked(object sender, RoutedEventArgs e)
-        {
-            // TODO: Save settings changes
-            ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>()!.GoBack();
-        }
-
-        private void CancelClicked(object sender, RoutedEventArgs e)
-        {
-            ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>()!.GoBack();
-        }
     }
 }
