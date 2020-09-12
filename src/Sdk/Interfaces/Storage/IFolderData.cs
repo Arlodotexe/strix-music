@@ -43,13 +43,19 @@ namespace StrixMusic.Sdk.Interfaces.Storage
         /// <summary>
         /// Scans and populates the immediate contents of the folder.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asyncronous operation.</returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task ScanAsync();
 
         /// <summary>
         /// Scans and populates the contents of the folder and all subfolders.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asyncronous operation.</returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task DeepScanAsync();
+
+        /// <summary>
+        /// Deletes the folder and all contents
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task Delete();
     }
 }

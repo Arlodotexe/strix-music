@@ -1,13 +1,13 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
-using StrixMusic.Sdk.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.Input;
+using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
 {
@@ -36,7 +36,6 @@ namespace StrixMusic.Sdk.Observables
             Artists = new ObservableCollection<ObservableArtist>(_track.Artists.Select(x => new ObservableArtist(x)));
             Images = new ObservableCollection<IImage>(_track.Images);
             SourceCore = new ObservableCore(_track.SourceCore);
-
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -324,7 +323,7 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc cref="ITrack.RelatedItems"/>
-        public ObservableCollectionGroup RelatedItems { get; }
+        public ObservableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc cref="ITrack.IsChangeArtistsAsyncSupported"/>
         public bool IsChangeArtistsAsyncSupported

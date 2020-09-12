@@ -51,7 +51,7 @@ namespace Hqub.MusicBrainz.Client
     //    {
     //        if (!Directory.Exists(path))
     //        {
-    //            Directory.CreateDirectory(path);
+    //            Directory.CreateDirectoryAsync(path);
     //        }
 
     //        await CacheEntry.Write(path, request, response);

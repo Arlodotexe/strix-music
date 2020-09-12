@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Interfaces.Storage;
 using StrixMusic.Models;
-using StrixMusic.UWP.Models;
+using StrixMusic.Sdk.Interfaces.Storage;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
-using StrixMusic.Sdk.Services.StorageService;
 
+// ReSharper disable CheckNamespace
 namespace StrixMusic.Sdk.Services.StorageService
 {
     /// <inheritdoc cref="IFileSystemService" />
@@ -59,17 +58,56 @@ namespace StrixMusic.Sdk.Services.StorageService
         /// <inheritdoc/>
         public Task RevokeAccess(IFolderData folder)
         {
-            if (_registeredFolders.Contains(folder) && folder is FolderData folderData)
-            {
-                var targetFutureAccessListFile = StorageApplicationPermissions.FutureAccessList.Entries
-                    .FirstOrDefault(x => x.Metadata == folderData.StorageFolder.Path);
+            if (!_registeredFolders.Contains(folder) || !(folder is FolderData folderData))
+                return Task.CompletedTask;
 
-                StorageApplicationPermissions.FutureAccessList.Remove(targetFutureAccessListFile.Token);
+            var targetFutureAccessListFile = StorageApplicationPermissions.FutureAccessList.Entries
+                .FirstOrDefault(x => x.Metadata == folderData.StorageFolder.Path);
 
-                _registeredFolders.Remove(folder);
-            }
+            StorageApplicationPermissions.FutureAccessList.Remove(targetFutureAccessListFile.Token);
+
+            _registeredFolders.Remove(folder);
 
             return Task.CompletedTask;
+        }
+
+
+        /// <inheritdoc/>
+        public async Task<bool> FileExistsAsync(string path)
+        {
+            try
+            {
+                await StorageFile.GetFileFromPathAsync(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> DirectoryExistsAsync(string path)
+        {
+            try
+            {
+                await StorageFile.GetFileFromPathAsync(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<IFolderData> CreateDirectoryAsync(string folderName)
+        {
+            var storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
+
+            var folderData = new FolderData(storageFolder);
+
+            return folderData;
         }
 
         /// <inheritdoc />

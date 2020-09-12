@@ -1,10 +1,10 @@
-﻿using StrixMusic.Sdk.Interfaces.Storage;
-using StrixMusic.UWP.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.Interfaces.Storage;
+using StrixMusic.UWP.Models;
 using Uno.Extensions;
 using Windows.Storage;
 
@@ -18,9 +18,9 @@ namespace StrixMusic.Models
         /// </summary>
         internal StorageFolder StorageFolder { get; }
 
-        private IList<IFileData> _files = new List<IFileData>();
+        private readonly IList<IFileData> _files = new List<IFileData>();
 
-        private IList<IFolderData> _folders = new List<IFolderData>();
+        private readonly IList<IFolderData> _folders = new List<IFolderData>();
 
         /// <summary>
         /// Constructs a new instance of <see cref="IFolderData"/>.
@@ -43,7 +43,7 @@ namespace StrixMusic.Models
         public IReadOnlyList<IFolderData> Folders => _folders.ToArray();
 
         /// <inheritdoc />
-        public int TotalFileCount { get; private set; } = 0;
+        public int TotalFileCount { get; private set; }
 
         /// <inheritdoc/>
         public async Task ScanAsync()
@@ -80,6 +80,14 @@ namespace StrixMusic.Models
             }
 
             Debug.WriteLine($"Deep scan finished for folder {Name}");
+        }
+
+        /// <inheritdoc/>
+        public async Task Delete()
+        {
+            await StorageFolder.DeleteAsync();
+            _files.Clear();
+            _folders.Clear();
         }
 
         /// <inheritdoc/>

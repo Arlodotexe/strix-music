@@ -36,18 +36,24 @@ namespace StrixMusic.Sdk.Interfaces.Storage
         /// The parent folder that contains this file.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the parent folder.</returns>
-        Task<IFolderData> GetParentAsync();
+        public Task<IFolderData> GetParentAsync();
 
         /// <summary>
         /// Opens and returns a stream to the file.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is a stream to the file.</returns>
-        Task<Stream> GetStreamAsync();
+        public Task<Stream> GetStreamAsync();
 
         /// <summary>
         /// Populates the <see cref="MusicProperties"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task ScanMediaDataAsync();
+
+        /// <summary>
+        /// Deletes the file.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task Delete();
     }
 }
