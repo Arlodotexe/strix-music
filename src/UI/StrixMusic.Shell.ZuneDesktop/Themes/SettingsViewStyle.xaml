@@ -7,78 +7,12 @@
     xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
     xmlns:selectors="using:StrixMusic.Shell.ZuneDesktop.TemplateSelectors"
     x:Class="StrixMusic.Shell.ZuneDesktop.Themes.SettingsViewStyle">
-
-    <DataTemplate x:Key="ZuneDesktopSettingsViewTemplate" x:DataType="observables:ObservableLibrary">
-        <UserControl>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <!--Header-->
-                <TextBlock Text="settings" FontSize="24" FontWeight="Light" Margin="44,36"/>
-
-                <Pivot Grid.Row="1" Margin="0,-36,0,0">
-                    <Pivot.Resources>
-                        <Style TargetType="PivotHeaderItem" BasedOn="{StaticResource SmallPivotItemStyle}"/>
-                    </Pivot.Resources>
-                    <Pivot.LeftHeader>
-                        <Grid Width="42"/>
-                    </Pivot.LeftHeader>
-                    <PivotItem Header="DISPLAY">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="24"/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <ListView ItemContainerStyle="{StaticResource ZuneSettingsListViewItem}" Grid.Column="1" Padding="24,0,96,0">
-                                <ListView ItemContainerStyle="{StaticResource ZuneSettingsListViewItem}" Grid.Column="1" Padding="24,0,96,0">
-                                    <ListView.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <ItemsStackPanel>
-                                                <ItemsStackPanel.ChildrenTransitions>
-                                                    <TransitionCollection>
-                                                        <EntranceThemeTransition FromHorizontalOffset="-10" FromVerticalOffset="0" IsStaggeringEnabled="True"/>
-                                                        <RepositionThemeTransition IsStaggeringEnabled="True"/>
-                                                    </TransitionCollection>
-                                                </ItemsStackPanel.ChildrenTransitions>
-                                            </ItemsStackPanel>
-                                        </ItemsPanelTemplate>
-                                    </ListView.ItemsPanel>
-                                    <ListViewItem Content="BACKGROUND"/>
-                                    <ListViewItem Content="SCALING"/>
-                                </ListView>
-                                <ListViewItem Content="BACKGROUND"/>
-                                <ListViewItem Content="SCALING"/>
-                            </ListView>
-
-                            <Rectangle Width="1" Grid.Column="2" Fill="Black" Opacity=".2"/>
-                        </Grid>
-                    </PivotItem>
-                    <PivotItem Header="BEHAVIOR" IsEnabled="False"/>
-                    <PivotItem Header="CORES" IsEnabled="False"/>
-                </Pivot>
-
-                <!--Action Buttons-->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
-                            Margin="48,32" Grid.Row="2">
-                    <Button Content="OK" Margin="2,0" Style="{StaticResource ZuneTextButton}" Click="SaveClicked"/>
-                    <Button Content="CANCEL" Style="{StaticResource ZuneTextButton}" Margin="2,0,0,0" Click="CancelClicked"/>
-                </StackPanel>
-            </Grid>
-        </UserControl>
-    </DataTemplate>
-
     <Style x:Key="ZuneDesktopSettingsViewControlStyle" TargetType="default:SettingsViewControl">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="default:SettingsViewControl">
-                        <ContentControl ContentTemplate="{StaticResource ZuneDesktopSettingsViewTemplate}"
-                                        VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
+                        <local:SettingsView/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
