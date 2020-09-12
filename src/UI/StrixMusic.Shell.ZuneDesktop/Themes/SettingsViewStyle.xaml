@@ -27,7 +27,36 @@
                         <Grid Width="42"/>
                     </Pivot.LeftHeader>
                     <PivotItem Header="DISPLAY">
-                        <Grid/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="24"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ListView ItemContainerStyle="{StaticResource ZuneSettingsListViewItem}" Grid.Column="1" Padding="24,0,96,0">
+                                <ListView ItemContainerStyle="{StaticResource ZuneSettingsListViewItem}" Grid.Column="1" Padding="24,0,96,0">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <ItemsStackPanel>
+                                                <ItemsStackPanel.ChildrenTransitions>
+                                                    <TransitionCollection>
+                                                        <EntranceThemeTransition FromHorizontalOffset="-10" FromVerticalOffset="0" IsStaggeringEnabled="True"/>
+                                                        <RepositionThemeTransition IsStaggeringEnabled="True"/>
+                                                    </TransitionCollection>
+                                                </ItemsStackPanel.ChildrenTransitions>
+                                            </ItemsStackPanel>
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                    <ListViewItem Content="BACKGROUND"/>
+                                    <ListViewItem Content="SCALING"/>
+                                </ListView>
+                                <ListViewItem Content="BACKGROUND"/>
+                                <ListViewItem Content="SCALING"/>
+                            </ListView>
+
+                            <Rectangle Width="1" Grid.Column="2" Fill="Black" Opacity=".2"/>
+                        </Grid>
                     </PivotItem>
                     <PivotItem Header="BEHAVIOR" IsEnabled="False"/>
                     <PivotItem Header="CORES" IsEnabled="False"/>
