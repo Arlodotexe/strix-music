@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Mvvm.Input;
+using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
+using StrixMusic.Sdk.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk;
-using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
-using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
 {
@@ -36,9 +35,12 @@ namespace StrixMusic.Sdk.Observables
             if (_playlist.Owner != null)
                 _owner = new ObservableUserProfile(_playlist.Owner);
 
+            if (_playlist.RelatedItems != null)
+                RelatedItems = new ObservableCollectionGroup(_playlist.RelatedItems);
+
             Tracks = new ObservableCollection<ObservableTrack>(_playlist.Tracks.Select(x => new ObservableTrack(x)));
             Images = new ObservableCollection<IImage>(_playlist.Images);
-            RelatedItems = new ObservableCollectionGroup(_playlist.RelatedItems);
+
             SourceCore = new ObservableCore(_playlist.SourceCore);
 
             AttachEvents();
@@ -171,7 +173,7 @@ namespace StrixMusic.Sdk.Observables
         public TimeSpan Duration => _playlist.Duration;
 
         /// <inheritdoc cref="IPlaylist.RelatedItems"/>
-        public ObservableCollectionGroup RelatedItems { get; }
+        public ObservableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc cref="ITrackCollection.TracksChanged"/>
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged

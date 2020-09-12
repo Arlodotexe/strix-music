@@ -66,7 +66,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IReadOnlyList<ITrack> Tracks => _tracks;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
+        public IPlayableCollectionGroup? RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public bool IsPlayAsyncSupported => false;

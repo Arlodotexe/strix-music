@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Mvvm.Input;
+using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
+using StrixMusic.Sdk.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk;
-using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
-using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
 {
@@ -28,17 +27,19 @@ namespace StrixMusic.Sdk.Observables
 
             SourceCore = new ObservableCore(_artist.SourceCore);
 
+            if (_artist.RelatedItems != null)
+                RelatedItems = new ObservableCollectionGroup(_artist.RelatedItems);
+
+            Tracks = new ObservableCollection<ObservableTrack>(_artist.Tracks.Select(x => new ObservableTrack(x)));
+            Albums = new ObservableCollection<ObservableAlbum>(_artist.Albums.Select(x => new ObservableAlbum(x)));
+            Images = new ObservableCollection<IImage>(_artist.Images);
+
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
             ChangeImagesAsyncCommand = new AsyncRelayCommand<IReadOnlyList<IImage>>(ChangeImagesAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
-
-            Tracks = new ObservableCollection<ObservableTrack>(_artist.Tracks.Select(x => new ObservableTrack(x)));
-            Albums = new ObservableCollection<ObservableAlbum>(_artist.Albums.Select(x => new ObservableAlbum(x)));
-            Images = new ObservableCollection<IImage>(_artist.Images);
-            RelatedItems = new ObservableCollectionGroup(_artist.RelatedItems);
 
             AttachEvents();
         }
@@ -337,7 +338,7 @@ namespace StrixMusic.Sdk.Observables
         public TimeSpan Duration => _artist.Duration;
 
         /// <inheritdoc cref="IArtist.RelatedItems"/>
-        public ObservableCollectionGroup RelatedItems { get; }
+        public ObservableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc cref="IPlayable.ChangeNameAsync"/>
         public Task ChangeNameAsync(string name) => _artist.ChangeNameAsync(name);

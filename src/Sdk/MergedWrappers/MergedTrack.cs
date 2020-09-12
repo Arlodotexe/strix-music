@@ -110,7 +110,7 @@ namespace StrixMusic.Sdk.MergedWrappers
         public TimeSpan Duration => _preferredSource.Duration;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup RelatedItems => _preferredSource.RelatedItems;
+        public IPlayableCollectionGroup? RelatedItems => _preferredSource.RelatedItems;
 
         /// <inheritdoc/>
         public bool IsChangeArtistsAsyncSupported => _preferredSource.IsChangeArtistsAsyncSupported;

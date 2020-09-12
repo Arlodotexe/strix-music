@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
@@ -30,7 +29,10 @@ namespace StrixMusic.Sdk.Observables
 
             Images = new ObservableCollection<IImage>(_album.Images);
             Tracks = new ObservableCollection<ObservableTrack>(_album.Tracks.Select(x => new ObservableTrack(x)));
-            RelatedItems = new ObservableCollectionGroup(_album.RelatedItems);
+
+            if (_album.RelatedItems != null)
+                RelatedItems = new ObservableCollectionGroup(_album.RelatedItems);
+
             _artist = new ObservableArtist(_album.Artist);
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
@@ -311,7 +313,7 @@ namespace StrixMusic.Sdk.Observables
         public int TotalTracksCount => _album.TotalTracksCount;
 
         /// <inheritdoc cref="IAlbum.RelatedItems"/>
-        public ObservableCollectionGroup RelatedItems { get; }
+        public ObservableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc cref="IPlayable.PlayAsync"/>
         public Task PlayAsync() => _album.PlayAsync();

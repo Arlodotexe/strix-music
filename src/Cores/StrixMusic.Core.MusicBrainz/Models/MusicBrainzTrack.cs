@@ -88,7 +88,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup RelatedItems => throw new NotImplementedException();
+        public IPlayableCollectionGroup? RelatedItems => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public bool IsChangeArtistsAsyncSupported => false;
