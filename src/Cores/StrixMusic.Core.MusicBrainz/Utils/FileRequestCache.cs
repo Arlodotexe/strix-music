@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API.Cache;
+using StrixMusic.Sdk.Services.StorageService;
 
 namespace Hqub.MusicBrainz.Client
 {
@@ -11,266 +12,262 @@ namespace Hqub.MusicBrainz.Client
     /// <summary>
     /// Caches requests to MusicBrainz API on disk.
     /// </summary>
-    //public class FileRequestCache : IRequestCache
-    //{
-    //    private const int HEADER_LENGTH = 512;
-
-    //    /// <summary>
-    //    /// Gets or sets the timeout for a cache entry to expire.
-    //    /// </summary>
-    //    public TimeSpan Timeout { get; set; }
-
-    //    private readonly string path;
-
-    //    /// <summary>
-    //    /// Initializes a new instance of the <see cref="FileRequestCache"/> class.
-    //    /// </summary>
-    //    public FileRequestCache()
-    //    {
-    //        var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-    //        this.path = Path.Combine(appdata, "MusicBrainz", "Cache");
-
-    //        this.Timeout = TimeSpan.FromHours(24.0);
-    //    }
-
-    //    /// <summary>
-    //    /// Initializes a new instance of the <see cref="FileRequestCache"/> class.
-    //    /// </summary>
-    //    /// <param name="path"></param>
-    //    public FileRequestCache(string path)
-    //    {
-    //        this.path = Path.GetFullPath(path);
-
-    //        this.Timeout = TimeSpan.FromHours(24.0);
-    //    }
-
-
-    //    /// <inheritdoc/>
-    //    public async Task Add(string request, Stream response)
-    //    {
-    //        if (!Directory.Exists(path))
-    //        {
-    //            Directory.CreateDirectoryAsync(path);
-    //        }
+    public class FileRequestCache : IRequestCache
+    {
+        private const int HEADER_LENGTH = 512;
+        //private readonly IFileSystemService _fileSystemService;
+        /// <summary>
+        /// Gets or sets the timeout for a cache entry to expire.
+        /// </summary>
+        public TimeSpan Timeout { get; set; }
+
+        private readonly string path;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileRequestCache"/> class.
+        /// </summary>
+        public FileRequestCache()
+        {
+            var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            this.path = Path.Combine(appdata, "MusicBrainz", "Cache");
+
+            this.Timeout = TimeSpan.FromHours(24.0);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileRequestCache"/> class.
+        /// </summary>
+        /// <param name="path"></param>
+        public FileRequestCache(string path)
+        {
+            this.path = Path.GetFullPath(path);
 
-    //        await CacheEntry.Write(path, request, response);
-    //    }
+            this.Timeout = TimeSpan.FromHours(24.0);
+        }
 
-    //    /// <inheritdoc/>
-    //    public Task<bool> TryGetCachedItem(string request, out Stream? stream)
-    //    {
-    //        var item = CacheEntry.Read(path, request);
 
-    //        stream = null;
+        /// <inheritdoc/>
+        public async Task Add(string request, Stream response)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
 
-    //        if (item == null)
-    //        {
-    //            return Task.FromResult(false);
-    //        }
+            await CacheEntry.Write(path, request, response);
+        }
 
-    //        if ((DateTime.Now - item.TimeStamp) > Timeout)
-    //        {
-    //            item.Stream.Close();
+        /// <inheritdoc/>
+        public Task<bool> TryGetCachedItem(string request, out Stream? stream)
+        {
+            var item = CacheEntry.Read(path, request);
 
-    //            return Task.FromResult(false);
-    //        }
-            
-    //        stream = item.Stream;
+            stream = null;
 
-    //        return Task.FromResult(true);
-    //    }
+            if (item == null)
+            {
+                return Task.FromResult(false);
+            }
 
-    //    /// <inheritdoc/>
-    //    public int Cleanup()
-    //    {
-    //        int count = 0;
+            if ((DateTime.Now - item.TimeStamp) > Timeout)
+            {
+                item.Stream?.Close();
 
-    //        var now = DateTime.Now;
+                return Task.FromResult(false);
+            }
 
-    //        foreach (var file in Directory.EnumerateFiles(path, "*.mb-cache"))
-    //        {
-    //            if ((now - CacheEntry.GetTimestamp(file)) > Timeout)
-    //            {
-    //                File.Delete(file);
-    //            }
-    //        }
+            stream = item.Stream;
 
-    //        return count;
-    //    }
+            return Task.FromResult(true);
+        }
 
-    //    /// <inheritdoc/>
-    //    public void Clear()
-    //    {
-    //        // If the path is used for cache only, we could just as well delete the directory.
-    //        //if (Directory.Exists(path))
-    //        //{
-    //        //    Directory.Delete(path);
-    //        //}
+        /// <inheritdoc/>
+        public int Cleanup()
+        {
+            int count = 0;
 
-    //        foreach (var file in Directory.EnumerateFiles(path, "*.mb-cache"))
-    //        {
-    //            File.Delete(file);
-    //        }
-    //    }
+            var now = DateTime.Now;
 
+            foreach (var file in Directory.EnumerateFiles(path, "*.mb-cache"))
+            {
+                if ((now - CacheEntry.GetTimestamp(file)) > Timeout)
+                {
+                    File.Delete(file);
+                }
+            }
 
-    //    private class CacheEntry
-    //    {
-    //        // Cache file header (512 bytes):
-    //        //
-    //        //      0  Timestamp (Int64 = 8 bytes)
-    //        //      8  Request string (char*, max 504 bytes, null-terminated)
+            return count;
+        }
 
-           
-    //        public Stream Stream { get; private set; }
+        /// <inheritdoc/>
+        public void Clear()
+        {
+            // If the path is used for cache only, we could just as well delete the directory.
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path);
+            }
 
-    //        public DateTime TimeStamp { get; private set; }
+            foreach (var file in Directory.EnumerateFiles(path, "*.mb-cache"))
+            {
+                File.Delete(file);
+            }
+        }
 
-    //        public string Request { get; set; }
 
-    //        public static CacheEntry Read(string path, string request)
-    //        {
-    //            const int REQUEST_LENGTH = HEADER_LENGTH - 8; // sizeof(long)
+        private class CacheEntry
+        {
+            // Cache file header (512 bytes):
+            //
+            //      0  Timestamp (Int64 = 8 bytes)
+            //      8  Request string (char*, max 504 bytes, null-terminated)
 
-    //            // The byte buffer to hold the request string.
-    //            var buffer = new byte[REQUEST_LENGTH];
 
-    //            int size = Math.Min(request.Length, REQUEST_LENGTH);
+            public Stream? Stream { get; private set; }
 
-    //            Encoding.UTF8.GetBytes(request, 0, size, buffer, 0);
+            public DateTime TimeStamp { get; private set; }
 
-    //            var file = GetCacheFileName(path, buffer, size);
+            public string? Request { get; set; }
 
-    //            if (!File.Exists(file))
-    //            {
-    //                return null;
-    //            }
+            public static CacheEntry? Read(string path, string request)
+            {
+                const int REQUEST_LENGTH = HEADER_LENGTH - 8; // sizeof(long)
 
-    //            var stream = File.OpenRead(file);
+                // The byte buffer to hold the request string.
+                var buffer = new byte[REQUEST_LENGTH];
 
-    //            CacheEntry entry;
+                int size = Math.Min(request.Length, REQUEST_LENGTH);
 
-    //            using (var reader = new BinaryReader(stream, Encoding.UTF8, true))
-    //            {
-    //                entry = new CacheEntry();
+                Encoding.UTF8.GetBytes(request, 0, size, buffer, 0);
 
-    //                long timestamp = reader.ReadInt64();
+                var file = GetCacheFileName(path, buffer, size);
 
-    //                entry.TimeStamp = TimestampToDateTime(timestamp, DateTimeKind.Utc);
+                if (!File.Exists(file))
+                {
+                    return null;
+                }
 
-    //                reader.Read(buffer, 0, REQUEST_LENGTH);
+                var stream = File.OpenRead(file);
 
-    //                size = 0;
+                CacheEntry entry;
 
-    //                while (buffer[size++] != 0 && size < REQUEST_LENGTH) ;
+                using (var reader = new BinaryReader(stream, Encoding.UTF8, true))
+                {
+                    entry = new CacheEntry();
 
-    //                entry.Request = Encoding.UTF8.GetString(buffer, 0, size - 1);
-    //            }
+                    long timestamp = reader.ReadInt64();
 
-    //            // Check if the cached request matches the given (could be a hash collision).
-    //            if (!request.Contains(entry.Request))
-    //            {
-    //                // Couldn't find content: invalidate the cache entry.
-    //                entry.TimeStamp = DateTime.MinValue;
-    //            }
+                    entry.TimeStamp = TimestampToDateTime(timestamp, DateTimeKind.Utc);
 
-    //            stream.Seek(HEADER_LENGTH, SeekOrigin.Begin);
+                    reader.Read(buffer, 0, REQUEST_LENGTH);
 
-    //            entry.Stream = stream;
+                    size = 0;
 
-    //            return entry;
-    //        }
+                    while (buffer[size++] != 0 && size < REQUEST_LENGTH) ;
 
-    //        public static async Task Write(string path, string request, Stream response)
-    //        {
-    //            const int REQUEST_LENGTH = HEADER_LENGTH - 8; // sizeof(long)
+                    entry.Request = Encoding.UTF8.GetString(buffer, 0, size - 1);
+                }
 
-    //            // The byte buffer to hold the request string.
-    //            var buffer = new byte[REQUEST_LENGTH];
+                // Check if the cached request matches the given (could be a hash collision).
+                if (!request.Contains(entry.Request))
+                {
+                    // Couldn't find content: invalidate the cache entry.
+                    entry.TimeStamp = DateTime.MinValue;
+                }
 
-    //            int size = Math.Min(request.Length, REQUEST_LENGTH);
+                stream.Seek(HEADER_LENGTH, SeekOrigin.Begin);
 
-    //            Encoding.UTF8.GetBytes(request, 0, size, buffer, 0);
+                entry.Stream = stream;
 
-    //            var name = GetCacheFileName(path, buffer, size);
+                return entry;
+            }
 
-    //            using (var stream = File.OpenWrite(name))
-    //            using (var writer = new BinaryWriter(stream))
-    //            {
-    //                writer.Write(GetUnixTimestamp());
-    //                writer.Write(buffer);
+            public static async Task Write(string path, string request, Stream response)
+            {
+                const int REQUEST_LENGTH = HEADER_LENGTH - 8; // sizeof(long)
 
-    //                writer.Flush();
+                // The byte buffer to hold the request string.
+                var buffer = new byte[REQUEST_LENGTH];
 
-    //                await response.CopyToAsync(writer.BaseStream);
-    //            }
+                int size = Math.Min(request.Length, REQUEST_LENGTH);
 
-    //            // Set the position of the response stream back to 0.
-    //            response.Seek(0, SeekOrigin.Begin);
-    //        }
+                Encoding.UTF8.GetBytes(request, 0, size, buffer, 0);
 
-    //        public static DateTime GetTimestamp(string file)
-    //        {
-    //            long timestamp = 0;
+                var name = GetCacheFileName(path, buffer, size);
 
-    //            using (var stream = File.OpenRead(file))
-    //            using (var reader = new BinaryReader(stream))
-    //            {
-    //                timestamp = reader.ReadInt64();
-    //            }
+                using (var stream = File.OpenWrite(name))
+                using (var writer = new BinaryWriter(stream))
+                {
+                    writer.Write(GetUnixTimestamp());
+                    writer.Write(buffer);
 
-    //            return TimestampToDateTime(timestamp, DateTimeKind.Utc);
-    //        }
+                    writer.Flush();
 
-    //        private static string GetCacheFileName(string path, byte[] buffer, int size)
-    //        {
-    //            return Path.Combine(path, GetHash(buffer, size)) + ".mb-cache";
-    //        }
+                    await response.CopyToAsync(writer.BaseStream);
+                }
 
-    //        #region Helper methods
+                // Set the position of the response stream back to 0.
+                response.Seek(0, SeekOrigin.Begin);
+            }
 
-    //        /// <summary>
-    //        /// Returns hash of a string (based on MD5, but only 16 instead of 32 bytes).
-    //        /// </summary>
-    //        /// <param name="text">Input string.</param>
-    //        /// <returns>MD5 hash.</returns>
-    //        private static string GetHash(byte[] bytes, int size)
-    //        {
-    //            var md5 = MD5.Create();
+            public static DateTime GetTimestamp(string file)
+            {
+                long timestamp = 0;
 
-    //            bytes = md5.ComputeHash(bytes, 0, size);
+                using (var stream = File.OpenRead(file))
+                using (var reader = new BinaryReader(stream))
+                {
+                    timestamp = reader.ReadInt64();
+                }
 
-    //            var buffer = new StringBuilder();
+                return TimestampToDateTime(timestamp, DateTimeKind.Utc);
+            }
 
-    //            for (int i = 0; i < bytes.Length; i += 2)
-    //            {
-    //                buffer.Append(bytes[i].ToString("x2").ToLower());
-    //            }
+            private static string GetCacheFileName(string path, byte[] buffer, int size)
+            {
+                return Path.Combine(path, GetHash(buffer, size)) + ".mb-cache";
+            }
 
-    //            return buffer.ToString();
-    //        }
+            /// <summary>
+            /// Returns hash of a string (based on MD5, but only 16 instead of 32 bytes).
+            /// </summary>
+            /// <param name="text">Input string.</param>
+            /// <returns>MD5 hash.</returns>
+            private static string GetHash(byte[] bytes, int size)
+            {
+                var md5 = MD5.Create();
 
-    //        private static DateTime TimestampToDateTime(long timestamp, DateTimeKind kind)
-    //        {
-    //            return new DateTime(1970, 1, 1, 0, 0, 0, 0, kind).AddSeconds(timestamp).ToLocalTime();
-    //        }
+                bytes = md5.ComputeHash(bytes, 0, size);
 
-    //        private static long DateTimeToUtcTimestamp(DateTime dateTime)
-    //        {
-    //            DateTime baseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                var buffer = new StringBuilder();
 
-    //            TimeSpan span = dateTime.ToUniversalTime() - baseDate;
+                for (int i = 0; i < bytes.Length; i += 2)
+                {
+                    buffer.Append(bytes[i].ToString("x2").ToLower());
+                }
 
-    //            return (long)span.TotalSeconds;
-    //        }
+                return buffer.ToString();
+            }
 
-    //        private static long GetUnixTimestamp()
-    //        {
-    //            return DateTimeToUtcTimestamp(DateTime.Now);
-    //        }
+            private static DateTime TimestampToDateTime(long timestamp, DateTimeKind kind)
+            {
+                return new DateTime(1970, 1, 1, 0, 0, 0, 0, kind).AddSeconds(timestamp).ToLocalTime();
+            }
 
-    //        #endregion
-    //    }
-    //}
+            private static long DateTimeToUtcTimestamp(DateTime dateTime)
+            {
+                DateTime baseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+
+                TimeSpan span = dateTime.ToUniversalTime() - baseDate;
+
+                return (long)span.TotalSeconds;
+            }
+
+            private static long GetUnixTimestamp()
+            {
+                return DateTimeToUtcTimestamp(DateTime.Now);
+            }
+        }
+    }
 }
