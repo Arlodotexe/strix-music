@@ -21,11 +21,6 @@ namespace StrixMusic.Sdk.Interfaces
         IAlbum? Album { get; }
 
         /// <summary>
-        /// The date the track was released.
-        /// </summary>
-        DateTime? DatePublished { get; }
-
-        /// <summary>
         /// A list of <see cref="string"/> describing the genres for this track.
         /// </summary>
         IReadOnlyList<string>? Genres { get; }
@@ -72,11 +67,6 @@ namespace StrixMusic.Sdk.Interfaces
         bool IsChangeAlbumAsyncSupported { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeDatePublishedAsync(DateTime)"/> is supported.
-        /// </summary>
-        bool IsChangeDatePublishedAsyncSupported { get; }
-
-        /// <summary>
         /// If true, <see cref="ChangeGenresAsync(IReadOnlyList{string}?)"/> is supported.
         /// </summary>
         bool IsChangeGenresAsyncSupported { get; }
@@ -114,13 +104,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// <param name="albums">The new album.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ChangeAlbumAsync(IAlbum? albums);
-
-        /// <summary>
-        /// Changes the <see cref="DatePublished"/> for this track.
-        /// </summary>
-        /// <param name="datePublished">The new date the track was published.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeDatePublishedAsync(DateTime datePublished);
 
         /// <summary>
         /// Change the <see cref="Genres"/> for this track.
@@ -166,11 +149,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// Fires when the <see cref="Album"/> metadata changes.
         /// </summary>
         event EventHandler<IAlbum?> AlbumChanged;
-
-        /// <summary>
-        /// Fires when the <see cref="DatePublished"/> metadata changes.
-        /// </summary>
-        event EventHandler<DateTime?> DatePublishedChanged;
 
         /// <summary>
         /// Fires when the <see cref="TrackNumber"/> metadata changes.

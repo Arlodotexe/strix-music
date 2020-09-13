@@ -51,7 +51,6 @@ namespace StrixMusic.Sdk.Observables
         {
             _track.AlbumChanged += Track_AlbumChanged;
             _track.ArtistsChanged += Track_ArtistsChanged;
-            _track.DatePublishedChanged += Track_DatePublishedChanged;
             _track.DescriptionChanged += Track_DescriptionChanged;
             _track.GenresChanged += Track_GenresChanged;
             _track.IsExplicitChanged += Track_IsExplicitChanged;
@@ -69,7 +68,6 @@ namespace StrixMusic.Sdk.Observables
         {
             _track.AlbumChanged -= Track_AlbumChanged;
             _track.ArtistsChanged -= Track_ArtistsChanged;
-            _track.DatePublishedChanged -= Track_DatePublishedChanged;
             _track.DescriptionChanged -= Track_DescriptionChanged;
             _track.GenresChanged -= Track_GenresChanged;
             _track.IsExplicitChanged -= Track_IsExplicitChanged;
@@ -154,11 +152,6 @@ namespace StrixMusic.Sdk.Observables
             Description = e;
         }
 
-        private void Track_DatePublishedChanged(object sender, DateTime? e)
-        {
-            DatePublished = e;
-        }
-
         private void Track_ArtistsChanged(object sender, CollectionChangedEventArgs<IArtist> e)
         {
             foreach (var item in e.AddedItems)
@@ -190,7 +183,7 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc cref="ITrack.Type"/>
         public TrackType Type => _track.Type;
 
-        /// <inheritdoc cref="ITrack.Artists"/>
+        /// <inheritdoc cref="IArtistCollection.Artists"/>
         public ObservableCollection<ObservableArtist> Artists { get; }
 
         private ObservableAlbum? _album;
@@ -200,13 +193,6 @@ namespace StrixMusic.Sdk.Observables
         {
             get => _album;
             set => SetProperty(ref _album, value);
-        }
-
-        /// <inheritdoc cref="ITrack.DatePublished"/>
-        public DateTime? DatePublished
-        {
-            get => _track.DatePublished;
-            set => SetProperty(() => _track.DatePublished, value);
         }
 
         /// <inheritdoc cref="ITrack.Genres"/>
@@ -339,13 +325,6 @@ namespace StrixMusic.Sdk.Observables
             set => SetProperty(() => _track.IsChangeAlbumAsyncSupported, value);
         }
 
-        /// <inheritdoc cref="ITrack.IsChangeDatePublishedAsyncSupported"/>
-        public bool IsChangeDatePublishedAsyncSupported
-        {
-            get => _track.IsChangeDatePublishedAsyncSupported;
-            set => SetProperty(() => _track.IsChangeDatePublishedAsyncSupported, value);
-        }
-
         /// <inheritdoc cref="ITrack.IsChangeGenresAsyncSupported"/>
         public bool IsChangeGenresAsyncSupported
         {
@@ -384,211 +363,113 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc cref="IPlayable.PlaybackStateChanged"/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
-            add
-            {
-                _track.PlaybackStateChanged += value;
-            }
+            add => _track.PlaybackStateChanged += value;
 
-            remove
-            {
-                _track.PlaybackStateChanged -= value;
-            }
+            remove => _track.PlaybackStateChanged -= value;
         }
 
-        /// <inheritdoc cref="ITrack.ArtistsChanged"/>
+        /// <inheritdoc cref="IArtistCollection.ArtistsChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>> ArtistsChanged
         {
-            add
-            {
-                _track.ArtistsChanged += value;
-            }
+            add => _track.ArtistsChanged += value;
 
-            remove
-            {
-                _track.ArtistsChanged -= value;
-            }
+            remove => _track.ArtistsChanged -= value;
         }
 
         /// <inheritdoc cref="ITrack.GenresChanged"/>
         public event EventHandler<CollectionChangedEventArgs<string>> GenresChanged
         {
-            add
-            {
-                _track.GenresChanged += value;
-            }
+            add => _track.GenresChanged += value;
 
-            remove
-            {
-                _track.GenresChanged -= value;
-            }
+            remove => _track.GenresChanged -= value;
         }
 
         /// <inheritdoc cref="ITrack.AlbumChanged"/>
         public event EventHandler<IAlbum?> AlbumChanged
         {
-            add
-            {
-                _track.AlbumChanged += value;
-            }
+            add => _track.AlbumChanged += value;
 
-            remove
-            {
-                _track.AlbumChanged -= value;
-            }
-        }
-
-        /// <inheritdoc cref="ITrack.DatePublishedChanged"/>
-        public event EventHandler<DateTime?> DatePublishedChanged
-        {
-            add
-            {
-                _track.DatePublishedChanged += value;
-            }
-
-            remove
-            {
-                _track.DatePublishedChanged -= value;
-            }
+            remove => _track.AlbumChanged -= value;
         }
 
         /// <inheritdoc cref="ITrack.TrackNumberChanged"/>
         public event EventHandler<int?> TrackNumberChanged
         {
-            add
-            {
-                _track.TrackNumberChanged += value;
-            }
+            add => _track.TrackNumberChanged += value;
 
-            remove
-            {
-                _track.TrackNumberChanged -= value;
-            }
+            remove => _track.TrackNumberChanged -= value;
         }
 
         /// <inheritdoc cref="ITrack.PlayCountChanged"/>
         public event EventHandler<int?> PlayCountChanged
         {
-            add
-            {
-                _track.PlayCountChanged += value;
-            }
+            add => _track.PlayCountChanged += value;
 
-            remove
-            {
-                _track.PlayCountChanged -= value;
-            }
+            remove => _track.PlayCountChanged -= value;
         }
 
         /// <inheritdoc cref="ITrack.LanguageChanged"/>
         public event EventHandler<CultureInfo?> LanguageChanged
         {
-            add
-            {
-                _track.LanguageChanged += value;
-            }
+            add => _track.LanguageChanged += value;
 
-            remove
-            {
-                _track.LanguageChanged -= value;
-            }
+            remove => _track.LanguageChanged -= value;
         }
 
         /// <inheritdoc cref="ITrack.LyricsChanged"/>
         public event EventHandler<ILyrics?> LyricsChanged
         {
-            add
-            {
-                _track.LyricsChanged += value;
-            }
+            add => _track.LyricsChanged += value;
 
-            remove
-            {
-                _track.LyricsChanged -= value;
-            }
+            remove => _track.LyricsChanged -= value;
         }
 
         /// <inheritdoc cref="ITrack.IsExplicitChanged"/>
         public event EventHandler<bool> IsExplicitChanged
         {
-            add
-            {
-                _track.IsExplicitChanged += value;
-            }
+            add => _track.IsExplicitChanged += value;
 
-            remove
-            {
-                _track.IsExplicitChanged -= value;
-            }
+            remove => _track.IsExplicitChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.NameChanged"/>
         public event EventHandler<string> NameChanged
         {
-            add
-            {
-                _track.NameChanged += value;
-            }
+            add => _track.NameChanged += value;
 
-            remove
-            {
-                _track.NameChanged -= value;
-            }
+            remove => _track.NameChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.DescriptionChanged"/>
         public event EventHandler<string?> DescriptionChanged
         {
-            add
-            {
-                _track.DescriptionChanged += value;
-            }
+            add => _track.DescriptionChanged += value;
 
-            remove
-            {
-                _track.DescriptionChanged -= value;
-            }
+            remove => _track.DescriptionChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.UrlChanged"/>
         public event EventHandler<Uri?> UrlChanged
         {
-            add
-            {
-                _track.UrlChanged += value;
-            }
+            add => _track.UrlChanged += value;
 
-            remove
-            {
-                _track.UrlChanged -= value;
-            }
+            remove => _track.UrlChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.ImagesChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged
         {
-            add
-            {
-                _track.ImagesChanged += value;
-            }
+            add => _track.ImagesChanged += value;
 
-            remove
-            {
-                _track.ImagesChanged -= value;
-            }
+            remove => _track.ImagesChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.DurationChanged"/>
         public event EventHandler<TimeSpan>? DurationChanged
         {
-            add
-            {
-                _track.DurationChanged += value;
-            }
+            add => _track.DurationChanged += value;
 
-            remove
-            {
-                _track.DurationChanged -= value;
-            }
+            remove => _track.DurationChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.PauseAsync"/>

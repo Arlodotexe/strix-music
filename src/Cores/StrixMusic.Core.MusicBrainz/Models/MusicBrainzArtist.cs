@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Hqub.MusicBrainz.API;
+﻿using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -153,15 +152,15 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public async Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset)
         {
-            var releases = await _musicBrainzClient.Releases.SearchAsync("*", limit, offset);
-            Parallel.ForEach(releases, (release) =>
+            var releasesList = await _musicBrainzClient.Releases.BrowseAsync("artist", Id, limit, offset);
+
+            foreach (var release in releasesList.Items)
             {
-                Parallel.ForEach(release.Credits, (credit) =>
+                foreach (var medium in release.Media)
                 {
-                    if (credit.Artist.Id == Id)
-                        _albums.Add(new MusicBrainzAlbum(SourceCore, release));
-                });
-            });
+                    _albums.Add(new MusicBrainzAlbum(SourceCore, release, medium));
+                }
+            }
 
             return _albums;
         }
@@ -169,15 +168,15 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public async Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
         {
-            var recordings = await _musicBrainzClient.Recordings.SearchAsync("*", limit, offset);
-            Parallel.ForEach(recordings, (recording) =>
+            var recordings = await _musicBrainzClient.Recordings.BrowseAsync("artist", Id, limit, offset);
+
+            foreach (var recording in recordings.Items)
             {
-                Parallel.ForEach(recording.Credits, (credit) =>
-                {
-                    if (credit.Artist.Id == Id)
-                        _tracks.Add(new MusicBrainzTrack(SourceCore, recording));
-                });
-            });
+                // TODO: Releases and other important metadata isn't returned on recording when called via browse.
+                // Missing data needs to be added manually.
+
+                _tracks.Add(new MusicBrainzTrack(SourceCore, recording));
+            }
 
             return _tracks;
         }

@@ -72,9 +72,6 @@ namespace StrixMusic.Sdk.MergedWrappers
         public IAlbum? Album => _preferredSource.Album;
 
         /// <inheritdoc/>
-        public DateTime? DatePublished => _preferredSource.DatePublished;
-
-        /// <inheritdoc/>
         public IReadOnlyList<string>? Genres => _preferredSource.Genres;
 
         /// <inheritdoc/>
@@ -124,9 +121,6 @@ namespace StrixMusic.Sdk.MergedWrappers
 
         /// <inheritdoc/>
         public bool IsChangeAlbumAsyncSupported => _preferredSource.IsChangeAlbumAsyncSupported;
-
-        /// <inheritdoc/>
-        public bool IsChangeDatePublishedAsyncSupported => _preferredSource.IsChangeDatePublishedAsyncSupported;
 
         /// <inheritdoc/>
         public bool IsChangeGenresAsyncSupported => _preferredSource.IsChangeGenresAsyncSupported;
@@ -183,14 +177,6 @@ namespace StrixMusic.Sdk.MergedWrappers
             add => _preferredSource.AlbumChanged += value;
 
             remove => _preferredSource.AlbumChanged -= value;
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<DateTime?> DatePublishedChanged
-        {
-            add => _preferredSource.DatePublishedChanged += value;
-
-            remove => _preferredSource.DatePublishedChanged -= value;
         }
 
         /// <inheritdoc/>
@@ -324,12 +310,6 @@ namespace StrixMusic.Sdk.MergedWrappers
         public Task ChangeAlbumAsync(IAlbum? albums)
         {
             return _preferredSource.ChangeAlbumAsync(albums);
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeDatePublishedAsync(DateTime datePublished)
-        {
-            return _preferredSource.ChangeDatePublishedAsync(datePublished);
         }
 
         /// <inheritdoc/>

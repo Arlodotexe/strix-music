@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk;
+using OwlCore.Extensions.DateTimeExtensions;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
@@ -21,22 +22,33 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzAlbum"/> class.
         /// </summary>
-        /// <param name="release"></param>
-        /// <param name="sourceCore"></param>
-        public MusicBrainzAlbum(ICore sourceCore, Release release)
+        /// <param name="sourceCore">The core that created this object.</param>
+        /// <param name="release">The release to wrap around.</param>
+        /// <param name="medium">The physical medium (album) for this release.</param>
+        public MusicBrainzAlbum(ICore sourceCore, Release release, Medium medium)
         {
-            SourceCore = sourceCore;
+            _musicBrainzClient = sourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
+
             _release = release;
-            Artist = new MusicBrainzArtist(SourceCore, release.Relations[0].Artist);
-            _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
+            Medium = medium;
             _tracks = new List<ITrack>();
+            Images = CreateImagesForRelease();
+
+            SourceCore = sourceCore;
+            Artist = new MusicBrainzArtist(SourceCore, release.Relations[0].Artist);
         }
+
+        /// <summary>
+        /// The physical medium (album) for this release.
+        /// </summary>
+        /// <remarks>In MusicBrainz, a release can contain multiple physical mediums. Only one of these Mediums should be used per Album.</remarks>
+        public Medium Medium { get; }
 
         /// <inheritdoc/>
         public IArtist Artist { get; private set; }
 
         /// <inheritdoc/>
-        public int TotalTracksCount => throw new NotImplementedException();
+        public int TotalTracksCount => Medium.TrackCount;
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
@@ -45,22 +57,25 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Id => _release.Id;
 
         /// <inheritdoc/>
-        public Uri Url => throw new NotImplementedException();
+        public Uri? Url => null;
 
         /// <inheritdoc/>
         public string Name => _release.Title;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
+        public DateTime? DatePublished => CreateReleaseDate(_release.Date);
 
         /// <inheritdoc/>
-        public string Description => _release.TextRepresentation.Script;
+        public IReadOnlyList<IImage> Images { get; }
 
         /// <inheritdoc/>
-        public PlaybackState PlaybackState => throw new NotImplementedException();
+        public string? Description => _release.TextRepresentation?.Script;
 
         /// <inheritdoc/>
-        public TimeSpan Duration => throw new NotImplementedException();
+        public PlaybackState PlaybackState => PlaybackState.None;
+
+        /// <inheritdoc/>
+        public TimeSpan Duration { get; }
 
         /// <inheritdoc/>
         public IReadOnlyList<ITrack> Tracks => _tracks;
@@ -79,6 +94,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public bool IsChangeImagesAsyncSupported => false;
+
+        /// <inheritdoc/>
+        public bool IsChangeDatePublishedAsyncSupported => false;
 
         /// <inheritdoc/>
         public bool IsChangeDescriptionAsyncSupported => false;
@@ -102,6 +120,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc/>
+        public event EventHandler<DateTime?>? DatePublishedChanged;
+
+        /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
 
         /// <inheritdoc/>
@@ -121,6 +142,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeDatePublishedAsync(DateTime datePublished)
         {
             throw new NotSupportedException();
         }
@@ -157,6 +184,38 @@ namespace StrixMusic.Core.MusicBrainz.Models
             });
 
             return _tracks;
+        }
+
+        private DateTime CreateReleaseDate(string musicBrainzDate)
+        {
+            var dateParts = musicBrainzDate.Split('-');
+
+            var date = default(DateTime);
+
+            foreach (var (item, index) in dateParts.Select((value, index) => (value, index)))
+            {
+                date = index switch
+                {
+                    0 => date.ChangeYear(Convert.ToInt32(item)),
+                    1 => date.ChangeMonth(Convert.ToInt32(item)),
+                    2 => date.ChangeDay(Convert.ToInt32(item)),
+                    _ => date
+                };
+            }
+
+            return date;
+        }
+
+        private IReadOnlyList<IImage> CreateImagesForRelease()
+        {
+            var list = new List<IImage>();
+
+            foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
+            {
+                list.Add(new MusicBrainzImage(_release.Id, item));
+            }
+
+            return list;
         }
     }
 }

@@ -1,14 +1,14 @@
-﻿using Hqub.MusicBrainz.API;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -29,13 +29,17 @@ namespace StrixMusic.Core.MusicBrainz.Models
             SourceCore = sourceCore;
             _recording = recording;
             _artists = new List<IArtist>();
-            Album = new MusicBrainzAlbum(sourceCore, recording.Releases[0]);
+
+            var release = recording.Releases.FirstOrDefault(x => x.Status == "Official") ?? recording.Releases.First();
+
+            // TODO: Figure out which medium/disc this track belongs to
+            Album = new MusicBrainzAlbum(sourceCore, release, release.Media.First());
 
             _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
         }
 
         /// <inheritdoc/>
-        public TrackType Type => throw new NotImplementedException();
+        public TrackType Type => TrackType.Song;
 
         /// <inheritdoc/>
         public IReadOnlyList<IArtist> Artists => _artists;
@@ -45,9 +49,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public IAlbum Album { get; }
-
-        /// <inheritdoc/>
-        public DateTime? DatePublished => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public IReadOnlyList<string> Genres => throw new NotImplementedException();
@@ -80,7 +81,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IReadOnlyList<IImage> Images => CreateImagesForRelease(_recording.Releases);
 
         /// <inheritdoc/>
-        public string Description => _recording.Title;
+        public string? Description => null;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => PlaybackState.None;
@@ -98,9 +99,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public bool IsChangeAlbumAsyncSupported => false;
-
-        /// <inheritdoc/>
-        public bool IsChangeDatePublishedAsyncSupported => false;
 
         /// <inheritdoc/>
         public bool IsChangeGenresAsyncSupported => false;
@@ -148,9 +146,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<IAlbum?>? AlbumChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<DateTime?>? DatePublishedChanged;
-
-        /// <inheritdoc/>
         public event EventHandler<int?>? TrackNumberChanged;
 
         /// <inheritdoc/>
@@ -191,12 +186,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public Task ChangeArtistsAsync(IReadOnlyList<IArtist>? artists)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeDatePublishedAsync(DateTime datePublished)
         {
             throw new NotSupportedException();
         }

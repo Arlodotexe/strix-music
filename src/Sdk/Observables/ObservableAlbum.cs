@@ -49,6 +49,7 @@ namespace StrixMusic.Sdk.Observables
         {
             _album.PlaybackStateChanged += Album_PlaybackStateChanged;
             _album.DescriptionChanged += Album_DescriptionChanged;
+            _album.DatePublishedChanged += Album_DatePublishedChanged;
             _album.NameChanged += Album_NameChanged;
             _album.UrlChanged += Album_UrlChanged;
             _album.ImagesChanged += Album_ImagesChanged;
@@ -59,6 +60,7 @@ namespace StrixMusic.Sdk.Observables
         {
             _album.PlaybackStateChanged -= Album_PlaybackStateChanged;
             _album.DescriptionChanged -= Album_DescriptionChanged;
+            _album.DatePublishedChanged -= Album_DatePublishedChanged;
             _album.NameChanged -= Album_NameChanged;
             _album.UrlChanged -= Album_UrlChanged;
             _album.ImagesChanged += Album_ImagesChanged;
@@ -111,6 +113,11 @@ namespace StrixMusic.Sdk.Observables
             PlaybackState = e;
         }
 
+        private void Album_DatePublishedChanged(object sender, DateTime? e)
+        {
+            DatePublished = e;
+        }
+
         /// <inheritdoc cref="ITrackCollection.Tracks"/>
         public ObservableCollection<ObservableTrack> Tracks { get; }
 
@@ -150,6 +157,13 @@ namespace StrixMusic.Sdk.Observables
         {
             get => _album.Url;
             private set => SetProperty(() => _album.Url, value);
+        }
+
+        /// <inheritdoc cref="IAlbum.DatePublished"/>
+        public DateTime? DatePublished
+        {
+            get => _album.DatePublished;
+            set => SetProperty(() => _album.DatePublished, value);
         }
 
         /// <inheritdoc cref="IPlayable.Description"/>
@@ -199,6 +213,13 @@ namespace StrixMusic.Sdk.Observables
         {
             get => _album.IsChangeDescriptionAsyncSupported;
             set => SetProperty(() => _album.IsChangeDescriptionAsyncSupported, value);
+        }
+
+        /// <inheritdoc cref="IAlbum.IsChangeDatePublishedAsyncSupported"/>
+        public bool IsChangeDatePublishedAsyncSupported
+        {
+            get => _album.IsChangeDatePublishedAsyncSupported;
+            set => SetProperty(() => _album.IsChangeDatePublishedAsyncSupported, value);
         }
 
         /// <inheritdoc cref="IPlayable.IsChangeDurationAsyncSupported"/>
@@ -262,6 +283,14 @@ namespace StrixMusic.Sdk.Observables
             add => _album.DurationChanged += value;
 
             remove => _album.DurationChanged -= value;
+        }
+
+        /// <inheritdoc cref="IAlbum.DatePublishedChanged"/>
+        public event EventHandler<DateTime?> DatePublishedChanged
+        {
+            add => _album.DatePublishedChanged += value;
+
+            remove => _album.DatePublishedChanged -= value;
         }
 
         /// <inheritdoc cref="IPlayable.PauseAsync"/>

@@ -5,11 +5,34 @@
     /// </summary>
     public static class RelationshipQueries
     {
-        private static readonly string[] _recordingQueries = { "artist-credits", "isrcs", "releases" };
+        /// <summary>
+        /// The relationship queries needed when getting Recordings from the API.
+        /// </summary>
+        public static readonly string[] Recordings = { "artist-credits", "isrcs", "releases" };
 
         /// <summary>
-        /// The relationship queries needed when getting tracks from the API.
+        /// The relationship queries needed when getting Releases from the API.
         /// </summary>
-        public static string Recordings => "inc=" + string.Join(",", _recordingQueries);
+        public static readonly string[] Releases = { "recordings" };
+
+        /// <summary>
+        /// The relationship queries needed when getting Artists from the API.
+        /// </summary>
+        public static readonly string[] Artists = { "releases" };
+
+        /// <summary>
+        /// The full relationship query needed when getting Recordings from the API.
+        /// </summary>
+        public static string RecordingsQuery => "inc=" + string.Join(",", Recordings);
+
+        /// <summary>
+        /// The full relationship query needed when getting Releases from the API.
+        /// </summary>
+        public static string ReleasesQuery => "inc=" + string.Join(",", Releases);
+
+        /// <summary>
+        /// The full relationship query needed when getting Artists from the API.
+        /// </summary>
+        public static string ArtistsQuery => "inc=" + string.Join(",", Artists);
     }
 }

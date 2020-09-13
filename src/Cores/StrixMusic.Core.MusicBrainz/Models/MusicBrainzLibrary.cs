@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
@@ -34,9 +33,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
             var albums = await _musicBrainzClient.Releases.SearchAsync("*", limit, offset);
             var list = new List<IAlbum>();
 
-            foreach (var item in albums.Items)
+            foreach (var release in albums.Items)
             {
-                list.Add(new MusicBrainzAlbum(SourceCore, item));
+                list.AddRange(release.Media.Select(medium => new MusicBrainzAlbum(SourceCore, release, medium)));
             }
 
             return list;
@@ -65,7 +64,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public override async Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
-            var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*&{RelationshipQueries.Recordings}", limit, offset);
+            var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*&{RelationshipQueries.RecordingsQuery}", limit, offset);
 
             return recordings.Items.Select(item => new MusicBrainzTrack(SourceCore, item)).Cast<ITrack>().ToList();
         }

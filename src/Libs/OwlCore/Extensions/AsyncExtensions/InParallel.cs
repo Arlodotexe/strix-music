@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OwlCore.Extensions
+namespace OwlCore.Extensions.AsyncExtensions
 {
+    /// <summary>
+    /// Async-related extension methods.
+    /// </summary>
     public static partial class AsyncExtensions
     {
         /// <summary>
@@ -17,8 +20,6 @@ namespace OwlCore.Extensions
         public static Task InParallel<T>(this IEnumerable<T> items, Func<T, Task> func)
         {
             var tasks = items.Select(func);
-            if (tasks == null)
-                return Task.CompletedTask;
 
             return Task.WhenAll(tasks);
         }
@@ -34,8 +35,6 @@ namespace OwlCore.Extensions
         public static Task<T2[]> InParallel<T, T2>(this IEnumerable<T> items, Func<T, Task<T2>> func)
         {
             var tasks = items.Select(func);
-            if (tasks == null)
-                return default;
 
             return Task.WhenAll(tasks);
         }
