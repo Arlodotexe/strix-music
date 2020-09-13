@@ -36,7 +36,7 @@ namespace StrixMusic.Sdk.Services.StorageService
         /// <param name="filename">The name of the file (including the file extension).</param>
         /// <param name="value">The value to be stored.</param>
         /// <param name="path">A relative path (separated by forward slashes), to save the file in a subfolder.</param>
-        /// <returns>The <see cref="Task"/> representing the asyncronous operation.</returns>
+        /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
         Task SetValueAsync(string filename, string value, string path);
 
         /// <summary>

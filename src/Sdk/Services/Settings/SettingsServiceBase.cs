@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.Services.Settings
         /// <summary>
         /// A service to store and retrieve settings throughout the app.
         /// </summary>
-        public SettingsServiceBase()
+        protected SettingsServiceBase()
         {
             _textStorageService = Ioc.Default.GetService<ITextStorageService>();
         }
@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Services.Settings
         /// A service to store and retrieve settings throughout the app.
         /// </summary>
         /// <param name="textStorageService">The text storage service to be used by this instance.</param>
-        public SettingsServiceBase(ITextStorageService textStorageService)
+        protected SettingsServiceBase(ITextStorageService textStorageService)
         {
             _textStorageService = textStorageService;
         }
