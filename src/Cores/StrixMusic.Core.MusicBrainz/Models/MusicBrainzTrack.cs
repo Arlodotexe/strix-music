@@ -29,7 +29,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
             SourceCore = sourceCore;
             _recording = recording;
             _artists = new List<IArtist>();
-            Album = new MusicBrainzAlbum(sourceCore, recording.Releases.FirstOrDefault(x => x.Status == "Official") ?? recording.Releases.First());
+
+            var release = recording.Releases.FirstOrDefault(x => x.Status == "Official") ?? recording.Releases.First();
+
+            // TODO: Figure out which medium/disc this track belongs to
+            Album = new MusicBrainzAlbum(sourceCore, release, release.Media.First());
 
             _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
         }
@@ -77,7 +81,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IReadOnlyList<IImage> Images => CreateImagesForRelease(_recording.Releases);
 
         /// <inheritdoc/>
-        public string Description => _recording.Title;
+        public string? Description => null;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => PlaybackState.None;
