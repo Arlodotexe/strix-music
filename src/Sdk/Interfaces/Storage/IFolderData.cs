@@ -41,6 +41,21 @@ namespace StrixMusic.Sdk.Interfaces.Storage
         Task<IFolderData> GetParentAsync();
 
         /// <summary>
+        /// Creates a new subfolder with the specified name in the current folder.
+        /// </summary>
+        /// <param name="desiredName">The name of the new subfolder to create in the current folder.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is a <see cref="IFolderData"/> that represents the created folder.</returns>
+        Task<IFolderData> CreateFolderAsync(string desiredName);
+
+        /// <summary>
+        /// Creates a new subfolder with the specified name in the current folder.
+        /// </summary>
+        /// <param name="desiredName">The name of the new subfolder to create in the current folder.</param>
+        /// <param name="options">One of the enumeration values that determines how to handle the collision if a subfolder with the specified desiredName already exists in the current folder.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is a <see cref="IFolderData"/> that represents the created folder.</returns>
+        Task<IFolderData> CreateFolderAsync(string desiredName, CreationCollisionOption options);
+
+        /// <summary>
         /// Scans and populates the immediate contents of the folder.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>

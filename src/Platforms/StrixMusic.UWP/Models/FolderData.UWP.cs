@@ -7,6 +7,7 @@ using StrixMusic.Sdk.Interfaces.Storage;
 using StrixMusic.UWP.Models;
 using Uno.Extensions;
 using Windows.Storage;
+using CreationCollisionOption = StrixMusic.Sdk.Interfaces.Storage.CreationCollisionOption;
 
 namespace StrixMusic.Models
 {
@@ -94,6 +95,22 @@ namespace StrixMusic.Models
         public async Task<IFolderData> GetParentAsync()
         {
             var storageFolder = await StorageFolder.GetParentAsync();
+
+            return new FolderData(storageFolder);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IFolderData> CreateFolderAsync(string desiredName)
+        {
+            var storageFolder = await StorageFolder.CreateFolderAsync(desiredName);
+
+            return new FolderData(storageFolder);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IFolderData> CreateFolderAsync(string desiredName, CreationCollisionOption options)
+        {
+            var storageFolder = await StorageFolder.CreateFolderAsync(desiredName, (Windows.Storage.CreationCollisionOption)options);
 
             return new FolderData(storageFolder);
         }

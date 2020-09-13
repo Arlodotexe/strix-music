@@ -8,6 +8,7 @@ namespace StrixMusic.Sdk.Services
     /// <inheritdoc cref="ITextStorageService"/>
     public class TextStorageService : ITextStorageService
     {
+
         private readonly StorageFolder _localFolder;
 
         /// <summary>

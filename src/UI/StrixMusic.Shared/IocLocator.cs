@@ -9,6 +9,7 @@ using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 using StrixMusic.Sdk.Services.SuperShell;
+using Windows.Storage;
 
 namespace StrixMusic.Shared
 {
@@ -24,8 +25,12 @@ namespace StrixMusic.Shared
                 var textStorageService = new TextStorageService();
                 var settingsService = new DefaultSettingsService(textStorageService);
 
+                var cacheFileSystemService = new FileSystemService(ApplicationData.Current.LocalCacheFolder);
+                var cacheService = new DefaultCacheService(cacheFileSystemService);
+
                 services.AddSingleton<ITextStorageService>(textStorageService);
                 services.AddSingleton<ISettingsService>(settingsService);
+                services.AddSingleton(cacheService);
                 services.AddSingleton<ISuperShellService, SuperShellService>();
                 services.AddSingleton<IFileSystemService, FileSystemService>();
 

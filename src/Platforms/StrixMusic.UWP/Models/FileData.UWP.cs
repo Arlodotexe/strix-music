@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using StrixMusic.Models;
 using StrixMusic.Sdk.Interfaces.Storage;
 using StrixMusic.Sdk.Models.Storage;
-using StrixMusic.Models;
 using Windows.Storage;
 
 namespace StrixMusic.UWP.Models

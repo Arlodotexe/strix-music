@@ -12,6 +12,11 @@ namespace StrixMusic.Sdk.Services.StorageService
     public interface IFileSystemService
     {
         /// <summary>
+        /// Defines the root folder where new files and folders are created.
+        /// </summary>
+        IFolderData RootFolder { get; }
+
+        /// <summary>
         /// Initializes the service, performing first time setup tasks.
         /// </summary>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
