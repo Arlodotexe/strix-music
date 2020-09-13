@@ -123,7 +123,7 @@
         <Setter Property="Background" Value="{ThemeResource RadioButtonBackground}"/>
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="BorderBrush" Value="{ThemeResource RadioButtonBorderBrush}"/>
-        <Setter Property="Padding" Value="8,6,0,0"/>
+        <Setter Property="Padding" Value="0,6,0,0"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
