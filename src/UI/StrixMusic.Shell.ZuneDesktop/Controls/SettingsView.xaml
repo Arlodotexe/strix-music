@@ -5,6 +5,7 @@
     xmlns:local="using:StrixMusic.Shell.ZuneDesktop.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="using:StrixMusic.Shell.ZuneDesktop.Controls.SettingsPages"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -58,6 +59,12 @@
             </ListView>
 
             <Rectangle Width="1" Grid.Row="1" Grid.Column="2" Fill="Black" Opacity=".2"/>
+
+            <ContentControl Grid.Row="1" Grid.Column="3" Padding="40,0">
+                <ContentControl.Content>
+                    <pages:SettingsBackgrounds/>
+                </ContentControl.Content>
+            </ContentControl>
         </Grid>
 
         <!--Action Buttons-->
