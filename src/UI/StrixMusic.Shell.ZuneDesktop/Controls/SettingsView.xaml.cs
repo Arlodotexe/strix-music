@@ -67,10 +67,8 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
                     // TODO:
                     break;
                 default:
-                    return;
+                    break;
             }
-
-            // TODO: Entrance animation on ListView
         }
     }
 }

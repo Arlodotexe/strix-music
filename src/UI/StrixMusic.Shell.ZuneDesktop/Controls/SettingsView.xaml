@@ -46,11 +46,15 @@
             <ListView x:Name="PagesList" ItemContainerStyle="{StaticResource ZuneSettingsListViewItem}" Grid.Row="1" Grid.Column="1" Padding="24,0,96,0">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <ItemsStackPanel x:Name="PageListItemPanel"/>
+                        <ItemsStackPanel x:Name="PageListItemPanel">
+                            <ItemsStackPanel.ChildrenTransitions>
+                                <TransitionCollection>
+                                    <EntranceThemeTransition FromHorizontalOffset="-20" FromVerticalOffset="0" IsStaggeringEnabled="True"/>
+                                </TransitionCollection>
+                            </ItemsStackPanel.ChildrenTransitions>
+                        </ItemsStackPanel>
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
-                <ListViewItem Content="BACKGROUND"/>
-                <ListViewItem Content="SCALING"/>
             </ListView>
 
             <Rectangle Width="1" Grid.Row="1" Grid.Column="2" Fill="Black" Opacity=".2"/>
