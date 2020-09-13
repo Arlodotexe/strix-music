@@ -1,48 +1,50 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Services;
 using StrixMusic.Sdk.Interfaces.Storage;
 
 namespace StrixMusic.Sdk.Services.StorageService
 {
-    /// <summary>
-    /// A service that stores file in a cache folder.
-    /// </summary>
+    /// <inheritdoc/>
     public abstract class CacheServiceBase : IFileSystemService
     {
-        private readonly IFileSystemService _fileSystemService;
+        private readonly IFileSystemService _cacheStorageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheServiceBase"/> class.
         /// </summary>
-        /// <param name="fileSystemService">The file system service to use for caching.</param>
-        protected CacheServiceBase(IFileSystemService fileSystemService)
+        protected CacheServiceBase()
         {
-            _fileSystemService = fileSystemService;
+            var contextContextualServiceLocator = Ioc.Default.GetService<ContextualServiceLocator>();
+
+            _cacheStorageService = contextContextualServiceLocator.GetServiceByContext<IFileSystemService>(nameof(CacheServiceBase));
         }
 
         /// <inheritdoc />
-        public IFolderData RootFolder => _fileSystemService.RootFolder;
+        public IFolderData RootFolder => _cacheStorageService.RootFolder;
 
         /// <inheritdoc/>
-        public Task Init() => _fileSystemService.Init();
+        public Task Init() => _cacheStorageService.Init();
 
         /// <inheritdoc/>
-        public Task<IFolderData?> PickFolder() => _fileSystemService.PickFolder();
+        public Task<IFolderData?> PickFolder() => _cacheStorageService.PickFolder();
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IFolderData?>> GetPickedFolders() => _fileSystemService.GetPickedFolders();
+        public Task<IReadOnlyList<IFolderData?>> GetPickedFolders() => _cacheStorageService.GetPickedFolders();
 
         /// <inheritdoc/>
-        public Task RevokeAccess(IFolderData folder) => _fileSystemService.RevokeAccess(folder);
+        public Task RevokeAccess(IFolderData folder) => _cacheStorageService.RevokeAccess(folder);
 
         /// <inheritdoc/>
-        public Task<bool> FileExistsAsync(string path) => _fileSystemService.FileExistsAsync(path);
+        public Task<bool> FileExistsAsync(string path) => _cacheStorageService.FileExistsAsync(path);
 
         /// <inheritdoc/>
-        public Task<bool> DirectoryExistsAsync(string path) => _fileSystemService.DirectoryExistsAsync(path);
+        public Task<bool> DirectoryExistsAsync(string path) => _cacheStorageService.DirectoryExistsAsync(path);
 
         /// <inheritdoc/>
-        public Task<IFolderData> CreateDirectoryAsync(string folderName) => _fileSystemService.CreateDirectoryAsync(folderName);
+        public Task<IFolderData> CreateDirectoryAsync(string folderName) => _cacheStorageService.CreateDirectoryAsync(folderName);
 
         /// <summary>
         /// A unique identifier for this instance of the cache that sections off the data.

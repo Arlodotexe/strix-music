@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Hqub.MusicBrainz.API;
+﻿using Hqub.MusicBrainz.API;
+using Hqub.MusicBrainz.Client;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Sdk.AbstractUI;
 using StrixMusic.Sdk.Interfaces;
-using StrixMusic.Sdk.Services.StorageService;
+using System;
+using System.Collections.Generic;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -36,9 +35,15 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             IServiceCollection services = new ServiceCollection();
 
-            services.Add(new ServiceDescriptor(typeof(MusicBrainzClient), new MusicBrainzClient()));
-            services.Add(new ServiceDescriptor(typeof(MusicBrainzCacheService), new MusicBrainzCacheService()));
-        
+            var cacheService = new MusicBrainzCacheService();
+
+            var musicBrainzClient = new MusicBrainzClient()
+            {
+                Cache = new FileRequestCache(cacheService.RootFolder.Path),
+            };
+
+            services.Add(new ServiceDescriptor(typeof(MusicBrainzClient), musicBrainzClient));
+
             return services.BuildServiceProvider();
         }
     }

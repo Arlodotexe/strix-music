@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using StrixMusic.Models;
 using StrixMusic.Sdk.Interfaces.Storage;
+using StrixMusic.Shared.Models;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;

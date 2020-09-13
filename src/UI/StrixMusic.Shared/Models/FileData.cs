@@ -8,7 +8,7 @@ using StrixMusic.Sdk.Interfaces.Storage;
 using StrixMusic.Sdk.Models.Storage;
 using Windows.Storage;
 
-namespace StrixMusic.UWP.Models
+namespace StrixMusic.Shared.Models
 {
     /// <inheritdoc cref="IFileData"/>
     public class FileData : IFileData
@@ -50,6 +50,7 @@ namespace StrixMusic.UWP.Models
             return new FolderData(storageFile);
         }
 
+        /// <inheritdoc/>
         public async Task Delete()
         {
             await StorageFile.DeleteAsync();

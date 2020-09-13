@@ -4,12 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Interfaces.Storage;
-using StrixMusic.UWP.Models;
 using Uno.Extensions;
 using Windows.Storage;
 using CreationCollisionOption = StrixMusic.Sdk.Interfaces.Storage.CreationCollisionOption;
 
-namespace StrixMusic.Models
+namespace StrixMusic.Shared.Models
 {
     /// <inheritdoc/>
     public class FolderData : IFolderData

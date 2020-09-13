@@ -175,6 +175,10 @@
       <Project>{d0618335-d56c-419d-b9fa-98e475338efc}</Project>
       <Name>StrixMusic.Core.MusicBrainz</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
+      <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>
+      <Name>OwlCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj">
       <Project>{60ee2300-f562-416c-9458-dbea41389d8b}</Project>
       <Name>StrixMusic.Sdk</Name>
