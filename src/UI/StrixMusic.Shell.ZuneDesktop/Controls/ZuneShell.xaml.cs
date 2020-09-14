@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Shell.ZuneDesktop.Settings;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace StrixMusic.Shell.ZuneDesktop.Controls
 {
@@ -35,6 +36,29 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
         {
             Loaded -= ZuneShell_Loaded;
             SettingsOverlay.DataContext = new ZuneDesktopSettingsViewModel();
+            SetupBackgroundImage();
+        }
+
+        private async void SetupBackgroundImage()
+        {
+
+            ZuneDesktopSettingsService settingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>();
+            ZuneDesktopBackgroundImage backgroundImage = await settingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
+
+            if (backgroundImage.IsNone)
+            {
+                BackgroundImage.Visibility = Visibility.Collapsed;
+                return;
+            }
+            else
+            {
+                BackgroundImage.Visibility = Visibility.Visible;
+            }
+
+            BitmapImage bitmapImage = new BitmapImage(backgroundImage.Path);
+            BackgroundImageBrush.ImageSource = bitmapImage;
+            BackgroundImageBrush.AlignmentY = backgroundImage.YAlignment;
+            BackgroundImageBrush.Stretch = backgroundImage.Stretch;
         }
 
         /// <inheritdoc/>
