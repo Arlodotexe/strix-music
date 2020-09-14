@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Shell.ZuneDesktop.Settings;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Strix
@@ -24,9 +23,13 @@ namespace StrixMusic.Shell.Strix
         internal static void Initialize()
         {
             Ioc = new Ioc();
+            var textStorageService = new TextStorageService();
+            var settingsService = new ZuneDesktopSettingsService(textStorageService);
+
             Ioc.ConfigureServices(services =>
             {
                 services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
+                services.AddSingleton(settingsService);
             });
         }
     }

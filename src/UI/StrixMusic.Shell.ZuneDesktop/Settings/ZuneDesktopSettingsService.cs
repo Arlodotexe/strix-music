@@ -1,27 +1,28 @@
-﻿// Special thanks to Sergio Pedri for this design from Legere
-// Sergio's GitHub: https://github.com/Sergio0694
-// Legere: https://www.microsoft.com/store/apps/9PHJRVCSKVJZ
-
+﻿using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
+using System;
 
-namespace StrixMusic.Sdk.Services.Settings
+namespace StrixMusic.Shell.ZuneDesktop.Settings
 {
     /// <summary>
-    /// The instance of <see cref="ISettingsService"/> used by default
+    /// The instance of <see cref="ISettingsService"/> used by the ZuneShell
     /// <remarks>Not used by Cores. User-configurable settings go here.</remarks>
     /// </summary>
-    public class DefaultSettingsService : SettingsServiceBase
+    public class ZuneDesktopSettingsService : SettingsServiceBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultSettingsService"/> class.
         /// </summary>
         /// <param name="textStorageService">The text storage service to be used by this instance.</param>
-        public DefaultSettingsService(ITextStorageService textStorageService)
+        public ZuneDesktopSettingsService(ITextStorageService textStorageService)
             : base(textStorageService)
         {
         }
 
         /// <inheritdoc/>
-        public override string Id => "Default";
+        public override string Id => "ZuneDesktop";
+
+        /// <inheritdoc/>
+        public override Type SettingsKeysType => typeof(ZuneDesktopSettingsKeys);
     }
 }

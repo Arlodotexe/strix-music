@@ -11,6 +11,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Shell.ZuneDesktop.Settings;
 
 namespace StrixMusic.Shell.ZuneDesktop.Controls
 {
@@ -27,6 +28,13 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
             SetupIoc();
             _navigationService!.NavigationRequested += ZuneShell_NavigationRequested;
             _navigationService!.BackRequested += ZuneShell_BackRequested;
+            Loaded += ZuneShell_Loaded;
+        }
+
+        private void ZuneShell_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= ZuneShell_Loaded;
+            SettingsOverlay.DataContext = new ZuneDesktopSettingsViewModel();
         }
 
         /// <inheritdoc/>

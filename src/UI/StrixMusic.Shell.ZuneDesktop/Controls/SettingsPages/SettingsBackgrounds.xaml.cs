@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using StrixMusic.Shell.ZuneDesktop.Settings;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.ZuneDesktop.Controls.SettingsPages
 {
@@ -14,5 +15,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls.SettingsPages
         {
             this.InitializeComponent();
         }
+
+        private ZuneDesktopSettingsViewModel? ViewModel => DataContext as ZuneDesktopSettingsViewModel;
     }
 }

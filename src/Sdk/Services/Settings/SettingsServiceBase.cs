@@ -84,7 +84,8 @@ namespace StrixMusic.Sdk.Services.Settings
             }
             else
             {
-                throw new ArgumentException($"Invalid setting of type {typeof(T)}", nameof(value));
+                serializable = (T)value!;
+                //throw new ArgumentException($"Invalid setting of type {typeof(T)}", nameof(value));
             }
 
             var serialized = JsonConvert.SerializeObject(serializable);

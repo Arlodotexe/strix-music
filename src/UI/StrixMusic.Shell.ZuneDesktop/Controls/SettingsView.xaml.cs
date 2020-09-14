@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Shell.Strix;
+using StrixMusic.Shell.ZuneDesktop.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Composition;
@@ -22,6 +23,8 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
         {
             this.InitializeComponent();
         }
+
+        private ZuneDesktopSettingsViewModel? ViewModel => DataContext as ZuneDesktopSettingsViewModel;
 
         private readonly List<string> _displayPages = new List<string>()
         {

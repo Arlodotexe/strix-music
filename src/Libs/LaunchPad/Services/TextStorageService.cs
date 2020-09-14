@@ -69,7 +69,7 @@ namespace StrixMusic.Sdk.Services
             }
             catch (Exception)
             {
-                return null!;
+                return null;
             }
         }
 

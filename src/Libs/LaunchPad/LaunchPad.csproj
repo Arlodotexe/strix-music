@@ -34,4 +34,7 @@
   <ItemGroup>
     <UpToDateCheckInput Remove="Themes\Generic.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
+  </ItemGroup>
 </Project>
