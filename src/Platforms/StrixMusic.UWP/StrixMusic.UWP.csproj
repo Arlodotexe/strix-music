@@ -23,7 +23,7 @@
     <PackageReference Include="Uno.Diagnostics.Eventing">
       <Version>1.0.4</Version>
     </PackageReference>
-    <PackageReference Include="Uno.UI" Version="3.0.12" />
+    <PackageReference Include="Uno.UI" Version="3.0.17" />
   </ItemGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>

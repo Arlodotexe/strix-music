@@ -56,7 +56,7 @@
     </PackageReference>
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="3.0.12" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.UI.WebAssembly" Version="3.0.12" />
+    <PackageReference Include="Uno.UI.WebAssembly" Version="3.0.17" />
     <PackageReference Include="Uno.Wasm.Bootstrap" Version="1.4.0-dev.16" />
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.4.0-dev.16" PrivateAssets="all" />
   </ItemGroup>
