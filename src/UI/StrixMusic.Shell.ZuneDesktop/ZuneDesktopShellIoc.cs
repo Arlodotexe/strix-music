@@ -5,7 +5,7 @@ using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Shell.ZuneDesktop.Settings;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shell.Strix
+namespace StrixMusic.Shell.ZuneDesktop
 {
     /// <summary>
     /// A static class containing the Ioc for the ZuneDesktopShell.

@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Shell.Default.Controls;
-using StrixMusic.Shell.Strix;
 using StrixMusic.Sdk;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
