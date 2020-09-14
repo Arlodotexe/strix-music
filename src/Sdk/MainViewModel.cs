@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk
     /// </summary>
     public class MainViewModel : ObservableRecipient
     {
-        private readonly IEnumerable<ICore> _cores
+        private readonly IEnumerable<ICore> _cores;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
