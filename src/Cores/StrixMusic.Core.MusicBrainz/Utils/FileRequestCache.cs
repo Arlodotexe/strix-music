@@ -28,9 +28,9 @@ namespace Hqub.MusicBrainz.Client
         /// </summary>
         public FileRequestCache()
         {
-            var appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-            this.path = Path.Combine(appdata, "MusicBrainz", "Cache");
+            this.path = Path.Combine(appData, "MusicBrainz", "Cache");
 
             this.Timeout = TimeSpan.FromHours(24.0);
         }

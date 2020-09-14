@@ -4,15 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using StrixMusic.Models;
 using StrixMusic.Sdk.Interfaces.Storage;
+using StrixMusic.Shared.Models;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using CreationCollisionOption = StrixMusic.Sdk.Interfaces.Storage.CreationCollisionOption;
 
 // ReSharper disable CheckNamespace
 namespace StrixMusic.Sdk.Services.StorageService
 {
     /// <inheritdoc cref="IFileSystemService" />
-    public class FileSystemService : IFileSystemService
+    public sealed class FileSystemService : IFileSystemService
     {
         private readonly List<IFolderData> _registeredFolders;
 
@@ -23,6 +25,21 @@ namespace StrixMusic.Sdk.Services.StorageService
         {
             _registeredFolders = new List<IFolderData>();
         }
+
+        /// <summary>
+        /// Constructs a new <see cref="FileSystemService"/>.
+        /// </summary>
+        public FileSystemService(StorageFolder rootFolder)
+        {
+            _registeredFolders = new List<IFolderData>();
+
+            RootFolder = new FolderData(rootFolder);
+        }
+
+        /// <summary>
+        /// Defines the root folder where new files and folders are created.
+        /// </summary>
+        public IFolderData RootFolder { get; } = new FolderData(ApplicationData.Current.LocalFolder);
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IFolderData?>> GetPickedFolders()
@@ -103,9 +120,7 @@ namespace StrixMusic.Sdk.Services.StorageService
         /// <inheritdoc/>
         public async Task<IFolderData> CreateDirectoryAsync(string folderName)
         {
-            var storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
-
-            var folderData = new FolderData(storageFolder);
+            var folderData = await RootFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
 
             return folderData;
         }
@@ -113,6 +128,8 @@ namespace StrixMusic.Sdk.Services.StorageService
         /// <inheritdoc />
         public async Task Init()
         {
+
+
             var persistentAccessEntries = StorageApplicationPermissions.FutureAccessList.Entries;
 
             if (persistentAccessEntries == null || !persistentAccessEntries.Any())

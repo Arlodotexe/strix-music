@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Interfaces.Storage;
-using StrixMusic.Sdk.Services.StorageService;
+using StrixMusic.Shared.Models;
+using Windows.Storage;
 
 namespace StrixMusic.Sdk.Services.StorageService
 {
@@ -10,7 +11,10 @@ namespace StrixMusic.Sdk.Services.StorageService
     public class FileSystemService : IFileSystemService
     {
         /// <inheritdoc/>
-        public FileSystemService()
+        public IFolderData RootFolder => new FolderData(ApplicationData.Current.LocalFolder);
+
+        /// <inheritdoc/>
+        public FileSystemService(StorageFolder rootFolder)
         {
         }
 

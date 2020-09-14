@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using StrixMusic.Sdk.Interfaces.Storage;
+using StrixMusic.Shared.Models;
+using Windows.Storage;
 
 namespace StrixMusic.Sdk.Services.StorageService
 {
@@ -17,7 +11,10 @@ namespace StrixMusic.Sdk.Services.StorageService
     public class FileSystemService : IFileSystemService
     {
         /// <inheritdoc/>
-        public FileSystemService()
+        public IFolderData RootFolder => new FolderData(ApplicationData.Current.LocalFolder);
+
+        /// <inheritdoc/>
+        public FileSystemService(StorageFolder rootFolder)
         {
         }
 

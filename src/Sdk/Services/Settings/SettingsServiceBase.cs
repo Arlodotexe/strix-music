@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Newtonsoft.Json;
+using StrixMusic.Sdk.Interfaces.Storage;
 using StrixMusic.Sdk.Services.StorageService;
 
 namespace StrixMusic.Sdk.Services.Settings

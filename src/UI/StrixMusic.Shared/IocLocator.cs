@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Services;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Interfaces;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 using StrixMusic.Sdk.Services.SuperShell;
+using Windows.Storage;
 
 namespace StrixMusic.Shared
 {
@@ -21,11 +23,18 @@ namespace StrixMusic.Shared
         {
             Ioc.Default.ConfigureServices(async services =>
             {
+                var contextualServiceLocator = new ContextualServiceLocator();
+
                 var textStorageService = new TextStorageService();
                 var settingsService = new DefaultSettingsService(textStorageService);
+                var cacheFileSystemService = new FileSystemService(ApplicationData.Current.LocalCacheFolder);
 
+                contextualServiceLocator.Register<IFileSystemService>(cacheFileSystemService, typeof(CacheServiceBase));
+
+                services.AddSingleton(contextualServiceLocator);
                 services.AddSingleton<ITextStorageService>(textStorageService);
                 services.AddSingleton<ISettingsService>(settingsService);
+                services.AddSingleton<CacheServiceBase, DefaultCacheService>();
                 services.AddSingleton<ISuperShellService, SuperShellService>();
                 services.AddSingleton<IFileSystemService, FileSystemService>();
 

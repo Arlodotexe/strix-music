@@ -26,6 +26,7 @@ namespace StrixMusic.Core.MusicBrainz
         {
             InstanceId = instanceId;
             CoreConfig = new MusicBrainzCoreConfig(this);
+
             // The library created here won't be used by the UI.
             // The UI isn't loaded until InitAsync is called, where we set up the actual library.
             Library = new MusicBrainzLibrary(this);

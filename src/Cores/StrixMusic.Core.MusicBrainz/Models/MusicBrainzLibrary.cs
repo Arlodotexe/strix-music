@@ -19,7 +19,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// Initializes a new instance of the <see cref="MusicBrainzLibrary"/> class.
         /// </summary>
         /// <param name="sourceCore"></param>
-
         public MusicBrainzLibrary(ICore sourceCore)
             : base(sourceCore)
         {
