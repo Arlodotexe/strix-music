@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Extensions.AsyncExtensions;
 using StrixMusic.Sdk;
-using StrixMusic.Shell.Strix;
 
 namespace StrixMusic.Shell.ZuneDesktop.Settings
 {

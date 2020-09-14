@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Shell.Strix;
 using StrixMusic.Shell.ZuneDesktop.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
