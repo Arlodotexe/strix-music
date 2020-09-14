@@ -18,6 +18,15 @@
             <DoubleAnimation Storyboard.TargetName="DarkBackground" Storyboard.TargetProperty="Opacity"
                              Duration="0:0:0.3" To="0"/>
         </Storyboard>
+
+        <Storyboard x:Name="ShowBackground">
+            <DoubleAnimation Storyboard.TargetName="BackgroundImage" Storyboard.TargetProperty="Opacity"
+                             Duration="0:0:0.3" To=".1" From="0"/>
+        </Storyboard>
+        <Storyboard x:Name="HideBackground" Completed="BackgroundHideCompleted">
+            <DoubleAnimation Storyboard.TargetName="BackgroundImage" Storyboard.TargetProperty="Opacity"
+                             Duration="0:0:0.3" To="0"/>
+        </Storyboard>
     </default:ShellControl.Resources>
 
     <Grid Background="{ThemeResource ZuneLightBackground}">

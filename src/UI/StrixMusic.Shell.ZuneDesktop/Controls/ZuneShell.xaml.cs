@@ -64,6 +64,14 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
             });
         }
 
+        private async void ChangeBackgroundImage()
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                HideBackground.Begin();
+            });
+        }
+
         /// <inheritdoc/>
         protected override void SetupTitleBar()
         {
@@ -150,7 +158,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
         {
             if (e.Key == nameof(ZuneDesktopSettingsKeys.BackgroundImage))
             {
-                SetupBackgroundImage();
+                ChangeBackgroundImage();
             }
         }
 
@@ -162,6 +170,12 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
         private void RequestBack(object sender, RoutedEventArgs e)
         {
             _navigationService!.GoBack();
+        }
+
+        private void BackgroundHideCompleted(object sender, object e)
+        {
+            SetupBackgroundImage();
+            ShowBackground.Begin();
         }
     }
 }
