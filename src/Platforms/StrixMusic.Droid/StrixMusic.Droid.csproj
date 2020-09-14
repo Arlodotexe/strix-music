@@ -81,7 +81,7 @@
     <PackageReference Include="Uno.Diagnostics.Eventing">
       <Version>1.0.4</Version>
     </PackageReference>
-    <PackageReference Include="Uno.UI" Version="3.0.17" />
+    <PackageReference Include="Uno.UI" Version="3.1.0-dev.327" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="3.0.17" Condition="'$(Configuration)'=='Debug'" />
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.32" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
