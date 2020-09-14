@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Media.Animation;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Shell.ZuneDesktop.Settings;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Core;
 
 namespace StrixMusic.Shell.ZuneDesktop.Controls
 {
@@ -41,24 +42,26 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
 
         private async void SetupBackgroundImage()
         {
-
             ZuneDesktopSettingsService settingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>();
             ZuneDesktopBackgroundImage backgroundImage = await settingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
 
-            if (backgroundImage.IsNone)
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                BackgroundImage.Visibility = Visibility.Collapsed;
-                return;
-            }
-            else
-            {
-                BackgroundImage.Visibility = Visibility.Visible;
-            }
+                if (backgroundImage.IsNone)
+                {
+                    BackgroundImage.Visibility = Visibility.Collapsed;
+                    return;
+                }
+                else
+                {
+                    BackgroundImage.Visibility = Visibility.Visible;
+                }
 
-            BitmapImage bitmapImage = new BitmapImage(backgroundImage.Path);
-            BackgroundImageBrush.ImageSource = bitmapImage;
-            BackgroundImageBrush.AlignmentY = backgroundImage.YAlignment;
-            BackgroundImageBrush.Stretch = backgroundImage.Stretch;
+                BitmapImage bitmapImage = new BitmapImage(backgroundImage.Path);
+                BackgroundImageBrush.ImageSource = bitmapImage;
+                BackgroundImageBrush.AlignmentY = backgroundImage.YAlignment;
+                BackgroundImageBrush.Stretch = backgroundImage.Stretch;
+            });
         }
 
         /// <inheritdoc/>
@@ -139,6 +142,16 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
         {
             ZuneDesktopShellIoc.Initialize();
             _navigationService = ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>();
+            ZuneDesktopSettingsService settingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>();
+            settingsService.SettingChanged += SettingsService_SettingChanged;
+        }
+
+        private void SettingsService_SettingChanged(object sender, Sdk.Services.Settings.SettingChangedEventArgs e)
+        {
+            if (e.Key == nameof(ZuneDesktopSettingsKeys.BackgroundImage))
+            {
+                SetupBackgroundImage();
+            }
         }
 
         private void SettingsLinkClicked(object sender, RoutedEventArgs e)
