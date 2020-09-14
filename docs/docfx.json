@@ -11,13 +11,13 @@
                         "src/Libs/LauchPad/LaunchPad.csproj"
                     ],
                     "exclude": [
-                        "**/bin/**",
-                        "**/obj/**"
-                    ],
-                    "src": "../"
+                        "../**/bin/**",
+                        "../**/obj/**",
+                        "/wwwroot/**"
+                    ]
                 }
             ],
-            "dest": "api"
+            "dest": "docs/api"
         }
     ],
     "build": {
