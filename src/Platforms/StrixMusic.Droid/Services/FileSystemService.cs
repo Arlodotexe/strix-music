@@ -11,27 +11,24 @@ namespace StrixMusic.Sdk.Services.StorageService
     public class FileSystemService : IFileSystemService
     {
         /// <inheritdoc/>
-        public IFolderData RootFolder => new FolderData(ApplicationData.Current.LocalFolder);
+        public IFolderData RootFolder { get; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Creates a new instance of <see cref="FileSystemService"/>.
+        /// </summary>
+        /// <param name="rootFolder"><inheritdoc cref="RootFolder"/></param>
         public FileSystemService(StorageFolder rootFolder)
         {
+            RootFolder = new FolderData(rootFolder);
         }
 
-        /// <inheritdoc/>
-        public event EventHandler<IFolderData>? FolderScanStarted;
-
-        /// <inheritdoc/>
-        public event EventHandler<IFolderData>? FolderDeepScanCompleted;
-
-        /// <inheritdoc/>
-        public event EventHandler<IFolderData>? FolderScanCompleted;
-
-        /// <inheritdoc/>
-        public event EventHandler<FileScanStateEventArgs>? FileScanStarted;
-
-        /// <inheritdoc/>
-        public event EventHandler<FileScanStateEventArgs>? FileScanCompleted;
+        /// <summary>
+        /// Creates a new instance of <see cref="FileSystemService"/>.
+        /// </summary>
+        public FileSystemService()
+        {
+            RootFolder = new FolderData(ApplicationData.Current.LocalFolder);
+        }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IFolderData?>> GetPickedFolders()
