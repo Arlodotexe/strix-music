@@ -19,13 +19,17 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Name="HomeItem" Content="Home">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE10F;"/>
+                        <FontIcon Glyph="&#xE10F;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Icon="Clock" Content="Recently Played" Tag="RecentlyPlayedItem"/>
+                <NavigationViewItem Icon="Clock" Content="Recently Played" Tag="RecentlyPlayedItem">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
                 <NavigationViewItem x:Name="NowPlaying" Content="Now Playing">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xF61F;"/>
+                        <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItemSeparator/>

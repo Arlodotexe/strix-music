@@ -64,19 +64,19 @@
 
                                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                                     <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE100;"/>
+                                        <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
                                     <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE102;"/>
+                                        <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
                                     <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE101;"/>
+                                        <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
                                     <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE8EE;"/>
+                                        <FontIcon Glyph="&#xE1CC;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
                                     <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE8B1;"/>
+                                        <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
                                 </StackPanel>
                             </Grid>

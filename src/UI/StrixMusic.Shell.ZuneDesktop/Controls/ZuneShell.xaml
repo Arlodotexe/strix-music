@@ -89,7 +89,7 @@
         <Button Style="{StaticResource ZuneButton}" Width="24" Margin="40,12,-32,0"
                 VerticalAlignment="Top" HorizontalAlignment="Left"
                 Click="RequestBack">
-            <FontIcon Glyph="&#xE0A6;" FontSize="12"/>
+            <FontIcon Glyph="&#xE0A6;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets" FontSize="12"/>
         </Button>
 
         <!--ZuneBar-->
