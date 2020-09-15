@@ -13,7 +13,6 @@ namespace StrixMusic.Shell.ZuneDesktop.Settings
         private readonly Dictionary<string, ZuneDesktopBackgroundImage> _zuneBackgroundImages = new Dictionary<string, ZuneDesktopBackgroundImage>()
         {
             { "None", new ZuneDesktopBackgroundImage() },
-            { "Bloom", new ZuneDesktopBackgroundImage("Bloom", Windows.UI.Xaml.Media.AlignmentY.Top) },
             { "Bubbles", new ZuneDesktopBackgroundImage("Bubbles") },
             { "Cells", new ZuneDesktopBackgroundImage("Cells") },
             { "Meadow", new ZuneDesktopBackgroundImage("Meadow") },
@@ -50,28 +49,6 @@ namespace StrixMusic.Shell.ZuneDesktop.Settings
                 }
 
                 ZuneDesktopBackgroundImage image = _zuneBackgroundImages["None"];
-                _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets if the ZuneShell BackgroundImage is Bloom.
-        /// </summary>
-        public bool IsBloomBackgroundSelected
-        {
-            get => AsyncExtensions.RunSync(async () =>
-            {
-                var backgroundImage = await _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
-                return backgroundImage.Name == "Bloom";
-            });
-            set
-            {
-                if (value == false)
-                {
-                    return;
-                }
-
-                ZuneDesktopBackgroundImage image = _zuneBackgroundImages["Bloom"];
                 _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
             }
         }
