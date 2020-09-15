@@ -39,153 +39,16 @@ namespace StrixMusic.Shell.ZuneDesktop.Settings
         /// <summary>
         /// Gets or sets if the ZuneShell BackgroundImage is None.
         /// </summary>
-        public bool IsNoneBackgroundSelected
+        public string SelectedBackgroundImage
         {
             get => AsyncExtensions.RunSync(async () =>
             {
                 var backgroundImage = await _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
-                return backgroundImage.IsNone;
+                return backgroundImage.Name;
             });
             set
             {
-                if (value == false)
-                {
-                    return;
-                }
-
-                ZuneDesktopBackgroundImage image = _zuneBackgroundImages["None"];
-                _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets if the ZuneShell BackgroundImage is Bubbles.
-        /// </summary>
-        public bool IsBubblesBackgroundSelected
-        {
-            get => AsyncExtensions.RunSync(async () =>
-            {
-                var backgroundImage = await _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
-                return backgroundImage.Name == "Bubbles";
-            });
-            set
-            {
-                if (value == false)
-                {
-                    return;
-                }
-
-                ZuneDesktopBackgroundImage image = _zuneBackgroundImages["Bubbles"];
-                _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets if the ZuneShell BackgroundImage is Cells.
-        /// </summary>
-        public bool IsCellsBackgroundSelected
-        {
-            get => AsyncExtensions.RunSync(async () =>
-            {
-                var backgroundImage = await _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
-                return backgroundImage.Name == "Cells";
-            });
-            set
-            {
-                if (value == false)
-                {
-                    return;
-                }
-
-                ZuneDesktopBackgroundImage image = _zuneBackgroundImages["Cells"];
-                _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets if the ZuneShell BackgroundImage is Meadow.
-        /// </summary>
-        public bool IsMeadowBackgroundSelected
-        {
-            get => AsyncExtensions.RunSync(async () =>
-            {
-                var backgroundImage = await _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
-                return backgroundImage.Name == "Meadow";
-            });
-            set
-            {
-                if (value == false)
-                {
-                    return;
-                }
-
-                ZuneDesktopBackgroundImage image = _zuneBackgroundImages["Meadow"];
-                _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets if the ZuneShell BackgroundImage is RobotOwl.
-        /// </summary>
-        public bool IsRobotOwlBackgroundSelected
-        {
-            get => AsyncExtensions.RunSync(async () =>
-            {
-                var backgroundImage = await _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
-                return backgroundImage.Name == "RobotOwl";
-            });
-            set
-            {
-                if (value == false)
-                {
-                    return;
-                }
-
-                ZuneDesktopBackgroundImage image = _zuneBackgroundImages["RobotOwl"];
-                _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets if the ZuneShell BackgroundImage is Shards.
-        /// </summary>
-        public bool IsShardsBackgroundSelected
-        {
-            get => AsyncExtensions.RunSync(async () =>
-            {
-                var backgroundImage = await _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
-                return backgroundImage.Name == "Shards";
-            });
-            set
-            {
-                if (value == false)
-                {
-                    return;
-                }
-
-                ZuneDesktopBackgroundImage image = _zuneBackgroundImages["Shards"];
-                _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets if the ZuneShell BackgroundImage is Wired.
-        /// </summary>
-        public bool IsWiredBackgroundSelected
-        {
-            get => AsyncExtensions.RunSync(async () =>
-            {
-                var backgroundImage = await _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
-                return backgroundImage.Name == "Wired";
-            });
-            set
-            {
-                if (value == false)
-                {
-                    return;
-                }
-
-                ZuneDesktopBackgroundImage image = _zuneBackgroundImages["Wired"];
+                ZuneDesktopBackgroundImage image = _zuneBackgroundImages[value];
                 _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
             }
         }
