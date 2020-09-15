@@ -16,7 +16,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Settings
             { "Bloom", new ZuneDesktopBackgroundImage("Bloom", Windows.UI.Xaml.Media.AlignmentY.Top) },
             { "Bubbles", new ZuneDesktopBackgroundImage("Bubbles") },
             { "Cells", new ZuneDesktopBackgroundImage("Cells") },
-            { "Meadow", new ZuneDesktopBackgroundImage("Meadow-Colored") },
+            { "Meadow", new ZuneDesktopBackgroundImage("Meadow") },
             { "RobotOwl", new ZuneDesktopBackgroundImage("RobotOwl", Windows.UI.Xaml.Media.AlignmentY.Center) },
             { "Shards", new ZuneDesktopBackgroundImage("Shards", Windows.UI.Xaml.Media.AlignmentY.Top) },
             { "Wired", new ZuneDesktopBackgroundImage("Wired") },
