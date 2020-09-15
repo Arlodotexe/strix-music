@@ -66,28 +66,28 @@
 
                                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                                     <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE100;"/>
+                                        <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
                                     <launchpad:ToggleContentButton>
                                         <launchpad:ToggleContentButton.CheckedContent>
-                                            <FontIcon Glyph="&#xE103;"/>
+                                            <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </launchpad:ToggleContentButton.CheckedContent>
-                                        <FontIcon Glyph="&#xE102;"/>
+                                        <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </launchpad:ToggleContentButton>
                                     <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE101;"/>
+                                        <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
                                     <launchpad:ToggleContentButton IsThreeState="True">
                                         <launchpad:ToggleContentButton.IndeterminateContent>
-                                            <FontIcon Glyph="&#xE1CC;"/>
+                                            <FontIcon Glyph="&#xE1CC;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </launchpad:ToggleContentButton.IndeterminateContent>
                                         <launchpad:ToggleContentButton.CheckedContent>
-                                            <FontIcon Glyph="&#xE1CD;"/>
+                                            <FontIcon Glyph="&#xE1CD;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </launchpad:ToggleContentButton.CheckedContent>
-                                        <FontIcon Glyph="&#xE194;"/>
+                                        <FontIcon Glyph="&#xE194;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </launchpad:ToggleContentButton>
                                     <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE8B1;"/>
+                                        <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
                                 </StackPanel>
                             </Grid>

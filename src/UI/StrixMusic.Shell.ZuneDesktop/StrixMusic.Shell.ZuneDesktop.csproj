@@ -84,13 +84,19 @@
 		<UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Include="Assets\Backgrounds\Wired.png" />
-	  <Content Include="Assets\Backgrounds\Bloom.png" />
 	  <Content Include="Assets\Backgrounds\Bubbles.png" />
 	  <Content Include="Assets\Backgrounds\Cells.png" />
 	  <Content Include="Assets\Backgrounds\Meadow.png" />
+	  <Content Include="Assets\Backgrounds\Old\Wired.png" />
+	  <Content Include="Assets\Backgrounds\Old\Bloom.png" />
+	  <Content Include="Assets\Backgrounds\Old\Bubbles.png" />
+	  <Content Include="Assets\Backgrounds\Old\Cells.png" />
+	  <Content Include="Assets\Backgrounds\Old\Meadow.png" />
+	  <Content Include="Assets\Backgrounds\Old\RobotOwl.png" />
+	  <Content Include="Assets\Backgrounds\Old\Shards.png" />
 	  <Content Include="Assets\Backgrounds\RobotOwl.png" />
 	  <Content Include="Assets\Backgrounds\Shards.png" />
+	  <Content Include="Assets\Backgrounds\Wired.png" />
 	  <Content Include="Assets\Quickplay-Background.png" />
 	</ItemGroup>
 	<ItemGroup>

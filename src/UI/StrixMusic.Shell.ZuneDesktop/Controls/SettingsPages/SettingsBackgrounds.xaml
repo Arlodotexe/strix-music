@@ -10,7 +10,6 @@
     <StackPanel>
         <TextBlock Text="Background" FontSize="20" FontWeight="SemiBold"/>
         <RadioButton Content="None" Style="{StaticResource ZuneRadioButton}" IsChecked="{x:Bind ViewModel.IsNoneBackgroundSelected, Mode=TwoWay}"/>
-        <RadioButton Content="Bloom" Style="{StaticResource ZuneRadioButton}"  IsChecked="{x:Bind ViewModel.IsBloomBackgroundSelected, Mode=TwoWay}"/>
         <RadioButton Content="Bubbles" Style="{StaticResource ZuneRadioButton}"  IsChecked="{x:Bind ViewModel.IsBubblesBackgroundSelected, Mode=TwoWay}"/>
         <RadioButton Content="Cells" Style="{StaticResource ZuneRadioButton}" IsChecked="{x:Bind ViewModel.IsCellsBackgroundSelected, Mode=TwoWay}"/>
         <RadioButton Content="Meadow" Style="{StaticResource ZuneRadioButton}" IsChecked="{x:Bind ViewModel.IsMeadowBackgroundSelected, Mode=TwoWay}"/>
