@@ -21,6 +21,11 @@ namespace StrixMusic.Shell.ZuneDesktop.Settings
             { "Wired", new ZuneDesktopBackgroundImage("Wired") },
         };
 
+        /// <summary>
+        /// List of names for the images
+        /// </summary>
+        public IEnumerable<string> ImageNames => _zuneBackgroundImages.Keys;
+
         private readonly ZuneDesktopSettingsService _zuneDesktopSettingsService;
 
         /// <summary>

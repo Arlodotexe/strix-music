@@ -9,12 +9,14 @@
 
     <StackPanel>
         <TextBlock Text="Background" FontSize="20" FontWeight="SemiBold"/>
-        <RadioButton Content="None" Style="{StaticResource ZuneRadioButton}" IsChecked="{x:Bind ViewModel.IsNoneBackgroundSelected, Mode=TwoWay}"/>
+        <!--<RadioButton Content="None" Style="{StaticResource ZuneRadioButton}" IsChecked="{x:Bind ViewModel.IsNoneBackgroundSelected, Mode=TwoWay}"/>
         <RadioButton Content="Bubbles" Style="{StaticResource ZuneRadioButton}"  IsChecked="{x:Bind ViewModel.IsBubblesBackgroundSelected, Mode=TwoWay}"/>
         <RadioButton Content="Cells" Style="{StaticResource ZuneRadioButton}" IsChecked="{x:Bind ViewModel.IsCellsBackgroundSelected, Mode=TwoWay}"/>
         <RadioButton Content="Meadow" Style="{StaticResource ZuneRadioButton}" IsChecked="{x:Bind ViewModel.IsMeadowBackgroundSelected, Mode=TwoWay}"/>
         <RadioButton Content="RobotOwl" Style="{StaticResource ZuneRadioButton}" IsChecked="{x:Bind ViewModel.IsRobotOwlBackgroundSelected, Mode=TwoWay}"/>
         <RadioButton Content="Shareds" Style="{StaticResource ZuneRadioButton}" IsChecked="{x:Bind ViewModel.IsShardsBackgroundSelected, Mode=TwoWay}"/>
-        <RadioButton Content="Wired" Style="{StaticResource ZuneRadioButton}" IsChecked="{x:Bind ViewModel.IsWiredBackgroundSelected, Mode=TwoWay}"/>
+        <RadioButton Content="Wired" Style="{StaticResource ZuneRadioButton}" IsChecked="{x:Bind ViewModel.IsWiredBackgroundSelected, Mode=TwoWay}"/>-->
+
+        <ListView ItemContainerStyle="{StaticResource ZuneRadioButtonListViewItem}" ItemsSource="{x:Bind ViewModel.ImageNames, Mode=OneWay}"/>
     </StackPanel>
 </UserControl>
