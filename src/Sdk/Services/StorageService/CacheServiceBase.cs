@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.Services.StorageService
         {
             var contextContextualServiceLocator = Ioc.Default.GetService<ContextualServiceLocator>();
 
-            _cacheStorageService = contextContextualServiceLocator.GetServiceByContext<IFileSystemService>(nameof(CacheServiceBase));
+            _cacheStorageService = contextContextualServiceLocator.GetServiceByContext<IFileSystemService>(typeof(CacheServiceBase));
         }
 
         /// <inheritdoc />
