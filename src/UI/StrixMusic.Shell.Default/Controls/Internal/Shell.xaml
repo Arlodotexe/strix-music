@@ -22,8 +22,9 @@
                         <FontIcon Glyph="&#xE10F;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Icon="Clock" Content="Recently Played" Tag="RecentlyPlayedItem">
+                <NavigationViewItem Content="Recently Played" Tag="RecentlyPlayedItem">
                     <NavigationViewItem.Icon>
+                        <!--<SymbolIcon Symbol="Clock"/>-->
                         <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>

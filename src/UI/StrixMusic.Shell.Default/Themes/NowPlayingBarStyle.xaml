@@ -73,7 +73,7 @@
                                         <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
                                     <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE1CC;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                        <FontIcon Glyph="&#xE194;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Shell.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
