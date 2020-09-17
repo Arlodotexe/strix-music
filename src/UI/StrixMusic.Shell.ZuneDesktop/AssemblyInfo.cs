@@ -2,6 +2,7 @@
 using StrixMusic.Shell.Default.Assembly.Enums;
 
 [assembly: Shell(
-    "Zune Desktop",
-    DeviceFamily.Desktop,
-    InputMethod.Mouse)]
+    displayName: "Zune Desktop",
+    deviceFamily: DeviceFamily.Desktop,
+    inputMethod: InputMethod.Mouse)
+]

@@ -4,7 +4,7 @@ using StrixMusic.Shell.Default.Assembly.Enums;
 namespace StrixMusic.Shell.Default.Assembly
 {
     /// <summary>
-    /// An attribute for the shell's name.
+    /// An attribute for the shell's name and other data.
     /// </summary>
     public class ShellAttribute : Attribute
     {
@@ -12,6 +12,8 @@ namespace StrixMusic.Shell.Default.Assembly
         /// Initializes a new instance of the <see cref="ShellAttribute"/> class.
         /// </summary>
         /// <param name="displayName"></param>
+        /// <param name="deviceFamily"></param>
+        /// <param name="inputMethod"></param>
         public ShellAttribute(
             string displayName,
             DeviceFamily deviceFamily = (DeviceFamily)int.MaxValue,

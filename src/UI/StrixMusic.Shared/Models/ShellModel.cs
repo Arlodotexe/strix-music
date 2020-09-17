@@ -8,13 +8,13 @@ namespace StrixMusic.Models
     /// </summary>
     public class ShellModel
     {
-        private ShellAttribute _shellAttribute;
+        private readonly ShellAttribute _shellAttribute;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellModel"/> class.
         /// </summary>
         /// <param name="assemblyName">The assembly name of the Shell.</param>
-        /// <param name="displayName">The display name for the Shell.</param>
+        /// <param name="attribute">An instance of a <see cref="ShellAttribute"/> with metadata about the shell.</param>
         public ShellModel(string assemblyName, ShellAttribute attribute)
         {
             AssemblyName = assemblyName;
