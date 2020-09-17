@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
+using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
@@ -26,6 +27,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <param name="sourceCore"></param>
         public MusicBrainzTrack(ICore sourceCore, Recording recording)
         {
+            // TODO: Refactor to pass in Track instead of recording.
             SourceCore = sourceCore;
             _recording = recording;
             _artists = new List<IArtist>();
@@ -54,25 +56,26 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IReadOnlyList<string> Genres => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public int? TrackNumber => throw new NotImplementedException();
+        /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>
+        public int? TrackNumber { get; internal set; }
 
         /// <inheritdoc/>
-        public int? PlayCount => throw new NotImplementedException();
+        public int? PlayCount => null;
 
         /// <inheritdoc/>
         public CultureInfo Language => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public ILyrics Lyrics => throw new NotImplementedException();
+        public ILyrics? Lyrics => null;
 
         /// <inheritdoc/>
-        public bool IsExplicit => throw new NotImplementedException();
+        public bool IsExplicit => _recording.Disambiguation.Contains("explicit");
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public Uri Url => throw new NotImplementedException();
+        public Uri? Url => null;
 
         /// <inheritdoc/>
         public string Name => _recording.Title;
@@ -88,7 +91,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public TimeSpan Duration => _recording.Length != null
-                ? TimeSpan.FromMilliseconds(Convert.ToDouble(_recording.Length))
+                ? TimeSpan.FromMilliseconds((double)_recording.Length)
                 : TimeSpan.Zero;
 
         /// <inheritdoc/>
@@ -259,7 +262,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public async Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
         {
-            var recording = await _musicBrainzClient.Recordings.GetAsync(Id, "artist-credits");
+            var recording = await _musicBrainzClient.Recordings.GetAsync(Id, RelationshipQueries.Recordings);
 
             foreach (var item in recording.Credits)
             {

@@ -6,7 +6,9 @@ using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using StrixMusic.Core.MusicBrainz.Statics;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -168,14 +170,43 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public async Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
         {
-            var recordings = await _musicBrainzClient.Recordings.BrowseAsync("artist", Id, limit, offset);
+            var recordings = await _musicBrainzClient.Recordings.BrowseAsync("artist", Id, limit, offset, RelationshipQueries.Recordings);
+
+            var releases =
+                await _musicBrainzClient.Releases.BrowseAsync("artist", Id, 100, 0, RelationshipQueries.Releases);
+
+            var releasesList = releases.Items.ToList();
+
+            for (var i = 100; i < releasesList.Count; i += 100)
+            {
+                var nextReleasesPage = await _musicBrainzClient.Releases.BrowseAsync("artist", Id, 100, 0, RelationshipQueries.Releases);
+
+                releasesList.AddRange(nextReleasesPage.Items);
+            }
 
             foreach (var recording in recordings.Items)
             {
-                // TODO: Releases and other important metadata isn't returned on recording when called via browse.
-                // Missing data needs to be added manually.
+                foreach (var release in releasesList)
+                {
+                    // Iterate through each physical medium for this release.
+                    foreach (var medium in release.Media)
+                    {
+                        // Iterate the tracks and find a matching ID for this recording
+                        foreach (var track in medium.Tracks)
+                        {
+                            if (track.Recording.Id == recording.Id)
+                            {
+                                recording.Releases.Add(release);
 
-                _tracks.Add(new MusicBrainzTrack(SourceCore, recording));
+                                _tracks.Add(new MusicBrainzTrack(SourceCore, recording)
+                                {
+                                    // TODO delete me when refactoring track.
+                                    TrackNumber = track.Position,
+                                });
+                            }
+                        }
+                    }
+                }
             }
 
             return _tracks;
