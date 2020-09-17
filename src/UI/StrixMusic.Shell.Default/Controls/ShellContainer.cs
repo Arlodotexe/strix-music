@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Shell.Default.Controls
 {
     /// <summary>
-    /// A Templated <see cref="Control"/> for the root container of any shell.
+    /// A templated <see cref="Control"/> for the root container of any shell.
     /// </summary>
     public sealed partial class ShellContainer : Control
     {
@@ -13,7 +13,7 @@ namespace StrixMusic.Shell.Default.Controls
         /// </summary>
         public ShellContainer()
         {
-            this.DefaultStyleKey = typeof(ShellContainer);
+            DefaultStyleKey = typeof(ShellContainer);
         }
 
         /// <summary>

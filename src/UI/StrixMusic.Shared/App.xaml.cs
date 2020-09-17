@@ -1,8 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Services;
+using StrixMusic.Core.MusicBrainz;
+using StrixMusic.Sdk;
+using StrixMusic.Sdk.Interfaces;
+using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Services.StorageService;
+using StrixMusic.Sdk.Services.SuperShell;
 using StrixMusic.Shared;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,12 +35,45 @@ namespace StrixMusic
         /// </summary>
         public App()
         {
-            ConfigureFilters(global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
-            // TODO: Debate location.
-            new IocLocator();
+            ConfigureFilters(Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
 
-            this.InitializeComponent();
-            this.Suspending += this.OnSuspending;
+            Initialize();
+
+            InitializeComponent();
+            Suspending += OnSuspending;
+        }
+
+        private void Initialize()
+        {
+            Ioc.Default.ConfigureServices(async services =>
+            {
+                var contextualServiceLocator = new ContextualServiceLocator();
+
+                var textStorageService = new TextStorageService();
+                var settingsService = new DefaultSettingsService(textStorageService);
+                var cacheFileSystemService = new FileSystemService(ApplicationData.Current.LocalCacheFolder);
+
+                contextualServiceLocator.Register<IFileSystemService>(cacheFileSystemService, typeof(CacheServiceBase));
+
+                services.AddSingleton(contextualServiceLocator);
+                services.AddSingleton<ITextStorageService>(textStorageService);
+                services.AddSingleton<ISettingsService>(settingsService);
+                services.AddSingleton<CacheServiceBase, DefaultCacheService>();
+                services.AddSingleton<ISuperShellService, SuperShellService>();
+                services.AddSingleton<IFileSystemService, FileSystemService>();
+
+                // Todo: If coreRegistry is null, show out of box setup page.
+                var coreRegistry = await settingsService.GetValue<Dictionary<string, Type>>(nameof(SettingsKeys.CoreRegistry));
+
+                if (coreRegistry != null)
+                {
+                    var cores = coreRegistry.Select(x => (ICore)Activator.CreateInstance(x.Value, x.Key)).ToList();
+
+                    cores.Add(new MusicBrainzCore(Guid.NewGuid().ToString()));
+
+                    services.AddSingleton(new MainViewModel(cores));
+                }
+            });
         }
 
         /// <summary>
@@ -51,7 +98,7 @@ namespace StrixMusic
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
 
-                rootFrame.NavigationFailed += this.OnNavigationFailed;
+                rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

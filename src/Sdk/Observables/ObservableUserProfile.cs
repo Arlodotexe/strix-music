@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Observables
     /// </summary>
     public class ObservableUserProfile : ObservableObject
     {
-        private IUserProfile _userProfile;
+        private readonly IUserProfile _userProfile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableUserProfile"/> class.
@@ -20,12 +20,7 @@ namespace StrixMusic.Sdk.Observables
         /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
         public ObservableUserProfile(IUserProfile userProfile)
         {
-            if (userProfile == null)
-            {
-                throw new ArgumentNullException(nameof(userProfile));
-            }
-
-            _userProfile = userProfile;
+            _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
             Urls = new ObservableCollection<Uri>(userProfile.Urls);
             Images = new ObservableCollection<IImage>(userProfile.Images);
@@ -82,99 +77,57 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc cref="IUserProfile.DisplayNameChanged"/>
         public event EventHandler<CollectionChangedEventArgs<string>> DisplayNameChanged
         {
-            add
-            {
-                _userProfile.DisplayNameChanged += value;
-            }
+            add => _userProfile.DisplayNameChanged += value;
 
-            remove
-            {
-                _userProfile.DisplayNameChanged -= value;
-            }
+            remove => _userProfile.DisplayNameChanged -= value;
         }
 
         /// <inheritdoc cref="IUserProfile.ImagesChanged"/>
         public event EventHandler<CollectionChangedEventArgs<IImage>> ImagesChanged
         {
-            add
-            {
-                _userProfile.ImagesChanged += value;
-            }
+            add => _userProfile.ImagesChanged += value;
 
-            remove
-            {
-                _userProfile.ImagesChanged -= value;
-            }
+            remove => _userProfile.ImagesChanged -= value;
         }
 
         /// <inheritdoc cref="IUserProfile.BirthDateChanged"/>
         public event EventHandler<CollectionChangedEventArgs<DateTime>> BirthDateChanged
         {
-            add
-            {
-                _userProfile.BirthDateChanged += value;
-            }
+            add => _userProfile.BirthDateChanged += value;
 
-            remove
-            {
-                _userProfile.BirthDateChanged -= value;
-            }
+            remove => _userProfile.BirthDateChanged -= value;
         }
 
         /// <inheritdoc cref="IUserProfile.FullNameChanged"/>
         public event EventHandler<string> FullNameChanged
         {
-            add
-            {
-                _userProfile.FullNameChanged += value;
-            }
+            add => _userProfile.FullNameChanged += value;
 
-            remove
-            {
-                _userProfile.FullNameChanged -= value;
-            }
+            remove => _userProfile.FullNameChanged -= value;
         }
 
         /// <inheritdoc cref="IUserProfile.UrlsChanged"/>
         public event EventHandler<CollectionChangedEventArgs<Uri>> UrlChanged
         {
-            add
-            {
-                _userProfile.UrlsChanged += value;
-            }
+            add => _userProfile.UrlsChanged += value;
 
-            remove
-            {
-                _userProfile.UrlsChanged -= value;
-            }
+            remove => _userProfile.UrlsChanged -= value;
         }
 
         /// <inheritdoc cref="IUserProfile.RegionChanged"/>
         public event EventHandler<CultureInfo> RegionChanged
         {
-            add
-            {
-                _userProfile.RegionChanged += value;
-            }
+            add => _userProfile.RegionChanged += value;
 
-            remove
-            {
-                _userProfile.RegionChanged -= value;
-            }
+            remove => _userProfile.RegionChanged -= value;
         }
 
         /// <inheritdoc cref="IUserProfile.EmailChanged"/>
         public event EventHandler<string?> EmailChanged
         {
-            add
-            {
-                _userProfile.EmailChanged += value;
-            }
+            add => _userProfile.EmailChanged += value;
 
-            remove
-            {
-                _userProfile.EmailChanged -= value;
-            }
+            remove => _userProfile.EmailChanged -= value;
         }
     }
 }

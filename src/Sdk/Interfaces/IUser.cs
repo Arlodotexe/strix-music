@@ -3,7 +3,7 @@
 namespace StrixMusic.Sdk.Interfaces
 {
     /// <summary>
-    /// Represents a user that is authenticated with a core and interacts with the app.
+    /// Contains information about a user and their library.
     /// </summary>
     public interface IUser : IUserProfile
     {

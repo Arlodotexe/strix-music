@@ -32,7 +32,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)SuperShellControls\SuperShellSettings.xaml.cs">
       <DependentUpon>SuperShellSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)IocLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">

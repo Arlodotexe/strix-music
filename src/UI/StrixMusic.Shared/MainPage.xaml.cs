@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Helpers;
-using StrixMusic.Shell.Default.Controls;
 using StrixMusic.Sdk;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 using StrixMusic.Sdk.Services.SuperShell;
+using StrixMusic.Shell.Default.Controls;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic
 {
@@ -25,7 +25,7 @@ namespace StrixMusic
         /// </summary>
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             Loaded += MainPage_Loaded;
         }
 
@@ -101,7 +101,7 @@ namespace StrixMusic
                         if (shellMatch.Groups[1].Value == Constants.Shells.DefaultShellAssemblyName)
                             continue;
 
-                        App.Current.Resources.MergedDictionaries.Remove(dict);
+                        Application.Current.Resources.MergedDictionaries.Remove(dict);
                         break;
                     }
                 }
@@ -120,7 +120,7 @@ namespace StrixMusic
                     // Loads the preferred shell
                     var resourcePath = $"{Constants.ResourcesPrefix}{Constants.Shells.ShellNamespacePrefix}.{preferredShell}/{Constants.Shells.ShellResourcesSuffix}";
                     var resourceDictionary = new ResourceDictionary() { Source = new Uri(resourcePath) };
-                    App.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+                    Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
                 }
 
                 ShellDisplay.Content = CreateShellControl();
