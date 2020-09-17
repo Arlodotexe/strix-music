@@ -18,7 +18,7 @@ namespace StrixMusic.Core.MusicBrainz.Statics
         private const int HEADER_LENGTH = 512;
 
         /// <summary>
-        /// Stream to hold data.
+        /// Reusable stream used when reading and writing cache.
         /// </summary>
         public Stream? Stream { get; private set; }
 
@@ -45,7 +45,7 @@ namespace StrixMusic.Core.MusicBrainz.Statics
             // The byte buffer to hold the request string.
             var buffer = new byte[REQUEST_LENGTH];
 
-            int size = Math.Min(request.Length, REQUEST_LENGTH);
+            var size = Math.Min(request.Length, REQUEST_LENGTH);
 
             Encoding.UTF8.GetBytes(request, 0, size, buffer, 0);
 
@@ -64,7 +64,7 @@ namespace StrixMusic.Core.MusicBrainz.Statics
             {
                 entry = new CacheEntry();
 
-                long timestamp = reader.ReadInt64();
+                var timestamp = reader.ReadInt64();
 
                 entry.TimeStamp = TimestampToDateTime(timestamp, DateTimeKind.Utc);
 
@@ -72,7 +72,9 @@ namespace StrixMusic.Core.MusicBrainz.Statics
 
                 size = 0;
 
-                while (buffer[size++] != 0 && size < REQUEST_LENGTH) ;
+                while (buffer[size++] != 0 && size < REQUEST_LENGTH)
+                {
+                }
 
                 entry.Request = Encoding.UTF8.GetString(buffer, 0, size - 1);
             }
@@ -97,7 +99,7 @@ namespace StrixMusic.Core.MusicBrainz.Statics
         /// <param name="path">Path to cache file.</param>
         /// <param name="request">API request information.</param>
         /// <param name="response">The response string to be cached.</param>
-        /// <returns>Returns a <see cref="Task"></returns>
+        /// <returns>Returns a <see cref="Task" /></returns>
         public static async Task Write(string path, string request, Stream response)
         {
             const int REQUEST_LENGTH = HEADER_LENGTH - 8; // sizeof(long)
@@ -105,7 +107,7 @@ namespace StrixMusic.Core.MusicBrainz.Statics
             // The byte buffer to hold the request string.
             var buffer = new byte[REQUEST_LENGTH];
 
-            int size = Math.Min(request.Length, REQUEST_LENGTH);
+            var size = Math.Min(request.Length, REQUEST_LENGTH);
 
             Encoding.UTF8.GetBytes(request, 0, size, buffer, 0);
 
@@ -130,10 +132,10 @@ namespace StrixMusic.Core.MusicBrainz.Statics
         /// Get's the timestamp for the file.
         /// </summary>
         /// <param name="file">File path for the timestamp.</param>
-        /// <returns>The tiemstamp in <see cref="DateTime"/></returns>
+        /// <returns>The timestamp in <see cref="DateTime"/></returns>
         public static DateTime GetTimestamp(string file)
         {
-            long timestamp = 0;
+            long timestamp;
 
             using (var stream = File.OpenRead(file))
             using (var reader = new BinaryReader(stream))
@@ -160,6 +162,7 @@ namespace StrixMusic.Core.MusicBrainz.Statics
         /// Returns hash of a string (based on MD5, but only 16 instead of 32 bytes).
         /// </summary>
         /// <param name="bytes">Input bytes.</param>
+        /// <param name="size">The total size of the hash.</param>
         /// <returns>MD5 hash.</returns>
         private static string GetHash(byte[] bytes, int size)
         {
@@ -169,7 +172,7 @@ namespace StrixMusic.Core.MusicBrainz.Statics
 
             var buffer = new StringBuilder();
 
-            for (int i = 0; i < bytes.Length; i += 2)
+            for (var i = 0; i < bytes.Length; i += 2)
             {
                 buffer.Append(bytes[i].ToString("x2").ToLower());
             }
@@ -184,9 +187,9 @@ namespace StrixMusic.Core.MusicBrainz.Statics
 
         private static long DateTimeToUtcTimestamp(DateTime dateTime)
         {
-            DateTime baseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            var baseDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
-            TimeSpan span = dateTime.ToUniversalTime() - baseDate;
+            var span = dateTime.ToUniversalTime() - baseDate;
 
             return (long)span.TotalSeconds;
         }
