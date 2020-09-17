@@ -2,22 +2,20 @@
 using System.IO;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API.Cache;
-using StrixMusic.Core.MusicBrainz.Statics;
 
-namespace Hqub.MusicBrainz.Client
+namespace StrixMusic.Core.MusicBrainz.Utils
 {
     /// <summary>
     /// Caches requests to MusicBrainz API on disk.
     /// </summary>
     public class FileRequestCache : IRequestCache
     {
-        private const int HEADER_LENGTH = 512;
         private readonly string _path;
 
         /// <summary>
         /// Gets or sets the timeout for a cache entry to expire.
         /// </summary>
-        public TimeSpan Timeout { get; set; }
+        public TimeSpan ExpiresIn { get; set; } = TimeSpan.FromHours(48.0);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileRequestCache"/> class.
@@ -25,8 +23,8 @@ namespace Hqub.MusicBrainz.Client
         public FileRequestCache()
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            this._path = Path.Combine(appData, "MusicBrainz", "Cache");
-            this.Timeout = TimeSpan.FromHours(24.0);
+            _path = Path.Combine(appData, "MusicBrainz", "Cache");
+            Cleanup();
         }
 
         /// <summary>
@@ -35,9 +33,8 @@ namespace Hqub.MusicBrainz.Client
         /// <param name="path"></param>
         public FileRequestCache(string path)
         {
-            this._path = Path.GetFullPath(path);
-
-            this.Timeout = TimeSpan.FromHours(24.0);
+            _path = Path.GetFullPath(path);
+            Cleanup();
         }
 
         /// <inheritdoc/>
@@ -54,14 +51,15 @@ namespace Hqub.MusicBrainz.Client
         /// <inheritdoc/>
         public Task<bool> TryGetCachedItem(string request, out Stream? stream)
         {
-            var item = CacheEntry.Read(_path, request);
             stream = null;
+
+            var item = CacheEntry.Read(_path, request);
             if (item == null)
             {
                 return Task.FromResult(false);
             }
 
-            if ((DateTime.Now - item.TimeStamp) > Timeout)
+            if (DateTime.Now - item.TimeStamp > ExpiresIn)
             {
                 item.Stream?.Close();
                 return Task.FromResult(false);
@@ -72,31 +70,25 @@ namespace Hqub.MusicBrainz.Client
             return Task.FromResult(true);
         }
 
-        /// <inheritdoc/>
-        public int Cleanup()
+        /// <summary>
+        /// Cleans out cached files that are passed their <see cref="ExpiresIn"/>.
+        /// </summary>
+        public void Cleanup()
         {
-            int count = 0;
-            var now = DateTime.Now;
             foreach (var file in Directory.EnumerateFiles(_path, "*.mb-cache"))
             {
-                if ((now - CacheEntry.GetTimestamp(file)) > Timeout)
+                if (DateTime.Now - CacheEntry.GetTimestamp(file) > ExpiresIn)
                 {
                     File.Delete(file);
                 }
             }
-
-            return count;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Clears out all cached files.
+        /// </summary>
         public void Clear()
         {
-            // If the path is used for cache only, we could just as well delete the directory.
-            if (Directory.Exists(_path))
-            {
-                Directory.Delete(_path);
-            }
-
             foreach (var file in Directory.EnumerateFiles(_path, "*.mb-cache"))
             {
                 File.Delete(file);

@@ -4,10 +4,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.MusicBrainz.Statics
+namespace StrixMusic.Core.MusicBrainz.Utils
 {
     /// <summary>
-    /// A static cache to handle cache entry.
+    /// A cache to handle cache entry.
     /// </summary>
     internal class CacheEntry
     {

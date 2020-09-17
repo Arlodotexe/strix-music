@@ -1,11 +1,11 @@
-﻿using Hqub.MusicBrainz.API;
-using Hqub.MusicBrainz.Client;
+﻿using System;
+using System.Collections.Generic;
+using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.MusicBrainz.Services;
+using StrixMusic.Core.MusicBrainz.Utils;
 using StrixMusic.Sdk.AbstractUI;
 using StrixMusic.Sdk.Interfaces;
-using System;
-using System.Collections.Generic;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -37,7 +37,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             var cacheService = new MusicBrainzCacheService();
 
-            var musicBrainzClient = new MusicBrainzClient()
+            var musicBrainzClient = new MusicBrainzClient
             {
                 Cache = new FileRequestCache(cacheService.RootFolder.Path),
             };
