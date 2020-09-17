@@ -192,18 +192,15 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     foreach (var medium in release.Media)
                     {
                         // Iterate the tracks and find a matching ID for this recording
-                        foreach (var track in medium.Tracks)
+                        foreach (var track in medium.Tracks.Where(track => track.Recording.Id == recording.Id))
                         {
-                            if (track.Recording.Id == recording.Id)
-                            {
-                                recording.Releases.Add(release);
+                            recording.Releases.Add(release);
 
-                                _tracks.Add(new MusicBrainzTrack(SourceCore, recording)
-                                {
-                                    // TODO delete me when refactoring track.
-                                    TrackNumber = track.Position,
-                                });
-                            }
+                            _tracks.Add(new MusicBrainzTrack(SourceCore, recording)
+                            {
+                                // TODO delete me when refactoring track.
+                                TrackNumber = track.Position,
+                            });
                         }
                     }
                 }
