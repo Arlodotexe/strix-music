@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Hqub.MusicBrainz.API;
+﻿using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Extensions.DateTimeExtensions;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -45,7 +45,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public Medium Medium { get; }
 
         /// <inheritdoc/>
-        public IArtist Artist { get; private set; }
+        public IArtist Artist { get; }
 
         /// <inheritdoc/>
         public int TotalTracksCount => Medium.TrackCount;
@@ -81,7 +81,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IReadOnlyList<ITrack> Tracks => _tracks;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? RelatedItems => throw new NotImplementedException();
+        public IPlayableCollectionGroup? RelatedItems => null;
 
         /// <inheritdoc/>
         public bool IsPlayAsyncSupported => false;
@@ -173,15 +173,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public async Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
         {
-            var recordings = await _musicBrainzClient.Recordings.SearchAsync("*", limit, offset);
-            Parallel.ForEach(recordings, (recording) =>
+            var recordings = await _musicBrainzClient.Recordings.BrowseAsync("album", Id, limit, offset);
+
+            foreach (var recording in recordings)
             {
-                Parallel.ForEach(recording.Releases, (release) =>
-                {
-                    if (release.Id == Id)
-                        _tracks.Add(new MusicBrainzTrack(SourceCore, recording));
-                });
-            });
+                _tracks.Add(new MusicBrainzTrack(SourceCore, recording));
+            }
 
             return _tracks;
         }
