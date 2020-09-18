@@ -56,7 +56,7 @@ namespace StrixMusic.Core.MusicBrainz
         public IRecentlyPlayed RecentlyPlayed => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup Discoverables => throw new NotImplementedException();
+        public IDiscoverables Discoverables => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public string InstanceId { get; }
