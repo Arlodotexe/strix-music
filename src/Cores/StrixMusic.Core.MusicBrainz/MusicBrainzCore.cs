@@ -33,6 +33,7 @@ namespace StrixMusic.Core.MusicBrainz
             Devices = new List<IDevice>();
             RecentlyPlayed = new MusicBrainzRecentlyPlayed(this);
             Discoverables = new MusicBrainzDiscoverables(this);
+            User = new MusicBrainzUser(this);
 
             _musicBrainzClient = CoreConfig.Services.GetService<MusicBrainzClient>();
         }
@@ -47,7 +48,7 @@ namespace StrixMusic.Core.MusicBrainz
         public string Name => "MusicBrainz";
 
         /// <inheritdoc/>
-        public IUser User => throw new NotImplementedException();
+        public IUser User { get; }
 
         /// <inheritdoc/>
         public IReadOnlyList<IDevice> Devices { get; }
