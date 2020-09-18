@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Newtonsoft.Json;
-using StrixMusic.Sdk.Interfaces.Storage;
 using StrixMusic.Sdk.Services.StorageService;
 
 namespace StrixMusic.Sdk.Services.Settings
@@ -86,7 +85,6 @@ namespace StrixMusic.Sdk.Services.Settings
             else
             {
                 serializable = (T)value!;
-                //throw new ArgumentException($"Invalid setting of type {typeof(T)}", nameof(value));
             }
 
             var serialized = JsonConvert.SerializeObject(serializable);
@@ -118,13 +116,13 @@ namespace StrixMusic.Sdk.Services.Settings
             {
                 obj = JsonConvert.DeserializeObject<T>(result);
             }
-            catch (Exception)
+            catch (JsonException)
             {
                 return default!;
             }
 
             // Try to get the setting value
-            if (!(obj is T))
+            if (obj == null)
             {
                 return (T)SettingsKeysType.GetField(key).GetValue(null);
             }

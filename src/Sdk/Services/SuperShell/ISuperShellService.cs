@@ -10,8 +10,8 @@ namespace StrixMusic.Sdk.Services.SuperShell
         /// <summary>
         /// Unhides the SuperShell and displays the specified view.
         /// </summary>
-        /// <param name="shellDisplay">A <see cref="SuperShellDisplay"/> specifying which view will be shown.</param>
-        void Show(SuperShellDisplay shellDisplay);
+        /// <param name="shellDisplayState">A <see cref="SuperShellDisplayState"/> specifying which view will be shown.</param>
+        void Show(SuperShellDisplayState shellDisplayState);
 
         /// <summary>
         /// Hides the SuperShell.
@@ -21,6 +21,6 @@ namespace StrixMusic.Sdk.Services.SuperShell
         /// <summary>
         /// Occurs when the SuperShell is shown or hidden.
         /// </summary>
-        event EventHandler<SuperShellDisplay> VisibilityChanged;
+        event EventHandler<SuperShellDisplayState> VisibilityChanged;
     }
 }

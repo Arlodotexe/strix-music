@@ -34,7 +34,7 @@ namespace StrixMusic
         /// </summary>
         public void Button_Click(object sender, RoutedEventArgs e)
         {
-            Ioc.Default.GetService<ISuperShellService>().Show(Sdk.Services.SuperShell.SuperShellDisplay.Settings);
+            Ioc.Default.GetService<ISuperShellService>().Show(Sdk.Services.SuperShell.SuperShellDisplayState.Settings);
         }
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)

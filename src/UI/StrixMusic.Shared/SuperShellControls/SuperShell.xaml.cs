@@ -41,18 +41,18 @@ namespace StrixMusic
             _superShellService.VisibilityChanged += Value_VisibilityChanged;
         }
 
-        private void Value_VisibilityChanged(object sender, SuperShellDisplay e)
+        private void Value_VisibilityChanged(object sender, SuperShellDisplayState e)
         {
             switch (e)
             {
-                case SuperShellDisplay.Hidden:
+                case SuperShellDisplayState.Hidden:
                     this.Visibility = Visibility.Collapsed;
                     break;
-                case SuperShellDisplay.Settings:
+                case SuperShellDisplayState.Settings:
                     this.Visibility = Visibility.Visible;
                     Presenter.Content = new SuperShellSettings();
                     break;
-                case SuperShellDisplay.Debug:
+                case SuperShellDisplayState.Debug:
                     throw new NotImplementedException();
             }
         }

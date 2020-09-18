@@ -1,12 +1,12 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
-using StrixMusic.Sdk.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.Input;
+using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
 {

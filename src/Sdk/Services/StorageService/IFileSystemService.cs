@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Interfaces.Storage;
 
@@ -61,5 +59,5 @@ namespace StrixMusic.Sdk.Services.StorageService
         /// <param name="folderName">The directory to create.</param>
         /// <returns>An instance of <see cref="IFolderData"/> for the created directory.</returns>
         Task<IFolderData> CreateDirectoryAsync(string folderName);
-    } 
+    }
 }

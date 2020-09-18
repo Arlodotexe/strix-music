@@ -8,18 +8,18 @@ namespace StrixMusic.Sdk.Services
     public class SuperShellService : ISuperShellService
     {
         /// <inheritdoc/>
-        public event EventHandler<SuperShellDisplay>? VisibilityChanged;
+        public event EventHandler<SuperShellDisplayState>? VisibilityChanged;
 
         /// <inheritdoc />
         public void Hide()
         {
-            VisibilityChanged?.Invoke(this, SuperShellDisplay.Hidden);
+            VisibilityChanged?.Invoke(this, SuperShellDisplayState.Hidden);
         }
 
         /// <inheritdoc />
-        public void Show(SuperShellDisplay shellDisplay)
+        public void Show(SuperShellDisplayState shellDisplayState)
         {
-            VisibilityChanged?.Invoke(this, shellDisplay);
+            VisibilityChanged?.Invoke(this, shellDisplayState);
         }
     }
 }

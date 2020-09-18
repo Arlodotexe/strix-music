@@ -42,7 +42,6 @@ namespace StrixMusic.Sdk.MergedWrappers
         }
     }
 
-
     /// <summary>
     /// A base that merges multiple <see cref="IPlayableCollectionGroup"/>s.
     /// </summary>
