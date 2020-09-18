@@ -38,7 +38,7 @@ namespace StrixMusic.Core.MusicBrainz
         public ICoreConfig CoreConfig { get; }
 
         /// <inheritdoc/>
-        public CoreState CoreState => throw new NotImplementedException();
+        public CoreState CoreState { get; internal set; } = CoreState.Unloaded;
 
         /// <inheritdoc/>
         public string Name => throw new NotImplementedException();
@@ -101,6 +101,9 @@ namespace StrixMusic.Core.MusicBrainz
         /// <inheritdoc/>
         public async Task InitAsync()
         {
+            CoreState = CoreState.Loading;
+            CoreStateChanged?.Invoke(this, CoreState);
+
             var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*", 1);
             var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1);
             var artists = await _musicBrainzClient.Artists.SearchAsync("*", 1);
@@ -113,6 +116,9 @@ namespace StrixMusic.Core.MusicBrainz
                 TotalPlaylistCount = 0,
                 TotalChildrenCount = 0,
             };
+
+            CoreState = CoreState.Loaded;
+            CoreStateChanged?.Invoke(this, CoreState);
         }
     }
 }
