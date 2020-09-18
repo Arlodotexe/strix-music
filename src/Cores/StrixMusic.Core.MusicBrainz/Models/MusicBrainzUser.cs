@@ -120,8 +120,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<CollectionChangedEventArgs<DateTime>>? BirthDateChanged;
 
         /// <inheritdoc />
-
-        /// <inheritdoc />
         public event EventHandler<string>? FullNameChanged;
 
         /// <inheritdoc />
