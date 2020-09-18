@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.Observables
         {
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
-            Urls = new ObservableCollection<Uri>(userProfile.Urls);
+            Urls = new ObservableCollection<Uri>(userProfile.Urls ?? Array.Empty<Uri>());
             Images = new ObservableCollection<IImage>(userProfile.Images);
         }
 

@@ -1,14 +1,14 @@
-﻿using Hqub.MusicBrainz.API;
-using Hqub.MusicBrainz.API.Entities;
-using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
-using StrixMusic.Sdk.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
+using Hqub.MusicBrainz.API.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.MusicBrainz.Statics;
+using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

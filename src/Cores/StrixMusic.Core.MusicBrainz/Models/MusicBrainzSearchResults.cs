@@ -1,9 +1,9 @@
-﻿using Hqub.MusicBrainz.API;
-using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
+using Microsoft.Extensions.DependencyInjection;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
