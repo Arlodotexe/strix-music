@@ -30,6 +30,9 @@ namespace StrixMusic.Core.MusicBrainz
             // The library created here won't be used by the UI.
             // The UI isn't loaded until InitAsync is called, where we set up the actual library.
             Library = new MusicBrainzLibrary(this);
+            Devices = new List<IDevice>();
+            RecentlyPlayed = new MusicBrainzRecentlyPlayed(this);
+            Discoverables = new MusicBrainzDiscoverables(this);
 
             _musicBrainzClient = CoreConfig.Services.GetService<MusicBrainzClient>();
         }
@@ -41,22 +44,22 @@ namespace StrixMusic.Core.MusicBrainz
         public CoreState CoreState { get; internal set; } = CoreState.Unloaded;
 
         /// <inheritdoc/>
-        public string Name => throw new NotImplementedException();
+        public string Name => "MusicBrainz";
 
         /// <inheritdoc/>
         public IUser User => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IReadOnlyList<IDevice> Devices => throw new NotImplementedException();
+        public IReadOnlyList<IDevice> Devices { get; }
 
         /// <inheritdoc/>
         public ILibrary Library { get; private set; }
 
         /// <inheritdoc/>
-        public IRecentlyPlayed RecentlyPlayed => throw new NotImplementedException();
+        public IRecentlyPlayed RecentlyPlayed { get; }
 
         /// <inheritdoc/>
-        public IDiscoverables Discoverables => throw new NotImplementedException();
+        public IDiscoverables Discoverables { get; }
 
         /// <inheritdoc/>
         public string InstanceId { get; }
