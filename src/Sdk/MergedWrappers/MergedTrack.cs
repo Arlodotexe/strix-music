@@ -11,7 +11,7 @@ using StrixMusic.Sdk.Interfaces;
 namespace StrixMusic.Sdk.MergedWrappers
 {
     /// <summary>
-    /// A concrete class that merged multiple <see cref="ISearchResults"/>
+    /// A concrete class that merged multiple <see cref="ITrack"/>s.
     /// </summary>
     public class MergedTrack : ITrack, IEquatable<ITrack>
     {
@@ -20,7 +20,7 @@ namespace StrixMusic.Sdk.MergedWrappers
         private readonly ITrack _preferredSource;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MergedSearchResults"/> class.
+        /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroupBase"/> class.
         /// </summary>
         /// <param name="tracks">The <see cref="ITrack"/>s to merge together.</param>
         public MergedTrack(ITrack[] tracks)

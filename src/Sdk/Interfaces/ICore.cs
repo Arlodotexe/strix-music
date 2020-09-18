@@ -50,7 +50,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// Used to browse and discover new music.
         /// </summary>
-        public IPlayableCollectionGroup Discoverables { get; }
+        public IDiscoverables Discoverables { get; }
 
         /// <summary>
         /// Given a query, return suggested completed queries.

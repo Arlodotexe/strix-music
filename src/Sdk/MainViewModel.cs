@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using OwlCore.Extensions;
 using OwlCore.Extensions.AsyncExtensions;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
+using StrixMusic.Sdk.MergedWrappers;
 using StrixMusic.Sdk.Observables;
 
 namespace StrixMusic.Sdk
@@ -36,7 +36,7 @@ namespace StrixMusic.Sdk
             GetSearchResultsAsyncCommand = new AsyncRelayCommand<string>(GlobalSearchResultsAsync);
             GetSearchAutoSuggestAsyncCommand = new RelayCommand<string>(GlobalSearchSuggestions);
 
-            _ = InitializeCores(_cores);
+            Task.Run(() => InitializeCores(_cores));
         }
 
         private async Task InitializeCores(IEnumerable<ICore> coresToLoad)
@@ -52,6 +52,15 @@ namespace StrixMusic.Sdk
 
                 AttachEvents(core);
             }
+
+            var mergedLibrary = new MergedLibrary(toLoad.Select(x => x.Library));
+            Library = new ObservableLibrary(mergedLibrary);
+
+            var mergedRecentlyPlayed = new MergedRecentlyPlayed(toLoad.Select(x => x.RecentlyPlayed));
+            RecentlyPlayed = new ObservableRecentlyPlayed(mergedRecentlyPlayed);
+
+            var mergedDiscoverables = new MergedDiscoverables(toLoad.Select(x => x.Discoverables));
+            Discoverables = new ObservableDiscoverables(mergedDiscoverables);
         }
 
         private void AttachEvents(ICore core)
@@ -95,8 +104,7 @@ namespace StrixMusic.Sdk
         {
             var searchResults = await _cores.InParallel(core => Task.Run(() => core.GetSearchResultsAsync(query)));
 
-            // TODO: Merge search results
-            var merged = searchResults.First();
+            var merged = new MergedSearchResults(searchResults);
 
             SearchResults = new ObservableSearchResults(merged);
 
@@ -144,7 +152,7 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// Used to browse and discovered new music.
         /// </summary>
-        public ObservableCollectionGroup? Discoverables { get; private set; }
+        public ObservableDiscoverables? Discoverables { get; private set; }
 
         /// <summary>
         /// Gets search results for a query.
