@@ -16,23 +16,31 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// <inheritdoc />
     public class MusicBrainzTrack : ITrack
     {
-        private readonly Recording _recording;
+        private readonly Track _track;
         private readonly MusicBrainzClient _musicBrainzClient;
         private readonly List<IArtist> _artists;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzTrack"/> class.
         /// </summary>
-        /// <param name="recording"></param>
+        /// <param name="track"></param>
+        /// <param name="musicBrainzAlbum"></param>
         /// <param name="sourceCore"></param>
-        public MusicBrainzTrack(ICore sourceCore, Recording recording)
+        /// <remarks>
+        /// Normally we don't pass in a fully constructed implementation of one of our classes,
+        /// instead opting for passing API-level information around,
+        /// but the Album is complex enough that implicitly passing the constructed object is preferred over manually
+        /// passing what is needed to
+        /// create one inside the MusicBrainzTrack.
+        /// </remarks>
+        public MusicBrainzTrack(ICore sourceCore, Track track, MusicBrainzAlbum musicBrainzAlbum)
         {
             // TODO: Refactor to pass in Track instead of recording.
             SourceCore = sourceCore;
-            _recording = recording;
+            _track = track;
             _artists = new List<IArtist>();
 
-            var release = recording.Releases.FirstOrDefault(x => x.Status == "Official") ?? recording.Releases.First();
+            var release = track.Recording.Releases.FirstOrDefault(x => x.Status == "Official") ?? track.Recording.Releases.First();
 
             // TODO: Figure out which medium/disc this track belongs to
             Album = new MusicBrainzAlbum(sourceCore, release, release.Media.First());
@@ -47,7 +55,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IReadOnlyList<IArtist> Artists => _artists;
 
         /// <inheritdoc />
-        public int TotalArtistsCount => _recording.Credits.Count;
+        public int TotalArtistsCount => _track.Recording.Credits.Count;
 
         /// <inheritdoc/>
         public IAlbum Album { get; }
@@ -57,7 +65,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>
-        public int? TrackNumber { get; internal set; }
+        public int? TrackNumber => _track.Position;
 
         /// <inheritdoc/>
         public int? PlayCount => null;
@@ -69,7 +77,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public ILyrics? Lyrics => null;
 
         /// <inheritdoc/>
-        public bool IsExplicit => _recording.Disambiguation.Contains("explicit");
+        public bool IsExplicit => _track.Recording.Disambiguation.Contains("explicit");
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
@@ -78,10 +86,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public Uri? Url => null;
 
         /// <inheritdoc/>
-        public string Name => _recording.Title;
+        public string Name => _track.Recording.Title;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IImage> Images => CreateImagesForRelease(_recording.Releases);
+        public IReadOnlyList<IImage> Images => CreateImagesForRelease(_track.Recording.Releases);
 
         /// <inheritdoc/>
         public string? Description => null;
@@ -90,8 +98,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public PlaybackState PlaybackState => PlaybackState.None;
 
         /// <inheritdoc/>
-        public TimeSpan Duration => _recording.Length != null
-                ? TimeSpan.FromMilliseconds((double)_recording.Length)
+        public TimeSpan Duration => _track.Length != null
+                ? TimeSpan.FromMilliseconds((double)_track.Length)
                 : TimeSpan.Zero;
 
         /// <inheritdoc/>
@@ -137,7 +145,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
-        public string Id => _recording.Id;
+        public string Id => _track.Id;
 
         /// <inheritdoc/>
         public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;

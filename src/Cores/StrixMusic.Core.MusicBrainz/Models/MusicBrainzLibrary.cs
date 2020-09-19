@@ -64,8 +64,24 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override async Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*&{RelationshipQueries.RecordingsQuery}", limit, offset);
+            List<ITrack> tracks = new List<ITrack>();
 
-            return recordings.Items.Select(item => new MusicBrainzTrack(SourceCore, item)).Cast<ITrack>().ToList();
+            foreach (var recording in recordings)
+            {
+                foreach (var release in recording.Releases)
+                {
+                    foreach (var medium in release.Media)
+                    {
+                        foreach (var track in medium.Tracks)
+                        {
+
+                            tracks.Add(new MusicBrainzTrack(SourceCore, track, new MusicBrainzAlbum(SourceCore, release, medium)));
+                        }
+                    }
+                }
+            }
+
+            return tracks;
         }
     }
 }

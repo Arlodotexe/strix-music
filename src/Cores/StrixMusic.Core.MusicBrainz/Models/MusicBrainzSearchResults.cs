@@ -77,9 +77,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var recordings = await _musicBrainzClient.Recordings.SearchAsync(_query, limit, offset);
 
-            foreach (var item in recordings)
+            foreach (var recording in recordings)
             {
-                _tracks.Add(new MusicBrainzTrack(SourceCore, item));
+                foreach (var release in recording.Releases)
+                {
+                    foreach (var medium in release.Media)
+                    {
+                        foreach (var track in medium.Tracks)
+                        {
+                            _tracks.Add(new MusicBrainzTrack(SourceCore, track, new MusicBrainzAlbum(SourceCore, release, medium)));
+                        }
+                    }
+                }
             }
 
             return _tracks;
