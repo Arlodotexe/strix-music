@@ -78,9 +78,6 @@ namespace StrixMusic.Sdk.MergedWrappers
         public int? TrackNumber => _preferredSource.TrackNumber;
 
         /// <inheritdoc/>
-        public int? PlayCount => _preferredSource.PlayCount;
-
-        /// <inheritdoc/>
         public CultureInfo? Language => _preferredSource.Language;
 
         /// <inheritdoc/>
@@ -185,14 +182,6 @@ namespace StrixMusic.Sdk.MergedWrappers
             add => _preferredSource.TrackNumberChanged += value;
 
             remove => _preferredSource.TrackNumberChanged -= value;
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<int?> PlayCountChanged
-        {
-            add => _preferredSource.PlayCountChanged += value;
-
-            remove => _preferredSource.PlayCountChanged -= value;
         }
 
         /// <inheritdoc/>

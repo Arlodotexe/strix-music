@@ -6,6 +6,9 @@ using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Extensions
 {
+    /// <summary>
+    /// Provides helper methods for <see cref="ICore"/>s.
+    /// </summary>
     public static partial class Cores
     {
         /// <summary>

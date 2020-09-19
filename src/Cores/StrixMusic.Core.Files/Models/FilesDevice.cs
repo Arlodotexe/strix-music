@@ -83,99 +83,57 @@ namespace StrixMusic.Core.Files.Models
         /// <inheritdoc/>
         public event EventHandler<bool>? IsActiveChanged
         {
-            add
-            {
-                IsActiveChanged += value;
-            }
+            add => IsActiveChanged += value;
 
-            remove
-            {
-                IsActiveChanged -= value;
-            }
+            remove => IsActiveChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<IPlayableCollectionBase>? PlaybackContextChanged
         {
-            add
-            {
-                PlaybackContextChanged += value;
-            }
+            add => PlaybackContextChanged += value;
 
-            remove
-            {
-                PlaybackContextChanged -= value;
-            }
+            remove => PlaybackContextChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<ITrack>? NowPlayingChanged
         {
-            add
-            {
-                NowPlayingChanged += value;
-            }
+            add => NowPlayingChanged += value;
 
-            remove
-            {
-                NowPlayingChanged -= value;
-            }
+            remove => NowPlayingChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<TimeSpan>? PositionChanged
         {
-            add
-            {
-                PositionChanged += value;
-            }
+            add => PositionChanged += value;
 
-            remove
-            {
-                PositionChanged -= value;
-            }
+            remove => PositionChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
-            add
-            {
-                PlaybackStateChanged += value;
-            }
+            add => PlaybackStateChanged += value;
 
-            remove
-            {
-                PlaybackStateChanged -= value;
-            }
+            remove => PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<bool>? ShuffleStateChanged
         {
-            add
-            {
-                ShuffleStateChanged += value;
-            }
+            add => ShuffleStateChanged += value;
 
-            remove
-            {
-                ShuffleStateChanged -= value;
-            }
+            remove => ShuffleStateChanged -= value;
         }
 
         /// <inheritdoc/>
         public event EventHandler<RepeatState>? RepeatStateChanged
         {
-            add
-            {
-                RepeatStateChanged += value;
-            }
+            add => RepeatStateChanged += value;
 
-            remove
-            {
-                RepeatStateChanged -= value;
-            }
+            remove => RepeatStateChanged -= value;
         }
 
         /// <inheritdoc/>

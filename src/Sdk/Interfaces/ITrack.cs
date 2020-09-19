@@ -31,11 +31,6 @@ namespace StrixMusic.Sdk.Interfaces
         int? TrackNumber { get; }
 
         /// <summary>
-        /// Number of the times this track has been played.
-        /// </summary>
-        int? PlayCount { get; }
-
-        /// <summary>
         /// The language for this track.
         /// </summary>
         /// <remarks>If track has no spoken words (instrumental), value is <see cref="CultureInfo.InvariantCulture"/>. If unknown, value is <see langword="null"/>.</remarks>
@@ -154,11 +149,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// Fires when the <see cref="TrackNumber"/> metadata changes.
         /// </summary>
         event EventHandler<int?> TrackNumberChanged;
-
-        /// <summary>
-        /// Fires when the <see cref="PlayCount"/> metadata changes.
-        /// </summary>
-        event EventHandler<int?> PlayCountChanged;
 
         /// <summary>
         /// Fires when the <see cref="Language"/> metadata changes.

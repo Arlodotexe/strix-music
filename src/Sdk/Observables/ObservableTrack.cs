@@ -58,7 +58,6 @@ namespace StrixMusic.Sdk.Observables
             _track.LyricsChanged += Track_LyricsChanged;
             _track.NameChanged += Track_NameChanged;
             _track.PlaybackStateChanged += Track_PlaybackStateChanged;
-            _track.PlayCountChanged += Track_PlayCountChanged;
             _track.TrackNumberChanged += Track_TrackNumberChanged;
             _track.UrlChanged += Track_UrlChanged;
             _track.ImagesChanged += Track_ImagesChanged;
@@ -75,7 +74,6 @@ namespace StrixMusic.Sdk.Observables
             _track.LyricsChanged -= Track_LyricsChanged;
             _track.NameChanged -= Track_NameChanged;
             _track.PlaybackStateChanged -= Track_PlaybackStateChanged;
-            _track.PlayCountChanged -= Track_PlayCountChanged;
             _track.TrackNumberChanged -= Track_TrackNumberChanged;
             _track.UrlChanged -= Track_UrlChanged;
             _track.ImagesChanged -= Track_ImagesChanged;
@@ -102,11 +100,6 @@ namespace StrixMusic.Sdk.Observables
         private void Track_TrackNumberChanged(object sender, int? e)
         {
             TrackNumber = e;
-        }
-
-        private void Track_PlayCountChanged(object sender, int? e)
-        {
-            PlayCount = e;
         }
 
         private void Track_PlaybackStateChanged(object sender, PlaybackState e)
@@ -203,13 +196,6 @@ namespace StrixMusic.Sdk.Observables
         {
             get => _track.TrackNumber;
             set => SetProperty(() => _track.TrackNumber, value);
-        }
-
-        /// <inheritdoc cref="ITrack.PlayCount"/>
-        public int? PlayCount
-        {
-            get => _track.PlayCount;
-            set => SetProperty(() => _track.PlayCount, value);
         }
 
         /// <inheritdoc cref="ITrack.Language"/>
@@ -398,14 +384,6 @@ namespace StrixMusic.Sdk.Observables
             add => _track.TrackNumberChanged += value;
 
             remove => _track.TrackNumberChanged -= value;
-        }
-
-        /// <inheritdoc cref="ITrack.PlayCountChanged"/>
-        public event EventHandler<int?> PlayCountChanged
-        {
-            add => _track.PlayCountChanged += value;
-
-            remove => _track.PlayCountChanged -= value;
         }
 
         /// <inheritdoc cref="ITrack.LanguageChanged"/>

@@ -70,9 +70,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public int? TrackNumber => _track.Position;
 
         /// <inheritdoc/>
-        public int? PlayCount => null;
-
-        /// <inheritdoc/>
         public CultureInfo Language { get; }
 
         /// <inheritdoc/>
@@ -160,9 +157,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public event EventHandler<int?>? TrackNumberChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<int?>? PlayCountChanged;
 
         /// <inheritdoc/>
         public event EventHandler<CultureInfo?>? LanguageChanged;
