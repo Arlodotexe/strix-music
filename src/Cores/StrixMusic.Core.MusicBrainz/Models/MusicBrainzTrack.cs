@@ -41,6 +41,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
             _artists = new List<IArtist>();
 
             Language = CultureInfoExtensions.FromIso636_3(musicBrainzAlbum.Release.TextRepresentation.Language);
+
+            // The genres should come from the release tag list. The API returns it, but the library we use doesn't deserialize it. For now, we have no genres.
+            // Genres = musicBrainzAlbum.Release.Tag;
             Album = musicBrainzAlbum;
 
             _musicBrainzClient = SourceCore.GetService<MusicBrainzClient>();
@@ -60,7 +63,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IAlbum Album { get; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<string> Genres => throw new NotImplementedException();
+        public IReadOnlyList<string> Genres => new List<string>();
 
         /// <inheritdoc/>
         /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>

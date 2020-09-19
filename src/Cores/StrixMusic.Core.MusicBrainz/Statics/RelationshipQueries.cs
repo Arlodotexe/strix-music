@@ -13,7 +13,7 @@
         /// <summary>
         /// The relationship queries needed when getting Releases from the API.
         /// </summary>
-        public static readonly string[] Releases = { "recordings" };
+        public static readonly string[] Releases = { "recordings", "tags" };
 
         /// <summary>
         /// The relationship queries needed when getting Artists from the API.

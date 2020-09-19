@@ -145,13 +145,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public Task PauseAsync()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PlayAsync()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
