@@ -71,43 +71,43 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public Task ChangeDisplayNameAsync(string displayName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task ChangeBirthDateAsync(DateTime birthdate)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task ChangeFullNameAsync(string fullname)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task ChangeUrlsAsync(IReadOnlyList<Uri> urls)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task ChangeRegionAsync(CultureInfo region)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task ChangeEmailAsync(string? email)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
