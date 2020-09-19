@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk
     /// <summary>
     /// The MainViewModel used throughout the app
     /// </summary>
-    public class MainViewModel : ObservableRecipient
+    public partial class MainViewModel : ObservableRecipient
     {
         private readonly IEnumerable<ICore> _cores;
 
@@ -24,6 +24,7 @@ namespace StrixMusic.Sdk
         /// </summary>
         public MainViewModel(IEnumerable<ICore> cores)
         {
+            Singleton = this;
             _cores = cores;
 
             Devices = new ObservableCollection<ObservableDevice>();
@@ -35,23 +36,37 @@ namespace StrixMusic.Sdk
 
             GetSearchResultsAsyncCommand = new AsyncRelayCommand<string>(GlobalSearchResultsAsync);
             GetSearchAutoSuggestAsyncCommand = new RelayCommand<string>(GlobalSearchSuggestions);
-
-            Task.Run(() => InitializeCores(_cores));
         }
 
-        private async Task InitializeCores(IEnumerable<ICore> coresToLoad)
+        /// <summary>
+        /// Initializes and loads the cores given during construction.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task InitializeCores()
         {
+            await LoadedCores.InParallel(x => Task.Run(x.DisposeAsync));
+
+            // These collections should be empty, no matter how many times the method is called.
+            Devices.Clear();
+            SearchAutoComplete.Clear();
+            LoadedCores.Clear();
+            Users.Clear();
+            PlaybackQueue.Clear();
+
             // Handle possible multiple enumeration
-            var toLoad = coresToLoad as ICore[] ?? coresToLoad.ToArray();
+            var toLoad = _cores as ICore[] ?? _cores.ToArray();
 
-            await toLoad.InParallel(core => Task.Run(core.InitAsync));
-
-            foreach (var core in toLoad)
+            await toLoad.InParallel(async core =>
             {
+                await core.InitAsync();
+
+                // Registers itself into LoadedCores
+                _ = new ObservableCore(core);
+
                 Users.Add(new ObservableUserProfile(core.User));
 
                 AttachEvents(core);
-            }
+            });
 
             var mergedLibrary = new MergedLibrary(toLoad.Select(x => x.Library));
             Library = new ObservableLibrary(mergedLibrary);
@@ -123,6 +138,16 @@ namespace StrixMusic.Sdk
                 Devices.RemoveAt(item.Index);
             }
         }
+
+        /// <summary>
+        /// The single instance of the <see cref="MainViewModel"/>.
+        /// </summary>
+        /// <remarks>
+        /// The <see cref="MainViewModel"/> contains only logic for interacting with instance of cores, and relaying them to the UI.
+        /// With how the settings are set up, creating more than one <see cref="MainViewModel"/> off the same instance IDs would result in a
+        /// second instance of MainViewModel with identical states and functionality. Therefore, a singleton is desired over multi-instance.
+        /// </remarks>
+        public static MainViewModel? Singleton { get; private set; }
 
         /// <summary>
         /// Contains data about the cores that are loaded.

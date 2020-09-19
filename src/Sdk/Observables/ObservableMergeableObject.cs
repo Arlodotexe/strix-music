@@ -8,6 +8,8 @@ namespace StrixMusic.Sdk.Observables
     /// </summary>
     public class ObservableMergeableObject<T> : ObservableObject
     {
+        private readonly ObservableCollection<T> _mergedData;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableMergeableObject{T}"/> class.
         /// </summary>
@@ -25,8 +27,6 @@ namespace StrixMusic.Sdk.Observables
         {
             _mergedData.Add(data);
         }
-
-        private ObservableCollection<T> _mergedData;
 
         /// <summary>
         /// A collection of matched, less preferred versions of this item from other sources.

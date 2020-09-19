@@ -21,9 +21,14 @@ namespace StrixMusic.Sdk.Observables
         /// Initializes a new instance of the <see cref="ObservableCore"/> class.
         /// </summary>
         /// <param name="core">The base <see cref="ICore"/></param>
+        /// <remarks>
+        /// Creating a new <see cref="ObservableCore"/> will register itself into <see cref="MainViewModel.LoadedCores"/>.
+        /// </remarks>
         public ObservableCore(ICore core)
         {
             _core = core;
+
+            MainViewModel.Singleton?.LoadedCores.Add(this);
 
             Devices = new ObservableCollection<ObservableDevice>(_core.Devices.Select(x => new ObservableDevice(x)));
             Library = new ObservableLibrary(_core.Library);
@@ -76,6 +81,9 @@ namespace StrixMusic.Sdk.Observables
 
         /// <inheritdoc cref="ICore.CoreState" />
         private void Core_CoreStateChanged(object sender, CoreState e) => CoreState = e;
+
+        /// <inheritdoc cref="ICore.InstanceId"/>
+        public string InstanceId => _core.InstanceId;
 
         /// <inheritdoc cref="ICore.Devices"/>
         public ObservableCollection<ObservableDevice> Devices { get; }

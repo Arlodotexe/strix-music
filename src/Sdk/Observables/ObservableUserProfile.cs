@@ -22,12 +22,13 @@ namespace StrixMusic.Sdk.Observables
         {
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
+            SourceCore = MainViewModel.GetLoadedCore(_userProfile.SourceCore);
             Urls = new ObservableCollection<Uri>(userProfile.Urls ?? Array.Empty<Uri>());
             Images = new ObservableCollection<IImage>(userProfile.Images);
         }
 
         /// <inheritdoc cref="IUserProfile.SourceCore"/>
-        public ICore SourceCore => _userProfile.SourceCore;
+        public ObservableCore SourceCore { get; }
 
         /// <inheritdoc cref="IUserProfile.Id"/>
         public string Id => _userProfile.Id;

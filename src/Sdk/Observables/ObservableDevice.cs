@@ -30,6 +30,8 @@ namespace StrixMusic.Sdk.Observables
             if (_device.NowPlaying != null)
                 NowPlaying = new ObservableTrack(_device.NowPlaying);
 
+            SourceCore = MainViewModel.GetLoadedCore(_device.SourceCore);
+
             PlaybackQueue = new ObservableCollection<ObservableTrack>(_device.PlaybackQueue.Select(x => new ObservableTrack(x)));
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
@@ -133,7 +135,7 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc cref="IDevice.SourceCore"/>
-        public ICore SourceCore => _device.SourceCore;
+        public ObservableCore SourceCore { get; }
 
         /// <inheritdoc cref="IDevice.Id"/>
         public string Id => _device.Id;

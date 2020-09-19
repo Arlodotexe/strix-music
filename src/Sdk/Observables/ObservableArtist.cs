@@ -25,7 +25,7 @@ namespace StrixMusic.Sdk.Observables
         {
             _artist = artist;
 
-            SourceCore = new ObservableCore(_artist.SourceCore);
+            SourceCore = MainViewModel.GetLoadedCore(_artist.SourceCore);
 
             if (_artist.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_artist.RelatedItems);

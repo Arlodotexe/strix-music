@@ -25,7 +25,7 @@ namespace StrixMusic.Sdk.Observables
         {
             _album = album;
 
-            SourceCore = new ObservableCore(_album.SourceCore);
+            SourceCore = MainViewModel.GetLoadedCore(_album.SourceCore);
 
             Images = new ObservableCollection<IImage>(_album.Images);
             Tracks = new ObservableCollection<ObservableTrack>(_album.Tracks.Select(x => new ObservableTrack(x)));

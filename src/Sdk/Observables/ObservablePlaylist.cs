@@ -41,7 +41,7 @@ namespace StrixMusic.Sdk.Observables
             Tracks = new ObservableCollection<ObservableTrack>(_playlist.Tracks.Select(x => new ObservableTrack(x)));
             Images = new ObservableCollection<IImage>(_playlist.Images);
 
-            SourceCore = new ObservableCore(_playlist.SourceCore);
+            SourceCore = MainViewModel.GetLoadedCore(_playlist.SourceCore);
 
             AttachEvents();
         }

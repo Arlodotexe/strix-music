@@ -35,7 +35,7 @@ namespace StrixMusic.Sdk.Observables
             Genres = new ObservableCollection<string>(_track.Genres);
             Artists = new ObservableCollection<ObservableArtist>(_track.Artists.Select(x => new ObservableArtist(x)));
             Images = new ObservableCollection<IImage>(_track.Images);
-            SourceCore = new ObservableCore(_track.SourceCore);
+            SourceCore = MainViewModel.GetLoadedCore(_track.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PlayAsync);

@@ -92,7 +92,7 @@ namespace StrixMusic
                 ShellDisplay.Content = null;
 
                 // Removes old resource(s).
-                foreach (var dict in App.Current.Resources.MergedDictionaries)
+                foreach (var dict in Application.Current.Resources.MergedDictionaries)
                 {
                     Match shellMatch = Regex.Match(dict.Source.AbsoluteUri, Constants.Shells.ShellResourceDictionaryRegex);
                     if (shellMatch.Success)

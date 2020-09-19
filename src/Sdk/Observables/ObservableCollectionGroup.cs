@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
@@ -24,9 +26,9 @@ namespace StrixMusic.Sdk.Observables
         /// <param name="collectionGroup">The base <see cref="IPlayableCollectionBase"/> containing properties about this class.</param>
         public ObservableCollectionGroup(IPlayableCollectionGroup collectionGroup)
         {
-            _collectionGroupBase = collectionGroup;
+            _collectionGroupBase = collectionGroup ?? throw new ArgumentNullException(nameof(collectionGroup));
 
-            SourceCore = new ObservableCore(_collectionGroupBase.SourceCore);
+            SourceCore = MainViewModel.GetLoadedCore(_collectionGroupBase.SourceCore);
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);

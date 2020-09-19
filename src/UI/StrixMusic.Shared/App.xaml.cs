@@ -62,17 +62,19 @@ namespace StrixMusic
                 services.AddSingleton<ISuperShellService, SuperShellService>();
                 services.AddSingleton<IFileSystemService, FileSystemService>();
 
-                // Todo: If coreRegistry is null, show out of box setup page.
                 var coreRegistry = await settingsService.GetValue<Dictionary<string, Type>>(nameof(SettingsKeys.CoreRegistry));
 
-                if (coreRegistry != null)
+                // Todo: If coreRegistry is null, show out of box setup page.
+                if (coreRegistry == null)
                 {
-                    var cores = coreRegistry.Select(x => (ICore)Activator.CreateInstance(x.Value, x.Key)).ToList();
-
-                    cores.Add(new MusicBrainzCore("testInstance"));
-
-                    services.AddSingleton(new MainViewModel(cores));
+                    coreRegistry = new Dictionary<string, Type>();
                 }
+
+                var cores = coreRegistry.Select(x => (ICore)Activator.CreateInstance(x.Value, x.Key)).ToList();
+
+                cores.Add(new MusicBrainzCore("testInstance"));
+
+                await new MainViewModel(cores).InitializeCores();
             });
         }
 
