@@ -53,7 +53,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public Uri Url => throw new NotImplementedException();
+        public Uri Url => new Uri($"https://musicbrainz.org/artist/{Id}");
 
         /// <inheritdoc/>
         public string Name => _artist.Name;

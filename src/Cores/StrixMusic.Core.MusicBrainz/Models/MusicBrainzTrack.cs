@@ -63,7 +63,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public int? PlayCount => null;
 
         /// <inheritdoc/>
-        public CultureInfo Language => throw new NotImplementedException();
+        public CultureInfo Language => CultureInfo.CreateSpecificCulture("TODO");
 
         /// <inheritdoc/>
         public ILyrics? Lyrics => null;
@@ -75,7 +75,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public Uri? Url => null;
+        public Uri? Url => new Uri($"https://musicbrainz.org/track/{Id}");
 
         /// <inheritdoc/>
         public string Name => _recording.Title;

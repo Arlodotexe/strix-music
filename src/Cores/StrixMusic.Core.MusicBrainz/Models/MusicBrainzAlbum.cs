@@ -57,7 +57,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Id => _release.Id;
 
         /// <inheritdoc/>
-        public Uri? Url => null;
+        public Uri? Url => new Uri($"https://musicbrainz.org/release/{Id}");
 
         /// <inheritdoc/>
         public string Name => _release.Title;
@@ -104,7 +104,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncSupported => false;
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Fires when <see cref="ITrackCollection.Tracks"/> changes.
+        /// </summary>
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
 
         /// <inheritdoc/>
