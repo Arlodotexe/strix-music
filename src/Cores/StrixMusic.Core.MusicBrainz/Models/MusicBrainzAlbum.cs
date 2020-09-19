@@ -175,11 +175,19 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public async Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
         {
-            var recordings = await _musicBrainzClient.Recordings.BrowseAsync("album", Id, limit, offset);
+            var recordings = await _musicBrainzClient.Recordings.BrowseAsync("release", Id, limit, offset);
 
-            foreach (var recording in recordings)
+            foreach (var recording in recordings.Items)
             {
-                _tracks.Add(new MusicBrainzTrack(SourceCore, recording));
+                // Iterate through each physical medium for this release.
+                foreach (var medium in _release.Media)
+                {
+                    // Iterate the tracks and find a matching ID for this recording
+                    foreach (var track in medium.Tracks.Where(track => track.Recording.Id == recording.Id))
+                    {
+                        _tracks.Add(new MusicBrainzTrack(SourceCore, track, new MusicBrainzAlbum(SourceCore, _release, medium)));
+                    }
+                }
             }
 
             return _tracks;
