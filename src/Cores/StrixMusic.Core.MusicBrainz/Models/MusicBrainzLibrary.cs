@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
 
@@ -24,10 +26,65 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public MusicBrainzLibrary(ICore sourceCore)
             : base(sourceCore)
         {
-            SourceCore = sourceCore;
-
             _musicBrainzClient = SourceCore.GetService<MusicBrainzClient>();
             _artistHelpersService = SourceCore.GetService<MusicBrainzArtistHelpersService>();
+        }
+
+        /// <inheritdoc />
+        public override string Id { get; protected set; } = "library";
+
+        /// <inheritdoc />
+        public override Uri? Url { get; protected set; } = null;
+
+        /// <inheritdoc />
+        public override string Name { get; protected set; } = "Library";
+
+        /// <inheritdoc />
+        public override IReadOnlyList<IImage> Images { get; protected set; } = new List<IImage>();
+
+        /// <inheritdoc />
+        public override string? Description { get; protected set; } = null;
+
+        /// <inheritdoc />
+        public override int TotalChildrenCount { get; protected set; } = 0;
+
+        /// <inheritdoc />
+        public override int TotalArtistsCount { get; protected set; }
+
+        /// <inheritdoc />
+        public override int TotalAlbumsCount { get; protected set; }
+
+        /// <inheritdoc />
+        public override int TotalPlaylistCount { get; protected set; } = 0;
+
+        /// <inheritdoc />
+        public override int TotalTracksCount { get; protected set; }
+
+        /// <inheritdoc />
+        public override event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+
+        /// <inheritdoc/>
+        public override Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0)
+        {
+            return Task.FromResult<IReadOnlyList<IPlayableCollectionGroup>>(new List<IPlayableCollectionGroup>());
+        }
+
+        /// <inheritdoc/>
+        public override Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
+        {
+            return Task.FromResult<IReadOnlyList<IPlaylist>>(new List<IPlaylist>());
         }
 
         /// <inheritdoc/>
@@ -48,6 +105,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 returnData.AddRange(release.Media.Select(medium => new MusicBrainzAlbum(SourceCore, release, medium, artist)));
             }
 
+            var addedItems = returnData.Select((x, index) => new CollectionChangedEventArgsItem<IAlbum>(x, index));
+
+            AlbumsChanged?.Invoke(this, new CollectionChangedEventArgs<IAlbum>(addedItems.ToArray(), null));
+
+            SourceAlbums.AddRange(returnData);
+
             return returnData;
         }
 
@@ -56,36 +119,31 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var artists = await _musicBrainzClient.Artists.SearchAsync($"*&{RelationshipQueries.ArtistsQuery}", limit, offset);
 
-            var returnList = new List<IArtist>();
+            var returnData = new List<IArtist>();
 
             foreach (var artist in artists.Items)
             {
-                returnList.Add(new MusicBrainzArtist(SourceCore, artist)
+                returnData.Add(new MusicBrainzArtist(SourceCore, artist)
                 {
                     TotalTracksCount = await _artistHelpersService.GetTotalTracksCount(artist),
                 });
             }
 
-            return returnList;
-        }
+            var addedItems = returnData.Select((x, index) => new CollectionChangedEventArgsItem<IArtist>(x, index));
 
-        /// <inheritdoc/>
-        public override Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0)
-        {
-            return Task.FromResult<IReadOnlyList<IPlayableCollectionGroup>>(new List<IPlayableCollectionGroup>());
-        }
+            ArtistsChanged?.Invoke(this, new CollectionChangedEventArgs<IArtist>(addedItems.ToArray(), null));
 
-        /// <inheritdoc/>
-        public override Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
-        {
-            return Task.FromResult<IReadOnlyList<IPlaylist>>(new List<IPlaylist>());
+            SourceArtists.AddRange(returnData);
+
+            return returnData;
         }
 
         /// <inheritdoc/>
         public override async Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
         {
             var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*&{RelationshipQueries.RecordingsQuery}", limit, offset);
-            List<ITrack> tracks = new List<ITrack>();
+
+            List<ITrack> returnData = new List<ITrack>();
 
             foreach (var recording in recordings)
             {
@@ -100,13 +158,19 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     {
                         foreach (var track in medium.Tracks)
                         {
-                            tracks.Add(new MusicBrainzTrack(SourceCore, track, new MusicBrainzAlbum(SourceCore, release, medium, artist)));
+                            returnData.Add(new MusicBrainzTrack(SourceCore, track, new MusicBrainzAlbum(SourceCore, release, medium, artist)));
                         }
                     }
                 }
             }
 
-            return tracks;
+            var addedItems = returnData.Select((x, index) => new CollectionChangedEventArgsItem<ITrack>(x, index));
+
+            TracksChanged?.Invoke(this, new CollectionChangedEventArgs<ITrack>(addedItems.ToArray(), null));
+
+            SourceTracks.AddRange(returnData);
+
+            return returnData;
         }
     }
 }

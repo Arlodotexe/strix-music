@@ -10,21 +10,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// <inheritdoc />
     public abstract class MusicBrainzCollectionGroupBase : IPlayableCollectionGroup
     {
-        /// <inheritdoc cref="Tracks"/>
-        protected List<ITrack> SourceTracks { get; }
-
-        /// <inheritdoc cref="Artists"/>
-        protected List<IArtist> SourceArtists { get; }
-
-        /// <inheritdoc cref="Albums"/>
-        protected List<IAlbum> SourceAlbums { get; }
-
-        /// <inheritdoc cref="Playlists"/>
-        protected List<IPlaylist> SourcePlaylists { get; }
-
-        /// <inheritdoc cref="Children"/>
-        protected List<IPlayableCollectionGroup> SourceChildren { get; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCollectionGroupBase"/> class.
         /// </summary>
@@ -40,92 +25,107 @@ namespace StrixMusic.Core.MusicBrainz.Models
             SourceChildren = new List<IPlayableCollectionGroup>();
         }
 
+        /// <inheritdoc cref="Tracks"/>
+        protected List<ITrack> SourceTracks { get; }
+
+        /// <inheritdoc cref="Artists"/>
+        protected List<IArtist> SourceArtists { get; }
+
+        /// <inheritdoc cref="Albums"/>
+        protected List<IAlbum> SourceAlbums { get; }
+
+        /// <inheritdoc cref="Playlists"/>
+        protected List<IPlaylist> SourcePlaylists { get; }
+
+        /// <inheritdoc cref="Children"/>
+        protected List<IPlayableCollectionGroup> SourceChildren { get; }
+
         /// <inheritdoc />
         public IReadOnlyList<IPlayableCollectionGroup> Children => SourceChildren;
 
         /// <inheritdoc />
-        public int TotalChildrenCount { get; internal set; }
+        public abstract int TotalChildrenCount { get; protected set; }
 
         /// <inheritdoc />
         public IReadOnlyList<IPlaylist> Playlists => SourcePlaylists;
 
         /// <inheritdoc />
-        public int TotalPlaylistCount { get; internal set; }
+        public abstract int TotalPlaylistCount { get; protected set; }
 
         /// <inheritdoc />
         public IReadOnlyList<ITrack> Tracks => SourceTracks;
 
         /// <inheritdoc />
-        public int TotalTracksCount { get; internal set; }
+        public abstract int TotalTracksCount { get; protected set; }
 
         /// <inheritdoc />
-        public IReadOnlyList<IAlbum> Albums => throw new NotImplementedException();
+        public IReadOnlyList<IAlbum> Albums => SourceAlbums;
 
         /// <inheritdoc />
-        public int TotalAlbumsCount { get; internal set; }
+        public abstract int TotalAlbumsCount { get; protected set; }
 
         /// <inheritdoc />
-        public IReadOnlyList<IArtist> Artists => throw new NotImplementedException();
+        public IReadOnlyList<IArtist> Artists => SourceArtists;
 
         /// <inheritdoc />
-        public int TotalArtistsCount { get; internal set; }
+        public abstract int TotalArtistsCount { get; protected set; }
 
         /// <inheritdoc />
-        public ICore SourceCore { get; internal set; }
+        public ICore SourceCore { get; }
 
         /// <inheritdoc />
-        public string Id => throw new NotImplementedException();
+        public abstract string Id { get; protected set; }
 
         /// <inheritdoc />
-        public Uri Url => throw new NotImplementedException();
+        public abstract Uri? Url { get; protected set; }
 
         /// <inheritdoc />
-        public string Name => throw new NotImplementedException();
+        public abstract string Name { get; protected set; }
 
         /// <inheritdoc />
-        public IReadOnlyList<IImage> Images => throw new NotImplementedException();
+        public abstract IReadOnlyList<IImage> Images { get; protected set; }
 
         /// <inheritdoc />
-        public string Description => throw new NotImplementedException();
+        public abstract string? Description { get; protected set; }
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState => throw new NotImplementedException();
+        public PlaybackState PlaybackState => PlaybackState.None;
 
         /// <inheritdoc />
-        public TimeSpan Duration => throw new NotImplementedException();
+        public TimeSpan Duration => TimeSpan.Zero;
 
         /// <inheritdoc />
-        public virtual bool IsPlayAsyncSupported => false;
+        public bool IsPlayAsyncSupported => false;
 
         /// <inheritdoc />
-        public virtual bool IsPauseAsyncSupported => false;
+        public bool IsPauseAsyncSupported => false;
 
         /// <inheritdoc />
-        public virtual bool IsChangeNameAsyncSupported { get; }
+        public bool IsChangeNameAsyncSupported => false;
 
         /// <inheritdoc />
-        public virtual bool IsChangeImagesAsyncSupported { get; }
+        public bool IsChangeImagesAsyncSupported => false;
 
         /// <inheritdoc />
-        public virtual bool IsChangeDescriptionAsyncSupported { get; }
+        public bool IsChangeDescriptionAsyncSupported => false;
 
         /// <inheritdoc/>
-        public virtual bool IsChangeDurationAsyncSupported { get; }
+        public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
+        public abstract event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
+        public abstract event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+        public abstract event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
+        public abstract event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
+        public abstract event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
@@ -146,37 +146,37 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
-        public virtual Task ChangeDescriptionAsync(string? description)
+        public Task ChangeDescriptionAsync(string? description)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public virtual Task ChangeDurationAsync(TimeSpan duration)
+        public Task ChangeDurationAsync(TimeSpan duration)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public virtual Task ChangeImagesAsync(IReadOnlyList<IImage> images)
+        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public virtual Task ChangeNameAsync(string name)
+        public Task ChangeNameAsync(string name)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public virtual Task PauseAsync()
+        public Task PauseAsync()
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public virtual Task PlayAsync()
+        public Task PlayAsync()
         {
             throw new NotSupportedException();
         }

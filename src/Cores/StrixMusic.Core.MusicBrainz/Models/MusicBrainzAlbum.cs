@@ -213,6 +213,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 }
             }
 
+            var addedItems = _tracks.Select((x, index) => new CollectionChangedEventArgsItem<ITrack>(x, index));
+
+            TracksChanged?.Invoke(this, new CollectionChangedEventArgs<ITrack>(addedItems.ToArray(), null));
+
             return _tracks;
         }
 

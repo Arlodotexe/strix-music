@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -27,6 +29,51 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             return Task.FromResult<IReadOnlyList<IArtist>>(new List<IArtist>());
         }
+
+        /// <inheritdoc />
+        public override string Id { get; protected set; } = "recentlyPlayed";
+
+        /// <inheritdoc />
+        public override Uri? Url { get; protected set; } = null;
+
+        /// <inheritdoc />
+        public override string Name { get; protected set; } = "Recently Played";
+
+        /// <inheritdoc />
+        public override IReadOnlyList<IImage> Images { get; protected set; } = new List<IImage>();
+
+        /// <inheritdoc />
+        public override string? Description { get; protected set; } = null;
+
+        /// <inheritdoc />
+        public override int TotalChildrenCount { get; protected set; } = 0;
+
+        /// <inheritdoc />
+        public override int TotalArtistsCount { get; protected set; } = 0;
+
+        /// <inheritdoc />
+        public override int TotalPlaylistCount { get; protected set; } = 0;
+
+        /// <inheritdoc />
+        public override int TotalTracksCount { get; protected set; } = 0;
+
+        /// <inheritdoc />
+        public override int TotalAlbumsCount { get; protected set; } = 0;
+
+        /// <inheritdoc />
+        public override event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
 
         /// <inheritdoc />
         public override Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0)
