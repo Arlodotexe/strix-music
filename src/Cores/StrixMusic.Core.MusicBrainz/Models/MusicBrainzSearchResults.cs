@@ -98,7 +98,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     {
                         foreach (var track in medium.Tracks)
                         {
-
                             _tracks.Add(new MusicBrainzTrack(SourceCore, track, new MusicBrainzAlbum(SourceCore, release, medium, artist)));
                         }
                     }
