@@ -69,7 +69,7 @@ namespace StrixMusic
                 {
                     var cores = coreRegistry.Select(x => (ICore)Activator.CreateInstance(x.Value, x.Key)).ToList();
 
-                    cores.Add(new MusicBrainzCore(Guid.NewGuid().ToString()));
+                    cores.Add(new MusicBrainzCore("testInstance"));
 
                     services.AddSingleton(new MainViewModel(cores));
                 }
