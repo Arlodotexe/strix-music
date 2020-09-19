@@ -33,19 +33,19 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override string? Description { get; protected set; } = null;
 
         /// <inheritdoc />
-        public override int TotalChildrenCount { get; protected set; } = 0;
+        public override int TotalChildrenCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override int TotalPlaylistCount { get; protected set; } = 0;
+        public override int TotalPlaylistCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override int TotalTracksCount { get; protected set; } = 0;
+        public override int TotalTracksCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override int TotalAlbumsCount { get; protected set; } = 0;
+        public override int TotalAlbumsCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override int TotalArtistsCount { get; protected set; } = 0;
+        public override int TotalArtistsCount { get; internal set; } = 0;
 
         /// <inheritdoc />
         public override event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;

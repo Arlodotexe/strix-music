@@ -44,31 +44,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IReadOnlyList<IPlayableCollectionGroup> Children => SourceChildren;
 
         /// <inheritdoc />
-        public abstract int TotalChildrenCount { get; protected set; }
-
-        /// <inheritdoc />
         public IReadOnlyList<IPlaylist> Playlists => SourcePlaylists;
-
-        /// <inheritdoc />
-        public abstract int TotalPlaylistCount { get; protected set; }
 
         /// <inheritdoc />
         public IReadOnlyList<ITrack> Tracks => SourceTracks;
 
         /// <inheritdoc />
-        public abstract int TotalTracksCount { get; protected set; }
-
-        /// <inheritdoc />
         public IReadOnlyList<IAlbum> Albums => SourceAlbums;
 
         /// <inheritdoc />
-        public abstract int TotalAlbumsCount { get; protected set; }
-
-        /// <inheritdoc />
         public IReadOnlyList<IArtist> Artists => SourceArtists;
-
-        /// <inheritdoc />
-        public abstract int TotalArtistsCount { get; protected set; }
 
         /// <inheritdoc />
         public ICore SourceCore { get; }
@@ -93,6 +78,21 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public TimeSpan Duration => TimeSpan.Zero;
+
+        /// <inheritdoc />
+        public abstract int TotalAlbumsCount { get; internal set; }
+
+        /// <inheritdoc />
+        public abstract int TotalArtistsCount { get; internal set; }
+
+        /// <inheritdoc />
+        public abstract int TotalTracksCount { get; internal set; }
+
+        /// <inheritdoc />
+        public abstract int TotalPlaylistCount { get; internal set; }
+
+        /// <inheritdoc />
+        public abstract int TotalChildrenCount { get; internal set; }
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported => false;

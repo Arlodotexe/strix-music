@@ -1,13 +1,12 @@
-﻿using Hqub.MusicBrainz.API;
-using StrixMusic.Core.MusicBrainz.Services;
-using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
+using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Sdk.Events;
-using IArtist = StrixMusic.Sdk.Interfaces.IArtist;
+using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -49,19 +48,19 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override string? Description { get; protected set; } = null;
 
         /// <inheritdoc />
-        public override int TotalChildrenCount { get; protected set; }
+        public override int TotalChildrenCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalPlaylistCount { get; protected set; }
+        public override int TotalPlaylistCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalArtistsCount { get; protected set; }
+        public override int TotalArtistsCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalAlbumsCount { get; protected set; }
+        public override int TotalAlbumsCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalTracksCount { get; protected set; }
+        public override int TotalTracksCount { get; internal set; }
 
         /// <inheritdoc />
         public override event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;

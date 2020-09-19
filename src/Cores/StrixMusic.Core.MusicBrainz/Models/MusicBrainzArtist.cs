@@ -1,4 +1,8 @@
-﻿using Hqub.MusicBrainz.API;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
@@ -6,10 +10,6 @@ using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -174,7 +174,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 }
             }
 
-            var addedItems = _tracks.Select((x, index) => new CollectionChangedEventArgsItem<IAlbum>(x, index));
+            var addedItems = _albums.Select((x, index) => new CollectionChangedEventArgsItem<IAlbum>(x, index));
 
             AlbumsChanged?.Invoke(this, new CollectionChangedEventArgs<IAlbum>(addedItems.ToArray(), null));
 
