@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using OwlCore.Extensions.DateTimeExtensions;
+using OwlCore.Extensions;
+using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
@@ -15,7 +16,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// <inheritdoc cref="IAlbum"/>
     public class MusicBrainzAlbum : IAlbum
     {
-        private readonly Release _release;
         private readonly MusicBrainzClient _musicBrainzClient;
         private readonly List<ITrack> _tracks;
 
@@ -29,7 +29,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             _musicBrainzClient = sourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
 
-            _release = release;
+            Release = release;
             Medium = medium;
             _tracks = new List<ITrack>();
             Images = CreateImagesForRelease();
@@ -41,8 +41,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <summary>
         /// The physical medium (album) for this release.
         /// </summary>
-        /// <remarks>In MusicBrainz, a release can contain multiple physical mediums. Only one of these Mediums should be used per Album.</remarks>
+        /// <remarks>In MusicBrainz, a <see cref="Release"/> can contain multiple physical mediums. Only one of these <see cref="Medium"/> should be used per Album.</remarks>
         public Medium Medium { get; }
+
+        /// <summary>
+        /// The <see cref="Release"/> for this album.
+        /// </summary>
+        public Release Release { get; }
 
         /// <inheritdoc/>
         public IArtist Artist { get; }
@@ -54,22 +59,22 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public string Id => _release.Id;
+        public string Id => Release.Id;
 
         /// <inheritdoc/>
         public Uri? Url => new Uri($"https://musicbrainz.org/release/{Id}");
 
         /// <inheritdoc/>
-        public string Name => _release.Title;
+        public string Name => $"{Release.Title} {(Release.Media.Count == 1 ? string.Empty : $"({Medium.Format} {Medium.Position})")}";
 
         /// <inheritdoc/>
-        public DateTime? DatePublished => CreateReleaseDate(_release.Date);
+        public DateTime? DatePublished => CreateReleaseDate(Release.Date);
 
         /// <inheritdoc/>
         public IReadOnlyList<IImage> Images { get; }
 
         /// <inheritdoc/>
-        public string? Description => _release.TextRepresentation?.Script;
+        public string? Description => Release.TextRepresentation?.Script;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => PlaybackState.None;
@@ -175,17 +180,17 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public async Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
         {
-            var recordings = await _musicBrainzClient.Recordings.BrowseAsync("release", Id, limit, offset);
+            var releaseData = await _musicBrainzClient.Releases.GetAsync(Id, RelationshipQueries.Releases);
 
-            foreach (var recording in recordings.Items)
+            foreach (var recording in releaseData.Media.First(x => x.Position == Medium.Position).Tracks)
             {
                 // Iterate through each physical medium for this release.
-                foreach (var medium in _release.Media)
+                foreach (var medium in Release.Media)
                 {
                     // Iterate the tracks and find a matching ID for this recording
                     foreach (var track in medium.Tracks.Where(track => track.Recording.Id == recording.Id))
                     {
-                        _tracks.Add(new MusicBrainzTrack(SourceCore, track, new MusicBrainzAlbum(SourceCore, _release, medium)));
+                        _tracks.Add(new MusicBrainzTrack(SourceCore, track, new MusicBrainzAlbum(SourceCore, Release, medium)));
                     }
                 }
             }
@@ -219,7 +224,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
             {
-                list.Add(new MusicBrainzImage(_release.Id, item));
+                list.Add(new MusicBrainzImage(Release.Id, item));
             }
 
             return list;

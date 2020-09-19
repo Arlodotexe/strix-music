@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OwlCore.Extensions.DateTimeExtensions
+namespace OwlCore.Extensions
 {
     /// <summary>
     /// Extensions that change a <see cref="DateTime"/>.

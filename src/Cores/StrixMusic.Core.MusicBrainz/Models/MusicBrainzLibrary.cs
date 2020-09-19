@@ -29,15 +29,17 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public override async Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
         {
-            var albums = await _musicBrainzClient.Releases.SearchAsync("*", limit, offset);
-            var list = new List<IAlbum>();
+            var albumsList = await _musicBrainzClient.Releases.SearchAsync("*", limit, offset);
+            var albums = albumsList.Items;
 
-            foreach (var release in albums.Items)
+            var returnData = new List<IAlbum>();
+
+            foreach (var release in albums)
             {
-                list.AddRange(release.Media.Select(medium => new MusicBrainzAlbum(SourceCore, release, medium)));
+                returnData.AddRange(release.Media.Select(medium => new MusicBrainzAlbum(SourceCore, release, medium)));
             }
 
-            return list;
+            return returnData;
         }
 
         /// <inheritdoc/>

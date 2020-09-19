@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using Microsoft.Extensions.DependencyInjection;
+using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
@@ -30,20 +31,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// Normally we don't pass in a fully constructed implementation of one of our classes,
         /// instead opting for passing API-level information around,
         /// but the Album is complex enough that implicitly passing the constructed object is preferred over manually
-        /// passing what is needed to
-        /// create one inside the MusicBrainzTrack.
+        /// passing what is needed to create one inside the MusicBrainzTrack.
         /// </remarks>
         public MusicBrainzTrack(ICore sourceCore, Track track, MusicBrainzAlbum musicBrainzAlbum)
         {
-            // TODO: Refactor to pass in Track instead of recording.
             SourceCore = sourceCore;
             _track = track;
             _artists = new List<IArtist>();
 
-            var release = track.Recording.Releases.FirstOrDefault(x => x.Status == "Official") ?? track.Recording.Releases.First();
-
-            // TODO: Figure out which medium/disc this track belongs to
-            Album = new MusicBrainzAlbum(sourceCore, release, release.Media.First());
+            Language = CultureInfoExtensions.FromIso636_3(musicBrainzAlbum.Release.TextRepresentation.Language);
+            Album = musicBrainzAlbum;
 
             _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
         }
@@ -71,7 +68,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public int? PlayCount => null;
 
         /// <inheritdoc/>
-        public CultureInfo Language => CultureInfo.CreateSpecificCulture("TODO");
+        public CultureInfo Language { get; }
 
         /// <inheritdoc/>
         public ILyrics? Lyrics => null;
@@ -280,7 +277,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             return _artists;
         }
 
-        private IReadOnlyList<IImage> CreateImagesForRelease(IEnumerable<Release> releases)
+        private static IReadOnlyList<IImage> CreateImagesForRelease(IEnumerable<Release> releases)
         {
             var list = new List<IImage>();
 
