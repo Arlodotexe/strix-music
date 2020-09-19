@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
-using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Extensions;
+using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -20,6 +20,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         private readonly Track _track;
         private readonly MusicBrainzClient _musicBrainzClient;
         private readonly List<IArtist> _artists;
+        private readonly MusicBrainzArtistHelpersService _artistHelpersService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzTrack"/> class.
@@ -42,7 +43,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
             Language = CultureInfoExtensions.FromIso636_3(musicBrainzAlbum.Release.TextRepresentation.Language);
             Album = musicBrainzAlbum;
 
-            _musicBrainzClient = SourceCore.CoreConfig.Services.GetService<MusicBrainzClient>();
+            _musicBrainzClient = SourceCore.GetService<MusicBrainzClient>();
+            _artistHelpersService = SourceCore.GetService<MusicBrainzArtistHelpersService>();
         }
 
         /// <inheritdoc/>
@@ -271,7 +273,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var item in recording.Credits)
             {
-                _artists.Add(new MusicBrainzArtist(SourceCore, item.Artist));
+                _artists.Add(new MusicBrainzArtist(SourceCore, item.Artist)
+                {
+                    TotalTracksCount = await _artistHelpersService.GetTotalTracksCount(item.Artist),
+                });
             }
 
             return _artists;

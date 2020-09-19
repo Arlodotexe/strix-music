@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
-using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.MusicBrainz.Models;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz
@@ -34,7 +34,7 @@ namespace StrixMusic.Core.MusicBrainz
             Discoverables = new MusicBrainzDiscoverables(this);
             User = new MusicBrainzUser(this);
 
-            _musicBrainzClient = CoreConfig.Services.GetService<MusicBrainzClient>();
+            _musicBrainzClient = this.GetService<MusicBrainzClient>();
         }
 
         /// <inheritdoc/>

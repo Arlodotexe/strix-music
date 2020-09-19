@@ -47,6 +47,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// How long the playable item takes to complete playback.
         /// </summary>
+        /// <remarks>If not applicable, use <see cref="TimeSpan.Zero"/>.</remarks>
         TimeSpan Duration { get; }
 
         /// <summary>

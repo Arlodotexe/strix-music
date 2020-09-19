@@ -42,7 +42,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 Cache = new FileRequestCache(cacheService.RootFolder.Path),
             };
 
+            var musicBrainzArtistHelper = new MusicBrainzArtistHelpersService(musicBrainzClient);
+
             services.Add(new ServiceDescriptor(typeof(MusicBrainzClient), musicBrainzClient));
+            services.Add(new ServiceDescriptor(typeof(MusicBrainzArtistHelpersService), musicBrainzArtistHelper));
 
             return services.BuildServiceProvider();
         }
