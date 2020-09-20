@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace StrixMusic.Sdk.Interfaces
+﻿namespace StrixMusic.Sdk.Interfaces
 {
     /// <summary>
     /// Contains information about a user and their library.

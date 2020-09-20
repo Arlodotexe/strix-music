@@ -21,7 +21,6 @@ namespace StrixMusic.Core.Files
             InstanceId = instanceId;
 
             CoreConfig = new FileCoreConfig(this);
-            User = new FileUser(this);
         }
 
         /// <inheritdoc/>
@@ -37,7 +36,7 @@ namespace StrixMusic.Core.Files
         public CoreState CoreState => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public IReadOnlyList<IDevice> Devices => throw new NotImplementedException();
+        public ObservableCollection<IDevice> Devices => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public ILibrary Library => throw new NotImplementedException();

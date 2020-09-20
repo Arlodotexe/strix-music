@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using StrixMusic.Sdk.Events;
+using System.Collections.ObjectModel;
 
 namespace StrixMusic.Sdk.AbstractUI
 {
@@ -16,20 +16,15 @@ namespace StrixMusic.Sdk.AbstractUI
         protected AbstractDataList(string id)
             : base(id)
         {
-            Items = Array.Empty<AbstractUIMetadata>();
+            Items = new ObservableCollection<AbstractUIMetadata>();
         }
 
         /// <summary>
         /// The items in this collection.
         /// </summary>
-        public IEnumerable<AbstractUIMetadata> Items { get; protected set; }
+        public ObservableCollection<AbstractUIMetadata> Items { get; protected set; }
 
         /// <inheritdoc cref="AbstractDataListPreferredDisplayMode"/>
         public AbstractDataListPreferredDisplayMode PreferredDisplayMode { get; protected set; }
-
-        /// <summary>
-        /// Fires when the <see cref="Items"/> are changed.
-        /// </summary>
-        public abstract event EventHandler<CollectionChangedEventArgs<AbstractUIMetadata>>? ItemsChanged;
     }
 }

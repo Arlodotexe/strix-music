@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
@@ -8,7 +9,6 @@ using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
 
@@ -18,7 +18,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
     public class MusicBrainzAlbum : IAlbum
     {
         private readonly MusicBrainzClient _musicBrainzClient;
-        private readonly List<ITrack> _tracks;
         private readonly MusicBrainzArtistHelpersService _artistHelpersService;
 
         /// <summary>
@@ -42,7 +41,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             Release = release;
             Medium = medium;
-            _tracks = new List<ITrack>();
+            Tracks = new ObservableCollection<ITrack>();
             Images = CreateImagesForRelease();
 
             SourceCore = sourceCore;
@@ -82,7 +81,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public DateTime? DatePublished => CreateReleaseDate(Release.Date);
 
         /// <inheritdoc/>
-        public IReadOnlyList<IImage> Images { get; }
+        public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc/>
         public string? Description => Release.TextRepresentation?.Script;
@@ -91,10 +90,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public PlaybackState PlaybackState => PlaybackState.None;
 
         /// <inheritdoc/>
-        public TimeSpan Duration { get; }
+        public TimeSpan Duration { get; } = TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public IReadOnlyList<ITrack> Tracks => _tracks;
+        public ObservableCollection<ITrack> Tracks { get; }
 
         /// <inheritdoc/>
         public IPlayableCollectionGroup? RelatedItems => null;
@@ -109,9 +108,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeNameAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeImagesAsyncSupported => false;
-
-        /// <inheritdoc/>
         public bool IsChangeDatePublishedAsyncSupported => false;
 
         /// <inheritdoc/>
@@ -120,10 +116,35 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncSupported => false;
 
-        /// <summary>
-        /// Fires when <see cref="ITrackCollection.Tracks"/> changes.
-        /// </summary>
-        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+        /// <inheritdoc/>
+        public ObservableCollection<string>? Genres { get; } = new ObservableCollection<string>();
+
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new ObservableCollection<bool>();
+
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveTrackSupportedMap { get; } = new ObservableCollection<bool>();
+
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new ObservableCollection<bool>();
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddGenreSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddTrackSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddImageSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
@@ -141,9 +162,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<DateTime?>? DatePublishedChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
-
-        /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc/>
@@ -154,12 +172,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
         {
             throw new NotSupportedException();
         }
@@ -189,7 +201,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public async Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
+        public async IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset)
         {
             var releaseData = await _musicBrainzClient.Releases.GetAsync(Id, RelationshipQueries.Releases);
 
@@ -198,26 +210,32 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 TotalTracksCount = await _artistHelpersService.GetTotalTracksCount(Release.Credits[0].Artist),
             };
 
-            foreach (var recording in releaseData.Media.First(x => x.Position == Medium.Position).Tracks)
+            foreach (var recording in releaseData.Media.First(x => x.Position == Medium.Position).Tracks.GetRange(offset, limit))
             {
                 // Iterate through each physical medium for this release.
                 foreach (var medium in Release.Media)
                 {
                     // Iterate the tracks and find a matching ID for this recording
-                    foreach (var track in medium.Tracks.Where(track => track.Recording.Id == recording.Id))
+                    foreach (var trackData in medium.Tracks.Where(track => track.Recording.Id == recording.Id))
                     {
                         var album = new MusicBrainzAlbum(SourceCore, Release, medium, artist);
+                        var track = new MusicBrainzTrack(SourceCore, trackData, album);
 
-                        _tracks.Add(new MusicBrainzTrack(SourceCore, track, album));
+                        yield return track;
                     }
                 }
             }
+        }
 
-            var addedItems = _tracks.Select((x, index) => new CollectionChangedEventArgsItem<ITrack>(x, index));
-
-            TracksChanged?.Invoke(this, new CollectionChangedEventArgs<ITrack>(addedItems.ToArray(), null));
-
-            return _tracks;
+        /// <inheritdoc/>
+        public async Task PopulateMoreTracksAsync(int limit)
+        {
+            var offset = Tracks.Count;
+            await foreach (var item in GetTracksAsync(limit, offset))
+            {
+                IsRemoveTrackSupportedMap.Add(false);
+                Tracks.Add(item);
+            }
         }
 
         private DateTime CreateReleaseDate(string musicBrainzDate)
@@ -240,16 +258,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
             return date;
         }
 
-        private IReadOnlyList<IImage> CreateImagesForRelease()
+        private ObservableCollection<IImage> CreateImagesForRelease()
         {
-            var list = new List<IImage>();
+            var returnData = new ObservableCollection<IImage>();
 
             foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
             {
-                list.Add(new MusicBrainzImage(Release.Id, item));
+                returnData.Add(new MusicBrainzImage(Release.Id, item));
             }
 
-            return list;
+            return returnData;
         }
     }
 }

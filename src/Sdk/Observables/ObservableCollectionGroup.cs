@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
@@ -16,7 +13,7 @@ namespace StrixMusic.Sdk.Observables
     /// <summary>
     /// A bindable wrapper of the <see cref="IPlayableCollectionGroup"/>.
     /// </summary>
-    public class ObservableCollectionGroup : ObservableObject
+    public class ObservableCollectionGroup : ObservableObject, IPlayableCollectionGroup
     {
         private readonly IPlayableCollectionGroup _collectionGroupBase;
 
@@ -33,27 +30,27 @@ namespace StrixMusic.Sdk.Observables
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
-            ChangeImagesAsyncCommand = new AsyncRelayCommand<IReadOnlyList<IImage>>(ChangeImagesAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
-            Tracks = new ObservableCollection<ObservableTrack>(_collectionGroupBase.Tracks.Select(x => new ObservableTrack(x)));
-            Playlists = new ObservableCollection<ObservablePlaylist>(_collectionGroupBase.Playlists.Select(x => new ObservablePlaylist(x)));
-            Albums = new ObservableCollection<ObservableAlbum>(_collectionGroupBase.Albums.Select(x => new ObservableAlbum(x)));
-            Artists = new ObservableCollection<ObservableArtist>(_collectionGroupBase.Artists.Select(x => new ObservableArtist(x)));
-            Children = new ObservableCollection<ObservableCollectionGroup>(_collectionGroupBase.Children.Select(x => new ObservableCollectionGroup(x)));
+            PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
+            PopulateMorePlaylistsCommand = new AsyncRelayCommand<int>(PopulateMorePlaylistsAsync);
+            PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
+            PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
+            PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
+
+            Tracks = new ObservableCollection<ITrack>(_collectionGroupBase.Tracks.Select(x => new ObservableTrack(x)));
+            Playlists = new ObservableCollection<IPlaylist>(_collectionGroupBase.Playlists.Select(x => new ObservablePlaylist(x)));
+            Albums = new ObservableCollection<IAlbum>(_collectionGroupBase.Albums.Select(x => new ObservableAlbum(x)));
+            Artists = new ObservableCollection<IArtist>(_collectionGroupBase.Artists.Select(x => new ObservableArtist(x)));
+            Children = new ObservableCollection<IPlayableCollectionGroup>(_collectionGroupBase.Children.Select(x => new ObservableCollectionGroup(x)));
 
             AttachEvents();
         }
 
         private void AttachEvents()
         {
-            _collectionGroupBase.AlbumsChanged += CollectionGroupBase_AlbumsChanged;
-            _collectionGroupBase.ArtistsChanged += CollectionGroupBase_ArtistsChanged;
-            _collectionGroupBase.ChildrenChanged += CollectionGroupBase_ChildrenChanged;
             _collectionGroupBase.PlaybackStateChanged += CollectionGroupBase_PlaybackStateChanged;
-            _collectionGroupBase.PlaylistsChanged += CollectionGroupBase_PlaylistsChanged;
-            _collectionGroupBase.TracksChanged += CollectionGroupBase_TracksChanged;
             _collectionGroupBase.DescriptionChanged += CollectionGroupBase_DescriptionChanged;
             _collectionGroupBase.NameChanged += CollectionGroupBase_NameChanged;
             _collectionGroupBase.UrlChanged += CollectionGroupBase_UrlChanged;
@@ -61,143 +58,208 @@ namespace StrixMusic.Sdk.Observables
 
         private void DetachEvents()
         {
-            _collectionGroupBase.AlbumsChanged -= CollectionGroupBase_AlbumsChanged;
-            _collectionGroupBase.ArtistsChanged -= CollectionGroupBase_ArtistsChanged;
-            _collectionGroupBase.ChildrenChanged -= CollectionGroupBase_ChildrenChanged;
             _collectionGroupBase.PlaybackStateChanged -= CollectionGroupBase_PlaybackStateChanged;
-            _collectionGroupBase.PlaylistsChanged -= CollectionGroupBase_PlaylistsChanged;
-            _collectionGroupBase.TracksChanged -= CollectionGroupBase_TracksChanged;
             _collectionGroupBase.DescriptionChanged -= CollectionGroupBase_DescriptionChanged;
             _collectionGroupBase.NameChanged -= CollectionGroupBase_NameChanged;
             _collectionGroupBase.UrlChanged -= CollectionGroupBase_UrlChanged;
         }
 
-        private void CollectionGroupBase_UrlChanged(object sender, Uri? e)
+        /// <inheritdoc />
+        public string Id => _collectionGroupBase.Id;
+
+        /// <inheritdoc />
+        public ICore SourceCore { get; }
+
+        /// <inheritdoc />
+        public string Name
         {
-            Url = e;
+            get => _collectionGroupBase.Name;
+            private set => SetProperty(() => _collectionGroupBase.Name, value);
         }
 
-        private void CollectionGroupBase_NameChanged(object sender, string e)
+        /// <inheritdoc />
+        public TimeSpan Duration => _collectionGroupBase.Duration;
+
+        /// <inheritdoc />
+        public ObservableCollection<IImage> Images => _collectionGroupBase.Images;
+
+        /// <inheritdoc />
+        public Uri? Url
         {
-            Name = e;
+            get => _collectionGroupBase.Url;
+            private set => SetProperty(() => _collectionGroupBase.Url, value);
         }
 
-        private void CollectionGroupBase_DescriptionChanged(object sender, string? e)
+        /// <inheritdoc />
+        public string? Description
         {
-            Description = e;
+            get => _collectionGroupBase.Description;
+            private set => SetProperty(() => _collectionGroupBase.Description, value);
         }
 
-        private void CollectionGroupBase_TracksChanged(object sender, CollectionChangedEventArgs<ITrack> e)
+        /// <inheritdoc />
+        public PlaybackState PlaybackState
         {
-            foreach (var item in e.AddedItems)
-            {
-                Tracks.Insert(item.Index, new ObservableTrack(item.Data));
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                Tracks.RemoveAt(item.Index);
-            }
+            get => _collectionGroupBase.PlaybackState;
+            private set => SetProperty(() => _collectionGroupBase.PlaybackState, value);
         }
 
-        private void CollectionGroupBase_PlaylistsChanged(object sender, CollectionChangedEventArgs<IPlaylist> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                Playlists.Insert(item.Index, new ObservablePlaylist(item.Data));
-            }
+        /// <inheritdoc />
+        public ObservableCollection<IPlaylist> Playlists { get; }
 
-            foreach (var item in e.RemovedItems)
-            {
-                Playlists.RemoveAt(item.Index);
-            }
+        /// <inheritdoc />
+        public ObservableCollection<ITrack> Tracks { get; }
+
+        /// <inheritdoc />
+        public ObservableCollection<IAlbum> Albums { get; }
+
+        /// <inheritdoc />
+        public ObservableCollection<IArtist> Artists { get; }
+
+        /// <inheritdoc />
+        public ObservableCollection<IPlayableCollectionGroup> Children { get; }
+
+        /// <inheritdoc />
+        public int TotalPlaylistCount => _collectionGroupBase.TotalPlaylistCount;
+
+        /// <inheritdoc />
+        public int TotalTracksCount => _collectionGroupBase.TotalTracksCount;
+
+        /// <inheritdoc />
+        public int TotalAlbumsCount => _collectionGroupBase.TotalAlbumsCount;
+
+        /// <inheritdoc />
+        public int TotalArtistsCount => _collectionGroupBase.TotalArtistsCount;
+
+        /// <inheritdoc />
+        public int TotalChildrenCount => _collectionGroupBase.TotalChildrenCount;
+
+        /// <inheritdoc />
+        public bool IsPlayAsyncSupported => _collectionGroupBase.IsPlayAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsPauseAsyncSupported => _collectionGroupBase.IsPauseAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsChangeNameAsyncSupported => _collectionGroupBase.IsChangeNameAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsChangeDescriptionAsyncSupported => _collectionGroupBase.IsChangeDescriptionAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsChangeDurationAsyncSupported => _collectionGroupBase.IsChangeDurationAsyncSupported;
+
+        /// <inheritdoc />
+        public ObservableCollection<bool> IsRemoveImageSupportedMap => _collectionGroupBase.IsRemoveImageSupportedMap;
+
+        /// <inheritdoc />
+        public ObservableCollection<bool> IsRemovePlaylistSupportedMap => _collectionGroupBase.IsRemovePlaylistSupportedMap;
+
+        /// <inheritdoc />
+        public ObservableCollection<bool> IsRemoveTrackSupportedMap => _collectionGroupBase.IsRemoveTrackSupportedMap;
+
+        /// <inheritdoc />
+        public ObservableCollection<bool> IsRemoveAlbumSupportedMap => _collectionGroupBase.IsRemoveAlbumSupportedMap;
+
+        /// <inheritdoc />
+        public ObservableCollection<bool> IsRemoveArtistSupportedMap => _collectionGroupBase.IsRemoveArtistSupportedMap;
+
+        /// <inheritdoc />
+        public ObservableCollection<bool> IsRemoveChildSupportedMap => _collectionGroupBase.IsRemoveChildSupportedMap;
+
+        /// <inheritdoc />
+        public Task<bool> IsAddImageSupported(int index) => _collectionGroupBase.IsAddImageSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsAddPlaylistSupported(int index) => _collectionGroupBase.IsAddPlaylistSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsAddTrackSupported(int index) => _collectionGroupBase.IsAddTrackSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsAddAlbumSupported(int index) => _collectionGroupBase.IsAddAlbumSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsAddArtistSupported(int index) => _collectionGroupBase.IsAddArtistSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsAddChildSupported(int index) => _collectionGroupBase.IsAddChildSupported(index);
+
+        /// <inheritdoc />
+        public Task PauseAsync() => _collectionGroupBase.PauseAsync();
+
+        /// <inheritdoc />
+        public Task PlayAsync() => _collectionGroupBase.PlayAsync();
+
+        /// <inheritdoc />
+        public Task ChangeNameAsync(string name) => _collectionGroupBase.ChangeNameAsync(name);
+
+        /// <inheritdoc />
+        public Task ChangeDescriptionAsync(string? description) => _collectionGroupBase.ChangeDescriptionAsync(description);
+
+        /// <inheritdoc />
+        public Task ChangeDurationAsync(TimeSpan duration) => _collectionGroupBase.ChangeDurationAsync(duration);
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset) => _collectionGroupBase.GetChildrenAsync(limit, offset);
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<IPlaylist> GetPlaylistsAsync(int limit, int offset = 0) => _collectionGroupBase.GetPlaylistsAsync(limit, offset);
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0) => _collectionGroupBase.GetTracksAsync(limit, offset);
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset = 0) => _collectionGroupBase.GetAlbumsAsync(limit, offset);
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0) => _collectionGroupBase.GetArtistsAsync(limit, offset);
+
+        /// <inheritdoc />
+        public Task PopulateMorePlaylistsAsync(int limit) => _collectionGroupBase.PopulateMorePlaylistsAsync(limit);
+
+        /// <inheritdoc />
+        public Task PopulateMoreTracksAsync(int limit) => _collectionGroupBase.PopulateMoreTracksAsync(limit);
+
+        /// <inheritdoc />
+        public Task PopulateMoreAlbumsAsync(int limit) => _collectionGroupBase.PopulateMoreAlbumsAsync(limit);
+
+        /// <inheritdoc />
+        public Task PopulateMoreArtistsAsync(int limit) => _collectionGroupBase.PopulateMoreArtistsAsync(limit);
+
+        /// <inheritdoc />
+        public Task PopulateMoreChildrenAsync(int limit) => _collectionGroupBase.PopulateMoreChildrenAsync(limit);
+
+        private void CollectionGroupBase_UrlChanged(object sender, Uri? e) => Url = e;
+
+        private void CollectionGroupBase_NameChanged(object sender, string e) => Name = e;
+
+        private void CollectionGroupBase_DescriptionChanged(object sender, string? e) => Description = e;
+
+        private void CollectionGroupBase_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+
+        /// <inheritdoc />
+        public event EventHandler<string> NameChanged
+        {
+            add => _collectionGroupBase.NameChanged += value;
+            remove => _collectionGroupBase.NameChanged -= value;
         }
 
-        private void CollectionGroupBase_PlaybackStateChanged(object sender, PlaybackState e)
+        /// <inheritdoc />
+        public event EventHandler<string?> DescriptionChanged
         {
-            PlaybackState = e;
+            add => _collectionGroupBase.DescriptionChanged += value;
+            remove => _collectionGroupBase.DescriptionChanged -= value;
         }
 
-        private void CollectionGroupBase_ChildrenChanged(object sender, CollectionChangedEventArgs<IPlayableCollectionGroup> e)
+        /// <inheritdoc />
+        public event EventHandler<Uri?> UrlChanged
         {
-            foreach (var item in e.AddedItems)
-            {
-                Children.Insert(item.Index, new ObservableCollectionGroup(item.Data));
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                Children.RemoveAt(item.Index);
-            }
+            add => _collectionGroupBase.UrlChanged += value;
+            remove => _collectionGroupBase.UrlChanged -= value;
         }
 
-        private void CollectionGroupBase_ArtistsChanged(object sender, CollectionChangedEventArgs<IArtist> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                Artists.Insert(item.Index, new ObservableArtist(item.Data));
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                Artists.RemoveAt(item.Index);
-            }
-        }
-
-        private void CollectionGroupBase_AlbumsChanged(object sender, CollectionChangedEventArgs<IAlbum> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                Albums.Insert(item.Index, new ObservableAlbum(item.Data));
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                Albums.RemoveAt(item.Index);
-            }
-        }
-
-        /// <inheritdoc cref="IPlayableCollectionGroup.ChildrenChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> ChildrenChanged
-        {
-            add => _collectionGroupBase.ChildrenChanged += value;
-
-            remove => _collectionGroupBase.ChildrenChanged -= value;
-        }
-
-        /// <inheritdoc cref="IPlaylistCollection.PlaylistsChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged
-        {
-            add => _collectionGroupBase.PlaylistsChanged += value;
-
-            remove => _collectionGroupBase.PlaylistsChanged -= value;
-        }
-
-        /// <inheritdoc cref="ITrackCollection.TracksChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
-        {
-            add => _collectionGroupBase.TracksChanged += value;
-
-            remove => _collectionGroupBase.TracksChanged -= value;
-        }
-
-        /// <inheritdoc cref="IAlbumCollection.AlbumsChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged
-        {
-            add => _collectionGroupBase.AlbumsChanged += value;
-
-            remove => _collectionGroupBase.AlbumsChanged -= value;
-        }
-
-        /// <inheritdoc cref="IArtistCollection.ArtistsChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged
-        {
-            add => _collectionGroupBase.ArtistsChanged += value;
-
-            remove => _collectionGroupBase.ArtistsChanged -= value;
-        }
-
-        /// <inheritdoc cref="IPlayable.PlaybackStateChanged"/>
+        /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => _collectionGroupBase.PlaybackStateChanged += value;
@@ -205,113 +267,13 @@ namespace StrixMusic.Sdk.Observables
             remove => _collectionGroupBase.PlaybackStateChanged -= value;
         }
 
-        /// <inheritdoc cref="IPlayable.DurationChanged"/>
+        /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged
         {
             add => _collectionGroupBase.DurationChanged += value;
 
             remove => _collectionGroupBase.DurationChanged -= value;
         }
-
-        /// <inheritdoc cref="IPlayableCollectionGroup.Children"/>
-        public ObservableCollection<ObservableCollectionGroup> Children { get; }
-
-        /// <inheritdoc cref="IPlayable.Id"/>
-        public string Id => _collectionGroupBase.Id;
-
-        /// <inheritdoc cref="IPlayable.SourceCore"/>
-        public ObservableCore SourceCore { get; }
-
-        /// <inheritdoc cref="IPlayable.Name"/>
-        public string Name
-        {
-            get => _collectionGroupBase.Name;
-            private set => SetProperty(() => _collectionGroupBase.Name, value);
-        }
-
-        /// <inheritdoc cref="IPlayable.Images"/>
-        public IReadOnlyList<IImage> Images => _collectionGroupBase.Images;
-
-        /// <inheritdoc cref="IPlayable.Url"/>
-        public Uri? Url
-        {
-            get => _collectionGroupBase.Url;
-            private set => SetProperty(() => _collectionGroupBase.Url, value);
-        }
-
-        /// <inheritdoc cref="IPlayable.Description"/>
-        public string? Description
-        {
-            get => _collectionGroupBase.Description;
-            private set => SetProperty(() => _collectionGroupBase.Description, value);
-        }
-
-        /// <inheritdoc cref="IPlayable.PlaybackState"/>
-        public PlaybackState PlaybackState
-        {
-            get => _collectionGroupBase.PlaybackState;
-            private set => SetProperty(() => _collectionGroupBase.PlaybackState, value);
-        }
-
-        /// <inheritdoc cref="IPlayableCollectionGroup.TotalChildrenCount"/>
-        public int TotalChildrenCount => _collectionGroupBase.TotalChildrenCount;
-
-        /// <inheritdoc cref="IPlaylistCollection.Playlists"/>
-        public ObservableCollection<ObservablePlaylist> Playlists { get; }
-
-        /// <inheritdoc cref="IPlaylistCollection.TotalPlaylistCount"/>
-        public int TotalPlaylistCount => _collectionGroupBase.TotalPlaylistCount;
-
-        /// <inheritdoc cref="ITrackCollection.Tracks"/>
-        public ObservableCollection<ObservableTrack> Tracks { get; }
-
-        /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
-        public int TotalTracksCount => _collectionGroupBase.TotalTracksCount;
-
-        /// <inheritdoc cref="IAlbumCollection.Albums"/>
-        public ObservableCollection<ObservableAlbum> Albums { get; }
-
-        /// <inheritdoc cref="IAlbumCollection.TotalAlbumsCount"/>
-        public int TotalAlbumsCount => _collectionGroupBase.TotalAlbumsCount;
-
-        /// <inheritdoc cref="IArtistCollection.Artists"/>
-        public ObservableCollection<ObservableArtist> Artists { get; }
-
-        /// <inheritdoc cref="IArtistCollection.TotalArtistsCount"/>
-        public int TotalArtistsCount => _collectionGroupBase.TotalArtistsCount;
-
-        /// <inheritdoc cref="IPlayable.PauseAsync"/>
-        public Task PauseAsync() => _collectionGroupBase.PauseAsync();
-
-        /// <inheritdoc cref="IPlayable.PlayAsync"/>
-        public Task PlayAsync() => _collectionGroupBase.PlayAsync();
-
-        /// <inheritdoc cref="IPlayable.ChangeNameAsync"/>
-        public Task ChangeNameAsync(string name) => _collectionGroupBase.ChangeNameAsync(name);
-
-        /// <inheritdoc cref="IPlayable.ChangeImagesAsync"/>
-        public Task ChangeImagesAsync(IReadOnlyList<IImage> images) => _collectionGroupBase.ChangeImagesAsync(images);
-
-        /// <inheritdoc cref="IPlayable.ChangeDescriptionAsync"/>
-        public Task ChangeDescriptionAsync(string? description) => _collectionGroupBase.ChangeDescriptionAsync(description);
-
-        /// <inheritdoc cref="IPlayable.ChangeDurationAsync"/>
-        public Task ChangeDurationAsync(TimeSpan duration) => _collectionGroupBase.ChangeDurationAsync(duration);
-
-        /// <inheritdoc cref="IPlayableCollectionGroup.PopulateChildrenAsync(int, int)"/>
-        public Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset) => _collectionGroupBase.PopulateChildrenAsync(limit, offset);
-
-        /// <inheritdoc cref="IPlaylistCollection.PopulatePlaylistsAsync(int, int)"/>
-        public Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0) => _collectionGroupBase.PopulatePlaylistsAsync(limit, offset);
-
-        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
-        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0) => _collectionGroupBase.PopulateTracksAsync(limit, offset);
-
-        /// <inheritdoc cref="IAlbumCollection.PopulateAlbumsAsync(int, int)"/>
-        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0) => _collectionGroupBase.PopulateAlbumsAsync(limit, offset);
-
-        /// <inheritdoc cref="IArtistCollection.PopulateArtistsAsync(int, int)"/>
-        public Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0) => _collectionGroupBase.PopulateArtistsAsync(limit, offset);
 
         /// <summary>
         /// Attempts to play the album.
@@ -329,11 +291,6 @@ namespace StrixMusic.Sdk.Observables
         public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
 
         /// <summary>
-        /// Attempts to change the images for the album, if supported.
-        /// </summary>
-        public IAsyncRelayCommand ChangeImagesAsyncCommand { get; }
-
-        /// <summary>
         /// Attempts to change the description of the album, if supported.
         /// </summary>
         public IAsyncRelayCommand ChangeDescriptionAsyncCommand { get; }
@@ -342,5 +299,30 @@ namespace StrixMusic.Sdk.Observables
         /// Attempts to change the duration of the album, if supported.
         /// </summary>
         public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
+
+        /// <summary>
+        /// <inheritdoc cref="PopulateMoreTracksAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
+
+        /// <summary>
+        /// <inheritdoc cref="PopulateMorePlaylistsAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }
+
+        /// <summary>
+        /// <inheritdoc cref="PopulateMoreAlbumsAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }
+
+        /// <summary>
+        /// <inheritdoc cref="PopulateMoreArtistsAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }
+
+        /// <summary>
+        /// <inheritdoc cref="PopulateMoreChildrenAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand<int> PopulateMoreChildrenCommand { get; }
     }
 }

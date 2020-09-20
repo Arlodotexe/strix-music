@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Events;
 
 namespace StrixMusic.Sdk.Interfaces
 {
     /// <summary>
-    /// A track collection.
+    /// A read only track collection.
     /// </summary>
     public interface ITrackCollection : IPlayableCollectionBase
     {
         /// <summary>
         /// The tracks for this artists. If unknown, returns the most listened to tracks for this user. Can be empty.
         /// </summary>
-        IReadOnlyList<ITrack> Tracks { get; }
+        ObservableCollection<ITrack> Tracks { get; }
 
         /// <summary>
         /// The total number of available <see cref="Tracks"/>.
@@ -21,14 +20,27 @@ namespace StrixMusic.Sdk.Interfaces
         int TotalTracksCount { get; }
 
         /// <summary>
-        /// Populates a set of <see cref="ITrack"/> into <see cref="Tracks"/>.
+        /// Checks if the backend supports adding an <see cref="ITrack"/> at a specific position in <see cref="ITrackCollection.Tracks"/>.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="ITrack"/> can be added.</returns>
+        Task<bool> IsAddTrackSupported(int index);
 
         /// <summary>
-        /// Fires when <see cref="Tracks"/> changes.
+        /// A collection that maps (by index) to the items in <see cref="ITrackCollection.Tracks"/>. The bool at each index tells you if removing the <see cref="ITrack"/> is supported.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+        ObservableCollection<bool> IsRemoveTrackSupportedMap { get; }
+
+        /// <summary>
+        /// Returns items at a specific index and offset.
+        /// </summary>
+        /// <remarks>Does not affect <see cref="Tracks"/>.</remarks>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset);
+
+        /// <summary>
+        /// Populates more items into <see cref="Tracks"/>.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PopulateMoreTracksAsync(int limit);
     }
 }

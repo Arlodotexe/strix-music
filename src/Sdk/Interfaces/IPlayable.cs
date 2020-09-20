@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 
 namespace StrixMusic.Sdk.Interfaces
 {
     /// <summary>
     /// Represents an item that can be played.
     /// </summary>
-    public interface IPlayable
+    public interface IPlayable : IImageCollection
     {
         /// <summary>
         /// The source core which created the parent.
@@ -30,11 +28,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// Name of the playable item.
         /// </summary>
         string Name { get; }
-
-        /// <summary>
-        /// Cover images for the item.
-        /// </summary>
-        IReadOnlyList<IImage> Images { get; }
 
         /// <summary>
         /// Provides comments about the item.
@@ -66,11 +59,6 @@ namespace StrixMusic.Sdk.Interfaces
         bool IsChangeNameAsyncSupported { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeImagesAsync(IReadOnlyList{IImage})"/> is supported.
-        /// </summary>
-        bool IsChangeImagesAsyncSupported { get; }
-
-        /// <summary>
         /// If true, <see cref="ChangeDescriptionAsync(string)"/> is supported.
         /// </summary>
         bool IsChangeDescriptionAsyncSupported { get; }
@@ -98,13 +86,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// <param name="name">The new name to use.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ChangeNameAsync(string name);
-
-        /// <summary>
-        /// Changes the <see cref="Images"/> for this playable item.
-        /// </summary>
-        /// <param name="images">The new images for this item.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeImagesAsync(IReadOnlyList<IImage> images);
 
         /// <summary>
         /// Changes the <see cref="Description"/> for this item.
@@ -139,11 +120,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// Fires when <see cref="Url"/> changes.
         /// </summary>
         event EventHandler<Uri?> UrlChanged;
-
-        /// <summary>
-        /// Fires when <see cref="Images"/> changes;
-        /// </summary>
-        event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
 
         /// <summary>
         /// Fires when <see cref="Duration"/> changes;

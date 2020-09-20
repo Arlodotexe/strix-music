@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Events;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -13,7 +12,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// The playlists in the library.
         /// </summary>
-        IReadOnlyList<IPlaylist> Playlists { get; }
+        ObservableCollection<IPlaylist> Playlists { get; }
 
         /// <summary>
         /// The total number of available <see cref="Playlists"/>.
@@ -21,14 +20,27 @@ namespace StrixMusic.Sdk.Interfaces
         int TotalPlaylistCount { get; }
 
         /// <summary>
-        /// Populates the <see cref="IPlaylist"/> in the collection.
+        /// Checks if the backend supports adding an <see cref="IPlaylist"/> at a specific position in <see cref="Playlists"/>.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IPlaylist"/> can be added.</returns>
+        Task<bool> IsAddPlaylistSupported(int index);
 
         /// <summary>
-        /// Fires when <see cref="Playlists"/> changes.
+        /// A collection that maps (by index) to the items in <see cref="Playlists"/>. The bool at each index tells you if removing the <see cref="IPlaylist"/> is supported.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
+        ObservableCollection<bool> IsRemovePlaylistSupportedMap { get; }
+
+        /// <summary>
+        /// Returns items at a specific index and offset.
+        /// </summary>
+        /// <remarks>Does not affect <see cref="Playlists"/>.</remarks>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        IAsyncEnumerable<IPlaylist> GetPlaylistsAsync(int limit, int offset);
+
+        /// <summary>
+        /// Populates more items into <see cref="Playlists"/>.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PopulateMorePlaylistsAsync(int limit);
     }
 }

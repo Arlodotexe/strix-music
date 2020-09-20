@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
@@ -15,9 +12,11 @@ namespace StrixMusic.Sdk.Observables
     /// <summary>
     /// Contains information about a <see cref="IImage"/>
     /// </summary>
-    public class ObservableDevice : ObservableObject
+    public class ObservableDevice : ObservableObject, IDevice
     {
         private readonly IDevice _device;
+
+        private ITrack? _nowPlaying;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableDevice"/> class.
@@ -32,7 +31,7 @@ namespace StrixMusic.Sdk.Observables
 
             SourceCore = MainViewModel.GetLoadedCore(_device.SourceCore);
 
-            PlaybackQueue = new ObservableCollection<ObservableTrack>(_device.PlaybackQueue.Select(x => new ObservableTrack(x)));
+            PlaybackQueue = new ObservableCollection<ITrack>(_device.PlaybackQueue.Select(x => new ObservableTrack(x)));
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
@@ -59,7 +58,6 @@ namespace StrixMusic.Sdk.Observables
             _device.ShuffleStateChanged += Device_ShuffleStateChanged;
             _device.PlaybackStateChanged += Device_StateChanged;
             _device.VolumePercentChanged += Device_VolumePercentChanged;
-            _device.PlaybackQueueChanged += Device_PlaybackQueueChanged;
         }
 
         private void DetachEvents()
@@ -73,20 +71,6 @@ namespace StrixMusic.Sdk.Observables
             _device.ShuffleStateChanged -= Device_ShuffleStateChanged;
             _device.PlaybackStateChanged -= Device_StateChanged;
             _device.VolumePercentChanged -= Device_VolumePercentChanged;
-            _device.PlaybackQueueChanged -= Device_PlaybackQueueChanged;
-        }
-
-        private void Device_PlaybackQueueChanged(object sender, CollectionChangedEventArgs<ITrack> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                PlaybackQueue.Insert(item.Index, new ObservableTrack(item.Data));
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                PlaybackQueue.RemoveAt(item.Index);
-            }
         }
 
         private void Device_VolumePercentChanged(object sender, double e)
@@ -94,127 +78,128 @@ namespace StrixMusic.Sdk.Observables
             VolumePercent = e;
         }
 
-        private void Device_StateChanged(object sender, PlaybackState e)
-        {
-            PlaybackState = e;
-        }
+        private void Device_StateChanged(object sender, PlaybackState e) => PlaybackState = e;
 
-        private void Device_ShuffleStateChanged(object sender, bool e)
-        {
-            ShuffleState = e;
-        }
+        private void Device_ShuffleStateChanged(object sender, bool e) => ShuffleState = e;
 
-        private void Device_RepeatStateChanged(object sender, RepeatState e)
-        {
-            RepeatState = e;
-        }
+        private void Device_RepeatStateChanged(object sender, RepeatState e) => RepeatState = e;
 
-        private void Device_PositionChanged(object sender, TimeSpan e)
-        {
-            Position = e;
-        }
+        private void Device_PositionChanged(object sender, TimeSpan e) => Position = e;
 
-        private void Device_PlaybackSpeedChanged(object sender, double e)
-        {
-            PlaybackSpeed = e;
-        }
+        private void Device_PlaybackSpeedChanged(object sender, double e) => PlaybackSpeed = e;
 
-        private void Device_PlaybackContextChanged(object sender, IPlayableCollectionBase e)
-        {
-            PlaybackContext = e;
-        }
+        private void Device_PlaybackContextChanged(object sender, IPlayableCollectionBase e) => PlaybackContext = e;
 
-        private void Device_NowPlayingChanged(object sender, ITrack e)
-        {
-            NowPlaying = new ObservableTrack(e);
-        }
+        private void Device_NowPlayingChanged(object sender, ITrack e) => NowPlaying = new ObservableTrack(e);
 
-        private void Device_IsActiveChanged(object sender, bool e)
-        {
-            IsActive = e;
-        }
+        private void Device_IsActiveChanged(object sender, bool e) => IsActive = e;
 
-        /// <inheritdoc cref="IDevice.SourceCore"/>
-        public ObservableCore SourceCore { get; }
+        /// <inheritdoc />
+        public ICore SourceCore { get; }
 
-        /// <inheritdoc cref="IDevice.Id"/>
+        /// <inheritdoc />
         public string Id => _device.Id;
 
-        /// <inheritdoc cref="IDevice.Name"/>
+        /// <inheritdoc />
         public string Name => _device.Name;
 
-        /// <inheritdoc cref="IDevice.IsActive"/>
+        /// <inheritdoc />
+        public DeviceType DeviceType => _device.DeviceType;
+
+        /// <inheritdoc />
+        public ObservableCollection<ITrack> PlaybackQueue { get; }
+
+        /// <inheritdoc />
         public bool IsActive
         {
             get => _device.IsActive;
             private set => SetProperty(() => _device.IsActive, value);
         }
 
-        /// <inheritdoc cref="IDevice.PlaybackContext"/>
+        /// <inheritdoc />
         public IPlayable PlaybackContext
         {
             get => _device.PlaybackContext;
             private set => SetProperty(() => _device.PlaybackContext, value);
         }
 
-        /// <inheritdoc cref="IDevice.PlaybackQueue"/>
-        public ObservableCollection<ObservableTrack> PlaybackQueue { get; }
-
-        private ObservableTrack? _nowPlaying;
-
-        /// <inheritdoc cref="IDevice.NowPlaying"/>
-        public ObservableTrack? NowPlaying
+        /// <inheritdoc />
+        public ITrack? NowPlaying
         {
             get => _nowPlaying;
             private set => SetProperty(ref _nowPlaying, value);
         }
 
-        /// <inheritdoc cref="IDevice.Position"/>
+        /// <inheritdoc />
         public TimeSpan Position
         {
             get => _device.Position;
             private set => SetProperty(() => _device.Position, value);
         }
 
-        /// <inheritdoc cref="IDevice.PlaybackState"/>
+        /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => _device.PlaybackState;
             private set => SetProperty(() => _device.PlaybackState, value);
         }
 
-        /// <inheritdoc cref="IDevice.ShuffleState"/>
+        /// <inheritdoc />
         public bool ShuffleState
         {
             get => _device.ShuffleState;
             private set => SetProperty(() => _device.ShuffleState, value);
         }
 
-        /// <inheritdoc cref="IDevice.RepeatState"/>
+        /// <inheritdoc />
         public RepeatState RepeatState
         {
             get => _device.RepeatState;
             private set => SetProperty(() => _device.RepeatState, value);
         }
 
-        /// <inheritdoc cref="IDevice.SourceCore"/>
+        /// <inheritdoc />
         public double VolumePercent
         {
             get => _device.VolumePercent;
             private set => SetProperty(() => _device.VolumePercent, value);
         }
 
-        /// <inheritdoc cref="IDevice.DeviceType"/>
-        public DeviceType DeviceType => _device.DeviceType;
-
-        /// <inheritdoc cref="IDevice.PlaybackSpeed"/>
-        public double? PlaybackSpeed
+        /// <inheritdoc />
+        public double PlaybackSpeed
         {
             get => _device.PlaybackSpeed;
             private set => SetProperty(() => _device.PlaybackSpeed, value);
         }
 
-        /// <inheritdoc cref="IDevice.IsActiveChanged"/>
+        /// <inheritdoc />
+        public bool IsShuffleStateChangedSupported => _device.IsShuffleStateChangedSupported;
+
+        /// <inheritdoc />
+        public bool IsRepeatStateChangedSupported => _device.IsRepeatStateChangedSupported;
+
+        /// <inheritdoc />
+        public bool IsChangeVolumeAsyncSupported => _device.IsChangeVolumeAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsChangePlaybackSpeedSupported => _device.IsChangePlaybackSpeedSupported;
+
+        /// <inheritdoc />
+        public bool IsResumeAsyncSupported => _device.IsResumeAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsPauseAsyncSupported => _device.IsPauseAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsNextAsyncSupported => _device.IsNextAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsPreviousAsyncSupported => _device.IsPreviousAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsSeekAsyncSupported => _device.IsSeekAsyncSupported;
+
+        /// <inheritdoc />
         public event EventHandler<bool>? IsActiveChanged
         {
             add => _device.IsActiveChanged += value;
@@ -222,7 +207,7 @@ namespace StrixMusic.Sdk.Observables
             remove => _device.IsActiveChanged -= value;
         }
 
-        /// <inheritdoc cref="IDevice.PlaybackContextChanged"/>
+        /// <inheritdoc />
         public event EventHandler<IPlayableCollectionBase> PlaybackContextChanged
         {
             add => _device.PlaybackContextChanged += value;
@@ -230,7 +215,7 @@ namespace StrixMusic.Sdk.Observables
             remove => _device.PlaybackContextChanged -= value;
         }
 
-        /// <inheritdoc cref="IDevice.NowPlayingChanged"/>
+        /// <inheritdoc />
         public event EventHandler<ITrack> NowPlayingChanged
         {
             add => _device.NowPlayingChanged += value;
@@ -238,7 +223,7 @@ namespace StrixMusic.Sdk.Observables
             remove => _device.NowPlayingChanged -= value;
         }
 
-        /// <inheritdoc cref="IDevice.PositionChanged"/>
+        /// <inheritdoc />
         public event EventHandler<TimeSpan> PositionChanged
         {
             add => _device.PositionChanged += value;
@@ -246,7 +231,7 @@ namespace StrixMusic.Sdk.Observables
             remove => _device.PositionChanged -= value;
         }
 
-        /// <inheritdoc cref="IDevice.PlaybackStateChanged"/>
+        /// <inheritdoc />
         public event EventHandler<PlaybackState> PlaybackStateChanged
         {
             add => _device.PlaybackStateChanged += value;
@@ -254,7 +239,7 @@ namespace StrixMusic.Sdk.Observables
             remove => _device.PlaybackStateChanged -= value;
         }
 
-        /// <inheritdoc cref="IDevice.ShuffleStateChanged"/>
+        /// <inheritdoc />
         public event EventHandler<bool> ShuffleStateChanged
         {
             add => _device.ShuffleStateChanged += value;
@@ -262,7 +247,7 @@ namespace StrixMusic.Sdk.Observables
             remove => _device.ShuffleStateChanged -= value;
         }
 
-        /// <inheritdoc cref="IDevice.RepeatStateChanged"/>
+        /// <inheritdoc />
         public event EventHandler<RepeatState> RepeatStateChanged
         {
             add => _device.RepeatStateChanged += value;
@@ -270,7 +255,7 @@ namespace StrixMusic.Sdk.Observables
             remove => _device.RepeatStateChanged -= value;
         }
 
-        /// <inheritdoc cref="IDevice.VolumePercentChanged"/>
+        /// <inheritdoc />
         public event EventHandler<double> VolumePercentChanged
         {
             add => _device.VolumePercentChanged += value;
@@ -278,7 +263,7 @@ namespace StrixMusic.Sdk.Observables
             remove => _device.VolumePercentChanged -= value;
         }
 
-        /// <inheritdoc cref="IDevice.PlaybackSpeedChanged"/>
+        /// <inheritdoc />
         public event EventHandler<double> PlaybackSpeedChanged
         {
             add => _device.PlaybackSpeedChanged += value;
@@ -286,69 +271,61 @@ namespace StrixMusic.Sdk.Observables
             remove => _device.PlaybackSpeedChanged -= value;
         }
 
-        /// <inheritdoc cref="IDevice.PlaybackQueueChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<ITrack>> PlaybackQueueChanged
-        {
-            add => _device.PlaybackQueueChanged += value;
-
-            remove => _device.PlaybackQueueChanged -= value;
-        }
-
-        /// <inheritdoc cref="IDevice.ChangePlaybackSpeedAsync"/>
+        /// <inheritdoc />
         public Task ChangePlaybackSpeedAsync(double speed)
         {
             return _device.ChangePlaybackSpeedAsync(speed);
         }
 
-        /// <inheritdoc cref="IDevice.ChangeVolumeAsync"/>
+        /// <inheritdoc />
         public Task ChangeVolumeAsync(double volume)
         {
             return _device.ChangeVolumeAsync(volume);
         }
 
-        /// <inheritdoc cref="IDevice.NextAsync"/>
+        /// <inheritdoc />
         public Task NextAsync()
         {
             return _device.NextAsync();
         }
 
-        /// <inheritdoc cref="IDevice.PauseAsync"/>
+        /// <inheritdoc />
         public Task PauseAsync()
         {
             return _device.PauseAsync();
         }
 
-        /// <inheritdoc cref="IDevice.PreviousAsync"/>
+        /// <inheritdoc />
         public Task PreviousAsync()
         {
             return _device.PreviousAsync();
         }
 
-        /// <inheritdoc cref="IDevice.ResumeAsync"/>
+        /// <inheritdoc />
         public Task ResumeAsync()
         {
             return _device.ResumeAsync();
         }
 
-        /// <inheritdoc cref="IDevice.SeekAsync"/>
+        /// <inheritdoc />
         public Task SeekAsync(TimeSpan position)
         {
             return _device.SeekAsync(position);
         }
 
-        /// <inheritdoc cref="IDevice.SwitchToAsync"/>
+        /// <inheritdoc />
         public Task SwitchToAsync()
         {
             return _device.SwitchToAsync();
         }
 
-        /// <inheritdoc cref="IDevice.ToggleRepeatAsync"/>
+        /// <inheritdoc />
         public Task ToggleRepeatAsync()
         {
             return _device.ToggleRepeatAsync();
         }
 
-        /// <inheritdoc cref="IDevice.ToggleShuffleAsync"/>
+        /// <inheritdoc />
         public Task ToggleShuffleAsync()
         {
             return _device.ToggleShuffleAsync();

@@ -20,6 +20,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="System.Linq.Async">
+      <Version>4.1.1</Version>
+    </PackageReference>
     <PackageReference Include="Uno.Diagnostics.Eventing">
       <Version>1.0.4</Version>
     </PackageReference>

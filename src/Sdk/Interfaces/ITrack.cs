@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 
 namespace StrixMusic.Sdk.Interfaces
 {
     /// <summary>
     /// Metadata about a track.
     /// </summary>
-    public interface ITrack : IArtistCollection
+    public interface ITrack : IArtistCollection, IGenreCollection
     {
         /// <inheritdoc cref="TrackType"/>
         TrackType Type { get; }
@@ -19,11 +18,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// An <see cref="IAlbum"/> object that this track belongs to.
         /// </summary>
         IAlbum? Album { get; }
-
-        /// <summary>
-        /// A list of <see cref="string"/> describing the genres for this track.
-        /// </summary>
-        IReadOnlyList<string>? Genres { get; }
 
         /// <summary>
         /// Position in a set, usually the album.
@@ -52,19 +46,9 @@ namespace StrixMusic.Sdk.Interfaces
         IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeArtistsAsync(IReadOnlyList{IArtist}?)"/> is supported.
-        /// </summary>
-        bool IsChangeArtistsAsyncSupported { get; }
-
-        /// <summary>
         /// If true, <see cref="ChangeAlbumAsync(IAlbum?)"/> is supported.
         /// </summary>
         bool IsChangeAlbumAsyncSupported { get; }
-
-        /// <summary>
-        /// If true, <see cref="ChangeGenresAsync(IReadOnlyList{string}?)"/> is supported.
-        /// </summary>
-        bool IsChangeGenresAsyncSupported { get; }
 
         /// <summary>
         /// If true, <see cref="ChangeTrackNumberAsync(int?)"/> is supported.
@@ -87,25 +71,11 @@ namespace StrixMusic.Sdk.Interfaces
         bool IsChangeIsExplicitAsyncSupported { get; }
 
         /// <summary>
-        /// Changes the <see cref="IArtistCollection.Artists"/> for this track.
-        /// </summary>
-        /// <param name="artists">Artist</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeArtistsAsync(IReadOnlyList<IArtist>? artists);
-
-        /// <summary>
         /// Changes the <see cref="Album"/> for this track.
         /// </summary>
         /// <param name="albums">The new album.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ChangeAlbumAsync(IAlbum? albums);
-
-        /// <summary>
-        /// Change the <see cref="Genres"/> for this track.
-        /// </summary>
-        /// <param name="genres">The new genres.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeGenresAsync(IReadOnlyList<string>? genres);
 
         /// <summary>
         /// Changes the <see cref="TrackNumber"/> on this track.
@@ -134,11 +104,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// <param name="isExplicit">The new value.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ChangeIsExplicitAsync(bool isExplicit);
-
-        /// <summary>
-        /// Fires when the <see cref="Genres"/> metadata changes.
-        /// </summary>
-        event EventHandler<CollectionChangedEventArgs<string>> GenresChanged;
 
         /// <summary>
         /// Fires when the <see cref="Album"/> metadata changes.

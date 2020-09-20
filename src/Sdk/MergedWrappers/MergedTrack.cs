@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.MergedWrappers
@@ -15,8 +15,6 @@ namespace StrixMusic.Sdk.MergedWrappers
     /// </summary>
     public class MergedTrack : ITrack, IEquatable<ITrack>
     {
-        private readonly List<IArtist> _artists = new List<IArtist>();
-
         private readonly ITrack _preferredSource;
 
         /// <summary>
@@ -36,55 +34,10 @@ namespace StrixMusic.Sdk.MergedWrappers
             foreach (var item in tracks)
             {
                 // TODO: Don't populate here
-                _artists.AddRange(item.Artists);
-
                 // TODO: Deal with merged artists
                 TotalArtistsCount += item.TotalArtistsCount;
-
-                item.ArtistsChanged += Item_ArtistsChanged;
             }
         }
-
-        private void Item_ArtistsChanged(object sender, CollectionChangedEventArgs<IArtist> e)
-        {
-            // TODO: Handle merging
-            foreach (var item in e.AddedItems)
-            {
-                _artists.Insert(item.Index, item.Data);
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                _artists.RemoveAt(item.Index);
-            }
-        }
-
-        /// <inheritdoc/>
-        public TrackType Type => _preferredSource.Type;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<IArtist> Artists => _artists;
-
-        /// <inheritdoc/>
-        public int TotalArtistsCount { get; }
-
-        /// <inheritdoc/>
-        public IAlbum? Album => _preferredSource.Album;
-
-        /// <inheritdoc/>
-        public IReadOnlyList<string>? Genres => _preferredSource.Genres;
-
-        /// <inheritdoc/>
-        public int? TrackNumber => _preferredSource.TrackNumber;
-
-        /// <inheritdoc/>
-        public CultureInfo? Language => _preferredSource.Language;
-
-        /// <inheritdoc/>
-        public ILyrics? Lyrics => _preferredSource.Lyrics;
-
-        /// <inheritdoc/>
-        public bool IsExplicit => _preferredSource.IsExplicit;
 
         /// <inheritdoc/>
         public ICore SourceCore => _preferredSource.SourceCore;
@@ -99,7 +52,37 @@ namespace StrixMusic.Sdk.MergedWrappers
         public string Name => _preferredSource.Name;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IImage> Images => _preferredSource.Images;
+        public TrackType Type => _preferredSource.Type;
+
+        /// <inheritdoc/>
+        public int TotalArtistsCount { get; }
+
+        /// <inheritdoc/>
+        public ObservableCollection<IArtist> Artists { get; } = new ObservableCollection<IArtist>();
+
+        /// <inheritdoc/>
+        public ObservableCollection<string>? Genres => _preferredSource.Genres;
+
+        /// <inheritdoc/>
+        public ObservableCollection<IImage> Images => _preferredSource.Images;
+
+        /// <inheritdoc/>
+        public IPlayableCollectionGroup? RelatedItems => _preferredSource.RelatedItems;
+
+        /// <inheritdoc/>
+        public IAlbum? Album => _preferredSource.Album;
+
+        /// <inheritdoc/>
+        public int? TrackNumber => _preferredSource.TrackNumber;
+
+        /// <inheritdoc/>
+        public CultureInfo? Language => _preferredSource.Language;
+
+        /// <inheritdoc/>
+        public ILyrics? Lyrics => _preferredSource.Lyrics;
+
+        /// <inheritdoc/>
+        public bool IsExplicit => _preferredSource.IsExplicit;
 
         /// <inheritdoc/>
         public string? Description => _preferredSource.Description;
@@ -111,16 +94,7 @@ namespace StrixMusic.Sdk.MergedWrappers
         public TimeSpan Duration => _preferredSource.Duration;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? RelatedItems => _preferredSource.RelatedItems;
-
-        /// <inheritdoc/>
-        public bool IsChangeArtistsAsyncSupported => _preferredSource.IsChangeArtistsAsyncSupported;
-
-        /// <inheritdoc/>
         public bool IsChangeAlbumAsyncSupported => _preferredSource.IsChangeAlbumAsyncSupported;
-
-        /// <inheritdoc/>
-        public bool IsChangeGenresAsyncSupported => _preferredSource.IsChangeGenresAsyncSupported;
 
         /// <inheritdoc/>
         public bool IsChangeTrackNumberAsyncSupported => _preferredSource.IsChangeTrackNumberAsyncSupported;
@@ -144,29 +118,19 @@ namespace StrixMusic.Sdk.MergedWrappers
         public bool IsChangeNameAsyncSupported => _preferredSource.IsChangeNameAsyncSupported;
 
         /// <inheritdoc/>
-        public bool IsChangeImagesAsyncSupported => _preferredSource.IsChangeImagesAsyncSupported;
-
-        /// <inheritdoc/>
         public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
 
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged
-        {
-            add => _preferredSource.ArtistsChanged += value;
-
-            remove => _preferredSource.ArtistsChanged -= value;
-        }
+        public ObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new ObservableCollection<bool>();
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<string>> GenresChanged
-        {
-            add => _preferredSource.GenresChanged += value;
+        public ObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new ObservableCollection<bool>();
 
-            remove => _preferredSource.GenresChanged -= value;
-        }
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new ObservableCollection<bool>();
 
         /// <inheritdoc/>
         public event EventHandler<IAlbum?> AlbumChanged
@@ -241,14 +205,6 @@ namespace StrixMusic.Sdk.MergedWrappers
         }
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged
-        {
-            add => _preferredSource.ImagesChanged += value;
-
-            remove => _preferredSource.ImagesChanged -= value;
-        }
-
-        /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged
         {
             add => _preferredSource.DurationChanged += value;
@@ -268,43 +224,10 @@ namespace StrixMusic.Sdk.MergedWrappers
             return _preferredSource.PlayAsync();
         }
 
-        /// <summary>
-        /// Indicates whether the current item can be merged with another item of the same type.
-        /// </summary>
-        /// <param name="other">The item to check against.</param>
-        /// <returns><see langword="True"/> if the item can be merged, otherwise <see langword="false"/></returns>
-        public bool Equals(ITrack? other)
-        {
-            return other?.Name == Name
-                && other?.Type.Equals(Type) == true
-                && other?.Album?.Equals(Album) == true
-                && other?.Language?.Equals(Language) == true
-                && other?.TrackNumber?.Equals(TrackNumber) == true
-                && other?.Artists?.SequenceEqual(Artists) == true;
-        }
-
-        /// <inheritdoc/>
-        public override bool Equals(object? obj) => Equals(obj as ITrack);
-
-        /// <inheritdoc/>
-        public override int GetHashCode() => _preferredSource.Id.GetHashCode();
-
-        /// <inheritdoc/>
-        public Task ChangeArtistsAsync(IReadOnlyList<IArtist>? artists)
-        {
-            return _preferredSource.ChangeArtistsAsync(artists);
-        }
-
         /// <inheritdoc/>
         public Task ChangeAlbumAsync(IAlbum? albums)
         {
             return _preferredSource.ChangeAlbumAsync(albums);
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeGenresAsync(IReadOnlyList<string>? genres)
-        {
-            return _preferredSource.ChangeGenresAsync(genres);
         }
 
         /// <inheritdoc/>
@@ -338,12 +261,6 @@ namespace StrixMusic.Sdk.MergedWrappers
         }
 
         /// <inheritdoc/>
-        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
-        {
-            return _preferredSource.ChangeImagesAsync(images);
-        }
-
-        /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
         {
             return _preferredSource.ChangeDescriptionAsync(description);
@@ -355,10 +272,56 @@ namespace StrixMusic.Sdk.MergedWrappers
             return _preferredSource.ChangeDurationAsync(duration);
         }
 
+        /// <summary>
+        /// Indicates whether the current item can be merged with another item of the same type.
+        /// </summary>
+        /// <param name="other">The item to check against.</param>
+        /// <returns><see langword="True"/> if the item can be merged, otherwise <see langword="false"/></returns>
+        public bool Equals(ITrack? other)
+        {
+            return other?.Name == Name
+                && other?.Type.Equals(Type) == true
+                && other?.Album?.Equals(Album) == true
+                && other?.Language?.Equals(Language) == true
+                && other?.TrackNumber?.Equals(TrackNumber) == true
+                && other?.Artists?.SequenceEqual(Artists) == true;
+        }
+
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
+        public override bool Equals(object? obj) => Equals(obj as ITrack);
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => _preferredSource.Id.GetHashCode();
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddArtistSupported(int index)
         {
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddImageSupported(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddGenreSupported(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PopulateMoreArtistsAsync(int limit)
+        {
+            // TODO
+            return _preferredSource.PopulateMoreArtistsAsync(limit);
         }
     }
 }

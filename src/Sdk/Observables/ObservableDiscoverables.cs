@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.Observables
     /// <summary>
     /// A bindable wrapper of the <see cref="IDiscoverables"/>.
     /// </summary>
-    public class ObservableDiscoverables : ObservableCollectionGroup
+    public class ObservableDiscoverables : ObservableCollectionGroup, IDiscoverables
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ObservableDiscoverables"/> class.

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Events;
+using Microsoft.Toolkit.Mvvm.Messaging.Messages;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -27,7 +29,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override string Name { get; protected set; } = "Discoverables";
 
         /// <inheritdoc />
-        public override IReadOnlyList<IImage> Images { get; protected set; } = new List<IImage>();
+        public override ObservableCollection<IImage> Images { get; protected set; } = new ObservableCollection<IImage>();
 
         /// <inheritdoc />
         public override string? Description { get; protected set; } = null;
@@ -48,48 +50,63 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override int TotalArtistsCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
-
-        /// <inheritdoc />
-        public override event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
-
-        /// <inheritdoc />
-        public override event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
-
-        /// <inheritdoc />
-        public override event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
-
-        /// <inheritdoc />
-        public override event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
-
-        /// <inheritdoc />
-        public override Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset = 0)
         {
-            return Task.FromResult<IReadOnlyList<IAlbum>>(new List<IAlbum>());
+            return AsyncEnumerable.Empty<IAlbum>();
         }
 
         /// <inheritdoc />
-        public override Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
+        public override Task PopulateMoreAlbumsAsync(int limit)
         {
-            return Task.FromResult<IReadOnlyList<IArtist>>(new List<IArtist>());
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public override Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0)
         {
-            return Task.FromResult<IReadOnlyList<IPlayableCollectionGroup>>(new List<IPlayableCollectionGroup>());
+            return AsyncEnumerable.Empty<IArtist>();
         }
 
         /// <inheritdoc />
-        public override Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0)
+        public override Task PopulateMoreArtistsAsync(int limit)
         {
-            return Task.FromResult<IReadOnlyList<IPlaylist>>(new List<IPlaylist>());
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public override Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)
         {
-            return Task.FromResult<IReadOnlyList<ITrack>>(new List<ITrack>());
+            return AsyncEnumerable.Empty<IPlayableCollectionGroup>();
+        }
+
+        /// <inheritdoc />
+        public override Task PopulateMoreChildrenAsync(int limit)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public override IAsyncEnumerable<IPlaylist> GetPlaylistsAsync(int limit, int offset = 0)
+        {
+            return AsyncEnumerable.Empty<IPlaylist>();
+        }
+
+        /// <inheritdoc />
+        public override Task PopulateMorePlaylistsAsync(int limit)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public override IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0)
+        {
+            return AsyncEnumerable.Empty<ITrack>();
+        }
+
+        /// <inheritdoc />
+        public override Task PopulateMoreTracksAsync(int limit)
+        {
+            return Task.CompletedTask;
         }
     }
 }

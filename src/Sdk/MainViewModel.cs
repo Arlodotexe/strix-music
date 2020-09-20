@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Extensions.AsyncExtensions;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 using StrixMusic.Sdk.MergedWrappers;
 using StrixMusic.Sdk.Observables;
@@ -64,8 +63,6 @@ namespace StrixMusic.Sdk
                 _ = new ObservableCore(core);
 
                 Users.Add(new ObservableUserProfile(core.User));
-
-                AttachEvents(core);
             });
 
             var mergedLibrary = new MergedLibrary(toLoad.Select(x => x.Library));
@@ -78,16 +75,6 @@ namespace StrixMusic.Sdk
             Discoverables = new ObservableDiscoverables(mergedDiscoverables);
         }
 
-        private void AttachEvents(ICore core)
-        {
-            core.DevicesChanged += Core_DevicesChanged;
-        }
-
-        private void DetachEvents(ICore core)
-        {
-            core.DevicesChanged -= Core_DevicesChanged;
-        }
-
         /// <summary>
         /// Gets search suggestions from all cores and asynchronously populate it into <see cref="SearchAutoComplete"/>.
         /// </summary>
@@ -98,11 +85,7 @@ namespace StrixMusic.Sdk
 
             Parallel.ForEach(_cores, async core =>
             {
-                var searchResults = await core.GetSearchAutoCompleteAsync(query);
-                if (searchResults == null)
-                    return;
-
-                foreach (var item in searchResults)
+                await foreach (var item in core.GetSearchAutoCompleteAsync(query))
                 {
                     if (!SearchAutoComplete.Contains(item))
                         SearchAutoComplete.Add(item);
@@ -124,19 +107,6 @@ namespace StrixMusic.Sdk
             SearchResults = new ObservableSearchResults(merged);
 
             return merged;
-        }
-
-        private void Core_DevicesChanged(object sender, CollectionChangedEventArgs<IDevice> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                Devices.RemoveAt(item.Index);
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                Devices.RemoveAt(item.Index);
-            }
         }
 
         /// <summary>

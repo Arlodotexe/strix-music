@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
@@ -13,7 +12,7 @@ namespace StrixMusic.Sdk.Observables
     /// <summary>
     /// Contains information about a <see cref="ICore"/>
     /// </summary>
-    public class ObservableCore : ObservableObject
+    public class ObservableCore : ObservableObject, ICore
     {
         private readonly ICore _core;
 
@@ -30,10 +29,10 @@ namespace StrixMusic.Sdk.Observables
 
             MainViewModel.Singleton?.LoadedCores.Add(this);
 
-            Devices = new ObservableCollection<ObservableDevice>(_core.Devices.Select(x => new ObservableDevice(x)));
+            Devices = new ObservableCollection<IDevice>(_core.Devices.Select(x => new ObservableDevice(x)));
             Library = new ObservableLibrary(_core.Library);
             RecentlyPlayed = new ObservableRecentlyPlayed(_core.RecentlyPlayed);
-            Discoverables = new ObservableCollectionGroup(_core.Discoverables);
+            Discoverables = new ObservableDiscoverables(_core.Discoverables);
 
             AttachEvents();
         }
@@ -46,37 +45,14 @@ namespace StrixMusic.Sdk.Observables
             remove => _core.CoreStateChanged -= value;
         }
 
-        /// <inheritdoc cref="ICore.DevicesChanged" />
-        public event EventHandler<CollectionChangedEventArgs<IDevice>>? DevicesChanged
-        {
-            add => _core.DevicesChanged += value;
-
-            remove => _core.DevicesChanged -= value;
-        }
-
         private void AttachEvents()
         {
             _core.CoreStateChanged += Core_CoreStateChanged;
-            _core.DevicesChanged += Core_DevicesChanged;
         }
 
         private void DetachEvents()
         {
             _core.CoreStateChanged -= Core_CoreStateChanged;
-            _core.DevicesChanged -= Core_DevicesChanged;
-        }
-
-        private void Core_DevicesChanged(object sender, CollectionChangedEventArgs<IDevice> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                Devices.Insert(item.Index, new ObservableDevice(item.Data));
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                Devices.RemoveAt(item.Index);
-            }
         }
 
         /// <inheritdoc cref="ICore.CoreState" />
@@ -86,19 +62,19 @@ namespace StrixMusic.Sdk.Observables
         public string InstanceId => _core.InstanceId;
 
         /// <inheritdoc cref="ICore.Devices"/>
-        public ObservableCollection<ObservableDevice> Devices { get; }
+        public ObservableCollection<IDevice> Devices { get; }
 
         /// <inheritdoc cref="ICore.Library" />
-        public ObservableLibrary Library { get; }
+        public ILibrary Library { get; }
 
         /// <inheritdoc cref="ICore.RecentlyPlayed" />
-        public ObservableRecentlyPlayed RecentlyPlayed { get; }
+        public IRecentlyPlayed RecentlyPlayed { get; }
 
         /// <inheritdoc cref="ICore.Discoverables" />
-        public ObservableCollectionGroup Discoverables { get; }
+        public IDiscoverables Discoverables { get; }
 
         /// <inheritdoc cref="ICore.GetSearchAutoCompleteAsync" />
-        public Task<IReadOnlyList<string>?> GetSearchAutoCompleteAsync(string query) => _core.GetSearchAutoCompleteAsync(query);
+        public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query) => _core.GetSearchAutoCompleteAsync(query);
 
         /// <inheritdoc cref="ICore.GetSearchResultsAsync" />
         public Task<ISearchResults> GetSearchResultsAsync(string query) => _core.GetSearchResultsAsync(query);

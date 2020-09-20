@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using StrixMusic.Core.MusicBrainz.Models;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
 
@@ -29,7 +30,7 @@ namespace StrixMusic.Core.MusicBrainz
             // The library created here won't be used by the UI.
             // The UI isn't loaded until InitAsync is called, where we set up the actual library.
             Library = new MusicBrainzLibrary(this);
-            Devices = new List<IDevice>();
+            Devices = new ObservableCollection<IDevice>();
             RecentlyPlayed = new MusicBrainzRecentlyPlayed(this);
             Discoverables = new MusicBrainzDiscoverables(this);
             User = new MusicBrainzUser(this);
@@ -50,7 +51,7 @@ namespace StrixMusic.Core.MusicBrainz
         public IUser User { get; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<IDevice> Devices { get; }
+        public ObservableCollection<IDevice> Devices { get; }
 
         /// <inheritdoc/>
         public ILibrary Library { get; private set; }
@@ -68,18 +69,15 @@ namespace StrixMusic.Core.MusicBrainz
         public event EventHandler<CoreState>? CoreStateChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IDevice>>? DevicesChanged;
-
-        /// <inheritdoc/>
         public ValueTask DisposeAsync()
         {
             return default;
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<string>?> GetSearchAutoCompleteAsync(string query)
+        public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query)
         {
-            return Task.FromResult<IReadOnlyList<string>?>(default);
+            return AsyncEnumerable.Empty<string>();
         }
 
         /// <inheritdoc/>

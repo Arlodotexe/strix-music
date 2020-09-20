@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Interfaces
@@ -7,7 +6,7 @@ namespace StrixMusic.Sdk.Interfaces
     /// <summary>
     /// Interface representing an album.
     /// </summary>
-    public interface IAlbum : ITrackCollection
+    public interface IAlbum : ITrackCollection, IGenreCollection
     {
         /// <summary>
         /// The date the album was released.

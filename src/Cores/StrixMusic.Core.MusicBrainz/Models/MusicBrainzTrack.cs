@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
@@ -8,7 +9,6 @@ using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
 
@@ -19,7 +19,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
     {
         private readonly Track _track;
         private readonly MusicBrainzClient _musicBrainzClient;
-        private readonly List<IArtist> _artists;
         private readonly MusicBrainzArtistHelpersService _artistHelpersService;
 
         /// <summary>
@@ -38,7 +37,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             SourceCore = sourceCore;
             _track = track;
-            _artists = new List<IArtist>();
 
             Language = CultureInfoExtensions.FromIso636_3(musicBrainzAlbum.Release.TextRepresentation.Language);
 
@@ -54,7 +52,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TrackType Type => TrackType.Song;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IArtist> Artists => _artists;
+        public ObservableCollection<IArtist> Artists { get; } = new ObservableCollection<IArtist>();
 
         /// <inheritdoc />
         public int TotalArtistsCount => _track.Recording.Credits.Count;
@@ -63,7 +61,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IAlbum Album { get; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<string> Genres => new List<string>();
+        public ObservableCollection<string>? Genres => new ObservableCollection<string>();
 
         /// <inheritdoc/>
         /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>
@@ -88,7 +86,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Name => _track.Recording.Title;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IImage> Images => CreateImagesForRelease(_track.Recording.Releases);
+        public ObservableCollection<IImage> Images => CreateImagesForRelease(_track.Recording.Releases);
 
         /// <inheritdoc/>
         public string? Description => null;
@@ -105,13 +103,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IPlayableCollectionGroup? RelatedItems => null;
 
         /// <inheritdoc/>
-        public bool IsChangeArtistsAsyncSupported => false;
-
-        /// <inheritdoc/>
         public bool IsChangeAlbumAsyncSupported => false;
-
-        /// <inheritdoc/>
-        public bool IsChangeGenresAsyncSupported => false;
 
         /// <inheritdoc/>
         public bool IsChangeTrackNumberAsyncSupported => false;
@@ -135,22 +127,22 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeNameAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeImagesAsyncSupported => false;
-
-        /// <inheritdoc/>
         public bool IsChangeDescriptionAsyncSupported => false;
 
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new ObservableCollection<bool>();
+
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new ObservableCollection<bool>();
+
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new ObservableCollection<bool>();
+
+        /// <inheritdoc/>
         public string Id => _track.Id;
-
-        /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<string>>? GenresChanged;
 
         /// <inheritdoc/>
         public event EventHandler<IAlbum?>? AlbumChanged;
@@ -180,19 +172,28 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
-
-        /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc/>
-        public Task ChangeAlbumAsync(IAlbum? albums)
+        public Task<bool> IsAddImageSupported(int index)
         {
-            throw new NotSupportedException();
+            return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task ChangeArtistsAsync(IReadOnlyList<IArtist>? artists)
+        public Task<bool> IsAddGenreSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddArtistSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task ChangeAlbumAsync(IAlbum? albums)
         {
             throw new NotSupportedException();
         }
@@ -205,18 +206,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeGenresAsync(IReadOnlyList<string>? genres)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
         {
             throw new NotSupportedException();
         }
@@ -264,34 +253,43 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public async Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0)
+        public async IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0)
         {
             var recording = await _musicBrainzClient.Recordings.GetAsync(Id, RelationshipQueries.Recordings);
 
             foreach (var item in recording.Credits)
             {
-                _artists.Add(new MusicBrainzArtist(SourceCore, item.Artist)
+                yield return new MusicBrainzArtist(SourceCore, item.Artist)
                 {
                     TotalTracksCount = await _artistHelpersService.GetTotalTracksCount(item.Artist),
-                });
+                };
             }
-
-            return _artists;
         }
 
-        private static IReadOnlyList<IImage> CreateImagesForRelease(IEnumerable<Release> releases)
+        /// <inheritdoc/>
+        public async Task PopulateMoreArtistsAsync(int limit)
         {
-            var list = new List<IImage>();
+            var offset = Artists.Count;
+            await foreach (var item in GetArtistsAsync(limit, offset))
+            {
+                IsRemoveArtistSupportedMap.Add(false);
+                Artists.Add(item);
+            }
+        }
+
+        private static ObservableCollection<IImage> CreateImagesForRelease(IEnumerable<Release> releases)
+        {
+            var returnData = new ObservableCollection<IImage>();
 
             foreach (var release in releases)
             {
                 foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
                 {
-                    list.Add(new MusicBrainzImage(release.Id, item));
+                    returnData.Add(new MusicBrainzImage(release.Id, item));
                 }
             }
 
-            return list;
+            return returnData;
         }
     }
 }

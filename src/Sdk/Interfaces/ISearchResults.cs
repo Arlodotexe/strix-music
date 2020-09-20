@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace StrixMusic.Sdk.Interfaces
+﻿namespace StrixMusic.Sdk.Interfaces
 {
     /// <summary>
     /// Represents search results.

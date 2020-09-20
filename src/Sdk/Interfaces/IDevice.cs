@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -35,7 +34,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// The current playback queue.
         /// </summary>
         /// <remarks>When <see cref="Enums.DeviceType"/> is <see cref="DeviceType.Remote" />, this will override the internal playback queue.</remarks>
-        public IReadOnlyList<ITrack> PlaybackQueue { get; }
+        public ObservableCollection<ITrack> PlaybackQueue { get; }
 
         /// <summary>
         /// The context of the currently playing track.
@@ -183,11 +182,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task SwitchToAsync();
-
-        /// <summary>
-        /// Fires when <see cref="PlaybackQueue"/> changes.
-        /// </summary>
-        event EventHandler<CollectionChangedEventArgs<ITrack>>? PlaybackQueueChanged;
 
         /// <summary>
         /// Fires when <see cref="IsActive"/> changes.

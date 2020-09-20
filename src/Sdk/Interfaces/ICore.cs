@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -35,7 +35,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// The available devices.
         /// </summary>
-        public IReadOnlyList<IDevice> Devices { get; }
+        public ObservableCollection<IDevice> Devices { get; }
 
         /// <summary>
         /// Gets the library for the user on this core.
@@ -57,7 +57,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// </summary>
         /// <param name="query">Search query</param>
         /// <returns>Suggested completed queries.</returns>
-        public Task<IReadOnlyList<string>?> GetSearchAutoCompleteAsync(string query);
+        public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query);
 
         /// <summary>
         /// Gets search results for a given query.
@@ -67,7 +67,7 @@ namespace StrixMusic.Sdk.Interfaces
         public Task<ISearchResults> GetSearchResultsAsync(string query);
 
         /// <summary>
-        /// Initializes the <see cref="ICore"/> asyncronously.
+        /// Initializes the <see cref="ICore"/> asynchronously.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task InitAsync();
@@ -76,10 +76,5 @@ namespace StrixMusic.Sdk.Interfaces
         /// Fires when the <see cref="CoreState"/> has changed.
         /// </summary>
         public event EventHandler<CoreState>? CoreStateChanged;
-
-        /// <summary>
-        /// Fires when the collection of devices is updated.
-        /// </summary>
-        public event EventHandler<CollectionChangedEventArgs<IDevice>>? DevicesChanged;
     }
 }

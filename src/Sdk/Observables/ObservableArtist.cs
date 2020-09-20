@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
@@ -13,7 +12,7 @@ namespace StrixMusic.Sdk.Observables
     /// <summary>
     /// Contains bindable information about an <see cref="IArtist"/>.
     /// </summary>
-    public class ObservableArtist : ObservableMergeableObject<IArtist>
+    public class ObservableArtist : ObservableMergeableObject<IArtist>, IArtist
     {
         private readonly IArtist _artist;
 
@@ -30,16 +29,17 @@ namespace StrixMusic.Sdk.Observables
             if (_artist.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_artist.RelatedItems);
 
-            Tracks = new ObservableCollection<ObservableTrack>(_artist.Tracks.Select(x => new ObservableTrack(x)));
-            Albums = new ObservableCollection<ObservableAlbum>(_artist.Albums.Select(x => new ObservableAlbum(x)));
+            Tracks = new ObservableCollection<ITrack>(_artist.Tracks.Select(x => new ObservableTrack(x)));
+            Albums = new ObservableCollection<IAlbum>(_artist.Albums.Select(x => new ObservableAlbum(x)));
             Images = new ObservableCollection<IImage>(_artist.Images);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
-            ChangeImagesAsyncCommand = new AsyncRelayCommand<IReadOnlyList<IImage>>(ChangeImagesAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+            PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
+            PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
 
             AttachEvents();
         }
@@ -47,36 +47,17 @@ namespace StrixMusic.Sdk.Observables
         private void AttachEvents()
         {
             _artist.PlaybackStateChanged += Artist_PlaybackStateChanged;
-            _artist.TracksChanged += Artist_RelatedTracksChanged;
-            _artist.AlbumsChanged += Artist_AlbumsChanged;
             _artist.DescriptionChanged += Artist_DescriptionChanged;
             _artist.NameChanged += Artist_NameChanged;
             _artist.UrlChanged += Artist_UrlChanged;
-            _artist.ImagesChanged += Artist_ImagesChanged;
         }
 
         private void DetachEvents()
         {
             _artist.PlaybackStateChanged -= Artist_PlaybackStateChanged;
-            _artist.TracksChanged -= Artist_RelatedTracksChanged;
-            _artist.AlbumsChanged -= Artist_AlbumsChanged;
             _artist.DescriptionChanged -= Artist_DescriptionChanged;
             _artist.NameChanged -= Artist_NameChanged;
             _artist.UrlChanged -= Artist_UrlChanged;
-            _artist.ImagesChanged -= Artist_ImagesChanged;
-        }
-
-        private void Artist_ImagesChanged(object sender, CollectionChangedEventArgs<IImage> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                Images.Insert(item.Index, item.Data);
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                Images.RemoveAt(item.Index);
-            }
         }
 
         private void Artist_UrlChanged(object sender, Uri? e)
@@ -94,33 +75,7 @@ namespace StrixMusic.Sdk.Observables
             Description = e;
         }
 
-        private void Artist_AlbumsChanged(object sender, CollectionChangedEventArgs<IAlbum> e)
-        {
-            foreach (var item in e.RemovedItems)
-            {
-                Albums.RemoveAt(item.Index);
-            }
-
-            foreach (var item in e.AddedItems)
-            {
-                Albums.Insert(item.Index, new ObservableAlbum(item.Data));
-            }
-        }
-
-        private void Artist_RelatedTracksChanged(object sender, CollectionChangedEventArgs<ITrack> e)
-        {
-            foreach (var item in e.RemovedItems)
-            {
-                Tracks.RemoveAt(item.Index);
-            }
-
-            foreach (var item in e.AddedItems)
-            {
-                Tracks.Insert(item.Index, new ObservableTrack(item.Data));
-            }
-        }
-
-        /// <inheritdoc cref="IPlayable.DurationChanged"/>
+        /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged
         {
             add => _artist.DurationChanged += value;
@@ -133,114 +88,106 @@ namespace StrixMusic.Sdk.Observables
             PlaybackState = e;
         }
 
-        /// <inheritdoc cref="IAlbumCollection.Albums"/>
-        public ObservableCollection<ObservableAlbum> Albums { get; }
+        /// <inheritdoc />
+        public ObservableCollection<IAlbum> Albums { get; }
 
-        /// <inheritdoc cref="IAlbumCollection.TotalAlbumsCount"/>
+        /// <inheritdoc />
         public int TotalAlbumsCount => _artist.TotalAlbumsCount;
 
-        /// <inheritdoc cref="ITrackCollection.Tracks"/>
-        public ObservableCollection<ObservableTrack> Tracks { get; }
+        /// <inheritdoc />
+        public ObservableCollection<ITrack> Tracks { get; }
 
-        /// <inheritdoc cref="ITrackCollection.TotalTracksCount"/>
+        /// <inheritdoc />
         public int TotalTracksCount => _artist.TotalTracksCount;
 
-        /// <inheritdoc cref="IPlayable.Url"/>
+        /// <inheritdoc />
         public Uri? Url
         {
             get => _artist.Url;
             private set => SetProperty(() => _artist.Url, value);
         }
 
-        /// <inheritdoc cref="IPlayable.SourceCore"/>
-        public ObservableCore SourceCore { get; }
+        /// <inheritdoc />
+        public ICore SourceCore { get; }
 
-        /// <inheritdoc cref="IPlayable.Id"/>
+        /// <inheritdoc />
         public string Id => _artist.Id;
 
-        /// <inheritdoc cref="IPlayable.Name"/>
+        /// <inheritdoc />
         public string Name
         {
             get => _artist.Name;
             private set => SetProperty(() => _artist.Name, value);
         }
 
-        /// <inheritdoc cref="IPlayable.Images"/>
+        /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }
 
-        /// <inheritdoc cref="IPlayable.Description"/>
+        /// <inheritdoc />
         public string? Description
         {
             get => _artist.Description;
             private set => SetProperty(() => _artist.Description, value);
         }
 
-        /// <inheritdoc cref="IPlayable.PlaybackState"/>
+        /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => _artist.PlaybackState;
             private set => SetProperty(() => _artist.PlaybackState, value);
         }
 
-        /// <inheritdoc cref="IPlayable.IsPlayAsyncSupported"/>
+        /// <inheritdoc />
         public bool IsPlayAsyncSupported
         {
             get => _artist.IsPlayAsyncSupported;
             set => SetProperty(() => _artist.IsPlayAsyncSupported, value);
         }
 
-        /// <inheritdoc cref="IPlayable.IsPauseAsyncSupported"/>
+        /// <inheritdoc />
         public bool IsPauseAsyncSupported
         {
             get => _artist.IsPauseAsyncSupported;
             set => SetProperty(() => _artist.IsPauseAsyncSupported, value);
         }
 
-        /// <inheritdoc cref="IPlayable.IsChangeNameAsyncSupported"/>
+        /// <inheritdoc />
         public bool IsChangeNameAsyncSupported
         {
             get => _artist.IsChangeNameAsyncSupported;
             set => SetProperty(() => _artist.IsChangeNameAsyncSupported, value);
         }
 
-        /// <inheritdoc cref="IPlayable.IsChangeImagesAsyncSupported"/>
-        public bool IsChangeImagesAsyncSupported
-        {
-            get => _artist.IsChangeImagesAsyncSupported;
-            set => SetProperty(() => _artist.IsChangeImagesAsyncSupported, value);
-        }
-
-        /// <inheritdoc cref="IPlayable.IsChangeDescriptionAsyncSupported"/>
+        /// <inheritdoc />
         public bool IsChangeDescriptionAsyncSupported
         {
             get => _artist.IsChangeDescriptionAsyncSupported;
             set => SetProperty(() => _artist.IsChangeDescriptionAsyncSupported, value);
         }
 
-        /// <inheritdoc cref="IPlayable.IsChangeDurationAsyncSupported"/>
+        /// <inheritdoc />
         public bool IsChangeDurationAsyncSupported
         {
             get => _artist.IsChangeDurationAsyncSupported;
             set => SetProperty(() => _artist.IsChangeDurationAsyncSupported, value);
         }
 
-        /// <inheritdoc cref="IAlbumCollection.AlbumsChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged
-        {
-            add => _artist.AlbumsChanged += value;
+        /// <inheritdoc />
+        public ObservableCollection<string>? Genres => _artist.Genres;
 
-            remove => _artist.AlbumsChanged -= value;
-        }
+        /// <inheritdoc />
+        public ObservableCollection<bool> IsRemoveImageSupportedMap => _artist.IsRemoveImageSupportedMap;
 
-        /// <inheritdoc cref="ITrackCollection.TracksChanged"/>
-        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
-        {
-            add => _artist.TracksChanged += value;
+        /// <inheritdoc />
+        public ObservableCollection<bool> IsRemoveAlbumSupportedMap => _artist.IsRemoveAlbumSupportedMap;
 
-            remove => _artist.TracksChanged -= value;
-        }
+        /// <inheritdoc />
+        public ObservableCollection<bool> IsRemoveTrackSupportedMap => _artist.IsRemoveTrackSupportedMap;
 
-        /// <inheritdoc cref="IPlayable.PlaybackStateChanged"/>
+        /// <inheritdoc />
+        public ObservableCollection<bool> IsRemoveGenreSupportedMap => _artist.IsRemoveGenreSupportedMap;
+
+        /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => _artist.PlaybackStateChanged += value;
@@ -248,7 +195,7 @@ namespace StrixMusic.Sdk.Observables
             remove => _artist.PlaybackStateChanged -= value;
         }
 
-        /// <inheritdoc cref="IPlayable.NameChanged"/>
+        /// <inheritdoc />
         public event EventHandler<string>? NameChanged
         {
             add => _artist.NameChanged += value;
@@ -256,7 +203,7 @@ namespace StrixMusic.Sdk.Observables
             remove => _artist.NameChanged -= value;
         }
 
-        /// <inheritdoc cref="IPlayable.DescriptionChanged"/>
+        /// <inheritdoc />
         public event EventHandler<string?> DescriptionChanged
         {
             add => _artist.DescriptionChanged += value;
@@ -264,7 +211,7 @@ namespace StrixMusic.Sdk.Observables
             remove => _artist.DescriptionChanged -= value;
         }
 
-        /// <inheritdoc cref="IPlayable.UrlChanged"/>
+        /// <inheritdoc />
         public event EventHandler<Uri?> UrlChanged
         {
             add => _artist.UrlChanged += value;
@@ -272,43 +219,60 @@ namespace StrixMusic.Sdk.Observables
             remove => _artist.UrlChanged -= value;
         }
 
-        /// <inheritdoc cref="IPlayable.Images"/>
-        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged
-        {
-            add => _artist.ImagesChanged += value;
-
-            remove => _artist.ImagesChanged -= value;
-        }
-
-        /// <inheritdoc cref="IPlayable.PlayAsync"/>
+        /// <inheritdoc />
         public Task PlayAsync() => _artist.PlayAsync();
 
-        /// <inheritdoc cref="IPlayable.PauseAsync"/>
+        /// <inheritdoc />
         public Task PauseAsync() => _artist.PauseAsync();
 
         /// <inheritdoc cref="IPlayable.Duration" />
         public TimeSpan Duration => _artist.Duration;
 
-        /// <inheritdoc cref="IArtist.RelatedItems"/>
-        public ObservableCollectionGroup? RelatedItems { get; }
+        /// <inheritdoc />
+        public IPlayableCollectionGroup? RelatedItems { get; }
 
-        /// <inheritdoc cref="IPlayable.ChangeNameAsync"/>
+        /// <inheritdoc />
         public Task ChangeNameAsync(string name) => _artist.ChangeNameAsync(name);
 
-        /// <inheritdoc cref="IPlayable.ChangeImagesAsync"/>
-        public Task ChangeImagesAsync(IReadOnlyList<IImage> images) => _artist.ChangeImagesAsync(images);
-
-        /// <inheritdoc cref="IPlayable.ChangeDescriptionAsync"/>
+        /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description) => _artist.ChangeDescriptionAsync(description);
 
-        /// <inheritdoc cref="IPlayable.ChangeDurationAsync"/>
+        /// <inheritdoc />
         public Task ChangeDurationAsync(TimeSpan duration) => _artist.ChangeDurationAsync(duration);
 
-        /// <inheritdoc cref="IAlbumCollection.PopulateAlbumsAsync(int, int)"/>
-        public Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0) => _artist.PopulateAlbumsAsync(limit, offset);
+        /// <inheritdoc />
+        public Task<bool> IsAddImageSupported(int index) => _artist.IsAddImageSupported(index);
 
-        /// <inheritdoc cref="ITrackCollection.PopulateTracksAsync(int, int)"/>
-        public Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0) => _artist.PopulateTracksAsync(limit, offset);
+        /// <inheritdoc />
+        public Task<bool> IsAddAlbumSupported(int index) => _artist.IsAddAlbumSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsAddTrackSupported(int index) => _artist.IsAddTrackSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsAddGenreSupported(int index) => _artist.IsAddGenreSupported(index);
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset) => _artist.GetAlbumsAsync(limit, offset);
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset) => _artist.GetTracksAsync(limit, offset);
+
+        /// <inheritdoc />
+        public Task PopulateMoreAlbumsAsync(int limit) => _artist.PopulateMoreAlbumsAsync(limit);
+
+        /// <inheritdoc />
+        public Task PopulateMoreTracksAsync(int limit) => _artist.PopulateMoreTracksAsync(limit);
+
+        /// <summary>
+        /// <inheritdoc cref="PopulateMoreAlbumsAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }
+
+        /// <summary>
+        /// <inheritdoc cref="PopulateMoreTracksAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
 
         /// <summary>
         /// Attempts to play the artist.
@@ -324,11 +288,6 @@ namespace StrixMusic.Sdk.Observables
         /// Attempts to change the name of the artist, if supported.
         /// </summary>
         public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
-
-        /// <summary>
-        /// Attempts to change the images for the artist, if supported.
-        /// </summary>
-        public IAsyncRelayCommand ChangeImagesAsyncCommand { get; }
 
         /// <summary>
         /// Attempts to change the description of the artist, if supported.

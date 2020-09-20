@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -17,43 +17,22 @@ namespace StrixMusic.Core.MusicBrainz.Models
         protected MusicBrainzCollectionGroupBase(ICore sourceCore)
         {
             SourceCore = sourceCore;
-
-            SourceTracks = new List<ITrack>();
-            SourceArtists = new List<IArtist>();
-            SourceAlbums = new List<IAlbum>();
-            SourcePlaylists = new List<IPlaylist>();
-            SourceChildren = new List<IPlayableCollectionGroup>();
         }
 
-        /// <inheritdoc cref="Tracks"/>
-        protected List<ITrack> SourceTracks { get; }
-
-        /// <inheritdoc cref="Artists"/>
-        protected List<IArtist> SourceArtists { get; }
-
-        /// <inheritdoc cref="Albums"/>
-        protected List<IAlbum> SourceAlbums { get; }
-
-        /// <inheritdoc cref="Playlists"/>
-        protected List<IPlaylist> SourcePlaylists { get; }
-
-        /// <inheritdoc cref="Children"/>
-        protected List<IPlayableCollectionGroup> SourceChildren { get; }
+        /// <inheritdoc />
+        public ObservableCollection<IPlayableCollectionGroup> Children { get; } = new ObservableCollection<IPlayableCollectionGroup>();
 
         /// <inheritdoc />
-        public IReadOnlyList<IPlayableCollectionGroup> Children => SourceChildren;
+        public ObservableCollection<IPlaylist> Playlists { get; } = new ObservableCollection<IPlaylist>();
 
         /// <inheritdoc />
-        public IReadOnlyList<IPlaylist> Playlists => SourcePlaylists;
+        public ObservableCollection<ITrack> Tracks { get; } = new ObservableCollection<ITrack>();
 
         /// <inheritdoc />
-        public IReadOnlyList<ITrack> Tracks => SourceTracks;
+        public ObservableCollection<IAlbum> Albums { get; } = new ObservableCollection<IAlbum>();
 
         /// <inheritdoc />
-        public IReadOnlyList<IAlbum> Albums => SourceAlbums;
-
-        /// <inheritdoc />
-        public IReadOnlyList<IArtist> Artists => SourceArtists;
+        public ObservableCollection<IArtist> Artists { get; } = new ObservableCollection<IArtist>();
 
         /// <inheritdoc />
         public ICore SourceCore { get; }
@@ -68,7 +47,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public abstract string Name { get; protected set; }
 
         /// <inheritdoc />
-        public abstract IReadOnlyList<IImage> Images { get; protected set; }
+        public abstract ObservableCollection<IImage> Images { get; protected set; }
 
         /// <inheritdoc />
         public abstract string? Description { get; protected set; }
@@ -104,28 +83,28 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeNameAsyncSupported => false;
 
         /// <inheritdoc />
-        public bool IsChangeImagesAsyncSupported => false;
-
-        /// <inheritdoc />
         public bool IsChangeDescriptionAsyncSupported => false;
 
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncSupported => false;
 
-        /// <inheritdoc />
-        public abstract event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new ObservableCollection<bool>();
 
-        /// <inheritdoc />
-        public abstract event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveAlbumSupportedMap { get; } = new ObservableCollection<bool>();
 
-        /// <inheritdoc />
-        public abstract event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new ObservableCollection<bool>();
 
-        /// <inheritdoc />
-        public abstract event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveTrackSupportedMap { get; } = new ObservableCollection<bool>();
 
-        /// <inheritdoc />
-        public abstract event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemovePlaylistSupportedMap { get; } = new ObservableCollection<bool>();
+
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveChildSupportedMap { get; } = new ObservableCollection<bool>();
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
@@ -140,10 +119,43 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
-
-        /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddChildSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddPlaylistSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddTrackSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddArtistSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddAlbumSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddImageSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
 
         /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description)
@@ -153,12 +165,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public Task ChangeDurationAsync(TimeSpan duration)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
         {
             throw new NotSupportedException();
         }
@@ -182,18 +188,33 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public abstract Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset = 0);
+        public abstract IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public abstract Task<IReadOnlyList<IArtist>> PopulateArtistsAsync(int limit, int offset = 0);
+        public abstract Task PopulateMoreAlbumsAsync(int limit);
 
         /// <inheritdoc />
-        public abstract Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0);
+        public abstract IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public abstract Task<IReadOnlyList<IPlaylist>> PopulatePlaylistsAsync(int limit, int offset = 0);
+        public abstract Task PopulateMoreArtistsAsync(int limit);
 
         /// <inheritdoc />
-        public abstract Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset = 0);
+        public abstract IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0);
+
+        /// <inheritdoc />
+        public abstract Task PopulateMoreChildrenAsync(int limit);
+
+        /// <inheritdoc />
+        public abstract IAsyncEnumerable<IPlaylist> GetPlaylistsAsync(int limit, int offset = 0);
+
+        /// <inheritdoc />
+        public abstract Task PopulateMorePlaylistsAsync(int limit);
+
+        /// <inheritdoc />
+        public abstract IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0);
+
+        /// <inheritdoc />
+        public abstract Task PopulateMoreTracksAsync(int limit);
     }
 }

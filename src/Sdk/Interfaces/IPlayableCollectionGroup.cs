@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Events;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -13,7 +12,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// The <see cref="IPlayableCollectionBase"/>s in this collection group.
         /// </summary>
-        IReadOnlyList<IPlayableCollectionGroup> Children { get; }
+        ObservableCollection<IPlayableCollectionGroup> Children { get; }
 
         /// <summary>
         /// The total number of available <see cref="Children"/>.
@@ -21,14 +20,27 @@ namespace StrixMusic.Sdk.Interfaces
         int TotalChildrenCount { get; }
 
         /// <summary>
-        /// Populates a set of <see cref="Children"/> into the collection.
+        /// Checks if the backend supports adding an <see cref="IPlayableCollectionGroup"/> at a specific position in <see cref="Children"/>.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task<IReadOnlyList<IPlayableCollectionGroup>> PopulateChildrenAsync(int limit, int offset = 0);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, an item can be added.</returns>
+        Task<bool> IsAddChildSupported(int index);
 
         /// <summary>
-        /// Fires when <see cref="Children"/> changes.
+        /// A collection that maps (by index) to the items in <see cref="Children"/>. The bool at each index tells you if removing the <see cref="IPlayableCollectionGroup"/> is supported.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>> ChildrenChanged;
+        ObservableCollection<bool> IsRemoveChildSupportedMap { get; }
+
+        /// <summary>
+        /// Returns items at a specific index and offset.
+        /// </summary>
+        /// <remarks>Does not affect <see cref="Children"/>.</remarks>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset);
+
+        /// <summary>
+        /// Populates the <see cref="Children"/> in the collection.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PopulateMoreChildrenAsync(int limit);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
@@ -7,7 +8,6 @@ using Hqub.MusicBrainz.API.Entities;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
 
@@ -18,8 +18,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
     {
         private readonly Artist _artist;
         private readonly MusicBrainzClient _musicBrainzClient;
-        private readonly List<IAlbum> _albums;
-        private readonly List<ITrack> _tracks;
         private readonly MusicBrainzArtistHelpersService _artistHelperService;
 
         /// <summary>
@@ -31,8 +29,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             SourceCore = sourceCore;
             _artist = artist;
-            _albums = new List<IAlbum>();
-            _tracks = new List<ITrack>();
+            Albums = new ObservableCollection<IAlbum>();
+            Tracks = new ObservableCollection<ITrack>();
+
             _musicBrainzClient = SourceCore.GetService<MusicBrainzClient>();
             _artistHelperService = SourceCore.GetService<MusicBrainzArtistHelpersService>();
         }
@@ -41,13 +40,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Id => _artist.Id;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IAlbum> Albums => _albums;
+        public ObservableCollection<IAlbum> Albums { get; }
 
         /// <inheritdoc/>
         public int TotalAlbumsCount => _artist.Releases.Count;
 
         /// <inheritdoc/>
-        public IReadOnlyList<ITrack> Tracks => _tracks;
+        public ObservableCollection<ITrack> Tracks { get; }
 
         /// <inheritdoc/>
         public int TotalTracksCount { get; internal set; }
@@ -62,7 +61,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Name => _artist.Name;
 
         /// <inheritdoc/>
-        public IReadOnlyList<IImage> Images => new List<IImage>();
+        public ObservableCollection<IImage> Images => new ObservableCollection<IImage>();
 
         /// <inheritdoc/>
         public string Description => _artist.SortName;
@@ -86,19 +85,25 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeNameAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeImagesAsyncSupported => false;
-
-        /// <inheritdoc/>
         public bool IsChangeDescriptionAsyncSupported => false;
 
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
+        public ObservableCollection<string>? Genres { get; }
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+        public ObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new ObservableCollection<bool>();
+
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveTrackSupportedMap { get; } = new ObservableCollection<bool>();
+
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveAlbumSupportedMap { get; } = new ObservableCollection<bool>();
+
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new ObservableCollection<bool>();
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
@@ -113,10 +118,31 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IImage>>? ImagesChanged;
+        public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<TimeSpan>? DurationChanged;
+        public Task<bool> IsAddImageSupported(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddTrackSupported(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddAlbumSupported(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddGenreSupported(int index)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
@@ -126,12 +152,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeImagesAsync(IReadOnlyList<IImage> images)
         {
             throw new NotSupportedException();
         }
@@ -155,7 +175,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public async Task<IReadOnlyList<IAlbum>> PopulateAlbumsAsync(int limit, int offset)
+        public async IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset)
         {
             var releasesList = await _musicBrainzClient.Releases.BrowseAsync("artist", Id, limit, offset);
 
@@ -170,19 +190,28 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
                 foreach (var medium in release.Media)
                 {
-                    _albums.Add(new MusicBrainzAlbum(SourceCore, release, medium, artist));
+                    var album = new MusicBrainzAlbum(SourceCore, release, medium, artist);
+
+                    Albums.Add(album);
+                    IsRemoveAlbumSupportedMap.Add(false);
+                    yield return album;
                 }
             }
-
-            var addedItems = _albums.Select((x, index) => new CollectionChangedEventArgsItem<IAlbum>(x, index));
-
-            AlbumsChanged?.Invoke(this, new CollectionChangedEventArgs<IAlbum>(addedItems.ToArray(), null));
-
-            return _albums;
         }
 
         /// <inheritdoc/>
-        public async Task<IReadOnlyList<ITrack>> PopulateTracksAsync(int limit, int offset)
+        public async Task PopulateMoreAlbumsAsync(int limit)
+        {
+            var offset = Albums.Count;
+            await foreach (var item in GetAlbumsAsync(limit, offset))
+            {
+                IsRemoveAlbumSupportedMap.Add(false);
+                Albums.Add(item);
+            }
+        }
+
+        /// <inheritdoc/>
+        public async IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset)
         {
             var recordings = await _musicBrainzClient.Recordings.BrowseAsync("artist", Id, limit, offset, RelationshipQueries.Recordings);
 
@@ -211,19 +240,28 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     foreach (var medium in release.Media)
                     {
                         // Iterate the tracks and find a matching ID for this recording
-                        foreach (var track in medium.Tracks.Where(track => track.Recording.Id == recording.Id))
+                        foreach (var trackData in medium.Tracks.Where(track => track.Recording.Id == recording.Id))
                         {
-                            _tracks.Add(new MusicBrainzTrack(SourceCore, track, new MusicBrainzAlbum(SourceCore, release, medium, artist)));
+                            var track = new MusicBrainzTrack(SourceCore, trackData, new MusicBrainzAlbum(SourceCore, release, medium, artist));
+
+                            Tracks.Add(track);
+                            IsRemoveTrackSupportedMap.Add(false);
+                            yield return track;
                         }
                     }
                 }
             }
+        }
 
-            var addedItems = _tracks.Select((x, index) => new CollectionChangedEventArgsItem<ITrack>(x, index));
-
-            TracksChanged?.Invoke(this, new CollectionChangedEventArgs<ITrack>(addedItems.ToArray(), null));
-
-            return _tracks;
+        /// <inheritdoc/>
+        public async Task PopulateMoreTracksAsync(int limit)
+        {
+            var offset = Tracks.Count;
+            await foreach (var item in GetTracksAsync(limit, offset))
+            {
+                IsRemoveTrackSupportedMap.Add(false);
+                Tracks.Add(item);
+            }
         }
     }
 }
