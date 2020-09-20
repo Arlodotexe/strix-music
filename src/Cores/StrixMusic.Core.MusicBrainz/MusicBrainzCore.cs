@@ -66,10 +66,10 @@ namespace StrixMusic.Core.MusicBrainz
         public string InstanceId { get; }
 
         /// <inheritdoc/>
-        public ObservableCollection<IPlayable> Pins => throw new NotSupportedException();
+        public ObservableCollection<IPlayable> Pins { get; } = new ObservableCollection<IPlayable>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemovePinSupportedMap => throw new NotSupportedException();
+        public ObservableCollection<bool> IsRemovePinSupportedMap { get; } = new ObservableCollection<bool>();
 
         /// <inheritdoc/>
         public event EventHandler<CoreState>? CoreStateChanged;

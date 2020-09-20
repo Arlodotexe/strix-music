@@ -83,11 +83,6 @@ namespace StrixMusic.Sdk.Interfaces
         public event EventHandler<CoreState>? CoreStateChanged;
 
         /// <summary>
-        /// Fires when the collection of devices is updated.
-        /// </summary>
-        public event EventHandler<CollectionChangedEventArgs<IDevice>>? DevicesChanged;
-
-        /// <summary>
         /// Checks if the backend supports adding an <see cref="IPlayable"/> at a specific position in <see cref="Pins"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IPlayable"/> can be added.</returns>

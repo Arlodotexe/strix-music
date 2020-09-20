@@ -38,14 +38,6 @@ namespace StrixMusic.Sdk.Observables
             AttachEvents();
         }
 
-        /// <inheritdoc cref="ICore.CoreStateChanged" />
-        public event EventHandler<CoreState>? CoreStateChanged
-        {
-            add => _core.CoreStateChanged += value;
-
-            remove => _core.CoreStateChanged -= value;
-        }
-
         private void AttachEvents()
         {
             _core.CoreStateChanged += Core_CoreStateChanged;
@@ -59,10 +51,26 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc cref="ICore.CoreState" />
         private void Core_CoreStateChanged(object sender, CoreState e) => CoreState = e;
 
-        /// <inheritdoc cref="ICore.InstanceId"/>
+        /// <inheritdoc />
         public string InstanceId => _core.InstanceId;
 
-        /// <inheritdoc cref="ICore.Devices"/>
+        /// <inheritdoc cref="ICore.Name" />
+        public string Name => _core.Name;
+
+        /// <inheritdoc cref="ICore.User" />
+        public IUser User => _core.User;
+
+        /// <inheritdoc cref="ICore.CoreConfig" />
+        public ICoreConfig CoreConfig => _core.CoreConfig;
+
+        /// <inheritdoc cref="ICore.CoreState" />
+        public CoreState CoreState
+        {
+            get => _core.CoreState;
+            set => SetProperty(() => _core.CoreState, value);
+        }
+
+        /// <inheritdoc />
         public ObservableCollection<IDevice> Devices { get; }
 
         /// <inheritdoc cref="ICore.Library" />
@@ -93,20 +101,18 @@ namespace StrixMusic.Sdk.Observables
             DetachEvents();
         }
 
-        /// <inheritdoc cref="ICore.CoreState" />
-        public CoreState CoreState
+        /// <inheritdoc />
+        public Task<bool> IsAddPinSupported(int index) => _core.IsAddPinSupported(index);
+
+        /// <inheritdoc />
+        public ObservableCollection<bool> IsRemovePinSupportedMap => _core.IsRemovePinSupportedMap;
+
+        /// <inheritdoc cref="ICore.CoreStateChanged" />
+        public event EventHandler<CoreState>? CoreStateChanged
         {
-            get => _core.CoreState;
-            set => SetProperty(() => _core.CoreState, value);
+            add => _core.CoreStateChanged += value;
+
+            remove => _core.CoreStateChanged -= value;
         }
-
-        /// <inheritdoc cref="ICore.CoreConfig" />
-        public ICoreConfig CoreConfig => _core.CoreConfig;
-
-        /// <inheritdoc cref="ICore.Name" />
-        public string Name => _core.Name;
-
-        /// <inheritdoc cref="ICore.User" />
-        public IUser User => _core.User;
     }
 }

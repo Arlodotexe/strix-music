@@ -5,7 +5,6 @@ using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Services.ContextNavigation
 {
-
     /// <summary>
     /// The arguments for whenever navigation is requested with context.
     /// </summary>

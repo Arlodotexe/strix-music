@@ -2,10 +2,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shell.Default.Controls"
-    xmlns:observables="using:StrixMusic.Sdk.Observables"
+    xmlns:Interfaces="using:StrixMusic.Sdk.Interfaces"
     x:Class="StrixMusic.Shell.Default.Themes.TrackListStyle">
 
-    <DataTemplate x:Key="DefaultTrackList" x:DataType="observables">
+    <DataTemplate x:Key="DefaultTrackList" x:DataType="Interfaces:ITrackCollection">
         <ListView ItemsSource="{x:Bind Tracks}" ItemContainerStyle="{StaticResource TrackListItemStyle}" Margin="32" HorizontalAlignment="Stretch">
             <ListView.ItemTemplate>
                 <DataTemplate>
