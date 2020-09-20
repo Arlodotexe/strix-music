@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using StrixMusic.Core.MusicBrainz.Models;
@@ -65,6 +66,9 @@ namespace StrixMusic.Core.MusicBrainz
         public string InstanceId { get; }
 
         /// <inheritdoc/>
+        public ObservableCollection<IPlayable> Pins => throw new NotSupportedException();
+
+        /// <inheritdoc/>
         public event EventHandler<CoreState>? CoreStateChanged;
 
         /// <inheritdoc/>
@@ -122,6 +126,18 @@ namespace StrixMusic.Core.MusicBrainz
 
             CoreState = CoreState.Loaded;
             CoreStateChanged?.Invoke(this, CoreState);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddPinSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsRemovePinSupported(int index)
+        {
+            return Task.FromResult(false);
         }
     }
 }

@@ -76,6 +76,9 @@ namespace StrixMusic.Core.Files
         public event EventHandler<ISearchResults>? SearchResultsChanged;
 
         /// <inheritdoc/>
+        public ObservableCollection<IPlayable> Pins => throw new NotImplementedException();();
+
+        /// <inheritdoc/>
         public ValueTask DisposeAsync()
         {
             throw new NotImplementedException();
@@ -121,6 +124,18 @@ namespace StrixMusic.Core.Files
         public Task InitAsync()
         {
             return Task.CompletedTask;
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddPinSupported(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsRemovePinSupported(int index)
+        {
+            throw new NotImplementedException();
         }
     }
 }

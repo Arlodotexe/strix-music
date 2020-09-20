@@ -34,6 +34,7 @@ namespace StrixMusic.Sdk.Observables
             Library = new ObservableLibrary(_core.Library);
             RecentlyPlayed = new ObservableRecentlyPlayed(_core.RecentlyPlayed);
             Discoverables = new ObservableCollectionGroup(_core.Discoverables);
+            Pins = new ObservableCollection<IPlayable>(_core.Pins);
 
             AttachEvents();
         }
@@ -96,6 +97,9 @@ namespace StrixMusic.Sdk.Observables
 
         /// <inheritdoc cref="ICore.Discoverables" />
         public ObservableCollectionGroup Discoverables { get; }
+
+        /// <inheritdoc cref="ICore.Pins" />
+        public ObservableCollection<IPlayable> Pins { get; }
 
         /// <inheritdoc cref="ICore.GetSearchAutoCompleteAsync" />
         public Task<IReadOnlyList<string>?> GetSearchAutoCompleteAsync(string query) => _core.GetSearchAutoCompleteAsync(query);
