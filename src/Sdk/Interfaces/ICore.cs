@@ -43,6 +43,11 @@ namespace StrixMusic.Sdk.Interfaces
         public ILibrary Library { get; }
 
         /// <summary>
+        /// A list of pinned playable items.
+        /// </summary>
+        public ObservableCollection<IPlayable> Pins { get; }
+
+        /// <summary>
         /// Gets the recently played items for this core.
         /// </summary>
         public IRecentlyPlayed RecentlyPlayed { get; }
@@ -76,5 +81,21 @@ namespace StrixMusic.Sdk.Interfaces
         /// Fires when the <see cref="CoreState"/> has changed.
         /// </summary>
         public event EventHandler<CoreState>? CoreStateChanged;
+
+        /// <summary>
+        /// Fires when the collection of devices is updated.
+        /// </summary>
+        public event EventHandler<CollectionChangedEventArgs<IDevice>>? DevicesChanged;
+
+        /// <summary>
+        /// Checks if the backend supports adding an <see cref="IPlayable"/> at a specific position in <see cref="Pins"/>.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IPlayable"/> can be added.</returns>
+        Task<bool> IsAddPinSupported(int index);
+
+        /// <summary>
+        /// A collection that maps (by index) to the items in <see cref="Pins"/>. The bool at each index tells you if removing the <see cref="IPlayable"/> is supported.
+        /// </summary>
+        ObservableCollection<bool> IsRemovePinSupportedMap { get; }
     }
 }

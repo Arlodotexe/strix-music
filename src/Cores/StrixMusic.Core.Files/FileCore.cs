@@ -33,6 +33,9 @@ namespace StrixMusic.Core.Files
         public IUser User { get; }
 
         /// <inheritdoc/>
+        public ObservableCollection<IPlayable> Pins => throw new NotImplementedException();
+
+        /// <inheritdoc/>
         public CoreState CoreState => throw new NotImplementedException();
 
         /// <inheritdoc/>
@@ -49,6 +52,9 @@ namespace StrixMusic.Core.Files
 
         /// <inheritdoc/>
         public string InstanceId { get; }
+
+        /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemovePinSupportedMap => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public event EventHandler<IDevice>? DeviceAdded;
@@ -120,6 +126,12 @@ namespace StrixMusic.Core.Files
         public Task InitAsync()
         {
             return Task.CompletedTask;
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddPinSupported(int index)
+        {
+            throw new NotImplementedException();
         }
     }
 }
