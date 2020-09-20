@@ -15,7 +15,7 @@
         <local:PlayableCollectionListControl/>
     </DataTemplate>
 
-    <DataTemplate x:Key="AlbumListTemplate" x:DataType="observables:">
+    <DataTemplate x:Key="AlbumListTemplate" >
         
     </DataTemplate>
 

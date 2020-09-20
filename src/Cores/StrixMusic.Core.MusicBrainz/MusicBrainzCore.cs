@@ -69,6 +69,9 @@ namespace StrixMusic.Core.MusicBrainz
         public ObservableCollection<IPlayable> Pins => throw new NotSupportedException();
 
         /// <inheritdoc/>
+        public ObservableCollection<bool> IsRemovePinSupportedMap => throw new NotSupportedException();
+
+        /// <inheritdoc/>
         public event EventHandler<CoreState>? CoreStateChanged;
 
         /// <inheritdoc/>
@@ -130,12 +133,6 @@ namespace StrixMusic.Core.MusicBrainz
 
         /// <inheritdoc/>
         public Task<bool> IsAddPinSupported(int index)
-        {
-            return Task.FromResult(false);
-        }
-
-        /// <inheritdoc/>
-        public Task<bool> IsRemovePinSupported(int index)
         {
             return Task.FromResult(false);
         }
