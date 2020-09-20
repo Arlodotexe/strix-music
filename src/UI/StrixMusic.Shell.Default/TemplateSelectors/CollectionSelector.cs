@@ -1,4 +1,5 @@
 ﻿using StrixMusic.Sdk.Interfaces;
+using StrixMusic.Sdk.Observables;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -15,6 +16,11 @@ namespace StrixMusic.Shell.Default.TemplateSelectors
         public DataTemplate? TrackListTemplate { get; set; }
 
         /// <summary>
+        /// The <see cref="DataTemplate"/> for album lists.
+        /// </summary>
+        public DataTemplate? AlbumListTemplate { get; set; }
+
+        /// <summary>
         /// The <see cref="DataTemplate"/> for any <see cref="IPlayableCollectionGroup"/>.
         /// </summary>
         public DataTemplate? PlayableCollectionGroupTemplate { get; set; }
@@ -24,8 +30,10 @@ namespace StrixMusic.Shell.Default.TemplateSelectors
         {
             switch (item)
             {
-                case IPlaylist _:
+                case ObservableTrack _:
                     return TrackListTemplate!;
+                case ObservableAlbum _:
+                    return AlbumListTemplate!;
                 default:
                     return PlayableCollectionGroupTemplate!;
             }

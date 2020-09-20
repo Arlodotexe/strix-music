@@ -10,36 +10,41 @@
     <DataTemplate x:Key="TrackListTemplate">
         <local:TrackListControl/>
     </DataTemplate>
+
     <DataTemplate x:Key="PlayableCollectionGroupTemplate">
         <local:PlayableCollectionListControl/>
     </DataTemplate>
+
+    <DataTemplate x:Key="AlbumListTemplate" x:DataType="observables:">
+        
+    </DataTemplate>
+
     <selectors:CollectionSelector x:Key="CollectionSelector"
                                  TrackListTemplate="{StaticResource TrackListTemplate}"
-                                 PlayableCollectionGroupTemplate="{StaticResource PlayableCollectionGroupTemplate}"/>
+                                 PlayableCollectionGroupTemplate="{StaticResource PlayableCollectionGroupTemplate}"
+                                 AlbumListTemplate="{StaticResource AlbumListTemplate}"/>
 
     <DataTemplate x:Key="DefaultHomeTemplate" x:DataType="observables:ObservableLibrary">
         <UserControl>
             <Grid>
-                <Pivot ItemsSource="{x:Bind Children, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
+                <Pivot ItemsSource="{x:Bind}" ItemTemplateSelector="{StaticResource CollectionSelector}">
                     <Pivot.Title>
                         <TextBlock Text="Home"/>
                     </Pivot.Title>
                     <Pivot.HeaderTemplate>
-                        <DataTemplate x:DataType="interfaces:IPlayableCollectionBase">
+                        <DataTemplate x:DataType="interfaces:IPlayable">
                             <TextBlock Text="{x:Bind Name}"/>
                         </DataTemplate>
                     </Pivot.HeaderTemplate>
-                    <!--<PivotItem Header="Overview">
-                    </PivotItem>
                     <PivotItem Header="Songs">
-                        <local:TrackListControl/>
+                        <local:TrackListControl />
                     </PivotItem>
                     <PivotItem Header="Albums">
                         <local:PlayableCollectionListControl/>
                     </PivotItem>
                     <PivotItem Header="Artists">
                         <local:PlayableCollectionListControl/>
-                    </PivotItem>-->
+                    </PivotItem>
                 </Pivot>
             </Grid>
         </UserControl>
