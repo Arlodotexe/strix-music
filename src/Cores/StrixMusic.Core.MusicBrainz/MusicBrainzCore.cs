@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
+using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Models;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
@@ -31,7 +31,7 @@ namespace StrixMusic.Core.MusicBrainz
             // The library created here won't be used by the UI.
             // The UI isn't loaded until InitAsync is called, where we set up the actual library.
             Library = new MusicBrainzLibrary(this);
-            Devices = new ObservableCollection<IDevice>();
+            Devices = new SynchronizedObservableCollection<IDevice>();
             RecentlyPlayed = new MusicBrainzRecentlyPlayed(this);
             Discoverables = new MusicBrainzDiscoverables(this);
             User = new MusicBrainzUser(this);
@@ -52,7 +52,7 @@ namespace StrixMusic.Core.MusicBrainz
         public IUser User { get; }
 
         /// <inheritdoc/>
-        public ObservableCollection<IDevice> Devices { get; }
+        public SynchronizedObservableCollection<IDevice> Devices { get; }
 
         /// <inheritdoc/>
         public ILibrary Library { get; private set; }
@@ -67,10 +67,10 @@ namespace StrixMusic.Core.MusicBrainz
         public string InstanceId { get; }
 
         /// <inheritdoc/>
-        public ObservableCollection<IPlayable> Pins { get; } = new ObservableCollection<IPlayable>();
+        public SynchronizedObservableCollection<IPlayable> Pins { get; } = new SynchronizedObservableCollection<IPlayable>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemovePinSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemovePinSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
         public event EventHandler<CoreState>? CoreStateChanged;
