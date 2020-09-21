@@ -135,7 +135,7 @@ namespace StrixMusic.Core.Files
         }
 
         /// <inheritdoc/>
-        public object GetIPlayableById(string? id)
+        public Task<object?> GetContextById(string? id)
         {
             throw new NotImplementedException();
         }

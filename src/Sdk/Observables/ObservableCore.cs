@@ -105,9 +105,9 @@ namespace StrixMusic.Sdk.Observables
         public Task<bool> IsAddPinSupported(int index) => _core.IsAddPinSupported(index);
 
         /// <inheritdoc/>
-        public object GetIPlayableById(string? id)
+        public Task<object?> GetContextById(string? id)
         {
-            return _core.GetIPlayableById(id);
+            return _core.GetContextById(id);
         }
 
         /// <inheritdoc />

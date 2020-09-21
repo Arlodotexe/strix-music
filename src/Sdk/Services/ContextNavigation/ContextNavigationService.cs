@@ -13,7 +13,7 @@ namespace StrixMusic.Sdk.Services.ContextNavigation
         public void RequestNavigation(string coreName, string payload)
         {
             var sourceCore = MainViewModel.Singleton?.LoadedCores.FirstOrDefault(c => c.Name == coreName);
-            var playable = sourceCore?.GetIPlayableById(payload);
+            var playable = sourceCore?.GetContextById(payload);
             var eventArgs = new ContextNavigateEventArgs<object?>(playable);
             NavigationRequested?.Invoke(this, eventArgs);
         }

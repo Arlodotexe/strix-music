@@ -89,11 +89,11 @@ namespace StrixMusic.Sdk.Interfaces
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IPlayable"/> can be added.</returns>
         Task<bool> IsAddPinSupported(int index);
 
-        ///<summary>
+        /// <summary>
         /// Gets the object against a context.
         /// </summary>
-        /// <returns>Returns an IPlayable object</returns>
-        object GetIPlayableById(string? id);
+        /// <returns>Returns the requested context object</returns>
+        Task<object?> GetContextById(string? id);
 
         /// <summary>
         /// Fires when the <see cref="CoreState"/> has changed.
