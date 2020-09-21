@@ -92,5 +92,11 @@ namespace StrixMusic.Sdk.Interfaces
         /// A collection that maps (by index) to the items in <see cref="Pins"/>. The bool at each index tells you if removing the <see cref="IPlayable"/> is supported.
         /// </summary>
         ObservableCollection<bool> IsRemovePinSupportedMap { get; }
+
+        ///<summary>
+        /// Gets the object against a context.
+        /// </summary>
+        /// <returns>Returns an IPlayable object</returns>
+        object GetIPlayableById(string? id);
     }
 }

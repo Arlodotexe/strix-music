@@ -81,6 +81,12 @@ namespace StrixMusic.Core.MusicBrainz
         }
 
         /// <inheritdoc/>
+        public object GetIPlayableById(string? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
         public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query)
         {
             return AsyncEnumerable.Empty<string>();

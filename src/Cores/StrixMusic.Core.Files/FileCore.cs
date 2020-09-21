@@ -133,5 +133,11 @@ namespace StrixMusic.Core.Files
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        public object GetIPlayableById(string? id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

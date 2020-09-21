@@ -104,6 +104,12 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc />
         public Task<bool> IsAddPinSupported(int index) => _core.IsAddPinSupported(index);
 
+        /// <inheritdoc/>
+        public object GetIPlayableById(string? id)
+        {
+            return _core.GetIPlayableById(id);
+        }
+
         /// <inheritdoc />
         public ObservableCollection<bool> IsRemovePinSupportedMap => _core.IsRemovePinSupportedMap;
 

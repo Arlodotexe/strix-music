@@ -23,6 +23,6 @@ namespace StrixMusic.Sdk.Services.ContextNavigation
         /// <summary>
         /// An event that is triggered whenever navigation is requested.
         /// </summary>
-        event EventHandler<ContextNavigateEventArgs<T>>? NavigationRequested;
+        event EventHandler<ContextNavigateEventArgs<object?>>? NavigationRequested;
     }
 }
