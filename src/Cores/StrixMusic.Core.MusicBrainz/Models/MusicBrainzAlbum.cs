@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
+using OwlCore.Collections;
 using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
@@ -41,7 +41,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             Release = release;
             Medium = medium;
-            Tracks = new ObservableCollection<ITrack>();
+            Tracks = new SynchronizedObservableCollection<ITrack>();
             Images = CreateImagesForRelease();
 
             SourceCore = sourceCore;
@@ -81,7 +81,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public DateTime? DatePublished => CreateReleaseDate(Release.Date);
 
         /// <inheritdoc/>
-        public ObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc/>
         public string? Description => Release.TextRepresentation?.Script;
@@ -93,7 +93,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration { get; } = TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public ObservableCollection<ITrack> Tracks { get; }
+        public SynchronizedObservableCollection<ITrack> Tracks { get; }
 
         /// <inheritdoc/>
         public IPlayableCollectionGroup? RelatedItems => null;
@@ -117,16 +117,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
-        public ObservableCollection<string>? Genres { get; } = new ObservableCollection<string>();
+        public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveTrackSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
         public Task<bool> IsAddGenreSupported(int index)
@@ -258,9 +258,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
             return date;
         }
 
-        private ObservableCollection<IImage> CreateImagesForRelease()
+        private SynchronizedObservableCollection<IImage> CreateImagesForRelease()
         {
-            var returnData = new ObservableCollection<IImage>();
+            var returnData = new SynchronizedObservableCollection<IImage>();
 
             foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
             {

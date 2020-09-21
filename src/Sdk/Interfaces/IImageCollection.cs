@@ -1,5 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using OwlCore.Collections;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// Relevant images for the collection.
         /// </summary>
-        ObservableCollection<IImage> Images { get; }
+        SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <summary>
         /// Checks if the backend supports adding an <see cref="IImage"/> at a specific position in <see cref="Images"/>.
@@ -22,6 +22,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// A collection that maps (by index) to the items in <see cref="Images"/>. The bool at each index tells you if removing the <see cref="IImage"/> is supported.
         /// </summary>
-        ObservableCollection<bool> IsRemoveImageSupportedMap { get; }
+        SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; }
     }
 }

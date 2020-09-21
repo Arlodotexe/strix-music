@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using OwlCore.Collections;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// Links to an external resource.
         /// </summary>
-        ObservableCollection<Uri>? Urls { get; }
+        SynchronizedObservableCollection<Uri>? Urls { get; }
 
         /// <summary>
         /// Checks if the backend supports adding an <see cref="Uri"/> at a specific position in <see cref="Urls"/>.
@@ -23,6 +23,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// A collection that maps (by index) to the items in <see cref="Urls"/>. The bool at each index tells you if removing the <see cref="Uri"/> is supported.
         /// </summary>
-        ObservableCollection<bool> IsRemoveUrlSupportedMap { get; }
+        SynchronizedObservableCollection<bool> IsRemoveUrlSupportedMap { get; }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Interfaces;
 
@@ -32,9 +32,9 @@ namespace StrixMusic.Sdk.Observables
             if (_track.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_track.RelatedItems);
 
-            Genres = new ObservableCollection<string>(_track.Genres);
-            Artists = new ObservableCollection<IArtist>(_track.Artists.Select(x => new ObservableArtist(x)));
-            Images = new ObservableCollection<IImage>(_track.Images);
+            Genres = new SynchronizedObservableCollection<string>(_track.Genres);
+            Artists = new SynchronizedObservableCollection<IArtist>(_track.Artists.Select(x => new ObservableArtist(x)));
+            Images = new SynchronizedObservableCollection<IImage>(_track.Images);
             SourceCore = MainViewModel.GetLoadedCore(_track.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -94,13 +94,13 @@ namespace StrixMusic.Sdk.Observables
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<IArtist> Artists { get; }
+        public SynchronizedObservableCollection<IArtist> Artists { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<string> Genres { get; }
+        public SynchronizedObservableCollection<string> Genres { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public TrackType Type => _track.Type;
@@ -251,13 +251,13 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveImageSupportedMap => _track.IsRemoveImageSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap => _track.IsRemoveImageSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveArtistSupportedMap => _track.IsRemoveArtistSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveArtistSupportedMap => _track.IsRemoveArtistSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveGenreSupportedMap => _track.IsRemoveGenreSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap => _track.IsRemoveGenreSupportedMap;
 
         /// <inheritdoc />
         public Task<bool> IsAddArtistSupported(int index) => _track.IsAddArtistSupported(index);

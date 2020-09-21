@@ -1,5 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using OwlCore.Collections;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// A list of <see cref="string"/> describing the genres for this track.
         /// </summary>
-        ObservableCollection<string>? Genres { get; }
+        SynchronizedObservableCollection<string>? Genres { get; }
 
         /// <summary>
         /// Checks if the backend supports adding a <see cref="string"/> at a specific position in <see cref="Genres"/>.
@@ -22,6 +22,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// A collection that maps (by index) to the items in <see cref="Genres"/>. The bool at each index tells you if removing the <see cref="string"/> is supported.
         /// </summary>
-        ObservableCollection<bool> IsRemoveGenreSupportedMap { get; }
+        SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap { get; }
     }
 }

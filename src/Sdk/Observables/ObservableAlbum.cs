@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Interfaces;
 
@@ -26,8 +26,8 @@ namespace StrixMusic.Sdk.Observables
 
             SourceCore = MainViewModel.GetLoadedCore(_album.SourceCore);
 
-            Images = new ObservableCollection<IImage>(_album.Images);
-            Tracks = new ObservableCollection<ITrack>(_album.Tracks.Select(x => new ObservableTrack(x)));
+            Images = new SynchronizedObservableCollection<IImage>(_album.Images);
+            Tracks = new SynchronizedObservableCollection<ITrack>(_album.Tracks.Select(x => new ObservableTrack(x)));
 
             if (_album.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_album.RelatedItems);
@@ -88,7 +88,7 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public ObservableCollection<ITrack> Tracks { get; }
+        public SynchronizedObservableCollection<ITrack> Tracks { get; }
 
         /// <inheritdoc />
         public int TotalTracksCount => _album.TotalTracksCount;
@@ -119,7 +119,7 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public ObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public Uri? Url
@@ -150,7 +150,7 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public ObservableCollection<string>? Genres => _album.Genres;
+        public SynchronizedObservableCollection<string>? Genres => _album.Genres;
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported
@@ -195,13 +195,13 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveImageSupportedMap => _album.IsRemoveImageSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap => _album.IsRemoveImageSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveGenreSupportedMap => _album.IsRemoveGenreSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap => _album.IsRemoveGenreSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveTrackSupportedMap => _album.IsRemoveTrackSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap => _album.IsRemoveTrackSupportedMap;
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
-using Microsoft.Toolkit.Mvvm.Messaging.Messages;
+using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Extensions;
@@ -41,7 +40,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override string Name { get; protected set; } = "Library";
 
         /// <inheritdoc />
-        public override ObservableCollection<IImage> Images { get; protected set; } = new ObservableCollection<IImage>();
+        public override SynchronizedObservableCollection<IImage> Images { get; protected set; } = new SynchronizedObservableCollection<IImage>();
 
         /// <inheritdoc />
         public override string? Description { get; protected set; } = null;

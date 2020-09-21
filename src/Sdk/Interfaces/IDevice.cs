@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
 
 namespace StrixMusic.Sdk.Interfaces
@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// The current playback queue.
         /// </summary>
         /// <remarks>When <see cref="Enums.DeviceType"/> is <see cref="DeviceType.Remote" />, this will override the internal playback queue.</remarks>
-        public ObservableCollection<ITrack> PlaybackQueue { get; }
+        public SynchronizedObservableCollection<ITrack> PlaybackQueue { get; }
 
         /// <summary>
         /// The context of the currently playing track.

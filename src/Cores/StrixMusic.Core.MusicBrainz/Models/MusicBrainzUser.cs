@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -38,13 +37,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string? Email => null;
 
         /// <inheritdoc />
-        public ObservableCollection<IImage> Images { get; } = new ObservableCollection<IImage>();
+        public SynchronizedObservableCollection<IImage> Images { get; } = new SynchronizedObservableCollection<IImage>();
 
         /// <inheritdoc />
         public DateTime? Birthdate => null;
 
         /// <inheritdoc />
-        public ObservableCollection<Uri>? Urls { get; } = new ObservableCollection<Uri>();
+        public SynchronizedObservableCollection<Uri>? Urls { get; } = new SynchronizedObservableCollection<Uri>();
 
         /// <inheritdoc />
         public CultureInfo Region => CultureInfo.CurrentUICulture;
@@ -65,10 +64,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeEmailAsyncSupported => false;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveUrlSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveUrlSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc />
         public Task<bool> IsAddUrlSupported(int index)

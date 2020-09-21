@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
+using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
@@ -29,8 +29,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             SourceCore = sourceCore;
             _artist = artist;
-            Albums = new ObservableCollection<IAlbum>();
-            Tracks = new ObservableCollection<ITrack>();
+            Albums = new SynchronizedObservableCollection<IAlbum>();
+            Tracks = new SynchronizedObservableCollection<ITrack>();
 
             _musicBrainzClient = SourceCore.GetService<MusicBrainzClient>();
             _artistHelperService = SourceCore.GetService<MusicBrainzArtistHelpersService>();
@@ -40,13 +40,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Id => _artist.Id;
 
         /// <inheritdoc/>
-        public ObservableCollection<IAlbum> Albums { get; }
+        public SynchronizedObservableCollection<IAlbum> Albums { get; }
 
         /// <inheritdoc/>
         public int TotalAlbumsCount => _artist.Releases.Count;
 
         /// <inheritdoc/>
-        public ObservableCollection<ITrack> Tracks { get; }
+        public SynchronizedObservableCollection<ITrack> Tracks { get; }
 
         /// <inheritdoc/>
         public int TotalTracksCount { get; internal set; }
@@ -61,7 +61,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Name => _artist.Name;
 
         /// <inheritdoc/>
-        public ObservableCollection<IImage> Images => new ObservableCollection<IImage>();
+        public SynchronizedObservableCollection<IImage> Images => new SynchronizedObservableCollection<IImage>();
 
         /// <inheritdoc/>
         public string Description => _artist.SortName;
@@ -91,19 +91,19 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
-        public ObservableCollection<string>? Genres { get; }
+        public SynchronizedObservableCollection<string>? Genres { get; }
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveTrackSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveAlbumSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveAlbumSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;

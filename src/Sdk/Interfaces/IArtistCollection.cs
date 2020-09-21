@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using OwlCore.Collections;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// The artists in the collection.
         /// </summary>
-        ObservableCollection<IArtist> Artists { get; }
+        SynchronizedObservableCollection<IArtist> Artists { get; }
 
         /// <summary>
         /// The total number of available <see cref="Artists"/>.
@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// A collection that maps (by index) to the items in <see cref="Artists"/>. The bool at each index tells you if removing the <see cref="IArtist"/> is supported.
         /// </summary>
-        ObservableCollection<bool> IsRemoveArtistSupportedMap { get; }
+        SynchronizedObservableCollection<bool> IsRemoveArtistSupportedMap { get; }
 
         /// <summary>
         /// Returns items at a specific index and offset.

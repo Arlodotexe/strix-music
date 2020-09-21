@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using OwlCore.Collections;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// The <see cref="IPlayableCollectionBase"/>s in this collection group.
         /// </summary>
-        ObservableCollection<IPlayableCollectionGroup> Children { get; }
+        SynchronizedObservableCollection<IPlayableCollectionGroup> Children { get; }
 
         /// <summary>
         /// The total number of available <see cref="Children"/>.
@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// A collection that maps (by index) to the items in <see cref="Children"/>. The bool at each index tells you if removing the <see cref="IPlayableCollectionGroup"/> is supported.
         /// </summary>
-        ObservableCollection<bool> IsRemoveChildSupportedMap { get; }
+        SynchronizedObservableCollection<bool> IsRemoveChildSupportedMap { get; }
 
         /// <summary>
         /// Returns items at a specific index and offset.

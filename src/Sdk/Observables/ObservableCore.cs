@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Interfaces;
 
@@ -29,10 +29,10 @@ namespace StrixMusic.Sdk.Observables
 
             MainViewModel.Singleton?.LoadedCores.Add(this);
 
-            Devices = new ObservableCollection<IDevice>(_core.Devices.Select(x => new ObservableDevice(x)));
+            Devices = new SynchronizedObservableCollection<IDevice>(_core.Devices.Select(x => new ObservableDevice(x)));
             Library = new ObservableLibrary(_core.Library);
             RecentlyPlayed = new ObservableRecentlyPlayed(_core.RecentlyPlayed);
-            Pins = new ObservableCollection<IPlayable>(_core.Pins);
+            Pins = new SynchronizedObservableCollection<IPlayable>(_core.Pins);
             Discoverables = new ObservableDiscoverables(_core.Discoverables);
 
             AttachEvents();
@@ -71,7 +71,7 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public ObservableCollection<IDevice> Devices { get; }
+        public SynchronizedObservableCollection<IDevice> Devices { get; }
 
         /// <inheritdoc cref="ICore.Library" />
         public ILibrary Library { get; }
@@ -83,7 +83,7 @@ namespace StrixMusic.Sdk.Observables
         public IDiscoverables Discoverables { get; }
 
         /// <inheritdoc cref="ICore.Pins" />
-        public ObservableCollection<IPlayable> Pins { get; }
+        public SynchronizedObservableCollection<IPlayable> Pins { get; }
 
         /// <inheritdoc cref="ICore.GetSearchAutoCompleteAsync" />
         public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query) => _core.GetSearchAutoCompleteAsync(query);
@@ -111,7 +111,7 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemovePinSupportedMap => _core.IsRemovePinSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemovePinSupportedMap => _core.IsRemovePinSupportedMap;
 
         /// <inheritdoc cref="ICore.CoreStateChanged" />
         public event EventHandler<CoreState>? CoreStateChanged

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Interfaces;
 
@@ -39,11 +39,11 @@ namespace StrixMusic.Sdk.Observables
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
 
-            Tracks = new ObservableCollection<ITrack>(_collectionGroupBase.Tracks.Select(x => new ObservableTrack(x)));
-            Playlists = new ObservableCollection<IPlaylist>(_collectionGroupBase.Playlists.Select(x => new ObservablePlaylist(x)));
-            Albums = new ObservableCollection<IAlbum>(_collectionGroupBase.Albums.Select(x => new ObservableAlbum(x)));
-            Artists = new ObservableCollection<IArtist>(_collectionGroupBase.Artists.Select(x => new ObservableArtist(x)));
-            Children = new ObservableCollection<IPlayableCollectionGroup>(_collectionGroupBase.Children.Select(x => new ObservableCollectionGroup(x)));
+            Tracks = new SynchronizedObservableCollection<ITrack>(_collectionGroupBase.Tracks.Select(x => new ObservableTrack(x)));
+            Playlists = new SynchronizedObservableCollection<IPlaylist>(_collectionGroupBase.Playlists.Select(x => new ObservablePlaylist(x)));
+            Albums = new SynchronizedObservableCollection<IAlbum>(_collectionGroupBase.Albums.Select(x => new ObservableAlbum(x)));
+            Artists = new SynchronizedObservableCollection<IArtist>(_collectionGroupBase.Artists.Select(x => new ObservableArtist(x)));
+            Children = new SynchronizedObservableCollection<IPlayableCollectionGroup>(_collectionGroupBase.Children.Select(x => new ObservableCollectionGroup(x)));
 
             AttachEvents();
         }
@@ -81,7 +81,7 @@ namespace StrixMusic.Sdk.Observables
         public TimeSpan Duration => _collectionGroupBase.Duration;
 
         /// <inheritdoc />
-        public ObservableCollection<IImage> Images => _collectionGroupBase.Images;
+        public SynchronizedObservableCollection<IImage> Images => _collectionGroupBase.Images;
 
         /// <inheritdoc />
         public Uri? Url
@@ -105,19 +105,19 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public ObservableCollection<IPlaylist> Playlists { get; }
+        public SynchronizedObservableCollection<IPlaylist> Playlists { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<ITrack> Tracks { get; }
+        public SynchronizedObservableCollection<ITrack> Tracks { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<IAlbum> Albums { get; }
+        public SynchronizedObservableCollection<IAlbum> Albums { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<IArtist> Artists { get; }
+        public SynchronizedObservableCollection<IArtist> Artists { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<IPlayableCollectionGroup> Children { get; }
+        public SynchronizedObservableCollection<IPlayableCollectionGroup> Children { get; }
 
         /// <inheritdoc />
         public int TotalPlaylistCount => _collectionGroupBase.TotalPlaylistCount;
@@ -150,22 +150,22 @@ namespace StrixMusic.Sdk.Observables
         public bool IsChangeDurationAsyncSupported => _collectionGroupBase.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveImageSupportedMap => _collectionGroupBase.IsRemoveImageSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap => _collectionGroupBase.IsRemoveImageSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemovePlaylistSupportedMap => _collectionGroupBase.IsRemovePlaylistSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemovePlaylistSupportedMap => _collectionGroupBase.IsRemovePlaylistSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveTrackSupportedMap => _collectionGroupBase.IsRemoveTrackSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap => _collectionGroupBase.IsRemoveTrackSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveAlbumSupportedMap => _collectionGroupBase.IsRemoveAlbumSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveAlbumSupportedMap => _collectionGroupBase.IsRemoveAlbumSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveArtistSupportedMap => _collectionGroupBase.IsRemoveArtistSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveArtistSupportedMap => _collectionGroupBase.IsRemoveArtistSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveChildSupportedMap => _collectionGroupBase.IsRemoveChildSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveChildSupportedMap => _collectionGroupBase.IsRemoveChildSupportedMap;
 
         /// <inheritdoc />
         public Task<bool> IsAddImageSupported(int index) => _collectionGroupBase.IsAddImageSupported(index);

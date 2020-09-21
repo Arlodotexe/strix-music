@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.Messaging.Messages;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -29,7 +28,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override string Name { get; protected set; } = "Discoverables";
 
         /// <inheritdoc />
-        public override ObservableCollection<IImage> Images { get; protected set; } = new ObservableCollection<IImage>();
+        public override SynchronizedObservableCollection<IImage> Images { get; protected set; } = new SynchronizedObservableCollection<IImage>();
 
         /// <inheritdoc />
         public override string? Description { get; protected set; } = null;

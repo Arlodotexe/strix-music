@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Interfaces;
 
@@ -31,7 +31,7 @@ namespace StrixMusic.Sdk.Observables
 
             SourceCore = MainViewModel.GetLoadedCore(_device.SourceCore);
 
-            PlaybackQueue = new ObservableCollection<ITrack>(_device.PlaybackQueue.Select(x => new ObservableTrack(x)));
+            PlaybackQueue = new SynchronizedObservableCollection<ITrack>(_device.PlaybackQueue.Select(x => new ObservableTrack(x)));
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
@@ -107,7 +107,7 @@ namespace StrixMusic.Sdk.Observables
         public DeviceType DeviceType => _device.DeviceType;
 
         /// <inheritdoc />
-        public ObservableCollection<ITrack> PlaybackQueue { get; }
+        public SynchronizedObservableCollection<ITrack> PlaybackQueue { get; }
 
         /// <inheritdoc />
         public bool IsActive

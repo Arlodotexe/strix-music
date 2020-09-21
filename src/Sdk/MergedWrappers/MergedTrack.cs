@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.Sdk;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Interfaces;
 
@@ -58,13 +57,13 @@ namespace StrixMusic.Sdk.MergedWrappers
         public int TotalArtistsCount { get; }
 
         /// <inheritdoc/>
-        public ObservableCollection<IArtist> Artists { get; } = new ObservableCollection<IArtist>();
+        public SynchronizedObservableCollection<IArtist> Artists { get; } = new SynchronizedObservableCollection<IArtist>();
 
         /// <inheritdoc/>
-        public ObservableCollection<string>? Genres => _preferredSource.Genres;
+        public SynchronizedObservableCollection<string>? Genres => _preferredSource.Genres;
 
         /// <inheritdoc/>
-        public ObservableCollection<IImage> Images => _preferredSource.Images;
+        public SynchronizedObservableCollection<IImage> Images => _preferredSource.Images;
 
         /// <inheritdoc/>
         public IPlayableCollectionGroup? RelatedItems => _preferredSource.RelatedItems;
@@ -124,13 +123,13 @@ namespace StrixMusic.Sdk.MergedWrappers
         public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
         public event EventHandler<IAlbum?> AlbumChanged

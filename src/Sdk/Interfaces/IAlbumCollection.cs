@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using OwlCore.Collections;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// A collection of albums.
         /// </summary>
-        ObservableCollection<IAlbum> Albums { get; }
+        SynchronizedObservableCollection<IAlbum> Albums { get; }
 
         /// <summary>
         /// The total number of available <see cref="Albums"/>.
@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// A collection that maps (by index) to the items in <see cref="Albums"/>. The bool at each index tells you if removing the <see cref="IAlbum"/> is supported.
         /// </summary>
-        ObservableCollection<bool> IsRemoveAlbumSupportedMap { get; }
+        SynchronizedObservableCollection<bool> IsRemoveAlbumSupportedMap { get; }
 
         /// <summary>
         /// Returns items at a specific index and offset.

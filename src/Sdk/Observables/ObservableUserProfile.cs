@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
@@ -23,8 +23,8 @@ namespace StrixMusic.Sdk.Observables
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
             SourceCore = MainViewModel.GetLoadedCore(_userProfile.SourceCore);
-            Urls = new ObservableCollection<Uri>(userProfile.Urls);
-            Images = new ObservableCollection<IImage>(userProfile.Images);
+            Urls = new SynchronizedObservableCollection<Uri>(userProfile.Urls);
+            Images = new SynchronizedObservableCollection<IImage>(userProfile.Images);
         }
 
         /// <inheritdoc />
@@ -46,10 +46,10 @@ namespace StrixMusic.Sdk.Observables
         public DateTime? Birthdate => _userProfile.Birthdate;
 
         /// <inheritdoc />
-        public ObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<Uri>? Urls { get; }
+        public SynchronizedObservableCollection<Uri>? Urls { get; }
 
         /// <inheritdoc />
         public CultureInfo Region => _userProfile.Region;
@@ -70,10 +70,10 @@ namespace StrixMusic.Sdk.Observables
         public bool IsChangeEmailAsyncSupported => _userProfile.IsChangeEmailAsyncSupported;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveImageSupportedMap => _userProfile.IsRemoveImageSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap => _userProfile.IsRemoveImageSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveUrlSupportedMap => _userProfile.IsRemoveUrlSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveUrlSupportedMap => _userProfile.IsRemoveUrlSupportedMap;
 
         /// <inheritdoc />
         public Task<bool> IsAddUrlSupported(int index) => _userProfile.IsAddUrlSupported(index);

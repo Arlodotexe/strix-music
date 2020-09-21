@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using OwlCore.Collections;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// The playlists in the library.
         /// </summary>
-        ObservableCollection<IPlaylist> Playlists { get; }
+        SynchronizedObservableCollection<IPlaylist> Playlists { get; }
 
         /// <summary>
         /// The total number of available <see cref="Playlists"/>.
@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// A collection that maps (by index) to the items in <see cref="Playlists"/>. The bool at each index tells you if removing the <see cref="IPlaylist"/> is supported.
         /// </summary>
-        ObservableCollection<bool> IsRemovePlaylistSupportedMap { get; }
+        SynchronizedObservableCollection<bool> IsRemovePlaylistSupportedMap { get; }
 
         /// <summary>
         /// Returns items at a specific index and offset.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using OwlCore.Collections;
 using OwlCore.Extensions.AsyncExtensions;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Interfaces;
@@ -82,19 +82,19 @@ namespace StrixMusic.Sdk.MergedWrappers
         public int TotalAlbumsCount { get; }
 
         /// <inheritdoc/>
-        public ObservableCollection<IPlayableCollectionGroup> Children { get; } = new ObservableCollection<IPlayableCollectionGroup>();
+        public SynchronizedObservableCollection<IPlayableCollectionGroup> Children { get; } = new SynchronizedObservableCollection<IPlayableCollectionGroup>();
 
         /// <inheritdoc/>
-        public ObservableCollection<IPlaylist> Playlists { get; } = new ObservableCollection<IPlaylist>();
+        public SynchronizedObservableCollection<IPlaylist> Playlists { get; } = new SynchronizedObservableCollection<IPlaylist>();
 
         /// <inheritdoc/>
-        public ObservableCollection<ITrack> Tracks { get; } = new ObservableCollection<ITrack>();
+        public SynchronizedObservableCollection<ITrack> Tracks { get; } = new SynchronizedObservableCollection<ITrack>();
 
         /// <inheritdoc/>
-        public ObservableCollection<IAlbum> Albums { get; } = new ObservableCollection<IAlbum>();
+        public SynchronizedObservableCollection<IAlbum> Albums { get; } = new SynchronizedObservableCollection<IAlbum>();
 
         /// <inheritdoc/>
-        public ObservableCollection<IArtist> Artists { get; } = new ObservableCollection<IArtist>();
+        public SynchronizedObservableCollection<IArtist> Artists { get; } = new SynchronizedObservableCollection<IArtist>();
 
         /// <inheritdoc/>
         public int TotalArtistsCount { get; }
@@ -112,7 +112,7 @@ namespace StrixMusic.Sdk.MergedWrappers
         public string Name => PreferredSource.Name;
 
         /// <inheritdoc/>
-        public ObservableCollection<IImage> Images { get; } = new ObservableCollection<IImage>();
+        public SynchronizedObservableCollection<IImage> Images { get; } = new SynchronizedObservableCollection<IImage>();
 
         /// <inheritdoc/>
         public string? Description => PreferredSource.Description;
@@ -139,22 +139,22 @@ namespace StrixMusic.Sdk.MergedWrappers
         public virtual bool IsChangeDurationAsyncSupported => PreferredSource.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveTrackSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveAlbumSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveAlbumSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemovePlaylistSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemovePlaylistSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveChildSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveChildSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;

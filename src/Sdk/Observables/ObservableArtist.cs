@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Interfaces;
 
@@ -29,9 +29,9 @@ namespace StrixMusic.Sdk.Observables
             if (_artist.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_artist.RelatedItems);
 
-            Tracks = new ObservableCollection<ITrack>(_artist.Tracks.Select(x => new ObservableTrack(x)));
-            Albums = new ObservableCollection<IAlbum>(_artist.Albums.Select(x => new ObservableAlbum(x)));
-            Images = new ObservableCollection<IImage>(_artist.Images);
+            Tracks = new SynchronizedObservableCollection<ITrack>(_artist.Tracks.Select(x => new ObservableTrack(x)));
+            Albums = new SynchronizedObservableCollection<IAlbum>(_artist.Albums.Select(x => new ObservableAlbum(x)));
+            Images = new SynchronizedObservableCollection<IImage>(_artist.Images);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
@@ -89,13 +89,13 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public ObservableCollection<IAlbum> Albums { get; }
+        public SynchronizedObservableCollection<IAlbum> Albums { get; }
 
         /// <inheritdoc />
         public int TotalAlbumsCount => _artist.TotalAlbumsCount;
 
         /// <inheritdoc />
-        public ObservableCollection<ITrack> Tracks { get; }
+        public SynchronizedObservableCollection<ITrack> Tracks { get; }
 
         /// <inheritdoc />
         public int TotalTracksCount => _artist.TotalTracksCount;
@@ -121,7 +121,7 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public ObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public string? Description
@@ -173,19 +173,19 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public ObservableCollection<string>? Genres => _artist.Genres;
+        public SynchronizedObservableCollection<string>? Genres => _artist.Genres;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveImageSupportedMap => _artist.IsRemoveImageSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap => _artist.IsRemoveImageSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveAlbumSupportedMap => _artist.IsRemoveAlbumSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveAlbumSupportedMap => _artist.IsRemoveAlbumSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveTrackSupportedMap => _artist.IsRemoveTrackSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap => _artist.IsRemoveTrackSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveGenreSupportedMap => _artist.IsRemoveGenreSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap => _artist.IsRemoveGenreSupportedMap;
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged

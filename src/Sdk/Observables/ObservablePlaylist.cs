@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Interfaces;
 
@@ -36,8 +36,8 @@ namespace StrixMusic.Sdk.Observables
             if (_playlist.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_playlist.RelatedItems);
 
-            Tracks = new ObservableCollection<ITrack>(_playlist.Tracks.Select(x => new ObservableTrack(x)));
-            Images = new ObservableCollection<IImage>(_playlist.Images);
+            Tracks = new SynchronizedObservableCollection<ITrack>(_playlist.Tracks.Select(x => new ObservableTrack(x)));
+            Images = new SynchronizedObservableCollection<IImage>(_playlist.Images);
 
             SourceCore = MainViewModel.GetLoadedCore(_playlist.SourceCore);
 
@@ -75,10 +75,10 @@ namespace StrixMusic.Sdk.Observables
         public string Id => _playlist.Id;
 
         /// <inheritdoc />
-        public ObservableCollection<ITrack> Tracks { get; }
+        public SynchronizedObservableCollection<ITrack> Tracks { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public int TotalTracksCount => _playlist.TotalTracksCount;
@@ -127,7 +127,7 @@ namespace StrixMusic.Sdk.Observables
         public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<string>? Genres => _playlist.Genres;
+        public SynchronizedObservableCollection<string>? Genres => _playlist.Genres;
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported => _playlist.IsPlayAsyncSupported;
@@ -145,13 +145,13 @@ namespace StrixMusic.Sdk.Observables
         public bool IsChangeDurationAsyncSupported => _playlist.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveTrackSupportedMap => _playlist.IsRemoveTrackSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap => _playlist.IsRemoveTrackSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveGenreSupportedMap => _playlist.IsRemoveGenreSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap => _playlist.IsRemoveGenreSupportedMap;
 
         /// <inheritdoc />
-        public ObservableCollection<bool> IsRemoveImageSupportedMap => _playlist.IsRemoveImageSupportedMap;
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap => _playlist.IsRemoveImageSupportedMap;
 
         /// <inheritdoc />
         public Task PauseAsync() => _playlist.PauseAsync();

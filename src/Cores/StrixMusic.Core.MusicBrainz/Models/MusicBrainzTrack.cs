@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
+using OwlCore.Collections;
 using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
@@ -52,7 +52,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TrackType Type => TrackType.Song;
 
         /// <inheritdoc/>
-        public ObservableCollection<IArtist> Artists { get; } = new ObservableCollection<IArtist>();
+        public SynchronizedObservableCollection<IArtist> Artists { get; } = new SynchronizedObservableCollection<IArtist>();
 
         /// <inheritdoc />
         public int TotalArtistsCount => _track.Recording.Credits.Count;
@@ -61,7 +61,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IAlbum Album { get; }
 
         /// <inheritdoc/>
-        public ObservableCollection<string>? Genres => new ObservableCollection<string>();
+        public SynchronizedObservableCollection<string>? Genres => new SynchronizedObservableCollection<string>();
 
         /// <inheritdoc/>
         /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>
@@ -86,7 +86,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Name => _track.Recording.Title;
 
         /// <inheritdoc/>
-        public ObservableCollection<IImage> Images => CreateImagesForRelease(_track.Recording.Releases);
+        public SynchronizedObservableCollection<IImage> Images => CreateImagesForRelease(_track.Recording.Releases);
 
         /// <inheritdoc/>
         public string? Description => null;
@@ -133,13 +133,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
-        public ObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new ObservableCollection<bool>();
+        public SynchronizedObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
 
         /// <inheritdoc/>
         public string Id => _track.Id;
@@ -277,9 +277,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
         }
 
-        private static ObservableCollection<IImage> CreateImagesForRelease(IEnumerable<Release> releases)
+        private static SynchronizedObservableCollection<IImage> CreateImagesForRelease(IEnumerable<Release> releases)
         {
-            var returnData = new ObservableCollection<IImage>();
+            var returnData = new SynchronizedObservableCollection<IImage>();
 
             foreach (var release in releases)
             {
