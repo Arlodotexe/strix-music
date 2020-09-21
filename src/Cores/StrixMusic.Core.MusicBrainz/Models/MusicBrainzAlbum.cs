@@ -221,7 +221,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
                         var album = new MusicBrainzAlbum(SourceCore, Release, medium, artist);
                         var track = new MusicBrainzTrack(SourceCore, trackData, album);
 
-                        yield return track;
+                        yield return track; 
                     }
                 }
             }

@@ -97,6 +97,6 @@ namespace StrixMusic.Sdk.Interfaces
         /// Gets the object against a context.
         /// </summary>
         /// <returns>Returns an IPlayable object</returns>
-        object GetIPlayableById(string? id);
+        Task<object?> GetContextById(string? id);
     }
 }
