@@ -20,6 +20,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
     {
         private readonly MusicBrainzClient _musicBrainzClient;
         private readonly MusicBrainzArtistHelpersService _artistHelpersService;
+        private readonly IPlayableCollectionGroup _relatedAlbums;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzAlbum"/> class.
@@ -39,6 +40,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             _musicBrainzClient = sourceCore.GetService<MusicBrainzClient>();
             _artistHelpersService = sourceCore.GetService<MusicBrainzArtistHelpersService>();
+            _relatedAlbums = new RelatedAlbumItems(SourceCore, release);
 
             Release = release;
             Medium = medium;
@@ -114,7 +116,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration { get; } = TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? RelatedItems => null;
+        public IPlayableCollectionGroup? RelatedItems => _relatedAlbums;
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
