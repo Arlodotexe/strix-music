@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -17,14 +18,17 @@ namespace OwlCore.Collections
     /// <typeparam name="T">The type of elements in the collection.</typeparam>
     /// <remarks>
     /// This class comes from <see href="https://github.com/CoryCharlton/CCSWE.Core/blob/master/src/Core/Collections/ObjectModel/SynchronizedObservableCollection%601.cs">CCSWE.Core</see> and is licensed under Apache 2.0.
-    /// It was modified to fix compiler warnings and satisfy ReSharper suggestions.
+    /// It was modified to:
+    /// <para> - Fix compiler warnings.</para>
+    /// <para> - Satisfy ReSharper suggestions.</para>
+    /// <para> - Derive from <see cref="ObservableCollection{T}"/></para>
     /// </remarks>
 #if NETSTANDARD2_0 || NETFULL
     [Serializable]
 #endif
     [ComVisible(false)]
     [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
-    public class SynchronizedObservableCollection<T> : IDisposable, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class SynchronizedObservableCollection<T> : ObservableCollection<T>, IDisposable, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         /// <summary>Initializes a new instance of the <see cref="SynchronizedObservableCollection{T}" /> class.</summary>
         public SynchronizedObservableCollection() : this(new List<T>(), GetCurrentSynchronizationContext())
@@ -91,10 +95,10 @@ namespace OwlCore.Collections
         }
 
         /// <summary>Occurs when an item is added, removed, changed, moved, or the entire list is refreshed.</summary>
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public new event NotifyCollectionChangedEventHandler CollectionChanged;
 
         /// <summary>Occurs when a property value changes.</summary>
-        protected event PropertyChangedEventHandler PropertyChanged;
+        protected new event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>Gets a value indicating whether the <see cref="SynchronizedObservableCollection{T}" />.</summary>
         /// <returns>true if the <see cref="SynchronizedObservableCollection{T}" /> has a fixed size; otherwise, false.</returns>
@@ -174,7 +178,7 @@ namespace OwlCore.Collections
 
         /// <summary>Gets the number of elements actually contained in the <see cref="SynchronizedObservableCollection{T}" />.</summary>
         /// <returns>The number of elements actually contained in the <see cref="SynchronizedObservableCollection{T}" />.</returns>
-        public int Count
+        public new int Count
         {
             get
             {
@@ -196,7 +200,7 @@ namespace OwlCore.Collections
         /// <param name="index">The zero-based index of the element to get or set.</param>
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="index" /> is less than zero.-or-<paramref name="index" /> is equal to or greater than <see cref="SynchronizedObservableCollection{T}.Count" />. </exception>
-        public T this[int index]
+        public new T this[int index]
         {
             get
             {
@@ -238,7 +242,7 @@ namespace OwlCore.Collections
             }
         }
 
-        private IDisposable BlockReentrancy()
+        private new IDisposable BlockReentrancy()
         {
             _monitor.Enter();
 
@@ -254,7 +258,7 @@ namespace OwlCore.Collections
             }
         }
 
-        private void CheckReentrancy()
+        private new void CheckReentrancy()
         {
             if (_monitor.Busy && CollectionChanged != null && CollectionChanged.GetInvocationList().Length > 1)
             {
@@ -354,7 +358,7 @@ namespace OwlCore.Collections
 
         /// <summary>Adds an object to the end of the <see cref="SynchronizedObservableCollection{T}" />. </summary>
         /// <param name="item">The object to be added to the end of the <see cref="SynchronizedObservableCollection{T}" />. The value can be null for reference types.</param>
-        public void Add(T item)
+        public new void Add(T item)
         {
             _itemsLocker.EnterWriteLock();
 
@@ -407,7 +411,7 @@ namespace OwlCore.Collections
         }
 
         /// <summary>Removes all elements from the <see cref="SynchronizedObservableCollection{T}" />.</summary>
-        public void Clear()
+        public new void Clear()
         {
             _itemsLocker.EnterWriteLock();
 
@@ -433,7 +437,7 @@ namespace OwlCore.Collections
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="arrayIndex" /> is less than zero.</exception>
         /// <exception cref="T:System.ArgumentException">The number of elements in the source <see cref="SynchronizedObservableCollection{T}" /> is greater than the available space from <paramref name="arrayIndex" /> to the end of the destination <paramref name="array" />.</exception>
-        public void CopyTo(T[] array, int arrayIndex)
+        public new void CopyTo(T[] array, int arrayIndex)
         {
             Ensure.IsNotNull(nameof(array), array);
             Ensure.IsInRange(nameof(arrayIndex), arrayIndex >= 0 && arrayIndex < array.Length);
@@ -518,7 +522,7 @@ namespace OwlCore.Collections
         /// <summary>Determines whether an element is in the <see cref="SynchronizedObservableCollection{T}" />.</summary>
         /// <returns>true if <paramref name="item" /> is found in the <see cref="SynchronizedObservableCollection{T}" />; otherwise, false.</returns>
         /// <param name="item">The object to locate in the <see cref="SynchronizedObservableCollection{T}" />. The value can be null for reference types.</param>
-        public bool Contains(T item)
+        public new bool Contains(T item)
         {
             _itemsLocker.EnterReadLock();
 
@@ -562,7 +566,7 @@ namespace OwlCore.Collections
 
         /// <summary>Returns an enumerator that iterates through the <see cref="SynchronizedObservableCollection{T}" />.</summary>
         /// <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1" /> for the <see cref="SynchronizedObservableCollection{T}" />.</returns>
-        public IEnumerator<T> GetEnumerator()
+        public new IEnumerator<T> GetEnumerator()
         {
             _itemsLocker.EnterReadLock();
 
@@ -585,7 +589,7 @@ namespace OwlCore.Collections
         /// <summary>Searches for the specified object and returns the zero-based index of the first occurrence within the entire <see cref="SynchronizedObservableCollection{T}" />.</summary>
         /// <returns>The zero-based index of the first occurrence of <paramref name="item" /> within the entire <see cref="SynchronizedObservableCollection{T}" />, if found; otherwise, -1.</returns>
         /// <param name="item">The object to locate in the <see cref="SynchronizedObservableCollection{T}" />. The value can be null for reference types.</param>
-        public int IndexOf(T item)
+        public new int IndexOf(T item)
         {
             _itemsLocker.EnterReadLock();
 
@@ -623,7 +627,7 @@ namespace OwlCore.Collections
         /// <param name="item">The object to insert. The value can be null for reference types.</param>
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="index" /> is less than zero.-or-<paramref name="index" /> is greater than <see cref="SynchronizedObservableCollection{T}.Count" />.</exception>
-        public void Insert(int index, T item)
+        public new void Insert(int index, T item)
         {
             _itemsLocker.EnterWriteLock();
 
@@ -661,7 +665,7 @@ namespace OwlCore.Collections
         /// <summary>Moves the item at the specified index to a new location in the collection.</summary>
         /// <param name="oldIndex">The zero-based index specifying the location of the item to be moved.</param>
         /// <param name="newIndex">The zero-based index specifying the new location of the item.</param>
-        public void Move(int oldIndex, int newIndex)
+        public new void Move(int oldIndex, int newIndex)
         {
             T item;
 
@@ -689,7 +693,7 @@ namespace OwlCore.Collections
         /// <summary>Removes the first occurrence of a specific object from the <see cref="SynchronizedObservableCollection{T}" />.</summary>
         /// <returns>true if <paramref name="item" /> is successfully removed; otherwise, false.  This method also returns false if <paramref name="item" /> was not found in the original <see cref="SynchronizedObservableCollection{T}" />.</returns>
         /// <param name="item">The object to remove from the <see cref="SynchronizedObservableCollection{T}" />. The value can be null for reference types.</param>
-        public bool Remove(T item)
+        public new bool Remove(T item)
         {
             int index;
             T value;
@@ -733,7 +737,7 @@ namespace OwlCore.Collections
         /// <param name="index">The zero-based index of the element to remove.</param>
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         /// <paramref name="index" /> is less than zero.-or-<paramref name="index" /> is equal to or greater than <see cref="SynchronizedObservableCollection{T}.Count" />.</exception>
-        public void RemoveAt(int index)
+        public new void RemoveAt(int index)
         {
             T value;
 

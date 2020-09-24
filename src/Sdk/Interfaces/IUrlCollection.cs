@@ -12,6 +12,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// Links to an external resource.
         /// </summary>
+        /// <remarks>Data should be populated on object creation. Handle <see cref="SynchronizedObservableCollection{T}.CollectionChanged"/> to find out when an <see cref="Uri"/> is added or removed.</remarks>
         SynchronizedObservableCollection<Uri>? Urls { get; }
 
         /// <summary>
@@ -21,8 +22,9 @@ namespace StrixMusic.Sdk.Interfaces
         Task<bool> IsAddUrlSupported(int index);
 
         /// <summary>
-        /// A collection that maps (by index) to the items in <see cref="Urls"/>. The bool at each index tells you if removing the <see cref="Uri"/> is supported.
+        /// Checks if the backend supports removing a <see cref="Uri"/> at a specific index.
         /// </summary>
-        SynchronizedObservableCollection<bool> IsRemoveUrlSupportedMap { get; }
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="Uri"/> can be removed.</returns>
+        Task<bool> IsRemoveUrlSupported(int index);
     }
 }

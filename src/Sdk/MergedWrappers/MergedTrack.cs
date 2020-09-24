@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.MergedWrappers
@@ -39,6 +40,39 @@ namespace StrixMusic.Sdk.MergedWrappers
         }
 
         /// <inheritdoc/>
+        public event EventHandler<IAlbum?>? AlbumChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<int?>? TrackNumberChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CultureInfo?>? LanguageChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<ILyrics?>? LyricsChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<bool>? IsExplicitChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<string>? NameChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<string?>? DescriptionChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<Uri?>? UrlChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
+
+        /// <inheritdoc/>
         public ICore SourceCore => _preferredSource.SourceCore;
 
         /// <inheritdoc/>
@@ -55,9 +89,6 @@ namespace StrixMusic.Sdk.MergedWrappers
 
         /// <inheritdoc/>
         public int TotalArtistsCount { get; }
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<IArtist> Artists { get; } = new SynchronizedObservableCollection<IArtist>();
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<string>? Genres => _preferredSource.Genres;
@@ -123,92 +154,21 @@ namespace StrixMusic.Sdk.MergedWrappers
         public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public event EventHandler<IAlbum?> AlbumChanged
+        public Task<bool> IsRemoveImageSupported(int index)
         {
-            add => _preferredSource.AlbumChanged += value;
-
-            remove => _preferredSource.AlbumChanged -= value;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public event EventHandler<int?> TrackNumberChanged
+        public Task<bool> IsRemoveGenreSupported(int index)
         {
-            add => _preferredSource.TrackNumberChanged += value;
-
-            remove => _preferredSource.TrackNumberChanged -= value;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public event EventHandler<CultureInfo?> LanguageChanged
+        public Task<bool> IsRemoveArtistSupported(int index)
         {
-            add => _preferredSource.LanguageChanged += value;
-
-            remove => _preferredSource.LanguageChanged -= value;
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<ILyrics?> LyricsChanged
-        {
-            add => _preferredSource.LyricsChanged += value;
-
-            remove => _preferredSource.LyricsChanged -= value;
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<bool> IsExplicitChanged
-        {
-            add => _preferredSource.IsExplicitChanged += value;
-
-            remove => _preferredSource.IsExplicitChanged -= value;
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<PlaybackState> PlaybackStateChanged
-        {
-            add => _preferredSource.PlaybackStateChanged += value;
-
-            remove => _preferredSource.PlaybackStateChanged -= value;
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<string> NameChanged
-        {
-            add => _preferredSource.NameChanged += value;
-
-            remove => _preferredSource.NameChanged -= value;
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<string?> DescriptionChanged
-        {
-            add => _preferredSource.DescriptionChanged += value;
-
-            remove => _preferredSource.DescriptionChanged -= value;
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<Uri?> UrlChanged
-        {
-            add => _preferredSource.UrlChanged += value;
-
-            remove => _preferredSource.UrlChanged -= value;
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler<TimeSpan>? DurationChanged
-        {
-            add => _preferredSource.DurationChanged += value;
-
-            remove => _preferredSource.DurationChanged -= value;
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
@@ -283,7 +243,10 @@ namespace StrixMusic.Sdk.MergedWrappers
                 && other?.Album?.Equals(Album) == true
                 && other?.Language?.Equals(Language) == true
                 && other?.TrackNumber?.Equals(TrackNumber) == true
-                && other?.Artists?.SequenceEqual(Artists) == true;
+
+                // Commented out for now. Might need again later. Removed while removing the collection properties from interfaces.
+                // && other?.Artists?.SequenceEqual(Artists) == true
+                ;
         }
 
         /// <inheritdoc/>
@@ -317,10 +280,15 @@ namespace StrixMusic.Sdk.MergedWrappers
         }
 
         /// <inheritdoc/>
-        public Task PopulateMoreArtistsAsync(int limit)
+        public Task AddArtistAsync(IArtist artist, int index)
         {
-            // TODO
-            return _preferredSource.PopulateMoreArtistsAsync(limit);
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task RemoveArtistAsync(int index)
+        {
+            throw new NotImplementedException();
         }
     }
 }

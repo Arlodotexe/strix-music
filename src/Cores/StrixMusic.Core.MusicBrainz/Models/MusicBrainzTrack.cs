@@ -9,6 +9,7 @@ using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
 
@@ -49,10 +50,43 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public TrackType Type => TrackType.Song;
+        public event EventHandler<IAlbum?>? AlbumChanged;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<IArtist> Artists { get; } = new SynchronizedObservableCollection<IArtist>();
+        public event EventHandler<int?>? TrackNumberChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<CultureInfo?>? LanguageChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<ILyrics?>? LyricsChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<bool>? IsExplicitChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<string>? NameChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<string?>? DescriptionChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<Uri?>? UrlChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
+
+        /// <inheritdoc/>
+        public string Id => _track.Id;
+
+        /// <inheritdoc/>
+        public TrackType Type => TrackType.Song;
 
         /// <inheritdoc />
         public int TotalArtistsCount => _track.Recording.Credits.Count;
@@ -133,48 +167,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public string Id => _track.Id;
-
-        /// <inheritdoc/>
-        public event EventHandler<IAlbum?>? AlbumChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<int?>? TrackNumberChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<CultureInfo?>? LanguageChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<ILyrics?>? LyricsChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<bool>? IsExplicitChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<PlaybackState>? PlaybackStateChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<string>? NameChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<string?>? DescriptionChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<Uri?>? UrlChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<TimeSpan>? DurationChanged;
-
-        /// <inheritdoc/>
         public Task<bool> IsAddImageSupported(int index)
         {
             return Task.FromResult(false);
@@ -188,6 +180,24 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public Task<bool> IsAddArtistSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveImageSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveArtistSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveGenreSupported(int index)
         {
             return Task.FromResult(false);
         }
@@ -266,17 +276,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
         }
 
-        /// <inheritdoc/>
-        public async Task PopulateMoreArtistsAsync(int limit)
-        {
-            var offset = Artists.Count;
-            await foreach (var item in GetArtistsAsync(limit, offset))
-            {
-                IsRemoveArtistSupportedMap.Add(false);
-                Artists.Add(item);
-            }
-        }
-
         private static SynchronizedObservableCollection<IImage> CreateImagesForRelease(IEnumerable<Release> releases)
         {
             var returnData = new SynchronizedObservableCollection<IImage>();
@@ -290,6 +289,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
 
             return returnData;
+        }
+
+        /// <inheritdoc />
+        public Task AddArtistAsync(IArtist artist, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveArtistAsync(int index)
+        {
+            throw new NotSupportedException();
         }
     }
 }

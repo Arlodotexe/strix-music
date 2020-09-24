@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
@@ -39,16 +39,16 @@ namespace StrixMusic.Sdk.Observables
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
 
-            Tracks = new SynchronizedObservableCollection<ITrack>(_collectionGroupBase.Tracks.Select(x => new ObservableTrack(x)));
-            Playlists = new SynchronizedObservableCollection<IPlaylist>(_collectionGroupBase.Playlists.Select(x => new ObservablePlaylist(x)));
-            Albums = new SynchronizedObservableCollection<IAlbum>(_collectionGroupBase.Albums.Select(x => new ObservableAlbum(x)));
-            Artists = new SynchronizedObservableCollection<IArtist>(_collectionGroupBase.Artists.Select(x => new ObservableArtist(x)));
-            Children = new SynchronizedObservableCollection<IPlayableCollectionGroup>(_collectionGroupBase.Children.Select(x => new ObservableCollectionGroup(x)));
+            Tracks = new SynchronizedObservableCollection<ITrack>();
+            Playlists = new SynchronizedObservableCollection<IPlaylist>();
+            Albums = new SynchronizedObservableCollection<IAlbum>();
+            Artists = new SynchronizedObservableCollection<IArtist>();
+            Children = new SynchronizedObservableCollection<IPlayableCollectionGroup>();
 
-            AttachEvents();
+            AttachPropertyEvents();
         }
 
-        private void AttachEvents()
+        private void AttachPropertyEvents()
         {
             _collectionGroupBase.PlaybackStateChanged += CollectionGroupBase_PlaybackStateChanged;
             _collectionGroupBase.DescriptionChanged += CollectionGroupBase_DescriptionChanged;
@@ -56,12 +56,175 @@ namespace StrixMusic.Sdk.Observables
             _collectionGroupBase.UrlChanged += CollectionGroupBase_UrlChanged;
         }
 
-        private void DetachEvents()
+        private void DetachPropertyEvents()
         {
             _collectionGroupBase.PlaybackStateChanged -= CollectionGroupBase_PlaybackStateChanged;
             _collectionGroupBase.DescriptionChanged -= CollectionGroupBase_DescriptionChanged;
             _collectionGroupBase.NameChanged -= CollectionGroupBase_NameChanged;
             _collectionGroupBase.UrlChanged -= CollectionGroupBase_UrlChanged;
+        }
+
+        private void AttachCollectionEvents()
+        {
+            _collectionGroupBase.TracksChanged += CollectionGroupBase_TracksChanged;
+            _collectionGroupBase.AlbumsChanged += CollectionGroupBase_AlbumsChanged;
+            _collectionGroupBase.ArtistsChanged += CollectionGroupBase_ArtistsChanged;
+            _collectionGroupBase.PlaylistsChanged += CollectionGroupBase_PlaylistsChanged;
+            _collectionGroupBase.ChildrenChanged += CollectionGroupBase_ChildrenChanged;
+        }
+
+        private void DetachCollectionEvents()
+        {
+            _collectionGroupBase.TracksChanged -= CollectionGroupBase_TracksChanged;
+            _collectionGroupBase.AlbumsChanged -= CollectionGroupBase_AlbumsChanged;
+            _collectionGroupBase.ArtistsChanged -= CollectionGroupBase_ArtistsChanged;
+            _collectionGroupBase.PlaylistsChanged -= CollectionGroupBase_PlaylistsChanged;
+            _collectionGroupBase.ChildrenChanged -= CollectionGroupBase_ChildrenChanged;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<string> NameChanged
+        {
+            add => _collectionGroupBase.NameChanged += value;
+            remove => _collectionGroupBase.NameChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<string?> DescriptionChanged
+        {
+            add => _collectionGroupBase.DescriptionChanged += value;
+            remove => _collectionGroupBase.DescriptionChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<Uri?> UrlChanged
+        {
+            add => _collectionGroupBase.UrlChanged += value;
+            remove => _collectionGroupBase.UrlChanged -= value;
+        }
+
+        private void CollectionGroupBase_UrlChanged(object sender, Uri? e) => Url = e;
+
+        private void CollectionGroupBase_NameChanged(object sender, string e) => Name = e;
+
+        private void CollectionGroupBase_DescriptionChanged(object sender, string? e) => Description = e;
+
+        private void CollectionGroupBase_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+
+        private void CollectionGroupBase_ChildrenChanged(object sender, CollectionChangedEventArgs<IPlayableCollectionGroup> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Children.Insert(item.Index, new ObservableCollectionGroup(item.Data));
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Children.RemoveAt(item.Index);
+            }
+        }
+
+        private void CollectionGroupBase_PlaylistsChanged(object sender, CollectionChangedEventArgs<IPlaylist> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Playlists.Insert(item.Index, new ObservablePlaylist(item.Data));
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Playlists.RemoveAt(item.Index);
+            }
+        }
+
+        private void CollectionGroupBase_ArtistsChanged(object sender, CollectionChangedEventArgs<IArtist> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Artists.Insert(item.Index, new ObservableArtist(item.Data));
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Artists.RemoveAt(item.Index);
+            }
+        }
+
+        private void CollectionGroupBase_AlbumsChanged(object sender, CollectionChangedEventArgs<IAlbum> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Albums.Insert(item.Index, new ObservableAlbum(item.Data));
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Albums.RemoveAt(item.Index);
+            }
+        }
+
+        private void CollectionGroupBase_TracksChanged(object sender, CollectionChangedEventArgs<ITrack> e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                Tracks.Insert(item.Index, new ObservableTrack(item.Data));
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Tracks.RemoveAt(item.Index);
+            }
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged
+        {
+            add => _collectionGroupBase.PlaylistsChanged += value;
+            remove => _collectionGroupBase.PlaylistsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
+        {
+            add => _collectionGroupBase.TracksChanged += value;
+            remove => _collectionGroupBase.TracksChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged
+        {
+            add => _collectionGroupBase.AlbumsChanged += value;
+            remove => _collectionGroupBase.AlbumsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged
+        {
+            add => _collectionGroupBase.ArtistsChanged += value;
+            remove => _collectionGroupBase.ArtistsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged
+        {
+            add => _collectionGroupBase.ChildrenChanged += value;
+            remove => _collectionGroupBase.ChildrenChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
+        {
+            add => _collectionGroupBase.PlaybackStateChanged += value;
+
+            remove => _collectionGroupBase.PlaybackStateChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<TimeSpan>? DurationChanged
+        {
+            add => _collectionGroupBase.DurationChanged += value;
+
+            remove => _collectionGroupBase.DurationChanged -= value;
         }
 
         /// <inheritdoc />
@@ -71,17 +234,57 @@ namespace StrixMusic.Sdk.Observables
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
+        public TimeSpan Duration => _collectionGroupBase.Duration;
+
+        /// <inheritdoc />
+        public int TotalPlaylistCount => _collectionGroupBase.TotalPlaylistCount;
+
+        /// <inheritdoc />
+        public int TotalTracksCount => _collectionGroupBase.TotalTracksCount;
+
+        /// <inheritdoc />
+        public int TotalAlbumsCount => _collectionGroupBase.TotalAlbumsCount;
+
+        /// <inheritdoc />
+        public int TotalArtistsCount => _collectionGroupBase.TotalArtistsCount;
+
+        /// <inheritdoc />
+        public int TotalChildrenCount => _collectionGroupBase.TotalChildrenCount;
+
+        /// <inheritdoc />
+        public SynchronizedObservableCollection<IImage> Images => _collectionGroupBase.Images;
+
+        /// <summary>
+        /// The playlists in this collection
+        /// </summary>
+        public SynchronizedObservableCollection<IPlaylist> Playlists { get; }
+
+        /// <summary>
+        /// The tracks in this collection.
+        /// </summary>
+        public SynchronizedObservableCollection<ITrack> Tracks { get; }
+
+        /// <summary>
+        /// The albums in this collection.
+        /// </summary>
+        public SynchronizedObservableCollection<IAlbum> Albums { get; }
+
+        /// <summary>
+        /// The artists in this collection.
+        /// </summary>
+        public SynchronizedObservableCollection<IArtist> Artists { get; }
+
+        /// <summary>
+        /// The nested <see cref="IPlayableCollectionGroup"/> items in this collection.
+        /// </summary>
+        public SynchronizedObservableCollection<IPlayableCollectionGroup> Children { get; }
+
+        /// <inheritdoc />
         public string Name
         {
             get => _collectionGroupBase.Name;
             private set => SetProperty(() => _collectionGroupBase.Name, value);
         }
-
-        /// <inheritdoc />
-        public TimeSpan Duration => _collectionGroupBase.Duration;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images => _collectionGroupBase.Images;
 
         /// <inheritdoc />
         public Uri? Url
@@ -105,36 +308,6 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IPlaylist> Playlists { get; }
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<ITrack> Tracks { get; }
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<IAlbum> Albums { get; }
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<IArtist> Artists { get; }
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<IPlayableCollectionGroup> Children { get; }
-
-        /// <inheritdoc />
-        public int TotalPlaylistCount => _collectionGroupBase.TotalPlaylistCount;
-
-        /// <inheritdoc />
-        public int TotalTracksCount => _collectionGroupBase.TotalTracksCount;
-
-        /// <inheritdoc />
-        public int TotalAlbumsCount => _collectionGroupBase.TotalAlbumsCount;
-
-        /// <inheritdoc />
-        public int TotalArtistsCount => _collectionGroupBase.TotalArtistsCount;
-
-        /// <inheritdoc />
-        public int TotalChildrenCount => _collectionGroupBase.TotalChildrenCount;
-
-        /// <inheritdoc />
         public bool IsPlayAsyncSupported => _collectionGroupBase.IsPlayAsyncSupported;
 
         /// <inheritdoc />
@@ -148,24 +321,6 @@ namespace StrixMusic.Sdk.Observables
 
         /// <inheritdoc />
         public bool IsChangeDurationAsyncSupported => _collectionGroupBase.IsChangeDurationAsyncSupported;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap => _collectionGroupBase.IsRemoveImageSupportedMap;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemovePlaylistSupportedMap => _collectionGroupBase.IsRemovePlaylistSupportedMap;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap => _collectionGroupBase.IsRemoveTrackSupportedMap;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveAlbumSupportedMap => _collectionGroupBase.IsRemoveAlbumSupportedMap;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveArtistSupportedMap => _collectionGroupBase.IsRemoveArtistSupportedMap;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveChildSupportedMap => _collectionGroupBase.IsRemoveChildSupportedMap;
 
         /// <inheritdoc />
         public Task<bool> IsAddImageSupported(int index) => _collectionGroupBase.IsAddImageSupported(index);
@@ -186,6 +341,24 @@ namespace StrixMusic.Sdk.Observables
         public Task<bool> IsAddChildSupported(int index) => _collectionGroupBase.IsAddChildSupported(index);
 
         /// <inheritdoc />
+        public Task<bool> IsRemoveImageSupported(int index) => _collectionGroupBase.IsRemoveImageSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemovePlaylistSupported(int index) => _collectionGroupBase.IsRemovePlaylistSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveTrackSupported(int index) => _collectionGroupBase.IsRemoveTrackSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveArtistSupported(int index) => _collectionGroupBase.IsRemoveArtistSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveAlbumSupported(int index) => _collectionGroupBase.IsRemoveAlbumSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveChildSupported(int index) => _collectionGroupBase.IsRemoveChildSupported(index);
+
+        /// <inheritdoc />
         public Task PauseAsync() => _collectionGroupBase.PauseAsync();
 
         /// <inheritdoc />
@@ -199,6 +372,36 @@ namespace StrixMusic.Sdk.Observables
 
         /// <inheritdoc />
         public Task ChangeDurationAsync(TimeSpan duration) => _collectionGroupBase.ChangeDurationAsync(duration);
+
+        /// <inheritdoc />
+        public Task AddTrackAsync(IPlayableCollectionGroup track, int index) => _collectionGroupBase.AddTrackAsync(track, index);
+
+        /// <inheritdoc />
+        public Task AddArtistAsync(IArtist artist, int index) => _collectionGroupBase.AddArtistAsync(artist, index);
+
+        /// <inheritdoc />
+        public Task AddAlbumAsync(IAlbum album, int index) => _collectionGroupBase.AddAlbumAsync(album, index);
+
+        /// <inheritdoc />
+        public Task AddPlaylistAsync(IPlayableCollectionGroup playlist, int index) => _collectionGroupBase.AddPlaylistAsync(playlist, index);
+
+        /// <inheritdoc />
+        public Task AddChildAsync(IPlayableCollectionGroup child, int index) => _collectionGroupBase.AddChildAsync(child, index);
+
+        /// <inheritdoc />
+        public Task RemoveTrackAsync(int index) => _collectionGroupBase.RemoveTrackAsync(index);
+
+        /// <inheritdoc />
+        public Task RemoveArtistAsync(int index) => _collectionGroupBase.RemoveArtistAsync(index);
+
+        /// <inheritdoc />
+        public Task RemoveAlbumAsync(int index) => _collectionGroupBase.RemoveAlbumAsync(index);
+
+        /// <inheritdoc />
+        public Task RemovePlaylistAsync(int index) => _collectionGroupBase.RemovePlaylistAsync(index);
+
+        /// <inheritdoc />
+        public Task RemoveChildAsync(int index) => _collectionGroupBase.RemoveChildAsync(index);
 
         /// <inheritdoc />
         public IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset) => _collectionGroupBase.GetChildrenAsync(limit, offset);
@@ -215,64 +418,59 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc />
         public IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0) => _collectionGroupBase.GetArtistsAsync(limit, offset);
 
-        /// <inheritdoc />
-        public Task PopulateMorePlaylistsAsync(int limit) => _collectionGroupBase.PopulateMorePlaylistsAsync(limit);
-
-        /// <inheritdoc />
-        public Task PopulateMoreTracksAsync(int limit) => _collectionGroupBase.PopulateMoreTracksAsync(limit);
-
-        /// <inheritdoc />
-        public Task PopulateMoreAlbumsAsync(int limit) => _collectionGroupBase.PopulateMoreAlbumsAsync(limit);
-
-        /// <inheritdoc />
-        public Task PopulateMoreArtistsAsync(int limit) => _collectionGroupBase.PopulateMoreArtistsAsync(limit);
-
-        /// <inheritdoc />
-        public Task PopulateMoreChildrenAsync(int limit) => _collectionGroupBase.PopulateMoreChildrenAsync(limit);
-
-        private void CollectionGroupBase_UrlChanged(object sender, Uri? e) => Url = e;
-
-        private void CollectionGroupBase_NameChanged(object sender, string e) => Name = e;
-
-        private void CollectionGroupBase_DescriptionChanged(object sender, string? e) => Description = e;
-
-        private void CollectionGroupBase_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
-
-        /// <inheritdoc />
-        public event EventHandler<string> NameChanged
+        /// <summary>
+        /// Populates the next set of playlists into the collection.
+        /// </summary>
+        /// <param name="limit">The number of items to load.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task PopulateMorePlaylistsAsync(int limit)
         {
-            add => _collectionGroupBase.NameChanged += value;
-            remove => _collectionGroupBase.NameChanged -= value;
+            // TODO
+            return Task.CompletedTask;
         }
 
-        /// <inheritdoc />
-        public event EventHandler<string?> DescriptionChanged
+        /// <summary>
+        /// Populates the next set of tracks into the collection.
+        /// </summary>
+        /// <param name="limit">The number of items to load.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task PopulateMoreTracksAsync(int limit)
         {
-            add => _collectionGroupBase.DescriptionChanged += value;
-            remove => _collectionGroupBase.DescriptionChanged -= value;
+            // TODO
+            return Task.CompletedTask;
         }
 
-        /// <inheritdoc />
-        public event EventHandler<Uri?> UrlChanged
+        /// <summary>
+        /// Populates the next set of albums into the collection.
+        /// </summary>
+        /// <param name="limit">The number of items to load.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task PopulateMoreAlbumsAsync(int limit)
         {
-            add => _collectionGroupBase.UrlChanged += value;
-            remove => _collectionGroupBase.UrlChanged -= value;
+            // TODO
+            return Task.CompletedTask;
         }
 
-        /// <inheritdoc />
-        public event EventHandler<PlaybackState>? PlaybackStateChanged
+        /// <summary>
+        /// Populates the next set of artists into the collection.
+        /// </summary>
+        /// <param name="limit">The number of items to load.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task PopulateMoreArtistsAsync(int limit)
         {
-            add => _collectionGroupBase.PlaybackStateChanged += value;
-
-            remove => _collectionGroupBase.PlaybackStateChanged -= value;
+            // TODO
+            return Task.CompletedTask;
         }
 
-        /// <inheritdoc />
-        public event EventHandler<TimeSpan>? DurationChanged
+        /// <summary>
+        /// Populates the next set of children items into the collection.
+        /// </summary>
+        /// <param name="limit">The number of items to load.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task PopulateMoreChildrenAsync(int limit)
         {
-            add => _collectionGroupBase.DurationChanged += value;
-
-            remove => _collectionGroupBase.DurationChanged -= value;
+            // TODO
+            return Task.CompletedTask;
         }
 
         /// <summary>

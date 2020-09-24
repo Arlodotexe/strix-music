@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
@@ -32,9 +32,7 @@ namespace StrixMusic.Sdk.Observables
             if (_track.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_track.RelatedItems);
 
-            Genres = new SynchronizedObservableCollection<string>(_track.Genres);
-            Artists = new SynchronizedObservableCollection<IArtist>(_track.Artists.Select(x => new ObservableArtist(x)));
-            Images = new SynchronizedObservableCollection<IImage>(_track.Images);
+            Artists = new SynchronizedObservableCollection<IArtist>();
             SourceCore = MainViewModel.GetLoadedCore(_track.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -72,6 +70,93 @@ namespace StrixMusic.Sdk.Observables
             _track.UrlChanged -= Track_UrlChanged;
         }
 
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged
+        {
+            add => _track.ArtistsChanged += value;
+            remove => _track.ArtistsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
+        {
+            add => _track.PlaybackStateChanged += value;
+
+            remove => _track.PlaybackStateChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<IAlbum?> AlbumChanged
+        {
+            add => _track.AlbumChanged += value;
+
+            remove => _track.AlbumChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int?> TrackNumberChanged
+        {
+            add => _track.TrackNumberChanged += value;
+
+            remove => _track.TrackNumberChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<CultureInfo?> LanguageChanged
+        {
+            add => _track.LanguageChanged += value;
+
+            remove => _track.LanguageChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<ILyrics?> LyricsChanged
+        {
+            add => _track.LyricsChanged += value;
+
+            remove => _track.LyricsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool> IsExplicitChanged
+        {
+            add => _track.IsExplicitChanged += value;
+
+            remove => _track.IsExplicitChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<string> NameChanged
+        {
+            add => _track.NameChanged += value;
+
+            remove => _track.NameChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<string?> DescriptionChanged
+        {
+            add => _track.DescriptionChanged += value;
+
+            remove => _track.DescriptionChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<Uri?> UrlChanged
+        {
+            add => _track.UrlChanged += value;
+
+            remove => _track.UrlChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<TimeSpan>? DurationChanged
+        {
+            add => _track.DurationChanged += value;
+
+            remove => _track.DurationChanged -= value;
+        }
+
         private void Track_UrlChanged(object sender, Uri? e) => Url = e;
 
         private void Track_TrackNumberChanged(object sender, int? e) => TrackNumber = e;
@@ -93,14 +178,16 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc />
         public ICore SourceCore { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// The artists for this track.
+        /// </summary>
         public SynchronizedObservableCollection<IArtist> Artists { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<string> Genres { get; }
+        public SynchronizedObservableCollection<string>? Genres => _track.Genres;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<IImage> Images => _track.Images;
 
         /// <inheritdoc />
         public TrackType Type => _track.Type;
@@ -251,15 +338,6 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap => _track.IsRemoveImageSupportedMap;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveArtistSupportedMap => _track.IsRemoveArtistSupportedMap;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap => _track.IsRemoveGenreSupportedMap;
-
-        /// <inheritdoc />
         public Task<bool> IsAddArtistSupported(int index) => _track.IsAddArtistSupported(index);
 
         /// <inheritdoc />
@@ -267,6 +345,15 @@ namespace StrixMusic.Sdk.Observables
 
         /// <inheritdoc />
         public Task<bool> IsAddImageSupported(int index) => _track.IsAddImageSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveImageSupported(int index) => _track.IsRemoveImageSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveGenreSupported(int index) => _track.IsRemoveGenreSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveArtistSupported(int index) => _track.IsRemoveArtistSupported(index);
 
         /// <inheritdoc />
         public Task ChangeAlbumAsync(IAlbum? albums) => _track.ChangeAlbumAsync(albums);
@@ -299,83 +386,23 @@ namespace StrixMusic.Sdk.Observables
         public Task ChangeDurationAsync(TimeSpan duration) => _track.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public event EventHandler<PlaybackState>? PlaybackStateChanged
-        {
-            add => _track.PlaybackStateChanged += value;
-
-            remove => _track.PlaybackStateChanged -= value;
-        }
+        public IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset) => _track.GetArtistsAsync(limit, offset);
 
         /// <inheritdoc />
-        public event EventHandler<IAlbum?> AlbumChanged
-        {
-            add => _track.AlbumChanged += value;
-
-            remove => _track.AlbumChanged -= value;
-        }
+        public Task AddArtistAsync(IArtist artist, int index) => _track.AddArtistAsync(artist, index);
 
         /// <inheritdoc />
-        public event EventHandler<int?> TrackNumberChanged
+        public Task RemoveArtistAsync(int index) => _track.RemoveArtistAsync(index);
+
+        /// <summary>
+        /// Populates the next set of tracks into the collection.
+        /// </summary>
+        /// <param name="limit">The number of items to load.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task PopulateMoreArtistsAsync(int limit)
         {
-            add => _track.TrackNumberChanged += value;
-
-            remove => _track.TrackNumberChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<CultureInfo?> LanguageChanged
-        {
-            add => _track.LanguageChanged += value;
-
-            remove => _track.LanguageChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<ILyrics?> LyricsChanged
-        {
-            add => _track.LyricsChanged += value;
-
-            remove => _track.LyricsChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<bool> IsExplicitChanged
-        {
-            add => _track.IsExplicitChanged += value;
-
-            remove => _track.IsExplicitChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<string> NameChanged
-        {
-            add => _track.NameChanged += value;
-
-            remove => _track.NameChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<string?> DescriptionChanged
-        {
-            add => _track.DescriptionChanged += value;
-
-            remove => _track.DescriptionChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<Uri?> UrlChanged
-        {
-            add => _track.UrlChanged += value;
-
-            remove => _track.UrlChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<TimeSpan>? DurationChanged
-        {
-            add => _track.DurationChanged += value;
-
-            remove => _track.DurationChanged -= value;
+            // TODO
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -402,11 +429,5 @@ namespace StrixMusic.Sdk.Observables
         /// Attempts to change the duration of the album, if supported.
         /// </summary>
         public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public Task PopulateMoreArtistsAsync(int limit) => _track.PopulateMoreArtistsAsync(limit);
-
-        /// <inheritdoc />
-        public IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset) => _track.GetArtistsAsync(limit, offset);
     }
 }

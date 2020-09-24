@@ -107,13 +107,12 @@
                                             <RowDefinition Height="auto"/>
                                         </Grid.RowDefinitions>
                                         <TextBlock Text="Vampire Weekend" FontSize="32" FontWeight="SemiBold"/>
-                                        <TextBlock x:Name="BioText" Grid.Row="1" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" Margin="8,8,0,0">
+                                        <TextBlock x:Name="BioText" Grid.Row="1" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" Margin="8,8,0,0" Text="
                                             Mixing well-read indie rock with joyful, Afro-pop-inspired melodies and rhythms, Vampire Weekend grew from one of the first bands
                                             to be championed by music bloggers into a chart topping, Grammy Award-winning act that helped define the sound of indie music in the late 2000s and 2010s.
                                             After establishing the foundations of their bright, intircate style of indie music with 2008's Vampire Weekend, the band soon became hugely successful;
                                             they're the first indie rock act to have consecutive albums (2010's Contra and 2013's Modern Vampires of the City) enter the Billboard 200 at number one.
-                                            With each release, Vampire Weekend's music grew more diverse, incorporating ska, hip-hop and '80s influences that nevertheless complemented their signature style.
-                                        </TextBlock>
+                                            With each release, Vampire Weekend's music grew more diverse, incorporating ska, hip-hop and '80s influences that nevertheless complemented their signature style." />
 
                                         <HyperlinkButton x:Name="BioMoreButton" Content="More" Grid.Row="2" Visibility="{Binding BioText.IsTextTrimmed}" HorizontalAlignment="Right" Margin="0,0,32,0" Padding="0,0,0,0"/>
                                     </Grid>

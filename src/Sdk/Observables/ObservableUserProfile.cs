@@ -28,6 +28,46 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
+        public event EventHandler<string>? DisplayNameChanged
+        {
+            add => _userProfile.DisplayNameChanged += value;
+
+            remove => _userProfile.DisplayNameChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<DateTime>? BirthDateChanged
+        {
+            add => _userProfile.BirthDateChanged += value;
+
+            remove => _userProfile.BirthDateChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<string>? FullNameChanged
+        {
+            add => _userProfile.FullNameChanged += value;
+
+            remove => _userProfile.FullNameChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<CultureInfo>? RegionChanged
+        {
+            add => _userProfile.RegionChanged += value;
+
+            remove => _userProfile.RegionChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<string?>? EmailChanged
+        {
+            add => _userProfile.EmailChanged += value;
+
+            remove => _userProfile.EmailChanged -= value;
+        }
+
+        /// <inheritdoc />
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
@@ -70,16 +110,16 @@ namespace StrixMusic.Sdk.Observables
         public bool IsChangeEmailAsyncSupported => _userProfile.IsChangeEmailAsyncSupported;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap => _userProfile.IsRemoveImageSupportedMap;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveUrlSupportedMap => _userProfile.IsRemoveUrlSupportedMap;
-
-        /// <inheritdoc />
         public Task<bool> IsAddUrlSupported(int index) => _userProfile.IsAddUrlSupported(index);
 
         /// <inheritdoc />
         public Task<bool> IsAddImageSupported(int index) => _userProfile.IsAddImageSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveImageSupported(int index) => _userProfile.IsRemoveImageSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveUrlSupported(int index) => _userProfile.IsRemoveUrlSupported(index);
 
         /// <inheritdoc />
         public Task ChangeDisplayNameAsync(string displayName) => _userProfile.ChangeDisplayNameAsync(displayName);
@@ -95,45 +135,5 @@ namespace StrixMusic.Sdk.Observables
 
         /// <inheritdoc />
         public Task ChangeEmailAsync(string? email) => _userProfile.ChangeEmailAsync(email);
-
-        /// <inheritdoc />
-        public event EventHandler<string>? DisplayNameChanged
-        {
-            add => _userProfile.DisplayNameChanged += value;
-
-            remove => _userProfile.DisplayNameChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<DateTime>? BirthDateChanged
-        {
-            add => _userProfile.BirthDateChanged += value;
-
-            remove => _userProfile.BirthDateChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<string>? FullNameChanged
-        {
-            add => _userProfile.FullNameChanged += value;
-
-            remove => _userProfile.FullNameChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<CultureInfo>? RegionChanged
-        {
-            add => _userProfile.RegionChanged += value;
-
-            remove => _userProfile.RegionChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<string?>? EmailChanged
-        {
-            add => _userProfile.EmailChanged += value;
-
-            remove => _userProfile.EmailChanged -= value;
-        }
     }
 }

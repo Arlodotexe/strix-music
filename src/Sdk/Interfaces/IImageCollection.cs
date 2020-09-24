@@ -11,6 +11,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// Relevant images for the collection.
         /// </summary>
+        /// <remarks>Data should be populated on object creation. Handle <see cref="SynchronizedObservableCollection{T}.CollectionChanged"/> to find out when an image is added or removed.</remarks>
         SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <summary>
@@ -20,8 +21,9 @@ namespace StrixMusic.Sdk.Interfaces
         Task<bool> IsAddImageSupported(int index);
 
         /// <summary>
-        /// A collection that maps (by index) to the items in <see cref="Images"/>. The bool at each index tells you if removing the <see cref="IImage"/> is supported.
+        /// Checks if the backend supports removing an <see cref="IImage"/> at a specific index.
         /// </summary>
-        SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; }
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IImage"/> can be removed.</returns>
+        Task<bool> IsRemoveImageSupported(int index);
     }
 }

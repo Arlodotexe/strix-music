@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
@@ -15,6 +15,8 @@ namespace StrixMusic.Sdk.Observables
     public class ObservablePlaylist : ObservableMergeableObject<IPlaylist>, IPlaylist
     {
         private readonly IPlaylist _playlist;
+
+        private IUserProfile? _owner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservablePlaylist"/> class.
@@ -36,8 +38,8 @@ namespace StrixMusic.Sdk.Observables
             if (_playlist.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_playlist.RelatedItems);
 
-            Tracks = new SynchronizedObservableCollection<ITrack>(_playlist.Tracks.Select(x => new ObservableTrack(x)));
-            Images = new SynchronizedObservableCollection<IImage>(_playlist.Images);
+            Tracks = new SynchronizedObservableCollection<ITrack>();
+            Images = new SynchronizedObservableCollection<IImage>();
 
             SourceCore = MainViewModel.GetLoadedCore(_playlist.SourceCore);
 
@@ -46,6 +48,7 @@ namespace StrixMusic.Sdk.Observables
 
         private void AttachEvents()
         {
+            _playlist.TracksChanged += Playlist_TracksChanged;
             _playlist.DescriptionChanged += Playlist_DescriptionChanged;
             _playlist.NameChanged += Playlist_NameChanged;
             _playlist.PlaybackStateChanged += Playlist_PlaybackStateChanged;
@@ -54,122 +57,25 @@ namespace StrixMusic.Sdk.Observables
 
         private void DetachEvents()
         {
+            _playlist.TracksChanged -= Playlist_TracksChanged;
             _playlist.DescriptionChanged -= Playlist_DescriptionChanged;
             _playlist.NameChanged -= Playlist_NameChanged;
             _playlist.PlaybackStateChanged -= Playlist_PlaybackStateChanged;
             _playlist.UrlChanged -= Playlist_UrlChanged;
         }
 
-        private void Playlist_UrlChanged(object sender, Uri? e) => Url = e;
-
-        private void Playlist_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
-
-        private void Playlist_NameChanged(object sender, string e) => Name = e;
-
-        private void Playlist_DescriptionChanged(object sender, string? e) => Description = e;
-
-        /// <inheritdoc />
-        public ICore SourceCore { get; }
-
-        /// <inheritdoc />
-        public string Id => _playlist.Id;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<ITrack> Tracks { get; }
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
-
-        /// <inheritdoc />
-        public int TotalTracksCount => _playlist.TotalTracksCount;
-
-        private IUserProfile? _owner;
-
-        /// <inheritdoc />
-        public IUserProfile? Owner
+        private void Playlist_TracksChanged(object sender, CollectionChangedEventArgs<ITrack> e)
         {
-            get => _owner;
-            set => SetProperty(ref _owner, value);
+            foreach (var item in e.AddedItems)
+            {
+                Tracks.Insert(item.Index, new ObservableTrack(item.Data));
+            }
+
+            foreach (var item in e.RemovedItems)
+            {
+                Tracks.RemoveAt(item.Index);
+            }
         }
-
-        /// <inheritdoc />
-        public Uri? Url
-        {
-            get => _playlist.Url;
-            set => SetProperty(() => _playlist.Url, value);
-        }
-
-        /// <inheritdoc />
-        public string Name
-        {
-            get => _playlist.Name;
-            set => SetProperty(() => _playlist.Name, value);
-        }
-
-        /// <inheritdoc />
-        public string? Description
-        {
-            get => _playlist.Description;
-            set => SetProperty(() => _playlist.Description, value);
-        }
-
-        /// <inheritdoc />
-        public PlaybackState PlaybackState
-        {
-            get => _playlist.PlaybackState;
-            set => SetProperty(() => _playlist.PlaybackState, value);
-        }
-
-        /// <inheritdoc />
-        public TimeSpan Duration => _playlist.Duration;
-
-        /// <inheritdoc />
-        public IPlayableCollectionGroup? RelatedItems { get; }
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<string>? Genres => _playlist.Genres;
-
-        /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _playlist.IsPlayAsyncSupported;
-
-        /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _playlist.IsPauseAsyncSupported;
-
-        /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _playlist.IsChangeNameAsyncSupported;
-
-        /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _playlist.IsChangeDescriptionAsyncSupported;
-
-        /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _playlist.IsChangeDurationAsyncSupported;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap => _playlist.IsRemoveTrackSupportedMap;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap => _playlist.IsRemoveGenreSupportedMap;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap => _playlist.IsRemoveImageSupportedMap;
-
-        /// <inheritdoc />
-        public Task PauseAsync() => _playlist.PauseAsync();
-
-        /// <inheritdoc />
-        public Task PlayAsync() => _playlist.PlayAsync();
-
-        /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => _playlist.ChangeNameAsync(name);
-
-        /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description) => _playlist.ChangeDescriptionAsync(description);
-
-        /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration) => _playlist.ChangeDurationAsync(duration);
-
-        /// <inheritdoc />
-        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0) => _playlist.GetTracksAsync(limit, offset);
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState> PlaybackStateChanged
@@ -210,6 +116,150 @@ namespace StrixMusic.Sdk.Observables
             remove => _playlist.DurationChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
+        {
+            add => _playlist.TracksChanged += value;
+            remove => _playlist.TracksChanged -= value;
+        }
+
+        private void Playlist_UrlChanged(object sender, Uri? e) => Url = e;
+
+        private void Playlist_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+
+        private void Playlist_NameChanged(object sender, string e) => Name = e;
+
+        private void Playlist_DescriptionChanged(object sender, string? e) => Description = e;
+
+        /// <inheritdoc />
+        public ICore SourceCore { get; }
+
+        /// <inheritdoc />
+        public string Id => _playlist.Id;
+
+        /// <inheritdoc />
+        public TimeSpan Duration => _playlist.Duration;
+
+        /// <inheritdoc />
+        public IPlayableCollectionGroup? RelatedItems { get; }
+
+        /// <inheritdoc />
+        public int TotalTracksCount => _playlist.TotalTracksCount;
+
+        /// <summary>
+        /// The tracks in this playlist.
+        /// </summary>
+        public SynchronizedObservableCollection<ITrack> Tracks { get; }
+
+        /// <inheritdoc />
+        public SynchronizedObservableCollection<IImage> Images { get; }
+
+        /// <inheritdoc />
+        public SynchronizedObservableCollection<string>? Genres => _playlist.Genres;
+
+        /// <inheritdoc />
+        public IUserProfile? Owner
+        {
+            get => _owner;
+            set => SetProperty(ref _owner, value);
+        }
+
+        /// <inheritdoc />
+        public Uri? Url
+        {
+            get => _playlist.Url;
+            set => SetProperty(() => _playlist.Url, value);
+        }
+
+        /// <inheritdoc />
+        public string Name
+        {
+            get => _playlist.Name;
+            set => SetProperty(() => _playlist.Name, value);
+        }
+
+        /// <inheritdoc />
+        public string? Description
+        {
+            get => _playlist.Description;
+            set => SetProperty(() => _playlist.Description, value);
+        }
+
+        /// <inheritdoc />
+        public PlaybackState PlaybackState
+        {
+            get => _playlist.PlaybackState;
+            set => SetProperty(() => _playlist.PlaybackState, value);
+        }
+
+        /// <inheritdoc />
+        public bool IsPlayAsyncSupported => _playlist.IsPlayAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsPauseAsyncSupported => _playlist.IsPauseAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsChangeNameAsyncSupported => _playlist.IsChangeNameAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsChangeDescriptionAsyncSupported => _playlist.IsChangeDescriptionAsyncSupported;
+
+        /// <inheritdoc />
+        public bool IsChangeDurationAsyncSupported => _playlist.IsChangeDurationAsyncSupported;
+
+        /// <inheritdoc />
+        public Task<bool> IsAddTrackSupported(int index) => _playlist.IsAddTrackSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsAddGenreSupported(int index) => _playlist.IsAddGenreSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsAddImageSupported(int index) => _playlist.IsAddImageSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveImageSupported(int index) => _playlist.IsRemoveImageSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveGenreSupported(int index) => _playlist.IsRemoveGenreSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveTrackSupported(int index) => _playlist.IsRemoveTrackSupported(index);
+
+        /// <inheritdoc />
+        public Task PauseAsync() => _playlist.PauseAsync();
+
+        /// <inheritdoc />
+        public Task PlayAsync() => _playlist.PlayAsync();
+
+        /// <inheritdoc />
+        public Task ChangeNameAsync(string name) => _playlist.ChangeNameAsync(name);
+
+        /// <inheritdoc />
+        public Task ChangeDescriptionAsync(string? description) => _playlist.ChangeDescriptionAsync(description);
+
+        /// <inheritdoc />
+        public Task ChangeDurationAsync(TimeSpan duration) => _playlist.ChangeDurationAsync(duration);
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0) => _playlist.GetTracksAsync(limit, offset);
+
+        /// <summary>
+        /// Populates the next set of tracks into the collection.
+        /// </summary>
+        /// <param name="limit">The number of items to load.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task PopulateMoreTracksAsync(int limit)
+        {
+            // TODO
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task AddTrackAsync(IPlayableCollectionGroup track, int index) => _playlist.AddTrackAsync(track, index);
+
+        /// <inheritdoc />
+        public Task RemoveTrackAsync(int index) => _playlist.RemoveTrackAsync(index);
+
         /// <summary>
         /// Attempts to play the playlist.
         /// </summary>
@@ -234,17 +284,5 @@ namespace StrixMusic.Sdk.Observables
         /// Attempts to change the duration of the album, if supported.
         /// </summary>
         public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public Task PopulateMoreTracksAsync(int limit) => _playlist.PopulateMoreTracksAsync(limit);
-
-        /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index) => _playlist.IsAddTrackSupported(index);
-
-        /// <inheritdoc />
-        public Task<bool> IsAddGenreSupported(int index) => _playlist.IsAddGenreSupported(index);
-
-        /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _playlist.IsAddImageSupported(index);
     }
 }

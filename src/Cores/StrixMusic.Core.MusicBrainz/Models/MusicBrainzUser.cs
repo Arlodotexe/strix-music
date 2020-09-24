@@ -64,12 +64,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeEmailAsyncSupported => false;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemoveUrlSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc />
         public Task<bool> IsAddUrlSupported(int index)
         {
             return Task.FromResult(false);
@@ -82,19 +76,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public event EventHandler<string>? FullNameChanged;
+        public Task<bool> IsRemoveUrlSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
 
         /// <inheritdoc />
-        public event EventHandler<CultureInfo>? RegionChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<string?>? EmailChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<string>? DisplayNameChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<DateTime>? BirthDateChanged;
+        public Task<bool> IsRemoveImageSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
 
         /// <inheritdoc />
         public Task ChangeDisplayNameAsync(string displayName)
@@ -125,5 +116,20 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             throw new NotSupportedException();
         }
+
+        /// <inheritdoc />
+        public event EventHandler<string>? FullNameChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<CultureInfo>? RegionChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<string?>? EmailChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<string>? DisplayNameChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<DateTime>? BirthDateChanged;
     }
 }

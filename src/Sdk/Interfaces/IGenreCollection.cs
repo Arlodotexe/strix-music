@@ -11,6 +11,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// A list of <see cref="string"/> describing the genres for this track.
         /// </summary>
+        /// <remarks>Data should be populated on object creation. Handle <see cref="SynchronizedObservableCollection{T}.CollectionChanged"/> to find out when a genre is added or removed.</remarks>
         SynchronizedObservableCollection<string>? Genres { get; }
 
         /// <summary>
@@ -20,8 +21,9 @@ namespace StrixMusic.Sdk.Interfaces
         Task<bool> IsAddGenreSupported(int index);
 
         /// <summary>
-        /// A collection that maps (by index) to the items in <see cref="Genres"/>. The bool at each index tells you if removing the <see cref="string"/> is supported.
+        /// Checks if the backend supports removing a <see cref="string"/> at a specific index.
         /// </summary>
-        SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap { get; }
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="string"/> can be removed.</returns>
+        Task<bool> IsRemoveGenreSupported(int index);
     }
 }

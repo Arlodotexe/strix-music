@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Interfaces;
 
@@ -56,21 +55,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public override Task PopulateMoreAlbumsAsync(int limit)
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
         public override IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0)
         {
             return AsyncEnumerable.Empty<IArtist>();
-        }
-
-        /// <inheritdoc />
-        public override Task PopulateMoreArtistsAsync(int limit)
-        {
-            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
@@ -80,33 +67,15 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public override Task PopulateMoreChildrenAsync(int limit)
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
         public override IAsyncEnumerable<IPlaylist> GetPlaylistsAsync(int limit, int offset = 0)
         {
             return AsyncEnumerable.Empty<IPlaylist>();
         }
 
         /// <inheritdoc />
-        public override Task PopulateMorePlaylistsAsync(int limit)
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
         public override IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0)
         {
             return AsyncEnumerable.Empty<ITrack>();
-        }
-
-        /// <inheritdoc />
-        public override Task PopulateMoreTracksAsync(int limit)
-        {
-            return Task.CompletedTask;
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using OwlCore.Collections;
+using StrixMusic.Sdk.Events;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -10,37 +11,49 @@ namespace StrixMusic.Sdk.Interfaces
     public interface IAlbumCollection : IPlayableCollectionBase
     {
         /// <summary>
-        /// A collection of albums.
-        /// </summary>
-        SynchronizedObservableCollection<IAlbum> Albums { get; }
-
-        /// <summary>
-        /// The total number of available <see cref="Albums"/>.
+        /// The total number of available Albums.
         /// </summary>
         int TotalAlbumsCount { get; }
 
         /// <summary>
-        /// Checks if the backend supports adding an <see cref="IAlbum"/> at a specific position in <see cref="Albums"/>.
+        /// Adds a new album to the collection on the backend.
+        /// </summary>
+        /// <param name="album">The album to create.</param>
+        /// <param name="index">the position to insert the album at.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task AddAlbumAsync(IAlbum album, int index);
+
+        /// <summary>
+        /// Removes the album from the collection on the backend.
+        /// </summary>
+        /// <param name="index">The index of the album to remove.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task RemoveAlbumAsync(int index);
+
+        /// <summary>
+        /// Checks if the backend supports adding an <see cref="IAlbum"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IAlbum"/> can be added.</returns>
         Task<bool> IsAddAlbumSupported(int index);
 
         /// <summary>
-        /// A collection that maps (by index) to the items in <see cref="Albums"/>. The bool at each index tells you if removing the <see cref="IAlbum"/> is supported.
+        /// Checks if the backend supports removing an <see cref="IAlbum"/> at a specific index.
         /// </summary>
-        SynchronizedObservableCollection<bool> IsRemoveAlbumSupportedMap { get; }
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IAlbum"/> can be removed.</returns>
+        Task<bool> IsRemoveAlbumSupported(int index);
 
         /// <summary>
-        /// Returns items at a specific index and offset.
+        /// Gets a requested number of <see cref="IAlbum"/>s starting at the given offset in the backend.
         /// </summary>
-        /// <remarks>Does not affect <see cref="Albums"/>.</remarks>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <param name="limit">The max number of items to return.</param>
+        /// <param name="offset">Get items starting at this index.</param>
+        /// <returns><see cref="IAsyncEnumerable{T}"/> that returns the items as they're retrieved.</returns>
         IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset);
 
         /// <summary>
-        /// Populates more items into <see cref="Albums"/>.
+        /// Fires when an <see cref="IAlbum"/> in this collection is added or removed in the backend.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PopulateMoreAlbumsAsync(int limit);
+        /// <remarks>This is used to handle real time changes from the backend, if supported by the core.</remarks>
+        event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
     }
 }

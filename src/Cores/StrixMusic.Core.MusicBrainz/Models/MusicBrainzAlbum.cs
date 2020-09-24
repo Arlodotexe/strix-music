@@ -9,6 +9,7 @@ using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
 
@@ -41,12 +42,32 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             Release = release;
             Medium = medium;
-            Tracks = new SynchronizedObservableCollection<ITrack>();
             Images = CreateImagesForRelease();
 
             SourceCore = sourceCore;
             Artist = artist;
         }
+
+        /// <inheritdoc/>
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<string>? NameChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<string?>? DescriptionChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<Uri?>? UrlChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<DateTime?>? DatePublishedChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
 
         /// <summary>
         /// The physical medium (album) for this release.
@@ -93,10 +114,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration { get; } = TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<ITrack> Tracks { get; }
+        public IPlayableCollectionGroup? RelatedItems => null;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? RelatedItems => null;
+        public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
 
         /// <inheritdoc/>
         public bool IsPlayAsyncSupported => false;
@@ -117,18 +138,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveGenreSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
         public Task<bool> IsAddGenreSupported(int index)
         {
             return Task.FromResult(false);
@@ -146,23 +155,23 @@ namespace StrixMusic.Core.MusicBrainz.Models
             return Task.FromResult(false);
         }
 
-        /// <inheritdoc/>
-        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+        /// <inheritdoc />
+        public Task<bool> IsRemoveTrackSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
 
-        /// <inheritdoc/>
-        public event EventHandler<string>? NameChanged;
+        /// <inheritdoc />
+        public Task<bool> IsRemoveImageSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
 
-        /// <inheritdoc/>
-        public event EventHandler<string?>? DescriptionChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<Uri?>? UrlChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<DateTime?>? DatePublishedChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<TimeSpan>? DurationChanged;
+        /// <inheritdoc />
+        public Task<bool> IsRemoveGenreSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
 
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
@@ -221,21 +230,22 @@ namespace StrixMusic.Core.MusicBrainz.Models
                         var album = new MusicBrainzAlbum(SourceCore, Release, medium, artist);
                         var track = new MusicBrainzTrack(SourceCore, trackData, album);
 
-                        yield return track; 
+                        yield return track;
                     }
                 }
             }
         }
 
-        /// <inheritdoc/>
-        public async Task PopulateMoreTracksAsync(int limit)
+        /// <inheritdoc />
+        public Task AddTrackAsync(IPlayableCollectionGroup track, int index)
         {
-            var offset = Tracks.Count;
-            await foreach (var item in GetTracksAsync(limit, offset))
-            {
-                IsRemoveTrackSupportedMap.Add(false);
-                Tracks.Add(item);
-            }
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveTrackAsync(int index)
+        {
+            throw new NotImplementedException();
         }
 
         private DateTime CreateReleaseDate(string musicBrainzDate)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Services;
@@ -129,48 +128,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     }
                 }
             }
-        }
-
-        /// <inheritdoc />
-        public override async Task PopulateMoreTracksAsync(int limit)
-        {
-            var offset = Tracks.Count;
-            await foreach (var item in GetTracksAsync(limit, offset))
-            {
-                Tracks.Add(item);
-            }
-        }
-
-        /// <inheritdoc />
-        public override async Task PopulateMoreAlbumsAsync(int limit)
-        {
-            var offset = Albums.Count;
-            await foreach (var item in GetAlbumsAsync(limit, offset))
-            {
-                Albums.Add(item);
-            }
-        }
-
-        /// <inheritdoc />
-        public override async Task PopulateMoreArtistsAsync(int limit)
-        {
-            var offset = Artists.Count;
-            await foreach (var item in GetArtistsAsync(limit, offset))
-            {
-                Artists.Add(item);
-            }
-        }
-
-        /// <inheritdoc />
-        public override Task PopulateMoreChildrenAsync(int limit)
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
-        public override Task PopulateMorePlaylistsAsync(int limit)
-        {
-            return Task.CompletedTask;
         }
     }
 }

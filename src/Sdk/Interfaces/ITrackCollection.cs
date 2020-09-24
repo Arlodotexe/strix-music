@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using OwlCore.Collections;
+using StrixMusic.Sdk.Events;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -10,37 +11,49 @@ namespace StrixMusic.Sdk.Interfaces
     public interface ITrackCollection : IPlayableCollectionBase
     {
         /// <summary>
-        /// The tracks for this artists. If unknown, returns the most listened to tracks for this user. Can be empty.
-        /// </summary>
-        SynchronizedObservableCollection<ITrack> Tracks { get; }
-
-        /// <summary>
-        /// The total number of available <see cref="Tracks"/>.
+        /// The total number of available Tracks.
         /// </summary>
         int TotalTracksCount { get; }
 
         /// <summary>
-        /// Checks if the backend supports adding an <see cref="ITrack"/> at a specific position in <see cref="ITrackCollection.Tracks"/>.
+        /// Adds a new track to the collection on the backend.
+        /// </summary>
+        /// <param name="track">The track to create.</param>
+        /// <param name="index">the position to insert the track at.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task AddTrackAsync(IPlayableCollectionGroup track, int index);
+
+        /// <summary>
+        /// Removes the track from the collection on the backend.
+        /// </summary>
+        /// <param name="index">The index of the track to remove.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task RemoveTrackAsync(int index);
+
+        /// <summary>
+        /// Checks if the backend supports adding an <see cref="ITrack"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="ITrack"/> can be added.</returns>
         Task<bool> IsAddTrackSupported(int index);
 
         /// <summary>
-        /// A collection that maps (by index) to the items in <see cref="ITrackCollection.Tracks"/>. The bool at each index tells you if removing the <see cref="ITrack"/> is supported.
+        /// Checks if the backend supports removing an <see cref="ITrack"/> at a specific index.
         /// </summary>
-        SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap { get; }
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="ITrack"/> can be removed.</returns>
+        Task<bool> IsRemoveTrackSupported(int index);
 
         /// <summary>
-        /// Returns items at a specific index and offset.
+        /// Gets a requested number of <see cref="ITrack"/>s starting at the given offset in the backend.
         /// </summary>
-        /// <remarks>Does not affect <see cref="Tracks"/>.</remarks>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <param name="limit">The max number of items to return.</param>
+        /// <param name="offset">Get items starting at this index.</param>
+        /// <returns><see cref="IAsyncEnumerable{T}"/> that returns the items as they're retrieved.</returns>
         IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset);
 
         /// <summary>
-        /// Populates more items into <see cref="Tracks"/>.
+        /// Fires when a <see cref="ITrack"/> in this collection is added or removed in the backend.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PopulateMoreTracksAsync(int limit);
+        /// <remarks>This is used to handle real time changes from the backend, if supported by the core.</remarks>
+        event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
     }
 }

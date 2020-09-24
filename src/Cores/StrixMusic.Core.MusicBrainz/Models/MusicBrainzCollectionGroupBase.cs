@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -20,19 +21,34 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IPlayableCollectionGroup> Children { get; } = new SynchronizedObservableCollection<IPlayableCollectionGroup>();
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IPlaylist> Playlists { get; } = new SynchronizedObservableCollection<IPlaylist>();
+        public event EventHandler<string>? NameChanged;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<ITrack> Tracks { get; } = new SynchronizedObservableCollection<ITrack>();
+        public event EventHandler<string?>? DescriptionChanged;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IAlbum> Albums { get; } = new SynchronizedObservableCollection<IAlbum>();
+        public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IArtist> Artists { get; } = new SynchronizedObservableCollection<IArtist>();
+        public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
 
         /// <inheritdoc />
         public ICore SourceCore { get; }
@@ -89,39 +105,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveImageSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveAlbumSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveArtistSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveTrackSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemovePlaylistSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemoveChildSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc />
-        public event EventHandler<PlaybackState>? PlaybackStateChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<string>? NameChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<string?>? DescriptionChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<Uri?>? UrlChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<TimeSpan>? DurationChanged;
-
-        /// <inheritdoc/>
         public Task<bool> IsAddChildSupported(int index)
         {
             return Task.FromResult(false);
@@ -153,6 +136,42 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public Task<bool> IsAddImageSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveTrackSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveImageSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemovePlaylistSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveAlbumSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveArtistSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveChildSupported(int index)
         {
             return Task.FromResult(false);
         }
@@ -191,30 +210,75 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public abstract IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public abstract Task PopulateMoreAlbumsAsync(int limit);
-
-        /// <inheritdoc />
         public abstract IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0);
-
-        /// <inheritdoc />
-        public abstract Task PopulateMoreArtistsAsync(int limit);
 
         /// <inheritdoc />
         public abstract IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public abstract Task PopulateMoreChildrenAsync(int limit);
-
-        /// <inheritdoc />
         public abstract IAsyncEnumerable<IPlaylist> GetPlaylistsAsync(int limit, int offset = 0);
-
-        /// <inheritdoc />
-        public abstract Task PopulateMorePlaylistsAsync(int limit);
 
         /// <inheritdoc />
         public abstract IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public abstract Task PopulateMoreTracksAsync(int limit);
+        public Task AddTrackAsync(IPlayableCollectionGroup track, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddArtistAsync(IArtist artist, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddAlbumAsync(IAlbum album, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddPlaylistAsync(IPlayableCollectionGroup playlist, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddChildAsync(IPlayableCollectionGroup child, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveTrackAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveArtistAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveAlbumAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemovePlaylistAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveChildAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

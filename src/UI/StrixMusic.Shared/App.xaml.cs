@@ -21,6 +21,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using StrixMusic.Services;
 
 namespace StrixMusic
 {
@@ -59,6 +60,7 @@ namespace StrixMusic
                 services.AddSingleton<ITextStorageService>(textStorageService);
                 services.AddSingleton<ISettingsService>(settingsService);
                 services.AddSingleton<CacheServiceBase, DefaultCacheService>();
+                services.AddSingleton<ISharedFactory, SharedFactory>();
                 services.AddSingleton<ISuperShellService, SuperShellService>();
                 services.AddSingleton<IFileSystemService, FileSystemService>();
 

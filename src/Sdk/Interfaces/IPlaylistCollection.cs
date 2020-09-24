@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using OwlCore.Collections;
+using StrixMusic.Sdk.Events;
 
 namespace StrixMusic.Sdk.Interfaces
 {
@@ -10,37 +11,49 @@ namespace StrixMusic.Sdk.Interfaces
     public interface IPlaylistCollection : IPlayableCollectionBase
     {
         /// <summary>
-        /// The playlists in the library.
-        /// </summary>
-        SynchronizedObservableCollection<IPlaylist> Playlists { get; }
-
-        /// <summary>
-        /// The total number of available <see cref="Playlists"/>.
+        /// The total number of available Playlists.
         /// </summary>
         int TotalPlaylistCount { get; }
 
         /// <summary>
-        /// Checks if the backend supports adding an <see cref="IPlaylist"/> at a specific position in <see cref="Playlists"/>.
+        /// Adds a new playlist to the collection on the backend.
+        /// </summary>
+        /// <param name="playlist">The playlist to create.</param>
+        /// <param name="index">the position to insert the playlist at.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task AddPlaylistAsync(IPlayableCollectionGroup playlist, int index);
+
+        /// <summary>
+        /// Removes the playlist from the collection on the backend.
+        /// </summary>
+        /// <param name="index">The index of the playlist to remove.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task RemovePlaylistAsync(int index);
+
+        /// <summary>
+        /// Checks if the backend supports adding an <see cref="IPlaylist"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IPlaylist"/> can be added.</returns>
         Task<bool> IsAddPlaylistSupported(int index);
 
         /// <summary>
-        /// A collection that maps (by index) to the items in <see cref="Playlists"/>. The bool at each index tells you if removing the <see cref="IPlaylist"/> is supported.
+        /// Checks if the backend supports removing an <see cref="IPlaylist"/> at a specific index.
         /// </summary>
-        SynchronizedObservableCollection<bool> IsRemovePlaylistSupportedMap { get; }
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IPlaylist"/> can be removed.</returns>
+        Task<bool> IsRemovePlaylistSupported(int index);
 
         /// <summary>
-        /// Returns items at a specific index and offset.
+        /// Gets a requested number of <see cref="IPlaylist"/>s starting at the given offset in the backend.
         /// </summary>
-        /// <remarks>Does not affect <see cref="Playlists"/>.</remarks>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <param name="limit">The max number of items to return.</param>
+        /// <param name="offset">Get items starting at this index.</param>
+        /// <returns><see cref="IAsyncEnumerable{T}"/> that returns the items as they're retrieved.</returns>
         IAsyncEnumerable<IPlaylist> GetPlaylistsAsync(int limit, int offset);
 
         /// <summary>
-        /// Populates more items into <see cref="Playlists"/>.
+        /// Fires when a <see cref="IPlaylist"/> in this collection is added or removed in the backend.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PopulateMorePlaylistsAsync(int limit);
+        /// <remarks>This is used to handle real time changes from the backend, if supported by the core.</remarks>
+        event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
     }
 }
