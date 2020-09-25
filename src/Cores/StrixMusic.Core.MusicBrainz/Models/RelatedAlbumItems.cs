@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using OwlCore.Collections;
@@ -22,42 +20,46 @@ namespace StrixMusic.Core.MusicBrainz.Models
             : base(sourceCore)
         {
             _release = release;
-            TotalAlbumsCount = release.Media.Count;
+
+            // Probably not the best way to do this.
+            Id = $"related{_release.Id}";
+            Name = "Other discs in this set";
+
             _musicBrainzClient = sourceCore.GetService<MusicBrainzClient>();
         }
 
         /// <inheritdoc />
-        public override string Id { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+        public sealed override string Id { get; protected set; }
 
         /// <inheritdoc />
-        public override Uri? Url { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+        public override Uri? Url { get; protected set; }
 
         /// <inheritdoc />
-        public override string Name { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+        public sealed override string Name { get; protected set; }
 
         /// <inheritdoc />
-        public override SynchronizedObservableCollection<IImage> Images { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+        public override SynchronizedObservableCollection<IImage> Images { get; protected set; } = new SynchronizedObservableCollection<IImage>();
 
         /// <inheritdoc />
-        public override string? Description { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+        public override string? Description { get; protected set; }
 
         /// <inheritdoc />
-        public override int TotalAlbumsCount { get => throw new NotImplementedException(); internal set => throw new NotImplementedException(); }
+        public override int TotalAlbumsCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalArtistsCount { get => throw new NotImplementedException(); internal set => throw new NotImplementedException(); }
+        public override int TotalArtistsCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalTracksCount { get => throw new NotImplementedException(); internal set => throw new NotImplementedException(); }
+        public override int TotalTracksCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalPlaylistCount { get => throw new NotImplementedException(); internal set => throw new NotImplementedException(); }
+        public override int TotalPlaylistCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalChildrenCount { get => throw new NotImplementedException(); internal set => throw new NotImplementedException(); }
+        public override int TotalChildrenCount { get; internal set; }
 
         /// <inheritdoc />
-        public async override IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset = 0)
+        public override async IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset = 0)
         {
             var release = await _musicBrainzClient.Releases.GetAsync(_release.Id);
             var artist = new MusicBrainzArtist(SourceCore, release.Credits[0].Artist);
@@ -66,8 +68,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
             foreach (var medium in mediums)
             {
                 var album = new MusicBrainzAlbum(SourceCore, release, medium, artist);
-                Albums.Add(album);
-                IsRemoveAlbumSupportedMap.Add(false);
 
                 yield return album;
             }
@@ -93,36 +93,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public override IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public override Task PopulateMoreAlbumsAsync(int limit)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public override Task PopulateMoreArtistsAsync(int limit)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public override Task PopulateMoreChildrenAsync(int limit)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public override Task PopulateMorePlaylistsAsync(int limit)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public override Task PopulateMoreTracksAsync(int limit)
         {
             throw new NotImplementedException();
         }
