@@ -29,8 +29,8 @@ namespace StrixMusic.Sdk.Observables
             if (_artist.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_artist.RelatedItems);
 
-            Tracks = new SynchronizedObservableCollection<ITrack>();
-            Albums = new SynchronizedObservableCollection<IAlbum>();
+            Tracks = new SynchronizedObservableCollection<ObservableTrack>();
+            Albums = new SynchronizedObservableCollection<ObservableAlbum>();
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
@@ -114,7 +114,7 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Tracks.Insert(item.Index, item.Data);
+                Tracks.Insert(item.Index, new ObservableTrack(item.Data));
             }
 
             foreach (var item in e.RemovedItems)
@@ -127,7 +127,7 @@ namespace StrixMusic.Sdk.Observables
         {
             foreach (var item in e.AddedItems)
             {
-                Albums.Insert(item.Index, item.Data);
+                Albums.Insert(item.Index, new ObservableAlbum(item.Data));
             }
 
             foreach (var item in e.RemovedItems)
@@ -172,12 +172,12 @@ namespace StrixMusic.Sdk.Observables
         /// <summary>
         /// The artist's albums.
         /// </summary>
-        public SynchronizedObservableCollection<IAlbum> Albums { get; }
+        public SynchronizedObservableCollection<ObservableAlbum> Albums { get; }
 
         /// <summary>
         /// The tracks released by this artist.
         /// </summary>
-        public SynchronizedObservableCollection<ITrack> Tracks { get; }
+        public SynchronizedObservableCollection<ObservableTrack> Tracks { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IImage> Images => _artist.Images;

@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Observables
     {
         private readonly IAlbum _album;
 
-        private IArtist _artist;
+        private ObservableArtist _artist;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableAlbum"/> class.
@@ -29,7 +29,7 @@ namespace StrixMusic.Sdk.Observables
             SourceCore = MainViewModel.GetLoadedCore(_album.SourceCore);
 
             Images = new SynchronizedObservableCollection<IImage>(_album.Images);
-            Tracks = new SynchronizedObservableCollection<ITrack>();
+            Tracks = new SynchronizedObservableCollection<ObservableTrack>();
 
             if (_album.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_album.RelatedItems);
@@ -183,7 +183,7 @@ namespace StrixMusic.Sdk.Observables
         /// <summary>
         /// The tracks for this album.
         /// </summary>
-        public SynchronizedObservableCollection<ITrack> Tracks { get; }
+        public SynchronizedObservableCollection<ObservableTrack> Tracks { get; }
 
         /// <inheritdoc />
         public string Name
@@ -196,7 +196,7 @@ namespace StrixMusic.Sdk.Observables
         public IArtist Artist
         {
             get => _artist;
-            set => SetProperty(ref _artist, value);
+            set => SetProperty(ref _artist, new ObservableArtist(value));
         }
 
         /// <inheritdoc />

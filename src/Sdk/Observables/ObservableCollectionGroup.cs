@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -39,11 +40,11 @@ namespace StrixMusic.Sdk.Observables
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
 
-            Tracks = new SynchronizedObservableCollection<ITrack>();
-            Playlists = new SynchronizedObservableCollection<IPlaylist>();
-            Albums = new SynchronizedObservableCollection<IAlbum>();
-            Artists = new SynchronizedObservableCollection<IArtist>();
-            Children = new SynchronizedObservableCollection<IPlayableCollectionGroup>();
+            Tracks = new SynchronizedObservableCollection<ObservableTrack>();
+            Playlists = new SynchronizedObservableCollection<ObservablePlaylist>();
+            Albums = new SynchronizedObservableCollection<ObservableAlbum>();
+            Artists = new SynchronizedObservableCollection<ObservableArtist>();
+            Children = new SynchronizedObservableCollection<ObservableCollectionGroup>();
 
             AttachPropertyEvents();
         }
@@ -257,27 +258,27 @@ namespace StrixMusic.Sdk.Observables
         /// <summary>
         /// The playlists in this collection
         /// </summary>
-        public SynchronizedObservableCollection<IPlaylist> Playlists { get; }
+        public SynchronizedObservableCollection<ObservablePlaylist> Playlists { get; }
 
         /// <summary>
         /// The tracks in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<ITrack> Tracks { get; }
+        public SynchronizedObservableCollection<ObservableTrack> Tracks { get; }
 
         /// <summary>
         /// The albums in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<IAlbum> Albums { get; }
+        public SynchronizedObservableCollection<ObservableAlbum> Albums { get; }
 
         /// <summary>
         /// The artists in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<IArtist> Artists { get; }
+        public SynchronizedObservableCollection<ObservableArtist> Artists { get; }
 
         /// <summary>
         /// The nested <see cref="IPlayableCollectionGroup"/> items in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<IPlayableCollectionGroup> Children { get; }
+        public SynchronizedObservableCollection<ObservableCollectionGroup> Children { get; }
 
         /// <inheritdoc />
         public string Name
@@ -434,10 +435,13 @@ namespace StrixMusic.Sdk.Observables
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task PopulateMoreTracksAsync(int limit)
+        public async Task PopulateMoreTracksAsync(int limit)
         {
             // TODO
-            return Task.CompletedTask;
+            await foreach (var item in _collectionGroupBase.GetTracksAsync(limit, Tracks.Count))
+            {
+                Tracks.Add(new ObservableTrack(item));
+            }
         }
 
         /// <summary>

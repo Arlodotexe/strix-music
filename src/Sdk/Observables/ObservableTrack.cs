@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Observables
             if (_track.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_track.RelatedItems);
 
-            Artists = new SynchronizedObservableCollection<IArtist>();
+            Artists = new SynchronizedObservableCollection<ObservableArtist>();
             SourceCore = MainViewModel.GetLoadedCore(_track.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -181,7 +181,7 @@ namespace StrixMusic.Sdk.Observables
         /// <summary>
         /// The artists for this track.
         /// </summary>
-        public SynchronizedObservableCollection<IArtist> Artists { get; }
+        public SynchronizedObservableCollection<ObservableArtist> Artists { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<string>? Genres => _track.Genres;
