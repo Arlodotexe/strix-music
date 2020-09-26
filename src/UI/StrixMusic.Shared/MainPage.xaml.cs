@@ -129,11 +129,10 @@ namespace StrixMusic
 
         private ShellContainer CreateShellControl()
         {
-            ShellContainer shell = new ShellContainer
+            return new ShellContainer
             {
-                DataContext = Ioc.Default.GetService<MainViewModel>(),
+                DataContext = MainViewModel.Singleton,
             };
-            return shell;
         }
     }
 }
