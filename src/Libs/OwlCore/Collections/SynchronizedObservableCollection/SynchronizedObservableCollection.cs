@@ -282,7 +282,7 @@ namespace OwlCore.Collections
         {
             using (BlockReentrancy())
             {
-                _context.Send(state =>
+                _context.Post(state =>
                 {
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Count"));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
@@ -295,7 +295,7 @@ namespace OwlCore.Collections
         {
             using (BlockReentrancy())
             {
-                _context.Send(state =>
+                _context.Post(state =>
                 {
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Count"));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
@@ -308,7 +308,7 @@ namespace OwlCore.Collections
         {
             using (BlockReentrancy())
             {
-                _context.Send(state =>
+                _context.Post(state =>
                 {
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
                     CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, newIndex, oldIndex));
@@ -320,7 +320,7 @@ namespace OwlCore.Collections
         {
             using (BlockReentrancy())
             {
-                _context.Send(state =>
+                _context.Post(state =>
                 {
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Count"));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
@@ -333,7 +333,7 @@ namespace OwlCore.Collections
         {
             using (BlockReentrancy())
             {
-                _context.Send(state =>
+                _context.Post(state =>
                 {
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
                     CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItem, oldItem, index));
