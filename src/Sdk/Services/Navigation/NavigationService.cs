@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StrixMusic.Sdk.Services.Navigation
 {
@@ -17,7 +18,7 @@ namespace StrixMusic.Sdk.Services.Navigation
         public event EventHandler? BackRequested;
 
         /// <inheritdoc/>
-        public void NavigateTo(Type type, bool overlay = false, object? args = null)
+        public void NavigateTo(Type type, bool overlay = false, params object[] args)
         {
             T page;
             if (_registeredPages.ContainsKey(type))
@@ -26,7 +27,7 @@ namespace StrixMusic.Sdk.Services.Navigation
             }
             else
             {
-                if (args != null)
+                if (args.Any())
                 {
                     page = (T)Activator.CreateInstance(type, args);
                 }

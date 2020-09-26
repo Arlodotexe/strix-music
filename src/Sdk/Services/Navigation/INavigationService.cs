@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.Services.Navigation
         /// <param name="type">The type of the page to navigate to.</param>
         /// <param name="overlay">Whether or not the page is an overlay.</param>
         /// <param name="args">The arguments for creating the page object.</param>
-        void NavigateTo(Type type, bool overlay = false, object? args = null);
+        void NavigateTo(Type type, bool overlay = false, params object[] args);
 
         /// <summary>
         /// Raises the <see cref="NavigationRequested"/> event based on the arguments
