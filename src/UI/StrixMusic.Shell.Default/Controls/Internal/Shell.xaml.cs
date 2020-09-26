@@ -21,10 +21,12 @@ namespace StrixMusic.Shell.Default.Controls.Internal
         /// </summary>
         public Shell()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             SetupIoc();
+
             _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
-            _navigationService!.BackRequested += Shell_BackRequested; ;
+            _navigationService!.BackRequested += Shell_BackRequested;
+
             _pagesMapping = new Dictionary<string, Type>
             {
                 { "Home", typeof(HomeControl) },

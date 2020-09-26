@@ -2,26 +2,22 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shell.Default.Controls"
-    xmlns:observables="using:StrixMusic.Sdk.Observables"
     x:Class="StrixMusic.Shell.Default.Themes.TrackListStyle">
 
-    <DataTemplate x:Key="DefaultTrackList" x:DataType="observables:ObservableLibrary">
-        <ListView ItemsSource="{x:Bind Tracks}" ItemContainerStyle="{StaticResource TrackListItemStyle}" Margin="32" HorizontalAlignment="Stretch">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <local:TrackControl/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </DataTemplate>
-    
     <Style x:Key="DefaultTrackListControlStyle" TargetType="local:TrackListControl">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:TrackListControl">
-                        <ContentControl ContentTemplate="{StaticResource DefaultTrackList}"
-                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                        <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <ListView x:Name="PART_ListView" ItemContainerStyle="{StaticResource TrackListItemStyle}" Margin="32" HorizontalAlignment="Stretch">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <local:TrackControl/>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ContentControl>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

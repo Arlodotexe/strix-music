@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk;
+﻿using Windows.UI.Xaml;
+using StrixMusic.Sdk;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls
@@ -14,6 +15,13 @@ namespace StrixMusic.Shell.Default.Controls
         public ShellContainer()
         {
             DefaultStyleKey = typeof(ShellContainer);
+
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var x = DataContext;
         }
 
         /// <summary>

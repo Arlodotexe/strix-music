@@ -2,7 +2,9 @@
 using StrixMusic.Sdk.Observables;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
+using OwlCore.Collections;
 using OwlCore.Exceptions;
+using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Shell.Default.Controls
 {
@@ -20,18 +22,33 @@ namespace StrixMusic.Shell.Default.Controls
         }
 
         /// <summary>
-        /// The backing DependencyProperty for <see cref="LoadMoreTracksCommand"/>.
+        /// The backing DependencyProperty for <see cref="PopulateMoreTracksCommand"/>.
         /// </summary>
         private static readonly DependencyProperty LoadMoreTracksCommandProperty = DependencyProperty.Register(
-            "LoadMoreTracksCommand", typeof(AsyncRelayCommand), typeof(TrackListControl), new PropertyMetadata(default(AsyncRelayCommand)));
+            "PopulateMoreTracksCommand", typeof(IAsyncRelayCommand<int>), typeof(TrackListControl), new PropertyMetadata(default(IAsyncRelayCommand<int>)));
 
         /// <summary>
         /// The command to fire when more tracks should be loaded.
         /// </summary>
-        public AsyncRelayCommand LoadMoreTracksCommand
+        public IAsyncRelayCommand<int> PopulateMoreTracksCommand
         {
-            get => (AsyncRelayCommand) GetValue(LoadMoreTracksCommandProperty);
+            get => (IAsyncRelayCommand<int>) GetValue(LoadMoreTracksCommandProperty);
             set => SetValue(LoadMoreTracksCommandProperty, value);
+        }
+
+        /// <summary>
+        /// The backing DependencyProperty for <see cref="Tracks"/>.
+        /// </summary>
+        public static readonly DependencyProperty TracksProperty = DependencyProperty.Register(
+            "Tracks", typeof(SynchronizedObservableCollection<ObservableTrack>), typeof(TrackListControl), new PropertyMetadata(default(SynchronizedObservableCollection<ObservableTrack>)));
+
+        /// <summary>
+        /// The tracks for this control.
+        /// </summary>
+        public SynchronizedObservableCollection<ObservableTrack> Tracks
+        {
+            get => (SynchronizedObservableCollection<ObservableTrack>)GetValue(TracksProperty);
+            set => SetValue(TracksProperty, value);
         }
 
         /// <summary>
@@ -50,6 +67,11 @@ namespace StrixMusic.Shell.Default.Controls
 
             PART_ListView = GetTemplateChild(nameof(PART_ListView)) as ListView ??
                             throw new UIElementNotFoundException(nameof(PART_ListView));
+
+            // This is really, really not great
+            PART_ListView.ItemsSource = Tracks;
+
+            PopulateMoreTracksCommand.Execute(100);
 
             AttachHandlers();
         }
