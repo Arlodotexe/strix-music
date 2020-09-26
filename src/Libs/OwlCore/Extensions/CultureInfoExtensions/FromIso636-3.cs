@@ -17,13 +17,12 @@ namespace OwlCore.Extensions
         {
             if (string.IsNullOrEmpty(name))
             {
-                return CultureInfo.CreateSpecificCulture("Unknown");
+                return null;
             }
 
             return CultureInfo
-                       .GetCultures(CultureTypes.AllCultures)
-                       .FirstOrDefault(c => c.ThreeLetterISOLanguageName == name)
-                   ?? CultureInfo.CreateSpecificCulture("Unknown");
+                .GetCultures(CultureTypes.AllCultures)
+                .FirstOrDefault(c => c.ThreeLetterISOLanguageName == name);
         }
     }
 }
