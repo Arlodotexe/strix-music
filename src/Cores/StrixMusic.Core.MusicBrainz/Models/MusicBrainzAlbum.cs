@@ -40,7 +40,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             _musicBrainzClient = sourceCore.GetService<MusicBrainzClient>();
             _artistHelpersService = sourceCore.GetService<MusicBrainzArtistHelpersService>();
-            _relatedAlbums = new RelatedAlbumItems(SourceCore, release);
+            _relatedAlbums = new RelatedAlbumItems(sourceCore, release);
 
             Release = release;
             Medium = medium;
@@ -101,7 +101,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Name => $"{Release.Title} {(Release.Media.Count == 1 ? string.Empty : $"({Medium.Format} {Medium.Position})")}";
 
         /// <inheritdoc/>
-        public DateTime? DatePublished => CreateReleaseDate(Release.Date);
+        public DateTime? DatePublished => CreateReleaseDate(Release?.Date);
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<IImage> Images { get; }
@@ -250,8 +250,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
             throw new NotImplementedException();
         }
 
-        private DateTime CreateReleaseDate(string musicBrainzDate)
+        private DateTime? CreateReleaseDate(string? musicBrainzDate)
         {
+            if (string.IsNullOrEmpty(musicBrainzDate) || musicBrainzDate == null)
+            {
+                return null;
+            }
+
             var dateParts = musicBrainzDate.Split('-');
 
             var date = default(DateTime);

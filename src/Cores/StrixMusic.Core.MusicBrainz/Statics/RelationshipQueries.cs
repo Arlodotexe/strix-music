@@ -23,16 +23,16 @@
         /// <summary>
         /// The full relationship query needed when getting Recordings from the API.
         /// </summary>
-        public static string RecordingsQuery => "inc=" + string.Join(",", Recordings);
+        public static string RecordingsQuery => "inc=" + string.Join("+", Recordings);
 
         /// <summary>
         /// The full relationship query needed when getting Releases from the API.
         /// </summary>
-        public static string ReleasesQuery => "inc=" + string.Join(",", Releases);
+        public static string ReleasesQuery => "inc=" + string.Join("+", Releases);
 
         /// <summary>
         /// The full relationship query needed when getting Artists from the API.
         /// </summary>
-        public static string ArtistsQuery => "inc=" + string.Join(",", Artists);
+        public static string ArtistsQuery => "inc=" + string.Join("+", Artists);
     }
 }

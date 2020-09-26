@@ -120,7 +120,7 @@ namespace StrixMusic.Core.MusicBrainz
             }
 
             // Iterating through retrieved releases.
-            foreach (var releaseItem in releasesList)
+            foreach (var releaseItem in releasesList.Items)
             {
                 // Iterating through retrieved release mediums.
                 foreach (var medium in releaseItem.Media)

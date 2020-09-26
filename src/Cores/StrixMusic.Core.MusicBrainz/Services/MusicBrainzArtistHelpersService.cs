@@ -32,12 +32,17 @@ namespace StrixMusic.Core.MusicBrainz.Services
         {
             var firstPage = await _musicBrainzClient.Releases.BrowseAsync("artist", artist.Id, 100, 0, RelationshipQueries.Releases);
 
-            var releases = await OwlCore.Helpers.APIs.GetAllItemsAsync(firstPage.Count, firstPage.Items, async currentOffset =>
+            if (firstPage.Items.Count < firstPage.Count)
             {
-                return (await _musicBrainzClient.Releases.BrowseAsync("artist", artist.Id, 100, currentOffset, RelationshipQueries.Releases))?.Items;
-            });
+                var remainingItems = await OwlCore.Helpers.APIs.GetAllItemsAsync(firstPage.Count, firstPage.Items, async currentOffset =>
+                {
+                    return (await _musicBrainzClient.Releases.BrowseAsync("artist", artist.Id, 100, currentOffset, RelationshipQueries.Releases))?.Items;
+                });
 
-            return releases.SelectMany(x => x.Media, (release, medium) => medium.Tracks.Count).Sum();
+                firstPage.Items.AddRange(remainingItems);
+            }
+
+            return firstPage.Items.SelectMany(x => x.Media, (release, medium) => medium.TrackCount).Sum();
         }
     }
 }

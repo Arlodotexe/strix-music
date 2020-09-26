@@ -78,7 +78,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var releases = await _musicBrainzClient.Releases.SearchAsync(_query, limit, offset);
 
-            foreach (var release in releases)
+            foreach (var release in releases.Items)
             {
                 var artist = new MusicBrainzArtist(SourceCore, release.Credits[0].Artist)
                 {
@@ -97,7 +97,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var artists = await _musicBrainzClient.Artists.SearchAsync(_query, limit, offset);
 
-            foreach (var item in artists)
+            foreach (var item in artists.Items)
             {
                 yield return new MusicBrainzArtist(SourceCore, item)
                 {
@@ -111,7 +111,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var recordings = await _musicBrainzClient.Recordings.SearchAsync(_query, limit, offset);
 
-            foreach (var recording in recordings)
+            foreach (var recording in recordings.Items)
             {
                 foreach (var release in recording.Releases)
                 {

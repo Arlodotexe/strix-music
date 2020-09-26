@@ -39,7 +39,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             SourceCore = sourceCore;
             _track = track;
 
-            Language = CultureInfoExtensions.FromIso636_3(musicBrainzAlbum.Release.TextRepresentation.Language);
+            Language = CultureInfoExtensions.FromIso636_3(musicBrainzAlbum.Release?.TextRepresentation?.Language);
 
             // The genres should come from the release tag list. The API returns it, but the library we use doesn't deserialize it. For now, we have no genres.
             // Genres = musicBrainzAlbum.Release.Tag;
@@ -102,7 +102,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public int? TrackNumber => _track.Position;
 
         /// <inheritdoc/>
-        public CultureInfo Language { get; }
+        public CultureInfo? Language { get; }
 
         /// <inheritdoc/>
         public ILyrics? Lyrics => null;

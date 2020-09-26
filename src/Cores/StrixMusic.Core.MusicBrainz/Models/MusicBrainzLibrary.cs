@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Services;
@@ -108,22 +109,32 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0)
         {
-            var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*&{RelationshipQueries.RecordingsQuery}", limit, offset);
+            var recordings = await _musicBrainzClient.Recordings.SearchAsync("*", limit, offset);
 
-            foreach (var recording in recordings)
+            foreach (var recording in recordings.Items)
             {
+                // TODO: Remove when rate limiting is added to the API.
+                await Task.Delay(60 * recording.Releases.Count);
+
                 foreach (var release in recording.Releases)
                 {
-                    var artist = new MusicBrainzArtist(SourceCore, release.Credits[0].Artist)
+                    // The search query above doesn't include track data, so we have to get it ourselves.
+                    var releaseData =
+                        await _musicBrainzClient.Releases.GetAsync(release.Id, RelationshipQueries.Releases);
+
+                    var artist = new MusicBrainzArtist(SourceCore, recording.Credits[0].Artist)
                     {
-                        TotalTracksCount = await _artistHelpersService.GetTotalTracksCount(release.Credits[0].Artist),
+                        TotalTracksCount = await _artistHelpersService.GetTotalTracksCount(recording.Credits[0].Artist),
                     };
 
-                    foreach (var medium in release.Media)
+                    foreach (var medium in releaseData.Media)
                     {
                         foreach (var track in medium.Tracks)
                         {
-                            yield return new MusicBrainzTrack(SourceCore, track, new MusicBrainzAlbum(SourceCore, release, medium, artist));
+                            if (track.Recording.Id == recording.Id)
+                            {
+                                yield return new MusicBrainzTrack(SourceCore, track, new MusicBrainzAlbum(SourceCore, release, medium, artist));
+                            }
                         }
                     }
                 }
