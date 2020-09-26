@@ -42,5 +42,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
-
 </Project>
