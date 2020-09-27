@@ -1,5 +1,4 @@
-﻿using Windows.UI.Xaml;
-using StrixMusic.Sdk.Observables;
+﻿using StrixMusic.Sdk;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls
@@ -15,8 +14,10 @@ namespace StrixMusic.Shell.Default.Controls
         public HomeControl()
         {
             this.DefaultStyleKey = typeof(HomeControl);
-        }
 
-        private ObservableLibrary? ViewModel => DataContext as ObservableLibrary;
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksAsync(100);
+
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsAsync(100);
+        }
     }
 }

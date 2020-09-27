@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -13,15 +12,13 @@ using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 using StrixMusic.Sdk.Services.SuperShell;
-using StrixMusic.Shared;
+using StrixMusic.Services;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using StrixMusic.Services;
 
 namespace StrixMusic
 {

@@ -4,57 +4,65 @@
     xmlns:local="using:StrixMusic.Shell.Default.Controls"
     xmlns:observables="using:StrixMusic.Sdk.Observables"
     xmlns:converters="using:StrixMusic.Converters"
+    xmlns:controls="using:StrixMusic.Shell.Default.Controls"
     x:Class="StrixMusic.Shell.Default.Themes.AlbumViewStyle">
 
-    <DataTemplate x:Key="DefaultAlbumViewTemplate" x:DataType="observables:ObservableAlbum">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="300"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-
+    <DataTemplate x:Key="DefaultAlbumViewDataTemplate" x:DataType="observables:ObservableAlbum">
+        <UserControl>
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="300"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="300"/>
                     <RowDefinition/>
-                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <Rectangle Grid.RowSpan="2" Margin="32">
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
-                    </Rectangle.Fill>
-                </Rectangle>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
 
-                <StackPanel Grid.Column="1" Margin="0,32,0,0">
-                    <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold"/>
-                    <TextBlock Text="{x:Bind Name}" Margin="0,4,0,0"/>
-                    <TextBlock Text="2010" Opacity=".5"/>
-                </StackPanel>
+                    <Rectangle Grid.RowSpan="2" Margin="32">
+                        <Rectangle.Fill>
+                            <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
 
-                <StackPanel Orientation="Horizontal"
+                    <StackPanel Grid.Column="1" Margin="0,32,0,0">
+                        <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold"/>
+                        <TextBlock Text="{x:Bind Name}" Margin="0,4,0,0"/>
+                        <TextBlock Text="2010" Opacity=".5"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal"
                             Grid.Column="1" Grid.Row="1" Margin="0,0,0,32">
-                    <Button Content="Play" Style="{StaticResource QuickActionButton}"/>
-                    <Button Content="Save" Style="{StaticResource QuickActionButton}"/>
-                    <Button Content="Add to" Style="{StaticResource QuickActionButton}"/>
-                    <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
-                </StackPanel>
-            </Grid>
+                        <Button Content="Play" Style="{StaticResource QuickActionButton}"/>
+                        <Button Content="Save" Style="{StaticResource QuickActionButton}"/>
+                        <Button Content="Add to" Style="{StaticResource QuickActionButton}"/>
+                        <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
+                    </StackPanel>
+                </Grid>
 
-            <local:TrackListControl Grid.Row="1"/>
-        </Grid>
+                <GridView x:Name="PART_GridView">
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <controls:AlbumControl />
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </Grid>
+        </UserControl>
     </DataTemplate>
-    
+
     <Style x:Key="DefaultAlbumViewControlStyle" TargetType="local:AlbumViewControl">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:AlbumViewControl">
-                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumViewTemplate}"
-                                        HorizontalContentAlignment="Stretch"/>
+                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumViewDataTemplate}" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

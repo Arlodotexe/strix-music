@@ -8,23 +8,6 @@
     xmlns:controls="using:StrixMusic.Shell.Default.Controls"
     x:Class="StrixMusic.Shell.Default.Themes.HomeStyle">
 
-    <DataTemplate x:Key="TrackListTemplate">
-        <controls:TrackListControl/>
-    </DataTemplate>
-
-    <DataTemplate x:Key="PlayableCollectionGroupTemplate">
-        <controls:PlayableCollectionListControl/>
-    </DataTemplate>
-
-    <DataTemplate x:Key="AlbumListTemplate" >
-        
-    </DataTemplate>
-
-    <selectors:CollectionSelector x:Key="CollectionSelector"
-                                 TrackListTemplate="{StaticResource TrackListTemplate}"
-                                 PlayableCollectionGroupTemplate="{StaticResource PlayableCollectionGroupTemplate}"
-                                 AlbumListTemplate="{StaticResource AlbumListTemplate}"/>
-
     <DataTemplate x:Key="DefaultHomeTemplate" x:DataType="sdk:MainViewModel">
         <UserControl>
             <Grid>
@@ -36,7 +19,7 @@
                         <controls:TrackListControl Tracks="{x:Bind Library.Tracks, Mode=OneWay}" PopulateMoreTracksCommand="{x:Bind Library.PopulateMoreTracksCommand}" />
                     </PivotItem>
                     <PivotItem Header="Albums">
-
+                        <controls:AlbumViewControl Albums="{x:Bind Library.Albums, Mode=OneWay}" PopulateMoreAlbumsCommand="{x:Bind Library.PopulateMoreAlbumsCommand}" />
                     </PivotItem>
                     <PivotItem Header="Artists">
 

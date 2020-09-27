@@ -5,11 +5,11 @@
     xmlns:converters="using:StrixMusic.Shell.Default.Converters"
     xmlns:themes="using:StrixMusic.Shell.Default.Themes">
     <ResourceDictionary.MergedDictionaries>
+        <themes:HomeStyle/>
         <themes:AlbumStyle/>
         <themes:AlbumViewStyle/>
         <ResourceDictionary Source="Themes/ArtistStyle.xaml"/>
         <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
-        <themes:HomeStyle/>
         <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
         <themes:NowPlayingViewStyle/>
         <themes:PlayableCollectionListStyle/>

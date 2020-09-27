@@ -1,10 +1,9 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
-using StrixMusic.Sdk.Observables;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml;
 using OwlCore.Collections;
 using OwlCore.Exceptions;
-using StrixMusic.Sdk.Interfaces;
+using StrixMusic.Sdk.Observables;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls
 {
@@ -70,8 +69,6 @@ namespace StrixMusic.Shell.Default.Controls
 
             // This is really, really not great
             PART_ListView.ItemsSource = Tracks;
-
-            PopulateMoreTracksCommand.Execute(100);
 
             AttachHandlers();
         }

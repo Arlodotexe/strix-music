@@ -2,11 +2,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shell.Default.Controls"
-    xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
+    xmlns:observables="using:StrixMusic.Sdk.Observables"
     xmlns:converters="using:StrixMusic.Converters"
     x:Class="StrixMusic.Shell.Default.Themes.AlbumStyle">
 
-    <DataTemplate x:Key="DefaultAlbumTemplate" x:DataType="interfaces:IAlbum">
+    <DataTemplate x:Key="DefaultAlbumTemplate" x:DataType="observables:ObservableAlbum">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -18,9 +18,10 @@
                     <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
                 </Rectangle.Fill>
             </Rectangle>
+
             <StackPanel Grid.Row="1" Margin="0,8,0,0">
                 <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                <TextBlock Text="{x:Bind Name}" Opacity=".5"/>
+                <TextBlock Text="{x:Bind Artist.Name}" Opacity=".5"/>
             </StackPanel>
         </Grid>
     </DataTemplate>
