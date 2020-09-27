@@ -97,7 +97,7 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
         public async ValueTask DisposeAsync()
         {
-            await _core.DisposeAsync().ConfigureAwait(true);
+            await _core.DisposeAsync().ConfigureAwait(false);
             DetachEvents();
         }
 
@@ -105,10 +105,7 @@ namespace StrixMusic.Sdk.Observables
         public Task<bool> IsAddPinSupported(int index) => _core.IsAddPinSupported(index);
 
         /// <inheritdoc/>
-        public Task<object?> GetContextById(string? id)
-        {
-            return _core.GetContextById(id);
-        }
+        public IAsyncEnumerable<object?> GetContextById(string? id) => _core.GetContextById(id);
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<bool> IsRemovePinSupportedMap => _core.IsRemovePinSupportedMap;

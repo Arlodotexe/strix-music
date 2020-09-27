@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Models;
+using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Extensions;
@@ -18,6 +19,7 @@ namespace StrixMusic.Core.MusicBrainz
     public class MusicBrainzCore : ICore
     {
         private readonly MusicBrainzClient _musicBrainzClient;
+        private readonly MusicBrainzArtistHelpersService _artistHelperService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCore"/> class.
@@ -37,6 +39,7 @@ namespace StrixMusic.Core.MusicBrainz
             User = new MusicBrainzUser(this);
 
             _musicBrainzClient = this.GetService<MusicBrainzClient>();
+            _artistHelperService = this.GetService<MusicBrainzArtistHelpersService>();
         }
 
         /// <inheritdoc/>
@@ -82,63 +85,55 @@ namespace StrixMusic.Core.MusicBrainz
         }
 
         /// <inheritdoc/>
-        public async Task<object?> GetContextById(string? id)
+        public async IAsyncEnumerable<object> GetContextById(string? id)
         {
+            // Check if the ID is an artist
             var artist = await _musicBrainzClient.Artists.GetAsync(id, RelationshipQueries.Artists);
             if (artist != null)
             {
-                return new MusicBrainzArtist(this, artist);
+                var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(artist);
+
+                yield return new MusicBrainzArtist(this, artist, totalTracksForArtist);
             }
 
-            // A list to include all albums for a release id.
-            var albums = new List<MusicBrainzAlbum>();
+            // Check if the ID is a release
             var release = await _musicBrainzClient.Releases.GetAsync(id, RelationshipQueries.Releases);
             if (release != null)
             {
-                var releaseArtist = new MusicBrainzArtist(this, release.Credits[0].Artist);
-                foreach (var medium in release.Media)
-                {
-                    var album = new MusicBrainzAlbum(this, release, medium, releaseArtist);
-                    albums.Add(album);
-                }
+                var releaseArtistData = release.Credits[0].Artist;
+                var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(releaseArtistData);
+                var releaseArtist = new MusicBrainzArtist(this, releaseArtistData, totalTracksForArtist);
 
-                return albums;
+                yield return new MusicBrainzAlbum(this, release, releaseArtist);
             }
 
-            var releasesList =
-                await _musicBrainzClient.Releases.SearchAsync("*", 100, 0);
-
-            // Created to add all releases on MusicBrainz.
-            var releases = releasesList.Items.ToList();
-
-            // Iterating through each page for releases.
-            for (var i = 100; i < releases.Count; i += 100)
-            {
-                var nextReleasesPage = await _musicBrainzClient.Releases.SearchAsync("*", 100, i);
-
-                releases.AddRange(nextReleasesPage.Items);
-            }
+            // Check if the ID is a recording.
+            var recordingData = await _musicBrainzClient.Recordings.GetAsync(id, RelationshipQueries.Recordings);
 
             // Iterating through retrieved releases.
-            foreach (var releaseItem in releasesList.Items)
+            foreach (var item in recordingData.Releases)
             {
+                var releaseData = await _musicBrainzClient.Releases.GetAsync(item.Id);
+
                 // Iterating through retrieved release mediums.
-                foreach (var medium in releaseItem.Media)
+                foreach (var medium in releaseData.Media)
                 {
                     // Iterating through retrieved medium tracks to get the specific track for the id.
                     foreach (var track in medium.Tracks)
                     {
-                        if (track.Id == id)
+                        if (track.Recording.Id == id)
                         {
-                            var artistForTrack = new MusicBrainzArtist(this, releaseItem.Credits[0].Artist);
-                            var albumForTrack = new MusicBrainzAlbum(this, releaseItem, medium, artistForTrack);
-                            return new MusicBrainzTrack(this, track, albumForTrack);
+                            var artistData = releaseData.Credits[0].Artist;
+                            var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(artistData);
+                            var artistForTrackAlbum = new MusicBrainzArtist(this, artistData, totalTracksForArtist);
+
+                            var albumForTrack = new MusicBrainzAlbum(this, releaseData, artistForTrackAlbum);
+
+                            yield return new MusicBrainzTrack(this, track, albumForTrack, medium.Position);
                         }
                     }
                 }
             }
-
-            return null;
         }
 
         /// <inheritdoc/>

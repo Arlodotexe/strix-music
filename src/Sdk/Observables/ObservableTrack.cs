@@ -232,6 +232,9 @@ namespace StrixMusic.Sdk.Observables
             set => SetProperty(() => _track.TrackNumber, value);
         }
 
+        /// <inheritdoc/>
+        public int? DiscNumber => _track.DiscNumber;
+
         /// <inheritdoc />
         public CultureInfo? Language
         {

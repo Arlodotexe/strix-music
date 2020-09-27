@@ -92,8 +92,8 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// Gets the object against a context.
         /// </summary>
-        /// <returns>Returns the requested context object</returns>
-        Task<object?> GetContextById(string? id);
+        /// <returns>Returns the requested context, cast down to an <see cref="object"/>.</returns>
+        IAsyncEnumerable<object?> GetContextById(string? id);
 
         /// <summary>
         /// Fires when the <see cref="CoreState"/> has changed.

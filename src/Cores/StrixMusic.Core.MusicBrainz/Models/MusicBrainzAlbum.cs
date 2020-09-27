@@ -20,14 +20,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
     {
         private readonly MusicBrainzClient _musicBrainzClient;
         private readonly MusicBrainzArtistHelpersService _artistHelpersService;
-        private readonly IPlayableCollectionGroup _relatedAlbums;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzAlbum"/> class.
         /// </summary>
         /// <param name="sourceCore">The core that created this object.</param>
         /// <param name="release">The release to wrap around.</param>
-        /// <param name="medium">The physical medium (album) for this release.</param>
         /// <param name="artist">A fully constructed <see cref="MusicBrainzArtist"/>.</param>
         /// <remarks>
         /// Normally we don't pass in a fully constructed implementation of one of our classes,
@@ -36,14 +34,15 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// To follow convention of Strix Music's Sdk interfaces, we're asynchronously filling that info in before creating the album,
         /// so it's available as soon as soon as the album is.
         /// </remarks>
-        public MusicBrainzAlbum(ICore sourceCore, Release release, Medium medium, MusicBrainzArtist artist)
+        public MusicBrainzAlbum(ICore sourceCore, Release release, MusicBrainzArtist artist)
         {
             _musicBrainzClient = sourceCore.GetService<MusicBrainzClient>();
             _artistHelpersService = sourceCore.GetService<MusicBrainzArtistHelpersService>();
-            _relatedAlbums = new RelatedAlbumItems(sourceCore, release);
+            RelatedItems = new RelatedAlbumItems(sourceCore, release);
+
+            TotalTracksCount = release.Media.Select(x => x.TrackCount).Sum();
 
             Release = release;
-            Medium = medium;
             Images = CreateImagesForRelease();
 
             SourceCore = sourceCore;
@@ -72,12 +71,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
 
         /// <summary>
-        /// The physical medium (album) for this release.
-        /// </summary>
-        /// <remarks>In MusicBrainz, a <see cref="Release"/> can contain multiple physical mediums. Only one of these <see cref="Medium"/> should be used per Album.</remarks>
-        public Medium Medium { get; }
-
-        /// <summary>
         /// The <see cref="Release"/> for this album.
         /// </summary>
         public Release Release { get; }
@@ -86,7 +79,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IArtist Artist { get; }
 
         /// <inheritdoc/>
-        public int TotalTracksCount => Medium.TrackCount;
+        public int TotalTracksCount { get; }
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
@@ -98,7 +91,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public Uri? Url => new Uri($"https://musicbrainz.org/release/{Id}");
 
         /// <inheritdoc/>
-        public string Name => $"{Release.Title} {(Release.Media.Count == 1 ? string.Empty : $"({Medium.Format} {Medium.Position})")}";
+        public string Name => Release.Title;
 
         /// <inheritdoc/>
         public DateTime? DatePublished => CreateReleaseDate(Release?.Date);
@@ -116,7 +109,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration { get; } = TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? RelatedItems => _relatedAlbums;
+        public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
@@ -216,12 +209,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var releaseData = await _musicBrainzClient.Releases.GetAsync(Id, RelationshipQueries.Releases);
 
-            var artist = new MusicBrainzArtist(SourceCore, Release.Credits[0].Artist)
-            {
-                TotalTracksCount = await _artistHelpersService.GetTotalTracksCount(Release.Credits[0].Artist),
-            };
+            var totalTrackCountForArtist = await _artistHelpersService.GetTotalTracksCount(Release.Credits[0].Artist);
+            var artist = new MusicBrainzArtist(SourceCore, Release.Credits[0].Artist, totalTrackCountForArtist);
 
-            foreach (var recording in releaseData.Media.First(x => x.Position == Medium.Position).Tracks.GetRange(offset, limit))
+            foreach (var recording in releaseData.Media.SelectMany(x => x.Tracks).ToList().GetRange(offset, limit))
             {
                 // Iterate through each physical medium for this release.
                 foreach (var medium in Release.Media)
@@ -229,8 +220,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     // Iterate the tracks and find a matching ID for this recording
                     foreach (var trackData in medium.Tracks.Where(track => track.Recording.Id == recording.Id))
                     {
-                        var album = new MusicBrainzAlbum(SourceCore, Release, medium, artist);
-                        var track = new MusicBrainzTrack(SourceCore, trackData, album);
+                        var album = new MusicBrainzAlbum(SourceCore, Release, artist);
+                        var track = new MusicBrainzTrack(SourceCore, trackData, album, medium.Position);
 
                         yield return track;
                     }

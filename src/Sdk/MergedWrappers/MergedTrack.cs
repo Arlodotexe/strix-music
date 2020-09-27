@@ -106,6 +106,9 @@ namespace StrixMusic.Sdk.MergedWrappers
         public int? TrackNumber => _preferredSource.TrackNumber;
 
         /// <inheritdoc/>
+        public int? DiscNumber => _preferredSource.DiscNumber;
+
+        /// <inheritdoc/>
         public CultureInfo? Language => _preferredSource.Language;
 
         /// <inheritdoc/>

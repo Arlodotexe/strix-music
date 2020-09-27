@@ -19,9 +19,17 @@ namespace StrixMusic.Sdk.Interfaces
         IAlbum? Album { get; }
 
         /// <summary>
-        /// Position in a set, usually the album.
+        /// Position in the album.
         /// </summary>
+        /// <remarks>
+        /// If an album has several discs, the track number is the number on the specified disc.
+        /// </remarks>
         int? TrackNumber { get; }
+
+        /// <summary>
+        /// The disc number (usually 1 unless the album consists of more than one disc).
+        /// </summary>
+        int? DiscNumber { get; }
 
         /// <summary>
         /// The language for this track.

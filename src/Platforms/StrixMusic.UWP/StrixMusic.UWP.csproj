@@ -213,10 +213,6 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.Files\StrixMusic.Core.Files.csproj">
-      <Project>{dbf0c623-33cf-4db6-bb3b-353045678a70}</Project>
-      <Name>StrixMusic.Core.Files</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj">
       <Project>{d0618335-d56c-419d-b9fa-98e475338efc}</Project>
       <Name>StrixMusic.Core.MusicBrainz</Name>

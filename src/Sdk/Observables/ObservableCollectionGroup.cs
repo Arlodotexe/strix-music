@@ -437,7 +437,6 @@ namespace StrixMusic.Sdk.Observables
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task PopulateMoreTracksAsync(int limit)
         {
-            // TODO
             await foreach (var item in _collectionGroupBase.GetTracksAsync(limit, Tracks.Count))
             {
                 Tracks.Add(new ObservableTrack(item));

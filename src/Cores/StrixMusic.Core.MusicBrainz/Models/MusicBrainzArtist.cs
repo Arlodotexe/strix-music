@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Hqub.MusicBrainz.API;
+﻿using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Services;
@@ -11,6 +7,10 @@ using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -24,11 +24,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzArtist"/> class.
         /// </summary>
-        /// <param name="artist"></param>
-        /// <param name="sourceCore"></param>
-        public MusicBrainzArtist(ICore sourceCore, Artist artist)
+        /// <param name="sourceCore">The source core.</param>
+        /// <param name="artist">The MusicBrainz artist to wrap.</param>
+        /// <param name="totalTracksCount"><inheritdoc cref="TotalTracksCount"/></param>
+        public MusicBrainzArtist(ICore sourceCore, Artist artist, int totalTracksCount)
         {
             SourceCore = sourceCore;
+            TotalTracksCount = totalTracksCount;
             _artist = artist;
 
             _musicBrainzClient = SourceCore.GetService<MusicBrainzClient>();
@@ -63,7 +65,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public int TotalAlbumsCount => _artist.Releases.Count;
 
         /// <inheritdoc/>
-        public int TotalTracksCount { get; internal set; }
+        public int TotalTracksCount { get; }
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
@@ -194,17 +196,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var release in releases)
             {
-                var artist = new MusicBrainzArtist(SourceCore, release.Credits[0].Artist)
-                {
-                    TotalTracksCount = await _artistHelperService.GetTotalTracksCount(release.Credits[0].Artist),
-                };
+                var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(release.Credits[0].Artist);
+                var artist = new MusicBrainzArtist(SourceCore, release.Credits[0].Artist, totalTracksForArtist);
 
-                foreach (var medium in release.Media)
-                {
-                    var album = new MusicBrainzAlbum(SourceCore, release, medium, artist);
-
-                    yield return album;
-                }
+                yield return new MusicBrainzAlbum(SourceCore, release, artist);
             }
         }
 
@@ -213,26 +208,23 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var recordings = await _musicBrainzClient.Recordings.BrowseAsync("artist", Id, limit, offset, RelationshipQueries.Recordings);
 
-            var releasesList =
-                await _musicBrainzClient.Releases.BrowseAsync("artist", Id, 100, 0, RelationshipQueries.Releases);
+            // This API call will include releases for this artist, with all track and recording data.
+            var firstPage = await _musicBrainzClient.Releases.BrowseAsync("artist", Id, 100, 0, RelationshipQueries.Releases);
 
-            var releases = releasesList.Items.ToList();
-
-            for (var i = 100; i < releases.Count; i += 100)
+            var releaseDataForArtist = await OwlCore.Helpers.APIs.GetAllItemsAsync(firstPage.Count, firstPage.Items, async currentOffset =>
             {
-                var nextReleasesPage = await _musicBrainzClient.Releases.BrowseAsync("artist", Id, 100, 0, RelationshipQueries.Releases);
-
-                releases.AddRange(nextReleasesPage.Items);
-            }
+                return (await _musicBrainzClient.Releases.BrowseAsync("artist", Id, 100, 0, RelationshipQueries.Releases))?.Items;
+            });
 
             foreach (var recording in recordings.Items)
             {
-                foreach (var release in releases)
+                foreach (var release in releaseDataForArtist)
                 {
-                    var artist = new MusicBrainzArtist(SourceCore, release.Credits[0].Artist)
-                    {
-                        TotalTracksCount = await _artistHelperService.GetTotalTracksCount(release.Credits[0].Artist),
-                    };
+                    var totalTracksForArtist =
+                    await _artistHelperService.GetTotalTracksCount(release.Credits[0].Artist);
+
+                    var artist = new MusicBrainzArtist(SourceCore, release.Credits[0].Artist, totalTracksForArtist);
+                    var album = new MusicBrainzAlbum(SourceCore, release, artist);
 
                     // Iterate through each physical medium for this release.
                     foreach (var medium in release.Media)
@@ -240,9 +232,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
                         // Iterate the tracks and find a matching ID for this recording
                         foreach (var trackData in medium.Tracks.Where(track => track.Recording.Id == recording.Id))
                         {
-                            var track = new MusicBrainzTrack(SourceCore, trackData, new MusicBrainzAlbum(SourceCore, release, medium, artist));
-
-                            yield return track;
+                            if (trackData != null)
+                            {
+                                yield return new MusicBrainzTrack(SourceCore, trackData, album, medium.Position);
+                            }
                         }
                     }
                 }

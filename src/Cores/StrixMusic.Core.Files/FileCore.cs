@@ -135,7 +135,7 @@ namespace StrixMusic.Core.Files
         }
 
         /// <inheritdoc/>
-        public Task<object?> GetContextById(string? id)
+        public IAsyncEnumerable<object?> GetContextById(string? id)
         {
             throw new NotImplementedException();
         }

@@ -25,16 +25,17 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzTrack"/> class.
         /// </summary>
-        /// <param name="track"></param>
-        /// <param name="musicBrainzAlbum"></param>
-        /// <param name="sourceCore"></param>
+        /// <param name="sourceCore">The source core.</param>
+        /// <param name="track">The MusicBrainz track to wrap around.</param>
+        /// <param name="musicBrainzAlbum">A fully constructed <see cref="MusicBrainzAlbum"/> that this track belongs to.</param>
+        /// <param name="discNumber">The disc number (<see cref="Medium"/>) that this track belongs to.</param>
         /// <remarks>
         /// Normally we don't pass in a fully constructed implementation of one of our classes,
         /// instead opting for passing API-level information around,
         /// but the Album is complex enough that implicitly passing the constructed object is preferred over manually
         /// passing what is needed to create one inside the MusicBrainzTrack.
         /// </remarks>
-        public MusicBrainzTrack(ICore sourceCore, Track track, MusicBrainzAlbum musicBrainzAlbum)
+        public MusicBrainzTrack(ICore sourceCore, Track track, MusicBrainzAlbum musicBrainzAlbum, int discNumber)
         {
             SourceCore = sourceCore;
             _track = track;
@@ -100,6 +101,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>
         public int? TrackNumber => _track.Position;
+
+        /// <inheritdoc />
+        public int? DiscNumber { get; }
 
         /// <inheritdoc/>
         public CultureInfo? Language { get; }
@@ -262,6 +266,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc />
+        public Task AddArtistAsync(IArtist artist, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveArtistAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
         /// <inheritdoc/>
         public async IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0)
         {
@@ -269,10 +285,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var item in recording.Credits)
             {
-                yield return new MusicBrainzArtist(SourceCore, item.Artist)
-                {
-                    TotalTracksCount = await _artistHelpersService.GetTotalTracksCount(item.Artist),
-                };
+                var totalTracksCount = await _artistHelpersService.GetTotalTracksCount(item.Artist);
+                yield return new MusicBrainzArtist(SourceCore, item.Artist, totalTracksCount);
             }
         }
 
@@ -289,18 +303,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
 
             return returnData;
-        }
-
-        /// <inheritdoc />
-        public Task AddArtistAsync(IArtist artist, int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task RemoveArtistAsync(int index)
-        {
-            throw new NotSupportedException();
         }
     }
 }
