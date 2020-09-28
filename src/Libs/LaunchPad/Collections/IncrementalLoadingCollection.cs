@@ -8,7 +8,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace StrixMusic.CustomClasses.Collections
+namespace LaunchPad.Collections
 {
     /// <summary>
     /// An collection that supports incremental loading.
@@ -38,7 +38,7 @@ namespace StrixMusic.CustomClasses.Collections
         private int VirtualCount { get; set; }
 
         /// <summary>
-        /// .ctor
+        /// Initializes a new instance of the <see cref="IncrementalLoadingCollection{T}"/> class.
         /// </summary>
         /// <param name="take">How many items to take per batch</param>
         /// <param name="loadMoreItems">The load more items function</param>

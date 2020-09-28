@@ -59,7 +59,7 @@ namespace StrixMusic.Sdk.Services
         }
 
         /// <inheritdoc />
-        public async Task<string> GetValueAsync(string filename)
+        public async Task<string?> GetValueAsync(string filename)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace StrixMusic.Sdk.Services
         }
 
         /// <inheritdoc />
-        public async Task<string> GetValueAsync(string filename, string path)
+        public async Task<string?> GetValueAsync(string filename, string path)
         {
             StorageFolder pathHandle;
             try
