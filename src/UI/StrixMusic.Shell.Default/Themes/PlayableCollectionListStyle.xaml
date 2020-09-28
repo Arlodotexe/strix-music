@@ -16,17 +16,15 @@
                                                AlbumTemplate="{StaticResource AlbumTemplate}"
                                                ArtistTemplate="{StaticResource ArtistTemplate}"/>
 
-    <!--<DataTemplate x:Key="DefaultPlayableCollectionListTemplate" x:DataType="interfaces:IPlayableCollectionGroup">
-        --><!--<GridView Padding="16" ItemContainerStyle="{StaticResource PlayableCollectionGridItemStyle}" ItemsSource="{x:Bind Items}"
-                  ItemTemplateSelector="{StaticResource PlayableCollectionGroupSelector}"/>--><!--
-    </DataTemplate>-->
-    
     <Style x:Key="DefaultPlayableCollectionListControlStyle" TargetType="local:PlayableCollectionListControl">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:PlayableCollectionListControl">
-                        <ContentControl ContentTemplate="{StaticResource DefaultPlayableCollectionListTemplate}"/>
+                        <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <GridView x:Name="PART_GridView" ItemContainerStyle="{StaticResource PlayableCollectionGridItemStyle}"
+                                      ItemTemplateSelector="{StaticResource PlayableCollectionGroupSelector}" Padding="16" HorizontalAlignment="Stretch"/>
+                        </ContentControl>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
