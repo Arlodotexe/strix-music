@@ -72,7 +72,7 @@
                         <ScaleTransform x:Name="AlbumCoverScale"/>
                     </Rectangle.RenderTransform>
                     <Rectangle.Fill>
-                        <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
+                        <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images[0])}"/>
                     </Rectangle.Fill>
                 </Rectangle>
             </Grid>

@@ -2,50 +2,33 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
+    xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:local="using:StrixMusic.Shell.Strix.Controls"
     xmlns:observables="using:StrixMusic.Sdk.Observables"
     xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
     xmlns:selectors="using:StrixMusic.Shell.Default.TemplateSelectors"
     x:Class="StrixMusic.Shell.Strix.Themes.HomeStyle">
 
-    <DataTemplate x:Key="TrackListTemplate">
-        <default:TrackListControl/>
-    </DataTemplate>
-    <DataTemplate x:Key="PlayableCollectionGroupTemplate">
-        <default:PlayableCollectionListControl/>
-    </DataTemplate>
-    <selectors:CollectionSelector x:Key="CollectionSelector"
-                                 TrackListTemplate="{StaticResource TrackListTemplate}"
-                                 PlayableCollectionGroupTemplate="{StaticResource PlayableCollectionGroupTemplate}"/>
-
-    <DataTemplate x:Key="StrixHomeTemplate" x:DataType="observables:ObservableLibrary">
+    <DataTemplate x:Key="StrixHomeTemplate" x:DataType="sdk:MainViewModel">
         <UserControl>
             <Grid>
-                <TextBlock Text="Home Page"/>
-                <!--<Pivot ItemsSource="{x:Bind Library.Items, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
+                <Pivot>
                     <Pivot.LeftHeader>
                         <TextBlock Grid.Column="1" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0"/>
                     </Pivot.LeftHeader>
-                    <Pivot.HeaderTemplate>
-                        <DataTemplate x:DataType="interfaces:IPlayableCollectionBase">
-                            <TextBlock />
-                        </DataTemplate>
-                    </Pivot.HeaderTemplate>
-                    --><!--<PivotItem Header="Overview">
-                    </PivotItem>
-                    <PivotItem Header="Playlists">
-                        <default:PlayableCollectionListControl/>
-                    </PivotItem>
-                    <PivotItem Header="Albums">
-                        <default:PlayableCollectionListControl/>
-                    </PivotItem>
-                    <PivotItem Header="Artists">
-                        <default:PlayableCollectionListControl/>
+                    <PivotItem Header="Overview">
                     </PivotItem>
                     <PivotItem Header="Tracks">
-                        <default:TrackListControl/>
-                    </PivotItem>--><!--
-                </Pivot>-->
+                        <default:TrackListControl Tracks="{x:Bind Library.Tracks, Mode=OneWay}" PopulateMoreTracksCommand="{x:Bind Library.PopulateMoreTracksCommand}"/>
+                    </PivotItem>
+                    <PivotItem Header="Albums">
+                        <default:PlayableCollectionListControl Collections="{x:Bind Library.Albums, Mode=OneWay}" PopulateMoreCollectionsCommand="{x:Bind Library.PopulateMoreAlbumsCommand}" />
+                    </PivotItem>
+                    <PivotItem Header="Artists">
+                    </PivotItem>
+                    <PivotItem Header="Playlists">
+                    </PivotItem>
+                </Pivot>
             </Grid>
         </UserControl>
     </DataTemplate>

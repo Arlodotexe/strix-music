@@ -5,7 +5,6 @@
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
     xmlns:selectors="using:StrixMusic.Shell.Default.TemplateSelectors"
-    xmlns:controls="using:StrixMusic.Shell.Default.Controls"
     x:Class="StrixMusic.Shell.Default.Themes.HomeStyle">
 
     <DataTemplate x:Key="DefaultHomeTemplate" x:DataType="sdk:MainViewModel">
@@ -16,10 +15,10 @@
                         <TextBlock Text="Home"/>
                     </Pivot.Title>
                     <PivotItem Header="Songs">
-                        <controls:TrackListControl Tracks="{x:Bind Library.Tracks, Mode=OneWay}" PopulateMoreTracksCommand="{x:Bind Library.PopulateMoreTracksCommand}" />
+                        <local:TrackListControl Tracks="{x:Bind Library.Tracks, Mode=OneWay}" PopulateMoreTracksCommand="{x:Bind Library.PopulateMoreTracksCommand}" />
                     </PivotItem>
                     <PivotItem Header="Albums">
-                        <controls:PlayableCollectionListControl Collections="{x:Bind Library.Albums, Mode=OneWay}" PopulateMoreCollectionsCommand="{x:Bind Library.PopulateMoreAlbumsCommand}" />
+                        <local:PlayableCollectionListControl Collections="{x:Bind Library.Albums, Mode=OneWay}" PopulateMoreCollectionsCommand="{x:Bind Library.PopulateMoreAlbumsCommand}" />
                     </PivotItem>
                     <PivotItem Header="Artists">
 
@@ -29,11 +28,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="DefaultHomeControlStyle" TargetType="controls:HomeControl">
+    <Style x:Key="DefaultHomeControlStyle" TargetType="local:HomeControl">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="controls:HomeControl">
+                    <ControlTemplate TargetType="local:HomeControl">
                         <ContentControl ContentTemplate="{StaticResource DefaultHomeTemplate}"/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -41,6 +40,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultHomeControlStyle}" TargetType="controls:HomeControl"/>
+    <Style BasedOn="{StaticResource DefaultHomeControlStyle}" TargetType="local:HomeControl"/>
 
 </ResourceDictionary>
