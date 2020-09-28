@@ -3,26 +3,26 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:converters="using:StrixMusic.Shell.Default.Converters"
-    xmlns:themes="using:StrixMusic.Shell.ZuneDesktop.Themes"
-    xmlns:dthemes="using:StrixMusic.Shell.Default.Themes">
+    xmlns:styles="using:StrixMusic.Shell.ZuneDesktop.Styles"
+    xmlns:dstyles="using:StrixMusic.Shell.Default.Styles">
     <ResourceDictionary.MergedDictionaries>
         <!--<themes:AlbumStyle/>-->
         <!--<themes:AlbumViewStyle/>-->
-        <!--<ResourceDictionary Source="Themes/ArtistStyle.xaml"/>-->
-        <!--<ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>-->
-        <themes:NowPlayingBarStyle/>
-        <themes:NowPlayingViewStyle/>
+        <!--<ResourceDictionary Source="Styles/ArtistStyle.xaml"/>-->
+        <!--<ResourceDictionary Source="Styles/ArtistViewStyle.xaml"/>-->
+        <styles:NowPlayingBarStyle/>
+        <styles:NowPlayingViewStyle/>
         <!--<themes:HomeStyle/>-->
         <!--<themes:PlayableCollectionListStyle/>-->
-        <themes:ShellStyle/>
-        <themes:SettingsViewStyle/>
-        <!--<ResourceDictionary Source="Themes/TrackListStyle.xaml"/>-->
-        <!--<ResourceDictionary Source="Themes/TrackStyle.xaml"/>-->
-        <dthemes:TrackListStyle/>
-        <dthemes:TrackStyle/>
+        <styles:ShellStyle/>
+        <styles:SettingsViewStyle/>
+        <!--<ResourceDictionary Source="Styles/TrackListStyle.xaml"/>-->
+        <!--<ResourceDictionary Source="Styles/TrackStyle.xaml"/>-->
+        <dstyles:TrackListStyle/>
+        <dstyles:TrackStyle/>
 
-        <ResourceDictionary Source="Styles/Brushes.xaml"/>
-        <ResourceDictionary Source="Styles/ButtonStyles.xaml"/>
+        <ResourceDictionary Source="Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="ZuneSlider" TargetType="Slider">

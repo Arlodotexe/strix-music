@@ -1,0 +1,97 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:default="using:StrixMusic.Shell.Default.Controls"
+    xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
+    xmlns:converters="using:StrixMusic.Converters"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    x:Class="StrixMusic.Shell.Strix.Styles.AlbumStyle">
+
+    <DataTemplate x:Key="StrixAlbumTemplate" x:DataType="interfaces:IAlbum">
+        <UserControl>
+            <Grid Padding="24,16" Background="Transparent">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="PointerEntered">
+                        <core:GoToStateAction StateName="PointerOver"/>
+                    </core:EventTriggerBehavior>
+                    <core:EventTriggerBehavior EventName="PointerExited">
+                        <core:GoToStateAction StateName="Normal"/>
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="AlbumCoverScale" Storyboard.TargetProperty="ScaleX"
+                                                                 Duration="0:0:0.6" From="1.15" To="1">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CircleEase/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <DoubleAnimation Storyboard.TargetName="AlbumCoverScale" Storyboard.TargetProperty="ScaleY"
+                                                                 Duration="0:0:0.6" From="1.15" To="1">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CircleEase/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </VisualState.Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="AlbumCoverScale" Storyboard.TargetProperty="ScaleX"
+                                                                 Duration="0:0:0.3" From="1" To="1.15">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CircleEase/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <DoubleAnimation Storyboard.TargetName="AlbumCoverScale" Storyboard.TargetProperty="ScaleY"
+                                                                 Duration="0:0:0.3" From="1" To="1.15">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CircleEase/>
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </VisualState.Storyboard>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="1" Margin="0,8,0,0" HorizontalAlignment="Center">
+                    <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Opacity=".5" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <Rectangle x:Name="AlbumCover" Width="128" Height="128" RenderTransformOrigin=".5,.5">
+                    <Rectangle.RenderTransform>
+                        <ScaleTransform x:Name="AlbumCoverScale"/>
+                    </Rectangle.RenderTransform>
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images[0])}"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Grid>
+        </UserControl>
+    </DataTemplate>
+
+    <Style x:Key="StrixAlbumControlStyle" TargetType="default:AlbumControl">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="default:AlbumControl">
+                        <ContentControl ContentTemplate="{StaticResource StrixAlbumTemplate}"
+                                        HorizontalContentAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource StrixAlbumControlStyle}" TargetType="default:AlbumControl"/>
+
+</ResourceDictionary>

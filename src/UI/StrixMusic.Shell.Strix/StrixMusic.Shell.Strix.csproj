@@ -41,33 +41,33 @@
     <None Remove="Controls\Drawer.xaml" />
     <None Remove="Preview.xaml" />
     <None Remove="Resources.xaml" />
-    <None Remove="Styles\Brushes.xaml" />
-    <None Remove="Styles\ButtonStyles.xaml" />
-    <None Remove="Themes\AlbumStyle.xaml" />
-    <None Remove="Themes\AlbumViewStyle.xaml" />
-    <None Remove="Themes\ArtistStyle.xaml" />
-    <None Remove="Themes\ArtistViewStyle.xaml" />
-    <None Remove="Themes\HomeStyle.xaml" />
-    <None Remove="Themes\NowPlayingBarStyle.xaml" />
-    <None Remove="Themes\PlayableCollectionListStyle.xaml" />
-    <None Remove="Themes\SettingsViewStyle.xaml" />
-    <None Remove="Themes\ShellStyle.xaml" />
+    <None Remove="Resources\Brushes.xaml" />
+    <None Remove="Resources\ButtonStyles.xaml" />
+    <None Remove="Styles\AlbumStyle.xaml" />
+    <None Remove="Styles\AlbumViewStyle.xaml" />
+    <None Remove="Styles\ArtistStyle.xaml" />
+    <None Remove="Styles\ArtistViewStyle.xaml" />
+    <None Remove="Styles\HomeStyle.xaml" />
+    <None Remove="Styles\NowPlayingBarStyle.xaml" />
+    <None Remove="Styles\PlayableCollectionListStyle.xaml" />
+    <None Remove="Styles\SettingsViewStyle.xaml" />
+    <None Remove="Styles\ShellStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="Controls\Drawer.xaml" />
     <UpToDateCheckInput Remove="Preview.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
-    <UpToDateCheckInput Remove="Styles\Brushes.xaml" />
-    <UpToDateCheckInput Remove="Styles\ButtonStyles.xaml" />
-    <UpToDateCheckInput Remove="Themes\AlbumStyle.xaml" />
-    <UpToDateCheckInput Remove="Themes\AlbumViewStyle.xaml" />
-    <UpToDateCheckInput Remove="Themes\ArtistStyle.xaml" />
-    <UpToDateCheckInput Remove="Themes\ArtistViewStyle.xaml" />
-    <UpToDateCheckInput Remove="Themes\HomeStyle.xaml" />
-    <UpToDateCheckInput Remove="Themes\NowPlayingBarStyle.xaml" />
-    <UpToDateCheckInput Remove="Themes\PlayableCollectionListStyle.xaml" />
-    <UpToDateCheckInput Remove="Themes\SettingsViewStyle.xaml" />
-    <UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
+    <UpToDateCheckInput Remove="Resources\Brushes.xaml" />
+    <UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
+    <UpToDateCheckInput Remove="Styles\AlbumStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\AlbumViewStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\ArtistStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\PlayableCollectionListStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\ShellStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
@@ -79,22 +79,22 @@
     <ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Themes\AlbumViewStyle.xaml.cs">
+    <Compile Update="Styles\AlbumViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Themes\AlbumStyle.xaml.cs">
+    <Compile Update="Styles\AlbumStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Themes\HomeStyle.xaml.cs">
+    <Compile Update="Styles\HomeStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Themes\PlayableCollectionListStyle.xaml.cs">
+    <Compile Update="Styles\PlayableCollectionListStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Themes\SettingsViewStyle.xaml.cs">
+    <Compile Update="Styles\SettingsViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Themes\ShellStyle.xaml.cs">
+    <Compile Update="Styles\ShellStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>

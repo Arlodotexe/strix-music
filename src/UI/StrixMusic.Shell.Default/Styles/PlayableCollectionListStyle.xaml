@@ -1,0 +1,36 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StrixMusic.Shell.Default.Controls"
+    xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
+    xmlns:selectors="using:StrixMusic.Shell.Default.TemplateSelectors"
+    x:Class="StrixMusic.Shell.Default.Styles.PlayableCollectionListStyle">
+
+    <DataTemplate x:Key="AlbumTemplate">
+        <local:AlbumControl/>
+    </DataTemplate>
+    <DataTemplate x:Key="ArtistTemplate">
+        <local:ArtistControl/>
+    </DataTemplate>
+    <selectors:PlayableCollectionGroupSelector x:Key="PlayableCollectionGroupSelector"
+                                               AlbumTemplate="{StaticResource AlbumTemplate}"
+                                               ArtistTemplate="{StaticResource ArtistTemplate}"/>
+
+    <Style x:Key="DefaultPlayableCollectionListControlStyle" TargetType="local:PlayableCollectionListControl">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="local:PlayableCollectionListControl">
+                        <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <GridView x:Name="PART_GridView" ItemContainerStyle="{StaticResource PlayableCollectionGridItemStyle}"
+                                      ItemTemplateSelector="{StaticResource PlayableCollectionGroupSelector}" Padding="16" HorizontalAlignment="Stretch"/>
+                        </ContentControl>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultPlayableCollectionListControlStyle}" TargetType="local:PlayableCollectionListControl"/>
+
+</ResourceDictionary>

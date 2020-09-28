@@ -1,0 +1,38 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:default="using:StrixMusic.Shell.Default.Controls"
+    xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
+    xmlns:selectors="using:StrixMusic.Shell.Default.TemplateSelectors"
+    x:Class="StrixMusic.Shell.Strix.Styles.PlayableCollectionListStyle">
+
+    <DataTemplate x:Key="AlbumTemplate">
+        <default:AlbumControl/>
+    </DataTemplate>
+    <DataTemplate x:Key="ArtistTemplate">
+        <default:ArtistControl/>
+    </DataTemplate>
+    <selectors:PlayableCollectionGroupSelector x:Key="PlayableCollectionGroupSelector"
+                                               AlbumTemplate="{StaticResource AlbumTemplate}"
+                                               ArtistTemplate="{StaticResource ArtistTemplate}"/>
+
+    <Style x:Key="StrixPlayableCollectionListControlStyle" TargetType="default:PlayableCollectionListControl">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="default:PlayableCollectionListControl">
+                        <ContentControl VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                                <GridView x:Name="PART_GridView" ItemContainerStyle="{StaticResource PlayableCollectionGridItemStyle}"
+                                      ItemTemplateSelector="{StaticResource PlayableCollectionGroupSelector}" Padding="16" HorizontalAlignment="Stretch"/>
+                            </ContentControl>
+                        </ContentControl>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource StrixPlayableCollectionListControlStyle}" TargetType="default:PlayableCollectionListControl"/>
+
+</ResourceDictionary>

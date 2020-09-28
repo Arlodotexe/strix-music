@@ -55,13 +55,13 @@
 		<None Remove="Controls\ZuneShell.xaml" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Resources.xaml" />
-		<None Remove="Styles\Brushes - Copy.xaml" />
-		<None Remove="Styles\Brushes.xaml" />
-		<None Remove="Styles\ButtonStyles.xaml" />
-		<None Remove="Themes\NowPlayingBarStyle.xaml" />
-		<None Remove="Themes\NowPlayingViewStyle.xaml" />
-		<None Remove="Themes\SettingsViewStyle.xaml" />
-		<None Remove="Themes\ShellStyle.xaml" />
+		<None Remove="Resources\Brushes - Copy.xaml" />
+		<None Remove="Resources\Brushes.xaml" />
+		<None Remove="Resources\ButtonStyles.xaml" />
+		<None Remove="Styles\NowPlayingBarStyle.xaml" />
+		<None Remove="Styles\NowPlayingViewStyle.xaml" />
+		<None Remove="Styles\SettingsViewStyle.xaml" />
+		<None Remove="Styles\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Remove="Assets\svg\Next.xaml" />
@@ -76,13 +76,13 @@
 		<UpToDateCheckInput Remove="Controls\ZuneShell.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
 		<UpToDateCheckInput Remove="Resources.xaml" />
-		<UpToDateCheckInput Remove="Styles\Brushes - Copy.xaml" />
-		<UpToDateCheckInput Remove="Styles\Brushes.xaml" />
-		<UpToDateCheckInput Remove="Styles\ButtonStyles.xaml" />
-		<UpToDateCheckInput Remove="Themes\NowPlayingBarStyle.xaml" />
-		<UpToDateCheckInput Remove="Themes\NowPlayingViewStyle.xaml" />
-		<UpToDateCheckInput Remove="Themes\SettingsViewStyle.xaml" />
-		<UpToDateCheckInput Remove="Themes\ShellStyle.xaml" />
+		<UpToDateCheckInput Remove="Resources\Brushes - Copy.xaml" />
+		<UpToDateCheckInput Remove="Resources\Brushes.xaml" />
+		<UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
+		<UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Include="Assets\Backgrounds\Bubbles.png" />
@@ -109,16 +109,16 @@
 		<ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Update="Themes\NowPlayingViewStyle.xaml.cs">
+		<Compile Update="Styles\NowPlayingViewStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Themes\NowPlayingBarStyle.xaml.cs">
+		<Compile Update="Styles\NowPlayingBarStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Themes\SettingsViewStyle.xaml.cs">
+		<Compile Update="Styles\SettingsViewStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Themes\ShellStyle.xaml.cs">
+		<Compile Update="Styles\ShellStyle.xaml.cs">
 			<DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 	</ItemGroup>

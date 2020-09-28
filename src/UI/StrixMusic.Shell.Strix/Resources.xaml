@@ -4,26 +4,26 @@
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:local="using:StrixMusic.Shell.Strix.Controls"
     xmlns:converters="using:StrixMusic.Shell.Default.Converters"
-    xmlns:themes="using:StrixMusic.Shell.Strix.Themes"
-    xmlns:dthemes="using:StrixMusic.Shell.Default.Themes">
+    xmlns:styles="using:StrixMusic.Shell.Strix.Styles"
+    xmlns:dstyles="using:StrixMusic.Shell.Default.Styles">
     <ResourceDictionary.MergedDictionaries>
-        <themes:AlbumStyle/>
-        <themes:AlbumViewStyle/>
-        <ResourceDictionary Source="Themes/ArtistStyle.xaml"/>
-        <ResourceDictionary Source="Themes/ArtistViewStyle.xaml"/>
-        <ResourceDictionary Source="Themes/NowPlayingBarStyle.xaml"/>
-        <themes:HomeStyle/>
-        <ResourceDictionary Source="Themes/PlayableCollectionListStyle.xaml"/>
-        <themes:PlayableCollectionListStyle/>
-        <themes:ShellStyle/>
-        <themes:SettingsViewStyle/>
-        <!--<ResourceDictionary Source="Themes/TrackListStyle.xaml"/>-->
-        <!--<ResourceDictionary Source="Themes/TrackStyle.xaml"/>-->
-        <dthemes:TrackListStyle/>
-        <dthemes:TrackStyle/>
+        <styles:AlbumStyle/>
+        <styles:AlbumViewStyle/>
+        <ResourceDictionary Source="Styles/ArtistStyle.xaml"/>
+        <ResourceDictionary Source="Styles/ArtistViewStyle.xaml"/>
+        <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
+        <styles:HomeStyle/>
+        <ResourceDictionary Source="Styles/PlayableCollectionListStyle.xaml"/>
+        <styles:PlayableCollectionListStyle/>
+        <styles:ShellStyle/>
+        <styles:SettingsViewStyle/>
+        <!--<ResourceDictionary Source="Styles/TrackListStyle.xaml"/>-->
+        <!--<ResourceDictionary Source="Styles/TrackStyle.xaml"/>-->
+        <dstyles:TrackListStyle/>
+        <dstyles:TrackStyle/>
 
-        <ResourceDictionary Source="Styles/Brushes.xaml"/>
-        <ResourceDictionary Source="Styles/ButtonStyles.xaml"/>
+        <ResourceDictionary Source="Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
     <Style x:Key="MediaSlider" TargetType="Slider">
