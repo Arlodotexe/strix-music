@@ -1,4 +1,5 @@
 ﻿using System;
+using StrixMusic.Sdk.Interfaces;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace StrixMusic.Converters
@@ -15,18 +16,23 @@ namespace StrixMusic.Converters
         /// <returns>A <see cref="BitmapImage"/>.</returns>
         public static BitmapImage? Convert(object value)
         {
-            Uri? uri;
+            Uri? uri = null;
             if (value is Uri)
             {
                 uri = value as Uri;
-                return new BitmapImage(uri);
             }
             else if (value is string sValue)
             {
-                if (Uri.TryCreate(sValue, UriKind.Absolute, out uri))
-                {
-                    return new BitmapImage(uri);
-                }
+                Uri.TryCreate(sValue, UriKind.Absolute, out uri);
+            }
+            else if (value is IImage iValue)
+            {
+                uri = iValue.Uri;
+            }
+
+            if (uri != null)
+            {
+                return new BitmapImage(uri);
             }
 
             return null;

@@ -15,7 +15,7 @@
             <!--<Rectangle Fill="#FF00FF" Width="128" Height="128"/>-->
             <Rectangle Width="128" Height="128">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images[0])}"/>
                 </Rectangle.Fill>
             </Rectangle>
 
