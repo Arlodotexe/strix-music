@@ -448,10 +448,12 @@ namespace StrixMusic.Sdk.Observables
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task PopulateMoreAlbumsAsync(int limit)
+        public async Task PopulateMoreAlbumsAsync(int limit)
         {
-            // TODO
-            return Task.CompletedTask;
+            await foreach (var item in _collectionGroupBase.GetAlbumsAsync(limit, Albums.Count))
+            {
+                Albums.Add(new ObservableAlbum(item));
+            }
         }
 
         /// <summary>
