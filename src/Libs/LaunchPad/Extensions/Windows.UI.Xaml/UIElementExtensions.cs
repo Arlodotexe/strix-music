@@ -38,7 +38,7 @@ namespace LaunchPad.Extensions.Windows.UI.Xaml
                 }
             }
 
-            return null;
+            return null!;
         }
     }
 }

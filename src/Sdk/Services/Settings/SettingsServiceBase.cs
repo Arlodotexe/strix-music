@@ -109,12 +109,12 @@ namespace StrixMusic.Sdk.Services.Settings
         /// <inheritdoc/>
         public virtual async Task<T> GetValue<T>(string key, string identifier)
         {
-            string result = await _textStorageService.GetValueAsync(key, identifier);
+            string? result = await _textStorageService.GetValueAsync(key, identifier);
 
             T obj;
             try
             {
-                obj = JsonConvert.DeserializeObject<T>(result);
+                obj = JsonConvert.DeserializeObject<T>(result!);
             }
             catch (JsonException)
             {

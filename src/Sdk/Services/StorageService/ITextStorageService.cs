@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Services.StorageService
         /// </summary>
         /// <param name="filename">The name of the file to get.</param>
         /// <returns>String representation of the stored value. Null if file isn't found.</returns>
-        Task<string> GetValueAsync(string filename);
+        Task<string?> GetValueAsync(string filename);
 
         /// <summary>
         /// Stores data locally.
@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.Services.StorageService
         /// <param name="filename">The name of the file to get.</param>
         /// <param name="path">A relative path (separated by forward slashes), to save the file in a subfolder.</param>
         /// <returns>String representation of the stored value. Null if file isn't found.</returns>
-        Task<string> GetValueAsync(string filename, string path);
+        Task<string?> GetValueAsync(string filename, string path);
 
         /// <summary>
         /// Stores data locally.
