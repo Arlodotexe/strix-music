@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -34,21 +33,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
 
         /// <inheritdoc />
         public ICore SourceCore { get; }
@@ -222,7 +206,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public abstract IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public Task AddTrackAsync(IPlayableCollectionGroup track, int index)
+        public Task AddTrackAsync(ITrack track, int index)
         {
             throw new NotSupportedException();
         }

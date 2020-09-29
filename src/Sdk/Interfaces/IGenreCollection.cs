@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Interfaces
     /// <summary>
     /// Metadata about genres.
     /// </summary>
-    public interface IGenreCollection
+    public interface IGenreCollection : ICoreMember
     {
         /// <summary>
         /// A list of <see cref="string"/> describing the genres for this track.

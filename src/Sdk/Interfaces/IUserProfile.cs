@@ -10,11 +10,6 @@ namespace StrixMusic.Sdk.Interfaces
     public interface IUserProfile : IImageCollection, IUrlCollection
     {
         /// <summary>
-        /// The source core which created the parent.
-        /// </summary>
-        public ICore SourceCore { get; }
-
-        /// <summary>
         /// Identifier for the user
         /// </summary>
         string Id { get; }

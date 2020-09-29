@@ -6,7 +6,7 @@ using StrixMusic.Sdk.Events;
 namespace StrixMusic.Sdk.Interfaces
 {
     /// <summary>
-    /// A collection of artists.
+    /// Defines properties and methods for using and manipulating a collection of artists.
     /// </summary>
     public interface IArtistCollection : IPlayableCollectionBase
     {
@@ -49,11 +49,5 @@ namespace StrixMusic.Sdk.Interfaces
         /// <param name="offset">Get items starting at this index.</param>
         /// <returns><see cref="IAsyncEnumerable{T}"/> that returns the items as they're retrieved.</returns>
         IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset);
-
-        /// <summary>
-        /// Fires when an <see cref="IArtist"/> in this collection is added or removed in the backend.
-        /// </summary>
-        /// <remarks>This is used to handle real time changes from the backend, if supported by the core.</remarks>
-        event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
     }
 }

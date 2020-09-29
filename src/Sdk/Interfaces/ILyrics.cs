@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Interfaces
     /// <summary>
     /// Interface representing lyrics for a <see cref="ITrack"/>.
     /// </summary>
-    public interface ILyrics
+    public interface ILyrics : ICoreMember
     {
         /// <summary>
         /// Timestamped lyrics. The Key is a point in the song, and the value is the lyric at that position.

@@ -6,7 +6,7 @@ using StrixMusic.Sdk.Events;
 namespace StrixMusic.Sdk.Interfaces
 {
     /// <summary>
-    /// A read only track collection.
+    /// Defines properties and methods for using and manipulating a collection of tracks.
     /// </summary>
     public interface ITrackCollection : IPlayableCollectionBase
     {
@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <param name="track">The track to create.</param>
         /// <param name="index">the position to insert the track at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task AddTrackAsync(IPlayableCollectionGroup track, int index);
+        Task AddTrackAsync(ITrack track, int index);
 
         /// <summary>
         /// Removes the track from the collection on the backend.
@@ -49,11 +49,5 @@ namespace StrixMusic.Sdk.Interfaces
         /// <param name="offset">Get items starting at this index.</param>
         /// <returns><see cref="IAsyncEnumerable{T}"/> that returns the items as they're retrieved.</returns>
         IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset);
-
-        /// <summary>
-        /// Fires when a <see cref="ITrack"/> in this collection is added or removed in the backend.
-        /// </summary>
-        /// <remarks>This is used to handle real time changes from the backend, if supported by the core.</remarks>
-        event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
     }
 }

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
@@ -12,7 +11,7 @@ namespace StrixMusic.Sdk.Observables
     /// <summary>
     /// Contains bindable information about an <see cref="IArtist"/>.
     /// </summary>
-    public class ObservableArtist : ObservableMergeableObject<IArtist>, IArtist
+    public class ObservableArtist : ObservableMergeableObject<IArtist>, IArtist, IObservableAlbumCollection, IObservableTrackCollection
     {
         private readonly IArtist _artist;
 
@@ -45,8 +44,6 @@ namespace StrixMusic.Sdk.Observables
 
         private void AttachEvents()
         {
-            _artist.AlbumsChanged += Artist_AlbumsChanged;
-            _artist.TracksChanged += Artist_TracksChanged;
             _artist.PlaybackStateChanged += Artist_PlaybackStateChanged;
             _artist.DescriptionChanged += Artist_DescriptionChanged;
             _artist.NameChanged += Artist_NameChanged;
@@ -55,8 +52,6 @@ namespace StrixMusic.Sdk.Observables
 
         private void DetachEvents()
         {
-            _artist.AlbumsChanged -= Artist_AlbumsChanged;
-            _artist.TracksChanged -= Artist_TracksChanged;
             _artist.PlaybackStateChanged -= Artist_PlaybackStateChanged;
             _artist.DescriptionChanged -= Artist_DescriptionChanged;
             _artist.NameChanged -= Artist_NameChanged;
@@ -101,46 +96,6 @@ namespace StrixMusic.Sdk.Observables
             add => _artist.UrlChanged += value;
 
             remove => _artist.UrlChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
-        {
-            add => _artist.TracksChanged += value;
-            remove => _artist.TracksChanged -= value;
-        }
-
-        private void Artist_TracksChanged(object sender, CollectionChangedEventArgs<ITrack> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                Tracks.Insert(item.Index, new ObservableTrack(item.Data));
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                Tracks.RemoveAt(item.Index);
-            }
-        }
-
-        private void Artist_AlbumsChanged(object sender, CollectionChangedEventArgs<IAlbum> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                Albums.Insert(item.Index, new ObservableAlbum(item.Data));
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                Albums.RemoveAt(item.Index);
-            }
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged
-        {
-            add => _artist.AlbumsChanged += value;
-            remove => _artist.AlbumsChanged -= value;
         }
 
         private void Artist_UrlChanged(object sender, Uri? e) => Url = e;
@@ -293,22 +248,14 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc />
         public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset) => _artist.GetTracksAsync(limit, offset);
 
-        /// <summary>
-        /// Populates the next set of albums into the collection.
-        /// </summary>
-        /// <param name="limit">The number of items to load.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <inheritdoc />
         public Task PopulateMoreAlbumsAsync(int limit)
         {
             // TODO
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Populates the next set of tracks into the collection.
-        /// </summary>
-        /// <param name="limit">The number of items to load.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <inheritdoc />
         public Task PopulateMoreTracksAsync(int limit)
         {
             // TODO
@@ -316,7 +263,7 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public Task AddTrackAsync(IPlayableCollectionGroup track, int index) => _artist.AddTrackAsync(track, index);
+        public Task AddTrackAsync(ITrack track, int index) => _artist.AddTrackAsync(track, index);
 
         /// <inheritdoc />
         public Task AddAlbumAsync(IAlbum album, int index) => _artist.AddAlbumAsync(album, index);
@@ -327,14 +274,10 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc />
         public Task RemoveAlbumAsync(int index) => _artist.RemoveAlbumAsync(index);
 
-        /// <summary>
-        /// <inheritdoc cref="PopulateMoreAlbumsAsync"/>
-        /// </summary>
+        /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }
 
-        /// <summary>
-        /// <inheritdoc cref="PopulateMoreTracksAsync"/>
-        /// </summary>
+        /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
 
         /// <summary>

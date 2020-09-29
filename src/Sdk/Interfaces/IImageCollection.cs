@@ -4,9 +4,9 @@ using OwlCore.Collections;
 namespace StrixMusic.Sdk.Interfaces
 {
     /// <summary>
-    /// A collection of images, which could be changeable from the backend.
+    /// A collection of images.
     /// </summary>
-    public interface IImageCollection
+    public interface IImageCollection : ICoreMember
     {
         /// <summary>
         /// Relevant images for the collection.

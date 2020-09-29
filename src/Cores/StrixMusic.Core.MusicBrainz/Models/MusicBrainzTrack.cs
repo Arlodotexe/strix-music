@@ -9,7 +9,6 @@ using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
 
@@ -46,6 +45,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
             // Genres = musicBrainzAlbum.Release.Tag;
             Album = musicBrainzAlbum;
 
+            DiscNumber = discNumber;
+
             _musicBrainzClient = SourceCore.GetService<MusicBrainzClient>();
             _artistHelpersService = SourceCore.GetService<MusicBrainzArtistHelpersService>();
         }
@@ -79,9 +80,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
 
         /// <inheritdoc/>
         public string Id => _track.Id;
@@ -290,7 +288,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
         }
 
-        private static SynchronizedObservableCollection<IImage> CreateImagesForRelease(IEnumerable<Release> releases)
+        private SynchronizedObservableCollection<IImage> CreateImagesForRelease(IEnumerable<Release> releases)
         {
             var returnData = new SynchronizedObservableCollection<IImage>();
 
@@ -298,7 +296,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             {
                 foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
                 {
-                    returnData.Add(new MusicBrainzImage(release.Id, item));
+                    returnData.Add(new MusicBrainzImage(SourceCore, release.Id, item));
                 }
             }
 

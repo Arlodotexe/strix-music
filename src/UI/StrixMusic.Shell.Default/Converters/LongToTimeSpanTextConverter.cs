@@ -14,10 +14,12 @@ namespace StrixMusic.Shell.Default.Converters
             if (value is double dValue)
             {
                 TimeSpan timeSpan = TimeSpan.FromMilliseconds(dValue);
+
                 if (timeSpan.Hours > 0)
                 {
                     return timeSpan.ToString(@"h\:mm\:ss");
-                } else
+                } 
+                else
                 {
                     return timeSpan.ToString(@"m\:ss");
                 }

@@ -88,7 +88,7 @@ namespace StrixMusic.Sdk.Observables
 
         private void Device_PlaybackSpeedChanged(object sender, double e) => PlaybackSpeed = e;
 
-        private void Device_PlaybackContextChanged(object sender, IPlayableCollectionBase e) => PlaybackContext = e;
+        private void Device_PlaybackContextChanged(object sender, IPlayable e) => PlaybackContext = e;
 
         private void Device_NowPlayingChanged(object sender, ITrack e) => NowPlaying = new ObservableTrack(e);
 
@@ -104,7 +104,7 @@ namespace StrixMusic.Sdk.Observables
         public string Name => _device.Name;
 
         /// <inheritdoc />
-        public DeviceType DeviceType => _device.DeviceType;
+        public DeviceType Type => _device.Type;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<ITrack> PlaybackQueue { get; }
@@ -208,7 +208,7 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public event EventHandler<IPlayableCollectionBase> PlaybackContextChanged
+        public event EventHandler<IPlayable> PlaybackContextChanged
         {
             add => _device.PlaybackContextChanged += value;
 

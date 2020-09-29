@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
@@ -13,7 +12,7 @@ namespace StrixMusic.Sdk.Observables
     /// <summary>
     /// Contains bindable information about an <see cref="ITrack"/>
     /// </summary>
-    public class ObservableTrack : ObservableMergeableObject<ITrack>, ITrack
+    public class ObservableTrack : ObservableMergeableObject<ITrack>, ITrack, IObservableArtistCollection
     {
         private readonly ITrack _track;
         private IAlbum? _album;
@@ -40,6 +39,7 @@ namespace StrixMusic.Sdk.Observables
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+            PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
 
             AttachEvents();
         }
@@ -68,13 +68,6 @@ namespace StrixMusic.Sdk.Observables
             _track.PlaybackStateChanged -= Track_PlaybackStateChanged;
             _track.TrackNumberChanged -= Track_TrackNumberChanged;
             _track.UrlChanged -= Track_UrlChanged;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged
-        {
-            add => _track.ArtistsChanged += value;
-            remove => _track.ArtistsChanged -= value;
         }
 
         /// <inheritdoc />
@@ -397,16 +390,15 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc />
         public Task RemoveArtistAsync(int index) => _track.RemoveArtistAsync(index);
 
-        /// <summary>
-        /// Populates the next set of tracks into the collection.
-        /// </summary>
-        /// <param name="limit">The number of items to load.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <inheritdoc />
         public Task PopulateMoreArtistsAsync(int limit)
         {
             // TODO
             return Task.CompletedTask;
         }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }
 
         /// <summary>
         /// Attempts to play the track.

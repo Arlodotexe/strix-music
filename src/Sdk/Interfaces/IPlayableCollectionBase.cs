@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using StrixMusic.Sdk.Enums;
-
-namespace StrixMusic.Sdk.Interfaces
+﻿namespace StrixMusic.Sdk.Interfaces
 {
     /// <summary>
-    /// Interface representing a collection of playable items.
+    /// A base class for playable collections.
     /// </summary>
-    /// <remarks>No <see langword="class"/> should ever directly implement this interface. The items in this collection, the count, and the method for getting them are defined in a child <see langword="interface" />.</remarks>
-    public interface IPlayableCollectionBase : IPlayable
+    public interface IPlayableCollectionBase : ICoreMember
     {
     }
 }

@@ -12,7 +12,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// <inheritdoc />
     public class RelatedAlbumItems : MusicBrainzCollectionGroupBase
     {
-
         private readonly MusicBrainzClient _musicBrainzClient;
         private readonly Release _release;
         private readonly MusicBrainzArtistHelpersService _artistHelperService;
@@ -71,6 +70,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
             var artist = new MusicBrainzArtist(SourceCore, artistData, totalTracksForArtist);
 
             var mediums = release.Media.GetRange(offset, limit);
+
+            // TODO fix, this won't work after the refactor to MusicBrainzAlbum where it no longer takes in a medium.
             foreach (var medium in mediums)
             {
                 var album = new MusicBrainzAlbum(SourceCore, release, artist);

@@ -315,7 +315,7 @@ namespace StrixMusic.Sdk.MergedWrappers
         }
 
         /// <inheritdoc/>
-        public Task AddTrackAsync(IPlayableCollectionGroup track, int index)
+        public Task AddTrackAsync(ITrack track, int index)
         {
             return PreferredSource.AddTrackAsync(track, index);
         }

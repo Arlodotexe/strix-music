@@ -16,7 +16,7 @@
                         <TextBlock Text="Settings"/>
                     </Pivot.Title>
                     <Pivot.HeaderTemplate>
-                        <DataTemplate x:DataType="interfaces:IPlayableCollectionBase">
+                        <DataTemplate x:DataType="interfaces:IPlayable">
                             <TextBlock Text="{x:Bind Name}"/>
                         </DataTemplate>
                     </Pivot.HeaderTemplate>

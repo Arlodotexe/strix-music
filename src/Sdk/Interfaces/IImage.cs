@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.Interfaces
     /// <summary>
     /// Contains details about an image.
     /// </summary>
-    public interface IImage
+    public interface IImage : ICoreMember
     {
         /// <summary>
         /// Local or remote resource pointing to the image.

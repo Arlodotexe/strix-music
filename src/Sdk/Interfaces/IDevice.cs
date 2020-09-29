@@ -8,13 +8,8 @@ namespace StrixMusic.Sdk.Interfaces
     /// <summary>
     /// Represents a device that a user can connect to for playback
     /// </summary>
-    public interface IDevice
+    public interface IDevice : ICoreMember
     {
-        /// <summary>
-        /// The source core which created the object.
-        /// </summary>
-        public ICore SourceCore { get; }
-
         /// <summary>
         /// Identifies the device.
         /// </summary>
@@ -33,7 +28,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// The current playback queue.
         /// </summary>
-        /// <remarks>When <see cref="Enums.DeviceType"/> is <see cref="DeviceType.Remote" />, this will override the internal playback queue.</remarks>
+        /// <remarks>When <see cref="DeviceType"/> is <see cref="DeviceType.Remote" />, this will override the internal playback queue.</remarks>
         public SynchronizedObservableCollection<ITrack> PlaybackQueue { get; }
 
         /// <summary>
@@ -68,7 +63,7 @@ namespace StrixMusic.Sdk.Interfaces
         double VolumePercent { get; }
 
         /// <inheritdoc cref="Enums.DeviceType" />
-        DeviceType DeviceType { get; }
+        DeviceType Type { get; }
 
         /// <summary>
         /// The rate of the playback for the current track.
@@ -128,13 +123,13 @@ namespace StrixMusic.Sdk.Interfaces
         Task ChangePlaybackSpeedAsync(double speed);
 
         /// <summary>
-        /// Resume the device if in the state <see cref="PlaybackState.Paused"/>.
+        /// Resume the device if in the state <see cref="Enums.PlaybackState.Paused"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ResumeAsync();
 
         /// <summary>
-        /// Pauses the device if in the state <see cref="PlaybackState.Playing"/>
+        /// Pauses the device if in the state <see cref="Enums.PlaybackState.Playing"/>
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task PauseAsync();
@@ -191,7 +186,7 @@ namespace StrixMusic.Sdk.Interfaces
         /// <summary>
         /// Fires when <see cref="PlaybackContext"/> changes.
         /// </summary>
-        event EventHandler<IPlayableCollectionBase> PlaybackContextChanged;
+        event EventHandler<IPlayable> PlaybackContextChanged;
 
         /// <summary>
         /// Fires when <see cref="NowPlaying"/> changes.

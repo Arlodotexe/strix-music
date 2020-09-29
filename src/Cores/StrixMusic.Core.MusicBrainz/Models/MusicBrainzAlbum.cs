@@ -9,7 +9,6 @@ using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
 
@@ -66,9 +65,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
 
         /// <summary>
         /// The <see cref="Release"/> for this album.
@@ -230,7 +226,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task AddTrackAsync(IPlayableCollectionGroup track, int index)
+        public Task AddTrackAsync(ITrack track, int index)
         {
             throw new NotImplementedException();
         }
@@ -272,7 +268,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
             {
-                returnData.Add(new MusicBrainzImage(Release.Id, item));
+                returnData.Add(new MusicBrainzImage(SourceCore, Release.Id, item));
             }
 
             return returnData;

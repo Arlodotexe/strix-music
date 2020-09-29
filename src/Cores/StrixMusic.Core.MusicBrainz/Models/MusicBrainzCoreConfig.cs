@@ -14,6 +14,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// </summary>
     public class MusicBrainzCoreConfig : ICoreConfig
     {
+        /// <inheritdoc />
+        public ICore SourceCore { get; }
+
         /// <inheritdoc/>
         public IServiceProvider Services { get; }
 
@@ -26,6 +29,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public MusicBrainzCoreConfig(ICore sourceCore)
         {
             Services = ConfigureServices(sourceCore.InstanceId);
+            SourceCore = sourceCore;
         }
 
         /// <summary>

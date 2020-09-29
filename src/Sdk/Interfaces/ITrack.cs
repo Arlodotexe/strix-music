@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.Interfaces
     /// <summary>
     /// Metadata about a track.
     /// </summary>
-    public interface ITrack : IArtistCollection, IGenreCollection
+    public interface ITrack : IPlayable, IArtistCollection, IGenreCollection
     {
         /// <inheritdoc cref="TrackType"/>
         TrackType Type { get; }

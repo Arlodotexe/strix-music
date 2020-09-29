@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.Observables
@@ -12,7 +11,7 @@ namespace StrixMusic.Sdk.Observables
     /// <summary>
     /// A bindable wrapper for <see cref="IPlaylist"/>.
     /// </summary>
-    public class ObservablePlaylist : ObservableMergeableObject<IPlaylist>, IPlaylist
+    public class ObservablePlaylist : ObservableMergeableObject<IPlaylist>, IPlaylist, IObservableTrackCollection
     {
         private readonly IPlaylist _playlist;
 
@@ -31,6 +30,7 @@ namespace StrixMusic.Sdk.Observables
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+            PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
 
             if (_playlist.Owner != null)
                 _owner = new ObservableUserProfile(_playlist.Owner);
@@ -38,7 +38,7 @@ namespace StrixMusic.Sdk.Observables
             if (_playlist.RelatedItems != null)
                 RelatedItems = new ObservableCollectionGroup(_playlist.RelatedItems);
 
-            Tracks = new SynchronizedObservableCollection<ITrack>();
+            Tracks = new SynchronizedObservableCollection<ObservableTrack>();
             Images = new SynchronizedObservableCollection<IImage>();
 
             SourceCore = MainViewModel.GetLoadedCore(_playlist.SourceCore);
@@ -48,7 +48,6 @@ namespace StrixMusic.Sdk.Observables
 
         private void AttachEvents()
         {
-            _playlist.TracksChanged += Playlist_TracksChanged;
             _playlist.DescriptionChanged += Playlist_DescriptionChanged;
             _playlist.NameChanged += Playlist_NameChanged;
             _playlist.PlaybackStateChanged += Playlist_PlaybackStateChanged;
@@ -57,24 +56,10 @@ namespace StrixMusic.Sdk.Observables
 
         private void DetachEvents()
         {
-            _playlist.TracksChanged -= Playlist_TracksChanged;
             _playlist.DescriptionChanged -= Playlist_DescriptionChanged;
             _playlist.NameChanged -= Playlist_NameChanged;
             _playlist.PlaybackStateChanged -= Playlist_PlaybackStateChanged;
             _playlist.UrlChanged -= Playlist_UrlChanged;
-        }
-
-        private void Playlist_TracksChanged(object sender, CollectionChangedEventArgs<ITrack> e)
-        {
-            foreach (var item in e.AddedItems)
-            {
-                Tracks.Insert(item.Index, new ObservableTrack(item.Data));
-            }
-
-            foreach (var item in e.RemovedItems)
-            {
-                Tracks.RemoveAt(item.Index);
-            }
         }
 
         /// <inheritdoc />
@@ -116,13 +101,6 @@ namespace StrixMusic.Sdk.Observables
             remove => _playlist.DurationChanged -= value;
         }
 
-        /// <inheritdoc />
-        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged
-        {
-            add => _playlist.TracksChanged += value;
-            remove => _playlist.TracksChanged -= value;
-        }
-
         private void Playlist_UrlChanged(object sender, Uri? e) => Url = e;
 
         private void Playlist_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
@@ -149,7 +127,7 @@ namespace StrixMusic.Sdk.Observables
         /// <summary>
         /// The tracks in this playlist.
         /// </summary>
-        public SynchronizedObservableCollection<ITrack> Tracks { get; }
+        public SynchronizedObservableCollection<ObservableTrack> Tracks { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IImage> Images { get; }
@@ -243,11 +221,7 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc />
         public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0) => _playlist.GetTracksAsync(limit, offset);
 
-        /// <summary>
-        /// Populates the next set of tracks into the collection.
-        /// </summary>
-        /// <param name="limit">The number of items to load.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <inheritdoc />
         public Task PopulateMoreTracksAsync(int limit)
         {
             // TODO
@@ -255,7 +229,7 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public Task AddTrackAsync(IPlayableCollectionGroup track, int index) => _playlist.AddTrackAsync(track, index);
+        public Task AddTrackAsync(ITrack track, int index) => _playlist.AddTrackAsync(track, index);
 
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index) => _playlist.RemoveTrackAsync(index);
@@ -284,5 +258,8 @@ namespace StrixMusic.Sdk.Observables
         /// Attempts to change the duration of the album, if supported.
         /// </summary>
         public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
     }
 }

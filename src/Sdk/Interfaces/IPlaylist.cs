@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.Interfaces
     /// <summary>
     /// Interface that represents a playlist.
     /// </summary>
-    public interface IPlaylist : ITrackCollection, IGenreCollection
+    public interface IPlaylist : IPlayable, ITrackCollection, IGenreCollection
     {
         /// <summary>
         /// Owner of the playable item.

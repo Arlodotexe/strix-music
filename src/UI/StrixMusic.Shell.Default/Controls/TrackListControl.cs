@@ -31,7 +31,7 @@ namespace StrixMusic.Shell.Default.Controls
         /// </summary>
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand
         {
-            get => (IAsyncRelayCommand<int>) GetValue(LoadMoreTracksCommandProperty);
+            get => (IAsyncRelayCommand<int>)GetValue(LoadMoreTracksCommandProperty);
             set => SetValue(LoadMoreTracksCommandProperty, value);
         }
 

@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Interfaces
     /// <summary>
     /// A collection of <see cref="Uri"/>s.
     /// </summary>
-    public interface IUrlCollection
+    public interface IUrlCollection : ICoreMember
     {
         /// <summary>
         /// Links to an external resource.

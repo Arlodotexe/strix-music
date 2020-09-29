@@ -10,11 +10,6 @@ namespace StrixMusic.Sdk.Interfaces
     public interface IPlayable : IImageCollection
     {
         /// <summary>
-        /// The source core which created the parent.
-        /// </summary>
-        public ICore SourceCore { get; }
-
-        /// <summary>
         /// The ID of the playable item.
         /// </summary>
         string Id { get; }
