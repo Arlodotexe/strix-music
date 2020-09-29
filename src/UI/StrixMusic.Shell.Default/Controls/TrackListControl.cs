@@ -24,7 +24,10 @@ namespace StrixMusic.Shell.Default.Controls
         /// The backing DependencyProperty for <see cref="PopulateMoreTracksCommand"/>.
         /// </summary>
         private static readonly DependencyProperty LoadMoreTracksCommandProperty = DependencyProperty.Register(
-            "PopulateMoreTracksCommand", typeof(IAsyncRelayCommand<int>), typeof(TrackListControl), new PropertyMetadata(default(IAsyncRelayCommand<int>)));
+            nameof(PopulateMoreTracksCommand),
+            typeof(IAsyncRelayCommand<int>),
+            typeof(TrackListControl),
+            new PropertyMetadata(default(IAsyncRelayCommand<int>)));
 
         /// <summary>
         /// The command to fire when more tracks should be loaded.
@@ -39,7 +42,10 @@ namespace StrixMusic.Shell.Default.Controls
         /// The backing DependencyProperty for <see cref="Tracks"/>.
         /// </summary>
         public static readonly DependencyProperty TracksProperty = DependencyProperty.Register(
-            "Tracks", typeof(SynchronizedObservableCollection<ObservableTrack>), typeof(TrackListControl), new PropertyMetadata(default(SynchronizedObservableCollection<ObservableTrack>)));
+            nameof(Tracks),
+            typeof(SynchronizedObservableCollection<ObservableTrack>),
+            typeof(TrackListControl),
+            new PropertyMetadata(default(SynchronizedObservableCollection<ObservableTrack>)));
 
         /// <summary>
         /// The tracks for this control.
