@@ -61,7 +61,6 @@
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.4.0-dev.16" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.Files\StrixMusic.Core.Files.csproj" />
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj" />
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />

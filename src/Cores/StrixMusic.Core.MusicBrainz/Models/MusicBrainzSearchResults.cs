@@ -1,11 +1,11 @@
-﻿using Hqub.MusicBrainz.API;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Hqub.MusicBrainz.API;
 using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.MergedWrappers
@@ -68,9 +67,6 @@ namespace StrixMusic.Sdk.MergedWrappers
 
         /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
 
         /// <inheritdoc/>
         public ICore SourceCore => _preferredSource.SourceCore;

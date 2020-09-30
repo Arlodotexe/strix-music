@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using OwlCore.Collections;
 using OwlCore.Extensions.AsyncExtensions;
 using StrixMusic.Sdk.Enums;
-using StrixMusic.Sdk.Events;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Sdk.MergedWrappers
@@ -64,21 +63,6 @@ namespace StrixMusic.Sdk.MergedWrappers
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
         }
-
-        /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<ITrack>>? TracksChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IArtist>>? ArtistsChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IAlbum>>? AlbumsChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IPlaylist>>? PlaylistsChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<CollectionChangedEventArgs<IPlayableCollectionGroup>>? ChildrenChanged;
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;

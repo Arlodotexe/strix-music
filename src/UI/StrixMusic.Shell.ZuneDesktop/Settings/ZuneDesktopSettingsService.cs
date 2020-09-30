@@ -1,6 +1,6 @@
-﻿using StrixMusic.Sdk.Services.Settings;
+﻿using System;
+using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
-using System;
 
 namespace StrixMusic.Shell.ZuneDesktop.Settings
 {

@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using StrixMusic.Sdk.Services.SuperShell;
 using StrixMusic.SuperShellControls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Services.SuperShell;
 
 namespace StrixMusic
 {

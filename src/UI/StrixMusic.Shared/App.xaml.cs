@@ -132,8 +132,8 @@ namespace StrixMusic
         private static void ConfigureFilters(ILoggerFactory factory) => factory
             .WithFilter(new FilterLoggerSettings
             {
-                {"Uno", LogLevel.Warning},
-                {"Windows", LogLevel.Warning},
+                { "Uno", LogLevel.Warning },
+                { "Windows", LogLevel.Warning },
 
                 // Debug JS interop
                 // { "Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug },

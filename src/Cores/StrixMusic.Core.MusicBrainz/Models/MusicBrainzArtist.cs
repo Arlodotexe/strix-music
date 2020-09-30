@@ -1,4 +1,8 @@
-﻿using Hqub.MusicBrainz.API;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Services;
@@ -6,10 +10,6 @@ using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
