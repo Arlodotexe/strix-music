@@ -8,24 +8,22 @@
     x:Class="StrixMusic.Shell.Default.Styles.HomeStyle">
 
     <DataTemplate x:Key="DefaultHomeTemplate" x:DataType="sdk:MainViewModel">
-        <UserControl>
-            <Grid>
-                <Pivot>
-                    <Pivot.Title>
-                        <TextBlock Text="Home"/>
-                    </Pivot.Title>
-                    <PivotItem Header="Songs">
-                        <local:TrackListControl Tracks="{x:Bind Library.Tracks, Mode=OneWay}" PopulateMoreTracksCommand="{x:Bind Library.PopulateMoreTracksCommand}" />
-                    </PivotItem>
-                    <PivotItem Header="Albums">
-                        <local:PlayableCollectionListControl Collections="{x:Bind Library.Albums, Mode=OneWay}" PopulateMoreCollectionsCommand="{x:Bind Library.PopulateMoreAlbumsCommand}" />
-                    </PivotItem>
-                    <PivotItem Header="Artists">
+        <Grid>
+            <Pivot>
+                <Pivot.Title>
+                    <TextBlock Text="Home"/>
+                </Pivot.Title>
+                <PivotItem Header="Songs">
+                    <local:TrackListControl Tracks="{x:Bind Library.Tracks, Mode=OneWay}" PopulateMoreTracksCommand="{x:Bind Library.PopulateMoreTracksCommand}" />
+                </PivotItem>
+                <PivotItem Header="Albums">
+                    <local:PlayableCollectionListControl Collections="{x:Bind Library.Albums, Mode=OneWay}" PopulateMoreCollectionsCommand="{x:Bind Library.PopulateMoreAlbumsCommand}" />
+                </PivotItem>
+                <PivotItem Header="Artists">
 
-                    </PivotItem>
-                </Pivot>
-            </Grid>
-        </UserControl>
+                </PivotItem>
+            </Pivot>
+        </Grid>
     </DataTemplate>
 
     <Style x:Key="DefaultHomeControlStyle" TargetType="local:HomeControl">
