@@ -1,4 +1,5 @@
 ﻿
+using OwlCore.Validation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +11,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using OwlCore.Validation;
 
 namespace OwlCore.Collections
 {
@@ -86,7 +86,7 @@ namespace OwlCore.Collections
 #if NETSTANDARD2_0 || NETFULL
         [NonSerialized]
 #endif
-        private object _syncRoot;
+        private object? _syncRoot;
 
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
@@ -95,10 +95,10 @@ namespace OwlCore.Collections
         }
 
         /// <summary>Occurs when an item is added, removed, changed, moved, or the entire list is refreshed.</summary>
-        public new event NotifyCollectionChangedEventHandler CollectionChanged;
+        public new event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         /// <summary>Occurs when a property value changes.</summary>
-        protected new event PropertyChangedEventHandler PropertyChanged;
+        protected new event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>Gets a value indicating whether the <see cref="SynchronizedObservableCollection{T}" />.</summary>
         /// <returns>true if the <see cref="SynchronizedObservableCollection{T}" /> has a fixed size; otherwise, false.</returns>
@@ -137,9 +137,11 @@ namespace OwlCore.Collections
                         {
                             _syncRoot = collection.SyncRoot;
                         }
-                        else
+                        else if (_syncRoot != null)
                         {
-                            Interlocked.CompareExchange<object>(ref _syncRoot, new object(), null);
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+                            _ = Interlocked.CompareExchange<object>(ref _syncRoot, new object(), null);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
                         }
                     }
                     finally
@@ -148,7 +150,7 @@ namespace OwlCore.Collections
                     }
                 }
 
-                return _syncRoot;
+                return _syncRoot!;
             }
         }
 
@@ -156,7 +158,9 @@ namespace OwlCore.Collections
 
         object IList.this[int index]
         {
+#pragma warning disable CS8603 // Possible null reference return.
             get => this[index];
+#pragma warning restore CS8603 // Possible null reference return.
             set
             {
                 try
@@ -504,7 +508,12 @@ namespace OwlCore.Collections
                     {
                         for (var i = 0; i < count; i++)
                         {
-                            objects[arrayIndex++] = _items[i];
+                            var item = _items[i];
+
+                            if (item != null)
+                            {
+                                objects[arrayIndex++] = item;
+                            }
                         }
                     }
                     catch (ArrayTypeMismatchException)

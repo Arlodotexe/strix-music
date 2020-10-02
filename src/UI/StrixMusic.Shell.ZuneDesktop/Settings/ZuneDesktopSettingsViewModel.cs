@@ -41,11 +41,13 @@ namespace StrixMusic.Shell.ZuneDesktop.Settings
         /// </summary>
         public string SelectedBackgroundImage
         {
-            get => AsyncExtensions.RunSync(async () =>
+            get
             {
-                var backgroundImage = await _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
+                // TODO: Initialize this value from code behind and keep track in a backing field.
+                var backgroundImage = _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage)).Result;
                 return backgroundImage.Name;
-            });
+            }
+
             set
             {
                 ZuneDesktopBackgroundImage image = _zuneBackgroundImages[value];

@@ -37,9 +37,9 @@ namespace OwlCore.Validation
         /// <param name="expression">The expression that will be evaluated.</param>
         /// <param name="message">The message associated with the <see cref="Exception"/></param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the expression evaluates to <c>false</c></exception>.
-        public static void IsInRange(string name, bool expression, string message = null)
+        public static void IsInRange(string name, bool expression, string? message = null)
         {
-            IsValid<ArgumentOutOfRangeException>(name, expression, string.IsNullOrWhiteSpace(message) ? $"The value passed for '{name}' is out of range." : message);
+            IsValid<ArgumentOutOfRangeException>(name, expression, string.IsNullOrWhiteSpace(message) || message is null ? $"The value passed for '{name}' is out of range." : message);
         }
 
         /// <summary>
@@ -49,9 +49,9 @@ namespace OwlCore.Validation
         /// <param name="value">The value that will be evaluated.</param>
         /// <param name="message">The message associated with the <see cref="Exception"/></param>
         /// <exception cref="ArgumentNullException">Thrown when the value is <c>null</c></exception>.
-        public static void IsNotNull<T>(string name, T value, string message = null)
+        public static void IsNotNull<T>(string name, T value, string? message = null)
         {
-            IsValid<ArgumentNullException>(name, value != null, string.IsNullOrWhiteSpace(message) ? $"The value passed for '{name}' is null." : message);
+            IsValid<ArgumentNullException>(name, value != null, string.IsNullOrWhiteSpace(message) || message is null ? $"The value passed for '{name}' is null." : message);
         }
 
         /// <summary>
@@ -61,9 +61,9 @@ namespace OwlCore.Validation
         /// <param name="value">The value that will be evaluated.</param>
         /// <param name="message">The message associated with the <see cref="Exception"/></param>
         /// <exception cref="ArgumentException">Thrown when the value is <c>null</c> or <c>whitespace</c>.</exception>.
-        public static void IsNotNullOrWhitespace(string name, string value, string message = null)
+        public static void IsNotNullOrWhitespace(string name, string value, string? message = null)
         {
-            IsValid<ArgumentException>(name, !string.IsNullOrWhiteSpace(value), string.IsNullOrWhiteSpace(message) ? $"The value passed for '{name}' is empty, null, or whitespace." : message);
+            IsValid<ArgumentException>(name, !string.IsNullOrWhiteSpace(value), string.IsNullOrWhiteSpace(message) || message is null ? $"The value passed for '{name}' is empty, null, or whitespace." : message);
         }
 
         /// <summary>
@@ -73,9 +73,9 @@ namespace OwlCore.Validation
         /// <param name="expression">The expression that will be evaluated.</param>
         /// <param name="message">The message associated with the <see cref="Exception"/></param>
         /// <exception cref="ArgumentException">Thrown when the expression evaluates to <c>false</c></exception>.
-        public static void IsValid(string name, bool expression, string message = null)
+        public static void IsValid(string name, bool expression, string? message = null)
         {
-            IsValid<ArgumentException>(name, expression, string.IsNullOrWhiteSpace(message) ? $"The value passed for '{name}' is not valid." : message);
+            IsValid<ArgumentException>(name, expression, string.IsNullOrWhiteSpace(message) || message is null ? $"The value passed for '{name}' is not valid." : message);
         }
 
         /// <summary>
@@ -85,14 +85,14 @@ namespace OwlCore.Validation
         /// <param name="name">The name of the parameter we are validating.</param>
         /// <param name="expression">The expression that will be evaluated.</param>
         /// <param name="message">The message associated with the <see cref="Exception"/></param>
-        public static void IsValid<TException>(string name, bool expression, string message = null) where TException : Exception, new()
+        public static void IsValid<TException>(string name, bool expression, string? message = null) where TException : Exception, new()
         {
             if (expression)
             {
                 return;
             }
 
-            throw GetException<TException>(name, string.IsNullOrWhiteSpace(message) ? $"The value passed for '{name}' is not valid." : message);
+            throw GetException<TException>(name, string.IsNullOrWhiteSpace(message) || message is null ? $"The value passed for '{name}' is not valid." : message);
         }
     }
 }

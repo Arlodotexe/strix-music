@@ -20,7 +20,7 @@ namespace OwlCore.Extensions
         /// <param name="pruneFunc">Projection for determining "distinctness"</param>
         /// <returns>A sequence consisting of distinct elements from the source sequence,
         /// comparing them by the specified key projection.</returns>
-        /// <remarks>https://stackoverflow.com/a/491832</remarks>
+        /// <remarks>Source: <see href="https://stackoverflow.com/a/491832"/></remarks>
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> pruneFunc)
         {
             return source

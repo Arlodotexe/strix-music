@@ -30,7 +30,7 @@ namespace OwlCore.Services
         /// <typeparam name="T">The return type for the service.</typeparam>
         /// <param name="service">The service to register.</param>
         /// <param name="context">The associated context.</param>
-        public void Register<T>(T service, object context)
+        public void Register<T>(T service, object context) where T : class
         {
             if (context is null)
             {
