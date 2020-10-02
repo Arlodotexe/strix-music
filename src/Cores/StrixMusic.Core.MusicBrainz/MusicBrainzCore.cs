@@ -14,8 +14,11 @@ using StrixMusic.Sdk.Interfaces;
 namespace StrixMusic.Core.MusicBrainz
 {
     /// <summary>
-    /// Mock Core
+    /// A core that gets data from the <see href="https://https://musicbrainz.org/doc/">MusicBrainz API</see>.
     /// </summary>
+    /// <remarks>
+    /// Backing API library: <see href="https://github.com/Arlodotexe/MusicBrainz/"/>
+    /// </remarks>
     public class MusicBrainzCore : ICore
     {
         private readonly MusicBrainzClient _musicBrainzClient;
