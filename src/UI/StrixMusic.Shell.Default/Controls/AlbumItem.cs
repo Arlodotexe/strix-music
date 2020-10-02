@@ -6,14 +6,14 @@ namespace StrixMusic.Shell.Default.Controls
     /// <summary>
     /// A Templated <see cref="Control"/> for displaying an <see cref="ObservableAlbum"/> in a list.
     /// </summary>
-    public sealed partial class AlbumControl : Control
+    public sealed partial class AlbumItem : Control
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlbumControl"/> class.
+        /// Initializes a new instance of the <see cref="AlbumItem"/> class.
         /// </summary>
-        public AlbumControl()
+        public AlbumItem()
         {
-            this.DefaultStyleKey = typeof(AlbumControl);
+            this.DefaultStyleKey = typeof(AlbumItem);
         }
     }
 }

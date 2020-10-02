@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using OwlCore.Exceptions;
+using StrixMusic.Sdk.Interfaces;
 using StrixMusic.Sdk.Observables;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -8,23 +9,13 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Shell.Default.Controls
 {
     /// <summary>
-    /// A Templated <see cref="Control"/> for displaying any Object containing a list of <see cref="ObservableTrack"/>.
+    /// A templated <see cref="Control"/> for displaying an <see cref="IObservableAlbumCollection"/>.
     /// </summary>
-    public sealed partial class TrackListControl : Control
+    /// <remarks>
+    /// This class temporarily only displays <see cref="ObservableAlbum"/>s.
+    /// </remarks>
+    public sealed partial class AlbumCollection : Control
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TrackListControl"/> class.
-        /// </summary>
-        public TrackListControl()
-        {
-            DefaultStyleKey = typeof(TrackListControl);
-        }
-
-        /// <summary>
-        /// The main list view that holds the tracks.
-        /// </summary>
-        public ListView? PART_ListView { get; set; }
-
         /// <inheritdoc />
         protected override void OnApplyTemplate()
         {
@@ -39,6 +30,12 @@ namespace StrixMusic.Shell.Default.Controls
 
         private void AttachHandlers()
         {
+            Unloaded += AlbumCollection_Unloaded;
+        }
+
+        private void AlbumCollection_Unloaded(object sender, RoutedEventArgs e)
+        {
+            DetachHandlers();
         }
 
         private void DetachHandlers()

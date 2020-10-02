@@ -44,15 +44,15 @@
                 </StackPanel>
             </Grid>
 
-            <local:TrackListControl Grid.Row="1"/>
+            <local:TrackCollection Grid.Row="1"/>
         </Grid>
     </DataTemplate>
 
-    <Style x:Key="DefaultAlbumViewControlStyle" TargetType="local:AlbumViewControl">
+    <Style x:Key="DefaultAlbumViewControlStyle" TargetType="local:AlbumView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:AlbumViewControl">
+                    <ControlTemplate TargetType="local:AlbumView">
                         <ContentControl ContentTemplate="{StaticResource DefaultAlbumViewTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -61,6 +61,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultAlbumViewControlStyle}" TargetType="local:AlbumViewControl"/>
+    <Style BasedOn="{StaticResource DefaultAlbumViewControlStyle}" TargetType="local:AlbumView"/>
 
 </ResourceDictionary>

@@ -4,9 +4,9 @@
     xmlns:local="using:StrixMusic.Shell.Default.Controls"
     xmlns:observables="using:StrixMusic.Sdk.Observables"
     xmlns:converters="using:StrixMusic.Converters"
-    x:Class="StrixMusic.Shell.Default.Styles.AlbumStyle">
+    x:Class="StrixMusic.Shell.Default.Styles.AlbumItemStyle">
 
-    <DataTemplate x:Key="DefaultAlbumTemplate" x:DataType="observables:ObservableAlbum">
+    <DataTemplate x:Key="DefaultAlbumItemTemplate" x:DataType="observables:ObservableAlbum">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -26,12 +26,12 @@
         </Grid>
     </DataTemplate>
     
-    <Style x:Key="DefaultAlbumControlStyle" TargetType="local:AlbumControl">
+    <Style x:Key="DefaultAlbumItemStyle" TargetType="local:AlbumItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:AlbumControl">
-                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumTemplate}"
+                    <ControlTemplate TargetType="local:AlbumItem">
+                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -39,6 +39,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultAlbumControlStyle}" TargetType="local:AlbumControl"/>
+    <Style BasedOn="{StaticResource DefaultAlbumItemStyle}" TargetType="local:AlbumItem"/>
 
 </ResourceDictionary>

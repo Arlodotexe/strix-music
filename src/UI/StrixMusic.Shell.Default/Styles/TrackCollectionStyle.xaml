@@ -4,23 +4,23 @@
     xmlns:local="using:StrixMusic.Shell.Default.Controls"
     xmlns:controls="using:StrixMusic.Shell.Default.Controls"
     xmlns:observables="using:StrixMusic.Sdk.Observables"
-    x:Class="StrixMusic.Shell.Default.Styles.TrackListStyle">
+    x:Class="StrixMusic.Shell.Default.Styles.TrackCollectionStyle">
 
     <DataTemplate x:Key="DefaultTrackListTemplate" x:DataType="observables:IObservableTrackCollection">
         <ListView ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}" Margin="32" HorizontalAlignment="Stretch">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <controls:TrackControl/>
+                    <controls:TrackItem />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
     </DataTemplate>
 
-    <Style x:Key="DefaultTrackListControlStyle" TargetType="local:TrackListControl">
+    <Style x:Key="DefaultTrackListControlStyle" TargetType="local:TrackCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:TrackListControl">
+                    <ControlTemplate TargetType="local:TrackCollection">
                         <ContentControl ContentTemplate="{StaticResource DefaultTrackListTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                     </ControlTemplate>
                 </Setter.Value>
@@ -28,6 +28,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultTrackListControlStyle}" TargetType="local:TrackListControl"/>
+    <Style BasedOn="{StaticResource DefaultTrackListControlStyle}" TargetType="local:TrackCollection"/>
 
 </ResourceDictionary>

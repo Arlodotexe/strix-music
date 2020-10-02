@@ -14,10 +14,10 @@
                     <TextBlock Text="Home"/>
                 </Pivot.Title>
                 <PivotItem Header="Songs">
-                    <local:TrackListControl />
+                    <local:TrackCollection />
                 </PivotItem>
                 <PivotItem Header="Albums">
-                    <local:PlayableCollectionListControl Collections="{x:Bind Library.Albums, Mode=OneWay}" PopulateMoreCollectionsCommand="{x:Bind Library.PopulateMoreAlbumsCommand}" />
+                    <local:AlbumCollection />
                 </PivotItem>
                 <PivotItem Header="Artists">
 

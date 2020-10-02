@@ -6,9 +6,9 @@
     xmlns:converters="using:StrixMusic.Converters"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    x:Class="StrixMusic.Shell.Strix.Styles.AlbumStyle">
+    x:Class="StrixMusic.Shell.Strix.Styles.AlbumItemStyle">
 
-    <DataTemplate x:Key="StrixAlbumTemplate" x:DataType="interfaces:IAlbum">
+    <DataTemplate x:Key="StrixAlbumItemTemplate" x:DataType="interfaces:IAlbum">
         <UserControl>
             <Grid Padding="24,16" Background="Transparent">
                 <interactivity:Interaction.Behaviors>
@@ -79,12 +79,12 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="StrixAlbumControlStyle" TargetType="default:AlbumControl">
+    <Style x:Key="StrixAlbumItemStyle" TargetType="default:AlbumItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:AlbumControl">
-                        <ContentControl ContentTemplate="{StaticResource StrixAlbumTemplate}"
+                    <ControlTemplate TargetType="default:AlbumItem">
+                        <ContentControl ContentTemplate="{StaticResource StrixAlbumItemTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -92,6 +92,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixAlbumControlStyle}" TargetType="default:AlbumControl"/>
+    <Style BasedOn="{StaticResource StrixAlbumItemStyle}" TargetType="default:AlbumItem"/>
 
 </ResourceDictionary>

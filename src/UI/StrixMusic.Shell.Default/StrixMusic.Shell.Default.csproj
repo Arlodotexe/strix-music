@@ -44,36 +44,36 @@
   <ItemGroup>
     <None Remove="Controls\Internal\Shell.xaml" />
     <None Remove="Resources.xaml" />
-    <None Remove="Styles\AlbumStyle.xaml" />
+    <None Remove="Styles\AlbumCollectionStyle.xaml" />
+    <None Remove="Styles\AlbumItemStyle.xaml" />
     <None Remove="Styles\AlbumViewStyle.xaml" />
     <None Remove="Styles\ArtistStyle.xaml" />
     <None Remove="Styles\ArtistViewStyle.xaml" />
     <None Remove="Styles\HomeStyle.xaml" />
     <None Remove="Styles\NowPlayingBarControl.xaml" />
     <None Remove="Styles\NowPlayingViewStyle.xaml" />
-    <None Remove="Styles\PlayableCollectionListStyle.xaml" />
     <None Remove="Styles\SearchViewStyle.xaml" />
     <None Remove="Styles\SettingsViewStyle.xaml" />
     <None Remove="Styles\ShellStyle.xaml" />
-    <None Remove="Styles\TrackListStyle.xaml" />
-    <None Remove="Styles\TrackStyle.xaml" />
+    <None Remove="Styles\TrackCollectionStyle.xaml" />
+    <None Remove="Styles\TrackItemStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="Controls\Internal\Shell.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
-    <UpToDateCheckInput Remove="Styles\AlbumStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingBarControl.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\PlayableCollectionListStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SearchViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ShellStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\TrackListStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\TrackStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\TrackCollectionStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
@@ -95,17 +95,17 @@
     <Compile Update="Styles\HomeStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\AlbumStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="Styles\AlbumItemStyle.xaml.cs">
+      <DependentUpon>AlbumItemStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Styles\PlayableCollectionListStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="Styles\AlbumCollectionStyle.xaml.cs">
+      <DependentUpon>AlbumCollectionStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Styles\TrackStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="Styles\TrackItemStyle.xaml.cs">
+      <DependentUpon>TrackItemStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Styles\TrackListStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="Styles\TrackCollectionStyle.xaml.cs">
+      <DependentUpon>TrackCollectionStyle.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -43,13 +43,13 @@
     <None Remove="Resources.xaml" />
     <None Remove="Resources\Brushes.xaml" />
     <None Remove="Resources\ButtonStyles.xaml" />
-    <None Remove="Styles\AlbumStyle.xaml" />
+    <None Remove="Styles\AlbumCollectionStyle.xaml" />
+    <None Remove="Styles\AlbumItemStyle.xaml" />
     <None Remove="Styles\AlbumViewStyle.xaml" />
     <None Remove="Styles\ArtistStyle.xaml" />
     <None Remove="Styles\ArtistViewStyle.xaml" />
     <None Remove="Styles\HomeStyle.xaml" />
     <None Remove="Styles\NowPlayingBarStyle.xaml" />
-    <None Remove="Styles\PlayableCollectionListStyle.xaml" />
     <None Remove="Styles\SettingsViewStyle.xaml" />
     <None Remove="Styles\ShellStyle.xaml" />
   </ItemGroup>
@@ -59,13 +59,13 @@
     <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Resources\Brushes.xaml" />
     <UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
-    <UpToDateCheckInput Remove="Styles\AlbumStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\PlayableCollectionListStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ShellStyle.xaml" />
   </ItemGroup>
@@ -82,14 +82,14 @@
     <Compile Update="Styles\AlbumViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\AlbumStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="Styles\AlbumItemStyle.xaml.cs">
+      <DependentUpon>AlbumItemStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Styles\HomeStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\PlayableCollectionListStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="Styles\AlbumCollectionStyle.xaml.cs">
+      <DependentUpon>AlbumCollectionStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Styles\SettingsViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>

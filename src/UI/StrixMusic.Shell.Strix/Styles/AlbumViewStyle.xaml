@@ -88,16 +88,16 @@
                     </StackPanel>
                 </Grid>
 
-                <default:TrackListControl Grid.Row="1"/>
+                <default:TrackCollection Grid.Row="1"/>
             </Grid>
         </UserControl>
     </DataTemplate>
     
-    <Style x:Key="StrixAlbumViewControlStyle" TargetType="default:AlbumViewControl">
+    <Style x:Key="StrixAlbumViewControlStyle" TargetType="default:AlbumView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:AlbumViewControl">
+                    <ControlTemplate TargetType="default:AlbumView">
                         <ContentControl ContentTemplate="{StaticResource StrixAlbumViewTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -106,6 +106,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixAlbumViewControlStyle}" TargetType="default:AlbumViewControl"/>
+    <Style BasedOn="{StaticResource StrixAlbumViewControlStyle}" TargetType="default:AlbumView"/>
 
 </ResourceDictionary>

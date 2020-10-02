@@ -6,18 +6,18 @@
     xmlns:styles="using:StrixMusic.Shell.Default.Styles">
     <ResourceDictionary.MergedDictionaries>
         <styles:HomeStyle/>
-        <styles:AlbumStyle/>
+        <styles:AlbumItemStyle/>
         <styles:AlbumViewStyle/>
         <ResourceDictionary Source="Styles/ArtistStyle.xaml"/>
         <ResourceDictionary Source="Styles/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
         <styles:NowPlayingViewStyle/>
-        <styles:PlayableCollectionListStyle/>
+        <styles:AlbumCollectionStyle/>
         <styles:SearchViewStyle/>
         <styles:SettingsViewStyle/>
         <styles:ShellStyle/>
-        <styles:TrackListStyle/>
-        <styles:TrackStyle/>
+        <styles:TrackCollectionStyle/>
+        <styles:TrackItemStyle/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="QuickActionButton" TargetType="Button">

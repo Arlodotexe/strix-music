@@ -128,13 +128,13 @@
 
                                 <Pivot Grid.Row="1">
                                     <PivotItem Header="Songs">
-                                        <local:TrackListControl/>
+                                        <local:TrackCollection/>
                                     </PivotItem>
                                     <PivotItem Header="Albums">
-                                        <local:PlayableCollectionListControl/>
+                                        <local:AlbumCollection/>
                                     </PivotItem>
                                     <PivotItem Header="Similar Artists">
-                                        <local:PlayableCollectionListControl/>
+                                        <local:AlbumCollection/>
                                     </PivotItem>
                                 </Pivot>
                             </Grid>

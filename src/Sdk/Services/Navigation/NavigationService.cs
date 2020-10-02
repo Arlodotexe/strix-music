@@ -5,11 +5,11 @@ using System.Linq;
 namespace StrixMusic.Sdk.Services.Navigation
 {
     /// <summary>
-    /// An <see cref="INavigationService{T}"/> implmentation.
+    /// An <see cref="INavigationService{T}"/> implementation.
     /// </summary>
     public class NavigationService<T> : INavigationService<T>
     {
-        private Dictionary<Type, T> _registeredPages = new Dictionary<Type, T>();
+        private readonly Dictionary<Type, T> _registeredPages = new Dictionary<Type, T>();
 
         /// <inheritdoc/>
         public event EventHandler<NavigateEventArgs<T>>? NavigationRequested;

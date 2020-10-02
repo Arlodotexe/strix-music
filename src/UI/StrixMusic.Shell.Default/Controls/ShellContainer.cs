@@ -1,5 +1,5 @@
-﻿using Windows.UI.Xaml;
-using StrixMusic.Sdk;
+﻿using StrixMusic.Sdk;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls

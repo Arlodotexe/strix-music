@@ -18,8 +18,8 @@
         <styles:SettingsViewStyle/>
         <!--<ResourceDictionary Source="Styles/TrackListStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Styles/TrackStyle.xaml"/>-->
-        <dstyles:TrackListStyle/>
-        <dstyles:TrackStyle/>
+        <dstyles:TrackCollectionStyle/>
+        <dstyles:TrackItemStyle/>
 
         <ResourceDictionary Source="Resources/Brushes.xaml"/>
         <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
