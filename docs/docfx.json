@@ -5,9 +5,8 @@
         {
           "files": [
             "src/Sdk/StrixMusic.Sdk.csproj",
-            "src/Cores/StrixMusic.Cores.MusicBrainz/StrixMusic.Cores.MusicBrainz.csproj",
-            "src/Libs/OwlCore/OwlCore.csproj",
-            "src/Libs/LauchPad/LaunchPad.csproj"
+            "src/Cores/StrixMusic.Core.MusicBrainz/StrixMusic.Core.MusicBrainz.csproj",
+            "src/Libs/OwlCore/OwlCore.csproj"
           ],
           "exclude": [
             "**/bin/**",
