@@ -37,7 +37,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             _musicBrainzClient = sourceCore.GetService<MusicBrainzClient>();
             _artistHelpersService = sourceCore.GetService<MusicBrainzArtistHelpersService>();
-            RelatedItems = new RelatedAlbumItems(sourceCore, release);
 
             TotalTracksCount = release.Media.Select(x => x.TrackCount).Sum();
 
