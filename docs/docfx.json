@@ -1,48 +1,48 @@
 {
-    "metadata": [
+  "metadata": [
+    {
+      "src": [
         {
-            "src": [
-                {
-                    "files": [
-                        "src/Sdk/StrixMusic.Sdk.csproj",
-                        "src/Cores/StrixMusic.Cores.Files/StrixMusic.Cores.Files.csproj",
-                        "src/Cores/StrixMusic.Cores.MusicBrainz/StrixMusic.Cores.MusicBrainz.csproj",
-                        "src/Libs/OwlCore/OwlCore.csproj",
-                        "src/Libs/LauchPad/LaunchPad.csproj"
-                    ],
-                    "exclude": [
-                        "../**/bin/**",
-                        "../**/obj/**",
-                        "/wwwroot/**"
-                    ]
-                }
-            ],
-            "dest": "docs/api"
+          "files": [
+            "src/Sdk/StrixMusic.Sdk.csproj",
+            "src/Cores/StrixMusic.Cores.MusicBrainz/StrixMusic.Cores.MusicBrainz.csproj",
+            "src/Libs/OwlCore/OwlCore.csproj",
+            "src/Libs/LauchPad/LaunchPad.csproj"
+          ],
+          "exclude": [
+            "**/bin/**",
+            "**/obj/**",
+            "/wwwroot/**"
+          ],
+          "src": "../"
         }
-    ],
-    "build": {
-        "content": [
-          {
-            "files": [
-              "api/**.yml",
-              "api/index.md"
-            ]
-          },
-          {
-            "files": [
-              "index.md",
-              "toc.yml",
-              "**.md"
-            ]
-          }
-        ],
-        "dest": "wwwroot",
-        "template": [
-            "default"
-        ],
-        "markdownEngineName": "markdig",
-        "noLangKeyword": false,
-        "cleanupCacheHistory": false,
-        "disableGitFeatures": false
+      ],
+      "dest": "api"
     }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "api/**.yml",
+          "api/index.md"
+        ]
+      },
+      {
+        "files": [
+          "index.md",
+          "toc.yml",
+          "**.md"
+        ]
+      }
+    ],
+    "dest": "wwwroot",
+    "template": [
+      "default"
+    ],
+    "markdownEngineName": "markdig",
+    "noLangKeyword": false,
+    "cleanupCacheHistory": false,
+    "disableGitFeatures": false
+  }
 }
