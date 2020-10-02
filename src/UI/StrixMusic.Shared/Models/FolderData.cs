@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Uno.Extensions;
 using StrixMusic.Sdk.Interfaces.Storage;
+using Uno.Extensions;
 using Windows.Storage;
 using CreationCollisionOption = StrixMusic.Sdk.Interfaces.Storage.CreationCollisionOption;
 

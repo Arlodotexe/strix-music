@@ -228,13 +228,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public Task AddTrackAsync(ITrack track, int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         private DateTime? CreateReleaseDate(string? musicBrainzDate)
