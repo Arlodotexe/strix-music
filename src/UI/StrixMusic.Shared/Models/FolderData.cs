@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Interfaces.Storage;
 using Uno.Extensions;
+using StrixMusic.Sdk.Interfaces.Storage;
 using Windows.Storage;
 using CreationCollisionOption = StrixMusic.Sdk.Interfaces.Storage.CreationCollisionOption;
 
@@ -16,7 +16,7 @@ namespace StrixMusic.Shared.Models
         /// <summary>
         /// The underlying <see cref="StorageFolder"/> instance in use.
         /// </summary>
-        internal StorageFolder StorageFolder { get; }
+        internal StorageFolder StorageFolder { get; private set; }
 
         private readonly IList<IFileData> _files = new List<IFileData>();
 
@@ -112,6 +112,19 @@ namespace StrixMusic.Shared.Models
             var storageFolder = await StorageFolder.CreateFolderAsync(desiredName, (Windows.Storage.CreationCollisionOption)options);
 
             return new FolderData(storageFolder);
+        }
+
+        /// <inheritdoc />
+        public async Task EnsureExists()
+        {
+            try
+            {
+                _ = StorageFolder.GetFolderFromPathAsync(StorageFolder.Path);
+            }
+            catch
+            {
+                StorageFolder = await StorageFolder.CreateFolderAsync(StorageFolder.Name);
+            }
         }
     }
 }

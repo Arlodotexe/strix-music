@@ -4,39 +4,42 @@ using System.Threading.Tasks;
 using StrixMusic.Sdk.Interfaces.Storage;
 using StrixMusic.Shared.Models;
 using Windows.Storage;
+using CreationCollisionOption = StrixMusic.Sdk.Interfaces.Storage.CreationCollisionOption;
 
 namespace StrixMusic.Sdk.Services.StorageService
 {
     /// <inheritdoc/>
     public class FileSystemService : IFileSystemService
     {
-        /// <inheritdoc/>
-        public IFolderData RootFolder => new FolderData(ApplicationData.Current.LocalFolder);
+        private readonly List<IFolderData> _registeredFolders;
 
-        /// <inheritdoc/>
-        public FileSystemService(StorageFolder rootFolder)
+        /// <summary>
+        /// Constructs a new <see cref="FileSystemService"/>.
+        /// </summary>
+        public FileSystemService()
         {
+            _registeredFolders = new List<IFolderData>();
         }
 
-        /// <inheritdoc/>
-        public event EventHandler<IFolderData>? FolderScanStarted;
+        /// <summary>
+        /// Constructs a new <see cref="FileSystemService"/>.
+        /// </summary>
+        public FileSystemService(StorageFolder rootFolder)
+        {
+            _registeredFolders = new List<IFolderData>();
 
-        /// <inheritdoc/>
-        public event EventHandler<IFolderData>? FolderDeepScanCompleted;
+            RootFolder = new FolderData(rootFolder);
+        }
 
-        /// <inheritdoc/>
-        public event EventHandler<IFolderData>? FolderScanCompleted;
-
-        /// <inheritdoc/>
-        public event EventHandler<FileScanStateEventArgs>? FileScanStarted;
-
-        /// <inheritdoc/>
-        public event EventHandler<FileScanStateEventArgs>? FileScanCompleted;
+        /// <summary>
+        /// Defines the root folder where new files and folders are created.
+        /// </summary>
+        public IFolderData RootFolder { get; } = new FolderData(ApplicationData.Current.LocalFolder);
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IFolderData?>> GetPickedFolders()
         {
-            throw new NotImplementedException();
+            return Task.FromResult<IReadOnlyList<IFolderData?>>(_registeredFolders.ToArray());
         }
 
         /// <inheritdoc/>
@@ -52,27 +55,44 @@ namespace StrixMusic.Sdk.Services.StorageService
         }
 
         /// <inheritdoc/>
-        public Task<bool> FileExistsAsync(string path)
+        public async Task<bool> FileExistsAsync(string path)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await StorageFile.GetFileFromPathAsync(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /// <inheritdoc/>
-        public Task<bool> DirectoryExistsAsync(string path)
+        public async Task<bool> DirectoryExistsAsync(string path)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await StorageFile.GetFileFromPathAsync(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /// <inheritdoc/>
-        public Task<IFolderData> CreateDirectoryAsync(string folderName)
+        public async Task<IFolderData> CreateDirectoryAsync(string folderName)
         {
-            throw new NotImplementedException();
+            var folderData = await RootFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
+            return folderData;
         }
 
         /// <inheritdoc/>
-        public Task Init()
+        public async Task Init()
         {
-            throw new NotImplementedException();
+            await RootFolder.EnsureExists();
         }
     }
 }

@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
-    <PackageReference Include="MusicBrainzAPI" Version="2.2.0-dev-2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
@@ -41,5 +40,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Hqub.MusicBrainz.API">
+      <HintPath>Dependencies\Hqub.MusicBrainz.API.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

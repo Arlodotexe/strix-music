@@ -3,8 +3,12 @@
   <assembly fullname="Uno.UI" />
 
   <assembly fullname="System.Core">
-	<!-- This is required by JSon.NET and any expression.Compile caller -->
-	<type fullname="System.Linq.Expressions*" />
+    <!-- This is required by JSon.NET and any expression.Compile caller -->
+    <type fullname="System.Linq.Expressions*" />
+  </assembly>
+
+  <assembly fullname="Hqub.MusicBrainz.API">
+    <type fullname="Hqub.MusicBrainz.API*" />
   </assembly>
 
   <assembly fullname="StrixMusic.Sdk">

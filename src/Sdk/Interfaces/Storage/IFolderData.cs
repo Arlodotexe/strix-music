@@ -72,5 +72,12 @@ namespace StrixMusic.Sdk.Interfaces.Storage
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task Delete();
+
+        /// <summary>
+        /// Calls the underlying filesystem to ensure that the folder exists.
+        /// </summary>
+        /// <remarks>This was created because the local cache folder does not exist by default on WebAssembly.</remarks>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task EnsureExists();
     }
 }

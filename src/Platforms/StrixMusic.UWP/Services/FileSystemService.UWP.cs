@@ -128,7 +128,7 @@ namespace StrixMusic.Sdk.Services.StorageService
         /// <inheritdoc />
         public async Task Init()
         {
-
+            await RootFolder.EnsureExists();
 
             var persistentAccessEntries = StorageApplicationPermissions.FutureAccessList.Entries;
 

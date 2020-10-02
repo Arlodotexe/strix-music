@@ -50,6 +50,10 @@ namespace StrixMusic
                 var textStorageService = new TextStorageService();
                 var settingsService = new DefaultSettingsService(textStorageService);
                 var cacheFileSystemService = new FileSystemService(ApplicationData.Current.LocalCacheFolder);
+                var fileSystemService = new FileSystemService();
+
+                _ = cacheFileSystemService.Init();
+                _ = fileSystemService.Init();
 
                 contextualServiceLocator.Register<IFileSystemService>(cacheFileSystemService, typeof(CacheServiceBase));
 
@@ -59,7 +63,7 @@ namespace StrixMusic
                 services.AddSingleton<CacheServiceBase, DefaultCacheService>();
                 services.AddSingleton<ISharedFactory, SharedFactory>();
                 services.AddSingleton<ISuperShellService, SuperShellService>();
-                services.AddSingleton<IFileSystemService, FileSystemService>();
+                services.AddSingleton<IFileSystemService>(fileSystemService);
 
                 var coreRegistry = await settingsService.GetValue<Dictionary<string, Type>>(nameof(SettingsKeys.CoreRegistry));
 

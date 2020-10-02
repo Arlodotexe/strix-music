@@ -20,16 +20,6 @@ namespace StrixMusic.Core.MusicBrainz.Utils
         /// <summary>
         /// Initializes a new instance of the <see cref="FileRequestCache"/> class.
         /// </summary>
-        public FileRequestCache()
-        {
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            _path = Path.Combine(appData, "MusicBrainz", "Cache");
-            Cleanup();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileRequestCache"/> class.
-        /// </summary>
         /// <param name="path"></param>
         public FileRequestCache(string path)
         {
@@ -75,6 +65,9 @@ namespace StrixMusic.Core.MusicBrainz.Utils
         /// </summary>
         public void Cleanup()
         {
+            if (!Directory.Exists(_path))
+                return;
+
             foreach (var file in Directory.EnumerateFiles(_path, "*.mb-cache"))
             {
                 if (DateTime.Now - CacheEntry.GetTimestamp(file) > ExpiresIn)
@@ -89,6 +82,9 @@ namespace StrixMusic.Core.MusicBrainz.Utils
         /// </summary>
         public void Clear()
         {
+            if (!Directory.Exists(_path))
+                return;
+
             foreach (var file in Directory.EnumerateFiles(_path, "*.mb-cache"))
             {
                 File.Delete(file);
