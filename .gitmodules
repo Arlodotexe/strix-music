@@ -1,6 +1,3 @@
 [submodule "src/OwlCore"]
 	path = src/OwlCore
 	url = https://dev.azure.com/arloappx/_git/OwlCore
-[submodule "src/Libs/MusicBrainz"]
-	path = src/Libs/MusicBrainz
-	url = https://github.com/Arlodotexe/MusicBrainz.git
