@@ -14,7 +14,7 @@
                     <TextBlock Text="Home"/>
                 </Pivot.Title>
                 <PivotItem Header="Songs">
-                    <local:TrackListControl Tracks="{x:Bind Library.Tracks, Mode=OneWay}" PopulateMoreTracksCommand="{x:Bind Library.PopulateMoreTracksCommand}" />
+                    <local:TrackListControl />
                 </PivotItem>
                 <PivotItem Header="Albums">
                     <local:PlayableCollectionListControl Collections="{x:Bind Library.Albums, Mode=OneWay}" PopulateMoreCollectionsCommand="{x:Bind Library.PopulateMoreAlbumsCommand}" />

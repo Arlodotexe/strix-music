@@ -19,7 +19,7 @@
                     <PivotItem Header="Overview">
                     </PivotItem>
                     <PivotItem Header="Tracks">
-                        <default:TrackListControl Tracks="{x:Bind Library.Tracks, Mode=OneWay}" PopulateMoreTracksCommand="{x:Bind Library.PopulateMoreTracksCommand}"/>
+                        <default:TrackListControl DataContext="{x:Bind Library}" />
                     </PivotItem>
                     <PivotItem Header="Albums">
                         <default:PlayableCollectionListControl Collections="{x:Bind Library.Albums, Mode=OneWay}" PopulateMoreCollectionsCommand="{x:Bind Library.PopulateMoreAlbumsCommand}" />

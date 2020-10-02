@@ -74,6 +74,7 @@ namespace StrixMusic.Shell.Default.Controls
             // and the visual tree might be incomplete as of Loaded.
             base.OnApplyTemplate();
 
+            // TODO: We don't need to do this anymore, we can bind to collection directly in XAML
             PART_GridView = GetTemplateChild(nameof(PART_GridView)) as GridView ??
                             throw new UIElementNotFoundException(nameof(PART_GridView));
 

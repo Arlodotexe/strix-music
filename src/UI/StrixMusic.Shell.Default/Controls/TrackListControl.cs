@@ -21,42 +21,6 @@ namespace StrixMusic.Shell.Default.Controls
         }
 
         /// <summary>
-        /// The backing DependencyProperty for <see cref="PopulateMoreTracksCommand"/>.
-        /// </summary>
-        private static readonly DependencyProperty LoadMoreTracksCommandProperty = DependencyProperty.Register(
-            nameof(PopulateMoreTracksCommand),
-            typeof(IAsyncRelayCommand<int>),
-            typeof(TrackListControl),
-            new PropertyMetadata(default(IAsyncRelayCommand<int>)));
-
-        /// <summary>
-        /// The command to fire when more tracks should be loaded.
-        /// </summary>
-        public IAsyncRelayCommand<int> PopulateMoreTracksCommand
-        {
-            get => (IAsyncRelayCommand<int>)GetValue(LoadMoreTracksCommandProperty);
-            set => SetValue(LoadMoreTracksCommandProperty, value);
-        }
-
-        /// <summary>
-        /// The backing DependencyProperty for <see cref="Tracks"/>.
-        /// </summary>
-        public static readonly DependencyProperty TracksProperty = DependencyProperty.Register(
-            nameof(Tracks),
-            typeof(SynchronizedObservableCollection<ObservableTrack>),
-            typeof(TrackListControl),
-            new PropertyMetadata(default(SynchronizedObservableCollection<ObservableTrack>)));
-
-        /// <summary>
-        /// The tracks for this control.
-        /// </summary>
-        public SynchronizedObservableCollection<ObservableTrack> Tracks
-        {
-            get => (SynchronizedObservableCollection<ObservableTrack>)GetValue(TracksProperty);
-            set => SetValue(TracksProperty, value);
-        }
-
-        /// <summary>
         /// The main list view that holds the tracks.
         /// </summary>
         public ListView? PART_ListView { get; set; }
@@ -69,12 +33,6 @@ namespace StrixMusic.Shell.Default.Controls
             // The Loaded event might occur before the template is applied,
             // and the visual tree might be incomplete as of Loaded.
             base.OnApplyTemplate();
-
-            PART_ListView = GetTemplateChild(nameof(PART_ListView)) as ListView ??
-                            throw new UIElementNotFoundException(nameof(PART_ListView));
-
-            // This is really, really not great
-            PART_ListView.ItemsSource = Tracks;
 
             AttachHandlers();
         }
