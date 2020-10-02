@@ -13,7 +13,7 @@ namespace OwlCore.Extensions
         /// </summary>
         /// <param name="name">The three letter ISO 636-3 language name.</param>
         /// <returns>The corresponding <see cref="CultureInfo"/>, or <see langword="null"/> if not found.</returns>
-        public static CultureInfo? FromIso636_3(string name)
+        public static CultureInfo? FromIso636_3(string? name)
         {
             if (string.IsNullOrEmpty(name))
             {

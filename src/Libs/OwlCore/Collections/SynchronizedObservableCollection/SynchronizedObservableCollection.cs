@@ -39,7 +39,7 @@ namespace OwlCore.Collections
         /// <param name="collection">The collection from which the elements are copied.</param>
         /// <exception cref="T:System.ArgumentNullException">The <paramref name="collection" /> parameter cannot be null.</exception>
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public SynchronizedObservableCollection(IEnumerable<T> collection) : this(collection, GetCurrentSynchronizationContext())
+        public SynchronizedObservableCollection(IEnumerable<T>? collection) : this(collection, GetCurrentSynchronizationContext())
         {
         }
 
@@ -56,14 +56,14 @@ namespace OwlCore.Collections
         /// <exception cref="T:System.ArgumentNullException">The <paramref name="collection" /> parameter cannot be null.</exception>
         /// <exception cref="T:System.ArgumentNullException">The <paramref name="context" /> parameter cannot be null.</exception>
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public SynchronizedObservableCollection(IEnumerable<T> collection, SynchronizationContext context)
+        public SynchronizedObservableCollection(IEnumerable<T>? collection, SynchronizationContext context)
         {
             Ensure.IsNotNull(nameof(collection), collection);
             Ensure.IsNotNull(nameof(context), context);
 
             _context = context;
 
-            foreach (var item in collection)
+            foreach (var item in collection ?? Array.Empty<T>())
             {
                 _items.Add(item);
             }
