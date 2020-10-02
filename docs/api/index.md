@@ -1,4 +1,4 @@
-# StrixMusic
+# Strix Music
 
 Select a namespace from the left to start browsing documentation.
 

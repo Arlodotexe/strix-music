@@ -1,21 +1,18 @@
 # Strix Music v2 documentation
 
-## Overview
-Strix Music is a free and open source UWP app that is supercharged by the [Uno Platform](https://platform.uno/), which allows us to target non-Windows platforms such as Android and the Web.
+Strix Music is a free and open source UWP app, supercharged by the [Uno Platform](https://platform.uno/) to run cross-platform.
 
 ---
 
-## Cores
+### Cores
+**A "Core" is how the app communicates with a service provider.**
 
-A "Core" is how Strix Music communicates with a service provider. 
-
-The Sdk provides an abstraction layer between the Shells and the Cores. This means if you want to add support for an arbitrary service provider, all you need to do is use an libary or SDK for that provider to create a Core. The app does the rest!
+Strix Music provides a common abstraction layer across all cores, which is consumed by a Shell. In theory, Strix supports any arbitrary music provider. All you need is a libary or SDK, and the know-how. Create a core, and the app does the rest!
 
 ---
 
-## Shells
-
-A "Shell" is how the user sees and interacts with the app. It deals with the abstraction layer created by the Strix Music Sdk to display the various Cores the user has configured.
+### Shells
+**A "Shell" is how the user sees and interacts with the app.**. It deals with the abstraction layer created by the Strix Music Sdk to display the various Cores the user has configured.
 
 Creating a shell can be an arduious task, but thanks to the power of XAML's templating system, you can speed up development by using our [Default Controls]()
 
