@@ -7,7 +7,9 @@ using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// A MusicBrainz implementation of <see cref="IPlayableCollectionGroup"/>.
+    /// </summary>
     public abstract class MusicBrainzCollectionGroupBase : IPlayableCollectionGroup
     {
         /// <summary>

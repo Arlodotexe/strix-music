@@ -12,7 +12,7 @@ using StrixMusic.Sdk.Interfaces;
 namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <summary>
-    /// The lists of tracks in the dummy core's library.
+    /// A MusicBrainz implementation of <see cref="ILibrary"/>.
     /// </summary>
     public class MusicBrainzLibrary : MusicBrainzCollectionGroupBase, ILibrary
     {

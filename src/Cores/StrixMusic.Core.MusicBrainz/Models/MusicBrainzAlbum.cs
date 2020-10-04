@@ -14,7 +14,9 @@ using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
-    /// <inheritdoc cref="IAlbum"/>
+    /// <summary>
+    /// A MusicBrainz implementation of <see cref="IAlbum"/>.
+    /// </summary>
     public class MusicBrainzAlbum : IAlbum
     {
         private readonly MusicBrainzClient _musicBrainzClient;

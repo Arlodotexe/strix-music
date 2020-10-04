@@ -10,7 +10,7 @@ using StrixMusic.Sdk.Interfaces;
 namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <summary>
-    /// MockCore config
+    /// Configures the MusicBrainz core.
     /// </summary>
     public class MusicBrainzCoreConfig : ICoreConfig
     {

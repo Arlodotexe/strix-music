@@ -9,7 +9,9 @@ using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
-    /// <inheritdoc cref="ISearchResults" />
+    /// <summary>
+    /// A MusicBrainz implementation of <see cref="ISearchResults"/>.
+    /// </summary>
     public class MusicBrainzSearchResults : MusicBrainzCollectionGroupBase, ISearchResults
     {
         private readonly MusicBrainzClient _musicBrainzClient;
