@@ -104,11 +104,11 @@ namespace StrixMusic.Sdk.Observables
         /// <inheritdoc />
         public Task<bool> IsAddPinSupported(int index) => _core.IsAddPinSupported(index);
 
+        /// <inheritdoc />
+        public Task<bool> IsRemovePinSupported(int index) => _core.IsRemovePinSupported(index);
+
         /// <inheritdoc/>
         public IAsyncEnumerable<object?> GetContextById(string? id) => _core.GetContextById(id);
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<bool> IsRemovePinSupportedMap => _core.IsRemovePinSupportedMap;
 
         /// <inheritdoc cref="ICore.CoreStateChanged" />
         public event EventHandler<CoreState>? CoreStateChanged

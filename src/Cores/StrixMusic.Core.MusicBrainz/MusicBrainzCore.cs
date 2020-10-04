@@ -76,9 +76,6 @@ namespace StrixMusic.Core.MusicBrainz
         public SynchronizedObservableCollection<IPlayable> Pins { get; } = new SynchronizedObservableCollection<IPlayable>();
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<bool> IsRemovePinSupportedMap { get; } = new SynchronizedObservableCollection<bool>();
-
-        /// <inheritdoc/>
         public event EventHandler<CoreState>? CoreStateChanged;
 
         /// <inheritdoc/>
@@ -189,6 +186,12 @@ namespace StrixMusic.Core.MusicBrainz
 
         /// <inheritdoc/>
         public Task<bool> IsAddPinSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsRemovePinSupported(int index)
         {
             return Task.FromResult(false);
         }

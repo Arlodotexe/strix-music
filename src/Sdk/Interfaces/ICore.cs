@@ -49,11 +49,6 @@ namespace StrixMusic.Sdk.Interfaces
         public SynchronizedObservableCollection<IPlayable> Pins { get; }
 
         /// <summary>
-        /// A collection that maps (by index) to the items in <see cref="Pins"/>. The bool at each index tells you if removing the <see cref="IPlayable"/> is supported.
-        /// </summary>
-        public SynchronizedObservableCollection<bool> IsRemovePinSupportedMap { get; }
-
-        /// <summary>
         /// Gets the recently played items for this core.
         /// </summary>
         public IRecentlyPlayed RecentlyPlayed { get; }
@@ -88,6 +83,12 @@ namespace StrixMusic.Sdk.Interfaces
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IPlayable"/> can be added.</returns>
         Task<bool> IsAddPinSupported(int index);
+
+        /// <summary>
+        /// Checks if the backend supports removing an <see cref="IPlayable"/> from a specific position in <see cref="Pins"/>.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IPlayable"/> can be removed.</returns>
+        Task<bool> IsRemovePinSupported(int index);
 
         /// <summary>
         /// Gets the object against a context.
