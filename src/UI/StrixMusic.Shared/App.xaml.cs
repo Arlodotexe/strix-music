@@ -116,6 +116,8 @@ namespace StrixMusic
 
             if (e.PrelaunchActivated == false)
             {
+                TryEnablePrelaunch();
+
                 if (rootFrame.Content == null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,
@@ -201,6 +203,18 @@ namespace StrixMusic
 
             // TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        /// <summary>
+        /// Encapsulates the call to CoreApplication.EnablePrelaunch() so that the JIT
+        /// won't encounter that call (and prevent the app from running when it doesn't
+        /// find it), unless this method gets called. This method should only
+        /// be called when the caller determines that we are running on a system that
+        /// supports CoreApplication.EnablePrelaunch().
+        /// </summary>
+        private void TryEnablePrelaunch()
+        {
+            Windows.ApplicationModel.Core.CoreApplication.EnablePrelaunch(true);
         }
     }
 }
