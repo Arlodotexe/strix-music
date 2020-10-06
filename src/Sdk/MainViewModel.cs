@@ -43,7 +43,7 @@ namespace StrixMusic.Sdk
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task InitializeCores()
         {
-            await LoadedCores.InParallel(x => Task.Run(x.DisposeAsync));
+            await LoadedCores.InParallel(x => x.DisposeAsync().AsTask());
 
             // These collections should be empty, no matter how many times the method is called.
             Devices.Clear();
@@ -100,7 +100,7 @@ namespace StrixMusic.Sdk
         /// <returns>The merged search results.</returns>
         public async Task<ISearchResults> GlobalSearchResultsAsync(string query)
         {
-            var searchResults = await _cores.InParallel(core => Task.Run(() => core.GetSearchResultsAsync(query)));
+            var searchResults = await _cores.InParallel(core => core.GetSearchResultsAsync(query));
 
             var merged = new MergedSearchResults(searchResults);
 
