@@ -25,7 +25,8 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
             {
                 VisualStateManager.GoToState(RootControl, "Main", true);
                 VisualStateManager.GoToState(RootControl, "SecondaryHover", true);
-            } else
+            }
+            else
             {
                 VisualStateManager.GoToState(RootControl, "Secondary", true);
                 VisualStateManager.GoToState(RootControl, "MainHover", true);
