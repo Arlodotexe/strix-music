@@ -1,6 +1,5 @@
-﻿using StrixMusic.Sdk.Interfaces.Storage;
-
-namespace StrixMusic.Sdk.Services.StorageService
+﻿
+namespace OwlCore.AbstractStorage
 {
     /// <summary>
     /// Event args for the file scanning related events.

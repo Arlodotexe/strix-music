@@ -1,6 +1,6 @@
 ﻿using System;
 using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Services.StorageService;
+using OwlCore.AbstractStorage;
 
 namespace StrixMusic.Shell.ZuneDesktop.Settings
 {

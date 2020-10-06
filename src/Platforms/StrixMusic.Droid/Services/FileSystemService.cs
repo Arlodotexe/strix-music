@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Interfaces.Storage;
 using StrixMusic.Shared.Models;
 using Windows.Storage;
 
-namespace StrixMusic.Sdk.Services.StorageService
+// ReSharper disable once CheckNamespace
+namespace OwlCore.AbstractStorage
 {
     /// <inheritdoc/>
     public class FileSystemService : IFileSystemService

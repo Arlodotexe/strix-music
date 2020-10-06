@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.Models;
-using StrixMusic.Sdk.Interfaces.Storage;
-using StrixMusic.Sdk.Models.Storage;
+using OwlCore.AbstractStorage;
 using Windows.Storage;
 
 namespace StrixMusic.Shared.Models
@@ -25,6 +21,7 @@ namespace StrixMusic.Shared.Models
         public FileData(StorageFile storageFile)
         {
             StorageFile = storageFile;
+            Properties = new FileDataProperties(storageFile);
         }
 
         /// <inheritdoc/>
@@ -40,7 +37,7 @@ namespace StrixMusic.Shared.Models
         public string FileExtension => StorageFile.FileType;
 
         /// <inheritdoc/>
-        public IMusicFileProperties MusicProperties { get; set; } = new MusicFileProperties();
+        public IFileDataProperties Properties { get; set; }
 
         /// <inheritdoc/>
         public async Task<IFolderData> GetParentAsync()
@@ -54,39 +51,6 @@ namespace StrixMusic.Shared.Models
         public async Task Delete()
         {
             await StorageFile.DeleteAsync();
-        }
-
-        /// <summary>
-        /// Populates the <see cref="MusicProperties"/>.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task ScanMediaDataAsync()
-        {
-            Debug.WriteLine($"Scanning media for {Name}");
-
-            var storageFileMusicProps = await StorageFile.Properties.GetMusicPropertiesAsync();
-
-            var musicFileProps = new MusicFileProperties()
-            {
-                Album = storageFileMusicProps.Album,
-                AlbumArtist = storageFileMusicProps.AlbumArtist,
-                Artist = storageFileMusicProps.Artist,
-                Bitrate = storageFileMusicProps.Bitrate,
-                Composers = storageFileMusicProps.Composers.ToArray(),
-                Conductors = storageFileMusicProps.Conductors.ToArray(),
-                Duration = storageFileMusicProps.Duration,
-                Genre = storageFileMusicProps.Genre.ToArray(),
-                Producers = storageFileMusicProps.Producers.ToArray(),
-                Publisher = storageFileMusicProps.Publisher,
-                Rating = storageFileMusicProps.Rating,
-                Subtitle = storageFileMusicProps.Subtitle,
-                Title = storageFileMusicProps.Title,
-                TrackNumber = storageFileMusicProps.TrackNumber,
-                Writers = storageFileMusicProps.Writers.ToArray(),
-                Year = storageFileMusicProps.Year,
-            };
-
-            MusicProperties = musicFileProps;
         }
 
         /// <inheritdoc />

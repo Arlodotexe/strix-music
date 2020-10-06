@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.AbstractStorage;
 using OwlCore.Services;
 using StrixMusic.Core.MusicBrainz;
 using StrixMusic.Sdk;

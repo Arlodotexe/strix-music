@@ -3,7 +3,7 @@
 namespace StrixMusic.Sdk.Services.StorageService
 {
     /// <summary>
-    /// The <see langword="interface"/> to handle storing and retreiving data.
+    /// The <see langword="interface"/> to handle storing and retrieving data.
     /// </summary>
     public interface ITextStorageService
     {

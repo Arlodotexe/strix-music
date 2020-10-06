@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.AbstractStorage;
 using OwlCore.Services;
-using StrixMusic.Sdk.Interfaces.Storage;
 
 namespace StrixMusic.Sdk.Services.StorageService
 {

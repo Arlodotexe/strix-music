@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Sdk.Interfaces.Storage
+namespace OwlCore.AbstractStorage
 {
     /// <summary>
     /// Holds information about a file
@@ -29,8 +28,8 @@ namespace StrixMusic.Sdk.Interfaces.Storage
         /// </summary>
         public string FileExtension { get; }
 
-        /// <inheritdoc cref="IMusicFileProperties"/>
-        public IMusicFileProperties MusicProperties { get; set; }
+        /// <inheritdoc cref="IFileDataProperties"/>
+        public IFileDataProperties Properties { get; set; }
 
         /// <summary>
         /// The parent folder that contains this file.
@@ -43,12 +42,6 @@ namespace StrixMusic.Sdk.Interfaces.Storage
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is a stream to the file.</returns>
         public Task<Stream> GetStreamAsync();
-
-        /// <summary>
-        /// Populates the <see cref="MusicProperties"/>.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task ScanMediaDataAsync();
 
         /// <summary>
         /// Deletes the file.

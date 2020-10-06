@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Interfaces.Storage;
-using Uno.Extensions;
+using OwlCore.AbstractStorage;
 using Windows.Storage;
-using CreationCollisionOption = StrixMusic.Sdk.Interfaces.Storage.CreationCollisionOption;
+using CreationCollisionOption = OwlCore.AbstractStorage.CreationCollisionOption;
 
 namespace StrixMusic.Shared.Models
 {
@@ -17,10 +15,6 @@ namespace StrixMusic.Shared.Models
         /// The underlying <see cref="StorageFolder"/> instance in use.
         /// </summary>
         internal StorageFolder StorageFolder { get; private set; }
-
-        private readonly IList<IFileData> _files = new List<IFileData>();
-
-        private readonly IList<IFolderData> _folders = new List<IFolderData>();
 
         /// <summary>
         /// Constructs a new instance of <see cref="IFolderData"/>.
@@ -36,59 +30,14 @@ namespace StrixMusic.Shared.Models
         /// <inheritdoc/>
         public string Path => StorageFolder.Path;
 
-        /// <inheritdoc />
-        public IReadOnlyList<IFileData> Files => _files.ToArray();
-
-        /// <inheritdoc />
-        public IReadOnlyList<IFolderData> Folders => _folders.ToArray();
-
-        /// <inheritdoc />
-        public int TotalFileCount { get; private set; }
-
         /// <inheritdoc/>
-        public async Task ScanAsync()
+        public Task<IEnumerable<IFileData>> GetFilesAsync()
         {
-            Debug.WriteLine($"Scanning folder {Name}");
-
-            var files = await StorageFolder.GetFilesAsync();
-            TotalFileCount = files.Count;
-
-            var filesData = files.Select(x => new FileData(x));
-            _files.AddRange(filesData);
-
-            var folders = await StorageFolder.GetFoldersAsync();
-            var foldersData = folders.Select(x => new FolderData(x));
-            _folders.AddRange(foldersData);
+            throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
-        public async Task DeepScanAsync()
-        {
-            Debug.WriteLine($"Deep scanning folder {Name}");
-
-            if (!Folders.Any())
-                await ScanAsync();
-
-            foreach (var file in Files)
-            {
-                await file.ScanMediaDataAsync();
-            }
-
-            foreach (var folder in Folders)
-            {
-                await folder.DeepScanAsync();
-            }
-
-            Debug.WriteLine($"Deep scan finished for folder {Name}");
-        }
-
-        /// <inheritdoc/>
-        public async Task Delete()
-        {
-            await StorageFolder.DeleteAsync();
-            _files.Clear();
-            _folders.Clear();
-        }
+        /// <inheritdoc />
+        public Task DeleteAsync() => StorageFolder.DeleteAsync().AsTask();
 
         /// <inheritdoc/>
         public async Task<IFolderData> GetParentAsync()
@@ -112,6 +61,47 @@ namespace StrixMusic.Shared.Models
             var storageFolder = await StorageFolder.CreateFolderAsync(desiredName, (Windows.Storage.CreationCollisionOption)options);
 
             return new FolderData(storageFolder);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IFileData> CreateFileAsync(string desiredName)
+        {
+            var storageFile = await StorageFolder.CreateFileAsync(desiredName);
+
+            return new FileData(storageFile);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IFileData> CreateFileAsync(string desiredName, CreationCollisionOption options)
+        {
+            var storageFile = await StorageFolder.CreateFileAsync(desiredName, (Windows.Storage.CreationCollisionOption)options);
+
+            return new FileData(storageFile);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IFolderData?> GetFolderAsync(string name)
+        {
+            var folderData = await StorageFolder.GetFolderAsync(name);
+
+            return new FolderData(folderData);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IFileData?> GetFileAsync(string name)
+        {
+            var fileData = await StorageFolder.GetFileAsync(name);
+
+            return new FileData(fileData);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IEnumerable<IFolderData>> GetFoldersAsync()
+        {
+            // TODO
+            var foldersData = await StorageFolder.GetFoldersAsync();
+
+            return foldersData.Select(x => new FolderData(x));
         }
 
         /// <inheritdoc />

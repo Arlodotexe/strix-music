@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.Models;
-using StrixMusic.Sdk.Interfaces.Storage;
 using StrixMusic.Shared.Models;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
-using CreationCollisionOption = StrixMusic.Sdk.Interfaces.Storage.CreationCollisionOption;
 
-// ReSharper disable CheckNamespace
-namespace StrixMusic.Sdk.Services.StorageService
+// ReSharper disable once CheckNamespace
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+namespace OwlCore.AbstractStorage
 {
     /// <inheritdoc cref="IFileSystemService" />
     public sealed class FileSystemService : IFileSystemService
@@ -148,3 +146,5 @@ namespace StrixMusic.Sdk.Services.StorageService
         }
     }
 }
+
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.

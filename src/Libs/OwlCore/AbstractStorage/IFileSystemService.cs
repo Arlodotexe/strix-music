@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Interfaces.Storage;
 
-namespace StrixMusic.Sdk.Services.StorageService
+namespace OwlCore.AbstractStorage
 {
     /// <summary>
     /// Provides safe interactions with the file system.
