@@ -14,10 +14,10 @@
                     <TextBlock Text="Home"/>
                 </Pivot.Title>
                 <PivotItem Header="Songs">
-                    <local:TrackCollection />
+                    <local:TrackCollection DataContext="{x:Bind Library}" />
                 </PivotItem>
                 <PivotItem Header="Albums">
-                    <local:AlbumCollection />
+                    <local:AlbumCollection DataContext="{x:Bind Library}" />
                 </PivotItem>
                 <PivotItem Header="Artists">
 
@@ -31,7 +31,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:HomeControl">
-                        <ContentControl ContentTemplate="{StaticResource DefaultHomeTemplate}"/>
+                        <ContentControl ContentTemplate="{StaticResource DefaultHomeTemplate}"
+                                        VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
