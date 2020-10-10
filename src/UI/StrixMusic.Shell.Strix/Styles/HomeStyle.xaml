@@ -11,8 +11,12 @@
 
     <DataTemplate x:Key="StrixHomeTemplate" x:DataType="sdk:MainViewModel">
         <UserControl>
-            <Grid>
-                <Pivot>
+
+            <default:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True" />
+
+            <!-- 
+            
+             <Pivot>
                     <Pivot.LeftHeader>
                         <TextBlock Grid.Column="1" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0"/>
                     </Pivot.LeftHeader>
@@ -29,7 +33,8 @@
                     <PivotItem Header="Playlists">
                     </PivotItem>
                 </Pivot>
-            </Grid>
+            
+            -->
         </UserControl>
     </DataTemplate>
 

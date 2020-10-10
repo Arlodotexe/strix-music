@@ -7,27 +7,40 @@
     xmlns:controls="using:StrixMusic.Shell.Default.Controls"
     x:Class="StrixMusic.Shell.Default.Styles.PlayableCollectionGroupPivotStyle">
 
-    <DataTemplate x:Key="DefaultAlbumCollectionContentTemplate" x:DataType="observables:IObservableAlbumCollection">
-        <GridView ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource DefaultAlbumCollectionItemStyle}"
-                  Padding="16" />
-    </DataTemplate>
-
-    <DataTemplate x:Key="DefaultAlbumCollectionItemStyle">
-        <controls:AlbumItem />
-    </DataTemplate>
-
-    <Style x:Key="DefaultAlbumCollectionStyle" TargetType="local:AlbumCollection">
+    <Style x:Key="DefaultPlayableCollectionGroupPivotStyle" TargetType="local:PlayableCollectionGroupPivot">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:AlbumCollection">
-                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumCollectionDataTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                    <ControlTemplate TargetType="local:PlayableCollectionGroupPivot">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}">
+                            <Grid>
+                                <Pivot x:Name="PART_Pivot">
+                                    <PivotItem x:Name="PART_SongsPivotItem" Header="Songs">
+                                        <local:TrackCollection />
+                                    </PivotItem>
+                                    <PivotItem x:Name="PART_AlbumsPivotItem" Header="Albums">
+                                        <local:AlbumCollection />
+                                    </PivotItem>
+                                    <PivotItem x:Name="PART_ArtistsPivotItem" Header="Artists">
+
+                                    </PivotItem>
+                                    <PivotItem x:Name="PART_PlaylistsPivotItem" Header="Playlists">
+
+                                    </PivotItem>
+                                </Pivot>
+
+                                <ContentPresenter x:Name="PART_AllEmptyContentPresenter" Visibility="Collapsed" />
+
+                            </Grid>
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultAlbumCollectionStyle}" TargetType="local:AlbumCollection"/>
+    <Style BasedOn="{StaticResource DefaultPlayableCollectionGroupPivotStyle}" TargetType="local:PlayableCollectionGroupPivot"/>
 
 </ResourceDictionary>

@@ -3,27 +3,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shell.Default.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
-    xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
+    xmlns:observables="using:StrixMusic.Sdk.Observables"
     xmlns:selectors="using:StrixMusic.Shell.Default.TemplateSelectors"
+    xmlns:controls="using:StrixMusic.Shell.Default.Controls"
     x:Class="StrixMusic.Shell.Default.Styles.HomeStyle">
 
     <DataTemplate x:Key="DefaultHomeTemplate" x:DataType="sdk:MainViewModel">
-        <Grid>
-            <Pivot>
-                <Pivot.Title>
-                    <TextBlock Text="Home"/>
-                </Pivot.Title>
-                <PivotItem Header="Songs">
-                    <local:TrackCollection />
-                </PivotItem>
-                <PivotItem Header="Albums">
-                    <local:AlbumCollection />
-                </PivotItem>
-                <PivotItem Header="Artists">
-
-                </PivotItem>
-            </Pivot>
-        </Grid>
+        <UserControl>
+            <controls:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True">
+                <controls:PlayableCollectionGroupPivot.AllEmptyContent>
+                    <TextBlock Text="Nothing to show!" />
+                </controls:PlayableCollectionGroupPivot.AllEmptyContent>
+            </controls:PlayableCollectionGroupPivot>
+        </UserControl>
     </DataTemplate>
 
     <Style x:Key="DefaultHomeControlStyle" TargetType="local:HomeControl">

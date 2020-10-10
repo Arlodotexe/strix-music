@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.Services.Settings
         void SetValue<T>(string key, object? value, bool overwrite = true);
 
         /// <summary>
-        /// Reads a value from the current <see cref="IServiceProvider"/> instance and returns its casting in the right type.
+        /// Reads a setting value from the current <see cref="IServiceProvider"/> instance and returns its casting in the right type.
         /// </summary>
         /// <typeparam name="T">The type of the object to retrieve.</typeparam>
         /// <param name="key">The key associated to the requested object.</param>

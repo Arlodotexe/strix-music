@@ -21,7 +21,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:AlbumCollection">
-                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumCollectionDataTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumCollectionContentTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

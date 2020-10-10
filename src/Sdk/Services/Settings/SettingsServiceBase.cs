@@ -1,4 +1,5 @@
-﻿// Special thanks to Sergio Pedri for this design from Legere
+﻿// Special thanks to Sergio Pedri for this class from Legere.
+// Modified to work with "identifiers" (setting folders).
 // Sergio's GitHub: https://github.com/Sergio0694
 // Legere: https://www.microsoft.com/store/apps/9PHJRVCSKVJZ
 
@@ -89,7 +90,7 @@ namespace StrixMusic.Sdk.Services.Settings
 
             var serialized = JsonConvert.SerializeObject(serializable);
 
-            // It's fine
+            // The method isn't async, but this is fine for now.
             Task.Run(async () =>
             {
                 // Store the new value
