@@ -3,11 +3,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shell.Default.Controls">
 
-    <Style x:Key="DefaultArtistControlStyle" TargetType="local:ArtistControl">
+	<Style x:Key="DefaultArtistItemStyle" TargetType="local:ArtistItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:ArtistControl">
+                    <ControlTemplate TargetType="local:ArtistItem">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
@@ -24,6 +24,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultArtistControlStyle}" TargetType="local:ArtistControl"/>
+	<Style BasedOn="{StaticResource DefaultArtistItemStyle}" TargetType="local:ArtistItem"/>
 
 </ResourceDictionary>

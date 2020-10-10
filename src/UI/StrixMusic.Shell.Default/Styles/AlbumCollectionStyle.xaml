@@ -7,9 +7,9 @@
     xmlns:controls="using:StrixMusic.Shell.Default.Controls"
     x:Class="StrixMusic.Shell.Default.Styles.AlbumCollectionStyle">
 
-    <DataTemplate x:Key="DefaultAlbumCollectionContentTemplate" x:DataType="observables:IObservableAlbumCollection">
+    <DataTemplate x:Key="DefaultAlbumCollectionDataTemplate" x:DataType="observables:IObservableAlbumCollection">
         <GridView ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource DefaultAlbumCollectionItemStyle}"
-                  Padding="16" />
+                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"/>
     </DataTemplate>
 
     <DataTemplate x:Key="DefaultAlbumCollectionItemStyle">
