@@ -8,16 +8,16 @@ namespace StrixMusic.Shell.Default.Controls
     /// A Templated <see cref="Control"/> for displaying an <see cref="ObservableArtist"/> in a list.
     /// </summary>
     [TemplatePart(Name = nameof(_rootGrid), Type = typeof(Grid))]
-    public sealed partial class ArtistControl : Control
+    public sealed partial class ArtistItem : Control
     {
         private Grid? _rootGrid;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ArtistControl"/> class.
+        /// Initializes a new instance of the <see cref="ArtistItem"/> class.
         /// </summary>
-        public ArtistControl()
+        public ArtistItem()
         {
-            this.DefaultStyleKey = typeof(ArtistControl);
+            this.DefaultStyleKey = typeof(ArtistItem);
         }
 
         /// <inheritdoc/>

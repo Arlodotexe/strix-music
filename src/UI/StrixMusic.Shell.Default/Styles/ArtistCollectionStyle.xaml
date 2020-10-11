@@ -1,0 +1,33 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StrixMusic.Shell.Default.Controls"
+    xmlns:observables="using:StrixMusic.Sdk.Observables"
+    xmlns:selectors="using:StrixMusic.Shell.Default.TemplateSelectors"
+    xmlns:controls="using:StrixMusic.Shell.Default.Controls"
+    x:Class="StrixMusic.Shell.Default.Styles.ArtistCollectionStyle">
+
+	<DataTemplate x:Key="DefaultArtistCollectionDataTemplate" x:DataType="observables:IObservableArtistCollection">
+		<GridView ItemsSource="{x:Bind Artists}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
+                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"/>
+	</DataTemplate>
+
+	<DataTemplate x:Key="DefaultArtistCollectionItemStyle">
+		<controls:ArtistItem />
+	</DataTemplate>
+
+	<Style x:Key="DefaultArtistCollectionStyle" TargetType="local:ArtistCollection">
+		<Style.Setters>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="local:ArtistCollection">
+						<ContentControl ContentTemplate="{StaticResource DefaultArtistCollectionContentTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style.Setters>
+	</Style>
+
+	<Style BasedOn="{StaticResource DefaultArtistCollectionStyle}" TargetType="local:ArtistCollection"/>
+
+</ResourceDictionary>

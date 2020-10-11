@@ -15,9 +15,15 @@ namespace StrixMusic.Shell.Default.Controls
         {
             this.DefaultStyleKey = typeof(HomeControl);
 
-            _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksAsync(100);
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksAsync(20);
 
-            _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsAsync(100);
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsAsync(20);
+        }
+
+        /// <inheritdoc />
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
         }
     }
 }

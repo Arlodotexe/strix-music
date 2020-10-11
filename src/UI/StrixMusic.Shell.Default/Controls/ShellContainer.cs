@@ -21,7 +21,6 @@ namespace StrixMusic.Shell.Default.Controls
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            var x = DataContext;
         }
 
         /// <summary>

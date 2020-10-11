@@ -2,6 +2,8 @@
 // Sergio's GitHub: https://github.com/Sergio0694
 // Legere: https://www.microsoft.com/store/apps/9PHJRVCSKVJZ
 
+using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.Messaging.Messages;
 using StrixMusic.Sdk.Services.StorageService;
 
 namespace StrixMusic.Sdk.Services.Settings
@@ -19,6 +21,46 @@ namespace StrixMusic.Sdk.Services.Settings
         public DefaultSettingsService(ITextStorageService textStorageService)
             : base(textStorageService)
         {
+        }
+
+        /// <summary>
+        /// Reads a setting value and returns it, casting to right type.
+        /// </summary>
+        /// <typeparam name="T">The type of the object to retrieve.</typeparam>
+        /// <param name="key">The key associated to the requested object.</param>
+        /// <param name="respectCurrentShell">If true, the returned value will be isolated to the current shell.</param>
+        /// <returns>A <see cref="Task{T}"/> that returns the requested value.</returns>
+        public async Task<T> GetValue<T>(string key, bool respectCurrentShell)
+        {
+            if (respectCurrentShell)
+            {
+                var currentShell = await GetValue<string>(nameof(SettingsKeys.PreferredShell));
+
+                return await GetValue<T>(key, $"{Id}IsolatedTo{currentShell}");
+            }
+
+            return await GetValue<T>(key);
+        }
+
+        /// <summary>
+        /// Sets a setting value.
+        /// </summary>
+        /// <typeparam name="T">The type of the object to store.</typeparam>
+        /// <param name="key">The key associated to the requested object.</param>
+        /// <param name="value">The data to store.</param>
+        /// <param name="respectCurrentShell">If true, the returned value will be isolated to the current shell.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task SetValue<T>(string key, T value, bool respectCurrentShell)
+        {
+            if (respectCurrentShell)
+            {
+                var currentShell = await GetValue<string>(nameof(SettingsKeys.PreferredShell));
+
+                SetValue<T>(key, value, $"{Id}IsolatedTo{currentShell}");
+                return;
+            }
+
+            SetValue<T>(key, value);
         }
 
         /// <inheritdoc/>

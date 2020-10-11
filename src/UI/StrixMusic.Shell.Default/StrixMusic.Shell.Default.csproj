@@ -43,11 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Controls\Internal\Shell.xaml" />
-    <None Remove="Controls\PlayableCollectionGroupPivot.xaml" />
     <None Remove="Resources.xaml" />
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
     <None Remove="Styles\AlbumItemStyle.xaml" />
     <None Remove="Styles\AlbumViewStyle.xaml" />
+    <None Remove="Styles\ArtistCollectionStyle.xaml" />
     <None Remove="Styles\ArtistStyle.xaml" />
     <None Remove="Styles\ArtistViewStyle.xaml" />
     <None Remove="Styles\HomeStyle.xaml" />
@@ -62,11 +62,11 @@
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="Controls\Internal\Shell.xaml" />
-    <UpToDateCheckInput Remove="Controls\PlayableCollectionGroupPivot.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumViewStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
@@ -84,8 +84,8 @@
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Controls\PlayableCollectionGroupPivot.xaml.cs">
-      <DependentUpon>PlayableCollectionGroupPivot.xaml</DependentUpon>
+    <Compile Update="Styles\PlayableCollectionGroupPivotStyle.xaml.cs">
+      <DependentUpon>PlayableCollectionGroupPivotStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Styles\NowPlayingViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>

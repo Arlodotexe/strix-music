@@ -18,6 +18,7 @@
         <styles:ShellStyle/>
         <styles:TrackCollectionStyle/>
         <styles:TrackItemStyle/>
+        <styles:PlayableCollectionGroupPivotStyle />
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="QuickActionButton" TargetType="Button">

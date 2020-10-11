@@ -11,7 +11,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Settings
     public class ZuneDesktopSettingsService : SettingsServiceBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultSettingsService"/> class.
+        /// Initializes a new instance of the <see cref="ZuneDesktopSettingsService"/> class.
         /// </summary>
         /// <param name="textStorageService">The text storage service to be used by this instance.</param>
         public ZuneDesktopSettingsService(ITextStorageService textStorageService)
