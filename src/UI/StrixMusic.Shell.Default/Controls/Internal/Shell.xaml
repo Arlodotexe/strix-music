@@ -35,7 +35,8 @@
                 </NavigationViewItem>
                 <NavigationViewItemSeparator/>
             </NavigationView.MenuItems>
-            <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"/>
+            <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"
+                            HorizontalContentAlignment="Stretch"/>
         </NavigationView>
 
         <local:NowPlayingBarControl Grid.Row="1"/>
