@@ -321,10 +321,12 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public Task PopulateMoreArtistsAsync(int limit)
+        public async Task PopulateMoreArtistsAsync(int limit)
         {
-            // TODO
-            return Task.CompletedTask;
+            await foreach (var item in _collectionGroupBase.GetArtistsAsync(limit, Albums.Count))
+            {
+                Artists.Add(new ObservableArtist(item));
+            }
         }
 
         /// <inheritdoc />
