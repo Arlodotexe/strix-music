@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:StrixMusic.Shell.Default.Controls"
     xmlns:launchpad="using:LaunchPad.Controls"
-    mc:Ignorable="d">
+    mc:Ignorable="d" SizeChanged="MainPage_SizeChanged">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ContentPresenter x:Name="ShellDisplay"/>

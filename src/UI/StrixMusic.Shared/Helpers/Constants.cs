@@ -56,6 +56,11 @@ namespace StrixMusic.Helpers
             public const string ShellResourcesSuffix = "Resources.xaml";
 
             /// <summary>
+            /// The <see cref="ShellModel"/> of the DefaultShell.
+            /// </summary>
+            public static ShellModel DefaultShellModel => LoadedShells[DefaultShellAssemblyName];
+
+            /// <summary>
             /// Gets the loaded shells in the <see cref="Assembly"/> AssemblyName and DisplayName.
             /// </summary>
             public static Dictionary<string, ShellModel> LoadedShells

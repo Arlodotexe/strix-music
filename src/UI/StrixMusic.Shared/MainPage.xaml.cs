@@ -3,12 +3,14 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.AbstractStorage;
 using StrixMusic.Helpers;
+using StrixMusic.Models;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Settings;
-using OwlCore.AbstractStorage;
 using StrixMusic.Sdk.Services.SuperShell;
 using StrixMusic.Shell.Default.Controls;
+using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,6 +22,9 @@ namespace StrixMusic
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private ShellModel? _activeShell;
+        private ShellModel? _prefferedShell;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
         /// </summary>
@@ -72,19 +77,33 @@ namespace StrixMusic
         {
             if (e.Key == nameof(SettingsKeys.PreferredShell))
             {
-                await SetupPreferredShell();
+                await SetupInitialShell();
             }
         }
 
         private async Task Initialize()
         {
             // TODO: Remove or replace.
-            await SetupPreferredShell();
+            await SetupInitialShell();
 
             SuperShellDisplay.Content = new SuperShell();
         }
 
-        private async Task SetupPreferredShell()
+        private async Task SetupInitialShell()
+        {
+            // Gets the preferred shell from settings.
+            string preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
+            ShellModel shellModel = Constants.Shells.DefaultShellModel!;
+            if (Constants.Shells.LoadedShells.ContainsKey(preferredShell))
+            {
+                shellModel = Constants.Shells.LoadedShells[preferredShell];
+                _prefferedShell = shellModel;
+            }
+
+            await SetupShell(shellModel);
+        }
+
+        private async Task SetupShell(ShellModel shell)
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
@@ -106,23 +125,15 @@ namespace StrixMusic
                     }
                 }
 
-                // Gets the preferred shell from settings.
-                string preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
-
-                // Makes sure the saved shell is valid, falls back to Default.
-                if (preferredShell == null || !Constants.Shells.LoadedShells.ContainsKey(preferredShell))
-                {
-                    preferredShell = Constants.Shells.DefaultShellAssemblyName;
-                }
-
-                if (preferredShell != Constants.Shells.DefaultShellAssemblyName)
+                if (shell.AssemblyName != Constants.Shells.DefaultShellAssemblyName)
                 {
                     // Loads the preferred shell
-                    var resourcePath = $"{Constants.ResourcesPrefix}{Constants.Shells.ShellNamespacePrefix}.{preferredShell}/{Constants.Shells.ShellResourcesSuffix}";
+                    var resourcePath = $"{Constants.ResourcesPrefix}{Constants.Shells.ShellNamespacePrefix}.{shell.AssemblyName}/{Constants.Shells.ShellResourcesSuffix}";
                     var resourceDictionary = new ResourceDictionary() { Source = new Uri(resourcePath) };
                     Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
                 }
 
+                _activeShell = shell;
                 ShellDisplay.Content = CreateShellControl();
             });
         }
@@ -133,6 +144,42 @@ namespace StrixMusic
             {
                 DataContext = MainViewModel.Singleton,
             };
+        }
+
+        private bool CheckShellModelSupport(ShellModel shell)
+        {
+            bool supported = true;
+
+            // Check height is within range
+            supported = supported && ActualHeight < shell.ShellAttribute.MaxWindowSize.Height;
+            supported = supported && ActualHeight > shell.ShellAttribute.MinWindowSize.Height;
+
+            // Check width is within range
+            supported = supported && ActualWidth > shell.ShellAttribute.MinWindowSize.Width;
+            supported = supported && ActualWidth > shell.ShellAttribute.MinWindowSize.Width;
+
+            return supported;
+        }
+
+        private async void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (_activeShell == null || _prefferedShell == null)
+            {
+                // Ignore this during initializion
+                return;
+            }
+
+            if (_activeShell != _prefferedShell)
+            {
+                if (CheckShellModelSupport(_prefferedShell!))
+                {
+                    await SetupShell(_prefferedShell);
+                }
+            }
+            else if (!CheckShellModelSupport(_activeShell!))
+            {
+                await SetupShell(Constants.Shells.DefaultShellModel);
+            }
         }
     }
 }

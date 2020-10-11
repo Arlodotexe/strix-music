@@ -30,5 +30,10 @@ namespace StrixMusic.Models
         /// The display name for the Shell.
         /// </summary>
         public string DisplayName => _shellAttribute.DisplayName;
+
+        /// <summary>
+        /// Gets the <see cref="ShellAttribute"/> for the <see cref="ShellModel"/>.
+        /// </summary>
+        public ShellAttribute ShellAttribute => _shellAttribute;
     }
 }
