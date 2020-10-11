@@ -44,7 +44,7 @@
                 </StackPanel>
             </Grid>
 
-            <local:TrackCollection Grid.Row="1"/>
+            <local:TrackCollection Grid.Row="1" />
         </Grid>
     </DataTemplate>
 

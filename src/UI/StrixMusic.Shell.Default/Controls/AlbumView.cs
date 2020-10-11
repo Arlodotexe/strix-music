@@ -15,11 +15,17 @@ namespace StrixMusic.Shell.Default.Controls
         {
             this.DefaultStyleKey = typeof(AlbumView);
             DataContext = album;
+            LoadTracksAsync();
         }
 
         /// <summary>
         /// The ViewModel for this page item
         /// </summary>
         public ObservableAlbum ViewModel => (DataContext as ObservableAlbum) !;
+
+        private async void LoadTracksAsync()
+        {
+            await ViewModel.PopulateMoreTracksAsync(25);
+        }
     }
 }
