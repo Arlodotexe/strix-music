@@ -13,6 +13,7 @@
         <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
         <styles:NowPlayingViewStyle/>
         <styles:AlbumCollectionStyle/>
+        <styles:ArtistCollectionStyle/>
         <styles:SearchViewStyle/>
         <styles:SettingsViewStyle/>
         <styles:ShellStyle/>
