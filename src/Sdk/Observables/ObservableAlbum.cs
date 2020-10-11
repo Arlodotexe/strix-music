@@ -286,10 +286,12 @@ namespace StrixMusic.Sdk.Observables
         public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset) => _album.GetTracksAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task PopulateMoreTracksAsync(int limit)
+        public async Task PopulateMoreTracksAsync(int limit)
         {
-            // TODO
-            return Task.CompletedTask;
+            await foreach (var item in _album.GetTracksAsync(limit, Tracks.Count))
+            {
+                Tracks.Add(new ObservableTrack(item));
+            }
         }
 
         /// <inheritdoc />
