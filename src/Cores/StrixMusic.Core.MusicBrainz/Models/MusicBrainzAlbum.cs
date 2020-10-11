@@ -209,8 +209,21 @@ namespace StrixMusic.Core.MusicBrainz.Models
             var totalTrackCountForArtist = await _artistHelpersService.GetTotalTracksCount(Release.Credits[0].Artist);
             var artist = new MusicBrainzArtist(SourceCore, Release.Credits[0].Artist, totalTrackCountForArtist);
 
-            foreach (var recording in releaseData.Media.SelectMany(x => x.Tracks).ToList().GetRange(offset, limit))
+            // Get full list of tracks from all sources
+            IEnumerable<Track> recordingList = releaseData.Media.SelectMany(x => x.Tracks);
+
+            // limit + offset cannot be greater than the number of items in the list
+            limit = Math.Min(limit, recordingList.Count() - offset);
+
+            foreach (var recording in recordingList.ToList().GetRange(offset, limit))
             {
+                var album = new MusicBrainzAlbum(SourceCore, Release, artist);
+                var track = new MusicBrainzTrack(SourceCore, recording, album, recording.Position);
+
+                yield return track;
+
+                // TODO: Check for duplicates between sources
+                /*
                 // Iterate through each physical medium for this release.
                 foreach (var medium in Release.Media)
                 {
@@ -222,7 +235,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
                         yield return track;
                     }
-                }
+                }*/
             }
         }
 
