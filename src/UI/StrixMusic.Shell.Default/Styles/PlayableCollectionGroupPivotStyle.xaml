@@ -24,7 +24,7 @@
                                         <local:AlbumCollection />
                                     </PivotItem>
                                     <PivotItem x:Name="PART_ArtistsPivotItem" Header="Artists">
-
+                                        <local:ArtistCollection />
                                     </PivotItem>
                                     <PivotItem x:Name="PART_PlaylistsPivotItem" Header="Playlists">
 

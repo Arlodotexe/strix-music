@@ -91,7 +91,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public override async IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0)
         {
-            var artists = await _musicBrainzClient.Artists.SearchAsync($"*&{RelationshipQueries.ArtistsQuery}", limit, offset);
+            var artists = await _musicBrainzClient.Artists.SearchAsync($"*", limit, offset);
 
             foreach (var artist in artists.Items)
             {

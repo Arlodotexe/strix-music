@@ -7,27 +7,27 @@
     xmlns:controls="using:StrixMusic.Shell.Default.Controls"
     x:Class="StrixMusic.Shell.Default.Styles.ArtistCollectionStyle">
 
-	<DataTemplate x:Key="DefaultArtistCollectionDataTemplate" x:DataType="observables:IObservableArtistCollection">
-		<GridView ItemsSource="{x:Bind Artists}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
+    <DataTemplate x:Key="DefaultArtistCollectionDataTemplate" x:DataType="observables:IObservableArtistCollection">
+        <GridView ItemsSource="{x:Bind Artists}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
                   Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"/>
-	</DataTemplate>
+    </DataTemplate>
 
-	<DataTemplate x:Key="DefaultArtistCollectionItemStyle">
-		<controls:ArtistItem />
-	</DataTemplate>
+    <DataTemplate x:Key="DefaultArtistCollectionItemStyle">
+        <controls:ArtistItem />
+    </DataTemplate>
 
-	<Style x:Key="DefaultArtistCollectionStyle" TargetType="local:ArtistCollection">
-		<Style.Setters>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="local:ArtistCollection">
-						<ContentControl ContentTemplate="{StaticResource DefaultArtistCollectionContentTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style.Setters>
-	</Style>
+    <Style x:Key="DefaultArtistCollectionStyle" TargetType="local:ArtistCollection">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="local:ArtistCollection">
+						<ContentControl ContentTemplate="{StaticResource DefaultArtistCollectionDataTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
 
-	<Style BasedOn="{StaticResource DefaultArtistCollectionStyle}" TargetType="local:ArtistCollection"/>
+    <Style BasedOn="{StaticResource DefaultArtistCollectionStyle}" TargetType="local:ArtistCollection"/>
 
 </ResourceDictionary>
