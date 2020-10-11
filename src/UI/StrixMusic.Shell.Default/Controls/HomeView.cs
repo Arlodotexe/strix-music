@@ -18,6 +18,8 @@ namespace StrixMusic.Shell.Default.Controls
             _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksAsync(20);
 
             _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsAsync(20);
+
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsAsync(20);
         }
 
         /// <inheritdoc />
