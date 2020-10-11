@@ -11,9 +11,15 @@ namespace StrixMusic.Shell.Default.Controls
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumView"/> class.
         /// </summary>
-        public AlbumView()
+        public AlbumView(ObservableAlbum album)
         {
             this.DefaultStyleKey = typeof(AlbumView);
+            DataContext = album;
         }
+
+        /// <summary>
+        /// The ViewModel for this page item
+        /// </summary>
+        public ObservableAlbum ViewModel => (DataContext as ObservableAlbum) !;
     }
 }

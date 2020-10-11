@@ -9,7 +9,8 @@
 
     <DataTemplate x:Key="DefaultAlbumCollectionDataTemplate" x:DataType="observables:IObservableAlbumCollection">
         <GridView ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource DefaultAlbumCollectionItemStyle}"
-                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"/>
+                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
+                  ItemClick="OpenAlbum"/>
     </DataTemplate>
 
     <DataTemplate x:Key="DefaultAlbumCollectionItemStyle">
