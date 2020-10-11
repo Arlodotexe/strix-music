@@ -3,11 +3,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:default="using:StrixMusic.Shell.Default.Controls">
 
-    <Style x:Key="ZuneShellPreviewStyle" TargetType="default:PreviewControl">
+    <Style x:Key="ZuneShellPreviewStyle" TargetType="default:ShellPreview">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:PreviewControl">
+                    <ControlTemplate TargetType="default:ShellPreview">
                         <Grid Background="#11090F">
                             <Grid VerticalAlignment="Top">
                                 <StackPanel Orientation="Horizontal">

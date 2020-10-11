@@ -11,9 +11,9 @@ namespace StrixMusic.Shell.Default.TemplateSelectors
     public class RootPageSelector : DataTemplateSelector
     {
         /// <summary>
-        /// Gets or sets the <see cref="HomeControl"/> template.
+        /// Gets or sets the <see cref="HomeView"/> template.
         /// </summary>
-        public DataTemplate? HomeControlTemplate { get; set; }
+        public DataTemplate? HomeViewTemplate { get; set; }
 
         /// <inheritdoc/>
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
@@ -21,9 +21,9 @@ namespace StrixMusic.Shell.Default.TemplateSelectors
             switch (item)
             {
                 case ObservableCollectionGroup _:
-                    return HomeControlTemplate!;
+                    return HomeViewTemplate!;
                 default:
-                    return HomeControlTemplate!;
+                    return HomeViewTemplate!;
             }
         }
     }

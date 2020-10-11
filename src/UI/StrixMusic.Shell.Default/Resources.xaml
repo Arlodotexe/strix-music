@@ -8,7 +8,7 @@
         <styles:HomeStyle/>
         <styles:AlbumItemStyle/>
         <styles:AlbumViewStyle/>
-        <ResourceDictionary Source="Styles/ArtistStyle.xaml"/>
+        <ResourceDictionary Source="Styles/ArtistItemStyle.xaml"/>
         <ResourceDictionary Source="Styles/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
         <styles:NowPlayingViewStyle/>

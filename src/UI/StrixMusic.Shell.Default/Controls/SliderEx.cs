@@ -22,7 +22,7 @@ namespace StrixMusic.Shell.Default.Controls
             DependencyProperty.Register(
                 nameof(Remaining),
                 typeof(bool),
-                typeof(ProgressSliderControl),
+                typeof(ProgressSlider),
                 new PropertyMetadata(true));
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace StrixMusic.Shell.Default.Controls
         {
             get
             {
-                return this._isContainerHeld || this._isThumbHeld;
+                return _isContainerHeld || _isThumbHeld;
             }
         }
 
@@ -72,9 +72,9 @@ namespace StrixMusic.Shell.Default.Controls
 
             if (thumb != null)
             {
-                thumb.DragStarted += this.Thumb_DragStarted;
-                thumb.DragCompleted += this.Thumb_DragCompleted;
-                thumb.DragDelta += this.Thumb_DragDelta;
+                thumb.DragStarted += Thumb_DragStarted;
+                thumb.DragCompleted += Thumb_DragCompleted;
+                thumb.DragDelta += Thumb_DragDelta;
             }
 
             var sliderContainer = GetTemplateChild("SliderContainer") as Grid;
@@ -82,17 +82,17 @@ namespace StrixMusic.Shell.Default.Controls
             {
                 sliderContainer.AddHandler(
                     PointerPressedEvent,
-                    new PointerEventHandler(this.SliderContainer_PointerPressed),
+                    new PointerEventHandler(SliderContainer_PointerPressed),
                     true);
 
                 sliderContainer.AddHandler(
                     PointerReleasedEvent,
-                    new PointerEventHandler(this.SliderContainer_PointerReleased),
+                    new PointerEventHandler(SliderContainer_PointerReleased),
                     true);
 
                 sliderContainer.AddHandler(
                     PointerMovedEvent,
-                    new PointerEventHandler(this.SliderContainer_PointerMoved),
+                    new PointerEventHandler(SliderContainer_PointerMoved),
                     true);
             }
         }
@@ -108,68 +108,68 @@ namespace StrixMusic.Shell.Default.Controls
             object sender,
             PointerRoutedEventArgs e)
         {
-            this.InvokeMove();
+            InvokeMove();
         }
 
         private void SliderContainer_PointerReleased(
             object sender,
             PointerRoutedEventArgs e)
         {
-            this.SetContainerHeld(false);
+            SetContainerHeld(false);
         }
 
         private void SliderContainer_PointerPressed(
             object sender,
             PointerRoutedEventArgs e)
         {
-            this.SetContainerHeld(true);
+            SetContainerHeld(true);
         }
 
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            this.InvokeMove();
+            InvokeMove();
         }
 
         private void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            this.SetThumbHeld(false);
+            SetThumbHeld(false);
         }
 
         private void Thumb_DragStarted(object sender, DragStartedEventArgs e)
         {
-            this.SetThumbHeld(true);
+            SetThumbHeld(true);
         }
 
         private void SetThumbHeld(bool held)
         {
-            bool wasManipulated = this.IsSliderBeingManpulated;
-            this._isThumbHeld = held;
-            this.InvokeStateChange(wasManipulated);
+            bool wasManipulated = IsSliderBeingManpulated;
+            _isThumbHeld = held;
+            InvokeStateChange(wasManipulated);
         }
 
         private void SetContainerHeld(bool held)
         {
-            bool wasManipulated = this.IsSliderBeingManpulated;
-            this._isContainerHeld = held;
-            this.InvokeStateChange(wasManipulated);
+            bool wasManipulated = IsSliderBeingManpulated;
+            _isContainerHeld = held;
+            InvokeStateChange(wasManipulated);
         }
 
         private void InvokeMove()
         {
-            this.SliderManipulationMoved?.Invoke(this, EventArgs.Empty);
+            SliderManipulationMoved?.Invoke(this, EventArgs.Empty);
         }
 
         private void InvokeStateChange(bool wasBeingManipulated)
         {
-            if (wasBeingManipulated != this.IsSliderBeingManpulated)
+            if (wasBeingManipulated != IsSliderBeingManpulated)
             {
-                if (this.IsSliderBeingManpulated)
+                if (IsSliderBeingManpulated)
                 {
-                    this.SliderManipulationStarted?.Invoke(this, EventArgs.Empty);
+                    SliderManipulationStarted?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
-                    this.SliderManipulationCompleted?.Invoke(this, EventArgs.Empty);
+                    SliderManipulationCompleted?.Invoke(this, EventArgs.Empty);
                 }
             }
         }

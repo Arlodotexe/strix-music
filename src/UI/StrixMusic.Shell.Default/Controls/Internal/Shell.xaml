@@ -38,7 +38,7 @@
             <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"/>
         </NavigationView>
 
-        <local:NowPlayingBarControl Grid.Row="1"/>
+        <local:NowPlayingBar Grid.Row="1"/>
 
         <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"

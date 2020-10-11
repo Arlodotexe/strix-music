@@ -5,14 +5,14 @@ namespace StrixMusic.Shell.Default.Controls
     /// <summary>
     /// A Templated <see cref="Control"/> for displaying the NowPlaying view.
     /// </summary>
-    public partial class NowPlayingViewControl : Control
+    public partial class NowPlayingView : Control
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NowPlayingViewControl"/> class.
+        /// Initializes a new instance of the <see cref="NowPlayingView"/> class.
         /// </summary>
-        public NowPlayingViewControl()
+        public NowPlayingView()
         {
-            this.DefaultStyleKey = typeof(NowPlayingViewControl);
+            this.DefaultStyleKey = typeof(NowPlayingView);
         }
     }
 }

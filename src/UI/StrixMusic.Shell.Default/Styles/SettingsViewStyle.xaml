@@ -24,11 +24,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="DefaultSettingsViewControlStyle" TargetType="local:SettingsViewControl">
+    <Style x:Key="DefaultSettingsViewStyle" TargetType="local:SettingsView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:SettingsViewControl">
+                    <ControlTemplate TargetType="local:SettingsView">
                         <ContentControl ContentTemplate="{StaticResource DefaultSettingsViewTemplate}"/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -36,6 +36,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultSettingsViewControlStyle}" TargetType="local:SettingsViewControl"/>
+    <Style BasedOn="{StaticResource DefaultSettingsViewStyle}" TargetType="local:SettingsView"/>
 
 </ResourceDictionary>

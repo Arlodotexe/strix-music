@@ -5,14 +5,14 @@ namespace StrixMusic.Shell.Default.Controls
     /// <summary>
     /// A Templated <see cref="Control"/> for the settings page.
     /// </summary>
-    public partial class SettingsViewControl : Control
+    public partial class SettingsView : Control
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SettingsViewControl"/> class.
+        /// Initializes a new instance of the <see cref="SettingsView"/> class.
         /// </summary>
-        public SettingsViewControl()
+        public SettingsView()
         {
-            this.DefaultStyleKey = typeof(SettingsViewControl);
+            this.DefaultStyleKey = typeof(SettingsView);
         }
     }
 }

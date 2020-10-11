@@ -19,7 +19,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Styles
         private void NavigateToNowPlaying(object sender, RoutedEventArgs e)
         {
             // TODO: Save settings changes
-            ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>()!.NavigateTo(typeof(NowPlayingViewControl));
+            ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>()!.NavigateTo(typeof(NowPlayingView));
         }
     }
 }

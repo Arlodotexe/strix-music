@@ -83,7 +83,7 @@
         </Grid>
 
         <!--SettingsOverlay-->
-        <default:SettingsViewControl x:Name="SettingsOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <default:SettingsView x:Name="SettingsOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
         <!--Back Button-->
         <Button Style="{StaticResource ZuneButton}" Width="24" Margin="40,12,-32,0"
@@ -103,8 +103,8 @@
         </Rectangle>
 
         <!--NowPlayingOverlay-->
-        <default:NowPlayingViewControl x:Name="NowPlayingOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <default:NowPlayingView x:Name="NowPlayingOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
-        <default:NowPlayingBarControl Grid.Row="1" x:Name="NowPlayingBar"/>
+        <default:NowPlayingBar Grid.Row="1" x:Name="NowPlayingBar"/>
     </Grid>
 </default:ShellControl>

@@ -87,7 +87,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
 
         private void ZuneShell_NavigationRequested(object sender, NavigateEventArgs<Control> e)
         {
-            if (e.Page is SettingsViewControl)
+            if (e.Page is SettingsView)
             {
                 SettingsOverlay.Visibility = Visibility.Visible;
                 NowPlayingOverlay.Visibility = Visibility.Collapsed;
@@ -96,7 +96,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
                 NowPlayingBar.Visibility = Visibility.Collapsed;
                 RequestTheme(ElementTheme.Light);
             }
-            else if (e.Page is NowPlayingViewControl)
+            else if (e.Page is NowPlayingView)
             {
                 SettingsOverlay.Visibility = Visibility.Collapsed;
                 NowPlayingOverlay.Visibility = Visibility.Visible;
@@ -163,7 +163,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
 
         private void SettingsLinkClicked(object sender, RoutedEventArgs e)
         {
-            _navigationService!.NavigateTo(typeof(SettingsViewControl));
+            _navigationService!.NavigateTo(typeof(SettingsView));
         }
 
         private void RequestBack(object sender, RoutedEventArgs e)

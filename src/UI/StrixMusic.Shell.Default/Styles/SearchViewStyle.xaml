@@ -14,11 +14,11 @@
         </StackPanel>
     </DataTemplate>
 
-    <Style x:Key="DefaultSearchViewControlStyle" TargetType="local:SearchViewControl">
+    <Style x:Key="DefaultSearchViewStyle" TargetType="local:SearchView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:SearchViewControl">
+                    <ControlTemplate TargetType="local:SearchView">
                         <ContentControl ContentTemplate="{StaticResource DefaultSearchViewTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -27,6 +27,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultSearchViewControlStyle}" TargetType="local:SearchViewControl"/>
+    <Style BasedOn="{StaticResource DefaultSearchViewStyle}" TargetType="local:SearchView"/>
 
 </ResourceDictionary>

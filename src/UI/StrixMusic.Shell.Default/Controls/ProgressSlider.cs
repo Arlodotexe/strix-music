@@ -8,7 +8,7 @@ namespace StrixMusic.Shell.Default.Controls
     /// <summary>
     /// A slider that can automatically update the tick position.
     /// </summary>
-    public partial class ProgressSliderControl : SliderEx
+    public partial class ProgressSlider : SliderEx
     {
         /// <summary>
         /// <see cref="DependencyProperty"/> for the <see cref="UpdateFrequency"/> property.
@@ -17,7 +17,7 @@ namespace StrixMusic.Shell.Default.Controls
             DependencyProperty.Register(
                 nameof(UpdateFrequency),
                 typeof(long),
-                typeof(ProgressSliderControl),
+                typeof(ProgressSlider),
                 new PropertyMetadata(50L)); // 100 milliseconds
 
         /// <summary>
@@ -27,16 +27,16 @@ namespace StrixMusic.Shell.Default.Controls
             DependencyProperty.Register(
                 nameof(IsAdvancing),
                 typeof(bool),
-                typeof(ProgressSliderControl),
+                typeof(ProgressSlider),
                 new PropertyMetadata(true));
 
         private DispatcherTimer _updateIntervalTimer = new DispatcherTimer();
         private DateTime _startTime = DateTime.Now;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProgressSliderControl"/> class.
+        /// Initializes a new instance of the <see cref="ProgressSlider"/> class.
         /// </summary>
-        public ProgressSliderControl()
+        public ProgressSlider()
             : base()
         {
             Loaded += OnLoaded;

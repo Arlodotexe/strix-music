@@ -29,9 +29,9 @@ namespace StrixMusic.Shell.Default.Controls.Internal
 
             _pagesMapping = new Dictionary<string, Type>
             {
-                { "Home", typeof(HomeControl) },
-                { "SettingsViewControl", typeof(SettingsViewControl) },
-                { "Now Playing", typeof(NowPlayingViewControl) },
+                { "Home", typeof(HomeView) },
+                { "SettingsView", typeof(SettingsView) },
+                { "Now Playing", typeof(NowPlayingView) },
             };
         }
 
@@ -48,8 +48,8 @@ namespace StrixMusic.Shell.Default.Controls.Internal
         {
             DefaultShellIoc.Initialize();
             _navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>();
-            _navigationService!.RegisterCommonPage(typeof(HomeControl));
-            _navigationService!.RegisterCommonPage(typeof(NowPlayingViewControl));
+            _navigationService!.RegisterCommonPage(typeof(HomeView));
+            _navigationService!.RegisterCommonPage(typeof(NowPlayingView));
         }
 
         private void NavigationService_NavigationRequested(object sender, NavigateEventArgs<Control> e)
@@ -66,7 +66,7 @@ namespace StrixMusic.Shell.Default.Controls.Internal
 
             // This isn't great, but there should only be 4 items
             Type controlType = e.Page.GetType();
-            bool containsValue = controlType == typeof(SettingsViewControl);
+            bool containsValue = controlType == typeof(SettingsView);
             foreach (var value in _pagesMapping.Values)
             {
                 containsValue = containsValue || (value == controlType);
@@ -85,14 +85,14 @@ namespace StrixMusic.Shell.Default.Controls.Internal
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            _navigationService!.NavigateTo(typeof(SearchViewControl), false, args.QueryText);
+            _navigationService!.NavigateTo(typeof(SearchView), false, args.QueryText);
         }
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             if (args.IsSettingsInvoked)
             {
-                _navigationService!.NavigateTo(_pagesMapping[nameof(SettingsViewControl)]);
+                _navigationService!.NavigateTo(_pagesMapping[nameof(SettingsView)]);
                 return;
             }
 

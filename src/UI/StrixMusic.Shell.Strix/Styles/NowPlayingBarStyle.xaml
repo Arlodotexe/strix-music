@@ -5,11 +5,11 @@
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:launchpad="using:LaunchPad.Controls">
 
-    <Style x:Key="StrixNowPlayingBarControlStyle" TargetType="default:NowPlayingBarControl">
+    <Style x:Key="StrixNowPlayingBarStyle" TargetType="default:NowPlayingBar">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:NowPlayingBarControl">
+                    <ControlTemplate TargetType="default:NowPlayingBar">
                         <UserControl>
                             <Grid VerticalAlignment="Center">
                                 <VisualStateManager.VisualStateGroups>
@@ -62,7 +62,7 @@
                                     <Rectangle Fill="#FF00FF" Width="80" Height="80" Margin="8"/>
                                 </Grid>
 
-                                <default:ProgressSliderControl x:Name="slider" VerticalAlignment="Center" Grid.Column="1" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"/>
+                                <default:ProgressSlider x:Name="slider" VerticalAlignment="Center" Grid.Column="1" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"/>
 
                                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                                     <Button Style="{StaticResource MediaButton}">
@@ -98,6 +98,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixNowPlayingBarControlStyle}" TargetType="default:NowPlayingBarControl"/>
+    <Style BasedOn="{StaticResource StrixNowPlayingBarStyle}" TargetType="default:NowPlayingBar"/>
 
 </ResourceDictionary>

@@ -46,7 +46,7 @@
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
     <None Remove="Styles\AlbumItemStyle.xaml" />
     <None Remove="Styles\AlbumViewStyle.xaml" />
-    <None Remove="Styles\ArtistStyle.xaml" />
+    <None Remove="Styles\ArtistItemStyle.xaml" />
     <None Remove="Styles\ArtistViewStyle.xaml" />
     <None Remove="Styles\HomeStyle.xaml" />
     <None Remove="Styles\NowPlayingBarStyle.xaml" />
@@ -62,7 +62,7 @@
     <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumViewStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\ArtistStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />

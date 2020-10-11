@@ -30,14 +30,14 @@ namespace StrixMusic.Shell.Strix.Controls
             _navigationService!.BackRequested += Shell_BackRequested;
             _pagesMapping = new Dictionary<Button, Type>
             {
-                [HomeTopButton] = typeof(HomeControl),
-                [HomeBottomButton] = typeof(HomeControl),
-                [SettingsButton] = typeof(SettingsViewControl),
+                [HomeTopButton] = typeof(HomeView),
+                [HomeBottomButton] = typeof(HomeView),
+                [SettingsButton] = typeof(SettingsView),
             };
 
             _overlayTypeMapping = new Dictionary<Type, string>
             {
-                { typeof(SettingsViewControl), nameof(OverlayOpenedPadded) },
+                { typeof(SettingsView), nameof(OverlayOpenedPadded) },
             };
         }
 
@@ -60,7 +60,7 @@ namespace StrixMusic.Shell.Strix.Controls
         {
             StrixShellIoc.Initialize();
             _navigationService = StrixShellIoc.Ioc.GetService<INavigationService<Control>>();
-            _navigationService!.RegisterCommonPage(typeof(HomeControl));
+            _navigationService!.RegisterCommonPage(typeof(HomeView));
         }
 
         private void NavigationService_NavigationRequested(object sender, NavigateEventArgs<Control> e)
@@ -87,7 +87,7 @@ namespace StrixMusic.Shell.Strix.Controls
 
         private void SearchButtonClicked(object sender, RoutedEventArgs e)
         {
-            _navigationService!.NavigateTo(typeof(SearchViewControl), false, SearchTextBox.Text);
+            _navigationService!.NavigateTo(typeof(SearchView), false, SearchTextBox.Text);
         }
 
         private void EnterOverlayView(Control page)

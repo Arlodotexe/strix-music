@@ -7,21 +7,21 @@ namespace StrixMusic.Shell.Default.Controls
     /// <summary>
     /// A Templated <see cref="Control"/> for showing <see cref="ObservableSearchResults"/> as a page.
     /// </summary>
-    public sealed partial class SearchViewControl : Control
+    public sealed partial class SearchView : Control
     {
         private string _query;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SearchViewControl"/> class.
+        /// Initializes a new instance of the <see cref="SearchView"/> class.
         /// </summary>
-        public SearchViewControl(string query)
+        public SearchView(string query)
         {
-            this.DefaultStyleKey = typeof(SearchViewControl);
+            this.DefaultStyleKey = typeof(SearchView);
             _query = query;
-            this.DataContextChanged += SearchViewControl_DataContextChanged;
+            this.DataContextChanged += SearchView_DataContextChanged;
         }
 
-        private async void SearchViewControl_DataContextChanged(Windows.UI.Xaml.DependencyObject sender, Windows.UI.Xaml.DataContextChangedEventArgs args)
+        private async void SearchView_DataContextChanged(Windows.UI.Xaml.DependencyObject sender, Windows.UI.Xaml.DataContextChangedEventArgs args)
         {
             //await ViewModel!.GlobalSearchResultsAsync(_query);
         }

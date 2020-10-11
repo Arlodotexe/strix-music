@@ -25,11 +25,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="StrixSettingsViewControlStyle" TargetType="default:SettingsViewControl">
+    <Style x:Key="StrixSettingsViewStyle" TargetType="default:SettingsView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:SettingsViewControl">
+                    <ControlTemplate TargetType="default:SettingsView">
                         <ContentControl ContentTemplate="{StaticResource StrixSettingsViewTemplate}"/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -37,6 +37,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixSettingsViewControlStyle}" TargetType="default:SettingsViewControl"/>
+    <Style BasedOn="{StaticResource StrixSettingsViewStyle}" TargetType="default:SettingsView"/>
 
 </ResourceDictionary>

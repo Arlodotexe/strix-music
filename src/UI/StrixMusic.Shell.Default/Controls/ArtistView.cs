@@ -6,14 +6,14 @@ namespace StrixMusic.Shell.Default.Controls
     /// <summary>
     /// A Templated <see cref="Control"/> for displaying an <see cref="ObservableArtist"/> as a page.
     /// </summary>
-    public sealed partial class ArtistViewControl : Control
+    public sealed partial class ArtistView : Control
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ArtistViewControl"/> class.
+        /// Initializes a new instance of the <see cref="ArtistView"/> class.
         /// </summary>
-        public ArtistViewControl()
+        public ArtistView()
         {
-            this.DefaultStyleKey = typeof(ArtistViewControl);
+            this.DefaultStyleKey = typeof(ArtistView);
         }
     }
 }

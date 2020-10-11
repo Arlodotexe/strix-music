@@ -14,11 +14,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="DefaultNowPlayingViewStyle" TargetType="controls:NowPlayingViewControl">
+    <Style x:Key="DefaultNowPlayingViewStyle" TargetType="controls:NowPlayingView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="controls:NowPlayingViewControl">
+                    <ControlTemplate TargetType="controls:NowPlayingView">
                         <ContentControl ContentTemplate="{StaticResource DefaultNowPlayingViewTemplate}"
                                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -27,6 +27,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultNowPlayingViewStyle}" TargetType="controls:NowPlayingViewControl"/>
+    <Style BasedOn="{StaticResource DefaultNowPlayingViewStyle}" TargetType="controls:NowPlayingView"/>
 
 </ResourceDictionary>

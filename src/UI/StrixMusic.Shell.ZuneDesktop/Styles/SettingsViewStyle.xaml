@@ -7,11 +7,11 @@
     xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
     xmlns:selectors="using:StrixMusic.Shell.ZuneDesktop.TemplateSelectors"
     x:Class="StrixMusic.Shell.ZuneDesktop.Styles.SettingsViewStyle">
-    <Style x:Key="ZuneDesktopSettingsViewControlStyle" TargetType="default:SettingsViewControl">
+    <Style x:Key="ZuneDesktopSettingsViewStyle" TargetType="default:SettingsView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:SettingsViewControl">
+                    <ControlTemplate TargetType="default:SettingsView">
                         <local:SettingsView/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -19,6 +19,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource ZuneDesktopSettingsViewControlStyle}" TargetType="default:SettingsViewControl"/>
+    <Style BasedOn="{StaticResource ZuneDesktopSettingsViewStyle}" TargetType="default:SettingsView"/>
 
 </ResourceDictionary>

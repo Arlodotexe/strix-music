@@ -5,14 +5,14 @@ namespace StrixMusic.Shell.Default.Controls
     /// <summary>
     /// A Templated <see cref="Control"/> for previewing a shell in settings.
     /// </summary>
-    public sealed partial class PreviewControl : Control
+    public sealed partial class ShellPreview : Control
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PreviewControl"/> class.
+        /// Initializes a new instance of the <see cref="ShellPreview"/> class.
         /// </summary>
-        public PreviewControl()
+        public ShellPreview()
         {
-            this.DefaultStyleKey = typeof(PreviewControl);
+            this.DefaultStyleKey = typeof(ShellPreview);
         }
     }
 }

@@ -7,11 +7,11 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:launchpad="using:LaunchPad.Controls">
 
-    <Style x:Key="ZuneNowPlayingViewControlStyle" TargetType="default:NowPlayingViewControl">
+    <Style x:Key="ZuneNowPlayingViewStyle" TargetType="default:NowPlayingView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:NowPlayingViewControl">
+                    <ControlTemplate TargetType="default:NowPlayingView">
                         <Grid>
                             <local:AlbumWall HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
@@ -31,6 +31,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource ZuneNowPlayingViewControlStyle}" TargetType="default:NowPlayingViewControl"/>
+    <Style BasedOn="{StaticResource ZuneNowPlayingViewStyle}" TargetType="default:NowPlayingView"/>
 
 </ResourceDictionary>

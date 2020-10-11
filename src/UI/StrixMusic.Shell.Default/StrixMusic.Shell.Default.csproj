@@ -48,10 +48,10 @@
     <None Remove="Styles\AlbumItemStyle.xaml" />
     <None Remove="Styles\AlbumViewStyle.xaml" />
     <None Remove="Styles\ArtistCollectionStyle.xaml" />
-    <None Remove="Styles\ArtistStyle.xaml" />
+    <None Remove="Styles\ArtistItemStyle.xaml" />
     <None Remove="Styles\ArtistViewStyle.xaml" />
     <None Remove="Styles\HomeStyle.xaml" />
-    <None Remove="Styles\NowPlayingBarControl.xaml" />
+    <None Remove="Styles\NowPlayingBar.xaml" />
     <None Remove="Styles\NowPlayingViewStyle.xaml" />
     <None Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
     <None Remove="Styles\SearchViewStyle.xaml" />
@@ -67,10 +67,10 @@
     <UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\ArtistStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\NowPlayingBarControl.xaml" />
+    <UpToDateCheckInput Remove="Styles\NowPlayingBar.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SearchViewStyle.xaml" />
@@ -116,7 +116,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Themes\NowPlayingBarControl.xaml">
+    <Page Update="Themes\NowPlayingBar.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>

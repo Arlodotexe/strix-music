@@ -18,11 +18,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="DefaultHomeControlStyle" TargetType="local:HomeControl">
+    <Style x:Key="DefaultHomeViewStyle" TargetType="local:HomeView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:HomeControl">
+                    <ControlTemplate TargetType="local:HomeView">
                         <ContentControl ContentTemplate="{StaticResource DefaultHomeTemplate}"/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -30,6 +30,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultHomeControlStyle}" TargetType="local:HomeControl"/>
+    <Style BasedOn="{StaticResource DefaultHomeViewStyle}" TargetType="local:HomeView"/>
 
 </ResourceDictionary>

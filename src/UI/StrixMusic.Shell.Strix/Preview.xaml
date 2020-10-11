@@ -4,11 +4,11 @@
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:local="using:StrixMusic.Shell.Strix.Controls">
 
-    <Style x:Key="StrixShellPreviewStyle" TargetType="default:PreviewControl">
+    <Style x:Key="StrixShellPreviewStyle" TargetType="default:ShellPreview">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:PreviewControl">
+                    <ControlTemplate TargetType="default:ShellPreview">
                         <Grid>
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="Sizes">

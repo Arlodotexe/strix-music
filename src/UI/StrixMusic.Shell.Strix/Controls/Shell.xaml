@@ -124,7 +124,7 @@
             </local:Drawer.MainContent>
             <local:Drawer.BottomBarSecondaryContent>
                 <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}">
-                    <default:NowPlayingBarControl/>
+                    <default:NowPlayingBar/>
                 </Grid>
             </local:Drawer.BottomBarSecondaryContent>
             <local:Drawer.BottomBarContent>

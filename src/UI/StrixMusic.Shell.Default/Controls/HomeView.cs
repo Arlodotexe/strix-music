@@ -6,14 +6,14 @@ namespace StrixMusic.Shell.Default.Controls
     /// <summary>
     /// A Templated <see cref="Control"/> for the home page of shell.
     /// </summary>
-    public sealed partial class HomeControl : Control
+    public sealed partial class HomeView : Control
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HomeControl"/> class.
+        /// Initializes a new instance of the <see cref="HomeView"/> class.
         /// </summary>
-        public HomeControl()
+        public HomeView()
         {
-            this.DefaultStyleKey = typeof(HomeControl);
+            this.DefaultStyleKey = typeof(HomeView);
 
             _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksAsync(20);
 

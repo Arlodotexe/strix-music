@@ -38,11 +38,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="StrixHomeViewControlStyle" TargetType="default:HomeControl">
+    <Style x:Key="StrixHomeViewControlStyle" TargetType="default:HomeView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:HomeControl">
+                    <ControlTemplate TargetType="default:HomeView">
                         <ContentControl ContentTemplate="{StaticResource StrixHomeTemplate}"
                                         VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -51,6 +51,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixHomeViewControlStyle}" TargetType="default:HomeControl"/>
+    <Style BasedOn="{StaticResource StrixHomeViewControlStyle}" TargetType="default:HomeView"/>
 
 </ResourceDictionary>

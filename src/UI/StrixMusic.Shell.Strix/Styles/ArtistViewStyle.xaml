@@ -4,11 +4,11 @@
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:local="using:StrixMusic.Shell.Strix.Controls">
 
-    <Style x:Key="StrixArtistViewControlStyle" TargetType="default:ArtistViewControl">
+    <Style x:Key="StrixArtistViewStyle" TargetType="default:ArtistView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:ArtistViewControl">
+                    <ControlTemplate TargetType="default:ArtistView">
                         <UserControl>
                             <Grid>
                                 <VisualStateManager.VisualStateGroups>
@@ -98,6 +98,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixArtistViewControlStyle}" TargetType="default:ArtistViewControl"/>
+    <Style BasedOn="{StaticResource StrixArtistViewStyle}" TargetType="default:ArtistView"/>
 
 </ResourceDictionary>
