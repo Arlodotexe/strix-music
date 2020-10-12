@@ -108,9 +108,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var recording in recordings.Items)
             {
-                // TODO: Remove when rate limiting is added to the API.
-                await Task.Delay(60 * recording.Releases.Count);
-
                 foreach (var release in recording.Releases)
                 {
                     // The search query above doesn't include track data, so we have to get it ourselves.
