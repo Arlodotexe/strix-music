@@ -1,13 +1,18 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Nito.AsyncEx;
+using OwlCore.Extensions.CollectionsExtensions.Dictionaries;
 using StrixMusic.Sdk.Services.StorageService;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.Storage;
+
 
 namespace StrixMusic.Sdk.Services
 {
     /// <inheritdoc cref="ITextStorageService"/>
     public class TextStorageService : ITextStorageService
     {
+        private readonly Dictionary<string, AsyncLock> _keyedMutex = new Dictionary<string, AsyncLock>();
         private readonly StorageFolder _localFolder;
 
         /// <summary>
@@ -140,6 +145,8 @@ namespace StrixMusic.Sdk.Services
                 fileHandle = await _localFolder.CreateFileAsync(filename);
             }
 
+            using (await _keyedMutex.GetOrAdd(filename, new AsyncLock()).LockAsync())
+
             await FileIO.WriteTextAsync(fileHandle, value);
         }
 
@@ -166,7 +173,9 @@ namespace StrixMusic.Sdk.Services
                 fileHandle = await pathHandle.CreateFileAsync(filename);
             }
 
-            await FileIO.WriteTextAsync(fileHandle, value);
+            using (await _keyedMutex.GetOrAdd(filename + path, new AsyncLock()).LockAsync())
+
+                await FileIO.WriteTextAsync(fileHandle, value);
         }
     }
 }
