@@ -9,11 +9,11 @@
         <styles:AlbumItemStyle/>
         <styles:AlbumViewStyle/>
         <ResourceDictionary Source="Styles/ArtistItemStyle.xaml"/>
+        <ResourceDictionary Source="Styles/ArtistCollectionStyle.xaml"/>
         <ResourceDictionary Source="Styles/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
         <styles:NowPlayingViewStyle/>
         <styles:AlbumCollectionStyle/>
-        <styles:ArtistCollectionStyle/>
         <styles:SearchViewStyle/>
         <styles:SettingsViewStyle/>
         <styles:ShellStyle/>
