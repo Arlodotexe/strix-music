@@ -148,17 +148,15 @@ namespace StrixMusic
 
         private bool CheckShellModelSupport(ShellModel shell)
         {
-            bool supported = true;
+            return
 
-            // Check height is within range
-            supported = supported && ActualHeight < shell.ShellAttribute.MaxWindowSize.Height;
-            supported = supported && ActualHeight > shell.ShellAttribute.MinWindowSize.Height;
+                // Check height is within range
+                ActualHeight < shell.ShellAttribute.MaxWindowSize.Height &&
+                ActualHeight > shell.ShellAttribute.MinWindowSize.Height &&
 
-            // Check width is within range
-            supported = supported && ActualWidth > shell.ShellAttribute.MinWindowSize.Width;
-            supported = supported && ActualWidth > shell.ShellAttribute.MinWindowSize.Width;
-
-            return supported;
+                // Check width is within range
+                ActualWidth > shell.ShellAttribute.MinWindowSize.Width &&
+                ActualWidth > shell.ShellAttribute.MinWindowSize.Width;
         }
 
         private async void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)

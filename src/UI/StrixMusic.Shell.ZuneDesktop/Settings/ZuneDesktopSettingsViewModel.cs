@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using OwlCore.Extensions.AsyncExtensions;
 using StrixMusic.Sdk;
 
 namespace StrixMusic.Shell.ZuneDesktop.Settings
@@ -27,6 +26,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Settings
         public IEnumerable<string> ImageNames => _zuneBackgroundImages.Keys;
 
         private readonly ZuneDesktopSettingsService _zuneDesktopSettingsService;
+        private string _selectedBackgroundImage = string.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ZuneDesktopSettingsViewModel"/> class.
@@ -34,6 +34,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Settings
         public ZuneDesktopSettingsViewModel()
         {
             _zuneDesktopSettingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>();
+            LoadInitalValues();
         }
 
         /// <summary>
@@ -41,18 +42,27 @@ namespace StrixMusic.Shell.ZuneDesktop.Settings
         /// </summary>
         public string SelectedBackgroundImage
         {
-            get
-            {
-                // TODO: Initialize this value from code behind and keep track in a backing field.
-                var backgroundImage = _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage)).Result;
-                return backgroundImage.Name;
-            }
-
+            get => _selectedBackgroundImage;
             set
             {
-                ZuneDesktopBackgroundImage image = _zuneBackgroundImages[value];
-                _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
+                if (SetProperty(ref _selectedBackgroundImage, value))
+                {
+                    ZuneDesktopBackgroundImage image = _zuneBackgroundImages[value];
+                    _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
+                }
             }
+        }
+
+        /// <summary>
+        /// Gets initial values from settings and sets the properties
+        /// </summary>
+        /// <remarks>
+        /// Once general settings are setup, this should be made a virtual method
+        /// </remarks>
+        private async void LoadInitalValues()
+        {
+            ZuneDesktopBackgroundImage backgroundImage = await _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
+            SetProperty(ref _selectedBackgroundImage, backgroundImage.Name);
         }
     }
 }

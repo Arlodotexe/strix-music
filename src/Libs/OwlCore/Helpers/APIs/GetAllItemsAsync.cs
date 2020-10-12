@@ -69,7 +69,7 @@ namespace OwlCore.Helpers
 
                 list.AddRange(page);
 
-                if (list.Count == total)
+                if (list.Count >= total)
                     break;
             }
 
