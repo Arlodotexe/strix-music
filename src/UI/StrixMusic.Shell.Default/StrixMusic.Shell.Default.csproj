@@ -105,8 +105,14 @@
     <Compile Update="Styles\AlbumItemStyle.xaml.cs">
       <DependentUpon>AlbumItemStyle.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Styles\ArtistItemStyle.xaml.cs">
+      <DependentUpon>ArtistItemStyle.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Styles\AlbumCollectionStyle.xaml.cs">
       <DependentUpon>AlbumCollectionStyle.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\ArtistCollectionStyle.xaml.cs">
+      <DependentUpon>ArtistCollectionStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Styles\TrackItemStyle.xaml.cs">
       <DependentUpon>TrackItemStyle.xaml</DependentUpon>
