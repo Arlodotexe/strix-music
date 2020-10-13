@@ -1,0 +1,50 @@
+﻿<ResourceDictionary
+    x:Class="StrixMusic.Shell.Strix.Styles.PlayableCollectionGroupPivotStyle"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:default="using:StrixMusic.Shell.Default.Controls"
+    xmlns:local="clr-namespace:StrixMusic.Shell.Strix.Styles">
+
+    <Style x:Key="StrixPlayableCollectionGroupPivotStyle" TargetType="default:PlayableCollectionGroupPivot">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="default:PlayableCollectionGroupPivot">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}">
+                            <Grid>
+                                <Pivot x:Name="PART_Pivot">
+                                    <Pivot.LeftHeader>
+                                        <TextBlock Grid.Column="1" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0"/>
+                                    </Pivot.LeftHeader>
+                                    <PivotItem x:Name="PART_OverviewPivotItem" Header="Overview">
+                                        
+                                    </PivotItem>
+                                    <PivotItem x:Name="PART_SongsPivotItem" Header="Songs">
+                                        <default:TrackCollection />
+                                    </PivotItem>
+                                    <PivotItem x:Name="PART_AlbumsPivotItem" Header="Albums">
+										<default:AlbumCollection />
+                                    </PivotItem>
+                                    <PivotItem x:Name="PART_ArtistsPivotItem" Header="Artists">
+										<default:ArtistCollection />
+                                    </PivotItem>
+                                    <PivotItem x:Name="PART_PlaylistsPivotItem" Header="Playlists">
+
+                                    </PivotItem>
+                                </Pivot>
+
+                                <ContentPresenter x:Name="PART_AllEmptyContentPresenter" Visibility="Collapsed" />
+
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource StrixPlayableCollectionGroupPivotStyle}" TargetType="default:PlayableCollectionGroupPivot"/>
+
+</ResourceDictionary>
