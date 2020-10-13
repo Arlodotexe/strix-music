@@ -2,7 +2,7 @@
 using StrixMusic.Sdk.Interfaces;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace StrixMusic.Converters
+namespace StrixMusic.Shell.Default.Converters
 {
     /// <summary>
     /// A simple converter that converts a given <see cref="Uri"/> to an <see cref="BitmapImage"/>.
@@ -10,7 +10,7 @@ namespace StrixMusic.Converters
     public sealed class UriToImageSourceConverter
     {
         /// <summary>
-        /// Converts a <see cref="Uri"/> or url string to an <see cref="BitmapImage"/>.
+        /// Converts a <see cref="Uri"/> or url string to a <see cref="BitmapImage"/>.
         /// </summary>
         /// <param name="value">The uri or url string.</param>
         /// <returns>A <see cref="BitmapImage"/>.</returns>
