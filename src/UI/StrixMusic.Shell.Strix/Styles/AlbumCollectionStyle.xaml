@@ -8,7 +8,8 @@
 
     <DataTemplate x:Key="StrixAlbumCollectionContentTemplate" x:DataType="observables:IObservableAlbumCollection">
         <GridView ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource StrixAlbumCollectionItemStyle}"
-                  Padding="16" HorizontalAlignment="Stretch"  SelectionMode="None" IsItemClickEnabled="True"/>
+                  Padding="16" HorizontalAlignment="Stretch"  SelectionMode="None" IsItemClickEnabled="True"
+                  ItemClick="OpenAlbum"/>
     </DataTemplate>
 
     <DataTemplate x:Key="StrixAlbumCollectionItemStyle">

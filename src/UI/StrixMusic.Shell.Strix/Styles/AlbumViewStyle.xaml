@@ -72,9 +72,12 @@
                     </Rectangle>
 
                     <StackPanel Grid.Column="1" Margin="0,32,0,0">
-                        <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold"/>
-                        <TextBlock Margin="0,4,0,0"/>
-                        <TextBlock Text="2010" Opacity=".5"/>
+                        <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
+                                   LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
+                        <HyperlinkButton Content="{x:Bind Artist.Name}" Margin="0,4,0,0"
+                                         Style="{StaticResource PlainTextSubtleHyperlinkStyle}"
+                                         Click="GoToArtist" />
+                        <TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>
                     </StackPanel>
                     <StackPanel x:Name="QuickActions" Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Margin="16,0,0,32" VerticalAlignment="Bottom">
                         <Button Content="Play" Style="{StaticResource QuickActionButton}" Background="{ThemeResource SystemAccentColor}"/>
