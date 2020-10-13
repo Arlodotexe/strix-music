@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shell.Default.Controls"
     xmlns:observables="using:StrixMusic.Sdk.Observables"
-    xmlns:converters="using:StrixMusic.Converters"
+    xmlns:converters="using:StrixMusic.Shell.Default.Converters"
     x:Class="StrixMusic.Shell.Default.Styles.AlbumItemStyle">
 
     <DataTemplate x:Key="DefaultAlbumItemTemplate" x:DataType="observables:ObservableAlbum">

@@ -4,7 +4,7 @@
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:local="using:StrixMusic.Shell.Strix.Controls"
     xmlns:observables="using:StrixMusic.Sdk.Observables"
-    xmlns:converters="using:StrixMusic.Converters"
+    xmlns:converters="using:StrixMusic.Shell.Default.Converters"
     x:Class="StrixMusic.Shell.Strix.Styles.AlbumViewStyle">
 
     <DataTemplate x:Key="StrixAlbumViewTemplate" x:DataType="observables:ObservableAlbum">
