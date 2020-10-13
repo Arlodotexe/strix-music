@@ -21,6 +21,7 @@ namespace StrixMusic.Shell.Default.Styles
         {
             if ((sender as Control)?.DataContext is ObservableAlbum viewModel)
             {
+                // TODO: Investigate exposed ObservableArtist in ObservableAlbum
                 if (viewModel.Artist is ObservableArtist observableArtist)
                 {
                     INavigationService<Control> navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>();
