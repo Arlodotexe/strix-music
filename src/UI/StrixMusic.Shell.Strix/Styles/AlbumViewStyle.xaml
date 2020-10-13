@@ -8,92 +8,94 @@
     x:Class="StrixMusic.Shell.Strix.Styles.AlbumViewStyle">
 
     <DataTemplate x:Key="StrixAlbumViewTemplate" x:DataType="observables:ObservableAlbum">
-        <UserControl>
-            <Grid>
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="Sizes">
-                        <VisualState x:Name="Tiny">
-                            <VisualState.StateTriggers>
-                                <AdaptiveTrigger MinWindowWidth="0"/>
-                            </VisualState.StateTriggers>
-                            <VisualState.Setters>
-                                <Setter Target="MoreButton.Visibility" Value="Visible"/>
-                                <Setter Target="ExtraQuickActions.Visibility" Value="Collapsed"/>
-                                <Setter Target="QuickActions.Margin" Value="16,0,0,32"/>
-                                <Setter Target="AlbumCoverColumn.Width" Value="224"/>
-                                <Setter Target="AlbumCoverRow.Height" Value="224"/>
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Small">
-                            <VisualState.StateTriggers>
-                                <AdaptiveTrigger MinWindowWidth="600"/>
-                            </VisualState.StateTriggers>
-                            <VisualState.Setters>
-                                <Setter Target="MoreButton.Visibility" Value="Visible"/>
-                                <Setter Target="ExtraQuickActions.Visibility" Value="Collapsed"/>
-                                <Setter Target="QuickActions.Margin" Value="16,0,0,32"/>
-                                <Setter Target="AlbumCoverColumn.Width" Value="300"/>
-                                <Setter Target="AlbumCoverRow.Height" Value="300"/>
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Mid">
-                            <VisualState.StateTriggers>
-                                <AdaptiveTrigger MinWindowWidth="800"/>
-                            </VisualState.StateTriggers>
-                            <VisualState.Setters>
-                                <Setter Target="MoreButton.Visibility" Value="Collapsed"/>
-                                <Setter Target="ExtraQuickActions.Visibility" Value="Visible"/>
-                                <Setter Target="QuickActions.Margin" Value="16,0,0,32"/>
-                                <Setter Target="AlbumCoverColumn.Width" Value="300"/>
-                                <Setter Target="AlbumCoverRow.Height" Value="300"/>
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
-                <Grid.RowDefinitions>
-                    <RowDefinition x:Name="AlbumCoverRow" Height="300"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-
+        <ScrollViewer>
+            <UserControl>
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="AlbumCoverColumn" Width="300"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="Sizes">
+                            <VisualState x:Name="Tiny">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="0"/>
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Target="MoreButton.Visibility" Value="Visible"/>
+                                    <Setter Target="ExtraQuickActions.Visibility" Value="Collapsed"/>
+                                    <Setter Target="QuickActions.Margin" Value="16,0,0,32"/>
+                                    <Setter Target="AlbumCoverColumn.Width" Value="224"/>
+                                    <Setter Target="AlbumCoverRow.Height" Value="224"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Small">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="600"/>
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Target="MoreButton.Visibility" Value="Visible"/>
+                                    <Setter Target="ExtraQuickActions.Visibility" Value="Collapsed"/>
+                                    <Setter Target="QuickActions.Margin" Value="16,0,0,32"/>
+                                    <Setter Target="AlbumCoverColumn.Width" Value="300"/>
+                                    <Setter Target="AlbumCoverRow.Height" Value="300"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Mid">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="800"/>
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Target="MoreButton.Visibility" Value="Collapsed"/>
+                                    <Setter Target="ExtraQuickActions.Visibility" Value="Visible"/>
+                                    <Setter Target="QuickActions.Margin" Value="16,0,0,32"/>
+                                    <Setter Target="AlbumCoverColumn.Width" Value="300"/>
+                                    <Setter Target="AlbumCoverRow.Height" Value="300"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
                     <Grid.RowDefinitions>
+                        <RowDefinition x:Name="AlbumCoverRow" Height="300"/>
                         <RowDefinition/>
-                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <Rectangle Grid.RowSpan="2" Margin="32">
-                        <Rectangle.Fill>
-                            <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
-                        </Rectangle.Fill>
-                    </Rectangle>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="AlbumCoverColumn" Width="300"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Column="1" Margin="0,32,0,0">
-                        <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
+                        <Rectangle Grid.RowSpan="2" Margin="32">
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+                        <StackPanel Grid.Column="1" Margin="0,32,0,0">
+                            <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
                                    LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
-                        <HyperlinkButton Content="{x:Bind Artist.Name}" Margin="0,4,0,0"
+                            <HyperlinkButton Content="{x:Bind Artist.Name}" Margin="0,4,0,0"
                                          Style="{StaticResource PlainTextSubtleHyperlinkStyle}"
                                          Click="GoToArtist" />
-                        <TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>
-                    </StackPanel>
-                    <StackPanel x:Name="QuickActions" Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Margin="16,0,0,32" VerticalAlignment="Bottom">
-                        <Button Content="Play" Style="{StaticResource QuickActionButton}" Background="{ThemeResource SystemAccentColor}"/>
-                        <StackPanel x:Name="ExtraQuickActions" Orientation="Horizontal">
-                            <Button Content="Follow" Style="{StaticResource QuickActionButton}"/>
-                            <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
+                            <TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>
                         </StackPanel>
-                        <Button x:Name="MoreButton" Style="{StaticResource InstantActionButton}">
-                            <FontIcon Glyph="&#xE10C;"/>
-                        </Button>
-                    </StackPanel>
-                </Grid>
+                        <StackPanel x:Name="QuickActions" Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Margin="16,0,0,32" VerticalAlignment="Bottom">
+                            <Button Content="Play" Style="{StaticResource QuickActionButton}" Background="{ThemeResource SystemAccentColor}"/>
+                            <StackPanel x:Name="ExtraQuickActions" Orientation="Horizontal">
+                                <Button Content="Follow" Style="{StaticResource QuickActionButton}"/>
+                                <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
+                            </StackPanel>
+                            <Button x:Name="MoreButton" Style="{StaticResource InstantActionButton}">
+                                <FontIcon Glyph="&#xE10C;"/>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
 
-                <default:TrackCollection Grid.Row="1"/>
-            </Grid>
-        </UserControl>
+                    <default:TrackCollection Grid.Row="1"/>
+                </Grid>
+            </UserControl>
+        </ScrollViewer>
     </DataTemplate>
     
     <Style x:Key="StrixAlbumViewControlStyle" TargetType="default:AlbumView">
