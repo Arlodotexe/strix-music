@@ -1,8 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
-using OwlCore.Collections;
-using OwlCore.Exceptions;
-using StrixMusic.Sdk.Interfaces;
-using StrixMusic.Sdk.Observables;
+﻿using StrixMusic.Sdk.Observables;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

@@ -11,6 +11,7 @@ namespace StrixMusic.Shell.Default.Controls
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumView"/> class.
         /// </summary>
+        /// <param name="album">The Album in view.</param>
         public AlbumView(ObservableAlbum album)
         {
             this.DefaultStyleKey = typeof(AlbumView);
