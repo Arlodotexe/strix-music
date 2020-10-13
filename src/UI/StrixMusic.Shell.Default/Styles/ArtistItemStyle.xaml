@@ -1,29 +1,44 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:StrixMusic.Converters"
+    xmlns:observables="using:StrixMusic.Sdk.Observables"
     xmlns:local="using:StrixMusic.Shell.Default.Controls">
 
-	<Style x:Key="DefaultArtistItemStyle" TargetType="local:ArtistItem">
+    <DataTemplate x:Key="DefaultArtistItemDataTemplate" x:DataType="observables:ObservableArtist">
+        <UserControl>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Rectangle Width="128" Height="128" RadiusX="64" RadiusY="64">
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images[0])}"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <StackPanel Grid.Row="1" Margin="0,20,0,0">
+                    <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Grid>
+        </UserControl>
+    </DataTemplate>
+
+
+    <Style x:Key="DefaultArtistItemStyle" TargetType="local:ArtistItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:ArtistItem">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <Rectangle Fill="#FF00FF" Width="128" Height="128" RadiusX="64" RadiusY="64"/>
-                            <StackPanel Grid.Row="1" Margin="0,20,0,0">
-                                <TextBlock Text="Vampire Weekend" FontWeight="SemiBold"/>
-                            </StackPanel>
-                        </Grid>
+                        <ContentControl ContentTemplate="{StaticResource DefaultArtistItemDataTemplate}" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style.Setters>
     </Style>
 
-	<Style BasedOn="{StaticResource DefaultArtistItemStyle}" TargetType="local:ArtistItem"/>
+    <Style BasedOn="{StaticResource DefaultArtistItemStyle}" TargetType="local:ArtistItem"/>
 
 </ResourceDictionary>
