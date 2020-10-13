@@ -50,6 +50,7 @@
     <None Remove="Styles\ArtistViewStyle.xaml" />
     <None Remove="Styles\HomeStyle.xaml" />
     <None Remove="Styles\NowPlayingBarStyle.xaml" />
+    <None Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
     <None Remove="Styles\SettingsViewStyle.xaml" />
     <None Remove="Styles\ShellStyle.xaml" />
   </ItemGroup>
@@ -66,6 +67,7 @@
     <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ShellStyle.xaml" />
   </ItemGroup>
