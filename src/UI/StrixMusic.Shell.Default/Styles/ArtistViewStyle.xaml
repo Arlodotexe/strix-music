@@ -99,8 +99,7 @@
                     <Rectangle x:Name="ArtistImage" Grid.RowSpan="2" Margin="38,32,22,32" Visibility="{x:Bind converters:CollectionAnyToVisibilityConverter.Convert(Images)}"
                            Height="224" Width="224" HorizontalAlignment="Center" RadiusX="300" RadiusY="300">
                         <Rectangle.Fill>
-                            <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images[0])}"/>
-                            <!--<SolidColorBrush Color="#FF00FF"/>-->
+                            <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
                         </Rectangle.Fill>
                     </Rectangle>
 

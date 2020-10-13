@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using StrixMusic.Sdk.Interfaces;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -28,6 +30,10 @@ namespace StrixMusic.Shell.Default.Converters
             else if (value is IImage iValue)
             {
                 uri = iValue.Uri;
+            }
+            else if (value is ICollection<IImage> imageCollection && imageCollection.Any())
+            {
+                uri = imageCollection.First().Uri;
             }
 
             if (uri != null)
