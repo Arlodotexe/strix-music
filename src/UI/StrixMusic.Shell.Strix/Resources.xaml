@@ -13,8 +13,8 @@
         <ResourceDictionary Source="Styles/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
         <styles:HomeStyle/>
-		<styles:PlayableCollectionGroupPivotStyle/>
-		<ResourceDictionary Source="Styles/AlbumCollectionStyle.xaml"/>
+        <styles:PlayableCollectionGroupPivotStyle/>
+        <ResourceDictionary Source="Styles/AlbumCollectionStyle.xaml"/>
         <styles:AlbumCollectionStyle/>
         <styles:ShellStyle/>
         <styles:SettingsViewStyle/>

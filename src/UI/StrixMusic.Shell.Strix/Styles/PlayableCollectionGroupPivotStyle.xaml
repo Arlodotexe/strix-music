@@ -5,7 +5,7 @@
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:local="clr-namespace:StrixMusic.Shell.Strix.Styles">
 
-    <Style x:Key="StrixPlayableCollectionGroupPivotStyle" TargetType="default:PlayableCollectionGroupPivot">
+	<Style BasedOn="{StaticResource DefaultPlayableCollectionGroupPivotStyle}" TargetType="default:PlayableCollectionGroupPivot">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
@@ -19,16 +19,16 @@
                                         <TextBlock Grid.Column="1" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0"/>
                                     </Pivot.LeftHeader>
                                     <PivotItem x:Name="PART_OverviewPivotItem" Header="Overview">
-                                        
+
                                     </PivotItem>
                                     <PivotItem x:Name="PART_SongsPivotItem" Header="Songs">
                                         <default:TrackCollection />
                                     </PivotItem>
                                     <PivotItem x:Name="PART_AlbumsPivotItem" Header="Albums">
-										<default:AlbumCollection />
+                                        <default:AlbumCollection />
                                     </PivotItem>
                                     <PivotItem x:Name="PART_ArtistsPivotItem" Header="Artists">
-										<default:ArtistCollection />
+                                        <default:ArtistCollection />
                                     </PivotItem>
                                     <PivotItem x:Name="PART_PlaylistsPivotItem" Header="Playlists">
 
@@ -44,7 +44,5 @@
             </Setter>
         </Style.Setters>
     </Style>
-
-    <Style BasedOn="{StaticResource StrixPlayableCollectionGroupPivotStyle}" TargetType="default:PlayableCollectionGroupPivot"/>
 
 </ResourceDictionary>
