@@ -227,7 +227,7 @@ namespace StrixMusic.Shell.Default.Controls
 
             var pivotSelectionMemo = await _settingsService.GetValue<Dictionary<string, int>>(nameof(SettingsKeys.PivotSelectionMemo), respectCurrentShell: true);
 
-            if (pivotSelectionMemo.TryGetValue(ViewModel.Id, out int value))
+            if (pivotSelectionMemo != null && pivotSelectionMemo.TryGetValue(ViewModel.Id, out int value))
             {
                 PART_Pivot.SelectedIndex = value;
             }
