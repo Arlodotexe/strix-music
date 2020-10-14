@@ -10,7 +10,7 @@
         <styles:AlbumCollectionStyle/>
         <styles:AlbumItemStyle/>
         <styles:AlbumViewStyle/>
-        <!--<styles:ArtistCollectionStyle/>-->
+        <styles:ArtistCollectionStyle/>
         <styles:ArtistItemStyle/>
         <styles:ArtistViewStyle/>
         <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>

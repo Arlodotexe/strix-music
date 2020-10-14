@@ -46,6 +46,7 @@
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
     <None Remove="Styles\AlbumItemStyle.xaml" />
     <None Remove="Styles\AlbumViewStyle.xaml" />
+    <None Remove="Styles\ArtistCollectionStyle.xaml" />
     <None Remove="Styles\ArtistItemStyle.xaml" />
     <None Remove="Styles\ArtistViewStyle.xaml" />
     <None Remove="Styles\HomeStyle.xaml" />
@@ -63,6 +64,7 @@
     <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumViewStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
@@ -81,6 +83,9 @@
     <ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Styles\AlbumCollectionStyle - Copy.xaml.cs">
+      <DependentUpon>AlbumCollectionStyle.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Styles\AlbumViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
