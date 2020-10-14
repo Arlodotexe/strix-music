@@ -2,12 +2,12 @@
 
 namespace StrixMusic.Shell.Strix.Styles
 {
-    public sealed partial class AlbumItemStyle : ResourceDictionary
+    public sealed partial class ArtistItemStyle : ResourceDictionary
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlbumItemStyle"/> class.
+        /// Initializes a new instance of the <see cref="ArtistItemStyle"/> class.
         /// </summary>
-        public AlbumItemStyle()
+        public ArtistItemStyle()
         {
             this.InitializeComponent();
         }
