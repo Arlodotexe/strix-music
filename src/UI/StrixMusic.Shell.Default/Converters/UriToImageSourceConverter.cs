@@ -12,7 +12,7 @@ namespace StrixMusic.Shell.Default.Converters
     public sealed class UriToImageSourceConverter
     {
         /// <summary>
-        /// Converts a <see cref="Uri"/> or url string to an <see cref="BitmapImage"/>.
+        /// Converts a <see cref="Uri"/> or url string to a <see cref="BitmapImage"/>.
         /// </summary>
         /// <param name="value">The uri or url string.</param>
         /// <returns>A <see cref="BitmapImage"/>.</returns>
