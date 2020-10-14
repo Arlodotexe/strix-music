@@ -6,20 +6,20 @@ using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Strix.Styles
 {
-    public sealed partial class AlbumCollectionStyle : ResourceDictionary
+    public sealed partial class ArtistCollectionStyle : ResourceDictionary
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlbumCollectionStyle"/> class.
+        /// Initializes a new instance of the <see cref="ArtistCollectionStyle"/> class.
         /// </summary>
-        public AlbumCollectionStyle()
+        public ArtistCollectionStyle()
         {
             this.InitializeComponent();
         }
 
-        private void OpenAlbum(object sender, ItemClickEventArgs e)
+        private void OpenArtist(object sender, ItemClickEventArgs e)
         {
             INavigationService<Control> navigationService = StrixShellIoc.Ioc.GetService<INavigationService<Control>>();
-            navigationService.NavigateTo(typeof(AlbumView), false, e.ClickedItem);
+            navigationService.NavigateTo(typeof(ArtistView), false, e.ClickedItem);
         }
     }
 }

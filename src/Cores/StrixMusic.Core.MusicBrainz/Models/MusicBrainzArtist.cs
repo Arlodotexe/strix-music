@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using OwlCore.Collections;
+using StrixMusic.Core.MusicBrainz.Models.Enums;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Enums;
@@ -32,7 +33,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             SourceCore = sourceCore;
             TotalTracksCount = totalTracksCount;
+
             _artist = artist;
+            Images = null!;
 
             _musicBrainzClient = SourceCore.GetService<MusicBrainzClient>();
             _artistHelperService = SourceCore.GetService<MusicBrainzArtistHelpersService>();
@@ -72,7 +75,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Name => _artist.Name;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<IImage> Images => new SynchronizedObservableCollection<IImage>();
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc/>
         public string Description => _artist.SortName;

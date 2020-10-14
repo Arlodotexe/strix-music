@@ -74,6 +74,7 @@ namespace StrixMusic.Shell.ZuneDesktop.Controls
         /// <inheritdoc/>
         protected override void SetupTitleBar()
         {
+            base.SetupTitleBar();
 #if NETFX_CORE
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             Window.Current.SetTitleBar(CustomTitleBar);

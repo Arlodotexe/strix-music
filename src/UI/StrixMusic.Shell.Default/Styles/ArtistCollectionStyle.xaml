@@ -9,7 +9,8 @@
 
     <DataTemplate x:Key="DefaultArtistCollectionDataTemplate" x:DataType="observables:IObservableArtistCollection">
         <GridView ItemsSource="{x:Bind Artists}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
-                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"/>
+                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
+                  ItemClick="OpenArtist"/>
     </DataTemplate>
 
     <DataTemplate x:Key="DefaultArtistCollectionItemStyle">

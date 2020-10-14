@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Observables
     {
         private readonly IAlbum _album;
 
-        private ObservableArtist _artist;
+        private ObservableArtist _artist; // TODO: Expose this field from readonly property
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObservableAlbum"/> class.
@@ -170,11 +170,14 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public IArtist Artist
+        public ObservableArtist Artist
         {
             get => _artist;
             set => SetProperty(ref _artist, new ObservableArtist(value));
         }
+
+        /// <inheritdoc />
+        IArtist IAlbum.Artist => Artist;
 
         /// <inheritdoc />
         public Uri? Url

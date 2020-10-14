@@ -5,21 +5,21 @@
     xmlns:converters="using:StrixMusic.Shell.Default.Converters"
     xmlns:styles="using:StrixMusic.Shell.Default.Styles">
     <ResourceDictionary.MergedDictionaries>
-        <styles:HomeStyle/>
+        <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
+        <styles:AlbumCollectionStyle/>
         <styles:AlbumItemStyle/>
         <styles:AlbumViewStyle/>
-        <ResourceDictionary Source="Styles/ArtistItemStyle.xaml"/>
-        <ResourceDictionary Source="Styles/ArtistCollectionStyle.xaml"/>
-        <ResourceDictionary Source="Styles/ArtistViewStyle.xaml"/>
-        <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
+        <styles:ArtistCollectionStyle/>
+        <styles:ArtistItemStyle/>
+        <styles:ArtistViewStyle/>
+        <styles:HomeStyle/>
         <styles:NowPlayingViewStyle/>
-        <styles:AlbumCollectionStyle/>
+        <styles:PlayableCollectionGroupPivotStyle />
         <styles:SearchViewStyle/>
         <styles:SettingsViewStyle/>
         <styles:ShellStyle/>
         <styles:TrackCollectionStyle/>
         <styles:TrackItemStyle/>
-        <styles:PlayableCollectionGroupPivotStyle />
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="QuickActionButton" TargetType="Button">

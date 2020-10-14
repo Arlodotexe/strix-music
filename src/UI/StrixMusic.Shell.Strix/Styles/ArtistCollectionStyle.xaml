@@ -4,24 +4,24 @@
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:observables="using:StrixMusic.Sdk.Observables"
     xmlns:selectors="using:StrixMusic.Shell.Default.TemplateSelectors"
-    x:Class="StrixMusic.Shell.Strix.Styles.AlbumCollectionStyle">
+    x:Class="StrixMusic.Shell.Strix.Styles.ArtistCollectionStyle">
 
-    <DataTemplate x:Key="StrixAlbumCollectionContentTemplate" x:DataType="observables:IObservableAlbumCollection">
-        <GridView ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource StrixAlbumCollectionItemStyle}"
+    <DataTemplate x:Key="StrixArtistCollectionContentTemplate" x:DataType="observables:IObservableArtistCollection">
+        <GridView ItemsSource="{x:Bind Artists}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
                   Padding="16" HorizontalAlignment="Stretch"  SelectionMode="None" IsItemClickEnabled="True"
-                  ItemClick="OpenAlbum"/>
+                  ItemClick="OpenArtist"/>
     </DataTemplate>
 
-    <DataTemplate x:Key="StrixAlbumCollectionItemStyle">
+    <DataTemplate x:Key="StrixArtistCollectionItemStyle">
         <default:AlbumItem />
     </DataTemplate>
 
-    <Style x:Key="StrixAlbumCollectionStyle" TargetType="default:AlbumCollection">
+    <Style x:Key="StrixArtistCollectionStyle" TargetType="default:ArtistCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:AlbumCollection">
-                        <ContentControl ContentTemplate="{StaticResource StrixAlbumCollectionContentTemplate}"
+                    <ControlTemplate TargetType="default:ArtistCollection">
+                        <ContentControl ContentTemplate="{StaticResource StrixArtistCollectionContentTemplate}"
                                         VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
                     </ControlTemplate>
                 </Setter.Value>
@@ -29,6 +29,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixAlbumCollectionStyle}" TargetType="default:AlbumCollection"/>
+    <Style BasedOn="{StaticResource StrixArtistCollectionStyle}" TargetType="default:ArtistCollection"/>
 
 </ResourceDictionary>

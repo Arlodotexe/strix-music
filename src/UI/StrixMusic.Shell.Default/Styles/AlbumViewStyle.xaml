@@ -7,45 +7,97 @@
     x:Class="StrixMusic.Shell.Default.Styles.AlbumViewStyle">
 
     <DataTemplate x:Key="DefaultAlbumViewTemplate" x:DataType="observables:ObservableAlbum">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="300"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+        <ScrollViewer>
+            <UserControl>
+                <Grid>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="Sizes">
+                            <VisualState x:Name="Small">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Target="QuickActionsBar.(Grid.Row)" Value="2"/>
+                                    <Setter Target="QuickActionsBar.(Grid.Column)" Value="0"/>
+                                    <Setter Target="QuickActionsBar.(Grid.ColumnSpan)" Value="2"/>
+                                    <Setter Target="QuickActionsBar.HorizontalAlignment" Value="Center"/>
+                                    <Setter Target="AlbumImage.(Grid.RowSpan)" Value="1"/>
+                                    <Setter Target="AlbumImage.(Grid.ColumnSpan)" Value="2"/>
+                                    <Setter Target="AlbumImage.Margin" Value="16,32,16,8"/>
+                                    <Setter Target="DetailsStack.(Grid.Row)" Value="1"/>
+                                    <Setter Target="DetailsStack.(Grid.Column)" Value="0"/>
+                                    <Setter Target="DetailsStack.(Grid.ColumnSpan)" Value="2"/>
+                                    <Setter Target="DetailsStack.HorizontalAlignment" Value="Center"/>
+                                    <Setter Target="DetailsStack.Margin" Value="0,8,0,16"/>
+                                    <Setter Target="DetailsStack.Padding" Value="0,0,0,0"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Mid">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="600"/>
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Target="QuickActionsBar.(Grid.Row)" Value="1"/>
+                                    <Setter Target="QuickActionsBar.(Grid.Column)" Value="1"/>
+                                    <Setter Target="QuickActionsBar.(Grid.ColumnSpan)" Value="1"/>
+                                    <Setter Target="QuickActionsBar.HorizontalAlignment" Value="Left"/>
+                                    <Setter Target="AlbumImage.(Grid.RowSpan)" Value="2"/>
+                                    <Setter Target="AlbumImage.(Grid.ColumnSpan)" Value="1"/>
+                                    <Setter Target="AlbumImage.Margin" Value="38,0,22,0"/>
+                                    <Setter Target="DetailsStack.(Grid.Row)" Value="0"/>
+                                    <Setter Target="DetailsStack.(Grid.Column)" Value="1"/>
+                                    <Setter Target="DetailsStack.(Grid.ColumnSpan)" Value="1"/>
+                                    <Setter Target="DetailsStack.HorizontalAlignment" Value="Left"/>
+                                    <Setter Target="DetailsStack.Margin" Value="16,32,0,0"/>
+                                    <Setter Target="DetailsStack.Padding" Value="0,0,64,0"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="300"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
 
-                <Rectangle Grid.RowSpan="2" Margin="32">
-                    <Rectangle.Fill>
-                        <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images[0])}"/>
-                    </Rectangle.Fill>
-                </Rectangle>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
 
-                <StackPanel Grid.Column="1" Margin="0,32,0,0">
-                    <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold"/>
-                    <TextBlock Text="{x:Bind Artist.Name}" Margin="0,4,0,0"/>
-                    <TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>
-                </StackPanel>
+                        <Rectangle x:Name="AlbumImage" Grid.RowSpan="2" Margin="38,0,22,0"
+                                   Height="300" Width="300" HorizontalAlignment="Center"
+                                   Visibility="{x:Bind converters:CollectionAnyToVisibilityConverter.Convert(Images)}">
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
 
-                <StackPanel Orientation="Horizontal"
-                            Grid.Column="1" Grid.Row="1" Margin="0,0,0,32">
-                    <Button Content="Play" Style="{StaticResource QuickActionButton}"/>
-                    <Button Content="Save" Style="{StaticResource QuickActionButton}"/>
-                    <Button Content="Add to" Style="{StaticResource QuickActionButton}"/>
-                    <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
-                </StackPanel>
-            </Grid>
+                        <StackPanel x:Name="DetailsStack" Grid.Column="1" Margin="16,32,0,0" MaxWidth="600" HorizontalAlignment="Left" Padding="0,0,64,0">
+                            <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold"/>
+                            <HyperlinkButton Content="{x:Bind Artist.Name}" Click="GoToArtist" Margin="0,4,0,0"/>
+                            <TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>
+                        </StackPanel>
 
-            <local:TrackCollection Grid.Row="1" />
-        </Grid>
+                        <StackPanel x:Name="QuickActionsBar" Orientation="Horizontal"
+                                    Grid.Column="1" Grid.Row="1">
+                            <Button Content="Play" Style="{StaticResource QuickActionButton}"/>
+                            <Button Content="Save" Style="{StaticResource QuickActionButton}"/>
+                            <Button Content="Add to" Style="{StaticResource QuickActionButton}"/>
+                            <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <local:TrackCollection Grid.Row="1" />
+                </Grid>
+            </UserControl>
+        </ScrollViewer>
     </DataTemplate>
 
     <Style x:Key="DefaultAlbumViewControlStyle" TargetType="local:AlbumView">

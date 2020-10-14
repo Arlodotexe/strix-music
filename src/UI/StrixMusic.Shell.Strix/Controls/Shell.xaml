@@ -119,7 +119,7 @@
             </local:Drawer.TopBarContent>
             <local:Drawer.MainContent>
                 <Grid Background="{ThemeResource AcrylicContentBackgroundBrush}">
-                    <ContentControl x:Name="MainContent"/>
+                    <ContentControl x:Name="MainContent" HorizontalContentAlignment="Stretch"/>
                 </Grid>
             </local:Drawer.MainContent>
             <local:Drawer.BottomBarSecondaryContent>

@@ -7,15 +7,15 @@
     xmlns:styles="using:StrixMusic.Shell.Strix.Styles"
     xmlns:dstyles="using:StrixMusic.Shell.Default.Styles">
     <ResourceDictionary.MergedDictionaries>
+        <styles:AlbumCollectionStyle/>
         <styles:AlbumItemStyle/>
         <styles:AlbumViewStyle/>
-        <ResourceDictionary Source="Styles/ArtistItemStyle.xaml"/>
-        <ResourceDictionary Source="Styles/ArtistViewStyle.xaml"/>
+        <styles:ArtistCollectionStyle/>
+        <styles:ArtistItemStyle/>
+        <styles:ArtistViewStyle/>
         <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
         <styles:HomeStyle/>
         <styles:PlayableCollectionGroupPivotStyle/>
-        <ResourceDictionary Source="Styles/AlbumCollectionStyle.xaml"/>
-        <styles:AlbumCollectionStyle/>
         <styles:ShellStyle/>
         <styles:SettingsViewStyle/>
         <!--<ResourceDictionary Source="Styles/TrackListStyle.xaml"/>-->

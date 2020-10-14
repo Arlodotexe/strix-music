@@ -5,5 +5,6 @@ using StrixMusic.Shell.Default.Assembly.Enums;
     displayName: "Zune Desktop",
     deviceFamily: DeviceFamily.Desktop,
     inputMethod: InputMethod.Mouse,
-    minWidth: 600)
+    minWidth: 700,
+    minHeight: 600)
 ]

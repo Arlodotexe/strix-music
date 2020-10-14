@@ -4,7 +4,6 @@
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
     xmlns:controls="using:StrixMusic.Shell.ZuneDesktop.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
-    xmlns:converters="using:LaunchPad.Converters"
     x:Class="StrixMusic.Shell.ZuneDesktop.Styles.ShellStyle">
 
     <DataTemplate x:Key="ZuneShellTemplate" x:DataType="sdk:MainViewModel">
