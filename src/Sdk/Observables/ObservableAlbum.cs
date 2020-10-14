@@ -170,11 +170,14 @@ namespace StrixMusic.Sdk.Observables
         }
 
         /// <inheritdoc />
-        public IArtist Artist
+        public ObservableArtist Artist
         {
             get => _artist;
             set => SetProperty(ref _artist, new ObservableArtist(value));
         }
+
+        /// <inheritdoc />
+        IArtist IAlbum.Artist => Artist;
 
         /// <inheritdoc />
         public Uri? Url
