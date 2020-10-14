@@ -9,8 +9,8 @@
     <ResourceDictionary.MergedDictionaries>
         <styles:AlbumItemStyle/>
         <styles:AlbumViewStyle/>
+        <styles:ArtistViewStyle/>
         <ResourceDictionary Source="Styles/ArtistItemStyle.xaml"/>
-        <ResourceDictionary Source="Styles/ArtistViewStyle.xaml"/>
         <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
         <styles:HomeStyle/>
         <styles:PlayableCollectionGroupPivotStyle/>
