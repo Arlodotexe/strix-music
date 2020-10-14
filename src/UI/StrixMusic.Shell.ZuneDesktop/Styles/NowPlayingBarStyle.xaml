@@ -16,17 +16,6 @@
                             <Grid Margin="28,0,28,28" VerticalAlignment="Bottom">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup>
-                                        <VisualState x:Name="Tiny">
-                                            <VisualState.StateTriggers>
-                                                <AdaptiveTrigger MinWindowWidth="0"/>
-                                            </VisualState.StateTriggers>
-                                            <VisualState.Setters>
-                                                <Setter Target="QuickLinksColumn.Width" Value="0"/>
-                                                <Setter Target="NowPlayingColumn.Width" Value="0"/>
-                                                <Setter Target="PlaybackControlsColumn.Width" Value="*"/>
-                                                <Setter Target="SecondaryNowPlayingRow.Height" Value="auto"/>
-                                            </VisualState.Setters>
-                                        </VisualState>
                                         <VisualState x:Name="Small">
                                             <VisualState.StateTriggers>
                                                 <AdaptiveTrigger MinWindowWidth="700"/>
@@ -50,11 +39,6 @@
                                     <ColumnDefinition x:Name="NowPlayingColumn"/>
                                     <ColumnDefinition x:Name="PlaybackControlsColumn" Width="244"/>
                                 </Grid.ColumnDefinitions>
-
-                                <Grid.RowDefinitions>
-                                    <RowDefinition x:Name="SecondaryNowPlayingRow" Height="0"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
 
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,-24">
                                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8EA;" Margin="8,0" FontSize="46" Opacity=".5"/>
@@ -80,7 +64,7 @@
                                     <default:ProgressSlider Maximum="280000"  Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"/>
                                 </Grid>
 
-                                <Grid Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                                <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom">
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
                                         <RowDefinition Height="auto"/>
@@ -118,16 +102,6 @@
                                         </Button>
                                     </StackPanel>
                                     <TextBlock Text="VOLUME 50" Grid.Row="1" FontSize="10" FontWeight="Bold" Opacity=".5" HorizontalAlignment="Center" Margin="36,4,0,-8"/>
-                                </Grid>
-
-                                <Grid Grid.ColumnSpan="3">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock Text="Diplomat's Son" FontSize="14" FontWeight="Bold" Opacity=".5"/>
-                                    <ProgressBar Value="33" Grid.Row="1" Height="1" MinHeight="1" Foreground="{ThemeResource Foreground}"/>
                                 </Grid>
                             </Grid>
                         </UserControl>
