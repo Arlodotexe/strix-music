@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Shell.Default.Controls;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shell.Default.Controls.Internal
+namespace StrixMusic.Shell.Default
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

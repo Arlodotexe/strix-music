@@ -2,12 +2,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:default="using:StrixMusic.Shell.Default.Controls"
-    xmlns:controls="using:StrixMusic.Shell.ZuneDesktop.Controls"
+    xmlns:root="using:StrixMusic.Shell.ZuneDesktop"
     xmlns:sdk="using:StrixMusic.Sdk"
     x:Class="StrixMusic.Shell.ZuneDesktop.Styles.ShellStyle">
 
     <DataTemplate x:Key="ZuneShellTemplate" x:DataType="sdk:MainViewModel">
-        <controls:ZuneShell/>
+        <root:ZuneShell/>
     </DataTemplate>
 
     <Style x:Key="ZuneShellContainerStyle" TargetType="default:ShellContainer">

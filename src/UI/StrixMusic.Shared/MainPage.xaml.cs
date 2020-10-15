@@ -134,16 +134,20 @@ namespace StrixMusic
                 }
 
                 _activeShell = shell;
-                ShellDisplay.Content = CreateShellControl();
+                ShellDisplay.Content = CreateShellControl(shell.ShellAttribute.ShellBaseSubType);
             });
         }
 
-        private ShellContainer CreateShellControl()
+        private Control CreateShellControl(Type shellType)
         {
-            return new ShellContainer
-            {
-                DataContext = MainViewModel.Singleton,
-            };
+            // TODO: Type check shellType to ensure it's a ShellBase
+            // if (shellType.BaseType != typeof())
+            // {
+            // }
+
+            Control shellControl = (Activator.CreateInstance(shellType) as Control) !;
+            shellControl.DataContext = MainViewModel.Singleton;
+            return shellControl;
         }
 
         private bool CheckShellModelSupport(ShellModel shell)

@@ -14,7 +14,7 @@ using StrixMusic.Shell.ZuneDesktop.Settings;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Core;
 
-namespace StrixMusic.Shell.ZuneDesktop.Controls
+namespace StrixMusic.Shell.ZuneDesktop
 {
     public sealed partial class ZuneShell : ShellBase
     {
