@@ -64,11 +64,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj" />
+    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.Strix\StrixMusic.Shell.Strix.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shell.ZuneDesktop\StrixMusic.Shell.ZuneDesktop.csproj" />
+    <ProjectReference Include="..\..\UI\StrixMusic.Shells\StrixMusic.Shells.csproj" />
   </ItemGroup>
   <Import Project="..\..\UI\StrixMusic.Shared\StrixMusic.Shared.projitems" Label="Shared" />
 </Project>
