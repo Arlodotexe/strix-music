@@ -247,6 +247,10 @@
       <Project>{29e800df-b67c-46c9-b4a4-c8a2cba0597f}</Project>
       <Name>StrixMusic.Shell.ZuneDesktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\UI\StrixMusic.Shells\StrixMusic.Shells.csproj">
+      <Project>{f48a8dd4-f438-451d-a971-92bb51e2f21e}</Project>
+      <Name>StrixMusic.Shells</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="..\..\UI\StrixMusic.Shared\StrixMusic.Shared.projitems" Label="Shared" />

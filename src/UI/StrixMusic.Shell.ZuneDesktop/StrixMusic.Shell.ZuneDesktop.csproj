@@ -105,6 +105,7 @@
 		<ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
 		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
 		<ProjectReference Include="..\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj" />
+		<ProjectReference Include="..\StrixMusic.Shells\StrixMusic.Shells.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Styles\NowPlayingViewStyle.xaml.cs">
