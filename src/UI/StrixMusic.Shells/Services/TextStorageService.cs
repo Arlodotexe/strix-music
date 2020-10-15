@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-
 namespace StrixMusic.Sdk.Services
 {
     /// <inheritdoc cref="ITextStorageService"/>
@@ -101,7 +100,8 @@ namespace StrixMusic.Sdk.Services
                 fileHandle = await pathHandle.CreateFileAsync(filename);
             }
 
-            return await FileIO.ReadTextAsync(fileHandle);
+            using (await _keyedMutex.GetOrAdd(filename + path, new AsyncLock()).LockAsync())
+                return await FileIO.ReadTextAsync(fileHandle);
         }
 
         /// <inheritdoc />
@@ -146,8 +146,7 @@ namespace StrixMusic.Sdk.Services
             }
 
             using (await _keyedMutex.GetOrAdd(filename, new AsyncLock()).LockAsync())
-
-            await FileIO.WriteTextAsync(fileHandle, value);
+                await FileIO.WriteTextAsync(fileHandle, value);
         }
 
         /// <inheritdoc />
@@ -174,7 +173,6 @@ namespace StrixMusic.Sdk.Services
             }
 
             using (await _keyedMutex.GetOrAdd(filename + path, new AsyncLock()).LockAsync())
-
                 await FileIO.WriteTextAsync(fileHandle, value);
         }
     }
