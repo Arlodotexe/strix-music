@@ -12,6 +12,7 @@ namespace StrixMusic.Shell.Default.Assembly
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellAttribute"/> class.
         /// </summary>
+        /// <param name="shellClass">The ShellBase child Type of the shell in the assembly.</param>
         /// <param name="displayName">The display name for the shell.</param>
         /// <param name="deviceFamily">The supported device families for the shell.</param>
         /// <param name="inputMethod">The supported input methods.</param>
@@ -20,6 +21,7 @@ namespace StrixMusic.Shell.Default.Assembly
         /// <param name="minWidth">The minimum width of the window for the shell.</param>
         /// <param name="minHeight">The minimum height of the window for the shell.</param>
         public ShellAttribute(
+            Type shellClass,
             string displayName,
             DeviceFamily deviceFamily = (DeviceFamily)int.MaxValue,
             InputMethod inputMethod = (InputMethod)int.MaxValue,
@@ -28,12 +30,18 @@ namespace StrixMusic.Shell.Default.Assembly
             double minWidth = 0,
             double minHeight = 0)
         {
+            ShellBaseSubType = shellClass;
             DisplayName = displayName;
             DeviceFamily = deviceFamily;
             InputMethod = inputMethod;
             MaxWindowSize = new Size(maxWidth, maxHeight);
             MinWindowSize = new Size(minWidth, minHeight);
         }
+
+        /// <summary>
+        /// The ShellBase child Type of the shell in the assembly.
+        /// </summary>
+        public Type ShellBaseSubType { get; }
 
         /// <summary>
         /// The DisplayName of the shell in the assembly.
