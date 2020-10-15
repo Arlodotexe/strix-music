@@ -15,15 +15,15 @@
     <type fullname="StrixMusic.Sdk*" />
   </assembly>
 
-  <assembly fullname="StrixMusic.Shell.Default">
-    <type fullname="StrixMusic.Shell.Default*" />
+  <assembly fullname="StrixMusic.Shells.Default">
+    <type fullname="StrixMusic.Shells.Default*" />
   </assembly>
 
-  <assembly fullname="StrixMusic.Shell.Strix">
-    <type fullname="StrixMusic.Shell.Strix*" />
+  <assembly fullname="StrixMusic.Shells.Strix">
+    <type fullname="StrixMusic.Shells.Strix*" />
   </assembly>
 
-  <assembly fullname="StrixMusic.Shell.ZuneDesktop">
-    <type fullname="StrixMusic.Shell.ZuneDesktop*" />
+  <assembly fullname="StrixMusic.Shells.ZuneDesktop">
+    <type fullname="StrixMusic.Shells.ZuneDesktop*" />
   </assembly>
 </linker>

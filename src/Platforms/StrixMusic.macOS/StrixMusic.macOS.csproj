@@ -124,17 +124,17 @@
       <Project>{60ee2300-f562-416c-9458-dbea41389d8b}</Project>
       <Name>StrixMusic.Sdk</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\StrixMusic.Shell.Default\StrixMusic.Shell.Default.csproj">
-      <Project>{1b218c58-e2b0-441e-a406-ee8ae87a009e}</Project>
-      <Name>StrixMusic.Shell.Default</Name>
+    <ProjectReference Include="..\..\UI\StrixMusic.Shells.Default\StrixMusic.Shells.Default.csproj">
+      <Project>{c2c542aa-8e94-4b60-bfdb-337a054d44cb}</Project>
+      <Name>StrixMusic.Shells.Default</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\StrixMusic.Shell.Strix\StrixMusic.Shell.Strix.csproj">
-      <Project>{1acebd69-e023-4917-b32e-f83a314a4809}</Project>
-      <Name>StrixMusic.Shell.Strix</Name>
+    <ProjectReference Include="..\..\UI\StrixMusic.Shells.Strix\StrixMusic.Shells.Strix.csproj">
+      <Project>{47c6fbeb-855f-47b7-a5f9-c23dfa47ea00}</Project>
+      <Name>StrixMusic.Shells.Strix</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\StrixMusic.Shell.ZuneDesktop\StrixMusic.Shell.ZuneDesktop.csproj">
-      <Project>{29e800df-b67c-46c9-b4a4-c8a2cba0597f}</Project>
-      <Name>StrixMusic.Shell.ZuneDesktop</Name>
+    <ProjectReference Include="..\..\UI\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj">
+      <Project>{e35102f3-8a0a-44dc-a209-a5ba91cab73b}</Project>
+      <Name>StrixMusic.Shells.ZuneDesktop</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\UI\StrixMusic.Shells\StrixMusic.Shells.csproj">
       <Project>{7766701f-8f91-44c1-809b-1c3941b09783}</Project>

@@ -28,12 +28,12 @@ namespace StrixMusic.Helpers
             /// <summary>
             /// The <see cref="Regex"/> to determine if an assembly is a shell by the fullname.
             /// </summary>
-            public const string ShellAssemblyRegex = @"^(?:StrixMusic\.Shell\.)(\w{3,})[^.]";
+            public const string ShellAssemblyRegex = @"^(?:StrixMusic\.Shells\.)(\w{3,})[^.]";
 
             /// <summary>
             /// The <see cref="Regex"/> to determine if an assembly is a shell by the fullname.
             /// </summary>
-            public const string ShellResourceDictionaryRegex = @"^(?:ms-appx:\/\/\/StrixMusic\.Shell\.)(\w{3,})(?:\/Resources\.xaml)$";
+            public const string ShellResourceDictionaryRegex = @"^(?:ms-appx:\/\/\/StrixMusic\.Shells\.)(\w{3,})(?:\/Resources\.xaml)$";
 
             /// <summary>
             /// The name of the DefaultShell.
@@ -48,7 +48,7 @@ namespace StrixMusic.Helpers
             /// <summary>
             /// The namespace before a shell.
             /// </summary>
-            public const string ShellNamespacePrefix = "StrixMusic.Shell";
+            public const string ShellNamespacePrefix = "StrixMusic.Shells";
 
             /// <summary>
             /// The name of the resources fill for a shell.

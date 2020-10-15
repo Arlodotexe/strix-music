@@ -8,7 +8,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shell.Default/Resources.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Default/Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Color x:Key="ShadowColor">#FF000000</Color>

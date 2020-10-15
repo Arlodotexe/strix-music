@@ -5,7 +5,7 @@
     xmlns:local="using:StrixMusic"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:StrixMusic.Shell.Default.Controls"
+    xmlns:controls="using:StrixMusic.Shells.Default.Controls"
     xmlns:launchpad="using:LaunchPad.Controls"
     mc:Ignorable="d" SizeChanged="MainPage_SizeChanged">
 

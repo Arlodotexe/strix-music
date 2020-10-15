@@ -1,0 +1,32 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
+    xmlns:converters="using:StrixMusic.Shells.Converters"
+    xmlns:sdk="using:StrixMusic.Sdk"
+    x:Class="StrixMusic.Shells.Default.Styles.SearchViewStyle">
+
+    <DataTemplate x:Key="DefaultSearchViewTemplate" x:DataType="sdk:MainViewModel">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Search results for &quot;"/>
+            <TextBlock Text="{x:Bind SearchResults.Name, Mode=OneWay}"/>
+            <TextBlock Text="&quot;"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <Style x:Key="DefaultSearchViewStyle" TargetType="shellcontrols:SearchView">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="shellcontrols:SearchView">
+                        <ContentControl ContentTemplate="{StaticResource DefaultSearchViewTemplate}"
+                                        HorizontalContentAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultSearchViewStyle}" TargetType="shellcontrols:SearchView"/>
+
+</ResourceDictionary>

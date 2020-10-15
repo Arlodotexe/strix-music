@@ -1,0 +1,34 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
+    xmlns:observables="using:StrixMusic.Sdk.Observables"
+    xmlns:selectors="using:StrixMusic.Shells.Default.TemplateSelectors"
+    x:Class="StrixMusic.Shells.Default.Styles.AlbumCollectionStyle">
+
+    <DataTemplate x:Key="DefaultAlbumCollectionDataTemplate" x:DataType="observables:IObservableAlbumCollection">
+        <GridView ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource DefaultAlbumCollectionItemStyle}"
+                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
+                  ItemClick="OpenAlbum"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DefaultAlbumCollectionItemStyle">
+        <shellcontrols:AlbumItem />
+    </DataTemplate>
+
+    <Style x:Key="DefaultAlbumCollectionStyle" TargetType="shellcontrols:AlbumCollection">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="shellcontrols:AlbumCollection">
+                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumCollectionDataTemplate}"
+                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultAlbumCollectionStyle}" TargetType="shellcontrols:AlbumCollection"/>
+
+</ResourceDictionary>
