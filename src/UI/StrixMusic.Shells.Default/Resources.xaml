@@ -21,12 +21,6 @@
         <styles:TrackItemStyle/>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="QuickActionButton" TargetType="Button">
-        <Setter Property="Margin" Value="4,0"/>
-        <Setter Property="Padding" Value="12"/>
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
-
     <Style x:Key="MediaButton" TargetType="Button">
         <Setter Property="Margin" Value="4,0"/>
         <Setter Property="Padding" Value="12"/>

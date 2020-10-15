@@ -85,13 +85,18 @@
                             <TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>
                         </StackPanel>
 
-                        <StackPanel x:Name="QuickActionsBar" Orientation="Horizontal"
-                                    Grid.Column="1" Grid.Row="1">
-                            <Button Content="Play" Style="{StaticResource QuickActionButton}"/>
-                            <Button Content="Save" Style="{StaticResource QuickActionButton}"/>
-                            <Button Content="Add to" Style="{StaticResource QuickActionButton}"/>
-                            <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
-                        </StackPanel>
+                        <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
+                                    Grid.Column="1" Grid.Row="1"
+                                    Background="Transparent">
+                            <AppBarButton Label="Play">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shells/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton Icon="Save" Label="Save"/>
+                            <AppBarButton Icon="Add" Label="Add to"/>
+                            <AppBarButton Icon="Share" Label="Share"/>
+                        </CommandBar>
                     </Grid>
 
                     <shellcontrols:TrackCollection Grid.Row="1" />
