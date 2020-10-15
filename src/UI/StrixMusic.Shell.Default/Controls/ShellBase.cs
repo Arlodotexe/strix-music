@@ -6,12 +6,12 @@ using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shell.Default.Controls
 {
-    public abstract partial class ShellControl : UserControl
+    public abstract partial class ShellBase : UserControl
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ShellControl"/> class.
+        /// Initializes a new instance of the <see cref="ShellBase"/> class.
         /// </summary>
-        public ShellControl()
+        public ShellBase()
         {
             Loaded += ShellControl_Loaded;
         }

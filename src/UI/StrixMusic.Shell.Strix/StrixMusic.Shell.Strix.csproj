@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="Controls\Drawer.xaml" />
+    <UpToDateCheckInput Remove="Controls\StrixShell.xaml" />
     <UpToDateCheckInput Remove="Preview.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Resources\Brushes.xaml" />

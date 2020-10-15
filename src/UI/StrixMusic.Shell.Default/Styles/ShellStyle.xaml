@@ -10,7 +10,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:ShellContainer">
-                        <internal:Shell/>
+                        <internal:DefaultShell/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

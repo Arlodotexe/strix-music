@@ -2,6 +2,6 @@
 using StrixMusic.Shell.Strix.Controls;
 
 [assembly: Shell(
-    shellClass: typeof(Shell),
+    shellClass: typeof(StrixShell),
     displayName: "Strix")
 ]

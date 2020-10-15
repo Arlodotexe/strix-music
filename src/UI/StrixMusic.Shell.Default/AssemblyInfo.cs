@@ -2,6 +2,6 @@
 using StrixMusic.Shell.Default.Controls.Internal;
 
 [assembly: Shell(
-    shellClass: typeof(Shell),
+    shellClass: typeof(DefaultShell),
     displayName: "Default Shell")
 ]

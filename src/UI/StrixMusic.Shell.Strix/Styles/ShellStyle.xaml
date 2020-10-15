@@ -11,7 +11,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="default:ShellContainer">
-                        <local:Shell/>
+                        <local:StrixShell/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

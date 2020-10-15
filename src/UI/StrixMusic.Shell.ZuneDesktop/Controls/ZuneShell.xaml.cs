@@ -16,7 +16,7 @@ using Windows.UI.Core;
 
 namespace StrixMusic.Shell.ZuneDesktop.Controls
 {
-    public sealed partial class ZuneShell : ShellControl
+    public sealed partial class ZuneShell : ShellBase
     {
         private INavigationService<Control>? _navigationService;
 
