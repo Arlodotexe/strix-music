@@ -23,113 +23,216 @@
         </Style.Setters>
     </Style>
 
-    <Style x:Key="QuickActionButton" TargetType="Button">
-        <Setter Property="Height" Value="32"/>
-        <Setter Property="MinWidth" Value="80"/>
+    <Style x:Key="QuickActionButton" TargetType="AppBarButton">
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="MinWidth" Value="60"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Margin" Value="4,0"/>
-        <Setter Property="Padding" Value="0"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="Button">
+                <ControlTemplate TargetType="AppBarButton">
                     <Grid x:Name="RootGrid">
                         <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="bgColor" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Storyboard.TargetName="bgDisabled" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase EasingMode="EaseOut"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase EasingMode="EaseOut"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
-                                    </Storyboard>
+                            <VisualStateGroup x:Name="ApplicationViewStates">
+                                <VisualState x:Name="FullSize" />
+                                <VisualState x:Name="Compact">
+                                    <VisualState.Setters>
+                                        <Setter Target="TextLabel.Visibility" Value="Collapsed"/>
+                                    </VisualState.Setters>
                                 </VisualState>
-                                <VisualState x:Name="PointerOver">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="bgColor" Storyboard.TargetProperty="Opacity" To="0.1" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Storyboard.TargetName="bgDisabled" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase EasingMode="EaseOut"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase EasingMode="EaseOut"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
-                                    </Storyboard>
+                                <VisualState x:Name="LabelOnRight">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Margin" Value="20,0,4,0"/>
+                                        <Setter Target="TextLabel.(Grid.Row)" Value="0"/>
+                                        <Setter Target="TextLabel.(Grid.Column)" Value="1"/>
+                                        <Setter Target="TextLabel.TextAlignment" Value="Left"/>
+                                        <Setter Target="TextLabel.VerticalAlignment" Value="Center"/>
+                                        <Setter Target="TextLabel.Margin" Value="4,0,20,0"/>
+                                    </VisualState.Setters>
                                 </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="bgColor" Storyboard.TargetProperty="Opacity" To="0.2" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase EasingMode="EaseOut"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Storyboard.TargetName="bgDisabled" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase EasingMode="EaseOut"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase EasingMode="EaseOut"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
-                                    </Storyboard>
+                                <VisualState x:Name="LabelCollapsed">
+                                    <VisualState.Setters>
+                                        <Setter Target="TextLabel.Visibility" Value="Collapsed"/>
+                                    </VisualState.Setters>
                                 </VisualState>
-                                <VisualState x:Name="Disabled">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="bgColor" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase EasingMode="EaseOut"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Storyboard.TargetName="bgDisabled" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase EasingMode="EaseOut"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.2">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase EasingMode="EaseOut"/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
+                                <VisualState x:Name="Overflow">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentRoot.Visibility" Value="Collapsed"/>
+                                        <Setter Target="OverflowBackgroundGrid.Visibility" Value="Visible"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="OverflowWithToggleButtons">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentRoot.Visibility" Value="Collapsed"/>
+                                        <Setter Target="OverflowBackgroundGrid.Visibility" Value="Visible"/>
+                                        <Setter Target="OverflowBackgroundGrid.Margin" Value="38,0,12,0"/>
+                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="bgColor" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="bgDisabled" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="OverflowTextLabel" />
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="bgColor" Storyboard.TargetProperty="Opacity" To="0.1" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="bgDisabled" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="OverflowBackgroundGrid.Background" Value="{ThemeResource AppBarButtonBackgroundPointerOver}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="bgColor" Storyboard.TargetProperty="Opacity" To="0.2" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="bgDisabled" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="OverflowBackgroundGrid.Background" Value="{ThemeResource AppBarButtonBackgroundPressed}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="bgColor" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="bgDisabled" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CircleEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <!--<VisualStateGroup x:Name="InputModeStates">
+                                <VisualState x:Name="InputModeDefault" />
+                                <VisualState x:Name="TouchInputMode">
+                                    <VisualState.Setters>
+                                        <Setter Target="OverflowTextLabel.Padding"
+                              Value="0,11,0,13" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="GameControllerInputMode">
+                                    <VisualState.Setters>
+                                        <Setter Target="OverflowTextLabel.Padding"
+                              Value="0,11,0,13" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>-->
                         </VisualStateManager.VisualStateGroups>
-                        <Border CornerRadius="16" Opacity="1" Background="{TemplateBinding Background}"/>
-                        <Border CornerRadius="16" x:Name="bgDisabled" Opacity="0" BorderBrush="{ThemeResource ButtonDisabledBorderThemeBrush}" BorderThickness="1"/>
-                        <Border CornerRadius="16" x:Name="bgColor" Opacity="0" Background="{TemplateBinding Foreground}"/>
-                        <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        <Grid x:Name="ContentRoot">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border CornerRadius="20" Opacity="1" Background="{TemplateBinding Background}"
+                                    Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+                            <Border CornerRadius="20" x:Name="bgDisabled" Opacity="0" BorderBrush="{ThemeResource ButtonDisabledBorderThemeBrush}"
+                                    BorderThickness="1" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+                            <Border CornerRadius="20" x:Name="bgColor" Opacity="0" Background="{TemplateBinding Foreground}"
+                                    Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+                            <ContentPresenter x:Name="ContentPresenter"
+                                              Height="{TemplateBinding Height}"
+                                              Content="{TemplateBinding Icon}"
+                                              FontSize="12"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              HorizontalAlignment="Stretch"
+                                              Margin="0"
+                                              AutomationProperties.AccessibilityView="Raw" />
+                            <TextBlock x:Name="TextLabel"
+                                       Grid.Row="1"
+                                       Text="{TemplateBinding Label}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       FontSize="12"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </Grid>
+                        <Grid x:Name="OverflowBackgroundGrid" Visibility="Collapsed"
+                              Background="Transparent">
+                            <TextBlock x:Name="OverflowTextLabel"
+                                   Text="{TemplateBinding Label}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   FontSize="15"
+                                   FontFamily="{TemplateBinding FontFamily}"
+                                   TextAlignment="Left"
+                                   TextTrimming="Clip"
+                                   TextWrapping="NoWrap"
+                                   HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Center"
+                                   Margin="12,0"
+                                   Padding="0,5,0,7"/>
+                        </Grid>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
-
-    <Style x:Key="InstantActionButton" TargetType="Button" BasedOn="{StaticResource QuickActionButton}">
-        <Setter Property="Width" Value="32"/>
-        <Setter Property="MinWidth" Value="32"/>
-        <Setter Property="MaxWidth" Value="32"/>
     </Style>
 
     <Style x:Key="MediaButton" TargetType="Button">
