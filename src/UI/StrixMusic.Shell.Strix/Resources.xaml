@@ -16,7 +16,6 @@
         <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
         <styles:HomeStyle/>
         <styles:PlayableCollectionGroupPivotStyle/>
-        <styles:ShellStyle/>
         <styles:SettingsViewStyle/>
         <!--<ResourceDictionary Source="Styles/TrackListStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Styles/TrackStyle.xaml"/>-->

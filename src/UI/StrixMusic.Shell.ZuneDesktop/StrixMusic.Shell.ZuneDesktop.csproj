@@ -61,7 +61,6 @@
 		<None Remove="Styles\NowPlayingBarStyle.xaml" />
 		<None Remove="Styles\NowPlayingViewStyle.xaml" />
 		<None Remove="Styles\SettingsViewStyle.xaml" />
-		<None Remove="Styles\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Remove="Assets\svg\Next.xaml" />
@@ -82,7 +81,6 @@
 		<UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
-		<UpToDateCheckInput Remove="Styles\ShellStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Include="Assets\Backgrounds\Bubbles.png" />
@@ -117,9 +115,6 @@
 		</Compile>
 		<Compile Update="Styles\SettingsViewStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
-		</Compile>
-		<Compile Update="Styles\ShellStyle.xaml.cs">
-			<DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 	</ItemGroup>
 	<ItemGroup>

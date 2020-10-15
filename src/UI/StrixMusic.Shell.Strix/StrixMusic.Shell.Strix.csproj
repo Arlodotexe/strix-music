@@ -53,7 +53,6 @@
     <None Remove="Styles\NowPlayingBarStyle.xaml" />
     <None Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
     <None Remove="Styles\SettingsViewStyle.xaml" />
-    <None Remove="Styles\ShellStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="Controls\Drawer.xaml" />
@@ -72,7 +71,6 @@
     <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\ShellStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
@@ -100,9 +98,6 @@
       <DependentUpon>AlbumCollectionStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Styles\SettingsViewStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="Styles\ShellStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>

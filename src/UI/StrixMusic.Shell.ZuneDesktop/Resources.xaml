@@ -14,7 +14,6 @@
         <styles:NowPlayingViewStyle/>
         <!--<themes:HomeStyle/>-->
         <!--<themes:PlayableCollectionListStyle/>-->
-        <styles:ShellStyle/>
         <styles:SettingsViewStyle/>
         <!--<ResourceDictionary Source="Styles/TrackListStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Styles/TrackStyle.xaml"/>-->

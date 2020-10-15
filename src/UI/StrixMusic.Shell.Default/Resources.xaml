@@ -17,7 +17,6 @@
         <styles:PlayableCollectionGroupPivotStyle />
         <styles:SearchViewStyle/>
         <styles:SettingsViewStyle/>
-        <styles:ShellStyle/>
         <styles:TrackCollectionStyle/>
         <styles:TrackItemStyle/>
     </ResourceDictionary.MergedDictionaries>
