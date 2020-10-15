@@ -58,21 +58,10 @@
                             </Rectangle>
                             <TextBlock Grid.Column="1" Text="{x:Bind Name}" FontSize="30" VerticalAlignment="Center" Margin="16,0"/>
 
-                            <StackPanel x:Name="QuickActions" Orientation="Horizontal" Grid.Column="2" Margin="16,0">
-                                <Button Content="Play" Style="{StaticResource QuickActionButton}" Background="{ThemeResource SystemAccentColor}"/>
-                                <StackPanel x:Name="ExtraQuickActions" Orientation="Horizontal">
-                                    <Button Content="Follow" Style="{StaticResource QuickActionButton}"/>
-                                    <Button Content="Share" Style="{StaticResource QuickActionButton}"/>
-                                </StackPanel>
-                                <Button x:Name="MoreButton" Style="{StaticResource InstantActionButton}">
-                                    <FontIcon Glyph="&#xE10C;"/>
-                                </Button>
-                            </StackPanel>
-
                             <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
                                     Grid.Column="1" Grid.Row="1"
                                     Background="Transparent">
-                                <AppBarButton Label="Play" Style="{StaticResource QuickActionButton}">
+                                <AppBarButton Label="Play" Style="{StaticResource QuickActionButton}" Background="{ThemeResource SystemAccentColor}">
                                     <AppBarButton.Icon>
                                         <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shells/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </AppBarButton.Icon>
