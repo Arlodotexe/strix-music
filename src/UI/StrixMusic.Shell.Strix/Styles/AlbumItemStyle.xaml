@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:default="using:StrixMusic.Shell.Default.Controls"
+    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
     xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
-    xmlns:converters="using:StrixMusic.Shell.Default.Converters"
+    xmlns:converters="using:StrixMusic.Shells.Converters"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shell.Strix.Styles.AlbumItemStyle">
@@ -79,11 +79,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="StrixAlbumItemStyle" TargetType="default:AlbumItem">
+    <Style x:Key="StrixAlbumItemStyle" TargetType="shellcontrols:AlbumItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:AlbumItem">
+                    <ControlTemplate TargetType="shellcontrols:AlbumItem">
                         <ContentControl ContentTemplate="{StaticResource StrixAlbumItemTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -92,6 +92,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixAlbumItemStyle}" TargetType="default:AlbumItem"/>
+    <Style BasedOn="{StaticResource StrixAlbumItemStyle}" TargetType="shellcontrols:AlbumItem"/>
 
 </ResourceDictionary>

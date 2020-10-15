@@ -1,5 +1,4 @@
-﻿using StrixMusic.Shell.Default.Assembly;
-using Windows.Foundation;
+﻿using StrixMusic.Shells.Assembly;
 
 namespace StrixMusic.Models
 {

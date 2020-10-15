@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
-namespace StrixMusic.Shell.Default.Controls
+namespace StrixMusic.Shells.Controls
 {
     /// <summary>
     /// A slider that can automatically update the tick position.

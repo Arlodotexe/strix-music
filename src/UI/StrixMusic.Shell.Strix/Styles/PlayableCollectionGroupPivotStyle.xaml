@@ -2,14 +2,14 @@
     x:Class="StrixMusic.Shell.Strix.Styles.PlayableCollectionGroupPivotStyle"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:default="using:StrixMusic.Shell.Default.Controls"
+    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
     xmlns:local="clr-namespace:StrixMusic.Shell.Strix.Styles">
 
-	<Style BasedOn="{StaticResource DefaultPlayableCollectionGroupPivotStyle}" TargetType="default:PlayableCollectionGroupPivot">
+    <Style BasedOn="{StaticResource DefaultPlayableCollectionGroupPivotStyle}" TargetType="shellcontrols:PlayableCollectionGroupPivot">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="default:PlayableCollectionGroupPivot">
+                    <ControlTemplate TargetType="shellcontrols:PlayableCollectionGroupPivot">
                         <Border BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Background="{TemplateBinding Background}">
@@ -22,13 +22,13 @@
 
                                     </PivotItem>
                                     <PivotItem x:Name="PART_SongsPivotItem" Header="Songs">
-                                        <default:TrackCollection />
+                                        <shellcontrols:TrackCollection />
                                     </PivotItem>
                                     <PivotItem x:Name="PART_AlbumsPivotItem" Header="Albums">
-                                        <default:AlbumCollection />
+                                        <shellcontrols:AlbumCollection />
                                     </PivotItem>
                                     <PivotItem x:Name="PART_ArtistsPivotItem" Header="Artists">
-                                        <default:ArtistCollection />
+                                        <shellcontrols:ArtistCollection />
                                     </PivotItem>
                                     <PivotItem x:Name="PART_PlaylistsPivotItem" Header="Playlists">
 

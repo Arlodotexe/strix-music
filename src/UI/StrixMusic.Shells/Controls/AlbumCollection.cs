@@ -6,7 +6,7 @@ using StrixMusic.Sdk.Observables;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shell.Default.Controls
+namespace StrixMusic.Shells.Controls
 {
     /// <summary>
     /// A templated <see cref="Control"/> for displaying an <see cref="IObservableAlbumCollection"/>.

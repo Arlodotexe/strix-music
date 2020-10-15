@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shell.Default.Controls
+namespace StrixMusic.Shells.Controls
 {
     /// <summary>
     /// Displays the content of a ObservableCollectionGroup in a Pivot.

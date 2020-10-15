@@ -4,7 +4,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shell.Default.Controls
+namespace StrixMusic.Shells.Controls
 {
     public abstract partial class ShellBase : UserControl
     {

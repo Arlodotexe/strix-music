@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
-namespace StrixMusic.Shell.Default.Controls
+namespace StrixMusic.Shells.Controls
 {
     /// <summary>
     /// An extended <see cref="Slider"/> that has events for the Slider is modifed by the user.

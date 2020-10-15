@@ -1,8 +1,8 @@
 ﻿using System;
-using StrixMusic.Shell.Default.Assembly.Enums;
+using StrixMusic.Shells.Assembly.Enums;
 using Windows.Foundation;
 
-namespace StrixMusic.Shell.Default.Assembly
+namespace StrixMusic.Shells.Assembly
 {
     /// <summary>
     /// An attribute for the shell's name and other data.

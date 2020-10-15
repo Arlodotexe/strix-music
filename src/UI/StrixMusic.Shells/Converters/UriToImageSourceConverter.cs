@@ -4,7 +4,7 @@ using System.Linq;
 using StrixMusic.Sdk.Interfaces;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace StrixMusic.Shell.Default.Converters
+namespace StrixMusic.Shells.Converters
 {
     /// <summary>
     /// A simple converter that converts a given <see cref="Uri"/> to an <see cref="BitmapImage"/>.

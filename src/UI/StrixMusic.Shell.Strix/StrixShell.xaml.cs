@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Shell.Default.Controls;
+using StrixMusic.Shells.Controls;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;

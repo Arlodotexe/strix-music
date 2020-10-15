@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using StrixMusic.Models;
-using StrixMusic.Shell.Default.Assembly;
+using StrixMusic.Shells.Assembly;
 
 namespace StrixMusic.Helpers
 {

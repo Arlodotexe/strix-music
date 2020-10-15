@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StrixMusic.Shell.Default.Assembly.Enums
+namespace StrixMusic.Shells.Assembly.Enums
 {
     /// <summary>
     /// The input methods supported by the shell.

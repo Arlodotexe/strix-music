@@ -1,8 +1,8 @@
-﻿<local:ShellBase
+﻿<shellcontrols:ShellBase
     x:Class="StrixMusic.Shell.Default.DefaultShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:StrixMusic.Shell.Default.Controls"
+    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -12,6 +12,7 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+
         <NavigationView x:Name="NavView" ItemInvoked="NavView_ItemInvoked" >
             <NavigationView.AutoSuggestBox>
                 <AutoSuggestBox x:Name="AutoSuggest" QuerySubmitted="AutoSuggestBox_QuerySubmitted"/>
@@ -39,10 +40,10 @@
                             HorizontalContentAlignment="Stretch"/>
         </NavigationView>
 
-        <local:NowPlayingBar Grid.Row="1"/>
+        <shellcontrols:NowPlayingBar Grid.Row="1"/>
 
         <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                         Visibility="Collapsed" Grid.RowSpan="2"/>
     </Grid>
-</local:ShellBase>
+</shellcontrols:ShellBase>

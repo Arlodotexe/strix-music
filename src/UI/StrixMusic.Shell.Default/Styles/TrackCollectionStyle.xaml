@@ -1,8 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:StrixMusic.Shell.Default.Controls"
-    xmlns:controls="using:StrixMusic.Shell.Default.Controls"
+    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
     xmlns:observables="using:StrixMusic.Sdk.Observables"
     x:Class="StrixMusic.Shell.Default.Styles.TrackCollectionStyle">
 
@@ -12,24 +11,25 @@
                    SelectionMode="None" IsItemClickEnabled="True">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <controls:TrackItem />
+                    <shellcontrols:TrackItem />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
     </DataTemplate>
 
-    <Style x:Key="DefaultTrackListControlStyle" TargetType="local:TrackCollection">
+    <Style x:Key="DefaultTrackListControlStyle" TargetType="shellcontrols:TrackCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:TrackCollection">
-                        <ContentControl ContentTemplate="{StaticResource DefaultTrackListTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                    <ControlTemplate TargetType="shellcontrols:TrackCollection">
+                        <ContentControl ContentTemplate="{StaticResource DefaultTrackListTemplate}"
+                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultTrackListControlStyle}" TargetType="local:TrackCollection"/>
+    <Style BasedOn="{StaticResource DefaultTrackListControlStyle}" TargetType="shellcontrols:TrackCollection"/>
 
 </ResourceDictionary>

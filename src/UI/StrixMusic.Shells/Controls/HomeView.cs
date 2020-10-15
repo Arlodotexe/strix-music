@@ -1,7 +1,7 @@
 ﻿using StrixMusic.Sdk;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shell.Default.Controls
+namespace StrixMusic.Shells.Controls
 {
     /// <summary>
     /// A Templated <see cref="Control"/> for the home page of shell.

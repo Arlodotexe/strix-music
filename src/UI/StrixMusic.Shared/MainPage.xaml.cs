@@ -9,7 +9,7 @@ using StrixMusic.Models;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.SuperShell;
-using StrixMusic.Shell.Default.Controls;
+using StrixMusic.Shells.Controls;
 using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;

@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:default="using:StrixMusic.Shell.Default.Controls"
-    xmlns:converters="using:StrixMusic.Shell.Default.Converters"
+    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
+    xmlns:converters="using:StrixMusic.Shells.Converters"
     xmlns:styles="using:StrixMusic.Shell.ZuneDesktop.Styles"
     xmlns:dstyles="using:StrixMusic.Shell.Default.Styles">
     <ResourceDictionary.MergedDictionaries>
@@ -35,7 +35,7 @@
         <Setter Property="IsThumbToolTipEnabled" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="default:SliderEx">
+                <ControlTemplate TargetType="shellcontrols:SliderEx">
                     <Grid Margin="{TemplateBinding Padding}">
                         <Grid.Resources>
                             <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>

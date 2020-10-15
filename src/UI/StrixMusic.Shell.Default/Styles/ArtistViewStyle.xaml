@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:StrixMusic.Shell.Default.Controls"
+    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
     xmlns:observables="using:StrixMusic.Sdk.Observables"
-    xmlns:converters="using:StrixMusic.Shell.Default.Converters"
+    xmlns:converters="using:StrixMusic.Shells.Converters"
     x:Class="StrixMusic.Shell.Default.Styles.ArtistViewStyle">
 
     <DataTemplate x:Key="DefaultArtistViewTemplate" x:DataType="observables:ObservableArtist">
@@ -144,12 +144,12 @@
             </Grid>
         </UserControl>
     </DataTemplate>
-    
-    <Style x:Key="DefaultArtistViewStyle" TargetType="local:ArtistView">
+
+    <Style x:Key="DefaultArtistViewStyle" TargetType="shellcontrols:ArtistView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:ArtistView">
+                    <ControlTemplate TargetType="shellcontrols:ArtistView">
                         <ContentControl ContentTemplate="{StaticResource DefaultArtistViewTemplate}"
                                      HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -158,7 +158,7 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultArtistViewStyle}" TargetType="local:ArtistView"/>
+    <Style BasedOn="{StaticResource DefaultArtistViewStyle}" TargetType="shellcontrols:ArtistView"/>
 
 </ResourceDictionary>
     
