@@ -39,9 +39,9 @@ namespace StrixMusic.Sdk.Services.Settings
         }
 
         /// <inheritdoc/>
-        public virtual void SetValue<T>(string key, object? value, bool overwrite = true)
+        public virtual async Task SetValue<T>(string key, object? value, bool overwrite = true)
         {
-            SetValue<T>(key, value, Id, overwrite);
+            await SetValue<T>(key, value, Id, overwrite);
         }
 
         /// <inheritdoc/>
@@ -63,7 +63,7 @@ namespace StrixMusic.Sdk.Services.Settings
         }
 
         /// <inheritdoc/>
-        public virtual void SetValue<T>(string key, object? value, string identifier, bool overwrite = true)
+        public virtual async Task SetValue<T>(string key, object? value, string identifier, bool overwrite = true)
         {
             // Serialize the value
 
@@ -90,21 +90,17 @@ namespace StrixMusic.Sdk.Services.Settings
 
             var serialized = JsonConvert.SerializeObject(serializable);
 
-            // The method isn't async, but this is fine for now.
-            Task.Run(async () =>
+            // Store the new value
+            if (!await _textStorageService.FileExistsAsync(key, identifier))
             {
-                // Store the new value
-                if (!await _textStorageService.FileExistsAsync(key, identifier))
-                {
-                    await _textStorageService.SetValueAsync(key, serialized, identifier);
-                    SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
-                }
-                else if (overwrite)
-                {
-                    await _textStorageService.SetValueAsync(key, serialized, identifier);
-                    SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
-                }
-            });
+                await _textStorageService.SetValueAsync(key, serialized, identifier);
+                SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
+            }
+            else if (overwrite)
+            {
+                await _textStorageService.SetValueAsync(key, serialized, identifier);
+                SettingChanged?.Invoke(this, new SettingChangedEventArgs() { Key = key, Value = value });
+            }
         }
 
         /// <inheritdoc/>

@@ -56,11 +56,11 @@ namespace StrixMusic.Sdk.Services.Settings
             {
                 var currentShell = await GetValue<string>(nameof(SettingsKeys.PreferredShell));
 
-                SetValue<T>(key, value, $"{Id}IsolatedTo{currentShell}");
+                await SetValue<T>(key, value, $"{Id}IsolatedTo{currentShell}");
                 return;
             }
 
-            SetValue<T>(key, value);
+            await SetValue<T>(key, value);
         }
 
         /// <inheritdoc/>

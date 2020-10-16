@@ -48,7 +48,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
                 if (SetProperty(ref _selectedBackgroundImage, value))
                 {
                     ZuneDesktopBackgroundImage image = _zuneBackgroundImages[value];
-                    _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
+                    _ = _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
                 }
             }
         }

@@ -52,7 +52,7 @@ namespace StrixMusic.SuperShellControls
             _loadingShells = false;
         }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Returns if the shell list is still initializing.
             if (_loadingShells)
@@ -68,7 +68,7 @@ namespace StrixMusic.SuperShellControls
             }
 
             // Saves the assembly name.
-            Ioc.Default.GetService<ISettingsService>().SetValue<string>(nameof(SettingsKeys.PreferredShell), newPreferredSkin.AssemblyName);
+            await Ioc.Default.GetService<ISettingsService>().SetValue<string>(nameof(SettingsKeys.PreferredShell), newPreferredSkin.AssemblyName);
         }
 
         private async void ButtonFolderSelect_Clicked(object sender, RoutedEventArgs e)
