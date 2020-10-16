@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace StrixMusic.Sdk.AbstractUI
+namespace OwlCore.AbstractUI
 {
     /// <summary>
     /// A <see cref="AbstractDataList"/> that can be changed by the user.

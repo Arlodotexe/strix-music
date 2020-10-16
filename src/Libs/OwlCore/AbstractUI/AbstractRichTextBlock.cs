@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StrixMusic.Sdk.AbstractUI
+namespace OwlCore.AbstractUI
 {
     /// <summary>
     /// Presents markdown-formatted text to the user.

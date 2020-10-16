@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.AbstractUI
+﻿namespace OwlCore.AbstractUI
 {
     /// <summary>
     /// Abstracted metadata that can be displayed inside of certain <see cref="AbstractUIElement"/>s.

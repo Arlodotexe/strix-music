@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.AbstractUI
+﻿namespace OwlCore.AbstractUI
 {
     /// <summary>
     /// The Preferred orientation for items in an <see cref="AbstractUIElementGroup"/>.

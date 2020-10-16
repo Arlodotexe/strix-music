@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.AbstractUI
+﻿namespace OwlCore.AbstractUI
 {
     /// <summary>
     /// The base for all AbstractUI objects. Contains abstracted metadata.

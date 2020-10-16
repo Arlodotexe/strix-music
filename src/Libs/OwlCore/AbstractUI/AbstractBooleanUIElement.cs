@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Sdk.AbstractUI
+namespace OwlCore.AbstractUI
 {
     /// <summary>
     /// Represents a UI element that has a changeable boolean value. (Checkbox, Toggle Buttons, Switches, etc)

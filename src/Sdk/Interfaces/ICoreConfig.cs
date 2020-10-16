@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using StrixMusic.Sdk.AbstractUI;
+using OwlCore.AbstractUI;
 
 namespace StrixMusic.Sdk.Interfaces
 {

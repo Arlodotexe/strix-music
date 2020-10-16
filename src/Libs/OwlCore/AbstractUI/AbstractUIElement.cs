@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.AbstractUI
+﻿namespace OwlCore.AbstractUI
 {
     /// <summary>
     /// Abstracted UI elements.

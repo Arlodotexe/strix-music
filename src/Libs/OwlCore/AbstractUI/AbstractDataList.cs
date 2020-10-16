@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace StrixMusic.Sdk.AbstractUI
+namespace OwlCore.AbstractUI
 {
     /// <summary>
     /// Presents a list of metadata in a Grid or List.

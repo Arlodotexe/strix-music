@@ -4,7 +4,7 @@ using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Utils;
-using StrixMusic.Sdk.AbstractUI;
+using OwlCore.AbstractUI;
 using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
