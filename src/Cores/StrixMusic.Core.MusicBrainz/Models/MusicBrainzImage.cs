@@ -1,7 +1,7 @@
 ﻿using System;
 using Hqub.MusicBrainz.API.Entities;
 using StrixMusic.Core.MusicBrainz.Models.Enums;
-using StrixMusic.Sdk.Interfaces;
+using StrixMusic.Sdk.Core.Data;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

@@ -1,11 +1,11 @@
 ﻿using StrixMusic.Sdk;
-using StrixMusic.Sdk.Observables;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Shells.Controls
 {
     /// <summary>
-    /// A Templated <see cref="Control"/> for showing <see cref="ObservableSearchResults"/> as a page.
+    /// A Templated <see cref="Control"/> for showing <see cref="SearchResultsViewModel"/> as a page.
     /// </summary>
     public sealed partial class SearchView : Control
     {

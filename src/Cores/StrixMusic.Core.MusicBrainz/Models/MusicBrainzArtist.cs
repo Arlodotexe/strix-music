@@ -8,9 +8,8 @@ using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Models.Enums;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
-using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -27,7 +26,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// Initializes a new instance of the <see cref="MusicBrainzArtist"/> class.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
-        /// <param name="artist">The MusicBrainz artist to wrap.</param>
+        /// <param name="artist">The MusicBrainz artistViewModel to wrap.</param>
         /// <param name="totalTracksCount"><inheritdoc cref="TotalTracksCount"/></param>
         public MusicBrainzArtist(ICore sourceCore, Artist artist, int totalTracksCount)
         {
@@ -69,7 +68,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public Uri Url => new Uri($"https://musicbrainz.org/artist/{Id}");
+        public Uri Url => new Uri($"https://musicbrainz.org/artistViewModel/{Id}");
 
         /// <inheritdoc/>
         public string Name => _artist.Name;
@@ -206,7 +205,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var recordings = await _musicBrainzClient.Recordings.BrowseAsync("artist", Id, limit, offset, RelationshipQueries.Recordings);
 
-            // This API call will include releases for this artist, with all track and recording data.
+            // This API call will include releases for this artistViewModel, with all track and recording data.
             var firstPage = await _musicBrainzClient.Releases.BrowseAsync("artist", Id, 100, 0, RelationshipQueries.Releases);
 
             var releaseDataForArtist = await OwlCore.Helpers.APIs.GetAllItemsAsync(firstPage.Count, firstPage.Items, async currentOffset =>

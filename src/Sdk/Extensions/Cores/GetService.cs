@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk.Interfaces;
+using StrixMusic.Sdk.Core.Data;
 
 namespace StrixMusic.Sdk.Extensions
 {

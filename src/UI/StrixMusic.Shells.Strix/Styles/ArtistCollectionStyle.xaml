@@ -2,11 +2,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
-    xmlns:observables="using:StrixMusic.Sdk.Observables"
     xmlns:selectors="using:StrixMusic.Shells.Default.TemplateSelectors"
+    xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
     x:Class="StrixMusic.Shells.Strix.Styles.ArtistCollectionStyle">
 
-    <DataTemplate x:Key="StrixArtistCollectionContentTemplate" x:DataType="observables:IObservableArtistCollection">
+    <DataTemplate x:Key="StrixArtistCollectionContentTemplate" x:DataType="viewModels:IArtistCollectionViewModel">
         <GridView ItemsSource="{x:Bind Artists}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
                   Padding="16" HorizontalAlignment="Stretch"  SelectionMode="None" IsItemClickEnabled="True"
                   ItemClick="OpenArtist"/>

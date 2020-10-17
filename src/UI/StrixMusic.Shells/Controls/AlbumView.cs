@@ -1,28 +1,28 @@
-﻿using StrixMusic.Sdk.Observables;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Shells.Controls
 {
     /// <summary>
-    /// A Templated <see cref="Control"/> for showing an <see cref="ObservableAlbum"/> as a page.
+    /// A Templated <see cref="Control"/> for showing an <see cref="AlbumViewModel"/> as a page.
     /// </summary>
     public sealed partial class AlbumView : Control
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumView"/> class.
         /// </summary>
-        /// <param name="album">The Album in view.</param>
-        public AlbumView(ObservableAlbum album)
+        /// <param name="albumViewModel">The Album in view.</param>
+        public AlbumView(AlbumViewModel albumViewModel)
         {
             this.DefaultStyleKey = typeof(AlbumView);
-            DataContext = album;
+            DataContext = albumViewModel;
             LoadTracksAsync();
         }
 
         /// <summary>
         /// The ViewModel for this page item
         /// </summary>
-        public ObservableAlbum ViewModel => (DataContext as ObservableAlbum) !;
+        public AlbumViewModel ViewModel => (DataContext as AlbumViewModel) !;
 
         private async void LoadTracksAsync()
         {

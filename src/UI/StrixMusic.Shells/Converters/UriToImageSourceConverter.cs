@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using StrixMusic.Sdk.Interfaces;
 using Windows.UI.Xaml.Media.Imaging;
+using StrixMusic.Sdk.Core.Data;
 
 namespace StrixMusic.Shells.Converters
 {

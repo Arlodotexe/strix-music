@@ -9,9 +9,8 @@ using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Models.Enums;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
-using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -231,7 +230,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     // Iterate the tracks and find a matching ID for this recording
                     foreach (var trackData in medium.Tracks.Where(track => track.Recording.Id == recording.Id))
                     {
-                        var album = new MusicBrainzAlbum(SourceCore, Release, artist);
+                        var album = new MusicBrainzAlbum(SourceCore, Release, artistViewModel);
                         var track = new MusicBrainzTrack(SourceCore, trackData, album, medium.Position);
 
                         yield return track;

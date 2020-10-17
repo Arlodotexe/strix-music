@@ -1,10 +1,9 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using OwlCore.Exceptions;
-using StrixMusic.Sdk.Interfaces;
-using StrixMusic.Sdk.Observables;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Shells.Controls
 {
@@ -12,7 +11,7 @@ namespace StrixMusic.Shells.Controls
     /// A templated <see cref="Control"/> for displaying an <see cref="IObservableAlbumCollection"/>.
     /// </summary>
     /// <remarks>
-    /// This class temporarily only displays <see cref="ObservableAlbum"/>s.
+    /// This class temporarily only displays <see cref="AlbumViewModel"/>s.
     /// </remarks>
     public sealed partial class AlbumCollection : Control
     {

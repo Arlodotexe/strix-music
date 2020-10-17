@@ -7,9 +7,8 @@ using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Models;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
-using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz
 {
@@ -87,7 +86,7 @@ namespace StrixMusic.Core.MusicBrainz
         /// <inheritdoc/>
         public async IAsyncEnumerable<object> GetContextById(string? id)
         {
-            // Check if the ID is an artist
+            // Check if the ID is an artistViewModel
             var artist = await _musicBrainzClient.Artists.GetAsync(id, RelationshipQueries.Artists);
             if (artist != null)
             {

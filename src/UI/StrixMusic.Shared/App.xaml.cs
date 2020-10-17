@@ -8,7 +8,6 @@ using OwlCore.AbstractStorage;
 using OwlCore.Services;
 using StrixMusic.Core.MusicBrainz;
 using StrixMusic.Sdk;
-using StrixMusic.Sdk.Interfaces;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
@@ -20,6 +19,7 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using StrixMusic.Sdk.Core.Data;
 
 namespace StrixMusic
 {

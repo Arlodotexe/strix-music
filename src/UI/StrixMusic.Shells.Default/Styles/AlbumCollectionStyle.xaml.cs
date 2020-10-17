@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk.Observables;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Shells.Controls;
 using Windows.UI.Xaml;

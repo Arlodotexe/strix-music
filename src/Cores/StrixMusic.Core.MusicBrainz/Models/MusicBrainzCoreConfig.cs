@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
+using OwlCore.AbstractUI;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Utils;
-using OwlCore.AbstractUI;
-using StrixMusic.Sdk.Interfaces;
+using StrixMusic.Sdk.Core.Data;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

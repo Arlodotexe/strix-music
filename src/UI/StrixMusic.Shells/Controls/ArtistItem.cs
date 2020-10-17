@@ -1,11 +1,11 @@
-﻿using StrixMusic.Sdk.Observables;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Shells.Controls
 {
     /// <summary>
-    /// A Templated <see cref="Control"/> for displaying an <see cref="ObservableArtist"/> in a list.
+    /// A Templated <see cref="Control"/> for displaying an <see cref="ArtistViewModel"/> in a list.
     /// </summary>
     [TemplatePart(Name = nameof(_rootGrid), Type = typeof(Grid))]
     public sealed partial class ArtistItem : Control

@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
-    xmlns:observables="using:StrixMusic.Sdk.Observables"
     xmlns:selectors="using:StrixMusic.Shells.Default.TemplateSelectors"
     x:Class="StrixMusic.Shells.Default.Styles.HomeStyle">
 

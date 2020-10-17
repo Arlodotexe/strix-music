@@ -9,9 +9,8 @@ using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Models.Enums;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
-using StrixMusic.Sdk.Enums;
+using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

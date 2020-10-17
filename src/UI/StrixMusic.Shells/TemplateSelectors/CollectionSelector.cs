@@ -1,7 +1,7 @@
-﻿using StrixMusic.Sdk.Interfaces;
-using StrixMusic.Sdk.Observables;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Shells.TemplateSelectors
 {
@@ -30,9 +30,9 @@ namespace StrixMusic.Shells.TemplateSelectors
         {
             switch (item)
             {
-                case ObservableTrack _:
+                case TrackViewModel _:
                     return TrackListTemplate!;
-                case ObservableAlbum _:
+                case AlbumViewModel _:
                     return AlbumListTemplate!;
                 default:
                     return PlayableCollectionGroupTemplate!;

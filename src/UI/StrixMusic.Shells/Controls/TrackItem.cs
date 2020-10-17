@@ -1,10 +1,10 @@
-﻿using StrixMusic.Sdk.Observables;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Shells.Controls
 {
     /// <summary>
-    /// A Templated <see cref="Control"/> for showing an <see cref="ObservableTrack"/> in a list.
+    /// A Templated <see cref="Control"/> for showing an <see cref="TrackViewModel"/> in a list.
     /// </summary>
     public sealed partial class TrackItem : Control
     {

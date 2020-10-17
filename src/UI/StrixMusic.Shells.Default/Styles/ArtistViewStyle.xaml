@@ -2,11 +2,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
-    xmlns:observables="using:StrixMusic.Sdk.Observables"
     xmlns:converters="using:StrixMusic.Shells.Converters"
+    xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
     x:Class="StrixMusic.Shells.Default.Styles.ArtistViewStyle">
 
-    <DataTemplate x:Key="DefaultArtistViewTemplate" x:DataType="observables:ObservableArtist">
+    <DataTemplate x:Key="DefaultArtistViewTemplate" x:DataType="viewModels:ArtistViewModel">
         <UserControl>
             <Grid>
                 <VisualStateManager.VisualStateGroups>

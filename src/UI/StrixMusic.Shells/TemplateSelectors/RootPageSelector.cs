@@ -1,7 +1,7 @@
 ﻿using StrixMusic.Shells.Controls;
-using StrixMusic.Sdk.Observables;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Shells.TemplateSelectors
 {
@@ -20,7 +20,7 @@ namespace StrixMusic.Shells.TemplateSelectors
         {
             switch (item)
             {
-                case ObservableCollectionGroup _:
+                case PlayableCollectionGroupViewModel _:
                     return HomeViewTemplate!;
                 default:
                     return HomeViewTemplate!;

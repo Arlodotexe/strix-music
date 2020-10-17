@@ -1,0 +1,51 @@
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace StrixMusic.Sdk.Core.Data
+{
+    /// <summary>
+    /// Defines properties and methods for using and manipulating a collection of artists.
+    /// </summary>
+    public interface IArtistCollection : IPlayableCollectionBase
+    {
+        /// <summary>
+        /// The total number of available Artists.
+        /// </summary>
+        int TotalArtistsCount { get; }
+
+        /// <summary>
+        /// Adds a new artistViewModel to the collection on the backend.
+        /// </summary>
+        /// <param name="artist">The artistViewModel to create.</param>
+        /// <param name="index">the position to insert the artistViewModel at.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task AddArtistAsync(IArtist artist, int index);
+
+        /// <summary>
+        /// Removes the artistViewModel from the collection on the backend.
+        /// </summary>
+        /// <param name="index">The index of the artistViewModel to remove.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task RemoveArtistAsync(int index);
+
+        /// <summary>
+        /// Checks if the backend supports adding an <see cref="IArtist"/> at a specific index.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IArtist"/> can be added.</returns>
+        Task<bool> IsAddArtistSupported(int index);
+
+        /// <summary>
+        /// Checks if the backend supports removing an <see cref="IArtist"/> at a specific index.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IArtist"/> can be removed.</returns>
+        Task<bool> IsRemoveArtistSupported(int index);
+
+        /// <summary>
+        /// Gets a requested number of <see cref="IArtist"/>s starting at the given offset in the backend.
+        /// </summary>
+        /// <param name="limit">The max number of items to return.</param>
+        /// <param name="offset">Get items starting at this index.</param>
+        /// <returns><see cref="IAsyncEnumerable{T}"/> that returns the items as they're retrieved.</returns>
+        IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset);
+    }
+}

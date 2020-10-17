@@ -1,10 +1,10 @@
-﻿using StrixMusic.Sdk.Observables;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Shells.Controls
 {
     /// <summary>
-    /// A Templated <see cref="Control"/> for displaying an <see cref="ObservableAlbum"/> in a list.
+    /// A Templated <see cref="Control"/> for displaying an <see cref="AlbumViewModel"/> in a list.
     /// </summary>
     public sealed partial class AlbumItem : Control
     {

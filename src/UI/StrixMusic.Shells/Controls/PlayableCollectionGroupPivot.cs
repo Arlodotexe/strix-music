@@ -1,18 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore.Collections;
-using StrixMusic.Sdk.Observables;
 using StrixMusic.Sdk.Services.Settings;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Shells.Controls
 {
     /// <summary>
-    /// Displays the content of a ObservableCollectionGroup in a Pivot.
+    /// Displays the content of a PlayableCollectionGroupViewModel in a Pivot.
     /// </summary>
     public sealed partial class PlayableCollectionGroupPivot : Control
     {
@@ -69,7 +68,7 @@ namespace StrixMusic.Shells.Controls
                 new PropertyMetadata(null, (d, e) => ((PlayableCollectionGroupPivot)d).SetNoContentTemplate((FrameworkElement)e.NewValue)));
 
         /// <summary>
-        /// The content to show when all the collections in this <see cref="IObservablePlaylistCollection"/> are empty.
+        /// The content to show when all the collections in this <see cref="IPlaylistCollectionViewModel"/> are empty.
         /// </summary>
         public FrameworkElement AllEmptyContent
         {
@@ -83,7 +82,7 @@ namespace StrixMusic.Shells.Controls
         public Pivot? PART_Pivot { get; set; }
 
         /// <summary>
-        /// The pivot item that displays an <see cref="IObservableTrackCollection" />
+        /// The pivot item that displays an <see cref="ITrackCollectionViewModel" />
         /// </summary>
         public PivotItem? PART_SongsPivotItem { get; set; }
 
@@ -93,12 +92,12 @@ namespace StrixMusic.Shells.Controls
         public PivotItem? PART_AlbumsPivotItem { get; set; }
 
         /// <summary>
-        /// The pivot item that displays an <see cref="IObservableArtistCollection" />
+        /// The pivot item that displays an <see cref="IArtistCollectionViewModel" />
         /// </summary>
         public PivotItem? PART_ArtistsPivotItem { get; set; }
 
         /// <summary>
-        /// The pivot item that displays an <see cref="IObservablePlaylistCollection" />
+        /// The pivot item that displays an <see cref="IPlaylistCollectionViewModel" />
         /// </summary>
         public PivotItem? PART_PlaylistsPivotItem { get; set; }
 
@@ -209,7 +208,7 @@ namespace StrixMusic.Shells.Controls
         }
 
         /// <summary>
-        /// Sets the content to show when all the collections in this <see cref="IObservablePlaylistCollection"/> are empty.
+        /// Sets the content to show when all the collections in this <see cref="IPlaylistCollectionViewModel"/> are empty.
         /// </summary>
         /// <param name="frameworkElement"></param>
         public void SetNoContentTemplate(FrameworkElement frameworkElement)
@@ -277,6 +276,6 @@ namespace StrixMusic.Shells.Controls
         /// <summary>
         /// The ViewModel for this control.
         /// </summary>
-        public ObservableCollectionGroup ViewModel => (ObservableCollectionGroup)DataContext;
+        public PlayableCollectionGroupViewModel ViewModel => (PlayableCollectionGroupViewModel)DataContext;
     }
 }

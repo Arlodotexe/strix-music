@@ -1,6 +1,6 @@
-﻿using StrixMusic.Sdk.Interfaces;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.Data;
 
 namespace StrixMusic.Shells.TemplateSelectors
 {

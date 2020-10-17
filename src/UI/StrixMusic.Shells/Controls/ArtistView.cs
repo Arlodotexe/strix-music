@@ -1,28 +1,28 @@
-﻿using StrixMusic.Sdk.Observables;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Shells.Controls
 {
     /// <summary>
-    /// A Templated <see cref="Control"/> for displaying an <see cref="ObservableArtist"/> as a page.
+    /// A Templated <see cref="Control"/> for displaying an <see cref="ArtistViewModel"/> as a page.
     /// </summary>
     public sealed partial class ArtistView : Control
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ArtistView"/> class.
         /// </summary>
-        /// <param name="artist">The Artist in view.</param>
-        public ArtistView(ObservableArtist artist)
+        /// <param name="artistViewModel">The Artist in view.</param>
+        public ArtistView(ArtistViewModel artistViewModel)
         {
             this.DefaultStyleKey = typeof(ArtistView);
-            DataContext = artist;
+            DataContext = artistViewModel;
             LoadTracksAsync();
         }
 
         /// <summary>
         /// The ViewModel for this page item
         /// </summary>
-        public ObservableArtist ViewModel => (DataContext as ObservableArtist) !;
+        public ArtistViewModel ViewModel => (DataContext as ArtistViewModel) !;
 
         private async void LoadTracksAsync()
         {

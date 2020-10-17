@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk.Observables;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Shells.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Shells.Default.Styles
 {
@@ -19,7 +19,7 @@ namespace StrixMusic.Shells.Default.Styles
 
         private void GoToArtist(object sender, RoutedEventArgs e)
         {
-            if ((sender as Control)?.DataContext is ObservableAlbum viewModel)
+            if ((sender as Control)?.DataContext is AlbumViewModel viewModel)
             {
                 INavigationService<Control> navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>();
                 navigationService.NavigateTo(typeof(ArtistView), false, viewModel.Artist);

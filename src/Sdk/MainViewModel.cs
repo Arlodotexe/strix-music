@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Extensions.AsyncExtensions;
-using StrixMusic.Sdk.Interfaces;
-using StrixMusic.Sdk.MergedWrappers;
-using StrixMusic.Sdk.Observables;
+using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Core.Merged;
+using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Sdk
 {
@@ -26,12 +26,12 @@ namespace StrixMusic.Sdk
             Singleton = this;
             _cores = cores;
 
-            Devices = new ObservableCollection<ObservableDevice>();
+            Devices = new ObservableCollection<DeviceViewModel>();
             SearchAutoComplete = new ObservableCollection<string>();
 
-            LoadedCores = new ObservableCollection<ObservableCore>();
-            Users = new ObservableCollection<ObservableUserProfile>();
-            PlaybackQueue = new ObservableCollection<ObservableTrack>();
+            LoadedCores = new ObservableCollection<CoreViewModel>();
+            Users = new ObservableCollection<UserProfileViewModel>();
+            PlaybackQueue = new ObservableCollection<TrackViewModel>();
 
             GetSearchResultsAsyncCommand = new AsyncRelayCommand<string>(GlobalSearchResultsAsync);
             GetSearchAutoSuggestAsyncCommand = new RelayCommand<string>(GlobalSearchSuggestions);
@@ -60,19 +60,19 @@ namespace StrixMusic.Sdk
                 await core.InitAsync();
 
                 // Registers itself into LoadedCores
-                _ = new ObservableCore(core);
+                _ = new CoreViewModel(core);
 
-                Users.Add(new ObservableUserProfile(core.User));
+                Users.Add(new UserProfileViewModel(core.User));
             });
 
             var mergedLibrary = new MergedLibrary(toLoad.Select(x => x.Library));
-            Library = new ObservableLibrary(mergedLibrary);
+            Library = new LibraryViewModel(mergedLibrary);
 
             var mergedRecentlyPlayed = new MergedRecentlyPlayed(toLoad.Select(x => x.RecentlyPlayed));
-            RecentlyPlayed = new ObservableRecentlyPlayed(mergedRecentlyPlayed);
+            RecentlyPlayed = new RecentlyPlayedViewModel(mergedRecentlyPlayed);
 
             var mergedDiscoverables = new MergedDiscoverables(toLoad.Select(x => x.Discoverables));
-            Discoverables = new ObservableDiscoverables(mergedDiscoverables);
+            Discoverables = new DiscoverablesViewModel(mergedDiscoverables);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace StrixMusic.Sdk
 
             var merged = new MergedSearchResults(searchResults);
 
-            SearchResults = new ObservableSearchResults(merged);
+            SearchResults = new SearchResultsViewModel(merged);
 
             return merged;
         }
@@ -122,32 +122,32 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// Contains data about the cores that are loaded.
         /// </summary>
-        public ObservableCollection<ObservableCore> LoadedCores { get; }
+        public ObservableCollection<CoreViewModel> LoadedCores { get; }
 
         /// <summary>
         /// A consolidated list of all users in the app.
         /// </summary>
-        public ObservableCollection<ObservableUserProfile> Users { get; }
+        public ObservableCollection<UserProfileViewModel> Users { get; }
 
         /// <summary>
         /// All available devices.
         /// </summary>
-        public ObservableCollection<ObservableDevice> Devices { get; }
+        public ObservableCollection<DeviceViewModel> Devices { get; }
 
         /// <summary>
         /// The consolidated music library across all cores.
         /// </summary>
-        public ObservableLibrary? Library { get; private set; }
+        public LibraryViewModel? Library { get; private set; }
 
         /// <summary>
         /// The consolidated recently played items across all cores.
         /// </summary>
-        public ObservableRecentlyPlayed? RecentlyPlayed { get; private set; }
+        public RecentlyPlayedViewModel? RecentlyPlayed { get; private set; }
 
         /// <summary>
         /// Used to browse and discovered new music.
         /// </summary>
-        public ObservableDiscoverables? Discoverables { get; private set; }
+        public DiscoverablesViewModel? Discoverables { get; private set; }
 
         /// <summary>
         /// Gets search results for a query.
@@ -162,7 +162,7 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// Contains search results.
         /// </summary>
-        public ObservableSearchResults? SearchResults { get; private set; }
+        public SearchResultsViewModel? SearchResults { get; private set; }
 
         /// <summary>
         /// The autocomplete strings for the search results.
@@ -172,6 +172,6 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// The current playback queue. First item plays next.
         /// </summary>
-        public ObservableCollection<ObservableTrack> PlaybackQueue { get; }
+        public ObservableCollection<TrackViewModel> PlaybackQueue { get; }
     }
 }

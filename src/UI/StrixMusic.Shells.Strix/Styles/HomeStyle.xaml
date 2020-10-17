@@ -4,8 +4,6 @@
     xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
-    xmlns:observables="using:StrixMusic.Sdk.Observables"
-    xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
     xmlns:selectors="using:StrixMusic.Shells.Default.TemplateSelectors"
     x:Class="StrixMusic.Shells.Strix.Styles.HomeStyle">
 

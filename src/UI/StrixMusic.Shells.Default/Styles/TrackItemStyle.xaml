@@ -2,10 +2,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
-    xmlns:observable="using:StrixMusic.Sdk.Observables"
+    xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
     x:Class="StrixMusic.Shells.Default.Styles.TrackItemStyle">
 
-    <DataTemplate x:Key="DefaultTrackTemplate" x:DataType="observable:ObservableTrack">
+    <DataTemplate x:Key="DefaultTrackTemplate" x:DataType="viewModels:TrackViewModel">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>

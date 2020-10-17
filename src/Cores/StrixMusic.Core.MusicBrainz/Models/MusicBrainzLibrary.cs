@@ -6,8 +6,8 @@ using Hqub.MusicBrainz.API;
 using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
+using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Interfaces;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

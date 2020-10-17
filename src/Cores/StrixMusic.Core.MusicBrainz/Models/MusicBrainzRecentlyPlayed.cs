@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using OwlCore.Collections;
-using StrixMusic.Sdk.Interfaces;
+using StrixMusic.Sdk.Core.Data;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

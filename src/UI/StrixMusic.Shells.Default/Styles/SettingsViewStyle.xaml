@@ -2,12 +2,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
-    xmlns:observables="using:StrixMusic.Sdk.Observables"
-    xmlns:interfaces="using:StrixMusic.Sdk.Interfaces"
     xmlns:selectors="using:StrixMusic.Shells.TemplateSelectors"
+    xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
+    xmlns:data="using:StrixMusic.Sdk.Core.Data"
     x:Class="StrixMusic.Shells.Default.Styles.SettingsViewStyle">
 
-    <DataTemplate x:Key="DefaultSettingsViewTemplate" x:DataType="observables:ObservableLibrary">
+    <DataTemplate x:Key="DefaultSettingsViewTemplate" x:DataType="viewModels:LibraryViewModel">
         <UserControl>
             <Grid>
                 <Pivot ItemsSource="{x:Bind Children, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
@@ -15,7 +15,7 @@
                         <TextBlock Text="Settings"/>
                     </Pivot.Title>
                     <Pivot.HeaderTemplate>
-                        <DataTemplate x:DataType="interfaces:IPlayable">
+                        <DataTemplate x:DataType="data:IPlayable">
                             <TextBlock Text="{x:Bind Name}"/>
                         </DataTemplate>
                     </Pivot.HeaderTemplate>

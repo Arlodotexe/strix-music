@@ -2,11 +2,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
-    xmlns:observables="using:StrixMusic.Sdk.Observables"
     xmlns:converters="using:StrixMusic.Shells.Default.Converters"
+    xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
     x:Class="StrixMusic.Shells.Default.Styles.ArtistItemStyle">
 
-    <DataTemplate x:Key="DefaultArtistItemDataTemplate" x:DataType="observables:ObservableArtist">
+    <DataTemplate x:Key="DefaultArtistItemDataTemplate" x:DataType="viewModels:ArtistViewModel">
         <Grid Padding="12,8" Background="Transparent">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
