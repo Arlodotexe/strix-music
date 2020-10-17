@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Shells.Controls;
-using Windows.UI;
-using Windows.UI.ViewManagement;
+using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -20,7 +18,7 @@ namespace StrixMusic.Shells.Strix
         private INavigationService<Control>? _navigationService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Shell"/> class.
+        /// Initializes a new instance of the <see cref="StrixShell"/> class.
         /// </summary>
         public StrixShell()
         {

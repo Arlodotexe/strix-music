@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
 
-namespace StrixMusic.Shells.Converters
+namespace StrixMusic.Sdk.Uno.Converters
 {
     /// <summary>
     /// A converter that converts a given <see cref="long"/> to a <see cref="TimeSpan"/> then to a natural time format string.

@@ -1,9 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
-    xmlns:selectors="using:StrixMusic.Shells.Default.TemplateSelectors"
     xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     x:Class="StrixMusic.Shells.Strix.Styles.ArtistCollectionStyle">
 
     <DataTemplate x:Key="StrixArtistCollectionContentTemplate" x:DataType="viewModels:IArtistCollectionViewModel">
@@ -13,14 +12,14 @@
     </DataTemplate>
 
     <DataTemplate x:Key="StrixArtistCollectionItemStyle">
-        <shellcontrols:AlbumItem />
+        <defaultcontrols:AlbumItem />
     </DataTemplate>
 
-    <Style x:Key="StrixArtistCollectionStyle" TargetType="shellcontrols:ArtistCollection">
+    <Style x:Key="StrixArtistCollectionStyle" TargetType="defaultcontrols:ArtistCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="shellcontrols:ArtistCollection">
+                    <ControlTemplate TargetType="defaultcontrols:ArtistCollection">
                         <ContentControl ContentTemplate="{StaticResource StrixArtistCollectionContentTemplate}"
                                         VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
                     </ControlTemplate>
@@ -29,6 +28,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixArtistCollectionStyle}" TargetType="shellcontrols:ArtistCollection"/>
+    <Style BasedOn="{StaticResource StrixArtistCollectionStyle}" TargetType="defaultcontrols:ArtistCollection"/>
 
 </ResourceDictionary>

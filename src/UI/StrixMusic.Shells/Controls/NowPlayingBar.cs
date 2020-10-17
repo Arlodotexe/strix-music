@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shells.Controls
+namespace StrixMusic.Sdk.Uno.Controls
 {
     /// <summary>
     /// A Templated <see cref="Control"/> for the NowPlaying bar in a Shell.

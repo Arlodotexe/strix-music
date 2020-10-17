@@ -1,5 +1,5 @@
-﻿using StrixMusic.Shells.Strix;
-using StrixMusic.Shells.Assembly;
+﻿using StrixMusic.Sdk.Uno.Assembly;
+using StrixMusic.Shells.Strix;
 
 [assembly: Shell(
     shellClass: typeof(StrixShell),

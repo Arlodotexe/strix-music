@@ -1,0 +1,40 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
+    xmlns:data="using:StrixMusic.Sdk.Core.Data"
+    x:Class="StrixMusic.Sdk.Uno.Styles.SettingsViewStyle">
+
+    <DataTemplate x:Key="DefaultSettingsViewTemplate" x:DataType="viewModels:LibraryViewModel">
+        <UserControl>
+            <Grid>
+                <Pivot ItemsSource="{x:Bind Children, Mode=OneWay}" ItemTemplateSelector="{StaticResource CollectionSelector}">
+                    <Pivot.Title>
+                        <TextBlock Text="Settings"/>
+                    </Pivot.Title>
+                    <Pivot.HeaderTemplate>
+                        <DataTemplate x:DataType="data:IPlayable">
+                            <TextBlock Text="{x:Bind Name}"/>
+                        </DataTemplate>
+                    </Pivot.HeaderTemplate>
+                </Pivot>
+            </Grid>
+        </UserControl>
+    </DataTemplate>
+
+    <Style x:Key="DefaultSettingsViewStyle" TargetType="defaultcontrols:SettingsView">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="defaultcontrols:SettingsView">
+                        <ContentControl ContentTemplate="{StaticResource DefaultSettingsViewTemplate}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultSettingsViewStyle}" TargetType="defaultcontrols:SettingsView"/>
+
+</ResourceDictionary>

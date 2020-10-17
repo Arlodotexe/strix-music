@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace StrixMusic.Shells.Assembly.Enums
+namespace StrixMusic.Sdk.Uno.Assembly.Enums
 {
     /// <summary>
     /// The input methods supported by the shell.

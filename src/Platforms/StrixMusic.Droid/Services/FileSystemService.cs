@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using StrixMusic.Shared.Models;
+using StrixMusic.Sdk.Uno.Models;
 using Windows.Storage;
 
 // ReSharper disable once CheckNamespace

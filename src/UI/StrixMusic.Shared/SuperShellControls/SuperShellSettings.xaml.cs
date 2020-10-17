@@ -4,8 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using StrixMusic.Helpers;
-using StrixMusic.Models;
 using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Uno.Models;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

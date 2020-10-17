@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Core.ViewModels;
 
-namespace StrixMusic.Shells.TemplateSelectors
+namespace StrixMusic.Sdk.Uno.TemplateSelectors
 {
     /// <summary>
     /// A <see cref="DataTemplateSelector"/> for the collections in a <see cref="IPlayableCollectionGroup"/> library.

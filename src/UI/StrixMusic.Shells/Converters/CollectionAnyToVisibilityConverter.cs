@@ -1,9 +1,8 @@
 ﻿using System.Collections;
-using System.Linq;
-using Uno.Extensions.Specialized;
 using Windows.UI.Xaml;
+using Uno.Extensions.Specialized;
 
-namespace StrixMusic.Shells.Converters
+namespace StrixMusic.Sdk.Uno.Converters
 {
     /// <summary>
     /// A simple converter that converts a given <see cref="ICollection"/> to an <see cref="Visibility"/> based on the presence of any items in the <see cref="ICollection"/>.

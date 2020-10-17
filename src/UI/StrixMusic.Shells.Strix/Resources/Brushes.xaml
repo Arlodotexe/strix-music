@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:default="using:StrixMusic.Shells.Default.Controls"
+    xmlns:default="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls">
 
     <!--<AcrylicBrush x:Key="AcrylicContentBackgroundBrush" TintColor="#302e38"

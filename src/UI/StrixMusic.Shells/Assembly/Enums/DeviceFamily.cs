@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StrixMusic.Shells.Assembly.Enums
+namespace StrixMusic.Sdk.Uno.Assembly.Enums
 {
     /// <summary>
     /// The Device family of the Shell.

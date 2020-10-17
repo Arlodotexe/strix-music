@@ -2,9 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
-    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
     xmlns:data="using:StrixMusic.Sdk.Core.Data"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     x:Class="StrixMusic.Shells.Strix.Styles.SettingsViewStyle">
 
     <DataTemplate x:Key="StrixSettingsViewTemplate" x:DataType="viewModels:LibraryViewModel">
@@ -24,11 +24,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="StrixSettingsViewStyle" TargetType="shellcontrols:SettingsView">
+    <Style x:Key="StrixSettingsViewStyle" TargetType="defaultcontrols:SettingsView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="shellcontrols:SettingsView">
+                    <ControlTemplate TargetType="defaultcontrols:SettingsView">
                         <ContentControl ContentTemplate="{StaticResource StrixSettingsViewTemplate}"/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -36,6 +36,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixSettingsViewStyle}" TargetType="shellcontrols:SettingsView"/>
+    <Style BasedOn="{StaticResource StrixSettingsViewStyle}" TargetType="defaultcontrols:SettingsView"/>
 
 </ResourceDictionary>

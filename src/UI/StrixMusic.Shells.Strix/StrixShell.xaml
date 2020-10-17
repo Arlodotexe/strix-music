@@ -1,9 +1,9 @@
-﻿<shellcontrols:ShellBase
+﻿<defaultcontrols:ShellBase
     x:Class="StrixMusic.Shells.Strix.StrixShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
-    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -68,12 +68,12 @@
 
                         <Button Style="{StaticResource GenericBarButton}">
                             <!--<SymbolIcon Symbol="Contact"/>-->
-                            <FontIcon Glyph="&#xE2AF;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                            <FontIcon Glyph="&#xE2AF;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
                         <TextBox x:Name="SearchTextBox" Grid.Column="1" Style="{StaticResource TextBoxStyle}" FontSize="24"/>
                         <Button Grid.Column="2" Style="{StaticResource GenericBarButton}" Click="SearchButtonClicked">
                             <!--<SymbolIcon Symbol="Find"/>-->
-                            <FontIcon Glyph="&#xE094;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                            <FontIcon Glyph="&#xE094;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
                     </Grid>
 
@@ -86,26 +86,26 @@
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0" Style="{StaticResource TopBarButton}">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 <TextBlock Text="Now Playing" VerticalAlignment="Center" Margin="8,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <Button x:Name="HomeTopButton" Grid.Column="1" Style="{StaticResource TopBarButton}" Click="NavButtonClicked">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon Glyph="&#xE10F;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xE10F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 <TextBlock Text="Home" VerticalAlignment="Center" Margin="8,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="2" Style="{StaticResource TopBarButton}">
                             <StackPanel Orientation="Horizontal">
                                 <!--<SymbolIcon Symbol="Clock"/>-->
-                                <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 <TextBlock Text="Recent" VerticalAlignment="Center" Margin="8,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="3" Style="{StaticResource TopBarButton}">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon Glyph="&#xEB44;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xEB44;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 <TextBlock Text="Browse" VerticalAlignment="Center" Margin="8,0,0,0"/>
                             </StackPanel>
                         </Button>
@@ -113,7 +113,7 @@
 
                     <Button x:Name="SettingsButton" Grid.Row="1" HorizontalAlignment="Right" Style="{StaticResource GenericBarButton}" Width="48" Margin="0,0,32,0" Click="SettingsButtonClick">
                         <!--<SymbolIcon Symbol="Setting"/>-->
-                        <FontIcon Glyph="&#xE115;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                        <FontIcon Glyph="&#xE115;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </Button>
                 </Grid>
             </local:Drawer.TopBarContent>
@@ -124,7 +124,7 @@
             </local:Drawer.MainContent>
             <local:Drawer.BottomBarSecondaryContent>
                 <Grid Background="{ThemeResource AcrylicSecondaryBarBackgroundBrush}">
-                    <shellcontrols:NowPlayingBar/>
+                    <defaultcontrols:NowPlayingBar/>
                 </Grid>
             </local:Drawer.BottomBarSecondaryContent>
             <local:Drawer.BottomBarContent>
@@ -139,33 +139,33 @@
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0" Style="{StaticResource GenericBarButton}">
                             <StackPanel>
-                                <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 <TextBlock Text="Now Playing" FontSize="8"/>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="1" Style="{StaticResource GenericBarButton}">
                             <StackPanel>
                                 <!--<SymbolIcon Symbol="Clock"/>-->
-                                <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 <TextBlock Text="Recent" FontSize="8"/>
                             </StackPanel>
                         </Button>
                         <Button x:Name="HomeBottomButton" Grid.Column="2" Style="{StaticResource GenericBarButton}" Click="NavButtonClicked">
                             <StackPanel>
-                                <FontIcon Glyph="&#xE10F;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xE10F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 <TextBlock Text="Home" FontSize="8"/>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="3" Style="{StaticResource GenericBarButton}">
                             <StackPanel>
-                                <FontIcon Glyph="&#xEB44;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xEB44;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 <TextBlock Text="Browse" FontSize="8"/>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="4" Style="{StaticResource GenericBarButton}">
                             <StackPanel>
                                 <!--<SymbolIcon Symbol="Find"/>-->
-                                <FontIcon Glyph="&#xE094;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                <FontIcon Glyph="&#xE094;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 <TextBlock Text="Search" FontSize="8"/>
                             </StackPanel>
                         </Button>
@@ -194,4 +194,4 @@
             </Border>
         </Grid>
     </Grid>
-</shellcontrols:ShellBase>
+</defaultcontrols:ShellBase>

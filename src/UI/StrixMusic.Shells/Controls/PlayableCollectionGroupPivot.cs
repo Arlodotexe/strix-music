@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Services.Settings;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Core.ViewModels;
+using StrixMusic.Sdk.Services.Settings;
 
-namespace StrixMusic.Shells.Controls
+namespace StrixMusic.Sdk.Uno.Controls
 {
     /// <summary>
     /// Displays the content of a PlayableCollectionGroupViewModel in a Pivot.
@@ -87,7 +87,7 @@ namespace StrixMusic.Shells.Controls
         public PivotItem? PART_SongsPivotItem { get; set; }
 
         /// <summary>
-        /// The pivot item that displays an <see cref="IObservableAlbumCollection" />
+        /// The pivot item that displays an <see cref="IAlbumCollectionViewModel" />
         /// </summary>
         public PivotItem? PART_AlbumsPivotItem { get; set; }
 

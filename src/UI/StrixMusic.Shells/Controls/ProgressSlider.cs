@@ -1,9 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 
-namespace StrixMusic.Shells.Controls
+namespace StrixMusic.Sdk.Uno.Controls
 {
     /// <summary>
     /// A slider that can automatically update the tick position.

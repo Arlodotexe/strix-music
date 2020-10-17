@@ -1,11 +1,7 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
-using OwlCore.Collections;
-using OwlCore.Exceptions;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.Core.ViewModels;
 
-namespace StrixMusic.Shells.Controls
+namespace StrixMusic.Sdk.Uno.Controls
 {
     /// <summary>
     /// A Templated <see cref="Control"/> for displaying any Object containing a list of <see cref="TrackViewModel"/>.

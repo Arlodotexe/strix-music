@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
-    xmlns:converters="using:StrixMusic.Shells.Converters"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
     x:Class="StrixMusic.Shells.Strix.Styles.AlbumViewStyle">
 
@@ -81,17 +81,17 @@
                         </CommandBar>
                     </Grid>
 
-                    <shellcontrols:TrackCollection Grid.Row="1"/>
+                    <defaultcontrols:TrackCollection Grid.Row="1"/>
                 </Grid>
             </UserControl>
         </ScrollViewer>
     </DataTemplate>
 
-    <Style x:Key="StrixAlbumViewControlStyle" TargetType="shellcontrols:AlbumView">
+    <Style x:Key="StrixAlbumViewControlStyle" TargetType="defaultcontrols:AlbumView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="shellcontrols:AlbumView">
+                    <ControlTemplate TargetType="defaultcontrols:AlbumView">
                         <ContentControl ContentTemplate="{StaticResource StrixAlbumViewTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -100,6 +100,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixAlbumViewControlStyle}" TargetType="shellcontrols:AlbumView"/>
+    <Style BasedOn="{StaticResource StrixAlbumViewControlStyle}" TargetType="defaultcontrols:AlbumView"/>
 
 </ResourceDictionary>

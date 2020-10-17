@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Shells.Controls;
+using StrixMusic.Sdk.Uno;
+using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,7 +19,7 @@ namespace StrixMusic.Shells.Default
         private INavigationService<Control>? _navigationService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Shell"/> class.
+        /// Initializes a new instance of the <see cref="DefaultShell"/> class.
         /// </summary>
         public DefaultShell()
         {
@@ -97,7 +98,7 @@ namespace StrixMusic.Shells.Default
                 return;
             }
 
-            string invokedItemString = (args.InvokedItem as string)!;
+            string invokedItemString = (args.InvokedItem as string) !;
             if (invokedItemString == null || !_pagesMapping.ContainsKey(invokedItemString))
             {
                 return;

@@ -4,14 +4,14 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shells.Controls
+namespace StrixMusic.Sdk.Uno.Controls
 {
     public abstract partial class ShellBase : UserControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellBase"/> class.
         /// </summary>
-        public ShellBase()
+        protected ShellBase()
         {
             Loaded += ShellControl_Loaded;
         }
@@ -23,7 +23,7 @@ namespace StrixMusic.Shells.Controls
         }
 
         /// <summary>
-        /// Sets properties of the taskbar for showing this shell.
+        /// Sets properties of the title bar for this shell.
         /// </summary>
         protected virtual void SetupTitleBar()
         {

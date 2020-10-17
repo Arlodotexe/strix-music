@@ -1,8 +1,8 @@
-﻿<shellcontrols:ShellBase
+﻿<defaultcontrols:ShellBase
     x:Class="StrixMusic.Shells.Default.DefaultShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:shellcontrols="using:StrixMusic.Shells.Controls"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -20,18 +20,18 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Name="HomeItem" Content="Home">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE10F;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                        <FontIcon Glyph="&#xE10F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem Content="Recently Played" Tag="RecentlyPlayedItem">
                     <NavigationViewItem.Icon>
                         <!--<SymbolIcon Symbol="Clock"/>-->
-                        <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                        <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Name="NowPlaying" Content="Now Playing">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Shells.Default/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                        <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItemSeparator/>
@@ -40,10 +40,10 @@
                             HorizontalContentAlignment="Stretch"/>
         </NavigationView>
 
-        <shellcontrols:NowPlayingBar Grid.Row="1"/>
+        <defaultcontrols:NowPlayingBar Grid.Row="1"/>
 
         <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                         Visibility="Collapsed" Grid.RowSpan="2"/>
     </Grid>
-</shellcontrols:ShellBase>
+</defaultcontrols:ShellBase>

@@ -1,14 +1,11 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
-using OwlCore.Collections;
-using OwlCore.Exceptions;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.Core.ViewModels;
 
-namespace StrixMusic.Shells.Controls
+namespace StrixMusic.Sdk.Uno.Controls
 {
     /// <summary>
-    /// A templated <see cref="Control"/> for displaying an <see cref="IObservableAlbumCollection"/>.
+    /// A templated <see cref="Control"/> for displaying an <see cref="IAlbumCollectionViewModel"/>.
     /// </summary>
     /// <remarks>
     /// This class temporarily only displays <see cref="AlbumViewModel"/>s.

@@ -5,7 +5,7 @@
     xmlns:local="using:StrixMusic.SuperShellControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="using:StrixMusic.Models"
+    xmlns:models="using:StrixMusic.Sdk.Uno.Models"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -17,7 +17,7 @@
             <ComboBox x:Name="ShellSelector" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
                   SelectionChanged="ComboBox_SelectionChanged">
                 <ComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="model:ShellModel">
+                    <DataTemplate x:DataType="models:ShellModel">
                         <TextBlock Text="{x:Bind DisplayName}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>

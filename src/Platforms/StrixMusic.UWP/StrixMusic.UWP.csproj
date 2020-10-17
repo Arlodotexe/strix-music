@@ -247,9 +247,9 @@
       <Project>{e35102f3-8a0a-44dc-a209-a5ba91cab73b}</Project>
       <Name>StrixMusic.Shells.ZuneDesktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\StrixMusic.Shells\StrixMusic.Shells.csproj">
-      <Project>{f48a8dd4-f438-451d-a971-92bb51e2f21e}</Project>
-      <Name>StrixMusic.Shells</Name>
+    <ProjectReference Include="..\..\UI\StrixMusic.Shells\StrixMusic.Sdk.Uno.csproj">
+      <Project>{7766701F-8F91-44C1-809B-1C3941B09783}</Project>
+      <Name>StrixMusic.Sdk.Uno</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

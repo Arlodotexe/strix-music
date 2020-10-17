@@ -70,7 +70,7 @@
     <ProjectReference Include="..\..\UI\StrixMusic.Shells.Default\StrixMusic.Shells.Default.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shells.Strix\StrixMusic.Shells.Strix.csproj" />
     <ProjectReference Include="..\..\UI\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />
-    <ProjectReference Include="..\..\UI\StrixMusic.Shells\StrixMusic.Shells.csproj" />
+    <ProjectReference Include="..\..\UI\StrixMusic.Shells\StrixMusic.Sdk.Uno.csproj" />
   </ItemGroup>
   <Import Project="..\..\UI\StrixMusic.Shared\StrixMusic.Shared.projitems" Label="Shared" />
 </Project>

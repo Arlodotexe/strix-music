@@ -1,7 +1,7 @@
 ﻿using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.Core.ViewModels;
 
-namespace StrixMusic.Shells.Controls
+namespace StrixMusic.Sdk.Uno.Controls
 {
     /// <summary>
     /// A Templated <see cref="Control"/> for displaying an <see cref="AlbumViewModel"/> in a list.

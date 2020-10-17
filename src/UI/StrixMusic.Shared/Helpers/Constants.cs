@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using StrixMusic.Models;
-using StrixMusic.Shells.Assembly;
+using StrixMusic.Sdk.Uno.Assembly;
+using StrixMusic.Sdk.Uno.Models;
 
 namespace StrixMusic.Helpers
 {

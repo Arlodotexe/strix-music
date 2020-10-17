@@ -1,14 +1,12 @@
 ﻿<Application
     x:Class="StrixMusic.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:StrixMusic"
-    xmlns:shared="using:StrixMusic.Shared">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Default/Resources.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.Uno/Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Color x:Key="ShadowColor">#FF000000</Color>

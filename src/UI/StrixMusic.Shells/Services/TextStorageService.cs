@@ -1,12 +1,12 @@
-﻿using Nito.AsyncEx;
-using OwlCore.Extensions.CollectionsExtensions.Dictionaries;
-using StrixMusic.Sdk.Services.StorageService;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Nito.AsyncEx;
+using OwlCore.Extensions.CollectionsExtensions.Dictionaries;
+using StrixMusic.Sdk.Services.StorageService;
 
-namespace StrixMusic.Sdk.Services
+namespace StrixMusic.Sdk.Uno.Services
 {
     /// <inheritdoc cref="ITextStorageService"/>
     public class TextStorageService : ITextStorageService

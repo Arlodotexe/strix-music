@@ -22,10 +22,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Models\FileData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\FileDataProperties.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\FolderData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\ShellModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SharedFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SuperShellService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SuperShellControls\SuperShell.xaml.cs">

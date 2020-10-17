@@ -1,6 +1,6 @@
-﻿using StrixMusic.Shells.ZuneDesktop;
-using StrixMusic.Shells.Assembly;
-using StrixMusic.Shells.Assembly.Enums;
+﻿using StrixMusic.Sdk.Uno.Assembly;
+using StrixMusic.Sdk.Uno.Assembly.Enums;
+using StrixMusic.Shells.ZuneDesktop;
 
 [assembly: Shell(
     shellClass: typeof(ZuneShell),

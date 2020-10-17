@@ -8,7 +8,7 @@ using Windows.UI.Xaml;
 
 namespace StrixMusic.Shells.Strix.Styles
 {
-    partial class PlayableCollectionGroupPivotStyle : ResourceDictionary
+    public partial class PlayableCollectionGroupPivotStyle : ResourceDictionary
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupPivotStyle"/> class.

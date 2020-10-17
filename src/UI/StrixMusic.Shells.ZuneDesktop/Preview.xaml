@@ -1,13 +1,13 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:shellcontrols="using:StrixMusic.Shells.Controls">
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls">
 
-    <Style x:Key="ZuneShellPreviewStyle" TargetType="shellcontrols:ShellPreview">
+    <Style x:Key="ZuneShellPreviewStyle" TargetType="defaultcontrols:ShellPreview">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="shellcontrols:ShellPreview">
+                    <ControlTemplate TargetType="defaultcontrols:ShellPreview">
                         <Grid Background="#11090F">
                             <Grid VerticalAlignment="Top">
                                 <StackPanel Orientation="Horizontal">

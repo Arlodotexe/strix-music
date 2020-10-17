@@ -1,18 +1,17 @@
-﻿ using System;
-using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Shells.Controls;
+﻿using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk;
+using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Uno.Controls;
+using StrixMusic.Shells.ZuneDesktop.Settings;
+using System;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
-using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Shells.ZuneDesktop.Settings;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Core;
 
 namespace StrixMusic.Shells.ZuneDesktop
 {
