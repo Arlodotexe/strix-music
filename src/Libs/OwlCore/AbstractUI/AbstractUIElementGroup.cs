@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OwlCore.AbstractUI
 {
@@ -25,9 +26,15 @@ namespace OwlCore.AbstractUI
         }
 
         /// <summary>
+        /// Get an item from this <see cref="AbstractUIElementGroup"/>.
+        /// </summary>
+        /// <param name="i">The index</param>
+        public AbstractUIElement this[int i] => Items.ElementAt(i);
+
+        /// <summary>
         /// The items in this group.
         /// </summary>
-        public IEnumerable<AbstractUIElement> Items { get; protected set; }
+        public IEnumerable<AbstractUIElement> Items { get; }
 
         /// <inheritdoc cref="AbstractUI.PreferredOrientation"/>
         public PreferredOrientation PreferredOrientation { get; }

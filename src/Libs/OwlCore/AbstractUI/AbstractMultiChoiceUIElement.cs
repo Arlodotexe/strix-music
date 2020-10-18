@@ -7,7 +7,7 @@ namespace OwlCore.AbstractUI
     /// <summary>
     /// Presents a list of multiple choices to the user for selection.
     /// </summary>
-    public abstract class AbstractMultiChoiceUIElement : AbstractUIElement
+    public class AbstractMultiChoiceUIElement : AbstractUIElement
     {
         /// <summary>
         /// Creates a new instance of a <see cref="AbstractMultiChoiceUIElement"/>.
@@ -15,10 +15,11 @@ namespace OwlCore.AbstractUI
         /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
         /// <param name="defaultSelectedItem"><inheritdoc cref="SelectedItem"/></param>
         /// <param name="preferredDisplayMode"><inheritdoc cref="PreferredDisplayMode"/></param>
-        protected AbstractMultiChoiceUIElement(string id, AbstractUIMetadata defaultSelectedItem, AbstractMultiChoicePreferredDisplayMode preferredDisplayMode)
+        /// <param name="items"><inheritdoc cref="Items"/></param>
+        public AbstractMultiChoiceUIElement(string id, AbstractUIMetadata defaultSelectedItem, AbstractMultiChoicePreferredDisplayMode preferredDisplayMode, IEnumerable<AbstractUIMetadata> items)
             : base(id)
         {
-            Items = Array.Empty<AbstractUIMetadata>();
+            Items = items;
             PreferredDisplayMode = preferredDisplayMode;
             SelectedItem = defaultSelectedItem;
         }
@@ -26,22 +27,31 @@ namespace OwlCore.AbstractUI
         /// <summary>
         /// The list of items to be displayed in the UI.
         /// </summary>
-        public IEnumerable<AbstractUIMetadata> Items { get; protected set; }
-
-        /// <summary>
-        /// The current selected item.
-        /// </summary>
-        /// <remarks>Must be specified on object creation, even if the item is just a prompt to choose something.</remarks>
-        public AbstractUIMetadata SelectedItem { get; protected set; }
+        public IEnumerable<AbstractUIMetadata> Items { get; }
 
         /// <inheritdoc cref="AbstractMultiChoicePreferredDisplayMode"/>
         public AbstractMultiChoicePreferredDisplayMode PreferredDisplayMode { get; }
 
         /// <summary>
-        /// Called to tell the core that the selected item has been changed.
+        /// The current selected item.
         /// </summary>
-        /// <param name="selectedItem"></param>
+        /// <remarks>Must be specified on object creation, even if the item is just a prompt to choose something.</remarks>
+        public AbstractUIMetadata SelectedItem { get; private set; }
+
+        /// <summary>
+        /// Called to change the <see cref="SelectedItem"/>.
+        /// </summary>
+        /// <param name="newValue"></param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public abstract Task ItemSelected(AbstractUIMetadata selectedItem);
+        public void SelectItem(AbstractUIMetadata newValue)
+        {
+            SelectedItem = newValue;
+            ItemSelected?.Invoke(this, newValue);
+        }
+
+        /// <summary>
+        /// Fires when the <see cref="SelectedItem"/> is changed.
+        /// </summary>
+        public event EventHandler<AbstractUIMetadata>? ItemSelected;
     }
 }

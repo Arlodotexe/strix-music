@@ -199,7 +199,7 @@
       <Project>{e35102f3-8a0a-44dc-a209-a5ba91cab73b}</Project>
       <Name>StrixMusic.Shells.ZuneDesktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\StrixMusic.Shells\StrixMusic.Shells.csproj">
+    <ProjectReference Include="..\..\UI\StrixMusic.Shells\StrixMusic.Sdk.Uno.csproj">
       <Project>{7766701f-8f91-44c1-809b-1c3941b09783}</Project>
       <Name>StrixMusic.Shells</Name>
     </ProjectReference>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace OwlCore.AbstractUI
 {
@@ -19,6 +20,12 @@ namespace OwlCore.AbstractUI
         {
             Items = items;
         }
+
+        /// <summary>
+        /// Get an item from this <see cref="AbstractDataList"/>.
+        /// </summary>
+        /// <param name="i">The index</param>
+        public AbstractUIMetadata this[int i] => Items.ElementAt(i);
 
         /// <summary>
         /// The items in this collection.
