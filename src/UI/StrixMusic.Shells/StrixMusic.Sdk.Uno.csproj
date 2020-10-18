@@ -11,6 +11,7 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
     <PackageReference Include="Uno.UI" Version="3.1.0-dev.327" />
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
+    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Styles\AlbumViewStyle.xaml.cs">

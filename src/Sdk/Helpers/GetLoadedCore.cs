@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk
         /// <returns>The loaded, observable core.</returns>
         public static CoreViewModel GetLoadedCore(ICore reference)
         {
-            return Singleton?.LoadedCores.First(x => x.InstanceId == reference.InstanceId)
+            return Singleton?.Cores.First(x => x.InstanceId == reference.InstanceId)
                    ?? throw new InvalidOperationException($"{nameof(MainViewModel)} is uninitialized.");
         }
     }

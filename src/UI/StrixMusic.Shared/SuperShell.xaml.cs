@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -9,31 +10,39 @@ using StrixMusic.Sdk.Uno.Models;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.SuperShellControls
+namespace StrixMusic.Shared
 {
-    public sealed partial class SuperShellSettings : UserControl
+    public sealed partial class SuperShell : UserControl
     {
+
         private bool _loadingShells = true;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SuperShellSettings"/> class.
+        /// The labels for the skins that the user can choose from.
         /// </summary>
-        public SuperShellSettings()
+        public ObservableCollection<ShellModel> Skins { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SuperShell"/> class.
+        /// </summary>
+        public SuperShell()
         {
             this.InitializeComponent();
 
-            Loaded += SuperShellSettings_Loaded;
+            Skins = new ObservableCollection<ShellModel>();
+
+            Loaded += SuperShell_Loaded;
         }
 
-        private async void SuperShellSettings_Loaded(object sender, RoutedEventArgs e)
+        private async void SuperShell_Loaded(object sender, RoutedEventArgs e)
         {
-            Loaded -= SuperShellSettings_Loaded;
+            Loaded -= SuperShell_Loaded;
             await InitSkins();
         }
 
         private async Task InitSkins()
         {
-            // Gets the preferred shell's assmebly name
+            // Gets the preferred shell's assembly name
             var preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
 
             // Gets the list of loaded shells.
@@ -77,10 +86,5 @@ namespace StrixMusic.SuperShellControls
 
             var folder = await fileSystemSvc.PickFolder();
         }
-
-        /// <summary>
-        /// The labels for the skins that the user can choose from.
-        /// </summary>
-        public ObservableCollection<ShellModel> Skins { get; set; } = new ObservableCollection<ShellModel>();
     }
 }

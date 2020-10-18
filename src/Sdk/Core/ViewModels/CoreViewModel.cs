@@ -20,13 +20,13 @@ namespace StrixMusic.Sdk.Core.ViewModels
         /// </summary>
         /// <param name="core">The base <see cref="ICore"/></param>
         /// <remarks>
-        /// Creating a new <see cref="CoreViewModel"/> will register itself into <see cref="MainViewModel.LoadedCores"/>.
+        /// Creating a new <see cref="CoreViewModel"/> will register itself into <see cref="MainViewModel.Cores"/>.
         /// </remarks>
         public CoreViewModel(ICore core)
         {
             _core = core;
 
-            MainViewModel.Singleton?.LoadedCores.Add(this);
+            MainViewModel.Singleton?.Cores.Add(this);
 
             Devices = new SynchronizedObservableCollection<IDevice>(_core.Devices.Select(x => new DeviceViewModel(x)));
             Library = new LibraryViewModel(_core.Library);

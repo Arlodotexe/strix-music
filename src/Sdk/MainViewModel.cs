@@ -16,20 +16,19 @@ namespace StrixMusic.Sdk
     /// </summary>
     public partial class MainViewModel : ObservableRecipient
     {
-        private readonly IEnumerable<ICore> _cores;
+        private readonly List<ICore> _cores = new List<ICore>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
-        public MainViewModel(IEnumerable<ICore> cores)
+        public MainViewModel()
         {
             Singleton = this;
-            _cores = cores;
 
             Devices = new ObservableCollection<DeviceViewModel>();
             SearchAutoComplete = new ObservableCollection<string>();
 
-            LoadedCores = new ObservableCollection<CoreViewModel>();
+            Cores = new ObservableCollection<CoreViewModel>();
             Users = new ObservableCollection<UserProfileViewModel>();
             PlaybackQueue = new ObservableCollection<TrackViewModel>();
 
@@ -38,40 +37,39 @@ namespace StrixMusic.Sdk
         }
 
         /// <summary>
-        /// Initializes and loads the cores given during construction.
+        /// Initializes and loads the cores given.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitializeCores()
+        public async Task InitializeCores(IEnumerable<ICore> cores)
         {
-            await LoadedCores.InParallel(x => x.DisposeAsync().AsTask());
+            _cores.AddRange(cores);
+
+            await Cores.InParallel(x => x.DisposeAsync().AsTask());
 
             // These collections should be empty, no matter how many times the method is called.
             Devices.Clear();
             SearchAutoComplete.Clear();
-            LoadedCores.Clear();
+            Cores.Clear();
             Users.Clear();
             PlaybackQueue.Clear();
 
-            // Handle possible multiple enumeration
-            var toLoad = _cores as ICore[] ?? _cores.ToArray();
-
-            await toLoad.InParallel(async core =>
+            await _cores.InParallel(async core =>
             {
-                await core.InitAsync();
-
-                // Registers itself into LoadedCores
+                // Registers itself into Cores
                 _ = new CoreViewModel(core);
+
+                await core.InitAsync();
 
                 Users.Add(new UserProfileViewModel(core.User));
             });
 
-            var mergedLibrary = new MergedLibrary(toLoad.Select(x => x.Library));
+            var mergedLibrary = new MergedLibrary(_cores.Select(x => x.Library));
             Library = new LibraryViewModel(mergedLibrary);
 
-            var mergedRecentlyPlayed = new MergedRecentlyPlayed(toLoad.Select(x => x.RecentlyPlayed));
+            var mergedRecentlyPlayed = new MergedRecentlyPlayed(_cores.Select(x => x.RecentlyPlayed));
             RecentlyPlayed = new RecentlyPlayedViewModel(mergedRecentlyPlayed);
 
-            var mergedDiscoverables = new MergedDiscoverables(toLoad.Select(x => x.Discoverables));
+            var mergedDiscoverables = new MergedDiscoverables(_cores.Select(x => x.Discoverables));
             Discoverables = new DiscoverablesViewModel(mergedDiscoverables);
         }
 
@@ -122,7 +120,7 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// Contains data about the cores that are loaded.
         /// </summary>
-        public ObservableCollection<CoreViewModel> LoadedCores { get; }
+        public ObservableCollection<CoreViewModel> Cores { get; }
 
         /// <summary>
         /// A consolidated list of all users in the app.

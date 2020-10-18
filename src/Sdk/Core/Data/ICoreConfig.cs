@@ -18,5 +18,10 @@ namespace StrixMusic.Sdk.Core.Data
         /// Abstract UI elements that will be presented to the user for Settings, About, Legal notices, Donation links, etc.
         /// </summary>
         IReadOnlyList<AbstractUIElementGroup> CoreDataUIElements { get; }
+
+        /// <summary>
+        /// A local path or url pointing to a SVG file containing the logo for this core.
+        /// </summary>
+        Uri LogoSvgUrl { get; }
     }
 }

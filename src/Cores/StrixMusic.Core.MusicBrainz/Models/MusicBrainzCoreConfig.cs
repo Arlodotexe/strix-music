@@ -23,6 +23,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public IReadOnlyList<AbstractUIElementGroup> CoreDataUIElements => throw new NotImplementedException();
 
+        /// <inheritdoc/>
+        public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/MusicBrainz/logo.svg");
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCoreConfig"/> class.
         /// </summary>

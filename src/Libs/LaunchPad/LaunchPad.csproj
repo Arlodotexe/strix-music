@@ -32,12 +32,14 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Controls\ContentPopup.xaml" />
     <None Remove="Themes\Generic.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <UpToDateCheckInput Remove="Controls\ContentPopup.xaml" />
     <UpToDateCheckInput Remove="Themes\Generic.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
+    <ProjectReference Include="..\OwlCore\OwlCore.csproj" />
   </ItemGroup>
 </Project>

@@ -18,29 +18,34 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)AppFrame.xaml.cs">
+      <DependentUpon>AppFrame.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\CurrentWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Constants.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShellLoader.xaml.cs">
+      <DependentUpon>ShellLoader.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Services\SharedFactory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\SuperShellService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SuperShellControls\SuperShell.xaml.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)SuperShell.xaml.cs">
       <DependentUpon>SuperShell.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)SuperShellControls\SuperShellSettings.xaml.cs">
-      <DependentUpon>SuperShellSettings.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)AppFrame.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)SuperShellControls\SuperShell.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)SuperShellControls\SuperShellSettings.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)ShellLoader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)SuperShell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -51,5 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\MusicBrainz\logo.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Assets\Strix\logo.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\Splash Screen.svg" />
   </ItemGroup>
 </Project>

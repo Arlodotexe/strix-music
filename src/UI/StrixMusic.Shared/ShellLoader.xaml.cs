@@ -6,39 +6,27 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
+using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Services.SuperShell;
 using StrixMusic.Sdk.Uno.Models;
-using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic
+namespace StrixMusic.Shared
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class ShellLoader : UserControl
     {
         private ShellModel? _activeShell;
-        private ShellModel? _prefferedShell;
+        private ShellModel? _preferredShell;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainPage"/> class.
+        /// Initializes a new instance of the <see cref="ShellLoader"/> class.
         /// </summary>
-        public MainPage()
+        public ShellLoader()
         {
             InitializeComponent();
             Loaded += MainPage_Loaded;
-        }
-
-        /// <summary>
-        /// Fires when the Super buttons is clicked. Temporary until a proper trigger mechanism is found for touch devices.
-        /// </summary>
-        public void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Ioc.Default.GetService<ISuperShellService>().Show(Sdk.Services.SuperShell.SuperShellDisplayState.Settings);
         }
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
@@ -56,6 +44,14 @@ namespace StrixMusic
         private void MainPage_Unloaded(object sender, RoutedEventArgs e)
         {
             DetachEvents();
+        }
+
+        /// <summary>
+        /// Fires when the Super buttons is clicked. Temporary until a proper trigger mechanism is found for touch devices.
+        /// </summary>
+        public void Button_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell));
         }
 
         private void AttachEvents()
@@ -84,8 +80,6 @@ namespace StrixMusic
         {
             // TODO: Remove or replace.
             await SetupInitialShell();
-
-            SuperShellDisplay.Content = new SuperShell();
         }
 
         private async Task SetupInitialShell()
@@ -96,7 +90,7 @@ namespace StrixMusic
             if (Constants.Shells.LoadedShells.ContainsKey(preferredShell))
             {
                 shellModel = Constants.Shells.LoadedShells[preferredShell];
-                _prefferedShell = shellModel;
+                _preferredShell = shellModel;
             }
 
             await SetupShell(shellModel);
@@ -144,7 +138,7 @@ namespace StrixMusic
             // {
             // }
 
-            Control shellControl = (Activator.CreateInstance(shellType) as Control) !;
+            Control shellControl = (Activator.CreateInstance(shellType) as Control)!;
             shellControl.DataContext = MainViewModel.Singleton;
             return shellControl;
         }
@@ -162,19 +156,19 @@ namespace StrixMusic
                 ActualWidth > shell.ShellAttribute.MinWindowSize.Width;
         }
 
-        private async void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        private async void ShellLoader_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (_activeShell == null || _prefferedShell == null)
+            if (_activeShell == null || _preferredShell == null)
             {
-                // Ignore this during initializion
+                // Ignore this during initialization
                 return;
             }
 
-            if (_activeShell != _prefferedShell)
+            if (_activeShell != _preferredShell)
             {
-                if (CheckShellModelSupport(_prefferedShell!))
+                if (CheckShellModelSupport(_preferredShell!))
                 {
-                    await SetupShell(_prefferedShell);
+                    await SetupShell(_preferredShell);
                 }
             }
             else if (!CheckShellModelSupport(_activeShell!))

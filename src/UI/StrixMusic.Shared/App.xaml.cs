@@ -1,26 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore.AbstractStorage;
-using OwlCore.Services;
-using StrixMusic.Core.MusicBrainz;
-using StrixMusic.Sdk;
-using StrixMusic.Sdk.Core.Data;
-using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Services.StorageService;
-using StrixMusic.Sdk.Services.SuperShell;
-using StrixMusic.Sdk.Uno.Services;
-using StrixMusic.Services;
+﻿using Microsoft.Extensions.Logging;
+using StrixMusic.Shared;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Storage;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
 namespace StrixMusic
 {
@@ -37,50 +19,8 @@ namespace StrixMusic
         {
             ConfigureFilters(Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
 
-            Initialize();
-
             InitializeComponent();
             Suspending += OnSuspending;
-        }
-
-        private void Initialize()
-        {
-            Ioc.Default.ConfigureServices(async services =>
-            {
-                var contextualServiceLocator = new ContextualServiceLocator();
-
-                var textStorageService = new TextStorageService();
-                var settingsService = new DefaultSettingsService(textStorageService);
-                var cacheFileSystemService = new FileSystemService(ApplicationData.Current.LocalCacheFolder);
-                var fileSystemService = new FileSystemService();
-
-                _ = cacheFileSystemService.Init();
-                _ = fileSystemService.Init();
-
-                contextualServiceLocator.Register<IFileSystemService>(cacheFileSystemService, typeof(CacheServiceBase));
-
-                services.AddSingleton(contextualServiceLocator);
-                services.AddSingleton<ITextStorageService>(textStorageService);
-                services.AddSingleton<ISettingsService>(settingsService);
-                services.AddSingleton<CacheServiceBase, DefaultCacheService>();
-                services.AddSingleton<ISharedFactory, SharedFactory>();
-                services.AddSingleton<ISuperShellService, SuperShellService>();
-                services.AddSingleton<IFileSystemService>(fileSystemService);
-
-                var coreRegistry = await settingsService.GetValue<Dictionary<string, Type>>(nameof(SettingsKeys.CoreRegistry));
-
-                // Todo: If coreRegistry is null, show out of box setup page.
-                if (coreRegistry == null)
-                {
-                    coreRegistry = new Dictionary<string, Type>();
-                }
-
-                var cores = coreRegistry.Select(x => (ICore)Activator.CreateInstance(x.Value, x.Key)).ToList();
-
-                cores.Add(new MusicBrainzCore("testInstance"));
-
-                await new MainViewModel(cores).InitializeCores();
-            });
         }
 
         /// <summary>
@@ -96,37 +36,24 @@ namespace StrixMusic
                 // this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            Frame? rootFrame = Window.Current.Content as Frame;
+            FrameworkElement? rootElement = Window.Current.Content as FrameworkElement;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (rootFrame == null)
+            if (rootElement == null)
             {
-                // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
-
-                rootFrame.NavigationFailed += OnNavigationFailed;
-
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     // TODO: Load state from previously suspended application
                 }
 
                 // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
+                Window.Current.Content = new AppFrame();
             }
 
             if (e.PrelaunchActivated == false)
             {
                 TryEnablePrelaunch();
-
-                if (rootFrame.Content == null)
-                {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                }
 
                 // Ensure the current window is active
                 Window.Current.Activate();
@@ -181,16 +108,6 @@ namespace StrixMusic
 #else
                 .AddConsole(LogLevel.Information);
 #endif
-
-        /// <summary>
-        /// Invoked when Navigation to a certain page fails.
-        /// </summary>
-        /// <param name="sender">The Frame which failed navigation.</param>
-        /// <param name="e">Details about the navigation failure.</param>
-        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            throw new Exception($"Failed to load {e.SourcePageType.FullName}: {e.Exception}");
-        }
 
         /// <summary>
         /// Invoked when application execution is being suspended.  Application state is saved
