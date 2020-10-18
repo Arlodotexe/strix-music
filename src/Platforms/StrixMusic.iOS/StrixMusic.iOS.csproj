@@ -201,7 +201,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\UI\StrixMusic.Shells\StrixMusic.Sdk.Uno.csproj">
       <Project>{7766701f-8f91-44c1-809b-1c3941b09783}</Project>
-      <Name>StrixMusic.Shells</Name>
+      <Name>StrixMusic.Sdk.Uno</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\UI\StrixMusic.Shared\StrixMusic.Shared.projitems" Label="Shared" />
