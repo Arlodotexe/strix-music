@@ -55,12 +55,25 @@ namespace LaunchPad.Controls
             _current.HeaderText.Text = headerText;
             _current.Presenter.Content = el;
             _current.Visibility = Visibility.Visible;
+            _current.ShowAnimation.Begin();
         }
 
         /// <summary>
         /// Hides the <see cref="ContentPopup"/>.
         /// </summary>
+        /// <remarks>
+        /// Occurs indirectly.
+        /// Visibility is collapsed and content is removed after animation.
+        /// </remarks>
         public static void Hide()
+        {
+            if (_current is null)
+                throw new InvalidOperationException("No content popup was registered.");
+
+            _current.HideAnimation.Begin();
+        }
+
+        private static void CompleteHide()
         {
             if (_current is null)
                 throw new InvalidOperationException("No content popup was registered.");
@@ -72,5 +85,7 @@ namespace LaunchPad.Controls
         private void CloseButton_OnClick(object sender, RoutedEventArgs e) => Hide();
 
         private void Background_OnTapped(object sender, TappedRoutedEventArgs e) => Hide();
+
+        private void HideAnimation_Completed(object sender, object e) => CompleteHide();
     }
 }
