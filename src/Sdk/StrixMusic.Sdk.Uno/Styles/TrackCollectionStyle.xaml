@@ -9,6 +9,9 @@
         <ListView ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
                   Margin="32" HorizontalAlignment="Stretch"
                    SelectionMode="None" IsItemClickEnabled="True">
+            <ListView.Header>
+                <ProgressRing IsActive="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
+            </ListView.Header>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <defaultcontrols:TrackItem />
