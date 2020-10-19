@@ -72,5 +72,5 @@
     <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.Strix\StrixMusic.Shells.Strix.csproj" />
     <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />
   </ItemGroup>
-  <Import Project="..\..\UI\StrixMusic.UI.Shared\StrixMusic.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems" Label="Shared" />
 </Project>
