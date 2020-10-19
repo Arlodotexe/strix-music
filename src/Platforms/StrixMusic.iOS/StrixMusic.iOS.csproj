@@ -204,6 +204,6 @@
       <Name>StrixMusic.Shells.ZuneDesktop</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\..\UI\StrixMusic.Shared\StrixMusic.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
