@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private async void LoadTracksAsync()
         {
-            await ViewModel.PopulateMoreTracksAsync(25);
+            await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(25);
         }
     }
 }

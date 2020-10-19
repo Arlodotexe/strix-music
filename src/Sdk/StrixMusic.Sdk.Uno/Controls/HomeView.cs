@@ -14,11 +14,11 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             this.DefaultStyleKey = typeof(HomeView);
 
-            _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksAsync(20);
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(20);
 
-            _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsAsync(20);
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsCommand.ExecuteAsync(20);
 
-            _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsAsync(20);
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.ExecuteAsync(20);
         }
 
         /// <inheritdoc />
