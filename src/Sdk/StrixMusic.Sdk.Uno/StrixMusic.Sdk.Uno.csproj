@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
-    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
+    <ProjectReference Include="..\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Styles\AlbumViewStyle.xaml.cs">

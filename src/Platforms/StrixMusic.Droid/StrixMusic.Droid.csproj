@@ -126,13 +126,17 @@
       <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>
       <Name>OwlCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj">
-      <Project>{60ee2300-f562-416c-9458-dbea41389d8b}</Project>
-      <Name>StrixMusic.Sdk</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj">
       <Project>{bd87b98b-b958-43ec-b3bf-6058afedcdc6}</Project>
       <Name>LaunchPad</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj">
+      <Project>{5f63ca91-0f29-4eb3-8954-e649a457acb2}</Project>
+      <Name>StrixMusic.Sdk.Uno</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj">
+      <Project>{b1fad5f0-4361-4d32-84ab-a809f121f50c}</Project>
+      <Name>StrixMusic.Sdk</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\UI\StrixMusic.Shells.Default\StrixMusic.Shells.Default.csproj">
       <Project>{c2c542aa-8e94-4b60-bfdb-337a054d44cb}</Project>
@@ -145,10 +149,6 @@
     <ProjectReference Include="..\..\UI\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj">
       <Project>{e35102f3-8a0a-44dc-a209-a5ba91cab73b}</Project>
       <Name>StrixMusic.Shells.ZuneDesktop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\UI\StrixMusic.Shells\StrixMusic.Sdk.Uno.csproj">
-      <Project>{7766701f-8f91-44c1-809b-1c3941b09783}</Project>
-      <Name>StrixMusic.Sdk.Uno</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\UI\StrixMusic.Shared\StrixMusic.Shared.projitems" Label="Shared" />

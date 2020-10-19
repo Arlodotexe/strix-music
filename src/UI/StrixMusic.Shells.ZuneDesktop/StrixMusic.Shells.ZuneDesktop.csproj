@@ -103,8 +103,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
-		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.csproj" />
-		<ProjectReference Include="..\StrixMusic.Shells\StrixMusic.Sdk.Uno.csproj" />
+		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Styles\NowPlayingViewStyle.xaml.cs">
