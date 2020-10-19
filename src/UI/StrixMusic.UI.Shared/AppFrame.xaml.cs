@@ -16,7 +16,7 @@ namespace StrixMusic.Shared
         /// <summary>
         /// The <see cref="MainViewModel"/> for the app.
         /// </summary>
-        public MainViewModel MainViewModel { get; }
+        public MainViewModel MainViewModel { get; private set; } = null!;
 
         /// <summary>
         /// Creates a new instance of <see cref="AppFrame"/>.
@@ -25,6 +25,7 @@ namespace StrixMusic.Shared
         {
             this.InitializeComponent();
             NavigationService = new NavigationService<Control>();
+
             MainViewModel = new MainViewModel();
         }
 

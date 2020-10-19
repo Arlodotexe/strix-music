@@ -6,8 +6,9 @@ using OwlCore.Collections;
 namespace StrixMusic.Sdk.Core.Data
 {
     /// <summary>
-    /// Describes a core.
+    /// A <see cref="ICore"/> is a common API surface that can be implemented to interface Strix with an arbitrary music service provider.
     /// </summary>
+    /// <remarks>In a core's constructor, only do basic object initialization. For heavy work, use <see cref="InitAsync"/>.</remarks>
     public interface ICore : IAsyncDisposable
     {
         /// <inheritdoc cref="ICoreConfig" />

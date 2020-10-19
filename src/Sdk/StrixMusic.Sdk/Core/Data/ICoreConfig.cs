@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Core.Data
         /// <summary>
         /// The services for this instance of the core.
         /// </summary>
-        IServiceProvider Services { get; }
+        IServiceProvider? Services { get; }
 
         /// <summary>
         /// Abstract UI elements that will be presented to the user for Settings, About, Legal notices, Donation links, etc.

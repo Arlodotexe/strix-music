@@ -24,7 +24,7 @@ namespace StrixMusic.Core.MusicBrainz.Utils
         public FileRequestCache(string path)
         {
             _path = Path.GetFullPath(path);
-            Cleanup();
+            Task.Run(Cleanup);
         }
 
         /// <inheritdoc/>
@@ -68,7 +68,9 @@ namespace StrixMusic.Core.MusicBrainz.Utils
             if (!Directory.Exists(_path))
                 return;
 
-            foreach (var file in Directory.EnumerateFiles(_path, "*.mb-cache"))
+            var files = Directory.EnumerateFiles(_path, "*.mb-cache");
+
+            foreach (var file in files)
             {
                 if (DateTime.Now - CacheEntry.GetTimestamp(file) > ExpiresIn)
                 {

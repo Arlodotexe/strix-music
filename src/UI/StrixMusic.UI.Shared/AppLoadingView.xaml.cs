@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Nito.AsyncEx;
 using OwlCore.AbstractStorage;
+using OwlCore.Extensions.AsyncExtensions;
 using OwlCore.Services;
 using StrixMusic.Core.MusicBrainz;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Services;
-using OwlCore.Extensions.AsyncExtensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
@@ -28,6 +26,8 @@ namespace StrixMusic.Shared
 {
     public sealed partial class AppLoadingView : UserControl
     {
+        private DefaultSettingsService? _settingsService;
+
         /// <summary>
         /// The ViewModel for this page.
         /// </summary>
@@ -56,6 +56,8 @@ namespace StrixMusic.Shared
         private async void AppLoadingView_OnLoaded(object sender, RoutedEventArgs e)
         {
             await InitializeServices();
+
+            await InitRegisteredCoresOrShowOOBE();
         }
 
         private async Task InitializeServices()
@@ -66,7 +68,7 @@ namespace StrixMusic.Shared
             var contextualServiceLocator = new ContextualServiceLocator();
 
             var textStorageService = new TextStorageService();
-            var settingsService = new DefaultSettingsService(textStorageService);
+            _settingsService = new DefaultSettingsService(textStorageService);
             var cacheFileSystemService = new FileSystemService(ApplicationData.Current.LocalCacheFolder);
             var fileSystemService = new FileSystemService();
 
@@ -86,21 +88,25 @@ namespace StrixMusic.Shared
 
             services.AddSingleton(contextualServiceLocator);
             services.AddSingleton<ITextStorageService>(textStorageService);
-            services.AddSingleton<ISettingsService>(settingsService);
+            services.AddSingleton<ISettingsService>(_settingsService);
             services.AddSingleton<CacheServiceBase, DefaultCacheService>();
             services.AddSingleton<ISharedFactory, SharedFactory>();
             services.AddSingleton<IFileSystemService>(fileSystemService);
 
             Ioc.Default.ConfigureServices(services);
-
-            await InitRegisteredCoresOrShowOOBE(settingsService);
         }
 
         // TODO: Rename this method or split up the code better.
-        private async Task InitRegisteredCoresOrShowOOBE(ISettingsService settingsService)
+        private async Task InitRegisteredCoresOrShowOOBE()
         {
+            if (_settingsService is null)
+            {
+                UpdateStatus("Fatal internal error: Settings service wasn't initialized.");
+                return;
+            }
+
             UpdateStatus("Initializing core registry");
-            var coreRegistry = await settingsService.GetValue<Dictionary<string, Type>>(nameof(SettingsKeys.CoreRegistry));
+            var coreRegistry = await Task.Run(() => _settingsService.GetValue<Dictionary<string, Type>>(nameof(SettingsKeys.CoreRegistry)));
 
             // Todo: If coreRegistry is null, show out of box setup page.
             if (coreRegistry == null)
@@ -108,13 +114,13 @@ namespace StrixMusic.Shared
             }
 
             UpdateStatus("Creating core instances");
-            var cores = coreRegistry.Select(x => (ICore)Activator.CreateInstance(x.Value, x.Key)).ToList();
+            var cores = await Task.Run(() => coreRegistry.Select(x => (ICore)Activator.CreateInstance(x.Value, x.Key)).ToList());
 
             UpdateStatus($"Adding temp {nameof(MusicBrainzCore)} instance");
             cores.Add(new MusicBrainzCore("testInstance"));
 
             UpdateStatus("Initializing cores");
-            await CurrentWindow.AppFrame.MainViewModel.InitializeCores(cores);
+            await Task.Run(() => CurrentWindow.MainViewModel.InitializeCores(cores));
 
             UpdateStatus("Simulating lag");
             await Task.Delay(2000);

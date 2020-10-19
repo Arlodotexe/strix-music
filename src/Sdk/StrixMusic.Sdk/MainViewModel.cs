@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore.Collections;
 using OwlCore.Extensions.AsyncExtensions;
 using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Core.Merged;
@@ -25,12 +26,12 @@ namespace StrixMusic.Sdk
         {
             Singleton = this;
 
-            Devices = new ObservableCollection<DeviceViewModel>();
-            SearchAutoComplete = new ObservableCollection<string>();
+            Devices = new SynchronizedObservableCollection<DeviceViewModel>();
+            SearchAutoComplete = new SynchronizedObservableCollection<string>();
 
-            Cores = new ObservableCollection<CoreViewModel>();
-            Users = new ObservableCollection<UserProfileViewModel>();
-            PlaybackQueue = new ObservableCollection<TrackViewModel>();
+            Cores = new SynchronizedObservableCollection<CoreViewModel>();
+            Users = new SynchronizedObservableCollection<UserProfileViewModel>();
+            PlaybackQueue = new SynchronizedObservableCollection<TrackViewModel>();
 
             GetSearchResultsAsyncCommand = new AsyncRelayCommand<string>(GlobalSearchResultsAsync);
             GetSearchAutoSuggestAsyncCommand = new RelayCommand<string>(GlobalSearchSuggestions);
@@ -120,17 +121,17 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// Contains data about the cores that are loaded.
         /// </summary>
-        public ObservableCollection<CoreViewModel> Cores { get; }
+        public SynchronizedObservableCollection<CoreViewModel> Cores { get; }
 
         /// <summary>
         /// A consolidated list of all users in the app.
         /// </summary>
-        public ObservableCollection<UserProfileViewModel> Users { get; }
+        public SynchronizedObservableCollection<UserProfileViewModel> Users { get; }
 
         /// <summary>
         /// All available devices.
         /// </summary>
-        public ObservableCollection<DeviceViewModel> Devices { get; }
+        public SynchronizedObservableCollection<DeviceViewModel> Devices { get; }
 
         /// <summary>
         /// The consolidated music library across all cores.
