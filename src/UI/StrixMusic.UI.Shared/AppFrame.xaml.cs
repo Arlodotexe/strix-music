@@ -41,7 +41,7 @@ namespace StrixMusic.Shared
             switch (e.Page)
             {
                 case SuperShell superShell:
-                    ContentPopup.Show(superShell, "Settings");
+                    OverlayPresenter.Show(superShell, "Settings");
                     break;
                 case ShellLoader shellLoader:
                     PART_ContentPresenter.Content = shellLoader;
