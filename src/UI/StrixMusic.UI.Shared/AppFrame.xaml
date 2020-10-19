@@ -12,6 +12,6 @@
     <Grid>
         <ContentPresenter x:Name="PART_ContentPresenter" />
 
-        <controls:ContentPopup />
+        <controls:ContentOverlay x:Name="OverlayPresenter"/>
     </Grid>
 </UserControl>
