@@ -12,6 +12,12 @@ namespace StrixMusic
     public sealed partial class App : Application
     {
         /// <summary>
+        /// The internal AppFrame used to host top level app content..
+        /// </summary>
+        /// <remarks>If/when the app is made to handle multiple instances, this needs to be reworked.</remarks>
+        public static AppFrame AppFrame { internal get; set; } = new AppFrame();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="App"/> class. This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
@@ -48,7 +54,7 @@ namespace StrixMusic
                 }
 
                 // Place the frame in the current Window
-                Window.Current.Content = new AppFrame();
+                Window.Current.Content = AppFrame;
             }
 
             if (e.PrelaunchActivated == false)
