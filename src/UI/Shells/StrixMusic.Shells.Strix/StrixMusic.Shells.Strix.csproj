@@ -77,8 +77,10 @@
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="6.1.0-build.191.gc988bdd4ff" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
-    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
+    <ProjectReference Include="..\..\..\Libs\LaunchPad\LaunchPad.csproj" />
+    <ProjectReference Include="..\..\..\Libs\OwlCore\OwlCore.csproj" />
+    <ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
+    <ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Styles\AlbumCollectionStyle - Copy.xaml.cs">
