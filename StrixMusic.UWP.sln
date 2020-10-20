@@ -16,8 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StrixMusic.Shared", "src\UI\StrixMusic.Shared\StrixMusic.Shared.shproj", "{2E82DB60-BA1E-402C-A4F8-56DA621B04E9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrixMusic.UWP", "src\Platforms\StrixMusic.UWP\StrixMusic.UWP.csproj", "{89AC1131-5215-4F43-B5AC-B4DFAE1366F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{D825BC4B-7DC6-4399-8573-C1741426B572}"
@@ -42,10 +40,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shells.ZuneDeskt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{E4843EC6-B838-4B1B-AEB5-43290238EF4B}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StrixMusic.UI.Shared", "src\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.shproj", "{2E82DB60-BA1E-402C-A4F8-56DA621B04E9}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		src\UI\StrixMusic.Shared\StrixMusic.Shared.projitems*{2e82db60-ba1e-402c-a4f8-56da621b04e9}*SharedItemsImports = 13
-		src\UI\StrixMusic.Shared\StrixMusic.Shared.projitems*{89ac1131-5215-4f43-b5ac-b4dfae1366f6}*SharedItemsImports = 4
+		src\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems*{2e82db60-ba1e-402c-a4f8-56da621b04e9}*SharedItemsImports = 13
+		src\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems*{89ac1131-5215-4f43-b5ac-b4dfae1366f6}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -352,7 +352,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{61E25943-3416-41AC-BC23-34E684953336} = {E4843EC6-B838-4B1B-AEB5-43290238EF4B}
-		{2E82DB60-BA1E-402C-A4F8-56DA621B04E9} = {E4843EC6-B838-4B1B-AEB5-43290238EF4B}
 		{89AC1131-5215-4F43-B5AC-B4DFAE1366F6} = {B9806E49-10D1-4C10-9752-6FF9DDD14766}
 		{BD87B98B-B958-43EC-B3BF-6058AFEDCDC6} = {D825BC4B-7DC6-4399-8573-C1741426B572}
 		{184CD528-2959-4AA5-A691-0E161C04E9AD} = {D825BC4B-7DC6-4399-8573-C1741426B572}
@@ -363,6 +362,7 @@ Global
 		{A29B8F19-0AE0-4943-94FF-0CA54936D2CA} = {61E25943-3416-41AC-BC23-34E684953336}
 		{C4BE3C98-F58D-4990-A84B-78A3A9F197D1} = {61E25943-3416-41AC-BC23-34E684953336}
 		{6312BF7C-B3EB-4FA0-9EAD-FB53EFC86A0F} = {61E25943-3416-41AC-BC23-34E684953336}
+		{2E82DB60-BA1E-402C-A4F8-56DA621B04E9} = {E4843EC6-B838-4B1B-AEB5-43290238EF4B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {48425E8F-F5B5-47DB-A42B-29BD64798016}
