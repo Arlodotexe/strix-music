@@ -9,7 +9,7 @@
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
 
-    <Grid Padding="32,-16,32,0">
+    <Grid Padding="32,-16,32,16">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -44,7 +44,7 @@
                 <ColumnDefinition x:Name="TertiaryColumn" MinWidth="200"/>
             </Grid.ColumnDefinitions>
 
-            <controls:TrackCollection DataContext="{x:Bind ViewModel.Library}"  Grid.Column="2"/>
+            <controls:TrackCollection DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="2"/>
 
             <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="1" Margin="0,12"
                                      Style="{StaticResource ThinGridSplitterStyle}"/>

@@ -493,7 +493,7 @@
         <Setter Property="Background" Value="{ThemeResource ZuneListViewItemBackground}"/>
         <Setter Property="TabNavigation" Value="Local"/>
         <Setter Property="IsHoldingEnabled" Value="True"/>
-        <Setter Property="Padding" Value="22,8,24,8"/>
+        <Setter Property="Padding" Value="24,6"/>
         <Setter Property="MinHeight" Value="0"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="FontSize" Value="15"/>
