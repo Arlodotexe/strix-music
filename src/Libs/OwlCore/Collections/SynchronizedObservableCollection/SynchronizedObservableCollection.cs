@@ -28,7 +28,7 @@ namespace OwlCore.Collections
 #endif
     [ComVisible(false)]
     [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
-    public class SynchronizedObservableCollection<T> : ObservableCollection<T>, IDisposable, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class SynchronizedObservableCollection<T> : ObservableCollection<T>, IDisposable, IList<T>, IList, IReadOnlyList<T>, INotifyPropertyChanged, INotifyCollectionChanged
     {
         /// <summary>Initializes a new instance of the <see cref="SynchronizedObservableCollection{T}" /> class.</summary>
         public SynchronizedObservableCollection() : this(new List<T>(), GetCurrentSynchronizationContext())
