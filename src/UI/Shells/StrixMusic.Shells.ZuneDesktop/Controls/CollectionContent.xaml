@@ -28,7 +28,7 @@
         <TextBox PlaceholderText="SEARCH" HorizontalAlignment="Right" Width="240" Margin="0,-8,0,0"/>
 
         <!--Page Selector-->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Margin="0,8">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Margin="0,8,0,24">
             <RadioButton Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
             <RadioButton Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
             <RadioButton Content="ALBUMS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
@@ -46,9 +46,9 @@
 
             <controls:TrackCollection DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="2"/>
 
-            <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="1" Margin="0,12"
+            <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="1" Margin="0,24,0,12"
                                      Style="{StaticResource ThinGridSplitterStyle}"/>
-            <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="2"  Margin="0,12"
+            <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="2" Margin="0,24,0,12"
                                      Style="{StaticResource ThinGridSplitterStyle}"/>
         </Grid>
     </Grid>

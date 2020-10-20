@@ -6,7 +6,7 @@
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.TrackItemStyle">
 
     <DataTemplate x:Key="ZuneDesktopTrackTemplate" x:DataType="viewModels:TrackViewModel">
-        <TextBlock Text="{x:Bind Name}" FontSize="12" FontWeight="SemiBold"/>
+        <TextBlock Text="{x:Bind Name}" FontSize="12" FontWeight="SemiBold" Opacity=".8"/>
     </DataTemplate>
 
     <Style x:Key="ZuneDesktopTrackControlStyle" TargetType="defaultcontrols:TrackItem">

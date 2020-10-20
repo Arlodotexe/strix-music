@@ -6,17 +6,32 @@
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.TrackCollectionStyle">
 
     <DataTemplate x:Key="ZuneDesktopTrackListTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
-        <ListView ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
-                  SelectionMode="None" IsItemClickEnabled="True">
-            <ListView.Header>
-                <ProgressRing IsActive="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
-            </ListView.Header>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <defaultcontrols:TrackItem />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <StackPanel Margin="24,0,0,6">
+                <TextBlock FontSize="12" FontWeight="Bold">
+                        <Run Text="{x:Bind Tracks.Count}"/>
+                        <Run Text=" SONGS"/>
+                </TextBlock>
+                <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
+            </StackPanel>
+
+            <ListView ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
+                      SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1">
+                <ListView.Header>
+                    <Grid Height="6"/>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <defaultcontrols:TrackItem />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
     </DataTemplate>
 
     <Style x:Key="ZuneDesktopTrackListControlStyle" TargetType="defaultcontrols:TrackCollection">

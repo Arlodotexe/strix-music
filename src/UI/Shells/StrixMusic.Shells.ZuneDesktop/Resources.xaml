@@ -389,7 +389,7 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="TabNavigation" Value="Local"/>
         <Setter Property="IsHoldingEnabled" Value="True"/>
-        <Setter Property="Padding" Value="0,6,0,0"/>
+        <Setter Property="Padding" Value="0,8,0,0"/>
         <Setter Property="MinHeight" Value="0"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="FontSize" Value="15"/>
@@ -493,9 +493,9 @@
         <Setter Property="Background" Value="{ThemeResource ZuneListViewItemBackground}"/>
         <Setter Property="TabNavigation" Value="Local"/>
         <Setter Property="IsHoldingEnabled" Value="True"/>
-        <Setter Property="Padding" Value="24,6"/>
+        <Setter Property="Padding" Value="24,4"/>
         <Setter Property="MinHeight" Value="0"/>
-        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Margin" Value="0,0,0,1"/>
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
