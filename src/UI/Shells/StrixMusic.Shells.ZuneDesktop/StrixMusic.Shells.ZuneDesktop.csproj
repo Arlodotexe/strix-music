@@ -62,6 +62,8 @@
 		<None Remove="Styles\NowPlayingBarStyle.xaml" />
 		<None Remove="Styles\NowPlayingViewStyle.xaml" />
 		<None Remove="Styles\SettingsViewStyle.xaml" />
+		<None Remove="Styles\TrackCollectionStyle.xaml" />
+		<None Remove="Styles\TrackItemStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Remove="Assets\svg\Next.xaml" />
@@ -82,6 +84,8 @@
 		<UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\TrackCollectionStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Include="Assets\Backgrounds\Bubbles.png" />
@@ -116,6 +120,12 @@
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 		<Compile Update="Styles\SettingsViewStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\TrackCollectionStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\TrackItemStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 	</ItemGroup>

@@ -44,6 +44,8 @@
                 <ColumnDefinition x:Name="TertiaryColumn" MinWidth="200"/>
             </Grid.ColumnDefinitions>
 
+            <controls:TrackCollection DataContext="{x:Bind ViewModel.Library}"  Grid.Column="2"/>
+
             <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="1" Margin="0,12"
                                      Style="{StaticResource ThinGridSplitterStyle}"/>
             <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="2"  Margin="0,12"
