@@ -677,10 +677,10 @@
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
-        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontSize" Value="14"/>
         <Setter Property="MinWidth" Value="12"/>
         <Setter Property="UseSystemFocusVisuals" Value="True"/>
-        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Margin" Value="0,0,6,0"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -736,10 +736,9 @@
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
-        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontSize" Value="12"/>
         <Setter Property="MinWidth" Value="12"/>
         <Setter Property="UseSystemFocusVisuals" Value="True"/>
-        <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Margin" Value="0,0,6,0"/>
         <Setter Property="Template">
             <Setter.Value>
