@@ -4,6 +4,7 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:styles="using:StrixMusic.Shells.ZuneDesktop.Styles"
+    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:dstyles="using:StrixMusic.Sdk.Uno.Styles">
 
     <ResourceDictionary.MergedDictionaries>
@@ -456,6 +457,32 @@
                             <Rectangle x:Name="FilledRect" Fill="Black" Width="8" Height="8" RadiusX="8" RadiusY="8" Visibility="Collapsed"/>
                         </Border>
                         <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Grid.Column="1" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" TextWrapping="Wrap" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ThinGridSplitterStyle" TargetType="tkcontrols:GridSplitter">
+        <Setter Property="IsTabStop" Value="True"></Setter>
+        <Setter Property="UseSystemFocusVisuals" Value="True"></Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+        <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+        <Setter Property="IsFocusEngagementEnabled" Value="True"></Setter>
+        <Setter Property="MinWidth" Value="6"></Setter>
+        <Setter Property="MinHeight" Value="6"></Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="tkcontrols:GridSplitter">
+                    <Grid Background="Transparent">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="GridSplitterStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver"/>
+                                <VisualState x:Name="Pressed"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Rectangle x:Name="Rectangle" Fill="#A7A9AC" Width="1" HorizontalAlignment="Left"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

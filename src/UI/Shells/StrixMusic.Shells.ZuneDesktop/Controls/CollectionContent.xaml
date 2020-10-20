@@ -5,29 +5,48 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
+    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
 
-    <Grid Padding="32,0">
+    <Grid Padding="32,-16,32,0">
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        
+        <!--Core Filters-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <RadioButton Content="All" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}"/>
             <RadioButton Content="MOCK" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}"/>
             <RadioButton Content="FILES" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}"/>
             <RadioButton Content="ONEDRIVE" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}"/>
             <RadioButton Content="SPOTIFY" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}"/>
         </StackPanel>
 
-        <TextBox PlaceholderText="SEARCH" HorizontalAlignment="Right" Width="240"/>
+        <!--Search box-->
+        <TextBox PlaceholderText="SEARCH" HorizontalAlignment="Right" Width="240" Margin="0,-8,0,0"/>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Margin="0,8,0,0">
+        <!--Page Selector-->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Margin="0,8">
             <RadioButton Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
             <RadioButton Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
             <RadioButton Content="ALBUMS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
             <RadioButton Content="SONGS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
             <RadioButton Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
         </StackPanel>
+
+        <!--Collection Grid-->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="PrimaryColumn" MinWidth="240"/>
+                <ColumnDefinition x:Name="SecondaryColumn" MinWidth="200"/>
+                <ColumnDefinition x:Name="TertiaryColumn" MinWidth="200"/>
+            </Grid.ColumnDefinitions>
+
+            <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="1" Margin="0,12"
+                                     Style="{StaticResource ThinGridSplitterStyle}"/>
+            <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="2"  Margin="0,12"
+                                     Style="{StaticResource ThinGridSplitterStyle}"/>
+        </Grid>
     </Grid>
 </UserControl>

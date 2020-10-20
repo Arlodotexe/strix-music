@@ -28,6 +28,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
 		<PackageReference Include="Uno.UI" Version="3.1.0-dev.327" />
 	</ItemGroup>
 	<ItemGroup>
@@ -122,5 +123,10 @@
 	  <Page Update="Controls\QuickplayContent.xaml">
 	    <SubType>Designer</SubType>
 	  </Page>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
+	  <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+	    <Version>6.1.1</Version>
+	  </PackageReference>
 	</ItemGroup>
 </Project>
