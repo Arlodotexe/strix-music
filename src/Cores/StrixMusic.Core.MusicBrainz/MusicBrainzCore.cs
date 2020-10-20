@@ -197,6 +197,8 @@ namespace StrixMusic.Core.MusicBrainz
 
             CoreState = CoreState.Loaded;
             CoreStateChanged?.Invoke(this, CoreState);
+
+            Devices.Add(new MusicBrainzDevice(this, "TestDevice", true)); // Hardcoded for now.
         }
 
         /// <inheritdoc/>
