@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
+    xmlns:controls="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
 
@@ -17,10 +18,10 @@
         
         <!--Core Filters-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <RadioButton Content="MOCK" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}"/>
-            <RadioButton Content="FILES" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}"/>
-            <RadioButton Content="ONEDRIVE" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}"/>
-            <RadioButton Content="SPOTIFY" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}"/>
+            <ToggleButton Content="MOCK" Style="{StaticResource SmallZuneMockPivotItemToggleButtonStyle}"/>
+            <ToggleButton Content="FILES" Style="{StaticResource SmallZuneMockPivotItemToggleButtonStyle}"/>
+            <ToggleButton Content="ONEDRIVE" Style="{StaticResource SmallZuneMockPivotItemToggleButtonStyle}"/>
+            <ToggleButton Content="SPOTIFY" Style="{StaticResource SmallZuneMockPivotItemToggleButtonStyle}"/>
         </StackPanel>
 
         <!--Search box-->
@@ -42,6 +43,8 @@
                 <ColumnDefinition x:Name="SecondaryColumn" MinWidth="200"/>
                 <ColumnDefinition x:Name="TertiaryColumn" MinWidth="200"/>
             </Grid.ColumnDefinitions>
+
+            <controls:TrackCollection Grid.Column="2"/>
 
             <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="1" Margin="0,12"
                                      Style="{StaticResource ThinGridSplitterStyle}"/>
