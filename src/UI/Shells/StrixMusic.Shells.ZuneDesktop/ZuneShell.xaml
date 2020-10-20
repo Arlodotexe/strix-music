@@ -76,6 +76,7 @@
                     <local:QuickplayContent/>
                 </PivotItem>
                 <PivotItem Header="collection">
+                    <local:CollectionContent/>
                 </PivotItem>
                 <PivotItem Header="browse">
                 </PivotItem>
