@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Core.Data;
-using StrixMusic.Sdk.Core.ViewModels;
+using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Sdk.Core.ViewModels
 {
@@ -15,6 +18,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
     public class PlayableCollectionGroupViewModel : ObservableObject, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel
     {
         private readonly IPlayableCollectionGroup _collectionGroupBase;
+        private readonly int _trackPageSize = 25;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupViewModel"/> class.
@@ -38,13 +42,20 @@ namespace StrixMusic.Sdk.Core.ViewModels
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
 
-            Tracks = new SynchronizedObservableCollection<TrackViewModel>();
+            var sharedFactory = Ioc.Default.GetService<ISharedFactory>();
+
+            Tracks = sharedFactory.GetIncrementalCollection(_trackPageSize, IncrementallyPopulateMoreTracks);
             Playlists = new SynchronizedObservableCollection<PlaylistViewModel>();
             Albums = new SynchronizedObservableCollection<AlbumViewModel>();
             Artists = new SynchronizedObservableCollection<ArtistViewModel>();
             Children = new SynchronizedObservableCollection<PlayableCollectionGroupViewModel>();
 
             AttachPropertyEvents();
+        }
+
+        private async Task<List<TrackViewModel>> IncrementallyPopulateMoreTracks(int offset)
+        {
+            return await GetTracksAsync(_trackPageSize, offset).Select(x => new TrackViewModel(x)).ToListAsync();
         }
 
         private void AttachPropertyEvents()

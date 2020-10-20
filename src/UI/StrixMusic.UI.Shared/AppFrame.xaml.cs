@@ -1,4 +1,5 @@
-﻿using LaunchPad.Controls;
+﻿using OwlCore.Helpers;
+using System.Threading;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
 using Windows.UI.Xaml;
@@ -24,6 +25,9 @@ namespace StrixMusic.Shared
         public AppFrame()
         {
             this.InitializeComponent();
+
+            Threading.SetUISynchronizationContext(SynchronizationContext.Current);
+
             NavigationService = new NavigationService<Control>();
 
             MainViewModel = new MainViewModel();

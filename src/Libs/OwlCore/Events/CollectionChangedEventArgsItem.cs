@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Events
+﻿namespace OwlCore.Events
 {
     /// <summary>
     /// Holds data about an item that was changed in a collection.

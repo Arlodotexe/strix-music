@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Events;
+using OwlCore.Events;
 
 namespace OwlCore.AbstractUI
 {
