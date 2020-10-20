@@ -10,6 +10,7 @@ using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Extensions;
 
+
 namespace StrixMusic.Core.MusicBrainz
 {
     /// <summary>
@@ -20,8 +21,8 @@ namespace StrixMusic.Core.MusicBrainz
     /// </remarks>
     public class MusicBrainzCore : ICore
     {
-        private readonly MusicBrainzClient _musicBrainzClient;
-        private readonly MusicBrainzArtistHelpersService _artistHelperService;
+        private MusicBrainzClient? _musicBrainzClient;
+        private MusicBrainzArtistHelpersService? _artistHelperService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCore"/> class.
@@ -39,9 +40,6 @@ namespace StrixMusic.Core.MusicBrainz
             RecentlyPlayed = new MusicBrainzRecentlyPlayed(this);
             Discoverables = new MusicBrainzDiscoverables(this);
             User = new MusicBrainzUser(this);
-
-            _musicBrainzClient = this.GetService<MusicBrainzClient>();
-            _artistHelperService = this.GetService<MusicBrainzArtistHelpersService>();
         }
 
         /// <inheritdoc/>
@@ -86,49 +84,52 @@ namespace StrixMusic.Core.MusicBrainz
         /// <inheritdoc/>
         public async IAsyncEnumerable<object> GetContextById(string? id)
         {
-            // Check if the ID is an artistViewModel
-            var artist = await _musicBrainzClient.Artists.GetAsync(id, RelationshipQueries.Artists);
-            if (artist != null)
+            if (_musicBrainzClient != null && _artistHelperService != null)
             {
-                var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(artist);
-
-                yield return new MusicBrainzArtist(this, artist, totalTracksForArtist);
-            }
-
-            // Check if the ID is a release
-            var release = await _musicBrainzClient.Releases.GetAsync(id, RelationshipQueries.Releases);
-            if (release != null)
-            {
-                var releaseArtistData = release.Credits[0].Artist;
-                var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(releaseArtistData);
-                var releaseArtist = new MusicBrainzArtist(this, releaseArtistData, totalTracksForArtist);
-
-                yield return new MusicBrainzAlbum(this, release, releaseArtist);
-            }
-
-            // Check if the ID is a recording.
-            var recordingData = await _musicBrainzClient.Recordings.GetAsync(id, RelationshipQueries.Recordings);
-
-            // Iterating through retrieved releases.
-            foreach (var item in recordingData.Releases)
-            {
-                var releaseData = await _musicBrainzClient.Releases.GetAsync(item.Id);
-
-                // Iterating through retrieved release mediums.
-                foreach (var medium in releaseData.Media)
+                // Check if the ID is an artistViewModel
+                var artist = await _musicBrainzClient.Artists.GetAsync(id, RelationshipQueries.Artists);
+                if (artist != null)
                 {
-                    // Iterating through retrieved medium tracks to get the specific track for the id.
-                    foreach (var track in medium.Tracks)
+                    var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(artist);
+
+                    yield return new MusicBrainzArtist(this, artist, totalTracksForArtist);
+                }
+
+                // Check if the ID is a release
+                var release = await _musicBrainzClient.Releases.GetAsync(id, RelationshipQueries.Releases);
+                if (release != null)
+                {
+                    var releaseArtistData = release.Credits[0].Artist;
+                    var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(releaseArtistData);
+                    var releaseArtist = new MusicBrainzArtist(this, releaseArtistData, totalTracksForArtist);
+
+                    yield return new MusicBrainzAlbum(this, release, releaseArtist);
+                }
+
+                // Check if the ID is a recording.
+                var recordingData = await _musicBrainzClient.Recordings.GetAsync(id, RelationshipQueries.Recordings);
+
+                // Iterating through retrieved releases.
+                foreach (var item in recordingData.Releases)
+                {
+                    var releaseData = await _musicBrainzClient.Releases.GetAsync(item.Id);
+
+                    // Iterating through retrieved release mediums.
+                    foreach (var medium in releaseData.Media)
                     {
-                        if (track.Recording.Id == id)
+                        // Iterating through retrieved medium tracks to get the specific track for the id.
+                        foreach (var track in medium.Tracks)
                         {
-                            var artistData = releaseData.Credits[0].Artist;
-                            var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(artistData);
-                            var artistForTrackAlbum = new MusicBrainzArtist(this, artistData, totalTracksForArtist);
+                            if (track.Recording.Id == id)
+                            {
+                                var artistData = releaseData.Credits[0].Artist;
+                                var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(artistData);
+                                var artistForTrackAlbum = new MusicBrainzArtist(this, artistData, totalTracksForArtist);
 
-                            var albumForTrack = new MusicBrainzAlbum(this, releaseData, artistForTrackAlbum);
+                                var albumForTrack = new MusicBrainzAlbum(this, releaseData, artistForTrackAlbum);
 
-                            yield return new MusicBrainzTrack(this, track, albumForTrack, medium.Position);
+                                yield return new MusicBrainzTrack(this, track, albumForTrack, medium.Position);
+                            }
                         }
                     }
                 }
@@ -144,20 +145,27 @@ namespace StrixMusic.Core.MusicBrainz
         /// <inheritdoc/>
         public async Task<ISearchResults> GetSearchResultsAsync(string query)
         {
-            var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*", 1);
-            var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1);
-            var artists = await _musicBrainzClient.Artists.SearchAsync("*", 1);
-
-            var results = new MusicBrainzSearchResults(this, query)
+            if (_musicBrainzClient != null)
             {
-                TotalTracksCount = recordings.Count,
-                TotalAlbumsCount = releases.Count,
-                TotalArtistsCount = artists.Count,
-                TotalPlaylistCount = 0,
-                TotalChildrenCount = 0,
-            };
+                var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*", 1);
+                var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1);
+                var artists = await _musicBrainzClient.Artists.SearchAsync("*", 1);
 
-            return results;
+                var results = new MusicBrainzSearchResults(this, query)
+                {
+                    TotalTracksCount = recordings.Count,
+                    TotalAlbumsCount = releases.Count,
+                    TotalArtistsCount = artists.Count,
+                    TotalPlaylistCount = 0,
+                    TotalChildrenCount = 0,
+                };
+
+                return results;
+            } 
+            else
+            {
+                return new MusicBrainzSearchResults(this, query);
+            }
         }
 
         /// <inheritdoc/>
@@ -165,6 +173,14 @@ namespace StrixMusic.Core.MusicBrainz
         {
             CoreState = CoreState.Loading;
             CoreStateChanged?.Invoke(this, CoreState);
+
+            if (!(CoreConfig is MusicBrainzCoreConfig coreConfig))
+                return;
+
+            coreConfig.ConfigureServices();
+
+            _musicBrainzClient = this.GetService<MusicBrainzClient>();
+            _artistHelperService = this.GetService<MusicBrainzArtistHelpersService>();
 
             var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*", 1);
             var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1);

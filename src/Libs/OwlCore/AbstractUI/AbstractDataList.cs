@@ -1,23 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace OwlCore.AbstractUI
 {
     /// <summary>
     /// Presents a list of metadata in a Grid or List.
     /// </summary>
-    public abstract class AbstractDataList : AbstractUIElement
+    public class AbstractDataList : AbstractUIElement
     {
         /// <summary>
         /// Constructs a new instance of a <see cref="AbstractDataList"/>.
         /// </summary>
         /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
-        protected AbstractDataList(string id)
+        /// <param name="items">The items in this collection.</param>
+        public AbstractDataList(string id, ObservableCollection<AbstractUIMetadata> items)
             : base(id)
         {
-            Items = new ObservableCollection<AbstractUIMetadata>();
+            Items = items;
         }
+
+        /// <summary>
+        /// Get an item from this <see cref="AbstractDataList"/>.
+        /// </summary>
+        /// <param name="i">The index</param>
+        public AbstractUIMetadata this[int i] => Items.ElementAt(i);
 
         /// <summary>
         /// The items in this collection.

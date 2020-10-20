@@ -1,0 +1,45 @@
+﻿<UserControl
+    x:Class="StrixMusic.Shared.AppLoadingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
+    mc:Ignorable="d"
+    Loaded="AppLoadingView_OnLoaded">
+
+    <Grid Background="#1E1E23">
+
+        <Image Stretch="UniformToFill" Height="315" Width="612">
+            <Image.Source>
+                <SvgImageSource UriSource="ms-appx:///Assets/Strix/Splash Screen.svg"
+                                RasterizePixelHeight="315" RasterizePixelWidth="612" />
+            </Image.Source>
+        </Image>
+
+        <StackPanel VerticalAlignment="Center" Margin="0,315,0,0">
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <ProgressRing IsActive="True" Margin="15,0" />
+                <TextBlock x:Name="PART_Status" Text="Starting up..." FontSize="20" />
+            </StackPanel>
+
+            <GridView ItemsSource="{x:Bind ViewModel.Cores}" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:CoreViewModel">
+                        <StackPanel>
+                            <Image Height="50" Width="50">
+                                <Image.Source>
+                                    <SvgImageSource UriSource="{x:Bind CoreConfig.LogoSvgUrl}"
+                                                    RasterizePixelHeight="150" RasterizePixelWidth="150"/>
+                                </Image.Source>
+                            </Image>
+
+                            <TextBlock Text="{x:Bind CoreState, Mode=OneWay}" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </StackPanel>
+    </Grid>
+</UserControl>

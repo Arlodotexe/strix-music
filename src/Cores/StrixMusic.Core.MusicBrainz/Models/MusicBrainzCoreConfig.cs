@@ -18,24 +18,27 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public IServiceProvider Services { get; }
+        public IServiceProvider? Services { get; private set; }
 
         /// <inheritdoc/>
         public IReadOnlyList<AbstractUIElementGroup> CoreDataUIElements => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/MusicBrainz/logo.svg");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCoreConfig"/> class.
         /// </summary>
         public MusicBrainzCoreConfig(ICore sourceCore)
         {
-            Services = ConfigureServices(sourceCore.InstanceId);
             SourceCore = sourceCore;
+            Services = new ServiceCollection().BuildServiceProvider();
         }
 
         /// <summary>
         /// Configures services for this instance of the core.
         /// </summary>
-        private IServiceProvider ConfigureServices(string instanceId)
+        public void ConfigureServices()
         {
             IServiceCollection services = new ServiceCollection();
 
@@ -51,7 +54,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             services.Add(new ServiceDescriptor(typeof(MusicBrainzClient), musicBrainzClient));
             services.Add(new ServiceDescriptor(typeof(MusicBrainzArtistHelpersService), musicBrainzArtistHelper));
 
-            return services.BuildServiceProvider();
+            Services = services.BuildServiceProvider();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Collections;
 using Windows.Foundation;
@@ -19,7 +20,7 @@ namespace LaunchPad.Collections
         : SynchronizedObservableCollection<T>, ISupportIncrementalLoading
     {
         private readonly Func<int, Task<List<T>>> _loadMoreItems;
-        private readonly Action<List<T>> _onBatchComplete;
+        private readonly Action<List<T>>? _onBatchComplete;
         private readonly Action? _onBatchStart;
 
         /// <summary>
@@ -44,7 +45,8 @@ namespace LaunchPad.Collections
         /// <param name="loadMoreItems">The load more items function</param>
         /// <param name="onBatchComplete">The action to fire when the items are done being retrieved.</param>
         /// <param name="onBatchStart">The action to fire when the <see cref="LoadMoreItemsAsync"/> is called.</param>
-        public IncrementalLoadingCollection(int take, Func<int, Task<List<T>>> loadMoreItems, Action<List<T>> onBatchComplete, Action? onBatchStart = null)
+        public IncrementalLoadingCollection(int take, Func<int, Task<List<T>>> loadMoreItems, Action<List<T>>? onBatchComplete = null, Action? onBatchStart = null)
+            : base(SynchronizationContext.Current)
         {
             Take = take;
             _loadMoreItems = loadMoreItems;
@@ -74,14 +76,14 @@ namespace LaunchPad.Collections
                      VirtualCount = result.Count;
                      Skip += Take;
 
+                     foreach (T item in result)
+                         Add(item);
+
                      await dispatcher.RunAsync(
                          CoreDispatcherPriority.Normal,
                          () =>
                          {
-                             foreach (T item in result) 
-                                 Add(item);
-
-                             _onBatchComplete(result); // This is the UI thread
+                             _onBatchComplete?.Invoke(result); // This is the UI thread
                          });
 
                      return new LoadMoreItemsResult

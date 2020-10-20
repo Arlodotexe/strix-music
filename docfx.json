@@ -4,7 +4,7 @@
             "src": [
                 {
                     "files": [
-                        "src/Sdk/StrixMusic.Sdk.csproj",
+                        "src/Sdk/StrixMusic.Sdk/StrixMusic.Sdk.csproj",
                         "src/Cores/StrixMusic.Cores.Files/StrixMusic.Cores.Files.csproj",
                         "src/Cores/StrixMusic.Cores.MusicBrainz/StrixMusic.Cores.MusicBrainz.csproj",
                         "src/Libs/OwlCore/OwlCore.csproj",
