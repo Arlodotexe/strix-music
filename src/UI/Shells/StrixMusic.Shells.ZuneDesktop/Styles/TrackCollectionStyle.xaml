@@ -21,7 +21,7 @@
             </StackPanel>
 
             <ListView ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
-                      SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1">
+                      SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.Header>
                     <Grid Height="6"/>
                 </ListView.Header>
