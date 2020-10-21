@@ -34,6 +34,11 @@
             <SolidColorBrush x:Key="ZuneSmallUnselectedHoverPivotHeaderItemBrush" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#000000"/>
 
+            <SolidColorBrush x:Key="ZuneListViewItemBackground" Color="#00FFFFFF"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundHover" Color="#18FFFFFF"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundPressed" Color="#18FFFFFF"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundSelected" Color="#27FFFFFF"/>
+
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundPressed" Color="#B1B4B6"/>
@@ -69,6 +74,11 @@
             <SolidColorBrush x:Key="ZuneSmallUnselectedPivotHeaderItemBrush" Color="#828689"/>
             <SolidColorBrush x:Key="ZuneSmallUnselectedHoverPivotHeaderItemBrush" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#000000"/>
+
+            <SolidColorBrush x:Key="ZuneListViewItemBackground" Color="#00000000"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundHover" Color="#18000000"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundPressed" Color="#18000000"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundSelected" Color="#27000000"/>
 
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
@@ -107,6 +117,11 @@
             <SolidColorBrush x:Key="ZuneSmallUnselectedHoverPivotHeaderItemBrush" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#000000"/>
 
+            <SolidColorBrush x:Key="ZuneListViewItemBackground" Color="#00000000"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundHover" Color="#18000000"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundPressed" Color="#18000000"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundSelected" Color="#27000000"/>
+
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="HyperlinkForegroundPressed" Color="#B1B4B6"/>
@@ -142,6 +157,11 @@
             <SolidColorBrush x:Key="ZuneSmallUnselectedPivotHeaderItemBrush" Color="#828689"/>
             <SolidColorBrush x:Key="ZuneSmallUnselectedHoverPivotHeaderItemBrush" Color="#B1B4B6"/>
             <SolidColorBrush x:Key="ZuneSmallSelectedPivotHeaderItemBrush" Color="#000000"/>
+
+            <SolidColorBrush x:Key="ZuneListViewItemBackground" Color="#00000000"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundHover" Color="#18000000"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundPressed" Color="#18000000"/>
+            <SolidColorBrush x:Key="ZuneListViewItemBackgroundSelected" Color="#27000000"/>
 
             <SolidColorBrush x:Key="HyperlinkForeground" Color="#828689"/>
             <SolidColorBrush x:Key="HyperlinkForegroundHover" Color="#B1B4B6"/>
