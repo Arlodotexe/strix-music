@@ -1,0 +1,52 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.TrackCollectionStyle">
+
+    <DataTemplate x:Key="ZuneDesktopTrackListTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <StackPanel Margin="24,0,0,6">
+                <TextBlock FontSize="12" FontWeight="Bold">
+                        <Run Text="{x:Bind Tracks.Count}"/>
+                        <Run Text=" SONGS"/>
+                </TextBlock>
+                <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
+            </StackPanel>
+
+            <ListView ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
+                      SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <ListView.Header>
+                    <Grid Height="6"/>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <defaultcontrols:TrackItem />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="ZuneDesktopTrackListControlStyle" TargetType="defaultcontrols:TrackCollection">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="defaultcontrols:TrackCollection">
+                        <ContentControl ContentTemplate="{StaticResource ZuneDesktopTrackListTemplate}"
+                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource ZuneDesktopTrackListControlStyle}" TargetType="defaultcontrols:TrackCollection"/>
+
+</ResourceDictionary>

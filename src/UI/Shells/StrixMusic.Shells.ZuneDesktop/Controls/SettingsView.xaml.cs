@@ -52,22 +52,19 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
             ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>()!.GoBack();
         }
 
-        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void NavigateToDisplay(object sender, RoutedEventArgs e)
         {
-            switch (PagesPivot.SelectedIndex)
-            {
-                case 0:
-                    PagesList.ItemsSource = _displayPages;
-                    break;
-                case 1:
-                    PagesList.ItemsSource = _behaviorPages;
-                    break;
-                case 2:
-                    // TODO:
-                    break;
-                default:
-                    break;
-            }
+            PagesList.ItemsSource = _displayPages;
+        }
+
+        private void NavigateToBehavior(object sender, RoutedEventArgs e)
+        {
+            PagesList.ItemsSource = _behaviorPages;
+        }
+
+        private void NavigateToCores(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

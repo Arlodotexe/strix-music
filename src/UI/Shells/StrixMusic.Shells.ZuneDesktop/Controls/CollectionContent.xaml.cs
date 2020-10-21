@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using StrixMusic.Sdk;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls
 {
@@ -13,6 +14,10 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         public CollectionContent()
         {
             this.InitializeComponent();
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(20);
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.ExecuteAsync(20);
         }
+
+        private MainViewModel? ViewModel => DataContext as MainViewModel;
     }
 }

@@ -68,7 +68,10 @@
                 </StackPanel>
             </StackPanel>
 
-            <Pivot x:Name="Pivot" Margin="0,24,0,0" SelectionChanged="Pivot_SelectionChanged">
+            <Pivot x:Name="Pivot" Margin="0,36,0,0" SelectionChanged="Pivot_SelectionChanged">
+                <Pivot.Resources>
+                    <Style TargetType="PivotHeaderItem" BasedOn="{StaticResource PrimaryPivotItemStyle}"/>
+                </Pivot.Resources>
                 <Pivot.LeftHeader>
                     <Grid Width="32"/>
                 </Pivot.LeftHeader>

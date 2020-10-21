@@ -17,7 +17,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <!--Header-->
-        <TextBlock Text="settings" FontSize="24" FontWeight="Light" Margin="44,36"/>
+        <TextBlock Text="settings" FontSize="24" FontWeight="Light" Margin="44,36,44,0"/>
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
@@ -31,20 +31,15 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Pivot x:Name="PagesPivot" Grid.ColumnSpan="4" Margin="0,-36,0,0" SelectionChanged="Pivot_SelectionChanged">
-                <Pivot.Resources>
-                    <Style TargetType="PivotHeaderItem" BasedOn="{StaticResource SmallPivotItemStyle}"/>
-                </Pivot.Resources>
-                <Pivot.LeftHeader>
-                    <Grid Width="42"/>
-                </Pivot.LeftHeader>
-                <PivotItem Header="DISPLAY">
-                </PivotItem>
-                <PivotItem Header="BEHAVIOR" IsEnabled="False"/>
-                <PivotItem Header="CORES" IsEnabled="False"/>
-            </Pivot>
+            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="4" Margin="42,0,0,36" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <RadioButton Content="DISPLAY" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" Click="NavigateToDisplay"
+                             IsChecked="True"/>
+                <RadioButton Content="BEHAVIOR" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" Click="NavigateToBehavior"/>
+                <RadioButton Content="CORES" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" Click="NavigateToBehavior"/>
+            </StackPanel>
 
-            <ListView x:Name="PagesList" ItemContainerStyle="{StaticResource ZuneSettingsListViewItem}" Grid.Row="1" Grid.Column="1" Padding="24,0,96,0">
+            <ListView x:Name="PagesList" ItemContainerStyle="{StaticResource ZuneSettingsListViewItem}" Grid.Row="1" Grid.Column="1" Padding="24,0,96,0"
+                      ItemsSource="{x:Bind _displayPages}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsStackPanel x:Name="PageListItemPanel">
