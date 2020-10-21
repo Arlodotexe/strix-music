@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Core.Data;
 
-namespace StrixMusic.Core.MusicBrainz
+namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <inheritdoc />
     public class MusicBrainzDevice : IDevice
