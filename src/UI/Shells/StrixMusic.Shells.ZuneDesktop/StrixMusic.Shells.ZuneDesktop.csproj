@@ -59,6 +59,8 @@
 		<None Remove="Resources\Brushes - Copy.xaml" />
 		<None Remove="Resources\Brushes.xaml" />
 		<None Remove="Resources\ButtonStyles.xaml" />
+		<None Remove="Styles\ArtistCollectionStyle.xaml" />
+		<None Remove="Styles\ArtistItemStyle.xaml" />
 		<None Remove="Styles\NowPlayingBarStyle.xaml" />
 		<None Remove="Styles\NowPlayingViewStyle.xaml" />
 		<None Remove="Styles\SettingsViewStyle.xaml" />
@@ -81,6 +83,8 @@
 		<UpToDateCheckInput Remove="Resources\Brushes - Copy.xaml" />
 		<UpToDateCheckInput Remove="Resources\Brushes.xaml" />
 		<UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
+		<UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
@@ -113,6 +117,12 @@
 		<ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Update="Styles\ArtistCollectionStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\ArtistItemStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
 		<Compile Update="Styles\NowPlayingViewStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>

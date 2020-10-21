@@ -44,6 +44,8 @@
                 <ColumnDefinition x:Name="TertiaryColumn" MinWidth="200"/>
             </Grid.ColumnDefinitions>
 
+            <controls:ArtistCollection DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="0"/>
+
             <controls:TrackCollection DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="2"/>
 
             <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="1" Margin="0,24,0,12"

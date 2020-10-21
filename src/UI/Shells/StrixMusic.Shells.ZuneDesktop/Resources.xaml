@@ -10,8 +10,8 @@
     <ResourceDictionary.MergedDictionaries>
         <!--<themes:AlbumStyle/>-->
         <!--<themes:AlbumViewStyle/>-->
-        <!--<ResourceDictionary Source="Styles/ArtistStyle.xaml"/>-->
-        <!--<ResourceDictionary Source="Styles/ArtistViewStyle.xaml"/>-->
+        <styles:ArtistCollectionStyle/>
+        <styles:ArtistItemStyle/>
         <styles:NowPlayingBarStyle/>
         <styles:NowPlayingViewStyle/>
         <!--<themes:HomeStyle/>-->

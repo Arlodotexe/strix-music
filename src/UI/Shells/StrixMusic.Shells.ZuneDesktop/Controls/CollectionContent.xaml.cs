@@ -15,6 +15,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         {
             this.InitializeComponent();
             _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(20);
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.ExecuteAsync(20);
         }
 
         private MainViewModel? ViewModel => DataContext as MainViewModel;
