@@ -6,7 +6,7 @@
     x:Class="StrixMusic.Sdk.Uno.Styles.TrackCollectionStyle">
 
     <DataTemplate x:Key="DefaultTrackListTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
-        <ListView ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
+        <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
                   Margin="32" HorizontalAlignment="Stretch"
                    SelectionMode="None" IsItemClickEnabled="True">
             <ListView.Header>
