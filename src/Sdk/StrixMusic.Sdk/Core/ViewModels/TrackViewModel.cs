@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Core.Data;
-using StrixMusic.Sdk.Core.ViewModels;
 
 namespace StrixMusic.Sdk.Core.ViewModels
 {
@@ -31,7 +30,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
             if (_track.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(_track.RelatedItems);
 
-            Artists = new SynchronizedObservableCollection<ArtistViewModel>();
+            Artists = new SynchronizedObservableCollection<IArtistCollectionItem>();
             SourceCore = MainViewModel.GetLoadedCore(_track.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -174,7 +173,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         /// <summary>
         /// The artists for this track.
         /// </summary>
-        public SynchronizedObservableCollection<ArtistViewModel> Artists { get; }
+        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<string>? Genres => _track.Genres;
@@ -186,7 +185,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public TrackType Type => _track.Type;
 
         /// <inheritdoc />
-        public int TotalArtistsCount => _track.TotalArtistsCount;
+        public int TotalArtistItemsCount => _track.TotalArtistItemsCount;
 
         /// <inheritdoc />
         public TimeSpan Duration => _track.Duration;
@@ -382,10 +381,10 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration) => _track.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset) => _track.GetArtistsAsync(limit, offset);
+        public IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset) => _track.GetArtistsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task AddArtistAsync(IArtist artist, int index) => _track.AddArtistAsync(artist, index);
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _track.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
         public Task RemoveArtistAsync(int index) => _track.RemoveArtistAsync(index);

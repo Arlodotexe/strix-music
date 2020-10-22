@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.Core.Merged
             {
                 // TODO: Don't populate here
                 // TODO: Deal with merged artists
-                TotalArtistsCount += item.TotalArtistsCount;
+                TotalArtistItemsCount += item.TotalArtistItemsCount;
             }
         }
 
@@ -83,7 +83,7 @@ namespace StrixMusic.Sdk.Core.Merged
         public TrackType Type => _preferredSource.Type;
 
         /// <inheritdoc/>
-        public int TotalArtistsCount { get; }
+        public int TotalArtistItemsCount { get; }
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<string>? Genres => _preferredSource.Genres;
@@ -272,13 +272,13 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset)
+        public IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task AddArtistAsync(IArtist artist, int index)
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index)
         {
             throw new NotImplementedException();
         }

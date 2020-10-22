@@ -14,8 +14,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             this.DefaultStyleKey = typeof(HomeView);
 
-            // Disabled for now, handled with incremental loading in StrixMusic.Sdk.Core.ViewModels.PlayableCollectionGroupViewModel 
-            // _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(20);
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(20);
 
             _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsCommand.ExecuteAsync(20);
 

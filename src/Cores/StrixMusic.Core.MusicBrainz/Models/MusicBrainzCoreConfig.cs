@@ -21,7 +21,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IServiceProvider? Services { get; private set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<AbstractUIElementGroup> CoreDataUIElements => throw new NotImplementedException();
+        public IReadOnlyList<AbstractUIElementGroup> CoreDataUIElements => new List<AbstractUIElementGroup>()
+        {
+            new AbstractUIElementGroup("about", PreferredOrientation.Horizontal, new List<AbstractUIElement>()
+            {
+                new AbstractTextBox("testbox", "Test value", "Placeholder"),
+                new AbstractRichTextBlock("richblock", "**Hello world!**"),
+                new AbstractBooleanUIElement("boolbox", "Did this work?"),
+            }),
+        };
+
 
         /// <inheritdoc/>
         public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/MusicBrainz/logo.svg");

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Sdk.Core.Data
 {
     /// <summary>
-    /// Defines properties and methods for using and manipulating a collection of <see cref="IPlayableCollectionGroup"/>.
+    /// A collection of <see cref="IPlayableCollectionGroup"/>s and the properties and methods for using and manipulating them.
     /// </summary>
     public interface IPlayableCollectionGroupChildren : IPlayableCollectionBase
     {

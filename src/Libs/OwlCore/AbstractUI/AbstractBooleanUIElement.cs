@@ -13,7 +13,7 @@ namespace OwlCore.AbstractUI
         /// </summary>
         /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
         /// <param name="label"><inheritdoc cref="Label"/></param>
-        protected AbstractBooleanUIElement(string id, string? label)
+        public AbstractBooleanUIElement(string id, string? label)
             : base(id)
         {
             Label = label;

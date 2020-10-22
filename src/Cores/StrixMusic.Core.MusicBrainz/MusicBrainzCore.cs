@@ -86,7 +86,7 @@ namespace StrixMusic.Core.MusicBrainz
         {
             if (_musicBrainzClient != null && _artistHelperService != null)
             {
-                // Check if the ID is an artistViewModel
+                // Check if the ID is an artist
                 var artist = await _musicBrainzClient.Artists.GetAsync(id, RelationshipQueries.Artists);
                 if (artist != null)
                 {
@@ -154,9 +154,9 @@ namespace StrixMusic.Core.MusicBrainz
                 var results = new MusicBrainzSearchResults(this, query)
                 {
                     TotalTracksCount = recordings.Count,
-                    TotalAlbumsCount = releases.Count,
-                    TotalArtistsCount = artists.Count,
-                    TotalPlaylistCount = 0,
+                    TotalAlbumItemsCount = releases.Count,
+                    TotalArtistItemsCount = artists.Count,
+                    TotalPlaylistItemsCount = 0,
                     TotalChildrenCount = 0,
                 };
 
@@ -189,9 +189,9 @@ namespace StrixMusic.Core.MusicBrainz
             Library = new MusicBrainzLibrary(this)
             {
                 TotalTracksCount = recordings.Count,
-                TotalAlbumsCount = releases.Count,
-                TotalArtistsCount = artists.Count,
-                TotalPlaylistCount = 0,
+                TotalAlbumItemsCount = releases.Count,
+                TotalArtistItemsCount = artists.Count,
+                TotalPlaylistItemsCount = 0,
                 TotalChildrenCount = 0,
             };
 

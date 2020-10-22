@@ -28,10 +28,10 @@ namespace StrixMusic.Sdk.Core.Merged
             foreach (var item in Sources)
             {
                 TotalChildrenCount += item.TotalChildrenCount;
-                TotalPlaylistCount += item.TotalPlaylistCount;
+                TotalPlaylistItemsCount += item.TotalPlaylistItemsCount;
                 TotalTracksCount += item.TotalTracksCount;
-                TotalAlbumsCount += item.TotalAlbumsCount;
-                TotalArtistsCount += item.TotalArtistsCount;
+                TotalAlbumItemsCount += item.TotalAlbumItemsCount;
+                TotalArtistItemsCount += item.TotalArtistItemsCount;
                 Duration += item.Duration;
 
                 // todo: merge data as needed
@@ -111,16 +111,16 @@ namespace StrixMusic.Sdk.Core.Merged
         public int TotalChildrenCount { get; }
 
         /// <inheritdoc/>
-        public int TotalPlaylistCount { get; }
+        public int TotalPlaylistItemsCount { get; }
 
         /// <inheritdoc/>
         public int TotalTracksCount { get; }
 
         /// <inheritdoc/>
-        public int TotalAlbumsCount { get; }
+        public int TotalAlbumItemsCount { get; }
 
         /// <inheritdoc/>
-        public int TotalArtistsCount { get; }
+        public int TotalArtistItemsCount { get; }
 
         /// <inheritdoc/>
         public virtual bool IsPlayAsyncSupported => PreferredSource.IsPlayAsyncSupported;
@@ -144,9 +144,9 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumSupported(int index)
+        public Task<bool> IsAddAlbumItemSupported(int index)
         {
-            return PreferredSource.IsAddAlbumSupported(index);
+            return PreferredSource.IsAddAlbumItemSupported(index);
         }
 
         /// <inheritdoc />
@@ -156,9 +156,9 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddPlaylistSupported(int index)
+        public Task<bool> IsAddPlaylistItemSupported(int index)
         {
-            return PreferredSource.IsAddPlaylistSupported(index);
+            return PreferredSource.IsAddPlaylistItemSupported(index);
         }
 
         /// <inheritdoc />
@@ -192,15 +192,15 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveAlbumSupported(int index)
+        public Task<bool> IsRemoveAlbumItemSupported(int index)
         {
-            return PreferredSource.IsRemoveAlbumSupported(index);
+            return PreferredSource.IsRemoveAlbumItemSupported(index);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsRemovePlaylistSupported(int index)
+        public Task<bool> IsRemovePlaylistItemSupported(int index)
         {
-            return PreferredSource.IsRemovePlaylistSupported(index);
+            return PreferredSource.IsRemovePlaylistItemSupported(index);
         }
 
         /// <inheritdoc/>
@@ -222,7 +222,7 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc/>
-        public async IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset = 0)
+        public async IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
             // The items in this Merged source are its own thing once we merge it, so any offset / limit passed here are completely disregarding the original source
 
@@ -237,13 +237,13 @@ namespace StrixMusic.Sdk.Core.Merged
             foreach (var source in Sources)
             {
                 // TODO: private field, keep track of albums you've already populated for this core.
-                // var remainingItems = source.TotalAlbumsCount - source.Albums.Count;
-                var remainingItems = source.TotalAlbumsCount;
+                // var remainingItems = source.TotalAlbumItemsCount - source.Albums.Count;
+                var remainingItems = source.TotalAlbumItemsCount;
 
                 if (remainingItems > 0)
                 {
                     // TODO: Offset is not 0, map it correctly
-                    await foreach (var item in source.GetAlbumsAsync(limitPerSource, 0))
+                    await foreach (var item in source.GetAlbumItemsAsync(limitPerSource, 0))
                     {
                         yield return item;
                     }
@@ -252,7 +252,7 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0)
+        public IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset)
         {
             // TODO
             return Sources[0].GetArtistsAsync(limit, offset);
@@ -266,10 +266,10 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<IPlaylist> GetPlaylistsAsync(int limit, int offset = 0)
+        public IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
             // TODO
-            return Sources[0].GetPlaylistsAsync(limit, offset);
+            return Sources[0].GetPlaylistItemsAsync(limit, offset);
         }
 
         /// <inheritdoc/>
@@ -304,21 +304,21 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc/>
-        public Task AddArtistAsync(IArtist artist, int index)
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index)
         {
-            return PreferredSource.AddArtistAsync(artist, index);
+            return PreferredSource.AddArtistItemAsync(artist, index);
         }
 
         /// <inheritdoc/>
-        public Task AddAlbumAsync(IAlbum album, int index)
+        public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index)
         {
-            return PreferredSource.AddAlbumAsync(album, index);
+            return PreferredSource.AddAlbumItemAsync(album, index);
         }
 
         /// <inheritdoc/>
-        public Task AddPlaylistAsync(IPlayableCollectionGroup playlist, int index)
+        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index)
         {
-            return PreferredSource.AddPlaylistAsync(playlist, index);
+            return PreferredSource.AddPlaylistItemAsync(playlist, index);
         }
 
         /// <inheritdoc/>
@@ -340,15 +340,15 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc/>
-        public Task RemoveAlbumAsync(int index)
+        public Task RemoveAlbumItemAsync(int index)
         {
-            return PreferredSource.RemoveAlbumAsync(index);
+            return PreferredSource.RemoveAlbumItemAsync(index);
         }
 
         /// <inheritdoc/>
-        public Task RemovePlaylistAsync(int index)
+        public Task RemovePlaylistItemAsync(int index)
         {
-            return PreferredSource.RemovePlaylistAsync(index);
+            return PreferredSource.RemovePlaylistItemAsync(index);
         }
 
         /// <inheritdoc/>
