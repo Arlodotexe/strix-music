@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Core.Data
     /// <summary>
     /// Interface representing an album.
     /// </summary>
-    public interface IAlbum : IPlayable, ITrackCollection, IGenreCollection
+    public interface IAlbum : IPlayable, IAlbumCollectionItem, ITrackCollection, IGenreCollection
     {
         /// <summary>
         /// An <see cref="IArtist"/> object that this album was created by.

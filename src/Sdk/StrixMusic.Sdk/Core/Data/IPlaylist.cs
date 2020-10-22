@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface that represents a playlist.
     /// </summary>
-    public interface IPlaylist : IPlayable, ITrackCollection, IGenreCollection
+    public interface IPlaylist : IPlayable, ITrackCollection, IGenreCollection, IPlaylistCollectionItem
     {
         /// <summary>
         /// Owner of the playable item.
@@ -11,7 +11,7 @@
         IUserProfile? Owner { get; }
 
         /// <summary>
-        /// A <see cref="IPlayable"/> of items related to this item.
+        /// A <see cref="IPlayableCollectionGroup"/> of items related to this item.
         /// </summary>
         IPlayableCollectionGroup? RelatedItems { get; }
     }

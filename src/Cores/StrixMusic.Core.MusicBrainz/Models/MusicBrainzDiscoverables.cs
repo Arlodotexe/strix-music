@@ -36,25 +36,25 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override int TotalChildrenCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override int TotalPlaylistCount { get; internal set; } = 0;
+        public override int TotalPlaylistItemsCount { get; internal set; } = 0;
 
         /// <inheritdoc />
         public override int TotalTracksCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override int TotalAlbumsCount { get; internal set; } = 0;
+        public override int TotalAlbumItemsCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override int TotalArtistsCount { get; internal set; } = 0;
+        public override int TotalArtistItemsCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
             return AsyncEnumerable.Empty<IAlbum>();
         }
 
         /// <inheritdoc />
-        public override IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset)
         {
             return AsyncEnumerable.Empty<IArtist>();
         }
@@ -66,7 +66,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public override IAsyncEnumerable<IPlaylist> GetPlaylistsAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
             return AsyncEnumerable.Empty<IPlaylist>();
         }

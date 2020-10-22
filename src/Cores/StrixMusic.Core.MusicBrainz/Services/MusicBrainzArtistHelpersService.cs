@@ -26,8 +26,8 @@ namespace StrixMusic.Core.MusicBrainz.Services
         /// <summary>
         /// Get the total track count for a given <see cref="Artist"/>.
         /// </summary>
-        /// <param name="artist">The artistViewModel to check.</param>
-        /// <returns>The total number of tracks for the artistViewModel.</returns>
+        /// <param name="artist">The <see cref="Artist"/> to check.</param>
+        /// <returns>The total number of tracks for the <see cref="Artist"/>.</returns>
         public async Task<int> GetTotalTracksCount(Artist artist)
         {
             var firstPage = await _musicBrainzClient.Releases.BrowseAsync("artist", artist.Id, 100, 0, RelationshipQueries.Releases);
