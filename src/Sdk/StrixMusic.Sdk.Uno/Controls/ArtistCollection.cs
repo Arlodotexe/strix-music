@@ -1,6 +1,8 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.Core.ViewModels;
+using Windows.UI.Xaml.Controls.Primitives;
+using Uno.Extensions.Specialized;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -10,7 +12,7 @@ namespace StrixMusic.Sdk.Uno.Controls
     /// <remarks>
     /// This class temporarily only displays <see cref="ArtistViewModel"/>s.
     /// </remarks>
-    public sealed partial class ArtistCollection : Control
+    public sealed partial class ArtistCollection : CollectionControl
     {
         /// <inheritdoc />
         protected override void OnApplyTemplate()
@@ -29,13 +31,13 @@ namespace StrixMusic.Sdk.Uno.Controls
             Unloaded += ArtistCollection_Unloaded;
         }
 
+        private void DetachHandlers()
+        {
+        }
+
         private void ArtistCollection_Unloaded(object sender, RoutedEventArgs e)
         {
             DetachHandlers();
-        }
-
-        private void DetachHandlers()
-        {
         }
     }
 }

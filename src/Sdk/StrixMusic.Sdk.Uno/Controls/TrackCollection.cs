@@ -1,12 +1,13 @@
-﻿using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Core.ViewModels;
+﻿using StrixMusic.Sdk.Core.ViewModels;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
     /// <summary>
     /// A Templated <see cref="Control"/> for displaying any Object containing a list of <see cref="TrackViewModel"/>.
     /// </summary>
-    public sealed partial class TrackCollection : Control
+    public sealed partial class TrackCollection : CollectionControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackCollection"/> class.
@@ -30,10 +31,16 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void AttachHandlers()
         {
+            Unloaded += TrackCollection_Unloaded;
         }
 
         private void DetachHandlers()
         {
+        }
+
+        private void TrackCollection_Unloaded(object sender, RoutedEventArgs e)
+        {
+            DetachHandlers();
         }
     }
 }

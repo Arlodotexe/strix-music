@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.Uno.Controls
     /// A Templated <see cref="Control"/> for displaying an <see cref="ArtistViewModel"/> in a list.
     /// </summary>
     [TemplatePart(Name = nameof(_rootGrid), Type = typeof(Grid))]
-    public sealed partial class ArtistItem : Control
+    public sealed partial class ArtistItem : ItemControl
     {
         private Grid? _rootGrid;
 
