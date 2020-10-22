@@ -20,7 +20,7 @@
                 <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreArtistsCommand.IsRunning, Mode=OneWay}"/>
             </StackPanel>
 
-            <ListView ItemsSource="{x:Bind Artists, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
+            <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Artists, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
                       SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1">
                 <ListView.Header>
                     <Grid Height="6"/>
