@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources.xaml" />
+    <None Remove="Styles\AbstractUIStyles.xaml" />
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
     <None Remove="Styles\AlbumItemStyle.xaml" />
     <None Remove="Styles\AlbumViewStyle.xaml" />
@@ -42,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="Resources.xaml" />
+    <UpToDateCheckInput Remove="Styles\AbstractUIStyles.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumViewStyle.xaml" />
