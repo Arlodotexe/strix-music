@@ -32,7 +32,7 @@
                 </VisualState>
                 <VisualState x:Name="Mid">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger x:Name="MediumTrigger" MinWindowWidth="800"/>
+                        <AdaptiveTrigger x:Name="MediumTrigger" MinWindowWidth="960"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="topBarRow.Height" Value="auto"/>
