@@ -14,7 +14,7 @@
             
             <StackPanel Margin="24,0,0,12">
                 <TextBlock FontSize="12" FontWeight="Bold">
-                        <Run Text="{x:Bind Tracks.Count}"/>
+                        <Run Text="{x:Bind TotalTracksCount}"/>
                         <Run Text=" SONGS"/>
                 </TextBlock>
                 <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
