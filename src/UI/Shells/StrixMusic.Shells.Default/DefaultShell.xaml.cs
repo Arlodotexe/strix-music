@@ -17,6 +17,7 @@ namespace StrixMusic.Shells.Default
     {
         private readonly IReadOnlyDictionary<string, Type> _pagesMapping;
         private INavigationService<Control>? _navigationService;
+        private Stack<Control> _history = new Stack<Control>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultShell"/> class.
@@ -58,6 +59,7 @@ namespace StrixMusic.Shells.Default
         {
             if (!e.IsOverlay)
             {
+                _history.Push((Control)MainContent.Content);
                 MainContent.Content = e.Page;
             }
             else
@@ -77,12 +79,24 @@ namespace StrixMusic.Shells.Default
             if (!containsValue)
             {
                 NavView.SelectedItem = null;
+            } else
+            {
+                _history.Clear();
             }
         }
 
         private void Shell_BackRequested(object sender, EventArgs e)
         {
-            OverlayContent.Visibility = Visibility.Collapsed;
+            if (OverlayContent.Visibility == Visibility.Visible)
+            {
+                OverlayContent.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            if (_history.Count > 0)
+            {
+                MainContent.Content = _history.Pop();
+            }
         }
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
