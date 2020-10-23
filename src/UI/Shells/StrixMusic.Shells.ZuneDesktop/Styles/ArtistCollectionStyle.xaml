@@ -12,7 +12,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <StackPanel Margin="24,0,0,6">
+            <StackPanel Margin="24,0,0,12">
                 <TextBlock FontSize="12" FontWeight="Bold">
                         <Run Text="{x:Bind Artists.Count}"/>
                         <Run Text=" ARTISTS"/>
@@ -22,9 +22,6 @@
 
             <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Artists, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
                       SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1">
-                <ListView.Header>
-                    <Grid Height="6"/>
-                </ListView.Header>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <defaultcontrols:ArtistItem />

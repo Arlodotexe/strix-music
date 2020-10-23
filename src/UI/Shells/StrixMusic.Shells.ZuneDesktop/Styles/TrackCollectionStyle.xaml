@@ -12,7 +12,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             
-            <StackPanel Margin="24,0,0,6">
+            <StackPanel Margin="24,0,0,12">
                 <TextBlock FontSize="12" FontWeight="Bold">
                         <Run Text="{x:Bind Tracks.Count}"/>
                         <Run Text=" SONGS"/>

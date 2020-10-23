@@ -1,0 +1,49 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.AlbumCollectionStyle">
+
+    <DataTemplate x:Key="ZuneDesktopAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Margin="24,0,0,12">
+                <TextBlock FontSize="12" FontWeight="Bold">
+                        <Run Text="{x:Bind Albums.Count}"/>
+                        <Run Text=" ALBUMS"/>
+                </TextBlock>
+                <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}"/>
+            </StackPanel>
+
+            <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource ZuneDesktopAlbumCollectionItemStyle}"
+                  ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}" Grid.Row="1"
+                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
+            </GridView>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle">
+        <defaultcontrols:AlbumItem />
+    </DataTemplate>
+
+    <Style x:Key="ZuneDesktopAlbumCollectionStyle" TargetType="defaultcontrols:AlbumCollection">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="defaultcontrols:AlbumCollection">
+                        <ContentControl ContentTemplate="{StaticResource ZuneDesktopAlbumCollectionDataTemplate}"
+                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource ZuneDesktopAlbumCollectionStyle}" TargetType="defaultcontrols:AlbumCollection"/>
+
+</ResourceDictionary>

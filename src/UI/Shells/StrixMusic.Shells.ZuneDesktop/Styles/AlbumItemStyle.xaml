@@ -1,0 +1,43 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.AlbumItemStyle">
+
+    <DataTemplate x:Key="DefaultAlbumItemDataTemplate" x:DataType="viewModels:AlbumViewModel">
+        <Grid Width="86">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Rectangle Width="86" Height="86">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
+                </Rectangle.Fill>
+            </Rectangle>
+
+            <StackPanel Grid.Row="1" Margin="0,2,0,0">
+                <TextBlock Text="{x:Bind Name}" FontSize="12" TextTrimming="Clip"/>
+                <TextBlock Text="{x:Bind Artist.Name}" FontSize="12" FontWeight="SemiLight" Opacity=".5"/>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="DefaultAlbumItemStyle" TargetType="defaultcontrols:AlbumItem">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="defaultcontrols:AlbumItem">
+                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemDataTemplate}"
+                                        HorizontalContentAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultAlbumItemStyle}" TargetType="defaultcontrols:AlbumItem"/>
+
+</ResourceDictionary>

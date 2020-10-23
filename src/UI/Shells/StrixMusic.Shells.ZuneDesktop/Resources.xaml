@@ -8,17 +8,14 @@
     xmlns:dstyles="using:StrixMusic.Sdk.Uno.Styles">
 
     <ResourceDictionary.MergedDictionaries>
-        <!--<themes:AlbumStyle/>-->
-        <!--<themes:AlbumViewStyle/>-->
         <styles:ArtistCollectionStyle/>
+        <styles:ArtistItemStyle/>
+        <styles:AlbumCollectionStyle/>
+        <styles:AlbumItemStyle/>
         <styles:ArtistItemStyle/>
         <styles:NowPlayingBarStyle/>
         <styles:NowPlayingViewStyle/>
-        <!--<themes:HomeStyle/>-->
-        <!--<themes:PlayableCollectionListStyle/>-->
         <styles:SettingsViewStyle/>
-        <!--<ResourceDictionary Source="Styles/TrackListStyle.xaml"/>-->
-        <!--<ResourceDictionary Source="Styles/TrackStyle.xaml"/>-->
         <styles:TrackCollectionStyle/>
         <styles:TrackItemStyle/>
 
@@ -686,6 +683,38 @@
                         <ScrollViewer x:Name="ContentElement" AutomationProperties.AccessibilityView="Raw" FontWeight="SemiBold" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsTabStop="False" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Grid.Row="1" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" ZoomMode="Disabled"/>
                         <TextBlock x:Name="PlaceholderTextContentPresenter" Grid.ColumnSpan="2" FontWeight="SemiBold" Foreground="{TemplateBinding PlaceholderForeground}" IsHitTestVisible="False" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Grid.Row="1" Text="{TemplateBinding PlaceholderText}" TextWrapping="{TemplateBinding TextWrapping}" TextAlignment="{TemplateBinding TextAlignment}"/>
                         <Button x:Name="DeleteButton" AutomationProperties.AccessibilityView="Raw" BorderThickness="{TemplateBinding BorderThickness}" Grid.Column="1" FontSize="{TemplateBinding FontSize}" IsTabStop="False" MinWidth="34" Margin="{ThemeResource HelperButtonThemePadding}" Grid.Row="1" Style="{StaticResource DeleteButtonStyle}" VerticalAlignment="Stretch" Visibility="Collapsed"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ZuneDesktopAlbumGridViewItemStyle" TargetType="GridViewItem">
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+        <Setter Property="TabNavigation" Value="Local"/>
+        <Setter Property="IsHoldingEnabled" Value="True"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,12,12"/>
+        <Setter Property="MinWidth" Value="{ThemeResource GridViewItemMinWidth}"/>
+        <Setter Property="MinHeight" Value="{ThemeResource GridViewItemMinHeight}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="GridViewItem">
+                    <Grid x:Name="ContentBorder" Background="Transparent">
+                        <ContentPresenter x:Name="ContentPresenter"
+                                                AutomationProperties.AccessibilityView="Raw"
+                                                BorderThickness="0"
+                                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                Content="{TemplateBinding Content}"
+                                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                Padding="{TemplateBinding Padding}"
+                                                Margin="{TemplateBinding Margin}"
+                                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
