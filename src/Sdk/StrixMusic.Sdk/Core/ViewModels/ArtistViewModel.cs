@@ -248,10 +248,15 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset) => _artist.GetTracksAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task PopulateMoreAlbumsAsync(int limit)
+        public async Task PopulateMoreAlbumsAsync(int limit)
         {
-            // TODO
-            return Task.CompletedTask;
+            await foreach (var item in _artist.GetAlbumItemsAsync(limit, Albums.Count))
+            {
+                if (item is IAlbum album)
+                {
+                    Albums.Add(new AlbumViewModel(album));
+                }
+            }
         }
 
         /// <inheritdoc />

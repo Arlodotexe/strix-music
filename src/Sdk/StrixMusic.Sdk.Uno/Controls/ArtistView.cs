@@ -17,6 +17,7 @@ namespace StrixMusic.Sdk.Uno.Controls
             this.DefaultStyleKey = typeof(ArtistView);
             DataContext = artistViewModel;
             LoadTracksAsync();
+            LoadAlbumsAsync();
         }
 
         /// <summary>
@@ -27,6 +28,11 @@ namespace StrixMusic.Sdk.Uno.Controls
         private async void LoadTracksAsync()
         {
             await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(25);
+        }
+
+        private async void LoadAlbumsAsync()
+        {
+            await ViewModel.PopulateMoreAlbumsCommand.ExecuteAsync(25);
         }
     }
 }

@@ -193,10 +193,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var release in releases)
             {
-                var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(release.Credits[0].Artist);
-                var artist = new MusicBrainzArtist(SourceCore, release.Credits[0].Artist, totalTracksForArtist);
-
-                yield return new MusicBrainzAlbum(SourceCore, release, artist);
+                yield return new MusicBrainzAlbum(SourceCore, release, this);
             }
         }
 
