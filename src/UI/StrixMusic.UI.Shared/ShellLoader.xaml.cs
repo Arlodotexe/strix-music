@@ -6,8 +6,8 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
-using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.Uno.Models;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -133,13 +133,12 @@ namespace StrixMusic.Shared
 
         private Control CreateShellControl(Type shellType)
         {
-            // TODO: Type check shellType to ensure it's a ShellBase
-            // if (shellType.BaseType != typeof())
-            // {
-            // }
+            if (shellType.BaseType != typeof(ShellBase))
+                throw new ArgumentException($@"Expected type {nameof(ShellBase)}", nameof(shellType));
 
-            Control shellControl = (Activator.CreateInstance(shellType) as Control)!;
+            Control shellControl = (Control)Activator.CreateInstance(shellType);
             shellControl.DataContext = MainViewModel.Singleton;
+
             return shellControl;
         }
 
