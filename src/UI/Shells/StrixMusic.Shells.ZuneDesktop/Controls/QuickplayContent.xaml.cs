@@ -19,6 +19,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
             this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Runs any animations for when the <see cref="QuickplayContent"/> enters view.
+        /// </summary>
+        public void RunEnterViewAnimation()
+        {
+            LoadInView.Begin();
+        }
+
         private void Rectangle_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             if (_isSecondaryActive)
