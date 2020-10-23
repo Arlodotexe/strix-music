@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Services;
@@ -95,7 +94,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var artist in artists.Items)
             {
-                var totalTracksForArtist = await _artistHelpersService.GetTotalTracksCount(artist);
+                int totalTracksForArtist = await _artistHelpersService.GetTotalTracksCount(artist, 50);
 
                 yield return new MusicBrainzArtist(SourceCore, artist, totalTracksForArtist);
             }

@@ -77,6 +77,16 @@ namespace StrixMusic.Sdk.Uno.Controls
             set => SetValue(AllEmptyContentProperty, value);
         }
 
+        // Using a DependencyProperty as the backing store for HideEmptyPivots.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HideEmptyPivotsProperty =
+            DependencyProperty.Register(nameof(HideEmptyPivots), typeof(bool), typeof(PlayableCollectionGroupPivot), new PropertyMetadata(true));
+
+        public bool HideEmptyPivots
+        {
+            get => (bool)GetValue(HideEmptyPivotsProperty);
+            set => SetValue(HideEmptyPivotsProperty, value);
+        }
+
         /// <summary>
         /// The primary pivot displayed by this control.
         /// </summary>
@@ -235,6 +245,9 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void ToggleAnyEmptyPivotItems()
         {
+            if (!HideEmptyPivots)
+                return;
+
             TogglePivotItemViaCollectionCount(nameof(PART_SongsPivotItem), PART_SongsPivotItem, ViewModel.Tracks);
 
             TogglePivotItemViaCollectionCount(nameof(PART_AlbumsPivotItem), PART_AlbumsPivotItem, ViewModel.Albums);

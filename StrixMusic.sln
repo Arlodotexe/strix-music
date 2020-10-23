@@ -52,7 +52,6 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems*{11b32fa9-e6af-4dce-80cc-a022afd8e075}*SharedItemsImports = 5
 		src\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems*{2e82db60-ba1e-402c-a4f8-56da621b04e9}*SharedItemsImports = 13
-		src\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems*{422b2330-2238-4d9b-94f6-6aaea2d17877}*SharedItemsImports = 4
 		src\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems*{7acfe9fe-4243-43c2-9de2-2232b090274c}*SharedItemsImports = 4
 		src\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems*{89ac1131-5215-4f43-b5ac-b4dfae1366f6}*SharedItemsImports = 4
 	EndGlobalSection

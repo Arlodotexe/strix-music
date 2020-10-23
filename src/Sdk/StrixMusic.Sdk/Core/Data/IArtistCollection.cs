@@ -4,13 +4,6 @@ using System.Threading.Tasks;
 namespace StrixMusic.Sdk.Core.Data
 {
     /// <summary>
-    /// An item that belongs in an <see cref="IArtistCollection"/>.
-    /// </summary>
-    public interface IArtistCollectionItem : ICoreMember
-    {
-    }
-
-    /// <summary>
     /// A collection of <see cref="IArtistCollectionItem"/>s and the properties and methods for using and manipulating them.
     /// </summary>
     public interface IArtistCollection : IPlayableCollectionBase, IArtistCollectionItem
