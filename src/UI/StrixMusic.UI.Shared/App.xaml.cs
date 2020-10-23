@@ -3,6 +3,7 @@ using StrixMusic.Shared;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic
 {
@@ -15,7 +16,7 @@ namespace StrixMusic
         /// The internal AppFrame used to host top level app content..
         /// </summary>
         /// <remarks>If/when the app is made to handle multiple instances, this needs to be reworked.</remarks>
-        public static AppFrame AppFrame { internal get; set; } = new AppFrame();
+        public static AppFrame AppFrame { internal get; set; } = null!;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="App"/> class. This is the first line of authored code
@@ -42,6 +43,15 @@ namespace StrixMusic
                 // this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+
+            if (e.PrelaunchActivated == false)
+            {
+                TryEnablePrelaunch();
+
+                // Ensure the current window is active
+                Window.Current.Activate();
+            }
+
             FrameworkElement? rootElement = Window.Current.Content as FrameworkElement;
 
             // Do not repeat app initialization when the Window already has content,
@@ -54,15 +64,7 @@ namespace StrixMusic
                 }
 
                 // Place the frame in the current Window
-                Window.Current.Content = AppFrame;
-            }
-
-            if (e.PrelaunchActivated == false)
-            {
-                TryEnablePrelaunch();
-
-                // Ensure the current window is active
-                Window.Current.Activate();
+                Window.Current.Content = AppFrame = new AppFrame();
             }
         }
 
