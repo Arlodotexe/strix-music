@@ -12,7 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
-    <PackageReference Include="Uno.UI" Version="3.2.0-dev.247" />
+    <PackageReference Include="Uno.UI" Version="3.2.0-dev.254" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

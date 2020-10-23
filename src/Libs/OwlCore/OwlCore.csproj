@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview2" />
+    <PackageReference Include="Uno.UI" Version="3.2.0-dev.254" />
   </ItemGroup>
 
 </Project>
