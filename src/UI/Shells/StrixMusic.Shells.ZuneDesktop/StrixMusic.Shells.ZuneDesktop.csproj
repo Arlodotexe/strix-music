@@ -41,6 +41,7 @@
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+		<None Remove="Assets\Backgrounds\Aurora Borealis.png" />
 		<None Remove="Assets\Backgrounds\Bloom.png" />
 		<None Remove="Assets\Backgrounds\Bubbles.png" />
 		<None Remove="Assets\Backgrounds\Cells.png" />
@@ -96,6 +97,7 @@
 		<UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Content Include="Assets\Backgrounds\Aurora Borealis.png" />
 	  <Content Include="Assets\Backgrounds\Bubbles.png" />
 	  <Content Include="Assets\Backgrounds\Cells.png" />
 	  <Content Include="Assets\Backgrounds\Meadow.png" />
