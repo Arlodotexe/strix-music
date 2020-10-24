@@ -45,6 +45,7 @@
 		<None Remove="Assets\Backgrounds\Bloom.png" />
 		<None Remove="Assets\Backgrounds\Bubbles.png" />
 		<None Remove="Assets\Backgrounds\Cells.png" />
+		<None Remove="Assets\Backgrounds\Hero.png" />
 		<None Remove="Assets\Backgrounds\Meadow.png" />
 		<None Remove="Assets\Backgrounds\RobotOwl.png" />
 		<None Remove="Assets\Backgrounds\Shards.png" />
@@ -100,6 +101,7 @@
 	  <Content Include="Assets\Backgrounds\Aurora Borealis.png" />
 	  <Content Include="Assets\Backgrounds\Bubbles.png" />
 	  <Content Include="Assets\Backgrounds\Cells.png" />
+	  <Content Include="Assets\Backgrounds\Hero.png" />
 	  <Content Include="Assets\Backgrounds\Meadow.png" />
 	  <Content Include="Assets\Backgrounds\Old\Wired.png" />
 	  <Content Include="Assets\Backgrounds\Old\Bloom.png" />
