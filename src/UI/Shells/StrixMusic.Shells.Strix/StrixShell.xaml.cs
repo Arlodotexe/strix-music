@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
+using Windows.ApplicationModel.Core;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -15,7 +19,9 @@ namespace StrixMusic.Shells.Strix
     {
         private readonly IReadOnlyDictionary<Button, Type> _pagesMapping;
         private readonly IReadOnlyDictionary<Type, string> _overlayTypeMapping;
+        private readonly Stack<Control> _history = new Stack<Control>();
         private INavigationService<Control>? _navigationService;
+        private bool _isOverlayOpen;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StrixShell"/> class.
@@ -26,6 +32,7 @@ namespace StrixMusic.Shells.Strix
             SetupIoc();
             _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
             _navigationService!.BackRequested += Shell_BackRequested;
+            _isOverlayOpen = false;
             _pagesMapping = new Dictionary<Button, Type>
             {
                 [HomeTopButton] = typeof(HomeView),
@@ -44,14 +51,12 @@ namespace StrixMusic.Shells.Strix
         {
             base.SetupTitleBar();
 #if NETFX_CORE
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             Window.Current.SetTitleBar(CustomTitleBar);
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
+            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 #endif
-        }
-
-        private void Shell_BackRequested(object sender, EventArgs e)
-        {
-            // TODO: Pop the stack if the overlay is not open
-            VisualStateManager.GoToState(this, nameof(OverlayClosed), true);
         }
 
         private void SetupIoc()
@@ -66,10 +71,30 @@ namespace StrixMusic.Shells.Strix
             if (e.IsOverlay)
             {
                 EnterOverlayView(e.Page);
+                _isOverlayOpen = true;
             }
             else
             {
+                _history.Push((Control)MainContent.Content);
                 MainContent.Content = e.Page;
+
+                // Clear history if root page type
+                if (_pagesMapping.Values.Any(x => x == e.Page.GetType()))
+                {
+                    _history.Clear();
+                }
+            }
+        }
+
+        private void Shell_BackRequested(object sender, EventArgs e)
+        {
+            if (_isOverlayOpen)
+            {
+                VisualStateManager.GoToState(this, nameof(OverlayClosed), true);
+            }
+            else if (_history.Count > 0)
+            {
+                MainContent.Content = _history.Pop();
             }
         }
 
@@ -96,7 +121,7 @@ namespace StrixMusic.Shells.Strix
             VisualStateManager.GoToState(this, _overlayTypeMapping[page.GetType()], true);
         }
 
-        private void GoBack(object sender, RoutedEventArgs e)
+        private void BackButtonClicked(object sender, RoutedEventArgs e)
         {
             _navigationService!.GoBack();
         }

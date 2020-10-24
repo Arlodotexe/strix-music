@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Helpers;
 using StrixMusic.Sdk.Core.ViewModels;
 using StrixMusic.Sdk.Services.Settings;
 
@@ -74,6 +75,16 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             get => (FrameworkElement)GetValue(AllEmptyContentProperty);
             set => SetValue(AllEmptyContentProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for HideEmptyPivots.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HideEmptyPivotsProperty =
+            DependencyProperty.Register(nameof(HideEmptyPivots), typeof(bool), typeof(PlayableCollectionGroupPivot), new PropertyMetadata(true));
+
+        public bool HideEmptyPivots
+        {
+            get => (bool)GetValue(HideEmptyPivotsProperty);
+            set => SetValue(HideEmptyPivotsProperty, value);
         }
 
         /// <summary>
@@ -154,7 +165,7 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void AllItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            ToggleAnyEmptyPivotItems();
+            Threading.InvokeOnUI(ToggleAnyEmptyPivotItems);
         }
 
         private void DetachEvents()
@@ -234,6 +245,9 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void ToggleAnyEmptyPivotItems()
         {
+            if (!HideEmptyPivots)
+                return;
+
             TogglePivotItemViaCollectionCount(nameof(PART_SongsPivotItem), PART_SongsPivotItem, ViewModel.Tracks);
 
             TogglePivotItemViaCollectionCount(nameof(PART_AlbumsPivotItem), PART_AlbumsPivotItem, ViewModel.Albums);
@@ -255,9 +269,10 @@ namespace StrixMusic.Sdk.Uno.Controls
             if (PART_Pivot == null || pivotItem == null)
                 return;
 
-            var pivotPositionExists = _pivotItemPositionMemo.TryGetValue(pivotItemName, out int position);
+            var pivotPositionExists = _pivotItemPositionMemo.TryGetValue(pivotItemName, out var position);
 
-            if (!collectionToCheck.Any() && PART_Pivot.Items.Contains(pivotItem))
+            var toCheck = collectionToCheck as object[] ?? collectionToCheck.ToArray();
+            if (!toCheck.Any() && PART_Pivot.Items.Contains(pivotItem))
             {
                 if (!pivotPositionExists)
                 {
@@ -267,7 +282,7 @@ namespace StrixMusic.Sdk.Uno.Controls
                 PART_Pivot.Items.Remove(pivotItem);
             }
 
-            if (!PART_Pivot.Items.Contains(pivotItem) && pivotPositionExists && collectionToCheck.Any())
+            if (!PART_Pivot.Items.Contains(pivotItem) && pivotPositionExists && toCheck.Any())
             {
                 PART_Pivot.Items.Insert(position, pivotItem);
             }

@@ -12,6 +12,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         private readonly Dictionary<string, ZuneDesktopBackgroundImage> _zuneBackgroundImages = new Dictionary<string, ZuneDesktopBackgroundImage>()
         {
             { "None", new ZuneDesktopBackgroundImage() },
+            { "Aurora Borealis", new ZuneDesktopBackgroundImage("Aurora Borealis", Windows.UI.Xaml.Media.AlignmentY.Top) },
             { "Bubbles", new ZuneDesktopBackgroundImage("Bubbles") },
             { "Cells", new ZuneDesktopBackgroundImage("Cells") },
             { "Meadow", new ZuneDesktopBackgroundImage("Meadow") },

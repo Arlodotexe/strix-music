@@ -6,7 +6,7 @@
     x:Class="StrixMusic.Shells.Strix.Styles.ArtistCollectionStyle">
 
     <DataTemplate x:Key="StrixArtistCollectionContentTemplate" x:DataType="viewModels:IArtistCollectionViewModel">
-        <GridView ItemsSource="{x:Bind Artists}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
+        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Artists}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
                   Padding="16" HorizontalAlignment="Stretch"  SelectionMode="None" IsItemClickEnabled="True"
                   ItemClick="OpenArtist"/>
     </DataTemplate>

@@ -10,6 +10,55 @@
     mc:Ignorable="d">
 
     <Grid Padding="32,-16,32,16">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="PageStates">
+                <VisualState x:Name="Artists">
+                    <VisualState.Setters>
+                        <Setter Target="PrimaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="SecondaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="200"/>
+                        
+                        <Setter Target="PrimaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="SecondaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
+
+                        <Setter Target="ArtistCollection.(Grid.Column)" Value="0"/>
+                        <Setter Target="AlbumCollection.(Grid.Column)" Value="1"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="2"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Albums">
+                    <VisualState.Setters>
+                        <Setter Target="PrimaryColumn.MinWidth" Value="0"/>
+                        <Setter Target="SecondaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="200"/>
+                        
+                        <Setter Target="PrimaryColumn.MaxWidth" Value="0"/>
+                        <Setter Target="SecondaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
+
+                        <Setter Target="ArtistCollection.(Grid.Column)" Value="0"/>
+                        <Setter Target="AlbumCollection.(Grid.Column)" Value="1"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="2"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Songs">
+                    <VisualState.Setters>
+                        <Setter Target="PrimaryColumn.MinWidth" Value="0"/>
+                        <Setter Target="SecondaryColumn.MinWidth" Value="0"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="200"/>
+                        
+                        <Setter Target="PrimaryColumn.MaxWidth" Value="0"/>
+                        <Setter Target="SecondaryColumn.MaxWidth" Value="0"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
+
+                        <Setter Target="ArtistCollection.(Grid.Column)" Value="0"/>
+                        <Setter Target="AlbumCollection.(Grid.Column)" Value="1"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="2"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -29,24 +78,26 @@
 
         <!--Page Selector-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Margin="0,8,0,24">
-            <RadioButton Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
-            <RadioButton Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
-            <RadioButton Content="ALBUMS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
-            <RadioButton Content="SONGS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
-            <RadioButton Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}"/>
+            <RadioButton Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsChecked="True" Click="ArtistsPageSelected"/>
+            <RadioButton Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"/>
+            <RadioButton Content="ALBUMS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="AlbumsPageSelected"/>
+            <RadioButton Content="SONGS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="SongsPageSelected"/>
+            <RadioButton Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"/>
         </StackPanel>
 
         <!--Collection Grid-->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="PrimaryColumn" MinWidth="240"/>
+                <ColumnDefinition x:Name="PrimaryColumn" MinWidth="200"/>
                 <ColumnDefinition x:Name="SecondaryColumn" MinWidth="200"/>
                 <ColumnDefinition x:Name="TertiaryColumn" MinWidth="200"/>
             </Grid.ColumnDefinitions>
 
-            <controls:ArtistCollection DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="0"/>
+            <controls:ArtistCollection x:Name="ArtistCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="0"/>
 
-            <controls:TrackCollection DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="2"/>
+            <controls:AlbumCollection x:Name="AlbumCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="1"/>
+
+            <controls:TrackCollection x:Name="TrackCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="2"/>
 
             <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="1" Margin="0,24,0,12"
                                      Style="{StaticResource ThinGridSplitterStyle}"/>

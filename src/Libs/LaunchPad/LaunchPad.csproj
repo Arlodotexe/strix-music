@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
   <PropertyGroup>
-    <!--<TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.16299</TargetFrameworks>-->
-    <TargetFrameworks>netstandard2.0;MonoAndroid90;monoandroid10.0;uap10.0.16299</TargetFrameworks>
+	<!--<TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.17763</TargetFrameworks>-->
+	<TargetFrameworks>netstandard2.0;MonoAndroid90;monoandroid10.0;uap10.0.17763</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Nullable>enable</Nullable>
@@ -20,7 +20,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview2" />
-    <PackageReference Include="Uno.UI" Version="3.1.0-dev.327" />
+    <PackageReference Include="Uno.UI" Version="3.2.0-dev.254" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

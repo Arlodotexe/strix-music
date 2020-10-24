@@ -1,4 +1,5 @@
 ﻿using StrixMusic.Sdk;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls
@@ -15,9 +16,25 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         {
             this.InitializeComponent();
             _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(20);
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsCommand.ExecuteAsync(20);
             _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.ExecuteAsync(20);
         }
 
         private MainViewModel? ViewModel => DataContext as MainViewModel;
+
+        private void ArtistsPageSelected(object sender, RoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Artists", true);
+        }
+
+        private void AlbumsPageSelected(object sender, RoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Albums", true);
+        }
+
+        private void SongsPageSelected(object sender, RoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Songs", true);
+        }
     }
 }

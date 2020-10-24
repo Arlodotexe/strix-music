@@ -57,10 +57,11 @@
     </PackageReference>
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
+    <PackageReference Include="Uno.UI" Version="3.2.0-dev.254" />
     <PackageReference Include="Uno.UI.RemoteControl" Version="3.0.12" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.UI.WebAssembly" Version="3.0.17" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="1.4.0-dev.16" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.4.0-dev.16" PrivateAssets="all" />
+    <PackageReference Include="Uno.UI.WebAssembly" Version="3.2.0-dev.254" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="1.5.0-dev.57" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.5.0-dev.57" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj" />

@@ -8,7 +8,7 @@
         /// <summary>
         /// The relationship queries needed when getting Recordings from the API.
         /// </summary>
-        public static readonly string[] Recordings = { "artistViewModel-credits", "isrcs", "releases" };
+        public static readonly string[] Recordings = { "artist-credits", "isrcs", "releases" };
 
         /// <summary>
         /// The relationship queries needed when getting Releases from the API.

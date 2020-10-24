@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Uno.Controls
     /// <summary>
     /// A Templated <see cref="Control"/> for showing an <see cref="TrackViewModel"/> in a list.
     /// </summary>
-    public sealed partial class TrackItem : Control
+    public sealed partial class TrackItem : ItemControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackItem"/> class.
@@ -15,5 +15,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             this.DefaultStyleKey = typeof(TrackItem);
         }
+
+        public TrackViewModel ViewModel => (DataContext as TrackViewModel)!;
     }
 }

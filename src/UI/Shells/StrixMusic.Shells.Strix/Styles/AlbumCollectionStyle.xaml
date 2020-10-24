@@ -6,7 +6,7 @@
     x:Class="StrixMusic.Shells.Strix.Styles.AlbumCollectionStyle">
 
     <DataTemplate x:Key="StrixAlbumCollectionContentTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
-        <GridView ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource StrixAlbumCollectionItemStyle}"
+        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource StrixAlbumCollectionItemStyle}"
                   Padding="16" HorizontalAlignment="Stretch"  SelectionMode="None" IsItemClickEnabled="True"
                   ItemClick="OpenAlbum"/>
     </DataTemplate>

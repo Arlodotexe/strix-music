@@ -21,6 +21,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
     {
         private readonly MusicBrainzClient _musicBrainzClient;
         private readonly MusicBrainzArtistHelpersService _artistHelpersService;
+        private readonly MusicBrainzArtist _artist;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzAlbum"/> class.
@@ -40,13 +41,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
             _musicBrainzClient = sourceCore.GetService<MusicBrainzClient>();
             _artistHelpersService = sourceCore.GetService<MusicBrainzArtistHelpersService>();
 
-            TotalTracksCount = release.Media.Select(x => x.TrackCount).Sum();
+            if (release.Media != null)
+            {
+                TotalTracksCount = release.Media.Select(x => x.TrackCount).Sum();
+            }
 
             Release = release;
             Images = CreateImagesForRelease();
 
             SourceCore = sourceCore;
-            Artist = artist;
+            _artist = artist;
         }
 
         /// <inheritdoc/>
@@ -73,7 +77,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public Release Release { get; }
 
         /// <inheritdoc/>
-        public IArtist Artist { get; }
+        public IArtist Artist => _artist;
 
         /// <inheritdoc/>
         public int TotalTracksCount { get; }
@@ -206,8 +210,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var releaseData = await _musicBrainzClient.Releases.GetAsync(Id, RelationshipQueries.Releases);
 
-            var totalTrackCountForArtist = await _artistHelpersService.GetTotalTracksCount(Release.Credits[0].Artist);
-            var artist = new MusicBrainzArtist(SourceCore, Release.Credits[0].Artist, totalTrackCountForArtist);
+            Artist? releaseArtist = Release.Credits?[0].Artist;
+
+            if (releaseArtist != null && releaseArtist.Id != _artist.Id)
+            {
+                var totalTrackCountForArtist = await _artistHelpersService.GetTotalTracksCount(Release.Credits[0].Artist);
+                var artist = new MusicBrainzArtist(SourceCore, Release.Credits[0].Artist, totalTrackCountForArtist);
+            }
 
             // Get full list of tracks from all sources
             IEnumerable<Track> recordingList = releaseData.Media.SelectMany(x => x.Tracks);
@@ -217,7 +226,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var recording in recordingList.ToList().GetRange(offset, limit))
             {
-                var album = new MusicBrainzAlbum(SourceCore, Release, artist);
+                var album = new MusicBrainzAlbum(SourceCore, Release, _artist);
                 var track = new MusicBrainzTrack(SourceCore, recording, album, recording.Position);
 
                 yield return track;

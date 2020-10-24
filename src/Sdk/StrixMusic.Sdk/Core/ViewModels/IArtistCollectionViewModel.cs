@@ -11,9 +11,9 @@ namespace StrixMusic.Sdk.Core.ViewModels
     public interface IArtistCollectionViewModel : IArtistCollection
     {
         /// <summary>
-        /// The artists in this collection.
+        /// The artist items in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<ArtistViewModel> Artists { get; }
+        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
 
         /// <summary>
         /// Populates the next set of artists into the collection.

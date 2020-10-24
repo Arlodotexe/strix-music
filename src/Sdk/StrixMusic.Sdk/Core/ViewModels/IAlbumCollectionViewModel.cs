@@ -13,7 +13,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         /// <summary>
         /// The albums in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<AlbumViewModel> Albums { get; }
+        public SynchronizedObservableCollection<IAlbumCollectionItem> Albums { get; }
 
         /// <summary>
         /// Populates the next set of albums into the collection.

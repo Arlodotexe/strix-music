@@ -75,6 +75,7 @@
                     <PivotItem Header="Overview">
                     </PivotItem>
                     <PivotItem Header="Albums">
+                        <defaultcontrols:AlbumCollection/>
                     </PivotItem>
                     <PivotItem Header="Songs">
                     </PivotItem>

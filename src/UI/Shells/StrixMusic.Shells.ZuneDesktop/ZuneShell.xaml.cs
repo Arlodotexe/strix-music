@@ -120,6 +120,11 @@ namespace StrixMusic.Shells.ZuneDesktop
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             RequestTheme(Pivot.SelectedIndex == 0 ? ElementTheme.Dark : ElementTheme.Light);
+
+            if (Pivot.SelectedIndex == 0)
+            {
+                QuickplayPage.RunEnterViewAnimation();
+            }
         }
 
         private void RequestTheme(ElementTheme theme = ElementTheme.Default)

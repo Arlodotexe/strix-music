@@ -26,7 +26,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// Initializes a new instance of the <see cref="MusicBrainzArtist"/> class.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
-        /// <param name="artist">The MusicBrainz artistViewModel to wrap.</param>
+        /// <param name="artist">The MusicBrainz artist to wrap.</param>
         /// <param name="totalTracksCount"><inheritdoc cref="TotalTracksCount"/></param>
         public MusicBrainzArtist(ICore sourceCore, Artist artist, int totalTracksCount)
         {
@@ -59,7 +59,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Id => _artist.Id;
 
         /// <inheritdoc/>
-        public int TotalAlbumsCount => _artist.Releases.Count;
+        public int TotalAlbumItemsCount => _artist.Releases.Count;
 
         /// <inheritdoc/>
         public int TotalTracksCount { get; }
@@ -119,7 +119,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddAlbumSupported(int index)
+        public Task<bool> IsAddAlbumItemSupported(int index)
         {
             return Task.FromResult(false);
         }
@@ -143,7 +143,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveAlbumSupported(int index)
+        public Task<bool> IsRemoveAlbumItemSupported(int index)
         {
             return Task.FromResult(false);
         }
@@ -185,7 +185,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public async IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset)
+        public async IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
             var releasesList = await _musicBrainzClient.Releases.BrowseAsync("artist", Id, limit, offset);
 
@@ -193,10 +193,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var release in releases)
             {
-                var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(release.Credits[0].Artist);
-                var artist = new MusicBrainzArtist(SourceCore, release.Credits[0].Artist, totalTracksForArtist);
-
-                yield return new MusicBrainzAlbum(SourceCore, release, artist);
+                yield return new MusicBrainzAlbum(SourceCore, release, this);
             }
         }
 
@@ -205,7 +202,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var recordings = await _musicBrainzClient.Recordings.BrowseAsync("artist", Id, limit, offset, RelationshipQueries.Recordings);
 
-            // This API call will include releases for this artistViewModel, with all track and recording data.
+            // This API call will include releases for this artist, with all track and recording data.
             var firstPage = await _musicBrainzClient.Releases.BrowseAsync("artist", Id, 100, 0, RelationshipQueries.Releases);
 
             var releaseDataForArtist = await OwlCore.Helpers.APIs.GetAllItemsAsync(firstPage.Count, firstPage.Items, async currentOffset =>
@@ -246,7 +243,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task AddAlbumAsync(IAlbum album, int index)
+        public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index)
         {
             throw new NotImplementedException();
         }
@@ -258,7 +255,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task RemoveAlbumAsync(int index)
+        public Task RemoveAlbumItemAsync(int index)
         {
             throw new NotImplementedException();
         }

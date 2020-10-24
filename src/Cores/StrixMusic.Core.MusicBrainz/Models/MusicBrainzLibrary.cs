@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Services;
@@ -49,13 +48,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override int TotalChildrenCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override int TotalArtistsCount { get; internal set; }
+        public override int TotalArtistItemsCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalAlbumsCount { get; internal set; }
+        public override int TotalAlbumItemsCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalPlaylistCount { get; internal set; } = 0;
+        public override int TotalPlaylistItemsCount { get; internal set; } = 0;
 
         /// <inheritdoc />
         public override int TotalTracksCount { get; internal set; }
@@ -67,13 +66,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<IPlaylist> GetPlaylistsAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
             return AsyncEnumerable.Empty<IPlaylist>();
         }
 
         /// <inheritdoc/>
-        public override async IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset = 0)
+        public override async IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
             var albumsList = await _musicBrainzClient.Releases.SearchAsync("*", limit, offset);
             var albums = albumsList.Items;
@@ -89,13 +88,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public override async IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0)
+        public override async IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset)
         {
             var artists = await _musicBrainzClient.Artists.SearchAsync($"*", limit, offset);
 
             foreach (var artist in artists.Items)
             {
-                var totalTracksForArtist = await _artistHelpersService.GetTotalTracksCount(artist);
+                int totalTracksForArtist = await _artistHelpersService.GetTotalTracksCount(artist, 50);
 
                 yield return new MusicBrainzArtist(SourceCore, artist, totalTracksForArtist);
             }

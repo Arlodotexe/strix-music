@@ -76,7 +76,7 @@
                     <Grid Width="32"/>
                 </Pivot.LeftHeader>
                 <PivotItem Header="quickplay">
-                    <local:QuickplayContent/>
+                    <local:QuickplayContent x:Name="QuickplayPage"/>
                 </PivotItem>
                 <PivotItem Header="collection">
                     <local:CollectionContent/>

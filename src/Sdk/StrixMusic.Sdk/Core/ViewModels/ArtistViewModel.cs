@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
                 RelatedItems = new PlayableCollectionGroupViewModel(_artist.RelatedItems);
 
             Tracks = new SynchronizedObservableCollection<TrackViewModel>();
-            Albums = new SynchronizedObservableCollection<AlbumViewModel>();
+            Albums = new SynchronizedObservableCollection<IAlbumCollectionItem>();
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
@@ -112,7 +112,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public string Id => _artist.Id;
 
         /// <inheritdoc />
-        public int TotalAlbumsCount => _artist.TotalAlbumsCount;
+        public int TotalAlbumItemsCount => _artist.TotalAlbumItemsCount;
 
         /// <inheritdoc />
         public int TotalTracksCount => _artist.TotalTracksCount;
@@ -126,7 +126,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         /// <summary>
         /// The artistViewModel's albums.
         /// </summary>
-        public SynchronizedObservableCollection<AlbumViewModel> Albums { get; }
+        public SynchronizedObservableCollection<IAlbumCollectionItem> Albums { get; }
 
         /// <summary>
         /// The tracks released by this artistViewModel.
@@ -221,7 +221,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task<bool> IsAddImageSupported(int index) => _artist.IsAddImageSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumSupported(int index) => _artist.IsAddAlbumSupported(index);
+        public Task<bool> IsAddAlbumItemSupported(int index) => _artist.IsAddAlbumItemSupported(index);
 
         /// <inheritdoc />
         public Task<bool> IsAddTrackSupported(int index) => _artist.IsAddTrackSupported(index);
@@ -236,22 +236,27 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task<bool> IsRemoveTrackSupported(int index) => _artist.IsRemoveTrackSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumSupported(int index) => _artist.IsRemoveAlbumSupported(index);
+        public Task<bool> IsRemoveAlbumItemSupported(int index) => _artist.IsRemoveAlbumItemSupported(index);
 
         /// <inheritdoc />
         public Task<bool> IsRemoveGenreSupported(int index) => _artist.IsRemoveGenreSupported(index);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset) => _artist.GetAlbumsAsync(limit, offset);
+        public IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset) => _artist.GetAlbumItemsAsync(limit, offset);
 
         /// <inheritdoc />
         public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset) => _artist.GetTracksAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task PopulateMoreAlbumsAsync(int limit)
+        public async Task PopulateMoreAlbumsAsync(int limit)
         {
-            // TODO
-            return Task.CompletedTask;
+            await foreach (var item in _artist.GetAlbumItemsAsync(limit, Albums.Count))
+            {
+                if (item is IAlbum album)
+                {
+                    Albums.Add(new AlbumViewModel(album));
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -265,13 +270,13 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task AddTrackAsync(ITrack track, int index) => _artist.AddTrackAsync(track, index);
 
         /// <inheritdoc />
-        public Task AddAlbumAsync(IAlbum album, int index) => _artist.AddAlbumAsync(album, index);
+        public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index) => _artist.AddAlbumItemAsync(album, index);
 
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index) => _artist.RemoveTrackAsync(index);
 
         /// <inheritdoc />
-        public Task RemoveAlbumAsync(int index) => _artist.RemoveAlbumAsync(index);
+        public Task RemoveAlbumItemAsync(int index) => _artist.RemoveAlbumItemAsync(index);
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }

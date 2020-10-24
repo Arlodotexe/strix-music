@@ -12,15 +12,15 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             
-            <StackPanel Margin="24,0,0,6">
+            <StackPanel Margin="24,0,0,12">
                 <TextBlock FontSize="12" FontWeight="Bold">
-                        <Run Text="{x:Bind Tracks.Count}"/>
+                        <Run Text="{x:Bind TotalTracksCount}"/>
                         <Run Text=" SONGS"/>
                 </TextBlock>
                 <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
             </StackPanel>
 
-            <ListView ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
+            <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
                       SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.Header>
                     <Grid Height="6"/>

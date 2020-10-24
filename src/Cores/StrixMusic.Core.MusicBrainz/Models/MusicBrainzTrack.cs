@@ -88,7 +88,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TrackType Type => TrackType.Song;
 
         /// <inheritdoc />
-        public int TotalArtistsCount => _track.Recording.Credits.Count;
+        public int TotalArtistItemsCount => _track.Recording.Credits.Count;
 
         /// <inheritdoc/>
         public IAlbum Album { get; }
@@ -265,7 +265,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task AddArtistAsync(IArtist artist, int index)
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index)
         {
             throw new NotSupportedException();
         }
@@ -277,7 +277,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public async IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0)
+        public async IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset)
         {
             var recording = await _musicBrainzClient.Recordings.GetAsync(Id, RelationshipQueries.Recordings);
 

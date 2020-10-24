@@ -60,16 +60,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration => TimeSpan.Zero;
 
         /// <inheritdoc />
-        public abstract int TotalAlbumsCount { get; internal set; }
+        public abstract int TotalAlbumItemsCount { get; internal set; }
 
         /// <inheritdoc />
-        public abstract int TotalArtistsCount { get; internal set; }
+        public abstract int TotalArtistItemsCount { get; internal set; }
 
         /// <inheritdoc />
         public abstract int TotalTracksCount { get; internal set; }
 
         /// <inheritdoc />
-        public abstract int TotalPlaylistCount { get; internal set; }
+        public abstract int TotalPlaylistItemsCount { get; internal set; }
 
         /// <inheritdoc />
         public abstract int TotalChildrenCount { get; internal set; }
@@ -96,7 +96,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddPlaylistSupported(int index)
+        public Task<bool> IsAddPlaylistItemSupported(int index)
         {
             return Task.FromResult(false);
         }
@@ -114,7 +114,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddAlbumSupported(int index)
+        public Task<bool> IsAddAlbumItemSupported(int index)
         {
             return Task.FromResult(false);
         }
@@ -138,13 +138,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemovePlaylistSupported(int index)
+        public Task<bool> IsRemovePlaylistItemSupported(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumSupported(int index)
+        public Task<bool> IsRemoveAlbumItemSupported(int index)
         {
             return Task.FromResult(false);
         }
@@ -192,16 +192,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<IAlbum> GetAlbumsAsync(int limit, int offset = 0);
+        public abstract IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset);
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<IArtist> GetArtistsAsync(int limit, int offset = 0);
+        public abstract IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset);
 
         /// <inheritdoc />
         public abstract IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<IPlaylist> GetPlaylistsAsync(int limit, int offset = 0);
+        public abstract IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset);
 
         /// <inheritdoc />
         public abstract IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0);
@@ -213,19 +213,19 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task AddArtistAsync(IArtist artist, int index)
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddAlbumAsync(IAlbum album, int index)
+        public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddPlaylistAsync(IPlayableCollectionGroup playlist, int index)
+        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index)
         {
             throw new NotSupportedException();
         }
@@ -249,13 +249,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task RemoveAlbumAsync(int index)
+        public Task RemoveAlbumItemAsync(int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task RemovePlaylistAsync(int index)
+        public Task RemovePlaylistItemAsync(int index)
         {
             throw new NotSupportedException();
         }

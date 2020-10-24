@@ -137,13 +137,13 @@
 
                 <Pivot Grid.Row="1">
                     <PivotItem Header="Songs">
-                        <!--<local:TrackCollection/>-->
+                        <!--<defaultcontrols:TrackCollection/>-->
                     </PivotItem>
                     <PivotItem Header="Albums">
-                        <!--<local:AlbumCollection/>-->
+                        <defaultcontrols:AlbumCollection/>
                     </PivotItem>
                     <PivotItem Header="Similar Artists">
-                        <!--<local:AlbumCollection/>-->
+                        <!--<defaultcontrols:AlbumCollection/>-->
                     </PivotItem>
                 </Pivot>
             </Grid>
