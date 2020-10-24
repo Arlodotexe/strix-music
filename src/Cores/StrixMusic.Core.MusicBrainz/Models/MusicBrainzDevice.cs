@@ -10,6 +10,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// <inheritdoc />
     public class MusicBrainzDevice : IDevice
     {
+        private string _name;
+        private double _volume;
+        private double _speed;
+        private TimeSpan _position;
+        private string _id;
+        private RepeatState _repeatState;
+        private bool _suffleState;
+        private PlaybackState _playBackState;
+        private ITrack? _nowPlaying;
+        private IPlayable _playBackContext;
+        private bool _isActive;
+
         /// <summary>
         /// Creates a <see cref="MusicBrainzDevice"/> with the core instance.
         /// </summary>
@@ -19,89 +31,92 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public MusicBrainzDevice(ICore sourceCore, string name, bool isActive)
         {
             SourceCore = sourceCore;
-            Name = name;
-            IsActive = isActive;
-            Id = Guid.NewGuid().ToString(); // hardcoded the Id for now.
+            _name = name;
+            _isActive = isActive;
+            _id = Guid.NewGuid().ToString(); // hardcoded the Id for now.
             PlaybackQueue = new SynchronizedObservableCollection<ITrack>();
-            Position = new TimeSpan(0, 0, 0); // hardcoded for now.
+            _position = new TimeSpan(0, 0, 0); // hardcoded for now.
 
-            IsActiveChanged?.Invoke(this, IsActive);
-            PositionChanged?.Invoke(this, Position);
+            IsActiveChanged?.Invoke(this, _isActive);
+            PositionChanged?.Invoke(this, _position);
         }
 
         /// <inheritdoc />
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
-        public string Id { get; }
+        public string Id { get => _id; }
 
         /// <inheritdoc />
-        public string Name { get; }
+        public string Name { get => _name; }
 
         /// <inheritdoc />
-        public bool IsActive { get; }
+        public bool IsActive { get => _isActive; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<ITrack> PlaybackQueue { get; }
 
         /// <inheritdoc />
-        public IPlayable PlaybackContext { get; }
+        public IPlayable PlaybackContext { get => _playBackContext; }
 
         /// <inheritdoc />
-        public ITrack? NowPlaying { get; }
+        public ITrack? NowPlaying { get => _nowPlaying; }
 
         /// <inheritdoc />
-        public TimeSpan Position { get; }
+        public TimeSpan Position { get => _position; }
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState { get; }
+        public PlaybackState PlaybackState { get => _playBackState; }
 
         /// <inheritdoc />
-        public bool ShuffleState { get; }
+        public bool ShuffleState { get => _suffleState; }
 
         /// <inheritdoc />
-        public RepeatState RepeatState { get; }
+        public RepeatState RepeatState { get => _repeatState; }
 
         /// <inheritdoc />
-        public double VolumePercent { get; }
+        public double VolumePercent { get => _volume; }
 
         /// <inheritdoc />
         public DeviceType Type { get; }
 
         /// <inheritdoc />
-        public double PlaybackSpeed { get; }
+        public double PlaybackSpeed { get => _speed; }
 
         /// <inheritdoc />
-        public bool IsShuffleStateChangedSupported { get; }
+        public bool IsShuffleStateChangedSupported { get; } = true;
 
         /// <inheritdoc />
-        public bool IsRepeatStateChangedSupported { get; }
+        public bool IsRepeatStateChangedSupported { get; } = true;
 
         /// <inheritdoc />
-        public bool IsChangeVolumeAsyncSupported { get; }
+        public bool IsChangeVolumeAsyncSupported { get; } = true;
 
         /// <inheritdoc />
-        public bool IsChangePlaybackSpeedSupported { get; }
+        public bool IsChangePlaybackSpeedSupported { get; } = true;
 
         /// <inheritdoc />
-        public bool IsResumeAsyncSupported { get; }
+        public bool IsResumeAsyncSupported { get; } = true;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported { get; }
+        public bool IsPauseAsyncSupported { get; } = true;
 
         /// <inheritdoc />
-        public bool IsNextAsyncSupported { get; }
+        public bool IsNextAsyncSupported { get; } = true;
 
         /// <inheritdoc />
-        public bool IsPreviousAsyncSupported { get; }
+        public bool IsPreviousAsyncSupported { get; } = true;
 
         /// <inheritdoc />
-        public bool IsSeekAsyncSupported { get; }
+        public bool IsSeekAsyncSupported { get; } = true;
 
         /// <inheritdoc />
         public Task ChangePlaybackSpeedAsync(double speed)
         {
-            throw new NotImplementedException();
+            _speed = speed;
+            PlaybackSpeedChanged?.Invoke(this, speed);
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
@@ -129,27 +144,53 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task SeekAsync(TimeSpan position)
+        public async Task SeekAsync(TimeSpan position)
         {
-            throw new NotImplementedException();
+            await Task.Delay(500);
+            _position = position;
+            PositionChanged?.Invoke(this, _position);
         }
 
         /// <inheritdoc />
         public Task ChangeVolumeAsync(double volume)
         {
-            throw new NotImplementedException();
+            _volume = volume;
+            VolumePercentChanged?.Invoke(this, volume);
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
         public Task ToggleShuffleAsync()
         {
-            throw new NotImplementedException();
+            _suffleState = !_suffleState;
+            ShuffleStateChanged(this, _suffleState);
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
         public Task ToggleRepeatAsync()
         {
-            throw new NotImplementedException();
+            switch (_repeatState)
+            {
+                case RepeatState.All:
+                    _repeatState = RepeatState.None;
+                    break;
+                case RepeatState.None:
+                    _repeatState = RepeatState.One;
+                    break;
+                case RepeatState.One:
+                    _repeatState = RepeatState.All;
+                    break;
+                default:
+                    _repeatState = RepeatState.None;
+                    break;
+            }
+
+            RepeatStateChanged(this, _repeatState);
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
