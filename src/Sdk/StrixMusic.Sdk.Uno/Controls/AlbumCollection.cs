@@ -1,6 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.Core.ViewModels;
+using StrixMusic.Sdk.Core.Data;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -10,7 +11,7 @@ namespace StrixMusic.Sdk.Uno.Controls
     /// <remarks>
     /// This class temporarily only displays <see cref="AlbumViewModel"/>s.
     /// </remarks>
-    public sealed partial class AlbumCollection : Control
+    public sealed partial class AlbumCollection : CollectionControl<IAlbum, AlbumItem>
     {
         /// <inheritdoc />
         protected override void OnApplyTemplate()

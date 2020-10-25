@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk.Core.ViewModels;
+﻿using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -7,7 +8,7 @@ namespace StrixMusic.Sdk.Uno.Controls
     /// <summary>
     /// A Templated <see cref="Control"/> for displaying any Object containing a list of <see cref="TrackViewModel"/>.
     /// </summary>
-    public sealed partial class TrackCollection : CollectionControl
+    public sealed partial class TrackCollection : CollectionControl<ITrack, TrackItem>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackCollection"/> class.
