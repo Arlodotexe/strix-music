@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Core.ViewModels
 {
@@ -107,7 +108,10 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task<bool> IsRemovePinSupported(int index) => _core.IsRemovePinSupported(index);
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<object?> GetContextById(string? id) => _core.GetContextById(id);
+        public IAsyncEnumerable<object?> GetContextById(string id) => _core.GetContextById(id);
+
+        /// <inheritdoc />
+        public Task<IMediaSourceConfig?> GetMediaSource(ITrack track) => _core.GetMediaSource(track);
 
         /// <inheritdoc cref="ICore.CoreStateChanged" />
         public event EventHandler<CoreState>? CoreStateChanged

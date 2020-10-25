@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Core.Data
+﻿namespace StrixMusic.Sdk.MediaPlayback
 {
     /// <summary>
     /// How songs will repeat in their context.
@@ -11,12 +11,12 @@
         None,
 
         /// <summary>
-        /// The current <see cref="ITrack"/> will repeat when done playing.
+        /// The current track will repeat when done playing.
         /// </summary>
         One,
 
         /// <summary>
-        /// The current context (<see cref="IAlbum"/>, <see cref="IPlaylist"/>, etc) will start over when it finishes playing the last item.
+        /// The current playback context (such as a Playlist) will start over when it finishes playing the last item.
         /// </summary>
         All,
     }

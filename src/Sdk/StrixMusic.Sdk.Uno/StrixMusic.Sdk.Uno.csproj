@@ -86,4 +86,7 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\MediaPlayback\" />
+  </ItemGroup>
 </Project>

@@ -29,6 +29,12 @@ namespace StrixMusic.Sdk.Services.Navigation
         void RegisterCommonPage(Type type);
 
         /// <summary>
+        /// Registers an instance of a page to have its state cached.
+        /// </summary>
+        /// <param name="type">The implementation of the page cached.</param>
+        void RegisterCommonPage(T type);
+
+        /// <summary>
         /// Raises the <see cref="NavigationRequested"/> event based on the arguments
         /// </summary>
         /// <param name="type">The type of the page to navigate to.</param>

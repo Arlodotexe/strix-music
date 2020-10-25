@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions.AsyncExtensions;
@@ -10,7 +11,9 @@ using OwlCore.Services;
 using StrixMusic.Core.MusicBrainz;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 using StrixMusic.Sdk.Uno.Services;
@@ -27,6 +30,7 @@ namespace StrixMusic.Shared
     public sealed partial class AppLoadingView : UserControl
     {
         private DefaultSettingsService? _settingsService;
+        private IPlaybackHandlerService? _playbackHandlerService;
 
         /// <summary>
         /// The ViewModel for this page.
@@ -93,6 +97,9 @@ namespace StrixMusic.Shared
             services.AddSingleton<ISharedFactory, SharedFactory>();
             services.AddSingleton<IFileSystemService>(fileSystemService);
 
+            _playbackHandlerService = new PlaybackHandlerService();
+            services.AddSingleton(_playbackHandlerService);
+
             Ioc.Default.ConfigureServices(services);
         }
 
@@ -122,11 +129,26 @@ namespace StrixMusic.Shared
             UpdateStatus("Initializing cores");
             await Task.Run(() => CurrentWindow.MainViewModel.InitializeCores(cores));
 
+            UpdateStatus("Setting up media players");
+            cores.ForEach(SetupMediaPlayerAsync);
+
             UpdateStatus("Simulating lag");
             await Task.Delay(2000);
 
-            UpdateStatus($"Done loading, navigating to {nameof(ShellLoader)}");
-            CurrentWindow.NavigationService?.NavigateTo(typeof(ShellLoader));
+            UpdateStatus($"Done loading, navigating to {nameof(MainPage)}");
+            CurrentWindow.NavigationService?.NavigateTo(typeof(MainPage));
+        }
+
+        private void SetupMediaPlayerAsync(ICore core)
+        {
+            Guard.IsNotNull(_playbackHandlerService, nameof(_playbackHandlerService));
+
+            if (core.CoreConfig.PreferredPlayerType == MediaPlayerType.Standard)
+            {
+                var mediaPlayerElement = CurrentWindow.AppFrame.MainPage.CreateMediaPlayerElement();
+
+                _playbackHandlerService.RegisterAudioPlayer(new AudioPlayerService(mediaPlayerElement), core);
+            }
         }
     }
 }

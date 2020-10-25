@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using OwlCore.Collections;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Core.Data
 {
     /// <summary>
-    /// Represents a device that a user can connect to for playback
+    /// A device that controls playback of an audio player.
     /// </summary>
-    public interface IDevice : ICoreMember
+    public interface IDevice : IAudioPlayerBase, ICoreMember
     {
         /// <summary>
-        /// Identifies the device.
+        /// A unique identifier for the player.
         /// </summary>
         string Id { get; }
 
@@ -25,79 +25,55 @@ namespace StrixMusic.Sdk.Core.Data
         bool IsActive { get; }
 
         /// <summary>
-        /// The current playback queue.
+        /// Tracks that have been queued to play next after the current track. Once this queue is exhausted, the next track in the <see cref="PlaybackContext"/> will play.
         /// </summary>
-        /// <remarks>When <see cref="DeviceType"/> is <see cref="DeviceType.Remote" />, this will override the internal playback queue.</remarks>
-        public SynchronizedObservableCollection<ITrack> PlaybackQueue { get; }
+        public ITrackCollection? PlaybackQueue { get; }
 
         /// <summary>
         /// The context of the currently playing track.
         /// </summary>
-        IPlayable PlaybackContext { get; }
+        IPlayable? PlaybackContext { get; }
 
         /// <summary>
         /// The currently playing <see cref="ITrack"/>.
         /// </summary>
         ITrack? NowPlaying { get; }
 
-        /// <summary>
-        /// The amount of time that has passed since a song has started.
-        /// </summary>
-        TimeSpan Position { get; }
-
-        /// <inheritdoc cref="Data.PlaybackState"/>
-        PlaybackState PlaybackState { get; }
+        /// <inheritdoc cref="DeviceType" />
+        DeviceType Type { get; }
 
         /// <summary>
         /// True if the player is using a shuffled track list.
         /// </summary>
         bool ShuffleState { get; }
 
-        /// <inheritdoc cref="Data.RepeatState"/>
+        /// <inheritdoc cref="RepeatState"/>
         RepeatState RepeatState { get; }
 
         /// <summary>
-        /// The volume of the device (0-1).
+        /// If true, <see cref="IAudioPlayerBase.SeekAsync(TimeSpan)"/> is supported.
         /// </summary>
-        double VolumePercent { get; }
-
-        /// <inheritdoc cref="DeviceType" />
-        DeviceType Type { get; }
+        bool IsSeekAsyncSupported { get; }
 
         /// <summary>
-        /// The rate of the playback for the current track.
-        /// </summary>
-        double PlaybackSpeed { get; }
-
-        /// <summary>
-        /// If true, <see cref="ToggleShuffleAsync"/> is supported.
-        /// </summary>
-        bool IsShuffleStateChangedSupported { get; }
-
-        /// <summary>
-        /// If true, <see cref="ToggleRepeatAsync"/> is supported.
-        /// </summary>
-        bool IsRepeatStateChangedSupported { get; }
-
-        /// <summary>
-        /// If true, <see cref="ChangeVolumeAsync(double)"/> is supported.
-        /// </summary>
-        bool IsChangeVolumeAsyncSupported { get; }
-
-        /// <summary>
-        /// If true, <see cref="ChangePlaybackSpeedAsync(double)"/> is supported.
-        /// </summary>
-        bool IsChangePlaybackSpeedSupported { get; }
-
-        /// <summary>
-        /// If true, <see cref="ResumeAsync()"/> is supported.
+        /// If true, <see cref="IAudioPlayerBase.ResumeAsync()"/> is supported.
         /// </summary>
         bool IsResumeAsyncSupported { get; }
 
         /// <summary>
-        /// If true, <see cref="PauseAsync()"/> is supported.
+        /// If true, <see cref="IAudioPlayerBase.PauseAsync()"/> is supported.
         /// </summary>
         bool IsPauseAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="IAudioPlayerBase.ChangeVolumeAsync(double)"/> is supported.
+        /// </summary>
+        bool IsChangeVolumeAsyncSupported { get; }
+
+        /// <summary>
+        /// If true, <see cref="IAudioPlayerBase.ChangePlaybackSpeedAsync(double)"/> is supported.
+        /// </summary>
+        bool IsChangePlaybackSpeedSupported { get; }
 
         /// <summary>
         /// If true, <see cref="NextAsync()"/> is supported.
@@ -110,28 +86,14 @@ namespace StrixMusic.Sdk.Core.Data
         bool IsPreviousAsyncSupported { get; }
 
         /// <summary>
-        /// If true, <see cref="SeekAsync(TimeSpan)"/> is supported.
+        /// If true, <see cref="ToggleShuffleAsync"/> is supported.
         /// </summary>
-        bool IsSeekAsyncSupported { get; }
+        bool IsToggleShuffleAsyncSupported { get; }
 
         /// <summary>
-        /// Attempts to change the playback speed.
+        /// If true, <see cref="ToggleRepeatAsync"/> is supported.
         /// </summary>
-        /// <param name="speed"></param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangePlaybackSpeedAsync(double speed);
-
-        /// <summary>
-        /// Resume the device if in the state <see cref="Data.PlaybackState.Paused"/>.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ResumeAsync();
-
-        /// <summary>
-        /// Pauses the device if in the state <see cref="Data.PlaybackState.Playing"/>
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PauseAsync();
+        bool IsToggleRepeatAsyncSupported { get; }
 
         /// <summary>
         /// Advances to the next track. If there is no next track, playback is paused.
@@ -146,18 +108,10 @@ namespace StrixMusic.Sdk.Core.Data
         Task PreviousAsync();
 
         /// <summary>
-        /// Seeks the track to a given timestamp.
+        /// Switches to this device.
         /// </summary>
-        /// <param name="position">Time to seek the song to.</param>
-        /// <returns><see langword="true"/> if the <see cref="ITrack"/> was seeked to successfully, <see langword="false"/> otherwise.</returns>
-        Task SeekAsync(TimeSpan position);
-
-        /// <summary>
-        /// Changes the volume
-        /// </summary>
-        /// <param name="volume">The volume of the device.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeVolumeAsync(double volume);
+        Task SwitchToAsync();
 
         /// <summary>
         /// Toggles shuffle on or off.
@@ -170,12 +124,6 @@ namespace StrixMusic.Sdk.Core.Data
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ToggleRepeatAsync();
-
-        /// <summary>
-        /// Switches to this device.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task SwitchToAsync();
 
         /// <summary>
         /// Fires when <see cref="IsActive"/> changes.
@@ -193,16 +141,6 @@ namespace StrixMusic.Sdk.Core.Data
         event EventHandler<ITrack> NowPlayingChanged;
 
         /// <summary>
-        /// Fires when <see cref="Position"/> changes.
-        /// </summary>
-        event EventHandler<TimeSpan> PositionChanged;
-
-        /// <summary>
-        /// Fires when <see cref="PlaybackState"/> changes.
-        /// </summary>
-        event EventHandler<PlaybackState> PlaybackStateChanged;
-
-        /// <summary>
         /// Fires when <see cref="ShuffleState"/> changes.
         /// </summary>
         event EventHandler<bool> ShuffleStateChanged;
@@ -211,15 +149,5 @@ namespace StrixMusic.Sdk.Core.Data
         /// Fires when <see cref="RepeatState"/> changes.
         /// </summary>
         event EventHandler<RepeatState> RepeatStateChanged;
-
-        /// <summary>
-        /// Fires when <see cref="VolumePercent"/> changes.
-        /// </summary>
-        event EventHandler<double> VolumePercentChanged;
-
-        /// <summary>
-        /// Fires when <see cref="PlaybackSpeed"/> changes.
-        /// </summary>
-        event EventHandler<double> PlaybackSpeedChanged;
     }
 }

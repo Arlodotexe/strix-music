@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using StrixMusic.Sdk.Core.Data;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {
@@ -9,11 +10,13 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <summary>
         /// Constructs a new <see cref="MediaSourceConfig"/>
         /// </summary>
+        /// <param name="track">The track that this media source is playing</param>
         /// <param name="id"><inheritdoc cref="Id"/></param>
         /// <param name="mediaSourceUri"><inheritdoc cref="MediaSourceUri"/></param>
         /// <param name="expirationDate"><inheritdoc cref="ExpirationDate"/></param>
-        public MediaSourceConfig(string id, Uri mediaSourceUri, DateTime expirationDate)
+        public MediaSourceConfig(ITrack track, string id, Uri mediaSourceUri, DateTime expirationDate)
         {
+            Track = track;
             Id = id;
             MediaSourceUri = mediaSourceUri;
             ExpirationDate = expirationDate;
@@ -22,13 +25,20 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <summary>
         /// Constructs a new <see cref="MediaSourceConfig"/>
         /// </summary>
+        /// <param name="track">The track that this media source is playing</param>
         /// <param name="id"><inheritdoc cref="Id"/></param>
-        /// <param name="fileStream"></param>
-        public MediaSourceConfig(string id, Stream fileStream)
+        /// <param name="fileStream">A <see cref="Stream"/> to an audio file to play.</param>
+        /// <param name="contentType">The content type for the <paramref name="fileStream"/>.</param>
+        public MediaSourceConfig(ITrack track, string id, Stream fileStream, string contentType)
         {
+            Track = track;
             Id = id;
             FileStreamSource = fileStream;
+            FileStreamContentType = contentType;
         }
+
+        /// <inheritdoc />
+        public ITrack Track { get; }
 
         /// <inheritdoc/>
         public string Id { get; }
@@ -41,5 +51,8 @@ namespace StrixMusic.Sdk.MediaPlayback
 
         /// <inheritdoc/>
         public Stream? FileStreamSource { get; }
+
+        /// <inheritdoc/>
+        public string? FileStreamContentType { get; }
     }
 }

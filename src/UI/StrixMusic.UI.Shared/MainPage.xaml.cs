@@ -1,29 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
+using OwlCore.Helpers;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.Uno.Models;
-using Windows.UI.Core;
+using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shared
 {
-    public sealed partial class ShellLoader : UserControl
+    public sealed partial class MainPage : UserControl
     {
+        private readonly List<MediaPlayerElement> _mediaPlayerElements = new List<MediaPlayerElement>();
         private ShellModel? _activeShell;
         private ShellModel? _preferredShell;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ShellLoader"/> class.
+        /// Initializes a new instance of the <see cref="MainPage"/> class.
         /// </summary>
-        public ShellLoader()
+        public MainPage()
         {
             InitializeComponent();
             Loaded += MainPage_Loaded;
@@ -34,7 +38,9 @@ namespace StrixMusic.Shared
             Loaded -= MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
 
-            await Initialize();
+            LoadRegisteredMediaPlayerElements();
+            await SetupInitialShell();
+
             AttachEvents();
 
             // Events must be attached before initializing if you want them to fire correctly.
@@ -76,10 +82,12 @@ namespace StrixMusic.Shared
             }
         }
 
-        private async Task Initialize()
+        private void LoadRegisteredMediaPlayerElements()
         {
-            // TODO: Remove or replace.
-            await SetupInitialShell();
+            foreach (var item in _mediaPlayerElements.Where(item => !PART_MediaPlayerElements.Children.Contains(item)))
+            {
+                PART_MediaPlayerElements.Children.Add(item);
+            }
         }
 
         private async Task SetupInitialShell()
@@ -96,9 +104,9 @@ namespace StrixMusic.Shared
             await SetupShell(shellModel);
         }
 
-        private async Task SetupShell(ShellModel shell)
+        private Task SetupShell(ShellModel shell)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            using (Threading.UIThread)
             {
                 // Removes the current shell.
                 ShellDisplay.Content = null;
@@ -128,7 +136,9 @@ namespace StrixMusic.Shared
 
                 _activeShell = shell;
                 ShellDisplay.Content = CreateShellControl(shell.ShellAttribute.ShellBaseSubType);
-            });
+            }
+
+            return Task.CompletedTask;
         }
 
         private Control CreateShellControl(Type shellType)
@@ -155,7 +165,7 @@ namespace StrixMusic.Shared
                 ActualWidth > shell.ShellAttribute.MinWindowSize.Width;
         }
 
-        private async void ShellLoader_SizeChanged(object sender, SizeChangedEventArgs e)
+        private async void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (_activeShell == null || _preferredShell == null)
             {
@@ -174,6 +184,28 @@ namespace StrixMusic.Shared
             {
                 await SetupShell(Constants.Shells.DefaultShellModel);
             }
+        }
+
+        /// <summary>
+        /// Creates a <see cref="MediaPlayerElement"/> and inserts it into the UI.
+        /// </summary>
+        /// <returns>The created <see cref="MediaPlayerElement"/></returns>
+        public MediaPlayerElement CreateMediaPlayerElement()
+        {
+            var mediaSource = new MediaPlayer();
+            var mediaPlayerElement = new MediaPlayerElement();
+            mediaPlayerElement.SetMediaPlayer(mediaSource);
+
+            _mediaPlayerElements.Add(mediaPlayerElement);
+
+            // If loaded, add it to the visual tree.
+            // If not loaded, we'll handle it in MainPage's Loaded event handler.
+            if (IsLoaded)
+            {
+                PART_MediaPlayerElements.Children.Add(mediaPlayerElement);
+            }
+
+            return mediaPlayerElement;
         }
     }
 }

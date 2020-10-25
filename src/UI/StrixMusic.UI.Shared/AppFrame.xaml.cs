@@ -1,5 +1,5 @@
-﻿using OwlCore.Helpers;
-using System.Threading;
+﻿using System.Threading;
+using OwlCore.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
 using Windows.UI.Xaml;
@@ -17,7 +17,12 @@ namespace StrixMusic.Shared
         /// <summary>
         /// The <see cref="MainViewModel"/> for the app.
         /// </summary>
-        public MainViewModel MainViewModel { get; private set; } = null!;
+        public MainViewModel MainViewModel { get; private set; }
+
+        /// <summary>
+        /// The <see cref="Shared.MainPage"/> displayed in the app.
+        /// </summary>
+        public MainPage MainPage { get; private set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AppFrame"/>.
@@ -31,6 +36,10 @@ namespace StrixMusic.Shared
             NavigationService = new NavigationService<Control>();
 
             MainViewModel = new MainViewModel();
+
+            MainPage = new MainPage();
+
+            NavigationService.RegisterCommonPage(MainPage);
         }
 
         private void AppFrame_OnLoaded(object sender, RoutedEventArgs e)
@@ -47,8 +56,8 @@ namespace StrixMusic.Shared
                 case SuperShell superShell:
                     OverlayPresenter.Show(superShell, "Settings");
                     break;
-                case ShellLoader shellLoader:
-                    PART_ContentPresenter.Content = shellLoader;
+                case MainPage mainPage:
+                    PART_ContentPresenter.Content = mainPage;
                     break;
                 default:
                     return;

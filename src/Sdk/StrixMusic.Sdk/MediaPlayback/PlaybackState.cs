@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Core.Data
+﻿namespace StrixMusic.Sdk.MediaPlayback
 {
     /// <summary>
     /// Current playback state.
@@ -6,7 +6,7 @@
     public enum PlaybackState
     {
         /// <summary>
-        /// The item is not playing, paused or queued to be played.
+        /// The item is not playing, paused or loading.
         /// </summary>
         None,
 
@@ -21,8 +21,8 @@
         Paused,
 
         /// <summary>
-        /// The audio is not playing, but is queued to be played.
+        /// The audio player is loading.
         /// </summary>
-        Queued,
+        Loading,
     }
 }

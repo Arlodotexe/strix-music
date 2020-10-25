@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.Core.ViewModels
 {
@@ -15,6 +19,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         private readonly IAlbum _album;
 
         private ArtistViewModel _artist; // TODO: Expose this field from readonly property
+        private readonly IPlaybackHandlerService _playbackHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumViewModel"/> class.
@@ -25,6 +30,8 @@ namespace StrixMusic.Sdk.Core.ViewModels
             _album = album;
 
             SourceCore = MainViewModel.GetLoadedCore(_album.SourceCore);
+
+            _playbackHandler = Ioc.Default.GetService<IPlaybackHandlerService>();
 
             Images = new SynchronizedObservableCollection<IImage>(_album.Images);
             Tracks = new SynchronizedObservableCollection<TrackViewModel>();
@@ -168,7 +175,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
             private set => SetProperty(() => _album.Name, value);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IAlbum.Artist" />
         public ArtistViewModel Artist
         {
             get => _artist;
@@ -252,7 +259,46 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task PauseAsync() => _album.PauseAsync();
 
         /// <inheritdoc />
-        public Task PlayAsync() => _album.PlayAsync();
+        public async Task PlayAsync()
+        {
+            if (_playbackHandler.PlaybackState == PlaybackState.Paused)
+            {
+                await _playbackHandler.ResumeAsync();
+            }
+            else
+            {
+                await _playbackHandler.PauseAsync();
+
+                // The actual playback
+                _playbackHandler.ClearNext();
+                _playbackHandler.ClearPrevious();
+
+                // Make sure we have all tracks
+                while (Tracks.Count < TotalTracksCount)
+                {
+                    await PopulateMoreTracksAsync(100);
+                }
+
+                // Insert the items into queue
+                foreach (var item in Tracks)
+                {
+                    var index = Tracks.IndexOf(item);
+
+                    var mediaSource = await SourceCore.GetMediaSource(item);
+
+                    if (mediaSource is null)
+                        continue;
+
+                    _playbackHandler.InsertNext(index, mediaSource);
+                }
+
+                // Play the first thing in the album.
+                await _playbackHandler.PlayFromNext(0);
+            }
+
+            // TODO: Check if active device is remote
+            await _album.PlayAsync();
+        }
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => _album.ChangeNameAsync(name);

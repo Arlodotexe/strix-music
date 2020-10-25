@@ -9,6 +9,7 @@ using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.MediaPlayback;
 
 
 namespace StrixMusic.Core.MusicBrainz
@@ -73,6 +74,12 @@ namespace StrixMusic.Core.MusicBrainz
         public SynchronizedObservableCollection<IPlayable> Pins { get; } = new SynchronizedObservableCollection<IPlayable>();
 
         /// <inheritdoc/>
+        public Task<IMediaSourceConfig?> GetMediaSource(ITrack track)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
         public event EventHandler<CoreState>? CoreStateChanged;
 
         /// <inheritdoc/>
@@ -82,7 +89,7 @@ namespace StrixMusic.Core.MusicBrainz
         }
 
         /// <inheritdoc/>
-        public async IAsyncEnumerable<object> GetContextById(string? id)
+        public async IAsyncEnumerable<object?> GetContextById(string id)
         {
             if (_musicBrainzClient != null && _artistHelperService != null)
             {
