@@ -29,11 +29,12 @@ namespace StrixMusic.Sdk.Core.ViewModels
 
             SourceCore = MainViewModel.GetLoadedCore(_device.SourceCore);
 
-            PlaybackQueue = new TrackCollectionViewModel(_device.PlaybackQueue);
+            if (_device.PlaybackQueue != null)
+                PlaybackQueue = new TrackCollectionViewModel(_device.PlaybackQueue);
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
-            PauseAsyncCommand = new AsyncRelayCommand(() => PauseAsync());
+            PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             NextAsyncCommand = new AsyncRelayCommand(NextAsync);
             PreviousAsyncCommand = new AsyncRelayCommand(PreviousAsync);
             SeekAsyncCommand = new AsyncRelayCommand<TimeSpan>(SeekAsync);
@@ -105,7 +106,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public DeviceType Type => _device.Type;
 
         /// <inheritdoc />
-        public ITrackCollection PlaybackQueue { get; }
+        public ITrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc />
         public bool IsActive
@@ -288,7 +289,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         }
 
         /// <inheritdoc />
-        public void PauseAsync()
+        public Task PauseAsync()
         {
             return _device.PauseAsync();
         }

@@ -27,12 +27,14 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// </summary>
         /// <param name="track">The track that this media source is playing</param>
         /// <param name="id"><inheritdoc cref="Id"/></param>
-        /// <param name="fileStream"></param>
-        public MediaSourceConfig(ITrack track, string id, Stream fileStream)
+        /// <param name="fileStream">A <see cref="Stream"/> to an audio file to play.</param>
+        /// <param name="contentType">The content type for the <paramref name="fileStream"/>.</param>
+        public MediaSourceConfig(ITrack track, string id, Stream fileStream, string contentType)
         {
             Track = track;
             Id = id;
             FileStreamSource = fileStream;
+            FileStreamContentType = contentType;
         }
 
         /// <inheritdoc />
@@ -49,5 +51,8 @@ namespace StrixMusic.Sdk.MediaPlayback
 
         /// <inheritdoc/>
         public Stream? FileStreamSource { get; }
+
+        /// <inheritdoc/>
+        public string? FileStreamContentType { get; }
     }
 }

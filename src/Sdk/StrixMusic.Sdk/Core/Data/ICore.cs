@@ -94,14 +94,14 @@ namespace StrixMusic.Sdk.Core.Data
         /// Gets the object against a context.
         /// </summary>
         /// <returns>Returns the requested context, cast down to an <see cref="object"/>.</returns>
-        IAsyncEnumerable<object?> GetContextById(string id);
+        public IAsyncEnumerable<object?> GetContextById(string id);
 
         /// <summary>
         /// Converts a <see cref="ITrack"/> into a <see cref="IMediaSourceConfig"/> that can be used to play the track.
         /// </summary>
         /// <param name="track">The track to convert.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. The value is an <see cref="IMediaSourceConfig"/> that can be used to play the track.</returns>
-        Task<IMediaSourceConfig?> GetMediaSource(ITrack track);
+        public Task<IMediaSourceConfig?> GetMediaSource(ITrack track);
 
         /// <summary>
         /// Fires when the <see cref="CoreState"/> has changed.

@@ -30,6 +30,11 @@ namespace StrixMusic.Sdk.MediaPlayback
         public Stream? FileStreamSource { get; }
 
         /// <summary>
+        /// The content type of the <see cref="FileStreamSource"/>.
+        /// </summary>
+        public string? FileStreamContentType { get; }
+
+        /// <summary>
         /// The <see cref="DateTime"/> that this source config expires, if applicable.
         /// </summary>
         public DateTime? ExpirationDate { get; }

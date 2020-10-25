@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Media.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using Windows.Media.Playback;
@@ -119,11 +120,13 @@ namespace StrixMusic.Shared.Services
         {
             if (sourceConfig.MediaSourceUri != null)
             {
-                _player.MediaPlayer.SetUriSource(sourceConfig.MediaSourceUri);
+                var source = MediaSource.CreateFromUri(sourceConfig.MediaSourceUri);
+                _player.MediaPlayer.Source = source;
             }
             else if (sourceConfig.FileStreamSource != null)
             {
-                _player.MediaPlayer.SetStreamSource(sourceConfig.FileStreamSource.AsRandomAccessStream());
+                var source = MediaSource.CreateFromStream(sourceConfig.FileStreamSource.AsRandomAccessStream(), sourceConfig.FileStreamContentType);
+                _player.MediaPlayer.Source = source;
             }
 
             _player.MediaPlayer.Play();
