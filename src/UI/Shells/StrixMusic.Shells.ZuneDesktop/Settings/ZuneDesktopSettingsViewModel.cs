@@ -15,9 +15,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
             { "Aurora Borealis", new ZuneDesktopBackgroundImage("Aurora Borealis", Windows.UI.Xaml.Media.AlignmentY.Top) },
             { "Bubbles", new ZuneDesktopBackgroundImage("Bubbles") },
             { "Cells", new ZuneDesktopBackgroundImage("Cells") },
+            { "Hero", new ZuneDesktopBackgroundImage("Hero", stretch: Windows.UI.Xaml.Media.Stretch.UniformToFill) },
             { "Meadow", new ZuneDesktopBackgroundImage("Meadow") },
             { "RobotOwl", new ZuneDesktopBackgroundImage("RobotOwl", Windows.UI.Xaml.Media.AlignmentY.Center) },
             { "Shards", new ZuneDesktopBackgroundImage("Shards", Windows.UI.Xaml.Media.AlignmentY.Top) },
+            { "Smooth", new ZuneDesktopBackgroundImage("Smooth", stretch: Windows.UI.Xaml.Media.Stretch.UniformToFill) },
             { "Wired", new ZuneDesktopBackgroundImage("Wired") },
         };
 

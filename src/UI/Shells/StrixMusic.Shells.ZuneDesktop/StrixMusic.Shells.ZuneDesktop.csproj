@@ -45,9 +45,11 @@
 		<None Remove="Assets\Backgrounds\Bloom.png" />
 		<None Remove="Assets\Backgrounds\Bubbles.png" />
 		<None Remove="Assets\Backgrounds\Cells.png" />
+		<None Remove="Assets\Backgrounds\Hero.png" />
 		<None Remove="Assets\Backgrounds\Meadow.png" />
 		<None Remove="Assets\Backgrounds\RobotOwl.png" />
 		<None Remove="Assets\Backgrounds\Shards.png" />
+		<None Remove="Assets\Backgrounds\Smooth.png" />
 		<None Remove="Assets\Backgrounds\Wired.png" />
 		<None Remove="Assets\Quickplay-Background.png" />
 		<None Remove="Controls\AlbumWall.xaml" />
@@ -100,6 +102,7 @@
 	  <Content Include="Assets\Backgrounds\Aurora Borealis.png" />
 	  <Content Include="Assets\Backgrounds\Bubbles.png" />
 	  <Content Include="Assets\Backgrounds\Cells.png" />
+	  <Content Include="Assets\Backgrounds\Hero.png" />
 	  <Content Include="Assets\Backgrounds\Meadow.png" />
 	  <Content Include="Assets\Backgrounds\Old\Wired.png" />
 	  <Content Include="Assets\Backgrounds\Old\Bloom.png" />
@@ -110,6 +113,7 @@
 	  <Content Include="Assets\Backgrounds\Old\Shards.png" />
 	  <Content Include="Assets\Backgrounds\RobotOwl.png" />
 	  <Content Include="Assets\Backgrounds\Shards.png" />
+	  <Content Include="Assets\Backgrounds\Smooth.png" />
 	  <Content Include="Assets\Backgrounds\Wired.png" />
 	  <Content Include="Assets\Quickplay-Background.png" />
 	</ItemGroup>
