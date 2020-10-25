@@ -21,12 +21,15 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using OwlCore.Helpers;
+using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Shared
 {
     public sealed partial class AppLoadingView : UserControl
     {
         private DefaultSettingsService? _settingsService;
+        private IPlaybackHandlerService _playbackHandlerService;
 
         /// <summary>
         /// The ViewModel for this page.
@@ -93,6 +96,9 @@ namespace StrixMusic.Shared
             services.AddSingleton<ISharedFactory, SharedFactory>();
             services.AddSingleton<IFileSystemService>(fileSystemService);
 
+            _playbackHandlerService = new PlaybackHandlerService();
+            services.AddSingleton(_playbackHandlerService);
+
             Ioc.Default.ConfigureServices(services);
         }
 
@@ -119,14 +125,24 @@ namespace StrixMusic.Shared
             UpdateStatus($"Adding temp {nameof(MusicBrainzCore)} instance");
             cores.Add(new MusicBrainzCore("testInstance"));
 
+            UpdateStatus("Setting up media players");
+            cores.ForEach(SetupMediaPlayerAsync);
+
             UpdateStatus("Initializing cores");
             await Task.Run(() => CurrentWindow.MainViewModel.InitializeCores(cores));
 
             UpdateStatus("Simulating lag");
             await Task.Delay(2000);
 
-            UpdateStatus($"Done loading, navigating to {nameof(ShellLoader)}");
-            CurrentWindow.NavigationService?.NavigateTo(typeof(ShellLoader));
+            UpdateStatus($"Done loading, navigating to {nameof(MainPage)}");
+            CurrentWindow.NavigationService?.NavigateTo(typeof(MainPage));
+        }
+
+        private void SetupMediaPlayerAsync(ICore core)
+        {
+            var mediaPlayerElement = CurrentWindow.AppFrame.MainPage.CreateMediaPlayerElement();
+
+            _playbackHandlerService.RegisterAudioPlayer(new AudioPlayerService(mediaPlayerElement), core);
         }
     }
 }

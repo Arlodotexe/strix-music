@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Core.Merged
 {

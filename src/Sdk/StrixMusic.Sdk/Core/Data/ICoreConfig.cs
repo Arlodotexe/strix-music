@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OwlCore.AbstractUI;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Core.Data
 {
@@ -23,5 +24,10 @@ namespace StrixMusic.Sdk.Core.Data
         /// A local path or url pointing to a SVG file containing the logo for this core.
         /// </summary>
         Uri LogoSvgUrl { get; }
+
+        /// <summary>
+        /// A core's preferred player type.
+        /// </summary>
+        MediaPlayerType PreferredPlayerType { get; }
     }
 }

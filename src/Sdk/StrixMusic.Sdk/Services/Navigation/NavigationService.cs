@@ -37,14 +37,14 @@ namespace StrixMusic.Sdk.Services.Navigation
                 }
             }
 
-            NavigateEventArgs<T> eventArgs = new NavigateEventArgs<T>(page, overlay);
+            var eventArgs = new NavigateEventArgs<T>(page, overlay);
             NavigationRequested?.Invoke(this, eventArgs);
         }
 
         /// <inheritdoc/>
         public void NavigateTo(T page, bool overlay = false)
         {
-            NavigateEventArgs<T> eventArgs = new NavigateEventArgs<T>(page, overlay);
+            var eventArgs = new NavigateEventArgs<T>(page, overlay);
             NavigationRequested?.Invoke(this, eventArgs);
         }
 
@@ -52,6 +52,15 @@ namespace StrixMusic.Sdk.Services.Navigation
         public void RegisterCommonPage(Type type)
         {
             _registeredPages.Add(type, (T)Activator.CreateInstance(type));
+        }
+
+        /// <inheritdoc />
+        public void RegisterCommonPage(T type)
+        {
+            if (type != null)
+            {
+                _registeredPages.Add(type.GetType(), type);
+            }
         }
 
         /// <inheritdoc/>

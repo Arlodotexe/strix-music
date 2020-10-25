@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using OwlCore.Collections;
 using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Core.ViewModels
 {
@@ -30,11 +29,11 @@ namespace StrixMusic.Sdk.Core.ViewModels
 
             SourceCore = MainViewModel.GetLoadedCore(_device.SourceCore);
 
-            PlaybackQueue = new SynchronizedObservableCollection<ITrack>(_device.PlaybackQueue.Select(x => new TrackViewModel(x)));
+            PlaybackQueue = new TrackCollectionViewModel(_device.PlaybackQueue);
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
-            PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
+            PauseAsyncCommand = new AsyncRelayCommand(() => PauseAsync());
             NextAsyncCommand = new AsyncRelayCommand(NextAsync);
             PreviousAsyncCommand = new AsyncRelayCommand(PreviousAsync);
             SeekAsyncCommand = new AsyncRelayCommand<TimeSpan>(SeekAsync);
@@ -56,7 +55,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
             _device.RepeatStateChanged += Device_RepeatStateChanged;
             _device.ShuffleStateChanged += Device_ShuffleStateChanged;
             _device.PlaybackStateChanged += Device_StateChanged;
-            _device.VolumePercentChanged += Device_VolumePercentChanged;
+            _device.VolumeChanged += Device_VolumeChanged;
         }
 
         private void DetachEvents()
@@ -69,12 +68,12 @@ namespace StrixMusic.Sdk.Core.ViewModels
             _device.RepeatStateChanged -= Device_RepeatStateChanged;
             _device.ShuffleStateChanged -= Device_ShuffleStateChanged;
             _device.PlaybackStateChanged -= Device_StateChanged;
-            _device.VolumePercentChanged -= Device_VolumePercentChanged;
+            _device.VolumeChanged -= Device_VolumeChanged;
         }
 
-        private void Device_VolumePercentChanged(object sender, double e)
+        private void Device_VolumeChanged(object sender, double e)
         {
-            VolumePercent = e;
+            Volume = e;
         }
 
         private void Device_StateChanged(object sender, PlaybackState e) => PlaybackState = e;
@@ -106,7 +105,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public DeviceType Type => _device.Type;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<ITrack> PlaybackQueue { get; }
+        public ITrackCollection PlaybackQueue { get; }
 
         /// <inheritdoc />
         public bool IsActive
@@ -116,7 +115,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         }
 
         /// <inheritdoc />
-        public IPlayable PlaybackContext
+        public IPlayable? PlaybackContext
         {
             get => _device.PlaybackContext;
             private set => SetProperty(() => _device.PlaybackContext, value);
@@ -158,10 +157,10 @@ namespace StrixMusic.Sdk.Core.ViewModels
         }
 
         /// <inheritdoc />
-        public double VolumePercent
+        public double Volume
         {
-            get => _device.VolumePercent;
-            private set => SetProperty(() => _device.VolumePercent, value);
+            get => _device.Volume;
+            private set => SetProperty(() => _device.Volume, value);
         }
 
         /// <inheritdoc />
@@ -172,10 +171,10 @@ namespace StrixMusic.Sdk.Core.ViewModels
         }
 
         /// <inheritdoc />
-        public bool IsShuffleStateChangedSupported => _device.IsShuffleStateChangedSupported;
+        public bool IsToggleShuffleAsyncSupported => _device.IsToggleShuffleAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsRepeatStateChangedSupported => _device.IsRepeatStateChangedSupported;
+        public bool IsToggleRepeatAsyncSupported => _device.IsToggleRepeatAsyncSupported;
 
         /// <inheritdoc />
         public bool IsChangeVolumeAsyncSupported => _device.IsChangeVolumeAsyncSupported;
@@ -255,11 +254,11 @@ namespace StrixMusic.Sdk.Core.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<double> VolumePercentChanged
+        public event EventHandler<double> VolumeChanged
         {
-            add => _device.VolumePercentChanged += value;
+            add => _device.VolumeChanged += value;
 
-            remove => _device.VolumePercentChanged -= value;
+            remove => _device.VolumeChanged -= value;
         }
 
         /// <inheritdoc />
@@ -289,7 +288,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PauseAsync()
+        public void PauseAsync()
         {
             return _device.PauseAsync();
         }

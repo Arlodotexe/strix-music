@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Core.Data
 {
@@ -28,7 +29,7 @@ namespace StrixMusic.Sdk.Core.Data
         /// </summary>
         string? Description { get; }
 
-        /// <inheritdoc cref="Data.PlaybackState"/>
+        /// <inheritdoc cref="MediaPlayback.PlaybackState"/>
         PlaybackState PlaybackState { get; }
 
         /// <summary>

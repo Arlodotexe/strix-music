@@ -6,6 +6,7 @@ using OwlCore.AbstractUI;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Utils;
 using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -14,6 +15,15 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// </summary>
     public class MusicBrainzCoreConfig : ICoreConfig
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MusicBrainzCoreConfig"/> class.
+        /// </summary>
+        public MusicBrainzCoreConfig(ICore sourceCore)
+        {
+            SourceCore = sourceCore;
+            Services = new ServiceCollection().BuildServiceProvider();
+        }
+
         /// <inheritdoc />
         public ICore SourceCore { get; }
 
@@ -31,18 +41,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }),
         };
 
-
         /// <inheritdoc/>
         public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/MusicBrainz/logo.svg");
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MusicBrainzCoreConfig"/> class.
-        /// </summary>
-        public MusicBrainzCoreConfig(ICore sourceCore)
-        {
-            SourceCore = sourceCore;
-            Services = new ServiceCollection().BuildServiceProvider();
-        }
+        /// <inheritdoc />
+        public MediaPlayerType PreferredPlayerType => MediaPlayerType.None;
 
         /// <summary>
         /// Configures services for this instance of the core.

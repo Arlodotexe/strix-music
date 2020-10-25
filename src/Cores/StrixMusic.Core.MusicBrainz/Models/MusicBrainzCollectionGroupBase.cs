@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {

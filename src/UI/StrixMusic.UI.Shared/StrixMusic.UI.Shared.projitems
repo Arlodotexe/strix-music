@@ -26,9 +26,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml.cs">
       <DependentUpon>AppLoadingView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)ShellLoader.xaml.cs">
-      <DependentUpon>ShellLoader.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Services\AudioPlayerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SharedFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SuperShell.xaml.cs">
       <DependentUpon>SuperShell.xaml</DependentUpon>
@@ -43,7 +44,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)ShellLoader.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

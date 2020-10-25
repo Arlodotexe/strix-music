@@ -6,11 +6,12 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Core.ViewModels
 {
     /// <summary>
-    /// A bindable wrapper of the <see cref="IPlayableCollectionGroup"/>.
+    /// An observable wrapper for a <see cref="IPlayableCollectionGroup"/>.
     /// </summary>
     public class PlayableCollectionGroupViewModel : ObservableObject, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel
     {
@@ -84,14 +85,6 @@ namespace StrixMusic.Sdk.Core.ViewModels
             remove => _collectionGroupBase.UrlChanged -= value;
         }
 
-        private void CollectionGroupBase_UrlChanged(object sender, Uri? e) => Url = e;
-
-        private void CollectionGroupBase_NameChanged(object sender, string e) => Name = e;
-
-        private void CollectionGroupBase_DescriptionChanged(object sender, string? e) => Description = e;
-
-        private void CollectionGroupBase_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
-
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
@@ -107,6 +100,14 @@ namespace StrixMusic.Sdk.Core.ViewModels
 
             remove => _collectionGroupBase.DurationChanged -= value;
         }
+
+        private void CollectionGroupBase_UrlChanged(object sender, Uri? e) => Url = e;
+
+        private void CollectionGroupBase_NameChanged(object sender, string e) => Name = e;
+
+        private void CollectionGroupBase_DescriptionChanged(object sender, string? e) => Description = e;
+
+        private void CollectionGroupBase_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
 
         /// <inheritdoc />
         public string Id => _collectionGroupBase.Id;

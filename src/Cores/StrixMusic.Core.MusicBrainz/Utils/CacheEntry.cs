@@ -113,15 +113,21 @@ namespace StrixMusic.Core.MusicBrainz.Utils
 
             var name = GetCacheFileName(path, buffer, size);
 
-            using (var stream = File.OpenWrite(name))
-            using (var writer = new BinaryWriter(stream))
+            try
             {
-                writer.Write(GetUnixTimestamp());
-                writer.Write(buffer);
+                using (var stream = File.OpenWrite(name))
+                using (var writer = new BinaryWriter(stream))
+                {
+                    writer.Write(GetUnixTimestamp());
+                    writer.Write(buffer);
 
-                writer.Flush();
+                    writer.Flush();
 
-                await response.CopyToAsync(writer.BaseStream);
+                    await response.CopyToAsync(writer.BaseStream);
+                }
+            }
+            catch (Exception)
+            {
             }
 
             // Set the position of the response stream back to 0.

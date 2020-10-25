@@ -11,6 +11,7 @@ using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -214,17 +215,25 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             if (releaseArtist != null && releaseArtist.Id != _artist.Id)
             {
-                var totalTrackCountForArtist = await _artistHelpersService.GetTotalTracksCount(Release.Credits[0].Artist);
-                var artist = new MusicBrainzArtist(SourceCore, Release.Credits[0].Artist, totalTrackCountForArtist);
+                var sourceArtist = Release.Credits.FirstOrDefault().Artist;
+
+                if (sourceArtist is null)
+                    yield break;
+
+                var totalTrackCountForArtist = await _artistHelpersService.GetTotalTracksCount(sourceArtist);
+
+                // TODO: ???
+                var artist = new MusicBrainzArtist(SourceCore, sourceArtist, totalTrackCountForArtist);
             }
 
             // Get full list of tracks from all sources
             IEnumerable<Track> recordingList = releaseData.Media.SelectMany(x => x.Tracks);
 
             // limit + offset cannot be greater than the number of items in the list
-            limit = Math.Min(limit, recordingList.Count() - offset);
+            var enumerable = recordingList as Track[] ?? recordingList.ToArray();
+            limit = Math.Min(limit, enumerable.Count() - offset);
 
-            foreach (var recording in recordingList.ToList().GetRange(offset, limit))
+            foreach (var recording in enumerable.ToList().GetRange(offset, limit))
             {
                 var album = new MusicBrainzAlbum(SourceCore, Release, _artist);
                 var track = new MusicBrainzTrack(SourceCore, recording, album, recording.Position);

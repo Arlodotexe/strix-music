@@ -107,7 +107,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task<bool> IsRemovePinSupported(int index) => _core.IsRemovePinSupported(index);
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<object?> GetContextById(string? id) => _core.GetContextById(id);
+        public IAsyncEnumerable<object?> GetContextById(string id) => _core.GetContextById(id);
 
         /// <inheritdoc cref="ICore.CoreStateChanged" />
         public event EventHandler<CoreState>? CoreStateChanged
