@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Uno.Controls
     /// <remarks>
     /// This class temporarily only displays <see cref="AlbumViewModel"/>s.
     /// </remarks>
-    public sealed partial class AlbumCollection : CollectionControl<IAlbum, AlbumItem>
+    public sealed partial class AlbumCollection : CollectionControl<AlbumViewModel, AlbumItem>
     {
         /// <inheritdoc />
         protected override void OnApplyTemplate()

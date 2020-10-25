@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Uno.Controls
     /// <remarks>
     /// This class temporarily only displays <see cref="ArtistViewModel"/>s.
     /// </remarks>
-    public sealed partial class ArtistCollection : CollectionControl<IArtist, ArtistItem>
+    public sealed partial class ArtistCollection : CollectionControl<ArtistViewModel, ArtistItem>
     {
         /// <inheritdoc />
         protected override void OnApplyTemplate()

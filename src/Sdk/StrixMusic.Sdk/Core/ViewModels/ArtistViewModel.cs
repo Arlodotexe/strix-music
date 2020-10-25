@@ -258,6 +258,8 @@ namespace StrixMusic.Sdk.Core.ViewModels
                     Albums.Add(new AlbumViewModel(album));
                 }
             }
+
+            OnPropertyChanged(nameof(TotalAlbumItemsCount));
         }
 
         /// <inheritdoc />

@@ -1,4 +1,7 @@
 ﻿using StrixMusic.Sdk;
+using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Core.ViewModels;
+using StrixMusic.Sdk.Uno.Controls.Events;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -25,6 +28,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         private void ArtistsPageSelected(object sender, RoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, "Artists", true);
+        }
+
+        private void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
+        {
+            e.SelectedItem.PopulateMoreAlbumsCommand.Execute(20);
+            AlbumCollection.DataContext = e.SelectedItem;
         }
 
         private void AlbumsPageSelected(object sender, RoutedEventArgs e)

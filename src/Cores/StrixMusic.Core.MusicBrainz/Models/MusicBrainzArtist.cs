@@ -60,7 +60,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Id => _artist.Id;
 
         /// <inheritdoc/>
-        public int TotalAlbumItemsCount => _artist.Releases.Count;
+        public int TotalAlbumItemsCount => _artist.Releases?.Count ?? 0;
 
         /// <inheritdoc/>
         public int TotalTracksCount { get; }
@@ -189,6 +189,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public async IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
             var releasesList = await _musicBrainzClient.Releases.BrowseAsync("artist", Id, limit, offset);
+
+            
 
             var releases = releasesList.Items;
 
