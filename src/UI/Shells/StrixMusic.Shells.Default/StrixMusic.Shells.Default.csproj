@@ -30,7 +30,7 @@
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="6.1.0-build.191.gc988bdd4ff" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
-    <PackageReference Include="Uno.UI" Version="3.2.0-dev.254" />
+    <PackageReference Include="Uno.UI" Version="3.1.6" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
