@@ -21,7 +21,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public MusicBrainzCoreConfig(ICore sourceCore)
         {
             SourceCore = sourceCore;
-            Services = new ServiceCollection().BuildServiceProvider();
         }
 
         /// <inheritdoc />
@@ -50,10 +49,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <summary>
         /// Configures services for this instance of the core.
         /// </summary>
-        public void ConfigureServices()
+        public void ConfigureServices(IServiceCollection services)
         {
-            IServiceCollection services = new ServiceCollection();
-
             var cacheService = new MusicBrainzCacheService();
 
             var musicBrainzClient = new MusicBrainzClient

@@ -2,10 +2,12 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using OwlCore.Extensions.AsyncExtensions;
+using OwlCore.Helpers;
 using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Core.Merged;
 using StrixMusic.Sdk.Core.ViewModels;
@@ -41,8 +43,10 @@ namespace StrixMusic.Sdk
         /// Initializes and loads the cores given.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitializeCores(IEnumerable<ICore> cores)
+        public async Task InitializeCores((ICore core, IServiceCollection services)[] initData)
         {
+            var cores = initData.Select(x => x.core);
+
             _cores.AddRange(cores);
 
             await Cores.InParallel(x => x.DisposeAsync().AsTask());
@@ -54,12 +58,14 @@ namespace StrixMusic.Sdk
             Users.Clear();
             PlaybackQueue.Clear();
 
-            await _cores.InParallel(async core =>
+            await initData.InParallel(async data =>
             {
+                var (core, services) = data;
+
                 // Registers itself into Cores
                 _ = new CoreViewModel(core);
 
-                await core.InitAsync();
+                await core.InitAsync(services);
 
                 Users.Add(new UserProfileViewModel(core.User));
             });

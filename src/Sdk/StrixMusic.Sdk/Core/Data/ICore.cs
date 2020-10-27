@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Collections;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -62,7 +63,7 @@ namespace StrixMusic.Sdk.Core.Data
         /// Initializes the <see cref="ICore"/> asynchronously.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task InitAsync();
+        public Task InitAsync(IServiceCollection services);
 
         /// <summary>
         /// Given a query, return suggested completed queries.

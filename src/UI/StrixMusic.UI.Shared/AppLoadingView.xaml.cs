@@ -127,7 +127,8 @@ namespace StrixMusic.Shared
             cores.Add(new MusicBrainzCore("testInstance"));
 
             UpdateStatus("Initializing cores");
-            await Task.Run(() => CurrentWindow.MainViewModel.InitializeCores(cores));
+            var initData = cores.Select(x => new ValueTuple<ICore, IServiceCollection>(x, new ServiceCollection())).ToArray();
+            await Task.Run(() => CurrentWindow.MainViewModel.InitializeCores(initData));
 
             UpdateStatus("Setting up media players");
             cores.ForEach(SetupMediaPlayerAsync);

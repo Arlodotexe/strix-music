@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
+using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Collections;
 using StrixMusic.Core.MusicBrainz.Models;
 using StrixMusic.Core.MusicBrainz.Services;
@@ -176,7 +177,7 @@ namespace StrixMusic.Core.MusicBrainz
         }
 
         /// <inheritdoc/>
-        public async Task InitAsync()
+        public async Task InitAsync(IServiceCollection services)
         {
             CoreState = CoreState.Loading;
             CoreStateChanged?.Invoke(this, CoreState);
@@ -184,7 +185,7 @@ namespace StrixMusic.Core.MusicBrainz
             if (!(CoreConfig is MusicBrainzCoreConfig coreConfig))
                 return;
 
-            coreConfig.ConfigureServices();
+            coreConfig.ConfigureServices(services);
 
             _musicBrainzClient = this.GetService<MusicBrainzClient>();
             _artistHelperService = this.GetService<MusicBrainzArtistHelpersService>();

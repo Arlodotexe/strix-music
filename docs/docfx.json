@@ -40,8 +40,6 @@
       "default"
     ],
     "markdownEngineName": "markdig",
-    "noLangKeyword": false,
-    "cleanupCacheHistory": false,
-    "disableGitFeatures": false
+    "noLangKeyword": false
   }
 }

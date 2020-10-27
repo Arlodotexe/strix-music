@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Core.Data;
@@ -92,7 +93,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task<ISearchResults> GetSearchResultsAsync(string query) => _core.GetSearchResultsAsync(query);
 
         /// <inheritdoc cref="ICore.InitAsync" />
-        public Task InitAsync() => _core.InitAsync();
+        public Task InitAsync(IServiceCollection services) => _core.InitAsync(services);
 
         /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
         public async ValueTask DisposeAsync()
