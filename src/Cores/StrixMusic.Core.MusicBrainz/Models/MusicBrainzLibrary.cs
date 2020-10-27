@@ -25,8 +25,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public MusicBrainzLibrary(ICore sourceCore)
             : base(sourceCore)
         {
-            _musicBrainzClient = SourceCore.GetService<MusicBrainzClient>();
-            _artistHelpersService = SourceCore.GetService<MusicBrainzArtistHelpersService>();
+            _musicBrainzClient = SourceCore.GetServiceSafe<MusicBrainzClient>() ?? new MusicBrainzClient();
+            _artistHelpersService = SourceCore.GetServiceSafe<MusicBrainzArtistHelpersService>() ?? new MusicBrainzArtistHelpersService(_musicBrainzClient);
         }
 
         /// <inheritdoc />
