@@ -17,9 +17,8 @@ namespace StrixMusic.Sdk.Core.ViewModels
     public class AlbumViewModel : MergeableObjectViewModel<IAlbum>, IAlbum, ITrackCollectionViewModel
     {
         private readonly IAlbum _album;
-
-        private ArtistViewModel _artist; // TODO: Expose this field from readonly property
         private readonly IPlaybackHandlerService _playbackHandler;
+        private ArtistViewModel _artist; // TODO: Expose this field from readonly property
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumViewModel"/> class.

@@ -79,7 +79,8 @@ namespace StrixMusic.Shells.Default
             if (!containsValue)
             {
                 NavView.SelectedItem = null;
-            } else
+            }
+            else
             {
                 _history.Clear();
             }

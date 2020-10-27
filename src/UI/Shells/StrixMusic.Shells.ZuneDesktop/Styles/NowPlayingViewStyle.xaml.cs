@@ -5,6 +5,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop.Styles
 {
+    /// <summary>
+    /// A <see cref="ResourceDictionary"/> containing the style and template for the <see cref="Sdk.Uno.Controls.NowPlayingView"/> in the ZuneDesktop Shell.
+    /// </summary>
     public sealed partial class NowPlayingViewStyle : ResourceDictionary
     {
         /// <summary>

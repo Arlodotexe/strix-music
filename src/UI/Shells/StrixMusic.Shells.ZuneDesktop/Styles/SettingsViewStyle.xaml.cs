@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk.Services.Navigation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml;
 
 namespace StrixMusic.Shells.ZuneDesktop.Styles
 {
+    /// <summary>
+    /// A <see cref="ResourceDictionary"/> containing the style and template for the <see cref="Sdk.Uno.Controls.SettingsView"/> in the ZuneDesktop Shell.
+    /// </summary>
     public sealed partial class SettingsViewStyle : ResourceDictionary
     {
         /// <summary>

@@ -86,7 +86,6 @@ namespace OwlCore.AbstractStorage
             return Task.CompletedTask;
         }
 
-
         /// <inheritdoc/>
         public async Task<bool> FileExistsAsync(string path)
         {

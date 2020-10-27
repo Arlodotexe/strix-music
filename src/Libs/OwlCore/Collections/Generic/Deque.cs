@@ -1,5 +1,5 @@
-﻿/// Pulled from MoreCollections
-/// https://github.com/Avid29/MoreCollections
+﻿// Pulled from MoreCollections
+// https://github.com/Avid29/MoreCollections
 
 using System;
 using System.Collections;

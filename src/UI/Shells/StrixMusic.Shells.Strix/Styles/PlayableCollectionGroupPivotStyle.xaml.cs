@@ -8,6 +8,9 @@ using Windows.UI.Xaml;
 
 namespace StrixMusic.Shells.Strix.Styles
 {
+    /// <summary>
+    /// A <see cref="ResourceDictionary"/> containing the style and template for the <see cref="Sdk.Uno.Controls.PlayableCollectionGroupPivot"/> in the Strix Shell.
+    /// </summary>
     public partial class PlayableCollectionGroupPivotStyle : ResourceDictionary
     {
         /// <summary>

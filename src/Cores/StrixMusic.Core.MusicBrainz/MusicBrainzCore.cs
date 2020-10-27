@@ -12,7 +12,6 @@ using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
-
 namespace StrixMusic.Core.MusicBrainz
 {
     /// <summary>
@@ -169,7 +168,7 @@ namespace StrixMusic.Core.MusicBrainz
                 };
 
                 return results;
-            } 
+            }
             else
             {
                 return new MusicBrainzSearchResults(this, query);

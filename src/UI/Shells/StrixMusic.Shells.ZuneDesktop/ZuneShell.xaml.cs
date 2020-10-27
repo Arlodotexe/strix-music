@@ -15,6 +15,9 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace StrixMusic.Shells.ZuneDesktop
 {
+    /// <summary>
+    /// The <see cref="ShellBase"/> implementation for ZuneDesktop.
+    /// </summary>
     public sealed partial class ZuneShell : ShellBase
     {
         private INavigationService<Control>? _navigationService;

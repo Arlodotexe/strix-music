@@ -14,7 +14,6 @@ namespace StrixMusic.Shared
 {
     public sealed partial class SuperShell : UserControl
     {
-
         private bool _loadingShells = true;
 
         /// <summary>

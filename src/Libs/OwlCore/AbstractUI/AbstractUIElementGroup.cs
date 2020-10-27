@@ -18,6 +18,7 @@ namespace OwlCore.AbstractUI
         /// </summary>
         /// <param name="id"></param>
         /// <param name="preferredOrientation"></param>
+        /// <param name="items"></param>
         public AbstractUIElementGroup(string id, PreferredOrientation preferredOrientation, IEnumerable<AbstractUIElement> items)
             : base(id)
         {

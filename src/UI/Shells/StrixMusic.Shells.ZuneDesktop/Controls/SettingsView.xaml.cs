@@ -64,7 +64,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
 
         private void NavigateToCores(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }

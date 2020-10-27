@@ -17,13 +17,15 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             this.DefaultStyleKey = typeof(SearchView);
             _query = query;
-            this.DataContextChanged += SearchView_DataContextChanged;
+
+            // TODO: Load query results after DataContext assigned.
+            //this.DataContextChanged += SearchView_DataContextChanged;
         }
 
-        private async void SearchView_DataContextChanged(Windows.UI.Xaml.DependencyObject sender, Windows.UI.Xaml.DataContextChangedEventArgs args)
-        {
-            //await ViewModel!.GlobalSearchResultsAsync(_query);
-        }
+        //private async void SearchView_DataContextChanged(Windows.UI.Xaml.DependencyObject sender, Windows.UI.Xaml.DataContextChangedEventArgs args)
+        //{
+        //    await ViewModel!.GlobalSearchResultsAsync(_query);
+        //}
 
         /// <summary>
         /// The <see cref="MainViewModel"/> for the app.

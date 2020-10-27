@@ -190,8 +190,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             var releasesList = await _musicBrainzClient.Releases.BrowseAsync("artist", Id, limit, offset);
 
-            
-
             var releases = releasesList.Items;
 
             foreach (var release in releases)
