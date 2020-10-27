@@ -133,9 +133,6 @@ namespace StrixMusic.Shared
             UpdateStatus("Setting up media players");
             cores.ForEach(SetupMediaPlayerAsync);
 
-            UpdateStatus("Simulating lag");
-            await Task.Delay(2000);
-
             UpdateStatus($"Done loading, navigating to {nameof(MainPage)}");
             CurrentWindow.NavigationService?.NavigateTo(typeof(MainPage));
         }
