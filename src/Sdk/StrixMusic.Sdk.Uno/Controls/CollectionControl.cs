@@ -38,14 +38,6 @@ namespace StrixMusic.Sdk.Uno.Controls
             }
         }
 
-        private void CollectionControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Find and set Selector
-            PART_Selector = VisualTreeHelpers.GetDataTemplateChild<Selector>(this, nameof(PART_Selector));
-
-            AttachHandlers();
-        }
-
         private void DetachHandlers()
         {
             Loaded -= CollectionControl_Loaded;
@@ -54,6 +46,14 @@ namespace StrixMusic.Sdk.Uno.Controls
             {
                 PART_Selector.SelectionChanged -= SelectedItemChanged;
             }
+        }
+
+        private void CollectionControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Find and set Selector
+            PART_Selector = VisualTreeHelpers.GetDataTemplateChild<Selector>(this, nameof(PART_Selector));
+
+            AttachHandlers();
         }
 
         private void CollectionControl_Unloaded(object sender, RoutedEventArgs e)

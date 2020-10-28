@@ -14,5 +14,10 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             this.DefaultStyleKey = typeof(NowPlayingBar);
         }
+
+        /// <summary>
+        /// The ViewModel for this page item
+        /// </summary>
+        public MainViewModel ViewModel => (DataContext as MainViewModel)!;
     }
 }
