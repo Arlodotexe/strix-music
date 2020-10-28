@@ -47,11 +47,11 @@ namespace StrixMusic.Sdk.Uno.Helpers
         /// <remarks>
         /// https://stackoverflow.com/questions/34396002/how-to-get-element-in-code-behind-from-datatemplate
         /// </remarks>
-        public static T GetDataTemplateChild<T>(DependencyObject depObj, string childName) where T : FrameworkElement
+        public static T GetDataTemplateChild<T>(DependencyObject depObj, string? childName = null) where T : FrameworkElement
         {
             foreach (var item in FindVisualChildren<T>(depObj))
             {
-                if (item.Name == childName)
+                if (childName == null || item.Name == childName)
                 {
                     return item;
                 }

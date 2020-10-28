@@ -1,12 +1,13 @@
 ﻿using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Core.ViewModels;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
     /// <summary>
-    /// A Templated <see cref="Control"/> for displaying any Object containing a list of <see cref="TrackViewModel"/>.
+    /// A Templated <see cref="Control"/> for displaying an <see cref="ITrackCollectionViewModel"/>.
     /// </summary>
     public sealed partial class TrackCollection : CollectionControl<TrackViewModel, TrackItem>
     {
@@ -18,6 +19,8 @@ namespace StrixMusic.Sdk.Uno.Controls
             DefaultStyleKey = typeof(TrackCollection);
         }
 
+        public ITrackCollectionViewModel? ViewModel => (DataContext as ITrackCollectionViewModel);
+
         /// <inheritdoc />
         protected override void OnApplyTemplate()
         {
@@ -28,6 +31,12 @@ namespace StrixMusic.Sdk.Uno.Controls
             base.OnApplyTemplate();
 
             AttachHandlers();
+        }
+
+        protected override async Task LoadMore()
+        {
+            if (!ViewModel!.PopulateMoreTracksCommand!.IsRunning)
+                await ViewModel!.PopulateMoreTracksCommand!.ExecuteAsync(25);
         }
 
         private void AttachHandlers()

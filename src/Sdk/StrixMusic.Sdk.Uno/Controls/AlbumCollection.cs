@@ -2,6 +2,7 @@
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.Core.ViewModels;
 using StrixMusic.Sdk.Core.Data;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -13,6 +14,16 @@ namespace StrixMusic.Sdk.Uno.Controls
     /// </remarks>
     public sealed partial class AlbumCollection : CollectionControl<AlbumViewModel, AlbumItem>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlbumCollection"/> class.
+        /// </summary>
+        public AlbumCollection()
+        {
+            this.DefaultStyleKey = typeof(ArtistCollection);
+        }
+
+        public IAlbumCollectionViewModel? ViewModel => (DataContext as IAlbumCollectionViewModel);
+
         /// <inheritdoc />
         protected override void OnApplyTemplate()
         {
@@ -23,6 +34,12 @@ namespace StrixMusic.Sdk.Uno.Controls
             base.OnApplyTemplate();
 
             AttachHandlers();
+        }
+
+        protected override async Task LoadMore()
+        {
+            if (!ViewModel!.PopulateMoreAlbumsCommand!.IsRunning)
+                await ViewModel!.PopulateMoreAlbumsCommand!.ExecuteAsync(25);
         }
 
         private void AttachHandlers()
