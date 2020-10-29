@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using Windows.UI.Xaml;
 using Uno.Extensions.Specialized;
+using Windows.UI.Xaml;
 
 namespace StrixMusic.Sdk.Uno.Converters
 {

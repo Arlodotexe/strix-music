@@ -1,6 +1,6 @@
-﻿using System;
+﻿using StrixMusic.Sdk.Uno.Assembly.Enums;
+using System;
 using Windows.Foundation;
-using StrixMusic.Sdk.Uno.Assembly.Enums;
 
 namespace StrixMusic.Sdk.Uno.Assembly
 {

@@ -19,7 +19,10 @@ namespace StrixMusic.Sdk.Uno.Controls
             DefaultStyleKey = typeof(TrackCollection);
         }
 
-        public ITrackCollectionViewModel? ViewModel => (DataContext as ITrackCollectionViewModel);
+        /// <summary>
+        /// The <see cref="ITrackCollectionViewModel"/> for the control.
+        /// </summary>
+        public ITrackCollectionViewModel ViewModel => (DataContext as ITrackCollectionViewModel)!;
 
         /// <inheritdoc />
         protected override void OnApplyTemplate()
@@ -33,10 +36,11 @@ namespace StrixMusic.Sdk.Uno.Controls
             AttachHandlers();
         }
 
+        /// <inheritdoc/>
         protected override async Task LoadMore()
         {
-            if (!ViewModel!.PopulateMoreTracksCommand!.IsRunning)
-                await ViewModel!.PopulateMoreTracksCommand!.ExecuteAsync(25);
+            if (!ViewModel.PopulateMoreTracksCommand.IsRunning)
+                await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(25);
         }
 
         private void AttachHandlers()

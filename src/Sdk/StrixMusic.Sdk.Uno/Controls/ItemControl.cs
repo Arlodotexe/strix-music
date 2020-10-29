@@ -38,7 +38,8 @@ namespace StrixMusic.Sdk.Uno.Controls
             if (selected)
             {
                 VisualStateManager.GoToState(this, "Selected", true);
-            } else
+            }
+            else
             {
                 VisualStateManager.GoToState(this, "Unselected", true);
             }

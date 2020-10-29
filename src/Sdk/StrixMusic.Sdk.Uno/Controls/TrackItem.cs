@@ -1,5 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Core.ViewModels;
+﻿using StrixMusic.Sdk.Core.ViewModels;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -16,6 +16,9 @@ namespace StrixMusic.Sdk.Uno.Controls
             this.DefaultStyleKey = typeof(TrackItem);
         }
 
+        /// <summary>
+        /// The <see cref="TrackViewModel"/> for the control.
+        /// </summary>
         public TrackViewModel ViewModel => (DataContext as TrackViewModel)!;
     }
 }

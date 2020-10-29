@@ -15,14 +15,12 @@ namespace StrixMusic.Sdk.Uno.Controls
         where TData : class
         where TItem : ItemControl
     {
-        protected Selector? PART_Selector;
-        protected ScrollViewer? PART_Scroller;
-
         /// <summary>
         /// Fired when the
         /// </summary>
         public event EventHandler<Events.SelectionChangedEventArgs<TData>>? SelectionChanged;
 
+        /// <inheritdoc/>
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -30,9 +28,14 @@ namespace StrixMusic.Sdk.Uno.Controls
             Loaded += CollectionControl_Loaded;
         }
 
+        private Selector? PART_Selector { get; set; }
+
+        private ScrollViewer? PART_Scroller { get; set; }
+
         /// <summary>
-        /// Perform incremental loading
+        /// Perform incremental loading.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         protected abstract Task LoadMore();
 
         private void AttachHandlers()
@@ -107,7 +110,7 @@ namespace StrixMusic.Sdk.Uno.Controls
                 }
             });
 
-            /// Get selected item
+            // Get selected item
             // Invoke event
             Events.SelectionChangedEventArgs<TData> selectionChangedEventArgs = new Events.SelectionChangedEventArgs<TData>((PART_Selector!.SelectedItem as TData)!);
             SelectionChanged?.Invoke(this, selectionChangedEventArgs);

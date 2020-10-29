@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1096697A-79A8-4D67-8093-8F322AB244B3}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		StrixStyleRules.ruleset = StrixStyleRules.ruleset
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrixMusic.UWP", "src\Platforms\StrixMusic.UWP\StrixMusic.UWP.csproj", "{89AC1131-5215-4F43-B5AC-B4DFAE1366F6}"

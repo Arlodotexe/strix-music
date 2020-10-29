@@ -1,5 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Core.ViewModels;
+﻿using StrixMusic.Sdk.Core.ViewModels;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -20,9 +20,9 @@ namespace StrixMusic.Sdk.Uno.Controls
         }
 
         /// <summary>
-        /// The ViewModel for this page item
+        /// The <see cref="AlbumViewModel"/> for this control.
         /// </summary>
-        public AlbumViewModel ViewModel => (DataContext as AlbumViewModel) !;
+        public AlbumViewModel ViewModel => (DataContext as AlbumViewModel)!;
 
         private async void LoadTracksAsync()
         {

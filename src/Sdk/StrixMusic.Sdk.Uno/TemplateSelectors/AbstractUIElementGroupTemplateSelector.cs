@@ -1,6 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿using OwlCore.AbstractUI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OwlCore.AbstractUI;
 
 namespace StrixMusic.Sdk.Uno.TemplateSelectors
 {
@@ -46,4 +46,3 @@ namespace StrixMusic.Sdk.Uno.TemplateSelectors
         }
     }
 }
-

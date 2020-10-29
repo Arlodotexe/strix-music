@@ -1,8 +1,7 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Core.ViewModels;
-using StrixMusic.Sdk.Core.Data;
+﻿using StrixMusic.Sdk.Core.ViewModels;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -22,7 +21,10 @@ namespace StrixMusic.Sdk.Uno.Controls
             this.DefaultStyleKey = typeof(ArtistCollection);
         }
 
-        public IAlbumCollectionViewModel? ViewModel => (DataContext as IAlbumCollectionViewModel);
+        /// <summary>
+        /// The <see cref="IAlbumCollectionViewModel"/> for the control.
+        /// </summary>
+        public IAlbumCollectionViewModel ViewModel => (DataContext as IAlbumCollectionViewModel)!;
 
         /// <inheritdoc />
         protected override void OnApplyTemplate()
@@ -36,10 +38,11 @@ namespace StrixMusic.Sdk.Uno.Controls
             AttachHandlers();
         }
 
+        /// <inheritdoc/>
         protected override async Task LoadMore()
         {
-            if (!ViewModel!.PopulateMoreAlbumsCommand!.IsRunning)
-                await ViewModel!.PopulateMoreAlbumsCommand!.ExecuteAsync(25);
+            if (!ViewModel.PopulateMoreAlbumsCommand.IsRunning)
+                await ViewModel.PopulateMoreAlbumsCommand.ExecuteAsync(25);
         }
 
         private void AttachHandlers()
@@ -54,6 +57,7 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void DetachHandlers()
         {
+            Unloaded -= AlbumCollection_Unloaded;
         }
     }
 }

@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 namespace StrixMusic.Sdk.Uno.Helpers
 {
+    /// <summary>
+    /// A <see langword="static"/> class of Visual Tree helper functions.
+    /// </summary>
     public static class VisualTreeHelpers
     {
         /// <summary>
@@ -17,7 +18,8 @@ namespace StrixMusic.Sdk.Uno.Helpers
         /// <remarks>
         /// https://stackoverflow.com/questions/34396002/how-to-get-element-in-code-behind-from-datatemplate
         /// </remarks>
-        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj)
+            where T : DependencyObject
         {
             if (depObj != null)
             {
@@ -47,7 +49,8 @@ namespace StrixMusic.Sdk.Uno.Helpers
         /// <remarks>
         /// https://stackoverflow.com/questions/34396002/how-to-get-element-in-code-behind-from-datatemplate
         /// </remarks>
-        public static T GetDataTemplateChild<T>(DependencyObject depObj, string? childName = null) where T : FrameworkElement
+        public static T GetDataTemplateChild<T>(DependencyObject depObj, string? childName = null)
+            where T : FrameworkElement
         {
             foreach (var item in FindVisualChildren<T>(depObj))
             {
@@ -59,6 +62,5 @@ namespace StrixMusic.Sdk.Uno.Helpers
 
             return null!;
         }
-
     }
 }

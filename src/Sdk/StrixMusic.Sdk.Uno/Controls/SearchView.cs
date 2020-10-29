@@ -1,5 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Core.ViewModels;
+﻿using StrixMusic.Sdk.Core.ViewModels;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -30,6 +30,6 @@ namespace StrixMusic.Sdk.Uno.Controls
         /// <summary>
         /// The <see cref="MainViewModel"/> for the app.
         /// </summary>
-        public MainViewModel? ViewModel => DataContext as MainViewModel;
+        public MainViewModel ViewModel => (DataContext as MainViewModel)!;
     }
 }

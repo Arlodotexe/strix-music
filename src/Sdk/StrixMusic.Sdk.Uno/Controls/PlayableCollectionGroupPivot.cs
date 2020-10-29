@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Core.ViewModels;
 using StrixMusic.Sdk.Services.Settings;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -77,10 +77,19 @@ namespace StrixMusic.Sdk.Uno.Controls
             set => SetValue(AllEmptyContentProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for HideEmptyPivots.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// The backing <see cref="DependencyProperty"/> for the <see cref="HideEmptyPivots"/> property.
+        /// </summary>
         public static readonly DependencyProperty HideEmptyPivotsProperty =
-            DependencyProperty.Register(nameof(HideEmptyPivots), typeof(bool), typeof(PlayableCollectionGroupPivot), new PropertyMetadata(true));
+            DependencyProperty.Register(
+                nameof(HideEmptyPivots),
+                typeof(bool),
+                typeof(PlayableCollectionGroupPivot),
+                new PropertyMetadata(true));
 
+        /// <summary>
+        /// Gets or sets whether or not to hide pivots with no content.
+        /// </summary>
         public bool HideEmptyPivots
         {
             get => (bool)GetValue(HideEmptyPivotsProperty);
@@ -90,30 +99,30 @@ namespace StrixMusic.Sdk.Uno.Controls
         /// <summary>
         /// The primary pivot displayed by this control.
         /// </summary>
-        public Pivot? PART_Pivot { get; set; }
+        public Pivot? PART_Pivot { get; private set; }
 
         /// <summary>
         /// The pivot item that displays an <see cref="ITrackCollectionViewModel" />
         /// </summary>
-        public PivotItem? PART_SongsPivotItem { get; set; }
+        public PivotItem? PART_SongsPivotItem { get; private set; }
 
         /// <summary>
         /// The pivot item that displays an <see cref="IAlbumCollectionViewModel" />
         /// </summary>
-        public PivotItem? PART_AlbumsPivotItem { get; set; }
+        public PivotItem? PART_AlbumsPivotItem { get; private set; }
 
         /// <summary>
         /// The pivot item that displays an <see cref="IArtistCollectionViewModel" />
         /// </summary>
-        public PivotItem? PART_ArtistsPivotItem { get; set; }
+        public PivotItem? PART_ArtistsPivotItem { get; private set; }
 
         /// <summary>
         /// The pivot item that displays an <see cref="IPlaylistCollectionViewModel" />
         /// </summary>
-        public PivotItem? PART_PlaylistsPivotItem { get; set; }
+        public PivotItem? PART_PlaylistsPivotItem { get; private set; }
 
         /// <inheritdoc cref="AllEmptyContent"/>
-        public ContentPresenter? PART_AllEmptyContentPresenter { get; set; }
+        public ContentPresenter? PART_AllEmptyContentPresenter { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupPivot"/> class.

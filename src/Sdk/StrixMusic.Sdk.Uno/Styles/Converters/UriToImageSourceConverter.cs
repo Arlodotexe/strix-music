@@ -1,8 +1,8 @@
-﻿using System;
+﻿using StrixMusic.Sdk.Core.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml.Media.Imaging;
-using StrixMusic.Sdk.Core.Data;
 
 namespace StrixMusic.Sdk.Uno.Converters
 {
