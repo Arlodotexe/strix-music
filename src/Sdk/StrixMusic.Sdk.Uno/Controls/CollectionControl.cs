@@ -89,8 +89,23 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void SelectedItemChanged(object sender, SelectionChangedEventArgs e)
         {
-            e.AddedItems.ForEach(x => GetItemFromData(x).Selected = true);
-            e.RemovedItems.ForEach(x => GetItemFromData(x).Selected = false);
+            e.AddedItems.ForEach(x =>
+            {
+                TItem? container = GetItemFromData(x);
+                if (container != null)
+                {
+                    container.Selected = true;
+                }
+            });
+
+            e.RemovedItems.ForEach(x =>
+            {
+                TItem? container = GetItemFromData(x);
+                if (container != null)
+                {
+                    container.Selected = false;
+                }
+            });
 
             /// Get selected item
             // Invoke event
@@ -98,10 +113,9 @@ namespace StrixMusic.Sdk.Uno.Controls
             SelectionChanged?.Invoke(this, selectionChangedEventArgs);
         }
 
-        private TItem GetItemFromData(object data)
+        private TItem? GetItemFromData(object data)
         {
             return VisualTreeHelpers.FindVisualChildren<TItem>(PART_Selector!.ContainerFromItem(data)).FirstOrDefault()!;
         }
-
     }
 }
