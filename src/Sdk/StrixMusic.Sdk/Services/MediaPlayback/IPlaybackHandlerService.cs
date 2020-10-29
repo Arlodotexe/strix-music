@@ -30,6 +30,19 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         IReadOnlyCollection<IMediaSourceConfig> PreviousItems { get; }
 
         /// <summary>
+        /// The currently playing item.
+        /// </summary>
+        IMediaSourceConfig? CurrentItem { get; }
+
+        /// <summary>
+        /// True if the player is using a shuffled track list.
+        /// </summary>
+        bool ShuffleState { get; }
+
+        /// <inheritdoc cref="Sdk.MediaPlayback.RepeatState"/>
+        RepeatState RepeatState { get; }
+
+        /// <summary>
         /// Plays a specific media from <see cref="NextItems"/>.
         /// </summary>
         /// <param name="queueIndex">The index of an item in <see cref="NextItems"/>.</param>
@@ -94,12 +107,24 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <summary>
         /// Toggles shuffle on or off.
         /// </summary>
-        void ToggleShuffleAsync();
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ToggleShuffleAsync();
 
         /// <summary>
         /// Asks the device to toggle to the next repeat state.
         /// </summary>
-        void ToggleRepeatAsync(RepeatState repeatState);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ToggleRepeatAsync();
+
+        /// <summary>
+        /// Fires when <see cref="ShuffleState"/> changes.
+        /// </summary>
+        event EventHandler<bool> ShuffleStateChanged;
+
+        /// <summary>
+        /// Fires when <see cref="RepeatState"/> changes.
+        /// </summary>
+        event EventHandler<RepeatState> RepeatStateChanged;
 
         /// <summary>
         /// Fires when the <see cref="NextItems"/> are updated.
@@ -110,5 +135,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// Fires when the <see cref="PreviousItems"/> are updated.
         /// </summary>
         event EventHandler<CollectionChangedEventArgs<IMediaSourceConfig>>? PreviousItemsChanged;
+
+        /// <summary>
+        /// Fires when the <see cref="CurrentItem"/> is changed.
+        /// </summary>
+        event EventHandler<IMediaSourceConfig>? CurrentItemChanged;
     }
 }

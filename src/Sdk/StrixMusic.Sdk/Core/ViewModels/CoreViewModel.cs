@@ -30,7 +30,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
 
             MainViewModel.Singleton?.Cores.Add(this);
 
-            Devices = new SynchronizedObservableCollection<IDevice>(_core.Devices.Select(x => new DeviceViewModel(x)));
+            Devices = new SynchronizedObservableCollection<ICoreDevice>(_core.Devices.Select(x => new DeviceViewModel(x)));
             Library = new LibraryViewModel(_core.Library);
             RecentlyPlayed = new RecentlyPlayedViewModel(_core.RecentlyPlayed);
             Pins = new SynchronizedObservableCollection<IPlayable>(_core.Pins);
@@ -72,7 +72,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IDevice> Devices { get; }
+        public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
 
         /// <inheritdoc cref="ICore.Library" />
         public ILibrary Library { get; }

@@ -6,15 +6,15 @@ using StrixMusic.Sdk.MediaPlayback;
 namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <inheritdoc />
-    public class MusicBrainzDevice : IDevice
+    public class MusicBrainzCoreDevice : ICoreDevice
     {
         /// <summary>
-        /// Creates a <see cref="MusicBrainzDevice"/> with the core instance.
+        /// Creates a <see cref="MusicBrainzCoreDevice"/> with the core instance.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
         /// <param name="name">Name of the device</param>
         /// <param name="isActive">State of the device.</param>
-        public MusicBrainzDevice(ICore sourceCore, string name, bool isActive)
+        public MusicBrainzCoreDevice(ICore sourceCore, string name, bool isActive)
         {
             SourceCore = sourceCore;
             Name = name;
@@ -26,7 +26,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             PositionChanged?.Invoke(this, Position);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ICoreMember.SourceCore" />
         public ICore SourceCore { get; }
 
         /// <inheritdoc />

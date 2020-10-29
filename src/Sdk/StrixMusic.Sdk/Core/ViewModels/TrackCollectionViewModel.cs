@@ -11,17 +11,19 @@ namespace StrixMusic.Sdk.Core.ViewModels
     /// <summary>
     /// A wrapper for <see cref="ITrackCollection"/> that contains props and methods for a ViewModel.
     /// </summary>
-    public class TrackCollectionViewModel : ObservableObject, ITrackCollectionViewModel
+    public class TrackCollectionViewModel : ObservableObject, ITrackCollectionBaseViewModel
     {
-        private readonly ITrackCollection _collection;
+        private readonly ITrackCollectionBase _collection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ITrackCollectionViewModel"/> class.
         /// </summary>
         /// <param name="collection">The base <see cref="ITrackCollection"/> containing properties about this class.</param>
-        public TrackCollectionViewModel(ITrackCollection collection)
+        public TrackCollectionViewModel(ITrackCollectionBase collection)
         {
             _collection = collection;
+
+            SourceCore = collection?.SourceCore != null ? MainViewModel.GetLoadedCore(collection.SourceCore) : null;
 
             Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
 
@@ -44,7 +46,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
 
         /// <inheritdoc />
-        public ICore SourceCore => _collection.SourceCore;
+        public ICore? SourceCore { get; }
 
         /// <inheritdoc />
         public int TotalTracksCount => _collection.TotalTracksCount;

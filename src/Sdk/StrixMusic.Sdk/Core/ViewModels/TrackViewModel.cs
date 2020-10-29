@@ -14,7 +14,6 @@ namespace StrixMusic.Sdk.Core.ViewModels
     /// </summary>
     public class TrackViewModel : MergeableObjectViewModel<ITrack>, ITrack, IArtistCollectionViewModel
     {
-        private readonly ITrack _track;
         private IAlbum? _album;
 
         /// <summary>
@@ -23,16 +22,16 @@ namespace StrixMusic.Sdk.Core.ViewModels
         /// <param name="track">The <see cref="ITrack"/> to wrap.</param>
         public TrackViewModel(ITrack track)
         {
-            _track = track;
+            Model = track;
 
-            if (_track.Album != null)
-                Album = new AlbumViewModel(_track.Album);
+            if (Model.Album != null)
+                Album = new AlbumViewModel(Model.Album);
 
-            if (_track.RelatedItems != null)
-                RelatedItems = new PlayableCollectionGroupViewModel(_track.RelatedItems);
+            if (Model.RelatedItems != null)
+                RelatedItems = new PlayableCollectionGroupViewModel(Model.RelatedItems);
 
             Artists = new SynchronizedObservableCollection<IArtistCollectionItem>();
-            SourceCore = MainViewModel.GetLoadedCore(_track.SourceCore);
+            SourceCore = MainViewModel.GetLoadedCore(Model.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -46,108 +45,108 @@ namespace StrixMusic.Sdk.Core.ViewModels
 
         private void AttachEvents()
         {
-            _track.AlbumChanged += Track_AlbumChanged;
-            _track.DescriptionChanged += Track_DescriptionChanged;
-            _track.IsExplicitChanged += Track_IsExplicitChanged;
-            _track.LanguageChanged += Track_LanguageChanged;
-            _track.LyricsChanged += Track_LyricsChanged;
-            _track.NameChanged += Track_NameChanged;
-            _track.PlaybackStateChanged += Track_PlaybackStateChanged;
-            _track.TrackNumberChanged += Track_TrackNumberChanged;
-            _track.UrlChanged += Track_UrlChanged;
+            Model.AlbumChanged += Track_AlbumChanged;
+            Model.DescriptionChanged += Track_DescriptionChanged;
+            Model.IsExplicitChanged += Track_IsExplicitChanged;
+            Model.LanguageChanged += Track_LanguageChanged;
+            Model.LyricsChanged += Track_LyricsChanged;
+            Model.NameChanged += Track_NameChanged;
+            Model.PlaybackStateChanged += Track_PlaybackStateChanged;
+            Model.TrackNumberChanged += Track_TrackNumberChanged;
+            Model.UrlChanged += Track_UrlChanged;
         }
 
         private void DetachEvents()
         {
-            _track.AlbumChanged -= Track_AlbumChanged;
-            _track.DescriptionChanged -= Track_DescriptionChanged;
-            _track.IsExplicitChanged -= Track_IsExplicitChanged;
-            _track.LanguageChanged -= Track_LanguageChanged;
-            _track.LyricsChanged -= Track_LyricsChanged;
-            _track.NameChanged -= Track_NameChanged;
-            _track.PlaybackStateChanged -= Track_PlaybackStateChanged;
-            _track.TrackNumberChanged -= Track_TrackNumberChanged;
-            _track.UrlChanged -= Track_UrlChanged;
+            Model.AlbumChanged -= Track_AlbumChanged;
+            Model.DescriptionChanged -= Track_DescriptionChanged;
+            Model.IsExplicitChanged -= Track_IsExplicitChanged;
+            Model.LanguageChanged -= Track_LanguageChanged;
+            Model.LyricsChanged -= Track_LyricsChanged;
+            Model.NameChanged -= Track_NameChanged;
+            Model.PlaybackStateChanged -= Track_PlaybackStateChanged;
+            Model.TrackNumberChanged -= Track_TrackNumberChanged;
+            Model.UrlChanged -= Track_UrlChanged;
         }
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
-            add => _track.PlaybackStateChanged += value;
+            add => Model.PlaybackStateChanged += value;
 
-            remove => _track.PlaybackStateChanged -= value;
+            remove => Model.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<IAlbum?> AlbumChanged
         {
-            add => _track.AlbumChanged += value;
+            add => Model.AlbumChanged += value;
 
-            remove => _track.AlbumChanged -= value;
+            remove => Model.AlbumChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int?> TrackNumberChanged
         {
-            add => _track.TrackNumberChanged += value;
+            add => Model.TrackNumberChanged += value;
 
-            remove => _track.TrackNumberChanged -= value;
+            remove => Model.TrackNumberChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<CultureInfo?> LanguageChanged
         {
-            add => _track.LanguageChanged += value;
+            add => Model.LanguageChanged += value;
 
-            remove => _track.LanguageChanged -= value;
+            remove => Model.LanguageChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<ILyrics?> LyricsChanged
         {
-            add => _track.LyricsChanged += value;
+            add => Model.LyricsChanged += value;
 
-            remove => _track.LyricsChanged -= value;
+            remove => Model.LyricsChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool> IsExplicitChanged
         {
-            add => _track.IsExplicitChanged += value;
+            add => Model.IsExplicitChanged += value;
 
-            remove => _track.IsExplicitChanged -= value;
+            remove => Model.IsExplicitChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string> NameChanged
         {
-            add => _track.NameChanged += value;
+            add => Model.NameChanged += value;
 
-            remove => _track.NameChanged -= value;
+            remove => Model.NameChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string?> DescriptionChanged
         {
-            add => _track.DescriptionChanged += value;
+            add => Model.DescriptionChanged += value;
 
-            remove => _track.DescriptionChanged -= value;
+            remove => Model.DescriptionChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<Uri?> UrlChanged
         {
-            add => _track.UrlChanged += value;
+            add => Model.UrlChanged += value;
 
-            remove => _track.UrlChanged -= value;
+            remove => Model.UrlChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged
         {
-            add => _track.DurationChanged += value;
+            add => Model.DurationChanged += value;
 
-            remove => _track.DurationChanged -= value;
+            remove => Model.DurationChanged -= value;
         }
 
         private void Track_UrlChanged(object sender, Uri? e) => Url = e;
@@ -168,6 +167,11 @@ namespace StrixMusic.Sdk.Core.ViewModels
 
         private void Track_AlbumChanged(object sender, IAlbum? e) => Album = e != null ? new AlbumViewModel(e) : null;
 
+        /// <summary>
+        /// The wrapped model for this <see cref="TrackViewModel"/>.
+        /// </summary>
+        internal ITrack Model { get; }
+
         /// <inheritdoc />
         public ICore SourceCore { get; }
 
@@ -177,38 +181,38 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<string>? Genres => _track.Genres;
+        public SynchronizedObservableCollection<string>? Genres => Model.Genres;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images => _track.Images;
+        public SynchronizedObservableCollection<IImage> Images => Model.Images;
 
         /// <inheritdoc />
-        public TrackType Type => _track.Type;
+        public TrackType Type => Model.Type;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount => _track.TotalArtistItemsCount;
+        public int TotalArtistItemsCount => Model.TotalArtistItemsCount;
 
         /// <inheritdoc />
-        public TimeSpan Duration => _track.Duration;
+        public TimeSpan Duration => Model.Duration;
 
         /// <inheritdoc />
         public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc />
-        public string Id => _track.Id;
+        public string Id => Model.Id;
 
         /// <inheritdoc />
         public string Name
         {
-            get => _track.Name;
-            set => SetProperty(() => _track.Name, value);
+            get => Model.Name;
+            set => SetProperty(() => Model.Name, value);
         }
 
         /// <inheritdoc />
         public Uri? Url
         {
-            get => _track.Url;
-            set => SetProperty(() => _track.Url, value);
+            get => Model.Url;
+            set => SetProperty(() => Model.Url, value);
         }
 
         /// <inheritdoc />
@@ -221,174 +225,174 @@ namespace StrixMusic.Sdk.Core.ViewModels
         /// <inheritdoc />
         public int? TrackNumber
         {
-            get => _track.TrackNumber;
-            set => SetProperty(() => _track.TrackNumber, value);
+            get => Model.TrackNumber;
+            set => SetProperty(() => Model.TrackNumber, value);
         }
 
         /// <inheritdoc/>
-        public int? DiscNumber => _track.DiscNumber;
+        public int? DiscNumber => Model.DiscNumber;
 
         /// <inheritdoc />
         public CultureInfo? Language
         {
-            get => _track.Language;
-            set => SetProperty(() => _track.Language, value);
+            get => Model.Language;
+            set => SetProperty(() => Model.Language, value);
         }
 
         /// <inheritdoc />
         public ILyrics? Lyrics
         {
-            get => _track.Lyrics;
-            set => SetProperty(() => _track.Lyrics, value);
+            get => Model.Lyrics;
+            set => SetProperty(() => Model.Lyrics, value);
         }
 
         /// <inheritdoc />
         public bool IsExplicit
         {
-            get => _track.IsExplicit;
-            set => SetProperty(() => _track.IsExplicit, value);
+            get => Model.IsExplicit;
+            set => SetProperty(() => Model.IsExplicit, value);
         }
 
         /// <inheritdoc />
         public string? Description
         {
-            get => _track.Description;
-            set => SetProperty(() => _track.Description, value);
+            get => Model.Description;
+            set => SetProperty(() => Model.Description, value);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
-            get => _track.PlaybackState;
-            set => SetProperty(() => _track.PlaybackState, value);
+            get => Model.PlaybackState;
+            set => SetProperty(() => Model.PlaybackState, value);
         }
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported
         {
-            get => _track.IsPlayAsyncSupported;
-            set => SetProperty(() => _track.IsPlayAsyncSupported, value);
+            get => Model.IsPlayAsyncSupported;
+            set => SetProperty(() => Model.IsPlayAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsPauseAsyncSupported
         {
-            get => _track.IsPauseAsyncSupported;
-            set => SetProperty(() => _track.IsPauseAsyncSupported, value);
+            get => Model.IsPauseAsyncSupported;
+            set => SetProperty(() => Model.IsPauseAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeNameAsyncSupported
         {
-            get => _track.IsChangeNameAsyncSupported;
-            set => SetProperty(() => _track.IsChangeNameAsyncSupported, value);
+            get => Model.IsChangeNameAsyncSupported;
+            set => SetProperty(() => Model.IsChangeNameAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeDescriptionAsyncSupported
         {
-            get => _track.IsChangeDescriptionAsyncSupported;
-            set => SetProperty(() => _track.IsChangeDescriptionAsyncSupported, value);
+            get => Model.IsChangeDescriptionAsyncSupported;
+            set => SetProperty(() => Model.IsChangeDescriptionAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeDurationAsyncSupported
         {
-            get => _track.IsChangeDurationAsyncSupported;
-            set => SetProperty(() => _track.IsChangeDurationAsyncSupported, value);
+            get => Model.IsChangeDurationAsyncSupported;
+            set => SetProperty(() => Model.IsChangeDurationAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeAlbumAsyncSupported
         {
-            get => _track.IsChangeAlbumAsyncSupported;
-            set => SetProperty(() => _track.IsChangeAlbumAsyncSupported, value);
+            get => Model.IsChangeAlbumAsyncSupported;
+            set => SetProperty(() => Model.IsChangeAlbumAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeTrackNumberAsyncSupported
         {
-            get => _track.IsChangeTrackNumberAsyncSupported;
-            set => SetProperty(() => _track.IsChangeTrackNumberAsyncSupported, value);
+            get => Model.IsChangeTrackNumberAsyncSupported;
+            set => SetProperty(() => Model.IsChangeTrackNumberAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeLanguageAsyncSupported
         {
-            get => _track.IsChangeLanguageAsyncSupported;
-            set => SetProperty(() => _track.IsChangeLanguageAsyncSupported, value);
+            get => Model.IsChangeLanguageAsyncSupported;
+            set => SetProperty(() => Model.IsChangeLanguageAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeLyricsAsyncSupported
         {
-            get => _track.IsChangeLyricsAsyncSupported;
-            set => SetProperty(() => _track.IsChangeLyricsAsyncSupported, value);
+            get => Model.IsChangeLyricsAsyncSupported;
+            set => SetProperty(() => Model.IsChangeLyricsAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeIsExplicitAsyncSupported
         {
-            get => _track.IsChangeIsExplicitAsyncSupported;
-            set => SetProperty(() => _track.IsChangeIsExplicitAsyncSupported, value);
+            get => Model.IsChangeIsExplicitAsyncSupported;
+            set => SetProperty(() => Model.IsChangeIsExplicitAsyncSupported, value);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistSupported(int index) => _track.IsAddArtistSupported(index);
+        public Task<bool> IsAddArtistSupported(int index) => Model.IsAddArtistSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreSupported(int index) => _track.IsAddGenreSupported(index);
+        public Task<bool> IsAddGenreSupported(int index) => Model.IsAddGenreSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _track.IsAddImageSupported(index);
+        public Task<bool> IsAddImageSupported(int index) => Model.IsAddImageSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _track.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageSupported(int index) => Model.IsRemoveImageSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index) => _track.IsRemoveGenreSupported(index);
+        public Task<bool> IsRemoveGenreSupported(int index) => Model.IsRemoveGenreSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistSupported(int index) => _track.IsRemoveArtistSupported(index);
+        public Task<bool> IsRemoveArtistSupported(int index) => Model.IsRemoveArtistSupported(index);
 
         /// <inheritdoc />
-        public Task ChangeAlbumAsync(IAlbum? albums) => _track.ChangeAlbumAsync(albums);
+        public Task ChangeAlbumAsync(IAlbum? albums) => Model.ChangeAlbumAsync(albums);
 
         /// <inheritdoc />
-        public Task ChangeTrackNumberAsync(int? trackNumber) => _track.ChangeTrackNumberAsync(trackNumber);
+        public Task ChangeTrackNumberAsync(int? trackNumber) => Model.ChangeTrackNumberAsync(trackNumber);
 
         /// <inheritdoc />
-        public Task ChangeLanguageAsync(CultureInfo language) => _track.ChangeLanguageAsync(language);
+        public Task ChangeLanguageAsync(CultureInfo language) => Model.ChangeLanguageAsync(language);
 
         /// <inheritdoc />
-        public Task ChangeLyricsAsync(ILyrics? lyrics) => _track.ChangeLyricsAsync(lyrics);
+        public Task ChangeLyricsAsync(ILyrics? lyrics) => Model.ChangeLyricsAsync(lyrics);
 
         /// <inheritdoc />
-        public Task ChangeIsExplicitAsync(bool isExplicit) => _track.ChangeIsExplicitAsync(isExplicit);
+        public Task ChangeIsExplicitAsync(bool isExplicit) => Model.ChangeIsExplicitAsync(isExplicit);
 
         /// <inheritdoc />
-        public Task PauseAsync() => _track.PauseAsync();
+        public Task PauseAsync() => Model.PauseAsync();
 
         /// <inheritdoc />
-        public Task PlayAsync() => _track.PlayAsync();
+        public Task PlayAsync() => Model.PlayAsync();
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => _track.ChangeNameAsync(name);
+        public Task ChangeNameAsync(string name) => Model.ChangeNameAsync(name);
 
         /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description) => _track.ChangeDescriptionAsync(description);
+        public Task ChangeDescriptionAsync(string? description) => Model.ChangeDescriptionAsync(description);
 
         /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration) => _track.ChangeDurationAsync(duration);
+        public Task ChangeDurationAsync(TimeSpan duration) => Model.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset) => _track.GetArtistsAsync(limit, offset);
+        public IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset) => Model.GetArtistsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _track.AddArtistItemAsync(artist, index);
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => Model.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
-        public Task RemoveArtistAsync(int index) => _track.RemoveArtistAsync(index);
+        public Task RemoveArtistAsync(int index) => Model.RemoveArtistAsync(index);
 
         /// <inheritdoc />
         public Task PopulateMoreArtistsAsync(int limit)

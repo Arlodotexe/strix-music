@@ -37,7 +37,7 @@ namespace StrixMusic.Sdk.Core.Data
         /// <summary>
         /// The available devices.
         /// </summary>
-        public SynchronizedObservableCollection<IDevice> Devices { get; }
+        public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
 
         /// <summary>
         /// Gets the library for the user on this core.

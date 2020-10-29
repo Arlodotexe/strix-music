@@ -11,6 +11,8 @@ using OwlCore.Helpers;
 using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Core.Merged;
 using StrixMusic.Sdk.Core.ViewModels;
+using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 
 namespace StrixMusic.Sdk
 {
@@ -138,6 +140,16 @@ namespace StrixMusic.Sdk
         /// All available devices.
         /// </summary>
         public SynchronizedObservableCollection<DeviceViewModel> Devices { get; }
+
+        /// <summary>
+        /// Gets the active device in <see cref="Devices"/>.
+        /// </summary>
+        public DeviceViewModel? ActiveDevice => Devices.FirstOrDefault(x => x.IsActive);
+
+        /// <summary>
+        /// Gets the active device in <see cref="Devices"/>.
+        /// </summary>
+        public DeviceViewModel? LocalDevice => Devices.FirstOrDefault(x => x.Type == DeviceType.Local && x.Model is StrixDevice);
 
         /// <summary>
         /// The consolidated music library across all cores.

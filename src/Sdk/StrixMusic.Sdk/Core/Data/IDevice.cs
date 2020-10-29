@@ -5,10 +5,15 @@ using StrixMusic.Sdk.MediaPlayback;
 namespace StrixMusic.Sdk.Core.Data
 {
     /// <summary>
-    /// A device that controls playback of an audio player.
+    /// A base class for a <see cref="ICoreDevice"/> that contains nullable properties that are optional in the ViewModel, but not in a core.
     /// </summary>
-    public interface IDevice : IAudioPlayerBase, ICoreMember
+    public interface IDevice : IAudioPlayerBase
     {
+        /// <summary>
+        /// The source core which created the parent.
+        /// </summary>
+        public ICore? SourceCore { get; }
+
         /// <summary>
         /// A unique identifier for the player.
         /// </summary>
@@ -27,7 +32,7 @@ namespace StrixMusic.Sdk.Core.Data
         /// <summary>
         /// Tracks that have been queued to play next after the current track. Once this queue is exhausted, the next track in the <see cref="PlaybackContext"/> will play.
         /// </summary>
-        public ITrackCollection? PlaybackQueue { get; }
+        public ITrackCollectionBase PlaybackQueue { get; }
 
         /// <summary>
         /// The context of the currently playing track.
@@ -108,12 +113,6 @@ namespace StrixMusic.Sdk.Core.Data
         Task PreviousAsync();
 
         /// <summary>
-        /// Switches to this device.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task SwitchToAsync();
-
-        /// <summary>
         /// Toggles shuffle on or off.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
@@ -124,6 +123,12 @@ namespace StrixMusic.Sdk.Core.Data
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ToggleRepeatAsync();
+
+        /// <summary>
+        /// Switches to this device.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task SwitchToAsync();
 
         /// <summary>
         /// Fires when <see cref="IsActive"/> changes.

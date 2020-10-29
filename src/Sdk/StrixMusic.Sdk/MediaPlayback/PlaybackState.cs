@@ -21,6 +21,11 @@
         Paused,
 
         /// <summary>
+        /// The item was queued by user to play next.
+        /// </summary>
+        Queued,
+
+        /// <summary>
         /// The audio player is loading.
         /// </summary>
         Loading,

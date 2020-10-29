@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -7,6 +8,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.Core.ViewModels
@@ -260,6 +262,12 @@ namespace StrixMusic.Sdk.Core.ViewModels
         /// <inheritdoc />
         public async Task PlayAsync()
         {
+            if (MainViewModel.Singleton?.ActiveDevice?.Type == DeviceType.Remote)
+            {
+                await _album.PlayAsync();
+                return;
+            }
+
             if (_playbackHandler.PlaybackState == PlaybackState.Paused)
             {
                 await _playbackHandler.ResumeAsync();
@@ -291,12 +299,14 @@ namespace StrixMusic.Sdk.Core.ViewModels
                     _playbackHandler.InsertNext(index, mediaSource);
                 }
 
+                if (MainViewModel.Singleton?.LocalDevice?.Model is StrixDevice device)
+                {
+                    device.SetPlaybackData(_album, Tracks[0].Model);
+                }
+
                 // Play the first thing in the album.
                 await _playbackHandler.PlayFromNext(0);
             }
-
-            // TODO: Check if active device is remote
-            await _album.PlayAsync();
         }
 
         /// <inheritdoc />

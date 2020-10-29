@@ -65,7 +65,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         {
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
 
-            // If the song is over
+            // If the song is not over
             if (_currentPlayerService.CurrentSource.Track.Duration < e)
                 return;
 
@@ -91,10 +91,19 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         }
 
         /// <inheritdoc />
+        public event EventHandler<RepeatState>? RepeatStateChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? ShuffleStateChanged;
+
+        /// <inheritdoc />
         public event EventHandler<CollectionChangedEventArgs<IMediaSourceConfig>>? NextItemsChanged;
 
         /// <inheritdoc />
         public event EventHandler<CollectionChangedEventArgs<IMediaSourceConfig>>? PreviousItemsChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<IMediaSourceConfig>? CurrentItemChanged;
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? PositionChanged;
@@ -113,6 +122,15 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
         /// <inheritdoc />
         public IReadOnlyCollection<IMediaSourceConfig> PreviousItems => _prevItems;
+
+        /// <inheritdoc />
+        public IMediaSourceConfig? CurrentItem { get; private set; }
+
+        /// <inheritdoc />
+        public bool ShuffleState { get; }
+
+        /// <inheritdoc />
+        public RepeatState RepeatState { get; }
 
         /// <inheritdoc />
         public TimeSpan Position => _currentPlayerService?.Position ?? TimeSpan.Zero;
@@ -163,7 +181,11 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore];
             AttachEvents();
 
+            // TODO shift queue, move tracks before the played item into previous
+
             await _currentPlayerService.Play(mediaSource);
+            CurrentItem = mediaSource;
+            CurrentItemChanged?.Invoke(this, mediaSource);
         }
 
         /// <inheritdoc />
@@ -181,7 +203,11 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore];
             AttachEvents();
 
+            // TODO shift queue, move tracks after the played item into next
+
             await _currentPlayerService.Play(mediaSource);
+            CurrentItem = mediaSource;
+            CurrentItemChanged?.Invoke(this, mediaSource);
         }
 
         /// <inheritdoc />
@@ -220,6 +246,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             AttachEvents();
 
             await _currentPlayerService.Play(nextItem);
+            CurrentItem = nextItem;
+            CurrentItemChanged?.Invoke(this, nextItem);
         }
 
         /// <inheritdoc />
@@ -312,7 +340,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         }
 
         /// <inheritdoc />
-        public void ToggleShuffleAsync()
+        public Task ToggleShuffleAsync()
         {
             _shuffleState = !_shuffleState;
 
@@ -331,12 +359,22 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             {
                 _shuffledNextItemsIndices = null;
             }
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void ToggleRepeatAsync(RepeatState repeatState)
+        public Task ToggleRepeatAsync()
         {
-            _repeatState = repeatState;
+            _repeatState = _repeatState switch
+            {
+                RepeatState.None => RepeatState.One,
+                RepeatState.One => RepeatState.All,
+                RepeatState.All => RepeatState.None,
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<RepeatState>(nameof(RepeatState)),
+            };
+
+            return Task.CompletedTask;
         }
     }
 }

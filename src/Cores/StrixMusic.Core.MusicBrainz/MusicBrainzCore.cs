@@ -37,7 +37,7 @@ namespace StrixMusic.Core.MusicBrainz
             // The library created here won't be used by the UI.
             // The UI isn't loaded until InitAsync is called, where we set up the actual library.
             Library = new MusicBrainzLibrary(this);
-            Devices = new SynchronizedObservableCollection<IDevice>();
+            Devices = new SynchronizedObservableCollection<ICoreDevice>();
             RecentlyPlayed = new MusicBrainzRecentlyPlayed(this);
             Discoverables = new MusicBrainzDiscoverables(this);
             User = new MusicBrainzUser(this);
@@ -56,7 +56,7 @@ namespace StrixMusic.Core.MusicBrainz
         public IUser User { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<IDevice> Devices { get; }
+        public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
 
         /// <inheritdoc/>
         public ILibrary Library { get; private set; }
@@ -205,7 +205,7 @@ namespace StrixMusic.Core.MusicBrainz
             CoreState = CoreState.Loaded;
             CoreStateChanged?.Invoke(this, CoreState);
 
-            Devices.Add(new MusicBrainzDevice(this, "TestDevice", true)); // Hardcoded for now.
+            Devices.Add(new MusicBrainzCoreDevice(this, "TestDevice", true)); // Hardcoded for now.
         }
 
         /// <inheritdoc/>
