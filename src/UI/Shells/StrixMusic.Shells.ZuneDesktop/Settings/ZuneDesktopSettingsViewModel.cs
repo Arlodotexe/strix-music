@@ -14,13 +14,13 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
             { "None", new ZuneDesktopBackgroundImage() },
             { "Aurora Borealis", new ZuneDesktopBackgroundImage("Aurora Borealis", Windows.UI.Xaml.Media.AlignmentY.Top) },
             { "Bubbles", new ZuneDesktopBackgroundImage("Bubbles") },
-            { "Cells", new ZuneDesktopBackgroundImage("Cells") },
-            { "Hero", new ZuneDesktopBackgroundImage("Hero", stretch: Windows.UI.Xaml.Media.Stretch.UniformToFill) },
-            { "Meadow", new ZuneDesktopBackgroundImage("Meadow") },
+            { "Cells", new ZuneDesktopBackgroundImage("Cells", Windows.UI.Xaml.Media.AlignmentY.Center) },
+            { "Hero", new ZuneDesktopBackgroundImage("Hero", Windows.UI.Xaml.Media.AlignmentY.Center) },
+            { "Meadow", new ZuneDesktopBackgroundImage("Meadow", stretch: Windows.UI.Xaml.Media.Stretch.None) },
             { "RobotOwl", new ZuneDesktopBackgroundImage("RobotOwl", Windows.UI.Xaml.Media.AlignmentY.Center) },
             { "Shards", new ZuneDesktopBackgroundImage("Shards", Windows.UI.Xaml.Media.AlignmentY.Top) },
-            { "Smooth", new ZuneDesktopBackgroundImage("Smooth", stretch: Windows.UI.Xaml.Media.Stretch.UniformToFill) },
-            { "Wired", new ZuneDesktopBackgroundImage("Wired") },
+            { "Smooth", new ZuneDesktopBackgroundImage("Smooth") },
+            { "Wired", new ZuneDesktopBackgroundImage("Wired", stretch: Windows.UI.Xaml.Media.Stretch.Uniform) },
         };
 
         /// <summary>
