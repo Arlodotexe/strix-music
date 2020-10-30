@@ -7,7 +7,7 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     x:Class="StrixMusic.Sdk.Uno.Styles.SafeImageStyle">
 
-    <DataTemplate x:Key="DefaultSafeImageTemplate" x:DataType="sdkData:IImage">
+    <DataTemplate x:Key="DefaultSafeImageTemplate" x:DataType="sdkData:IImageCollection">
         <Grid>
             <!--Fallback SVG-->
             <Image x:Name="PART_Fallback" Opacity=".3">
@@ -19,7 +19,7 @@
 
             <Rectangle x:Name="PART_ImageRectangle">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Uri)}"/>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images[0])}"/>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
@@ -38,7 +38,7 @@
         </Style.Setters>
     </Style>
 
-    <DataTemplate x:Key="DefaultRoundSafeImageTemplate" x:DataType="sdkData:IImage">
+    <DataTemplate x:Key="DefaultRoundSafeImageTemplate" x:DataType="sdkData:IImageCollection">
         <Grid>
             <!--Fallback SVG-->
             <Image x:Name="PART_Fallback" Opacity=".3">
@@ -50,7 +50,7 @@
 
             <Rectangle x:Name="PART_ImageRectangle" RadiusX="10000" RadiusY="10000">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Uri)}"/>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images[0])}"/>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>

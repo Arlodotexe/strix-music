@@ -55,16 +55,13 @@
                 </Grid.RowDefinitions>
                 <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" HorizontalAlignment="Center"
                            Grid.Row="1" Margin="0,16,0,0" TextTrimming="CharacterEllipsis"/>
-                <Rectangle x:Name="ArtistCover" Width="128" Height="128"
-                           RadiusX="64" RadiusY="64"
+                <defaultcontrols:SafeImage x:Name="ArtistCover" Width="128" Height="128"
+                           Style="{StaticResource DefaultRoundSafeImageStyle}"
                            RenderTransformOrigin=".5,.5">
-                    <Rectangle.Fill>
-                            <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
-                        </Rectangle.Fill>
-                    <Rectangle.RenderTransform>
+                    <defaultcontrols:SafeImage.RenderTransform>
                         <ScaleTransform x:Name="ArtistCoverScale"/>
-                    </Rectangle.RenderTransform>
-                </Rectangle>
+                    </defaultcontrols:SafeImage.RenderTransform>
+                </defaultcontrols:SafeImage>
             </Grid>
         </UserControl>
     </DataTemplate>

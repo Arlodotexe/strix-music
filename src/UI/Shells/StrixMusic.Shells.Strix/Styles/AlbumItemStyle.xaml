@@ -68,8 +68,6 @@
                     <TextBlock Opacity=".5" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <defaultcontrols:SafeImage x:Name="AlbumCover" Width="128" Height="128"
-                                           DataContext="{x:Bind Images[0]}"
-                                           SourceCore="{x:Bind SourceCore}"
                                            RenderTransformOrigin=".5,.5">
                     <defaultcontrols:SafeImage.RenderTransform>
                         <ScaleTransform x:Name="AlbumCoverScale"/>

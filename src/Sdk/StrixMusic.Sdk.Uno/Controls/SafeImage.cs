@@ -1,44 +1,24 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.Uno.Helpers;
-using System.Linq;
+using Uno.Extensions.Specialized;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
     /// <summary>
-    /// An control that displays an image, or a (constant) backup image if there is none.
+    /// An control that displays an image, or a backup image if there is none.
     /// </summary>
+    /// <remarks>
+    /// This control takes an <see cref="IImageCollection"/> and displays only the first, or none if none exist.
+    /// </remarks>
     [TemplatePart(Name = nameof(PART_ImageRectangle), Type = typeof(Rectangle))]
-    [TemplatePart(Name = nameof(PART_Fallback), Type = typeof(Image))]
+    [TemplatePart(Name = nameof(PART_Fallback), Type = typeof(FrameworkElement))]
     public sealed partial class SafeImage : Control
     {
-        /*
-        /// <summary>
-        /// <see cref="DependencyProperty"/> for the <see cref="CornerRadius"/> property.
-        /// </summary>
-        public static readonly DependencyProperty CornerRadiiProperty =
-            DependencyProperty.Register(
-                nameof(CornerRadii),
-                typeof(bool),
-                typeof(SafeImage),
-                new PropertyMetadata(true));
-        */
-
-        /// <summary>
-        /// <see cref="DependencyProperty"/> for the <see cref="SourceCore"/> property.
-        /// </summary>
-        public static readonly DependencyProperty SourceCoreProperty =
-            DependencyProperty.Register(
-                nameof(SourceCore),
-                typeof(ICore),
-                typeof(SafeImage),
-                new PropertyMetadata(null));
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SafeImage"/> class.
         /// </summary>
@@ -56,37 +36,15 @@ namespace StrixMusic.Sdk.Uno.Controls
         }
 
         /// <summary>
-        /// The <see cref="IImage"/> ViewModel of the control.
+        /// The <see cref="IImageCollection"/> ViewModel of the control.
         /// </summary>
-        public IImage? ViewModel => DataContext as IImage;
-
-        /*
-        /// <summary>
-        /// Gets or sets the CornerRadii of the image.
-        /// </summary>
-        public double CornerRadii
-        {
-            get => (double)GetValue(CornerRadiiProperty);
-            set => SetValue(CornerRadiiProperty, value);
-        }
-        */
-
-        /// <summary>
-        /// Gets or sets the CornerRadii of the image.
-        /// </summary>
-        public ICore? SourceCore
-        {
-            get => (ICore)GetValue(SourceCoreProperty);
-            set => SetValue(SourceCoreProperty, value);
-        }
+        public IImageCollection ViewModel => (DataContext as IImageCollection)!;
 
         private Rectangle? PART_ImageRectangle { get; set; }
 
         private ImageBrush? PART_ImageBrush { get; set; }
 
-        private Image? PART_Fallback { get; set; }
-
-        private SvgImageSource? PART_SvgBrush { get; set; }
+        private FrameworkElement? PART_Fallback { get; set; }
 
         private void AttachHandlers()
         {
@@ -108,7 +66,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             // Find Parts
             PART_ImageRectangle = VisualTreeHelpers.GetDataTemplateChild<Rectangle>(this, nameof(PART_ImageRectangle));
-            PART_Fallback = VisualTreeHelpers.GetDataTemplateChild<Image>(this, nameof(PART_Fallback));
+            PART_Fallback = VisualTreeHelpers.GetDataTemplateChild<FrameworkElement>(this, nameof(PART_Fallback));
 
             Brush brush = PART_ImageRectangle!.Fill;
             if (brush is ImageBrush imgBrush)
@@ -120,23 +78,7 @@ namespace StrixMusic.Sdk.Uno.Controls
                 ThrowHelper.ThrowInvalidDataException(string.Format("{0}'s fill must an ImageBrush.", nameof(PART_ImageRectangle)));
             }
 
-            ImageSource source = PART_Fallback!.Source;
-            if (source is SvgImageSource svgBrush)
-            {
-                PART_SvgBrush = svgBrush;
-            }
-            else
-            {
-                ThrowHelper.ThrowInvalidDataException(string.Format("{0}'s source must an SvgImageSource.", nameof(PART_Fallback)));
-            }
-
             Setup();
-
-            if (ViewModel == null)
-            {
-                GoToFallback();
-                return; // No need to attach handlers when null
-            }
 
             AttachHandlers();
         }
@@ -154,11 +96,14 @@ namespace StrixMusic.Sdk.Uno.Controls
         private void Setup()
         {
             PART_Fallback!.Visibility = Visibility.Collapsed;
-            if (SourceCore != null)
-            {
-                PART_SvgBrush!.UriSource = SourceCore!.CoreConfig.LogoSvgUrl;
-            }
             PART_ImageRectangle!.Visibility = Visibility.Visible;
+
+            if (ViewModel == null ||
+                ViewModel.Images == null ||
+                !ViewModel.Images.Any())
+            {
+                GoToFallback();
+            }
         }
 
         private void GoToFallback()
