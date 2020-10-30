@@ -12,12 +12,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Rectangle Width="86" Height="86">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
-                </Rectangle.Fill>
-            </Rectangle>
-
+            <defaultcontrols:SafeImage Width="86" Height="86"/>
             <StackPanel Grid.Row="1" Margin="0,2,0,0">
                 <TextBlock Text="{x:Bind Name}" FontSize="12" TextTrimming="Clip"/>
                 <TextBlock Text="{x:Bind Artist.Name}" FontSize="12" FontWeight="SemiLight" Opacity=".5"/>
