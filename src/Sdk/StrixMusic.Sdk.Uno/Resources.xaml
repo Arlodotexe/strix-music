@@ -15,6 +15,7 @@
         <styles:HomeStyle/>
         <styles:NowPlayingViewStyle/>
         <styles:PlayableCollectionGroupPivotStyle />
+        <styles:SafeImageStyle/>
         <styles:SearchViewStyle/>
         <styles:SettingsViewStyle/>
         <styles:TrackCollectionStyle/>

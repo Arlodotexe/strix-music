@@ -58,6 +58,7 @@
     <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\SafeImageStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SearchViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\TrackCollectionStyle.xaml" />
@@ -85,6 +86,9 @@
     </Compile>
     <Compile Update="Styles\NowPlayingViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\SafeImageStyle.xaml.cs">
+      <DependentUpon>SafeImageStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Styles\SettingsViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>

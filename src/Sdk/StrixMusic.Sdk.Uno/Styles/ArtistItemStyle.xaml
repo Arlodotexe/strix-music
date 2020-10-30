@@ -12,11 +12,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Rectangle Width="128" Height="128" RadiusX="64" RadiusY="64">
-                <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
-                </Rectangle.Fill>
-            </Rectangle>
+            <defaultcontrols:SafeImage Height="128" Width="128" Style="{StaticResource DefaultRoundSafeImageStyle}"/>
             <TextBlock  Grid.Row="1" Text="{x:Bind Name}" FontWeight="SemiBold" Margin="0,20,0,0"
                         HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
         </Grid>

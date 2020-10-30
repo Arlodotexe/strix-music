@@ -94,7 +94,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             e.AddedItems.ForEach(x =>
             {
-                TItem? container = GetItemFromData(x);
+                TItem container = GetItemFromData(x);
                 if (container != null)
                 {
                     container.Selected = true;
@@ -103,7 +103,7 @@ namespace StrixMusic.Sdk.Uno.Controls
 
             e.RemovedItems.ForEach(x =>
             {
-                TItem? container = GetItemFromData(x);
+                TItem container = GetItemFromData(x);
                 if (container != null)
                 {
                     container.Selected = false;
@@ -116,7 +116,7 @@ namespace StrixMusic.Sdk.Uno.Controls
             SelectionChanged?.Invoke(this, selectionChangedEventArgs);
         }
 
-        private TItem? GetItemFromData(object data)
+        private TItem GetItemFromData(object data)
         {
             return VisualTreeHelpers.FindVisualChildren<TItem>(PART_Selector!.ContainerFromItem(data)).FirstOrDefault()!;
         }

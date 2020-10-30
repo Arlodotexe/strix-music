@@ -6,7 +6,7 @@
     xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
     x:Class="StrixMusic.Sdk.Uno.Styles.HomeStyle">
 
-    <DataTemplate x:Key="DefaultHomeTemplate" x:DataType="sdk:MainViewModel">
+    <DataTemplate x:Key="DefaultHomeViewTemplate" x:DataType="sdk:MainViewModel">
         <UserControl>
             <defaultcontrols:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True">
                 <defaultcontrols:PlayableCollectionGroupPivot.AllEmptyContent>
@@ -21,7 +21,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="defaultcontrols:HomeView">
-                        <ContentControl ContentTemplate="{StaticResource DefaultHomeTemplate}"/>
+                        <ContentControl ContentTemplate="{StaticResource DefaultHomeViewTemplate}"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
