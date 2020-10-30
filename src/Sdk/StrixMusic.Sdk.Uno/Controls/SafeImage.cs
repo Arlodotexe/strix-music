@@ -49,6 +49,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         private void AttachHandlers()
         {
             Unloaded += SafeImage_Unloaded;
+            DataContextChanged += SafeImage_DataContextChanged;
 
             Guard.IsNotNull(PART_ImageBrush, nameof(PART_ImageBrush));
             PART_ImageBrush!.ImageFailed += SafeImage_ImageFailed;
@@ -57,6 +58,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         private void DetachHandlers()
         {
             Loaded -= SafeImage_Loaded;
+            DataContextChanged -= SafeImage_DataContextChanged;
 
             Guard.IsNotNull(PART_ImageBrush, nameof(PART_ImageBrush));
             PART_ImageBrush!.ImageFailed -= SafeImage_ImageFailed;
@@ -86,6 +88,11 @@ namespace StrixMusic.Sdk.Uno.Controls
         private void SafeImage_Unloaded(object sender, RoutedEventArgs e)
         {
             DetachHandlers();
+        }
+
+        private void SafeImage_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
+        {
+            Setup();
         }
 
         private void SafeImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
