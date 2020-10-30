@@ -3,58 +3,46 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:LaunchPad.Controls">
 
-    <!--TODO: Make true default instead of StrixStyle default-->
     <Style TargetType="local:ToggleContentButton">
         <Style.Setters>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Width" Value="48"/>
             <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="Background" Value="{StaticResource ToggleButtonBackground}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ToggleButtonBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="local:ToggleContentButton">
                         <Grid Background="Transparent">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal">
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
-                                                <DoubleAnimation.EasingFunction>
-                                                    <CircleEase/>
-                                                </DoubleAnimation.EasingFunction>
-                                            </DoubleAnimation>
-                                            <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2">
-                                                <DoubleAnimation.EasingFunction>
-                                                    <CircleEase EasingMode="EaseOut"/>
-                                                </DoubleAnimation.EasingFunction>
-                                            </DoubleAnimation>
-                                        </Storyboard>
-                                    </VisualState>
+                                    <VisualState x:Name="Normal"/>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.1" Duration="0:0:0.2">
-                                                <DoubleAnimation.EasingFunction>
-                                                    <CircleEase/>
-                                                </DoubleAnimation.EasingFunction>
-                                            </DoubleAnimation>
-                                            <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2">
-                                                <DoubleAnimation.EasingFunction>
-                                                    <CircleEase EasingMode="EaseOut"/>
-                                                </DoubleAnimation.EasingFunction>
-                                            </DoubleAnimation>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBackgroundPointerOver}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBorderBrushPointerOver}" />
+                                            </ObjectAnimationUsingKeyFrames>
                                             <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.2" Duration="0:0:0.2">
-                                                <DoubleAnimation.EasingFunction>
-                                                    <CircleEase EasingMode="EaseOut"/>
-                                                </DoubleAnimation.EasingFunction>
-                                            </DoubleAnimation>
-                                            <DoubleAnimation Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2">
-                                                <DoubleAnimation.EasingFunction>
-                                                    <CircleEase EasingMode="EaseOut"/>
-                                                </DoubleAnimation.EasingFunction>
-                                            </DoubleAnimation>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBackgroundPressed}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBorderBrushPressed}" />
+                                            </ObjectAnimationUsingKeyFrames>
                                             <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
                                         </Storyboard>
                                     </VisualState>
@@ -64,11 +52,14 @@
                                     <VisualState x:Name="Checked">
                                         <VisualState.Storyboard>
                                             <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CircleEase/>
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBackgroundChecked}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBorderBrushChecked}" />
+                                                </ObjectAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState.Storyboard>
                                         <VisualState.Setters>
@@ -79,11 +70,14 @@
                                     <VisualState x:Name="CheckedPointerOver">
                                         <VisualState.Storyboard>
                                             <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.1" Duration="0:0:0.2">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CircleEase/>
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBackgroundCheckedPointerOver}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBorderBrushPointerOver}" />
+                                                </ObjectAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState.Storyboard>
                                         <VisualState.Setters>
@@ -94,11 +88,14 @@
                                     <VisualState x:Name="CheckedPressed">
                                         <VisualState.Storyboard>
                                             <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.1" Duration="0:0:0.2">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CircleEase/>
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBackgroundCheckedPressed}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBorderBrushCheckedPressed}" />
+                                                </ObjectAnimationUsingKeyFrames>
                                                 <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
                                             </Storyboard>
                                         </VisualState.Storyboard>
@@ -113,11 +110,14 @@
                                     <VisualState x:Name="Indeterminate">
                                         <VisualState.Storyboard>
                                             <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CircleEase/>
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBackgroundChecked}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBorderBrushChecked}" />
+                                                </ObjectAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState.Storyboard>
                                         <VisualState.Setters>
@@ -128,11 +128,14 @@
                                     <VisualState x:Name="IndeterminatePointerOver">
                                         <VisualState.Storyboard>
                                             <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.1" Duration="0:0:0.2">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CircleEase/>
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBackgroundCheckedPointerOver}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBorderBrushCheckedPointerOver}" />
+                                                </ObjectAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState.Storyboard>
                                         <VisualState.Setters>
@@ -143,11 +146,14 @@
                                     <VisualState x:Name="IndeterminatePressed">
                                         <VisualState.Storyboard>
                                             <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.1" Duration="0:0:0.2">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CircleEase/>
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBackgroundCheckedPressed}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                    <DiscreteObjectKeyFrame Value="{ThemeResource ToggleButtonBorderBrushCheckedPressed}" />
+                                                </ObjectAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState.Storyboard>
                                         <VisualState.Setters>
@@ -160,41 +166,38 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <Rectangle x:Name="Background" Fill="White" RadiusX="1000" RadiusY="1000"
-                                    Height="{TemplateBinding Width}" Width="{TemplateBinding Width}"/>
-                            <Grid>
+                            <Grid x:Name="MainGrid"
+                                  Background="{TemplateBinding Background}"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                  HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                  VerticalAlignment="{TemplateBinding VerticalAlignment}">
                                 <ContentPresenter x:Name="ContentPresenter"
                                               AutomationProperties.AccessibilityView="Raw"
-                                              BorderBrush="{TemplateBinding BorderBrush}"
-                                              BorderThickness="{TemplateBinding BorderThickness}"
-                                              ContentTemplate="{TemplateBinding ContentTemplate}"
-                                              ContentTransitions="{TemplateBinding ContentTransitions}"
-                                              Content="{TemplateBinding Content}"
-                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              Padding="{TemplateBinding Padding}"
-                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                  Content="{TemplateBinding Content}"
+                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Padding="{TemplateBinding Padding}"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                                 <ContentPresenter x:Name="CheckedContentPresenter"
-                                              AutomationProperties.AccessibilityView="Raw"
-                                              BorderBrush="{TemplateBinding BorderBrush}"
-                                              BorderThickness="{TemplateBinding BorderThickness}"
-                                              ContentTemplate="{TemplateBinding ContentTemplate}"
-                                              ContentTransitions="{TemplateBinding ContentTransitions}"
-                                              Content="{TemplateBinding CheckedContent}"
-                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              Padding="{TemplateBinding Padding}"
-                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                              Visibility="Collapsed"/>
+                                                  AutomationProperties.AccessibilityView="Raw"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                  Content="{TemplateBinding CheckedContent}"
+                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Padding="{TemplateBinding Padding}"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Visibility="Collapsed"/>
                                 <ContentPresenter x:Name="IndeterminateContentPresenter"
-                                              AutomationProperties.AccessibilityView="Raw"
-                                              BorderBrush="{TemplateBinding BorderBrush}"
-                                              BorderThickness="{TemplateBinding BorderThickness}"
-                                              ContentTemplate="{TemplateBinding ContentTemplate}"
-                                              ContentTransitions="{TemplateBinding ContentTransitions}"
-                                              Content="{TemplateBinding IndeterminateContent}"
-                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              Padding="{TemplateBinding Padding}"
-                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                              Visibility="Collapsed"/>
+                                                  AutomationProperties.AccessibilityView="Raw"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                  Content="{TemplateBinding IndeterminateContent}"
+                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Padding="{TemplateBinding Padding}"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Visibility="Collapsed"/>
                             </Grid>
                         </Grid>
                     </ControlTemplate>

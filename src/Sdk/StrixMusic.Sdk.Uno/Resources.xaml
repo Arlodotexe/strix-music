@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    xmlns:styles="using:StrixMusic.Sdk.Uno.Styles">
+    xmlns:styles="using:StrixMusic.Sdk.Uno.Styles"
+    xmlns:launchpad="using:LaunchPad.Controls">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
         <styles:AlbumCollectionStyle/>
@@ -23,6 +24,12 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="MediaButton" TargetType="Button">
+        <Setter Property="Margin" Value="4,0"/>
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="MediaToggleContentButton" TargetType="launchpad:ToggleContentButton">
         <Setter Property="Margin" Value="4,0"/>
         <Setter Property="Padding" Value="12"/>
         <Setter Property="Background" Value="Transparent"/>
