@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         where TItem : ItemControl
     {
         /// <summary>
-        /// Fired when the
+        /// Fired when the selected item changes
         /// </summary>
         public event EventHandler<Events.SelectionChangedEventArgs<TData>>? SelectionChanged;
 

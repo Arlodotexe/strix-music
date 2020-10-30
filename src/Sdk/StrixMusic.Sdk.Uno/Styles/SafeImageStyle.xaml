@@ -7,23 +7,21 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     x:Class="StrixMusic.Sdk.Uno.Styles.SafeImageStyle">
 
-    <DataTemplate x:Key="DefaultSafeImageTemplate" x:DataType="sdkData:IImageCollection">
+    <DataTemplate x:Key="DefaultSafeImageTemplate" x:DataType="sdkData:IImage">
         <Grid>
             <!--Fallback SVG-->
-            <Image x:Name="FallbackImage" x:Load="{x:Bind converters:CollectionNotAnyToBoolConverter.Convert(Images)}"
-                   Opacity=".1">
+            <Image x:Name="PART_Fallback" Opacity=".3">
                 <Image.Source>
                     <SvgImageSource UriSource="{x:Bind SourceCore.CoreConfig.LogoSvgUrl}"
                                     RasterizePixelHeight="150" RasterizePixelWidth="150"/>
                 </Image.Source>
             </Image>
-            
-            <Rectangle x:Name="Image" x:Load="{x:Bind converters:CollectionAnyToBoolConverter.Convert(Images)}">
+
+            <Rectangle x:Name="PART_ImageRectangle">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Uri)}"/>
                 </Rectangle.Fill>
             </Rectangle>
-            
         </Grid>
     </DataTemplate>
 
@@ -40,21 +38,19 @@
         </Style.Setters>
     </Style>
 
-    <DataTemplate x:Key="DefaultRoundSafeImageTemplate" x:DataType="sdkData:IImageCollection">
+    <DataTemplate x:Key="DefaultRoundSafeImageTemplate" x:DataType="sdkData:IImage">
         <Grid>
             <!--Fallback SVG-->
-            <Image x:Name="FallbackImage" x:Load="{x:Bind converters:CollectionNotAnyToBoolConverter.Convert(Images)}"
-                   Opacity=".1">
+            <Image x:Name="PART_Fallback" Opacity=".3">
                 <Image.Source>
                     <SvgImageSource UriSource="{x:Bind SourceCore.CoreConfig.LogoSvgUrl}"
                                     RasterizePixelHeight="150" RasterizePixelWidth="150"/>
                 </Image.Source>
             </Image>
-            
-            <Rectangle x:Name="Image" x:Load="{x:Bind converters:CollectionAnyToBoolConverter.Convert(Images)}"
-                       RadiusX="10000" RadiusY="10000">
+
+            <Rectangle x:Name="PART_ImageRectangle" RadiusX="10000" RadiusY="10000">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Uri)}"/>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
