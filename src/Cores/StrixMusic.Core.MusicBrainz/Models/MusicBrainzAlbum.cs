@@ -39,6 +39,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// </remarks>
         public MusicBrainzAlbum(ICore sourceCore, Release release, MusicBrainzArtist artist)
         {
+            SourceCore = sourceCore;
             _musicBrainzClient = sourceCore.GetService<MusicBrainzClient>();
             _artistHelpersService = sourceCore.GetService<MusicBrainzArtistHelpersService>();
 
@@ -50,7 +51,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
             Release = release;
             Images = CreateImagesForRelease();
 
-            SourceCore = sourceCore;
             _artist = artist;
         }
 
