@@ -75,10 +75,10 @@ namespace StrixMusic.Sdk
             var mergedLibrary = new MergedLibrary(_cores.Select(x => x.Library));
             Library = new LibraryViewModel(mergedLibrary);
 
-            var mergedRecentlyPlayed = new MergedRecentlyPlayed(_cores.Select(x => x.RecentlyPlayed));
+            var mergedRecentlyPlayed = new MergedRecentlyPlayed(_cores.Select(x => x.CoreRecentlyPlayed));
             RecentlyPlayed = new RecentlyPlayedViewModel(mergedRecentlyPlayed);
 
-            var mergedDiscoverables = new MergedDiscoverables(_cores.Select(x => x.Discoverables));
+            var mergedDiscoverables = new MergedDiscoverables(_cores.Select(x => x.CoreDiscoverables));
             Discoverables = new DiscoverablesViewModel(mergedDiscoverables);
         }
 
@@ -105,7 +105,7 @@ namespace StrixMusic.Sdk
         /// </summary>
         /// <param name="query">The query to search for.</param>
         /// <returns>The merged search results.</returns>
-        public async Task<ISearchResults> GlobalSearchResultsAsync(string query)
+        public async Task<ICoreSearchResults> GlobalSearchResultsAsync(string query)
         {
             var searchResults = await _cores.InParallel(core => core.GetSearchResultsAsync(query));
 

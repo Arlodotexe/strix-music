@@ -193,7 +193,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset);
+        public abstract IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset);
 
         /// <inheritdoc />
         public abstract IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset);
@@ -205,10 +205,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public abstract IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset);
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0);
+        public abstract IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ITrack track, int index)
+        public Task AddTrackAsync(ICoreTrack track, int index)
         {
             throw new NotSupportedException();
         }
@@ -220,7 +220,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index)
+        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
         {
             throw new NotSupportedException();
         }

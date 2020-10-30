@@ -45,7 +45,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IPlayable? PlaybackContext { get; }
 
         /// <inheritdoc />
-        public ITrack? NowPlaying { get; }
+        public ICoreTrack? NowPlaying { get; }
 
         /// <inheritdoc />
         public TimeSpan Position { get; }
@@ -162,7 +162,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<IPlayable>? PlaybackContextChanged;
 
         /// <inheritdoc />
-        public event EventHandler<ITrack>? NowPlayingChanged;
+        public event EventHandler<ICoreTrack>? NowPlayingChanged;
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? PositionChanged;

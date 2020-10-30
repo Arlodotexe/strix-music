@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <param name="id"><inheritdoc cref="Id"/></param>
         /// <param name="mediaSourceUri"><inheritdoc cref="MediaSourceUri"/></param>
         /// <param name="expirationDate"><inheritdoc cref="ExpirationDate"/></param>
-        public MediaSourceConfig(ITrack track, string id, Uri mediaSourceUri, DateTime expirationDate)
+        public MediaSourceConfig(ICoreTrack track, string id, Uri mediaSourceUri, DateTime expirationDate)
         {
             Track = track;
             Id = id;
@@ -29,7 +29,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <param name="id"><inheritdoc cref="Id"/></param>
         /// <param name="fileStream">A <see cref="Stream"/> to an audio file to play.</param>
         /// <param name="contentType">The content type for the <paramref name="fileStream"/>.</param>
-        public MediaSourceConfig(ITrack track, string id, Stream fileStream, string contentType)
+        public MediaSourceConfig(ICoreTrack track, string id, Stream fileStream, string contentType)
         {
             Track = track;
             Id = id;
@@ -38,7 +38,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         }
 
         /// <inheritdoc />
-        public ITrack Track { get; }
+        public ICoreTrack Track { get; }
 
         /// <inheritdoc/>
         public string Id { get; }

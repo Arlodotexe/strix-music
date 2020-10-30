@@ -24,9 +24,9 @@ namespace StrixMusic.Sdk.Uno.TemplateSelectors
         {
             switch (item)
             {
-                case IAlbum _:
+                case ICoreAlbum _:
                     return AlbumTemplate!;
-                case IArtist _:
+                case ICoreArtist _:
                     return ArtistTemplate!;
                 default:
                     return ArtistTemplate!;

@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public int TotalTracksCount { get; }
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ITrack track, int index)
+        public Task AddTrackAsync(ICoreTrack track, int index)
         {
             throw new NotImplementedException();
         }
@@ -42,7 +42,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public Task<bool> IsRemoveTrackSupported(int index) => Task.FromResult(true);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
             throw new NotImplementedException();
         }
