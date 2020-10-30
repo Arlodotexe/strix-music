@@ -444,7 +444,7 @@
                                 <VisualState x:Name="Disabled"/>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="RadioBorder" Width="16" Height="16" CornerRadius="8" BorderThickness="0.5" BorderBrush="Black" Opacity=".7" HorizontalAlignment="Left">
+                        <Border x:Name="RadioBorder" Width="16" Height="16" CornerRadius="8" BorderThickness="1" BorderBrush="Black" Opacity=".7" HorizontalAlignment="Left">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                     <GradientStop Color="#DFDFDF" Offset="0.0" />
