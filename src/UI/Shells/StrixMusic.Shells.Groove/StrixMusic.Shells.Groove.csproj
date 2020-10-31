@@ -29,10 +29,14 @@
   <ItemGroup>
     <None Remove="GrooveShell.xaml" />
     <None Remove="Resources.xaml" />
+    <None Remove="Style\HomeStyle.xaml" />
+    <None Remove="Style\PlayableCollectionGroupPivotStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="GrooveShell.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
+    <UpToDateCheckInput Remove="Style\HomeStyle.xaml" />
+    <UpToDateCheckInput Remove="Style\PlayableCollectionGroupPivotStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Libs\LaunchPad\LaunchPad.csproj" />
@@ -42,6 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Update="GrooveShell.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Style\HomeStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Style\PlayableCollectionGroupPivotStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>
