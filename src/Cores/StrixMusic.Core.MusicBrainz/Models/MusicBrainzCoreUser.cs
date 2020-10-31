@@ -22,7 +22,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
-        public ILibraryBase Library => SourceCore.Library;
+        public ICoreLibrary Library => SourceCore.Library;
 
         /// <inheritdoc />
         public string Id => SourceCore.InstanceId;

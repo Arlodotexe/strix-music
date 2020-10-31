@@ -59,7 +59,7 @@ namespace StrixMusic.Core.MusicBrainz
         public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
 
         /// <inheritdoc/>
-        public ILibraryBase Library { get; private set; }
+        public ICoreLibrary Library { get; private set; }
 
         /// <inheritdoc/>
         public ICoreRecentlyPlayed CoreRecentlyPlayed { get; }

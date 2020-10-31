@@ -44,7 +44,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             // The genres should come from the release tag list. The API returns it, but the library we use doesn't deserialize it. For now, we have no genres.
             // Genres = musicBrainzAlbum.Release.Tag;
-            CoreAlbum = musicBrainzCoreAlbum;
+            Album = musicBrainzCoreAlbum;
 
             DiscNumber = discNumber;
 
@@ -92,7 +92,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public int TotalArtistItemsCount => _track.Recording.Credits.Count;
 
         /// <inheritdoc/>
-        public ICoreAlbum CoreAlbum { get; }
+        public ICoreAlbum? Album { get; }
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<string>? Genres => new SynchronizedObservableCollection<string>();
@@ -137,7 +137,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 : TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroupBase? RelatedItems => null;
+        public ICorePlayableCollectionGroup? RelatedItems => null;
 
         /// <inheritdoc/>
         public bool IsChangeAlbumAsyncSupported => false;
@@ -278,7 +278,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
             var recording = await _musicBrainzClient.Recordings.GetAsync(Id, RelationshipQueries.Recordings);
 

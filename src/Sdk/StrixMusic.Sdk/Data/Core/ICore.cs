@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Core.Data
         /// <summary>
         /// Represents the user that is authenticated with this core.
         /// </summary>
-        public IUserBase User { get; }
+        public ICoreUser User { get; }
 
         /// <summary>
         /// The available devices.
@@ -52,12 +52,12 @@ namespace StrixMusic.Sdk.Core.Data
         /// <summary>
         /// Gets the recently played items for this core.
         /// </summary>
-        public IRecentlyPlayedBase CoreRecentlyPlayed { get; }
+        public ICoreRecentlyPlayed CoreRecentlyPlayed { get; }
 
         /// <summary>
         /// Used to browse and discover new music.
         /// </summary>
-        public IDiscoverablesBase CoreDiscoverables { get; }
+        public ICoreDiscoverables CoreDiscoverables { get; }
 
         /// <summary>
         /// Initializes the <see cref="ICore"/> asynchronously.

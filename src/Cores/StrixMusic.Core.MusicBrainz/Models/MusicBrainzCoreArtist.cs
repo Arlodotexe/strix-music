@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using OwlCore.Collections;
-using StrixMusic.Core.MusicBrainz.Models.Enums;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Core.Data;
@@ -87,7 +86,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration => TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroupBase? RelatedItems => null;
+        public ICorePlayableCollectionGroup? RelatedItems => null;
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<string>? Genres { get; }

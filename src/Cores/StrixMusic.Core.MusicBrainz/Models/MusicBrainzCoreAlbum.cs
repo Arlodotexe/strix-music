@@ -111,7 +111,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration { get; } = TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroupBase? RelatedItems { get; }
+        public ICorePlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();

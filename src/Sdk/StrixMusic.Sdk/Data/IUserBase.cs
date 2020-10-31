@@ -5,9 +5,5 @@
     /// </summary>
     public interface IUserBase : IUserProfileBase
     {
-        /// <summary>
-        /// This user's library.
-        /// </summary>
-        ILibraryBase Library { get; }
     }
 }

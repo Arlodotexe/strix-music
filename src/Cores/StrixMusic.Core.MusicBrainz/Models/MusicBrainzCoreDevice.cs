@@ -39,7 +39,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsActive { get; }
 
         /// <inheritdoc />
-        public ITrackCollection? PlaybackQueue { get; }
+        public ICoreTrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc />
         public IPlayable? PlaybackContext { get; }

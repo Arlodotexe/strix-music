@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.Core.Data
     public interface ITrack : ITrackBase, IArtistCollection, IGenreCollection, ISdkMember
     {
         /// <summary>
-        /// An <see cref="ICoreAlbum"/> object that this track belongs to.
+        /// An <see cref="IAlbum"/> object that this track belongs to.
         /// </summary>
         IAlbum? Album { get; }
 

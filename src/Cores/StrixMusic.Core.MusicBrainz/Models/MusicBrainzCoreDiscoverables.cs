@@ -54,15 +54,15 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public override IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistsAsync(int limit, int offset)
+        public override IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
             return AsyncEnumerable.Empty<ICoreArtist>();
         }
 
         /// <inheritdoc />
-        public override IAsyncEnumerable<IPlayableCollectionGroupBase> GetChildrenAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)
         {
-            return AsyncEnumerable.Empty<IPlayableCollectionGroupBase>();
+            return AsyncEnumerable.Empty<ICorePlayableCollectionGroup>();
         }
 
         /// <inheritdoc />

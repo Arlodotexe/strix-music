@@ -196,10 +196,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public abstract IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset);
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistsAsync(int limit, int offset);
+        public abstract IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset);
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<IPlayableCollectionGroupBase> GetChildrenAsync(int limit, int offset = 0);
+        public abstract IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
         public abstract IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset);
@@ -232,7 +232,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task AddChildAsync(IPlayableCollectionGroupBase child, int index)
+        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index)
         {
             throw new NotSupportedException();
         }

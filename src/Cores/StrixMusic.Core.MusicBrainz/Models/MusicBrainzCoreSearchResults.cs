@@ -64,9 +64,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override int TotalTracksCount { get; internal set; }
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<IPlayableCollectionGroupBase> GetChildrenAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)
         {
-            return AsyncEnumerable.Empty<IPlayableCollectionGroupBase>();
+            return AsyncEnumerable.Empty<ICorePlayableCollectionGroup>();
         }
 
         /// <inheritdoc/>
@@ -92,7 +92,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistsAsync(int limit, int offset)
+        public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
             var artists = await _musicBrainzClient.Artists.SearchAsync(_query, limit, offset);
 
