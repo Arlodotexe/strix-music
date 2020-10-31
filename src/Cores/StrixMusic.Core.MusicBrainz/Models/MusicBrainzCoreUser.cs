@@ -22,7 +22,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
-        public ILibrary Library => SourceCore.Library;
+        public ILibraryBase Library => SourceCore.Library;
 
         /// <inheritdoc />
         public string Id => SourceCore.InstanceId;
@@ -37,7 +37,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string? Email => null;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; } = new SynchronizedObservableCollection<IImage>();
+        public SynchronizedObservableCollection<ICoreImage> Images { get; } = new SynchronizedObservableCollection<ICoreImage>();
 
         /// <inheritdoc />
         public DateTime? Birthdate => null;

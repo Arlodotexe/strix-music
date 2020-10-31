@@ -75,7 +75,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Name => _artist.Name;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<ICoreImage> Images { get; }
 
         /// <inheritdoc/>
         public string Description => _artist.SortName;
@@ -87,7 +87,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration => TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? RelatedItems => null;
+        public IPlayableCollectionGroupBase? RelatedItems => null;
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<string>? Genres { get; }

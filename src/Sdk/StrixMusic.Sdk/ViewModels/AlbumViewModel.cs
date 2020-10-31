@@ -34,13 +34,13 @@ namespace StrixMusic.Sdk.Core.ViewModels
 
             _playbackHandler = Ioc.Default.GetService<IPlaybackHandlerService>();
 
-            Images = new SynchronizedObservableCollection<IImage>(_coreAlbum.Images);
+            Images = new SynchronizedObservableCollection<ICoreImage>(_coreAlbum.Images);
             Tracks = new SynchronizedObservableCollection<TrackViewModel>();
 
             if (_coreAlbum.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(_coreAlbum.RelatedItems);
 
-            _coreArtist = new ArtistViewModel(_coreAlbum.CoreArtist);
+            _coreArtist = new ArtistViewModel(_coreAlbum.Artist);
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -156,10 +156,10 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public int TotalTracksCount => _coreAlbum.TotalTracksCount;
 
         /// <inheritdoc />
-        public IPlayableCollectionGroup? RelatedItems { get; }
+        public IPlayableCollectionGroupBase? RelatedItems { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<ICoreImage> Images { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<string>? Genres => _coreAlbum.Genres;
@@ -176,7 +176,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
             private set => SetProperty(() => _coreAlbum.Name, value);
         }
 
-        /// <inheritdoc cref="IAlbum.CoreArtist" />
+        /// <inheritdoc cref="IAlbumBase.Artist" />
         public ArtistViewModel Artist
         {
             get => _coreArtist;

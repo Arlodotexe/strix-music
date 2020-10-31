@@ -11,9 +11,9 @@ using StrixMusic.Sdk.Extensions;
 namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <summary>
-    /// A MusicBrainz implementation of <see cref="ILibrary"/>.
+    /// A MusicBrainz implementation of <see cref="ILibraryBase"/>.
     /// </summary>
-    public class MusicBrainzLibrary : MusicBrainzCollectionGroupBase, ILibrary
+    public class MusicBrainzLibrary : MusicBrainzCollectionGroupBase, ILibraryBase
     {
         private readonly MusicBrainzClient _musicBrainzClient;
         private readonly MusicBrainzArtistHelpersService _artistHelpersService;
@@ -39,7 +39,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override string Name { get; protected set; } = "Library";
 
         /// <inheritdoc />
-        public override SynchronizedObservableCollection<IImage> Images { get; protected set; } = new SynchronizedObservableCollection<IImage>();
+        public override SynchronizedObservableCollection<ICoreImage> Images { get; protected set; } = new SynchronizedObservableCollection<ICoreImage>();
 
         /// <inheritdoc />
         public override string? Description { get; protected set; } = null;
@@ -60,13 +60,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override int TotalTracksCount { get; internal set; }
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)
+        public override IAsyncEnumerable<IPlayableCollectionGroupBase> GetChildrenAsync(int limit, int offset = 0)
         {
-            return AsyncEnumerable.Empty<IPlayableCollectionGroup>();
+            return AsyncEnumerable.Empty<IPlayableCollectionGroupBase>();
         }
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
+        public override IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
             return AsyncEnumerable.Empty<ICorePlaylist>();
         }
@@ -88,7 +88,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public override async IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset)
+        public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistsAsync(int limit, int offset)
         {
             var artists = await _musicBrainzClient.Artists.SearchAsync($"*", limit, offset);
 

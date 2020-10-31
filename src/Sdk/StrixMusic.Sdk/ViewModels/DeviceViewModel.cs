@@ -8,17 +8,17 @@ using StrixMusic.Sdk.MediaPlayback;
 namespace StrixMusic.Sdk.Core.ViewModels
 {
     /// <summary>
-    /// Contains information about a <see cref="IImage"/>
+    /// Contains information about a <see cref="ICoreImage"/>
     /// </summary>
-    public class DeviceViewModel : ObservableObject, IDevice
+    public class DeviceViewModel : ObservableObject, IDeviceBase
     {
         private ICoreTrack? _nowPlaying;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceViewModel"/> class.
         /// </summary>
-        /// <param name="device">The base <see cref="IDevice"/></param>
-        public DeviceViewModel(IDevice device)
+        /// <param name="device">The base <see cref="IDeviceBase"/></param>
+        public DeviceViewModel(IDeviceBase device)
         {
             Model = device;
 
@@ -91,7 +91,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         /// <summary>
         /// The wrapped model for this <see cref="DeviceViewModel"/>.
         /// </summary>
-        internal IDevice Model { get; set; }
+        internal IDeviceBase Model { get; set; }
 
         /// <inheritdoc />
         public ICore? SourceCore { get; }

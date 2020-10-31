@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Core.Merged
         /// </summary>
         /// <param name="source">The <see cref="ICoreDiscoverables"/> objects to merge.</param>
         public MergedDiscoverables(IEnumerable<ICoreDiscoverables> source)
-            : base(source.ToArray<IPlayableCollectionGroup>())
+            : base(source.ToArray<IPlayableCollectionGroupBase>())
         {
         }
 

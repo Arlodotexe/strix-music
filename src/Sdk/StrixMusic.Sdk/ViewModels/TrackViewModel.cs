@@ -30,7 +30,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
             if (Model.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(Model.RelatedItems);
 
-            Artists = new SynchronizedObservableCollection<IArtistCollectionItem>();
+            Artists = new SynchronizedObservableCollection<ICoreArtistCollectionItem>();
             SourceCore = MainViewModel.GetLoadedCore(Model.SourceCore);
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -178,13 +178,13 @@ namespace StrixMusic.Sdk.Core.ViewModels
         /// <summary>
         /// The artists for this track.
         /// </summary>
-        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
+        public SynchronizedObservableCollection<ICoreArtistCollectionItem> Artists { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<string>? Genres => Model.Genres;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images => Model.Images;
+        public SynchronizedObservableCollection<ICoreImage> Images => Model.Images;
 
         /// <inheritdoc />
         public TrackType Type => Model.Type;
@@ -196,7 +196,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public TimeSpan Duration => Model.Duration;
 
         /// <inheritdoc />
-        public IPlayableCollectionGroup? RelatedItems { get; }
+        public IPlayableCollectionGroupBase? RelatedItems { get; }
 
         /// <inheritdoc />
         public string Id => Model.Id;
@@ -386,10 +386,10 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration) => Model.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset) => Model.GetArtistsAsync(limit, offset);
+        public IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset) => Model.GetArtistItemsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => Model.AddArtistItemAsync(artist, index);
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index) => Model.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
         public Task RemoveArtistAsync(int index) => Model.RemoveArtistAsync(index);

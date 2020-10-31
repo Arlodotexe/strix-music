@@ -9,15 +9,15 @@ using StrixMusic.Sdk.MediaPlayback;
 namespace StrixMusic.Sdk.Core.Merged
 {
     /// <summary>
-    /// A base that merges multiple <see cref="IPlayableCollectionGroup"/>s.
+    /// A base that merges multiple <see cref="IPlayableCollectionGroupBase"/>s.
     /// </summary>
-    public abstract class MergedPlayableCollectionGroupBase : IPlayableCollectionGroup
+    public abstract class MergedPlayableCollectionGroupBase : IPlayableCollectionGroupBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroupBase"/> class.
         /// </summary>
         /// <param name="source">The search results to merge.</param>
-        protected MergedPlayableCollectionGroupBase(IReadOnlyList<IPlayableCollectionGroup> source)
+        protected MergedPlayableCollectionGroupBase(IReadOnlyList<IPlayableCollectionGroupBase> source)
         {
             Sources = source;
 
@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.Core.Merged
         /// <summary>
         /// The top preferred source for this item, used for property getters.
         /// </summary>
-        protected IPlayableCollectionGroup PreferredSource { get; }
+        protected IPlayableCollectionGroupBase PreferredSource { get; }
 
         private void AttachPropertyChangedEvents(IPlayable source)
         {
@@ -82,7 +82,7 @@ namespace StrixMusic.Sdk.Core.Merged
         /// <summary>
         /// The source data that went into this merged instance.
         /// </summary>
-        public IReadOnlyList<IPlayableCollectionGroup> Sources { get; }
+        public IReadOnlyList<IPlayableCollectionGroupBase> Sources { get; }
 
         /// <inheritdoc/>
         public ICore SourceCore => PreferredSource.SourceCore;
@@ -97,7 +97,7 @@ namespace StrixMusic.Sdk.Core.Merged
         public string Name => PreferredSource.Name;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<IImage> Images { get; } = new SynchronizedObservableCollection<IImage>();
+        public SynchronizedObservableCollection<ICoreImage> Images { get; } = new SynchronizedObservableCollection<ICoreImage>();
 
         /// <inheritdoc/>
         public string? Description => PreferredSource.Description;
@@ -223,7 +223,7 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc/>
-        public async IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
             // The items in this Merged source are its own thing once we merge it, so any offset / limit passed here are completely disregarding the original source
 
@@ -253,21 +253,21 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistsAsync(int limit, int offset)
         {
             // TODO
-            return Sources[0].GetArtistsAsync(limit, offset);
+            return Sources[0].GetArtistItemsAsync(limit, offset);
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)
+        public IAsyncEnumerable<IPlayableCollectionGroupBase> GetChildrenAsync(int limit, int offset = 0)
         {
             // TODO
             return Sources[0].GetChildrenAsync(limit, offset);
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
+        public IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
             // TODO
             return Sources[0].GetPlaylistItemsAsync(limit, offset);
@@ -305,25 +305,25 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc/>
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index)
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
             return PreferredSource.AddArtistItemAsync(artist, index);
         }
 
         /// <inheritdoc/>
-        public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index)
+        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
         {
             return PreferredSource.AddAlbumItemAsync(album, index);
         }
 
         /// <inheritdoc/>
-        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index)
+        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index)
         {
             return PreferredSource.AddPlaylistItemAsync(playlist, index);
         }
 
         /// <inheritdoc/>
-        public Task AddChildAsync(IPlayableCollectionGroup child, int index)
+        public Task AddChildAsync(IPlayableCollectionGroupBase child, int index)
         {
             return PreferredSource.AddChildAsync(child, index);
         }

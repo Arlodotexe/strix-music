@@ -13,7 +13,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         /// <summary>
         /// The playlists in this collection
         /// </summary>
-        public SynchronizedObservableCollection<IPlaylistCollectionItem> Playlists { get; }
+        public SynchronizedObservableCollection<ICorePlaylistCollectionItem> Playlists { get; }
 
         /// <summary>
         /// Populates the next set of playlists into the collection.

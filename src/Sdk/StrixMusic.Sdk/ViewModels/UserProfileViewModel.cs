@@ -8,23 +8,23 @@ using StrixMusic.Sdk.Core.Data;
 namespace StrixMusic.Sdk.Core.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="IUserProfile"/>
+    /// Contains bindable information about an <see cref="ICoreUserProfile"/>
     /// </summary>
-    public class UserProfileViewModel : ObservableObject, IUserProfile
+    public class UserProfileViewModel : ObservableObject, ICoreUserProfile
     {
-        private readonly IUserProfile _userProfile;
+        private readonly ICoreUserProfile _userProfile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserProfileViewModel"/> class.
         /// </summary>
-        /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
-        public UserProfileViewModel(IUserProfile userProfile)
+        /// <param name="userProfile">The base <see cref="ICoreUserProfile"/></param>
+        public UserProfileViewModel(ICoreUserProfile userProfile)
         {
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
             SourceCore = MainViewModel.GetLoadedCore(_userProfile.SourceCore);
             Urls = new SynchronizedObservableCollection<Uri>(userProfile.Urls);
-            Images = new SynchronizedObservableCollection<IImage>(userProfile.Images);
+            Images = new SynchronizedObservableCollection<ICoreImage>(userProfile.Images);
         }
 
         /// <inheritdoc />
@@ -86,7 +86,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public DateTime? Birthdate => _userProfile.Birthdate;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<ICoreImage> Images { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<Uri>? Urls { get; }

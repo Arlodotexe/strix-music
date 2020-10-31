@@ -6,12 +6,12 @@ using StrixMusic.Sdk.Core.Data;
 namespace StrixMusic.Sdk.Core.ViewModels
 {
     /// <summary>
-    /// An observable <see cref="IPlayableCollectionGroup"/>.
+    /// An observable <see cref="IPlayableCollectionGroupBase"/>.
     /// </summary>
-    public interface IPlayableCollectionGroupChildrenViewModel : IPlayableCollectionGroupChildren
+    public interface IPlayableCollectionGroupChildrenViewModel : ICorePlayableCollectionGroupChildren
     {
         /// <summary>
-        /// The nested <see cref="IPlayableCollectionGroup"/> items in this collection.
+        /// The nested <see cref="IPlayableCollectionGroupBase"/> items in this collection.
         /// </summary>
         public SynchronizedObservableCollection<PlayableCollectionGroupViewModel> Children { get; }
 

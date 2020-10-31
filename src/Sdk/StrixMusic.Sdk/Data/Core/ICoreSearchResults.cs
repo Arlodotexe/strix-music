@@ -1,8 +1,8 @@
 ﻿namespace StrixMusic.Sdk.Core.Data
 {
-    /// <inheritdoc cref="ISearchResults"/>
+    /// <inheritdoc cref="ISearchResultsBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreSearchResults : ISearchResults, ICoreMember
+    public interface ICoreSearchResults : ISearchResultsBase, ICorePlayableCollectionGroup, ICoreMember
     {
     }
 }

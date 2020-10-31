@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
     {
         private readonly ICorePlaylist _playlist;
 
-        private IUserProfile? _owner;
+        private ICoreUserProfile? _owner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.
@@ -39,7 +39,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
                 RelatedItems = new PlayableCollectionGroupViewModel(_playlist.RelatedItems);
 
             Tracks = new SynchronizedObservableCollection<TrackViewModel>();
-            Images = new SynchronizedObservableCollection<IImage>();
+            Images = new SynchronizedObservableCollection<ICoreImage>();
 
             SourceCore = MainViewModel.GetLoadedCore(_playlist.SourceCore);
 
@@ -119,7 +119,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public TimeSpan Duration => _playlist.Duration;
 
         /// <inheritdoc />
-        public IPlayableCollectionGroup? RelatedItems { get; }
+        public IPlayableCollectionGroupBase? RelatedItems { get; }
 
         /// <inheritdoc />
         public int TotalTracksCount => _playlist.TotalTracksCount;
@@ -130,13 +130,13 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<ICoreImage> Images { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<string>? Genres => _playlist.Genres;
 
         /// <inheritdoc />
-        public IUserProfile? Owner
+        public ICoreUserProfile? Owner
         {
             get => _owner;
             set => SetProperty(ref _owner, value);

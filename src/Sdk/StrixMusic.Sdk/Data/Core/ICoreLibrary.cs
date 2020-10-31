@@ -1,8 +1,8 @@
 ﻿namespace StrixMusic.Sdk.Core.Data
 {
-    /// <inheritdoc cref="ILibrary"/>
+    /// <inheritdoc cref="ILibraryBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreLibrary : ILibrary, ICoreMember
+    public interface ICoreLibrary : ILibraryBase, ICorePlayableCollectionGroup, ICoreMember
     {
     }
 }

@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         {
             _collection = collection;
 
-            Playlists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IPlaylistCollectionItem>());
+            Playlists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<ICorePlaylistCollectionItem>());
             PopulateMorePlaylistsCommand = new AsyncRelayCommand<int>(PopulateMorePlaylistsAsync);
         }
 
@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public int TotalPlaylistItemsCount => _collection.TotalPlaylistItemsCount;
 
         /// <inheritdoc />
-        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index) => _collection.AddPlaylistItemAsync(playlist, index);
+        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index) => _collection.AddPlaylistItemAsync(playlist, index);
 
         /// <inheritdoc />
         public Task RemovePlaylistItemAsync(int index) => _collection.RemovePlaylistItemAsync(index);
@@ -46,10 +46,10 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task<bool> IsRemovePlaylistItemSupported(int index) => _collection.IsRemovePlaylistItemSupported(index);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset) => _collection.GetPlaylistItemsAsync(limit, offset);
+        public IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset) => _collection.GetPlaylistItemsAsync(limit, offset);
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IPlaylistCollectionItem> Playlists { get; }
+        public SynchronizedObservableCollection<ICorePlaylistCollectionItem> Playlists { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }

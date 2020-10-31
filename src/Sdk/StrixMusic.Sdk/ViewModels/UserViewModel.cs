@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
             Library = new LibraryViewModel(user.Library);
         }
 
-        /// <inheritdoc cref="ILibrary"/>
+        /// <inheritdoc cref="ILibraryBase"/>
         public LibraryViewModel Library { get; }
     }
 }

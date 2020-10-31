@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Core.Merged
         /// </summary>
         /// <param name="searchResults">The search results to merge.</param>
         public MergedSearchResults(IEnumerable<ICoreSearchResults> searchResults)
-            : base(searchResults.ToArray<IPlayableCollectionGroup>())
+            : base(searchResults.ToArray<IPlayableCollectionGroupBase>())
         {
         }
     }

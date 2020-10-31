@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
             _collection = collection;
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
 
-            Artists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IArtistCollectionItem>());
+            Artists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<ICoreArtistCollectionItem>());
         }
 
         /// <inheritdoc />
@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public int TotalArtistItemsCount => _collection.TotalArtistItemsCount;
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) =>
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index) =>
             _collection.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
@@ -47,19 +47,19 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task<bool> IsRemoveArtistSupported(int index) => _collection.IsRemoveArtistSupported(index);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset) =>
-            _collection.GetArtistsAsync(limit, offset);
+        public IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset) =>
+            _collection.GetArtistItemsAsync(limit, offset);
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
+        public SynchronizedObservableCollection<ICoreArtistCollectionItem> Artists { get; }
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            await foreach (var item in _collection.GetArtistsAsync(limit, Artists.Count))
+            await foreach (var item in _collection.GetArtistItemsAsync(limit, Artists.Count))
             {
                 switch (item)
                 {

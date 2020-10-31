@@ -75,7 +75,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
 
         /// <inheritdoc cref="ICore.Library" />
-        public ILibrary Library { get; }
+        public ILibraryBase Library { get; }
 
         /// <inheritdoc cref="ICore.CoreRecentlyPlayed" />
         public ICoreRecentlyPlayed CoreRecentlyPlayed { get; }

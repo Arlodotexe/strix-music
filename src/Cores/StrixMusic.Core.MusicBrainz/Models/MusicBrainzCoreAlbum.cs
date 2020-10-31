@@ -78,7 +78,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public Release Release { get; }
 
         /// <inheritdoc/>
-        public ICoreArtist CoreArtist => _coreArtist;
+        public ICoreArtist Artist => _coreArtist;
 
         /// <inheritdoc/>
         public int TotalTracksCount { get; }
@@ -99,7 +99,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public DateTime? DatePublished => CreateReleaseDate(Release?.Date);
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public SynchronizedObservableCollection<ICoreImage> Images { get; }
 
         /// <inheritdoc/>
         public string? Description => Release.TextRepresentation?.Script;
@@ -111,7 +111,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration { get; } = TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? RelatedItems { get; }
+        public IPlayableCollectionGroupBase? RelatedItems { get; }
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
@@ -290,17 +290,17 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     _ => date
                 };
             }
-
+            
             return date;
         }
 
-        private SynchronizedObservableCollection<IImage> CreateImagesForRelease()
+        private SynchronizedObservableCollection<ICoreImage> CreateImagesForRelease()
         {
-            var returnData = new SynchronizedObservableCollection<IImage>();
+            var returnData = new SynchronizedObservableCollection<ICoreImage>();
 
             foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
             {
-                returnData.Add(new MusicBrainzImage(SourceCore, Release.Id, item));
+                returnData.Add(new MusicBrainzCoreImage(SourceCore, Release.Id, item));
             }
 
             return returnData;

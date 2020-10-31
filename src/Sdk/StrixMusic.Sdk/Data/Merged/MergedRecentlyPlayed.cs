@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Core.Merged
         /// </summary>
         /// <param name="recentlyPlayed">The <see cref="ICoreRecentlyPlayed"/> objects to merge.</param>
         public MergedRecentlyPlayed(IEnumerable<ICoreRecentlyPlayed> recentlyPlayed)
-            : base(recentlyPlayed.ToArray<IPlayableCollectionGroup>())
+            : base(recentlyPlayed.ToArray<IPlayableCollectionGroupBase>())
         {
         }
     }

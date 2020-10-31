@@ -1,8 +1,8 @@
 ﻿namespace StrixMusic.Sdk.Core.Data
 {
-    /// <inheritdoc cref="IDiscoverables"/>
+    /// <inheritdoc cref="IDiscoverablesBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreDiscoverables : IDiscoverables, ICoreMember
+    public interface ICoreDiscoverables : IDiscoverablesBase, ICorePlayableCollectionGroup, ICoreMember
     {
     }
 }

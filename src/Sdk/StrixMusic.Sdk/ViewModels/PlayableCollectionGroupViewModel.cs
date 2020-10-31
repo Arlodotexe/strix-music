@@ -11,17 +11,17 @@ using StrixMusic.Sdk.MediaPlayback;
 namespace StrixMusic.Sdk.Core.ViewModels
 {
     /// <summary>
-    /// An observable wrapper for a <see cref="IPlayableCollectionGroup"/>.
+    /// An observable wrapper for a <see cref="IPlayableCollectionGroupBase"/>.
     /// </summary>
-    public class PlayableCollectionGroupViewModel : ObservableObject, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel
+    public class PlayableCollectionGroupViewModel : ObservableObject, IPlayableCollectionGroupBase, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel
     {
-        private readonly IPlayableCollectionGroup _collectionGroupBase;
+        private readonly IPlayableCollectionGroupBase _collectionGroupBase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupViewModel"/> class.
         /// </summary>
         /// <param name="collectionGroup">The base <see cref="IPlayableCollectionBase"/> containing properties about this class.</param>
-        public PlayableCollectionGroupViewModel(IPlayableCollectionGroup collectionGroup)
+        public PlayableCollectionGroupViewModel(IPlayableCollectionGroupBase collectionGroup)
         {
             _collectionGroupBase = collectionGroup ?? throw new ArgumentNullException(nameof(collectionGroup));
 
@@ -40,9 +40,9 @@ namespace StrixMusic.Sdk.Core.ViewModels
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
 
             Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
-            Playlists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IPlaylistCollectionItem>());
+            Playlists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<ICorePlaylistCollectionItem>());
             Albums = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<ICoreAlbumCollectionItem>());
-            Artists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IArtistCollectionItem>());
+            Artists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<ICoreArtistCollectionItem>());
             Children = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<PlayableCollectionGroupViewModel>());
 
             AttachPropertyEvents();
@@ -134,10 +134,10 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public int TotalChildrenCount => _collectionGroupBase.TotalChildrenCount;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images => _collectionGroupBase.Images;
+        public SynchronizedObservableCollection<ICoreImage> Images => _collectionGroupBase.Images;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IPlaylistCollectionItem> Playlists { get; }
+        public SynchronizedObservableCollection<ICorePlaylistCollectionItem> Playlists { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }
@@ -148,10 +148,10 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public SynchronizedObservableCollection<ICoreAlbumCollectionItem> Albums { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
+        public SynchronizedObservableCollection<ICoreArtistCollectionItem> Artists { get; }
 
         /// <summary>
-        /// The nested <see cref="IPlayableCollectionGroup"/> items in this collection.
+        /// The nested <see cref="IPlayableCollectionGroupBase"/> items in this collection.
         /// </summary>
         public SynchronizedObservableCollection<PlayableCollectionGroupViewModel> Children { get; }
 
@@ -253,16 +253,16 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task AddTrackAsync(ICoreTrack track, int index) => _collectionGroupBase.AddTrackAsync(track, index);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _collectionGroupBase.AddArtistItemAsync(artist, index);
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index) => _collectionGroupBase.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
         public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index) => _collectionGroupBase.AddAlbumItemAsync(album, index);
 
         /// <inheritdoc />
-        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index) => _collectionGroupBase.AddPlaylistItemAsync(playlist, index);
+        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index) => _collectionGroupBase.AddPlaylistItemAsync(playlist, index);
 
         /// <inheritdoc />
-        public Task AddChildAsync(IPlayableCollectionGroup child, int index) => _collectionGroupBase.AddChildAsync(child, index);
+        public Task AddChildAsync(IPlayableCollectionGroupBase child, int index) => _collectionGroupBase.AddChildAsync(child, index);
 
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index) => _collectionGroupBase.RemoveTrackAsync(index);
@@ -280,10 +280,10 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public Task RemoveChildAsync(int index) => _collectionGroupBase.RemoveChildAsync(index);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset) => _collectionGroupBase.GetChildrenAsync(limit, offset);
+        public IAsyncEnumerable<IPlayableCollectionGroupBase> GetChildrenAsync(int limit, int offset) => _collectionGroupBase.GetChildrenAsync(limit, offset);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset) => _collectionGroupBase.GetPlaylistItemsAsync(limit, offset);
+        public IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset) => _collectionGroupBase.GetPlaylistItemsAsync(limit, offset);
 
         /// <inheritdoc />
         public IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0) => _collectionGroupBase.GetTracksAsync(limit, offset);
@@ -292,7 +292,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset) => _collectionGroupBase.GetAlbumItemsAsync(limit, offset);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset) => _collectionGroupBase.GetArtistsAsync(limit, offset);
+        public IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset) => _collectionGroupBase.GetArtistItemsAsync(limit, offset);
 
         /// <inheritdoc />
         public async Task PopulateMorePlaylistsAsync(int limit)
@@ -340,7 +340,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            await foreach (var item in _collectionGroupBase.GetArtistsAsync(limit, Artists.Count))
+            await foreach (var item in _collectionGroupBase.GetArtistItemsAsync(limit, Artists.Count))
             {
                 if (item is ICoreArtist artist)
                 {

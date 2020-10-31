@@ -5,16 +5,16 @@ using StrixMusic.Sdk.Core.Data;
 namespace StrixMusic.Sdk.Core.Merged
 {
     /// <summary>
-    /// A concrete class that merges multiple <see cref="ILibrary"/>.
+    /// A concrete class that merges multiple <see cref="ILibraryBase"/>.
     /// </summary>
-    public class MergedLibrary : MergedPlayableCollectionGroupBase, ILibrary
+    public class MergedLibrary : MergedPlayableCollectionGroupBase, ILibraryBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedLibrary"/> class.
         /// </summary>
-        /// <param name="source">The <see cref="ILibrary"/> objects to merge.</param>
-        public MergedLibrary(IEnumerable<ILibrary> source)
-            : base(source.ToArray<IPlayableCollectionGroup>())
+        /// <param name="source">The <see cref="ILibraryBase"/> objects to merge.</param>
+        public MergedLibrary(IEnumerable<ILibraryBase> source)
+            : base(source.ToArray<IPlayableCollectionGroupBase>())
         {
         }
     }

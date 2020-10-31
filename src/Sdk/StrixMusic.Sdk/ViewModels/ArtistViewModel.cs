@@ -122,7 +122,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public TimeSpan Duration => _coreArtist.Duration;
 
         /// <inheritdoc />
-        public IPlayableCollectionGroup? RelatedItems { get; }
+        public IPlayableCollectionGroupBase? RelatedItems { get; }
 
         /// <summary>
         /// The artistViewModel's albums.
@@ -135,7 +135,7 @@ namespace StrixMusic.Sdk.Core.ViewModels
         public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images => _coreArtist.Images;
+        public SynchronizedObservableCollection<ICoreImage> Images => _coreArtist.Images;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<string>? Genres => _coreArtist.Genres;

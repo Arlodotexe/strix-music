@@ -5,7 +5,7 @@ using StrixMusic.Sdk.Core.Data;
 namespace StrixMusic.Sdk.Uno.TemplateSelectors
 {
     /// <summary>
-    /// A <see cref="DataTemplateSelector"/> for the collections in a <see cref="IPlayableCollectionGroup"/> library.
+    /// A <see cref="DataTemplateSelector"/> for the collections in a <see cref="IPlayableCollectionGroupBase"/> library.
     /// </summary>
     public class PlayableCollectionGroupSelector : DataTemplateSelector
     {
@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Uno.TemplateSelectors
         public DataTemplate? AlbumTemplate { get; set; }
 
         /// <summary>
-        /// The <see cref="DataTemplate"/> for any <see cref="IPlayableCollectionGroup"/>.
+        /// The <see cref="DataTemplate"/> for any <see cref="IPlayableCollectionGroupBase"/>.
         /// </summary>
         public DataTemplate? ArtistTemplate { get; set; }
 

@@ -27,11 +27,11 @@ namespace StrixMusic.Sdk.Uno.Converters
             {
                 Uri.TryCreate(sValue, UriKind.Absolute, out uri);
             }
-            else if (value is IImage iValue)
+            else if (value is ICoreImage iValue)
             {
                 uri = iValue.Uri;
             }
-            else if (value is ICollection<IImage> imageCollection && imageCollection.Any())
+            else if (value is ICollection<ICoreImage> imageCollection && imageCollection.Any())
             {
                 uri = imageCollection.First().Uri;
             }

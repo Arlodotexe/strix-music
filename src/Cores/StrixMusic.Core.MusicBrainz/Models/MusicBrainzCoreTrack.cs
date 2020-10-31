@@ -123,7 +123,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string Name => _track.Recording.Title;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<IImage> Images => CreateImagesForRelease(_track.Recording.Releases);
+        public SynchronizedObservableCollection<ICoreImage> Images => CreateImagesForRelease(_track.Recording.Releases);
 
         /// <inheritdoc/>
         public string? Description => null;
@@ -137,7 +137,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 : TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? RelatedItems => null;
+        public IPlayableCollectionGroupBase? RelatedItems => null;
 
         /// <inheritdoc/>
         public bool IsChangeAlbumAsyncSupported => false;
@@ -266,7 +266,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index)
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
             throw new NotSupportedException();
         }
@@ -278,7 +278,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public async IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistsAsync(int limit, int offset)
         {
             var recording = await _musicBrainzClient.Recordings.GetAsync(Id, RelationshipQueries.Recordings);
 
@@ -289,15 +289,15 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
         }
 
-        private SynchronizedObservableCollection<IImage> CreateImagesForRelease(IEnumerable<Release> releases)
+        private SynchronizedObservableCollection<ICoreImage> CreateImagesForRelease(IEnumerable<Release> releases)
         {
-            var returnData = new SynchronizedObservableCollection<IImage>();
+            var returnData = new SynchronizedObservableCollection<ICoreImage>();
 
             foreach (var release in releases)
             {
                 foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
                 {
-                    returnData.Add(new MusicBrainzImage(SourceCore, release.Id, item));
+                    returnData.Add(new MusicBrainzCoreImage(SourceCore, release.Id, item));
                 }
             }
 

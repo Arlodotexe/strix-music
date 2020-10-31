@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
     /// <summary>
     /// The default playback device for the app.
     /// </summary>
-    public class StrixDevice : IDevice
+    public class StrixDevice : IDeviceBase
     {
         private readonly IPlaybackHandlerService _playbackHandler = Ioc.Default.GetService<IPlaybackHandlerService>();
 

@@ -90,10 +90,10 @@ namespace StrixMusic.Sdk.Core.Merged
         public SynchronizedObservableCollection<string>? Genres => _preferredSource.Genres;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<IImage> Images => _preferredSource.Images;
+        public SynchronizedObservableCollection<ICoreImage> Images => _preferredSource.Images;
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? RelatedItems => _preferredSource.RelatedItems;
+        public IPlayableCollectionGroupBase? RelatedItems => _preferredSource.RelatedItems;
 
         /// <inheritdoc/>
         public ICoreAlbum? Album => _preferredSource.Album;
@@ -273,13 +273,13 @@ namespace StrixMusic.Sdk.Core.Merged
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistsAsync(int limit, int offset)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index)
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
             throw new NotImplementedException();
         }
