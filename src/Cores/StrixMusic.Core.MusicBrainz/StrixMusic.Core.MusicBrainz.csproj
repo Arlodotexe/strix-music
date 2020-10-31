@@ -21,7 +21,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\logo.svg" />
     <None Remove="Library.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\logo.svg" />
   </ItemGroup>
 
   <ItemGroup>

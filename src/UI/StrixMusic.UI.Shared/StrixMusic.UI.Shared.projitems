@@ -61,10 +61,10 @@
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Assets\MusicBrainz\logo.svg" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Assets\Strix\logo.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\Splash Screen.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\MusicBrainz\logo.svg" />
   </ItemGroup>
 </Project>
