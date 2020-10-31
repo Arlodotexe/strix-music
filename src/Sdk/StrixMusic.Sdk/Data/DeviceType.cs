@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Core.Data
+﻿namespace StrixMusic.Sdk.Data
 {
     /// <summary>
     /// Describes the type of device used for playback.

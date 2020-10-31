@@ -1,4 +1,6 @@
-﻿namespace StrixMusic.Sdk.Core.Data
+﻿using StrixMusic.Sdk.Data.Base;
+
+namespace StrixMusic.Sdk.Data.Core
 {
     /// <inheritdoc cref="ISearchResultsBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>

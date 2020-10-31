@@ -1,6 +1,6 @@
-﻿using StrixMusic.Sdk.Core.Data;
+﻿using StrixMusic.Sdk.Data.Core;
 
-namespace StrixMusic.Sdk.Core.ViewModels
+namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
     /// A bindable wrapper of the <see cref="ICoreDiscoverables"/>.

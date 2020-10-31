@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
-namespace StrixMusic.Sdk.Core.ViewModels
+namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
     /// A base class containing the implementation for handling merged data.

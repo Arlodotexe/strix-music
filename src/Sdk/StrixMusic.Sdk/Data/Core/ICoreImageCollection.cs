@@ -1,6 +1,7 @@
 ﻿using OwlCore.Collections;
+using StrixMusic.Sdk.Data.Base;
 
-namespace StrixMusic.Sdk.Core.Data
+namespace StrixMusic.Sdk.Data.Core
 {
     /// <inheritdoc cref="IImageCollectionBase" />
     /// <remarks>This interface should be implemented in a core.</remarks>

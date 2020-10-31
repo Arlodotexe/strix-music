@@ -1,7 +1,8 @@
 ﻿using System;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 
-namespace StrixMusic.Sdk.Core.ViewModels
+namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
     /// Contains bindable information about an <see cref="ICoreUser"/>

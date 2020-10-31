@@ -1,6 +1,6 @@
-﻿using StrixMusic.Sdk.Core.Data;
+﻿using StrixMusic.Sdk.Data.Core;
 
-namespace StrixMusic.Sdk.Core.ViewModels
+namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
     /// Used to bind search results across multiple cores to the View model.

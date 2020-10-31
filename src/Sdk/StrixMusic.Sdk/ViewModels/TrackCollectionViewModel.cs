@@ -4,9 +4,11 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using OwlCore.Helpers;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 
-namespace StrixMusic.Sdk.Core.ViewModels
+namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
     /// A wrapper for <see cref="ITrackCollection"/> that contains props and methods for a ViewModel.

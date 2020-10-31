@@ -6,8 +6,8 @@ using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Helpers;
-using StrixMusic.Sdk.Core.ViewModels;
 using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {

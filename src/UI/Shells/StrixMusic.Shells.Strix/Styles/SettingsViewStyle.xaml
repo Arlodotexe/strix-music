@@ -2,9 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
-    xmlns:viewModels="using:StrixMusic.Sdk.Core.ViewModels"
-    xmlns:data="using:StrixMusic.Sdk.Core.Data"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:viewModels="clr-namespace:StrixMusic.Sdk.ViewModels;assembly=StrixMusic.Sdk"
+    xmlns:base="clr-namespace:StrixMusic.Sdk.Data.Base;assembly=StrixMusic.Sdk"
     x:Class="StrixMusic.Shells.Strix.Styles.SettingsViewStyle">
 
     <DataTemplate x:Key="StrixSettingsViewTemplate" x:DataType="viewModels:LibraryViewModel">
@@ -15,7 +15,7 @@
                         <TextBlock Text="Settings"/>
                     </Pivot.Title>
                     <Pivot.HeaderTemplate>
-                        <DataTemplate x:DataType="data:IPlayable">
+                        <DataTemplate x:DataType="base:IPlayable">
                             <TextBlock Text="{x:Bind Name}"/>
                         </DataTemplate>
                     </Pivot.HeaderTemplate>

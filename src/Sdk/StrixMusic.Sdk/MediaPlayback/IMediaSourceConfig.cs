@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {

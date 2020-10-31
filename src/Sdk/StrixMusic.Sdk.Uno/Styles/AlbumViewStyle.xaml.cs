@@ -1,9 +1,9 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Core.ViewModels;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Uno.Styles
 {

@@ -1,5 +1,5 @@
 ﻿using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Core.ViewModels;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {

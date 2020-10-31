@@ -1,6 +1,6 @@
-﻿using StrixMusic.Sdk.Core.Data;
+﻿using StrixMusic.Sdk.Data.Base;
 
-namespace StrixMusic.Sdk.Core.ViewModels
+namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
     /// A bindable wrapper of the <see cref="ILibraryBase"/>.

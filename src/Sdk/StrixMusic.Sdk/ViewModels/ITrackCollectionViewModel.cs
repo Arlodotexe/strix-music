@@ -1,6 +1,6 @@
-﻿using StrixMusic.Sdk.Core.Data;
+﻿using StrixMusic.Sdk.Data;
 
-namespace StrixMusic.Sdk.Core.ViewModels
+namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
     /// An observable <see cref="ITrackCollection"/>.

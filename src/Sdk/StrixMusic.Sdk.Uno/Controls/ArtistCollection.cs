@@ -1,10 +1,9 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Core.ViewModels;
 using Windows.UI.Xaml.Controls.Primitives;
 using Uno.Extensions.Specialized;
-using StrixMusic.Sdk.Core.Data;
 using System;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {

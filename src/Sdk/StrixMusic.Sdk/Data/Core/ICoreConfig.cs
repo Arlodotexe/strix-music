@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using OwlCore.AbstractUI;
 using StrixMusic.Sdk.MediaPlayback;
 
-namespace StrixMusic.Sdk.Core.Data
+namespace StrixMusic.Sdk.Data.Core
 {
     /// <summary>
     /// Provides various methods of configuring a core.

@@ -1,12 +1,12 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Core.Data;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.Data;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {

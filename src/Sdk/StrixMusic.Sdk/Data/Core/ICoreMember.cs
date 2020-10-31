@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Core.Data
+﻿namespace StrixMusic.Sdk.Data.Core
 {
     /// <summary>
     /// Properties required by all core-based interfaces that live in an <see cref="ICore"/>.

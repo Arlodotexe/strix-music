@@ -3,9 +3,10 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.Collections;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Core;
 
-namespace StrixMusic.Sdk.Core.ViewModels
+namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
     /// Contains bindable information about an <see cref="ICoreUserProfile"/>

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.Collections;
 using OwlCore.Extensions.AsyncExtensions;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 
-namespace StrixMusic.Sdk.Core.Merged
+namespace StrixMusic.Sdk.Data.Merged
 {
     /// <summary>
     /// A base that merges multiple <see cref="IPlayableCollectionGroupBase"/>s.

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml.Media.Imaging;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Uno.Converters
 {

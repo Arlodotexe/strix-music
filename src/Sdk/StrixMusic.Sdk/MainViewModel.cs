@@ -8,11 +8,12 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using OwlCore.Extensions.AsyncExtensions;
 using OwlCore.Helpers;
-using StrixMusic.Sdk.Core.Data;
-using StrixMusic.Sdk.Core.Merged;
-using StrixMusic.Sdk.Core.ViewModels;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk
 {

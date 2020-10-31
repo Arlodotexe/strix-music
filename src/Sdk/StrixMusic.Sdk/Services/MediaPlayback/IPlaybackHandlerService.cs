@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.Events;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback

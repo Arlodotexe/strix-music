@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.MediaPlayback.LocalDevice

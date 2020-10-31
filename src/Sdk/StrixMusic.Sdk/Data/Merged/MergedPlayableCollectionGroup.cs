@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data.Base;
 
-namespace StrixMusic.Sdk.Core.Merged
+namespace StrixMusic.Sdk.Data.Merged
 {
     /// <summary>
     /// A concrete class that merges multiple <see cref="IPlayableCollectionGroupBase"/>s.

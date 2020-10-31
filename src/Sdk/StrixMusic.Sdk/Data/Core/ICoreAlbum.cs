@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using StrixMusic.Sdk.Data.Base;
 
-namespace StrixMusic.Sdk.Core.Data
+namespace StrixMusic.Sdk.Data.Core
 {
     /// <inheritdoc cref="IAlbumBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>

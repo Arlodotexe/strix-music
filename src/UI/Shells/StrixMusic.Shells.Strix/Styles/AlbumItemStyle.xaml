@@ -3,12 +3,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:data="using:StrixMusic.Sdk.Core.Data"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:core1="clr-namespace:StrixMusic.Sdk.Data.Core;assembly=StrixMusic.Sdk"
     x:Class="StrixMusic.Shells.Strix.Styles.AlbumItemStyle">
 
-    <DataTemplate x:Key="StrixAlbumItemTemplate" x:DataType="data:ICoreAlbum">
+    <DataTemplate x:Key="StrixAlbumItemTemplate" x:DataType="core1:ICoreAlbum">
         <UserControl>
             <Grid Padding="24,16" Background="Transparent">
                 <interactivity:Interaction.Behaviors>

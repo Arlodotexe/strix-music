@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Sdk.Core.Data
+﻿namespace StrixMusic.Sdk.Data
 {
     /// <summary>
     /// The state of a <see cref="ICore"/>.

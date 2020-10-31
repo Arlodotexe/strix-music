@@ -4,10 +4,11 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Collections;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 
-namespace StrixMusic.Sdk.Core.Merged
+namespace StrixMusic.Sdk.Data.Merged
 {
     /// <summary>
     /// A concrete class that merged multiple <see cref="ICoreTrack"/>s.

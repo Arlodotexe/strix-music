@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using StrixMusic.Sdk.Data.Base;
 
-namespace StrixMusic.Sdk.Core.Data
+namespace StrixMusic.Sdk.Data.Core
 {
     /// <inheritdoc cref="IDeviceBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>

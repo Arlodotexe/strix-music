@@ -1,4 +1,6 @@
-﻿namespace StrixMusic.Sdk.Core.Data
+﻿using StrixMusic.Sdk.Data.Core;
+
+namespace StrixMusic.Sdk.Data
 {
     /// <summary>
     /// Used to identify which variant of <see cref="ICoreTrack"/> this is.
