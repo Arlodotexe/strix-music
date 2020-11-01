@@ -26,11 +26,11 @@ namespace Windows.UI
             switch (GetCMaxChannel(color))
             {
                 case RGBChannel.R:
-                    return 60 * ((color.G - color.B) / delta) % 6;
+                    return (byte)(60 * ((color.G - color.B) / delta) % 6);
                 case RGBChannel.G:
-                    return 60 * ((color.B - color.R) / delta) + 2;
+                    return (byte)(60 * ((color.B - color.R) / delta) + 2);
                 case RGBChannel.B:
-                    return 60 * ((color.R - color.G) / delta) + 4;
+                    return (byte)(60 * ((color.R - color.G) / delta) + 4);
             }
 
             return 0; // Not possible
@@ -43,7 +43,7 @@ namespace Windows.UI
         public static byte GetSaturation(this Color color)
         {
             int value = color.GetValue();
-            return GetDelta(color) / value;
+            return (byte)(GetDelta(color) / value);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Windows.UI
         public static byte GetValue(this Color color)
         {
             int max = Math.Max(color.R, color.G);
-            return Math.Max(max, color.B);
+            return (byte)Math.Max(max, color.B);
         }
 
         /// <summary>
@@ -72,12 +72,12 @@ namespace Windows.UI
         private static byte GetCMin(this Color color)
         {
             int min = Math.Min(color.R, color.G);
-            return Math.Min(min, color.B);
+            return (byte)(Math.Min(min, color.B));
         }
 
         private static byte GetDelta(this Color color)
         {
-            return GetValue(color) - GetCMin(color);
+            return (byte)(GetValue(color) - GetCMin(color));
         }
 
         private static RGBChannel GetCMaxChannel(this Color color)
