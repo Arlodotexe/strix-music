@@ -264,7 +264,7 @@
                                 </Grid.RowDefinitions>
 
                                 <!--Background behind thumb-->
-                                <Border CornerRadius="2,0,0,2" Grid.Row="1">
+                                <Border CornerRadius="2" Grid.Row="1">
                                     <Rectangle x:Name="HorizontalDecreaseRect"
                                                Fill="{TemplateBinding Background}" Grid.Row="1" />
                                 </Border>
