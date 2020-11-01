@@ -54,6 +54,9 @@ namespace StrixMusic.Shells.Groove
 
             SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
             currentView.BackRequested += (s, e) => _navigationService!.GoBack();
+
+            Color accentColor = (Color)Resources["SystemAccentColor"];
+            
         }
 
         private void SetupIoc()

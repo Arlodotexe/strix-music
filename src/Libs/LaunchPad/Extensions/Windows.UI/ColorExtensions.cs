@@ -16,7 +16,7 @@ namespace Windows.UI
         /// Gets the Hue of a <see cref="Color"/> in hex format.
         /// </summary>
         /// <returns>The hex Hue.</returns>
-        public static int GetHexHue(this Color color)
+        public static byte GetHexHue(this Color color)
         {
             int delta = GetDelta(color);
 
@@ -40,7 +40,7 @@ namespace Windows.UI
         /// Gets the Saturation of a <see cref="Color"/> in hex format.
         /// </summary>
         /// <returns>The hex Saturation.</returns>
-        public static int GetSaturation(this Color color)
+        public static byte GetSaturation(this Color color)
         {
             int value = color.GetValue();
             return GetDelta(color) / value;
@@ -50,19 +50,32 @@ namespace Windows.UI
         /// Gets the Value of a <see cref="Color"/> in hex format.
         /// </summary>
         /// <returns>The hex Value.</returns>
-        public static int GetValue(this Color color)
+        public static byte GetValue(this Color color)
         {
             int max = Math.Max(color.R, color.G);
             return Math.Max(max, color.B);
         }
 
-        private static int GetCMin(this Color color)
+        /// <summary>
+        /// Adjusts the Value of the <see cref="Color"/>.
+        /// </summary>
+        /// <returns>A <see cref="Color"/> with the same Hue and Saturation of this, but a value of <paramref name="value"/>.</returns>
+        public static Color AdjustValue(this Color color, byte value)
+        {
+            float adjustmentFactor = value / GetValue(color);
+            byte r = (byte)(color.R * adjustmentFactor);
+            byte g = (byte)(color.G * adjustmentFactor);
+            byte b = (byte)(color.B * adjustmentFactor);
+            return Color.FromArgb(color.A, r, g, b);
+        }
+
+        private static byte GetCMin(this Color color)
         {
             int min = Math.Min(color.R, color.G);
             return Math.Min(min, color.B);
         }
 
-        private static int GetDelta(this Color color)
+        private static byte GetDelta(this Color color)
         {
             return GetValue(color) - GetCMin(color);
         }

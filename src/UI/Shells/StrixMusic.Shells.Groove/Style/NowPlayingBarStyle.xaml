@@ -5,13 +5,13 @@
     xmlns:launchpad="using:LaunchPad.Controls"
     x:Class="StrixMusic.Shells.Groove.Styles.NowPlayingBarStyle">
 
-    <Style x:Key="DefaultNowPlayingBarStyle" TargetType="defaultcontrols:NowPlayingBar">
+    <Style x:Key="GrooveNowPlayingBarStyle" TargetType="defaultcontrols:NowPlayingBar">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="defaultcontrols:NowPlayingBar">
                         <UserControl>
-                            <Grid VerticalAlignment="Center">
+                            <Grid VerticalAlignment="Center" >
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="Sizes">
                                         <VisualState x:Name="Small">
@@ -50,6 +50,7 @@
                                     <ColumnDefinition x:Name="sliderColumn"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
+
                                 <Grid MaxWidth="300">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
@@ -98,6 +99,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultNowPlayingBarStyle}" TargetType="defaultcontrols:NowPlayingBar"/>
+    <Style BasedOn="{StaticResource GrooveNowPlayingBarStyle}" TargetType="defaultcontrols:NowPlayingBar"/>
 
 </ResourceDictionary>
