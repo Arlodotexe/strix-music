@@ -19,6 +19,170 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="CornerRadius" Value="1000"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="launchpad:ToggleContentButton">
+                    <Grid x:Name="RootGrid"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                          CornerRadius="{TemplateBinding CornerRadius}"
+                          VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                            <DiscreteObjectKeyFrame Value="#33FFFFFF" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                            <DiscreteObjectKeyFrame Value="#80FFFFFF" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <!--TODO: Upon necessity-->
+                                </VisualState>
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame Value="#7D000000" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="CheckedContentPresenter.Visibility" Value="Visible"/>
+                                        <Setter Target="ContentPresenter.Visibility" Value="Collapsed"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="CheckedPointerOver">
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                <DiscreteObjectKeyFrame Value="#33FFFFFF" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="CheckedContentPresenter.Visibility" Value="Visible"/>
+                                        <Setter Target="ContentPresenter.Visibility" Value="Collapsed"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="CheckedPressed">
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                <DiscreteObjectKeyFrame Value="#80FFFFFF" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="CheckedContentPresenter.Visibility" Value="Visible"/>
+                                        <Setter Target="ContentPresenter.Visibility" Value="Collapsed"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="CheckedDisabled">
+                                    <!--TODO: Upon necessity-->
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate">
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame Value="#7D000000" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="IndeterminateContentPresenter.Visibility" Value="Visible"/>
+                                        <Setter Target="ContentPresenter.Visibility" Value="Collapsed"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="IndeterminatePointerOver">
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                <DiscreteObjectKeyFrame Value="#33FFFFFF" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="IndeterminateContentPresenter.Visibility" Value="Visible"/>
+                                        <Setter Target="ContentPresenter.Visibility" Value="Collapsed"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="IndeterminatePressed">
+                                    <VisualState.Storyboard>
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background"
+                                                                            Storyboard.TargetName="MainGrid">
+                                                <DiscreteObjectKeyFrame Value="#80FFFFFF" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState.Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="IndeterminateContentPresenter.Visibility" Value="Visible"/>
+                                        <Setter Target="ContentPresenter.Visibility" Value="Collapsed"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="IndeterminateDisabled">
+                                    <!--TODO: Upon necessity-->
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid x:Name="MainGrid"
+                              Background="Transparent"
+                              CornerRadius="{TemplateBinding CornerRadius}">
+                            <ContentPresenter x:Name="ContentPresenter"
+                                                  AutomationProperties.AccessibilityView="Raw"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                  Content="{TemplateBinding Content}"
+                                                  FontSize="{TemplateBinding FontSize}"
+                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Padding="{TemplateBinding Padding}"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            <ContentPresenter x:Name="CheckedContentPresenter"
+                                                  AutomationProperties.AccessibilityView="Raw"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                  Content="{TemplateBinding CheckedContent}"
+                                                  FontSize="{TemplateBinding FontSize}"
+                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Padding="{TemplateBinding Padding}"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Visibility="Collapsed"/>
+                            <ContentPresenter x:Name="IndeterminateContentPresenter"
+                                                  AutomationProperties.AccessibilityView="Raw"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                  Content="{TemplateBinding IndeterminateContent}"
+                                                  FontSize="{TemplateBinding FontSize}"
+                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Padding="{TemplateBinding Padding}"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Visibility="Collapsed"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
     
 </ResourceDictionary>
