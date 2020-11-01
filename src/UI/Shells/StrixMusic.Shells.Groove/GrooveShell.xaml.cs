@@ -28,9 +28,6 @@ namespace StrixMusic.Shells.Groove
         /// </summary>
         public GrooveShell()
         {
-            Color accentColor = (Color)Application.Current.Resources["SystemAccentColor"];
-            Application.Current.Resources["NowPlayingBarBackgroundBrush"] = new SolidColorBrush(accentColor.AdjustValue(.25));
-            
             InitializeComponent();
             SetupIoc();
 
