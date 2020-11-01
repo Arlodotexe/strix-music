@@ -76,8 +76,7 @@
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
-                                    <launchpad:ToggleContentButton Style="{StaticResource MediaToggleContentButton}" FontSize="22"
-                                                                   BorderThickness="2" BorderBrush="#40FFFFFF" Padding="12">
+                                    <launchpad:ToggleContentButton Style="{StaticResource PlayPauseToggleContentButton}">
                                         <launchpad:ToggleContentButton.CheckedContent>
                                             <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </launchpad:ToggleContentButton.CheckedContent>
