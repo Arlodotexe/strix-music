@@ -20,20 +20,20 @@
                                             </VisualState.StateTriggers>
                                             <VisualState.Setters>
                                                 <!--<Setter Target="sliderGrid.Visibility" Value="Collapsed"/>-->
-                                                <Setter Target="sliderRow.Height" Value="48"/>
-                                                <Setter Target="slider.(Grid.Row)" Value="1"/>
+                                                <Setter Target="sliderRow.Height" Value="32"/>
+                                                <Setter Target="slider.(Grid.Row)" Value="2"/>
                                                 <Setter Target="slider.(Grid.Column)" Value="0"/>
                                                 <Setter Target="slider.(Grid.ColumnSpan)" Value="3"/>
                                             </VisualState.Setters>
                                         </VisualState>
                                         <VisualState x:Name="Large">
                                             <VisualState.StateTriggers>
-                                                <AdaptiveTrigger MinWindowWidth="1200"/>
+                                                <AdaptiveTrigger MinWindowWidth="600"/>
                                             </VisualState.StateTriggers>
                                             <VisualState.Setters>
                                                 <!--<Setter Target="sliderGrid.Visibility" Value="Visible"/>-->
                                                 <Setter Target="sliderRow.Height" Value="0"/>
-                                                <Setter Target="slider.(Grid.Row)" Value="0"/>
+                                                <Setter Target="slider.(Grid.Row)" Value="1"/>
                                                 <Setter Target="slider.(Grid.Column)" Value="1"/>
                                                 <Setter Target="slider.(Grid.ColumnSpan)" Value="1"/>
                                             </VisualState.Setters>
@@ -42,16 +42,18 @@
                                 </VisualStateManager.VisualStateGroups>
 
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="96"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
                                     <RowDefinition x:Name="sliderRow" Height="0"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition x:Name="sliderColumn"/>
-                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Grid MaxWidth="300">
+                                <!--Album Image / Track Data-->
+                                <Grid Height="96" MaxWidth="300" HorizontalAlignment="Left" Grid.RowSpan="2">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition/>
@@ -63,9 +65,11 @@
                                     <Rectangle Fill="#FF00FF" Width="96" Height="96"/>
                                 </Grid>
 
-                                <defaultcontrols:ProgressSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"/>
-
-                                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                                <!--Slider and Buttons-->
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
+                                    <Button Style="{StaticResource MediaButton}">
+                                        <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                    </Button>
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
@@ -87,10 +91,9 @@
                                         </launchpad:ToggleContentButton.CheckedContent>
                                         <FontIcon Glyph="&#xE194;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </launchpad:ToggleContentButton>
-                                    <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                    </Button>
                                 </StackPanel>
+                                
+                                <defaultcontrols:ProgressSlider x:Name="slider" Grid.Row="1" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"/>
                             </Grid>
                         </UserControl>
                     </ControlTemplate>
