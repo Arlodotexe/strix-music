@@ -10,6 +10,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 namespace StrixMusic.Shells.Groove
 {
@@ -27,6 +28,9 @@ namespace StrixMusic.Shells.Groove
         /// </summary>
         public GrooveShell()
         {
+            Color accentColor = (Color)Application.Current.Resources["SystemAccentColor"];
+            Application.Current.Resources["NowPlayingBarBackgroundBrush"] = new SolidColorBrush(accentColor.AdjustValue(.25));
+            
             InitializeComponent();
             SetupIoc();
 
@@ -54,9 +58,6 @@ namespace StrixMusic.Shells.Groove
 
             SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
             currentView.BackRequested += (s, e) => _navigationService!.GoBack();
-
-            Color accentColor = (Color)Resources["SystemAccentColor"];
-            
         }
 
         private void SetupIoc()

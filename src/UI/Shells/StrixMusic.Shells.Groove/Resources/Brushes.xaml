@@ -1,0 +1,11 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+    Redefined in C#
+    Computed as "SystemAccentColor" with a value of 25%
+    -->
+    <SolidColorBrush x:Key="NowPlayingBarBackgroundBrush" Color="#000000"/>
+    
+</ResourceDictionary>

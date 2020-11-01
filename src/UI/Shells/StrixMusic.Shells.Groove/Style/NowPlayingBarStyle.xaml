@@ -11,7 +11,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="defaultcontrols:NowPlayingBar">
                         <UserControl>
-                            <Grid VerticalAlignment="Center" >
+                            <Grid VerticalAlignment="Center" Background="{ThemeResource NowPlayingBarBackgroundBrush}">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="Sizes">
                                         <VisualState x:Name="Small">
