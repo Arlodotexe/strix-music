@@ -19,7 +19,7 @@
         <dstyles:TrackItemStyle/>
 
         <ResourceDictionary Source="Resources/Brushes.xaml"/>
-        <!--<ResourceDictionary Source="Resources/ButtonStyles.xaml"/>-->
+        <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
     <Style x:Key="MediaSlider" TargetType="Slider">

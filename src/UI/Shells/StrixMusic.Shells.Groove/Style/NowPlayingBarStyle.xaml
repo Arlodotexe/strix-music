@@ -53,19 +53,22 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!--Album Image / Track Data-->
-                                <Grid Height="96" MaxWidth="300" HorizontalAlignment="Left" Grid.RowSpan="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                        <TextBlock Text="Diplomat's Son"/>
-                                        <TextBlock Text="Vampire Weekend" Opacity=".5"/>
-                                    </StackPanel>
-                                    <Rectangle Fill="#FF00FF" Width="96" Height="96"/>
-                                </Grid>
+                                <Button Height="96" MaxWidth="300" HorizontalAlignment="Left" VerticalAlignment="Stretch" Grid.RowSpan="2"
+                                        BorderThickness="0" Background="Transparent" Padding="0,0,16,0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="Diplomat's Son"/>
+                                            <TextBlock Text="Vampire Weekend" Opacity=".5"/>
+                                        </StackPanel>
+                                        <Rectangle Fill="#FF00FF" Width="96" Height="96"/>
+                                    </Grid>
+                                </Button>
 
-                                <!--Slider and Buttons-->
+                                <!--Buttons-->
                                 <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
@@ -73,7 +76,8 @@
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
-                                    <launchpad:ToggleContentButton Style="{StaticResource MediaToggleContentButton}">
+                                    <launchpad:ToggleContentButton Style="{StaticResource MediaToggleContentButton}" FontSize="22"
+                                                                   BorderThickness="2" BorderBrush="#40FFFFFF" Padding="12">
                                         <launchpad:ToggleContentButton.CheckedContent>
                                             <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </launchpad:ToggleContentButton.CheckedContent>
@@ -93,6 +97,7 @@
                                     </launchpad:ToggleContentButton>
                                 </StackPanel>
                                 
+                                <!--Slider-->
                                 <defaultcontrols:ProgressSlider x:Name="slider" Grid.Row="1" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"/>
                             </Grid>
                         </UserControl>

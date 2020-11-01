@@ -30,6 +30,7 @@
     <None Remove="GrooveShell.xaml" />
     <None Remove="Resources.xaml" />
     <None Remove="Resources\Brushes.xaml" />
+    <None Remove="Resources\ButtonStyles.xaml" />
     <None Remove="Style\HomeStyle.xaml" />
     <None Remove="Style\NowPlayingBarStyle.xaml" />
     <None Remove="Style\PlayableCollectionGroupPivotStyle.xaml" />
@@ -38,6 +39,7 @@
     <UpToDateCheckInput Remove="GrooveShell.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Resources\Brushes.xaml" />
+    <UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
     <UpToDateCheckInput Remove="Style\HomeStyle.xaml" />
     <UpToDateCheckInput Remove="Style\NowPlayingBarStyle.xaml" />
     <UpToDateCheckInput Remove="Style\PlayableCollectionGroupPivotStyle.xaml" />
