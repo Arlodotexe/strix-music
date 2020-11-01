@@ -62,11 +62,24 @@ namespace Windows.UI
         /// <returns>A <see cref="Color"/> with the same Hue and Saturation of this, but a value of <paramref name="value"/>.</returns>
         public static Color AdjustValue(this Color color, byte value)
         {
-            float adjustmentFactor = value / GetValue(color);
+            byte oldValue = GetValue(color);
+            if (oldValue == 0)
+                return Color.FromArgb(color.A, value, value, value);
+
+            float adjustmentFactor = (float)value / oldValue;
             byte r = (byte)(color.R * adjustmentFactor);
             byte g = (byte)(color.G * adjustmentFactor);
             byte b = (byte)(color.B * adjustmentFactor);
             return Color.FromArgb(color.A, r, g, b);
+        }
+
+        /// <summary>
+        /// Adjusts the Value of the <see cref="Color"/>.
+        /// </summary>
+        /// <returns>A <see cref="Color"/> with the same Hue and Saturation of this, but a value of <paramref name="value"/>.</returns>
+        public static Color AdjustValue(this Color color, double value)
+        {
+            return AdjustValue(color, (byte)(255 * value));
         }
 
         private static byte GetCMin(this Color color)
