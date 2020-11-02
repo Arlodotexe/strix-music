@@ -70,9 +70,9 @@
 
                                 <!--Buttons-->
                                 <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
-                                    <Button Style="{StaticResource MediaButton}">
+                                    <ToggleButton Style="{StaticResource MediaToggleButton}">
                                         <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                    </Button>
+                                    </ToggleButton>
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
