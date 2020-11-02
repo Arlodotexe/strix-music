@@ -1,28 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions.SdkMember;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="ICoreTrack"/>
+    /// Contains bindable information about an <see cref="ITrack"/>
     /// </summary>
-    public class TrackViewModel : MergeableObjectViewModel<ICoreTrack>, ICoreTrack, IArtistCollectionViewModel
+    public class TrackViewModel : MergeableObjectViewModel<ITrack>, ITrack, IArtistCollectionViewModel
     {
-        private ICoreAlbum? _album;
+        private IAlbum? _album;
 
         /// <summary>
-        /// Creates a bindable wrapper around an <see cref="ICoreTrack"/>.
+        /// Creates a bindable wrapper around an <see cref="ITrack"/>.
         /// </summary>
-        /// <param name="track">The <see cref="ICoreTrack"/> to wrap.</param>
-        public TrackViewModel(ICoreTrack track)
+        /// <param name="track">The <see cref="ITrack"/> to wrap.</param>
+        public TrackViewModel(ITrack track)
         {
             Model = track;
 
@@ -32,8 +33,8 @@ namespace StrixMusic.Sdk.ViewModels
             if (Model.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(Model.RelatedItems);
 
-            Artists = new SynchronizedObservableCollection<ICoreArtistCollectionItem>();
-            SourceCore = MainViewModel.GetLoadedCore(Model.SourceCore);
+            Artists = new SynchronizedObservableCollection<IArtistCollectionItem>();
+            SourceCores = Model.GetSourceCores<ICoreTrack>().Select(MainViewModel.GetLoadedCore).ToList();
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -80,7 +81,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<ICoreAlbum?> AlbumChanged
+        public event EventHandler<IAlbum?> AlbumChanged
         {
             add => Model.AlbumChanged += value;
 
@@ -104,7 +105,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<ICoreLyrics?> LyricsChanged
+        public event EventHandler<ILyrics?> LyricsChanged
         {
             add => Model.LyricsChanged += value;
 
@@ -159,7 +160,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Track_NameChanged(object sender, string e) => Name = e;
 
-        private void Track_LyricsChanged(object sender, ICoreLyrics? e) => Lyrics = e;
+        private void Track_LyricsChanged(object sender, ILyrics? e) => Lyrics = e;
 
         private void Track_LanguageChanged(object sender, CultureInfo? e) => Language = e;
 
@@ -167,26 +168,46 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Track_DescriptionChanged(object sender, string? e) => Description = e;
 
-        private void Track_AlbumChanged(object sender, ICoreAlbum? e) => Album = e != null ? new AlbumViewModel(e) : null;
+        private void Track_AlbumChanged(object sender, IAlbum? e) => Album = e != null ? new AlbumViewModel(e) : null;
 
         /// <summary>
         /// The wrapped model for this <see cref="TrackViewModel"/>.
         /// </summary>
-        internal ICoreTrack Model { get; }
+        internal ITrack Model { get; }
+
+        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
+        public IReadOnlyList<ICore> SourceCores { get; }
+
+        /// <summary>
+        /// The merged sources for this model
+        /// </summary>
+        public IReadOnlyList<ICoreTrack> Sources => Model.GetSources<ICoreTrack>();
 
         /// <inheritdoc />
-        public ICore[] SourceCore { get; }
+        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreGenreCollection> ISdkMember<ICoreGenreCollection>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreTrack> ISdkMember<ICoreTrack>.Sources => Sources;
 
         /// <summary>
         /// The artists for this track.
         /// </summary>
-        public SynchronizedObservableCollection<ICoreArtistCollectionItem> Artists { get; }
+        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<string>? Genres => Model.Genres;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<ICoreImage> Images => Model.Images;
+        public SynchronizedObservableCollection<IImage> Images => Model.Images;
 
         /// <inheritdoc />
         public TrackType Type => Model.Type;
@@ -198,7 +219,7 @@ namespace StrixMusic.Sdk.ViewModels
         public TimeSpan Duration => Model.Duration;
 
         /// <inheritdoc />
-        public IPlayableCollectionGroupBase? RelatedItems { get; }
+        public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc />
         public string Id => Model.Id;
@@ -218,7 +239,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public ICoreAlbum? Album
+        public IAlbum? Album
         {
             get => _album;
             set => SetProperty(ref _album, value);
@@ -242,7 +263,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public ICoreLyrics? Lyrics
+        public ILyrics? Lyrics
         {
             get => Model.Lyrics;
             set => SetProperty(() => Model.Lyrics, value);
@@ -358,7 +379,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveArtistSupported(int index) => Model.IsRemoveArtistSupported(index);
 
         /// <inheritdoc />
-        public Task ChangeAlbumAsync(ICoreAlbum? albums) => Model.ChangeAlbumAsync(albums);
+        public Task ChangeAlbumAsync(IAlbum? album) => Model.ChangeAlbumAsync(album);
 
         /// <inheritdoc />
         public Task ChangeTrackNumberAsync(int? trackNumber) => Model.ChangeTrackNumberAsync(trackNumber);
@@ -367,7 +388,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeLanguageAsync(CultureInfo language) => Model.ChangeLanguageAsync(language);
 
         /// <inheritdoc />
-        public Task ChangeLyricsAsync(ICoreLyrics? lyrics) => Model.ChangeLyricsAsync(lyrics);
+        public Task ChangeLyricsAsync(ILyrics? lyrics) => Model.ChangeLyricsAsync(lyrics);
 
         /// <inheritdoc />
         public Task ChangeIsExplicitAsync(bool isExplicit) => Model.ChangeIsExplicitAsync(isExplicit);
@@ -388,10 +409,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration) => Model.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset) => Model.GetArtistItemsAsync(limit, offset);
+        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => Model.GetArtistItemsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index) => Model.AddArtistItemAsync(artist, index);
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => Model.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
         public Task RemoveArtistAsync(int index) => Model.RemoveArtistAsync(index);

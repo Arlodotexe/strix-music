@@ -32,6 +32,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             MainViewModel.Singleton?.Cores.Add(this);
 
+            // TODO: Create merged items
+
             Devices = new SynchronizedObservableCollection<ICoreDevice>(_core.Devices.Select(x => new DeviceViewModel(x)));
             Library = new LibraryViewModel(_core.Library);
             CoreRecentlyPlayed = new RecentlyPlayedViewModel(_core.CoreRecentlyPlayed);

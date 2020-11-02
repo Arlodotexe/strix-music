@@ -1,10 +1,14 @@
-﻿using StrixMusic.Sdk.Data.Base;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="IPlaylistBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface IPlaylist : IPlaylistBase, ITrackCollection, IPlaylistCollection, IGenreCollection, IPlaylistCollectionItem, ISdkMember
+    [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
+    public interface IPlaylist : IPlaylistBase, ITrackCollection, IImageCollection, IGenreCollection, IPlaylistCollectionItem, ISdkMember<ICorePlaylist>
     {
         /// <summary>
         /// Owner of the playable item.

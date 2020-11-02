@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -8,6 +9,7 @@ using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions.SdkMember;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Services.MediaPlayback;
@@ -15,33 +17,33 @@ using StrixMusic.Sdk.Services.MediaPlayback;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="ICoreAlbum"/>.
+    /// Contains bindable information about an <see cref="IAlbum"/>.
     /// </summary>
-    public class AlbumViewModel : MergeableObjectViewModel<ICoreAlbum>, ICoreAlbum, ITrackCollectionViewModel
+    public class AlbumViewModel : MergeableObjectViewModel<IAlbum>, IAlbum, ITrackCollectionViewModel
     {
-        private readonly ICoreAlbum _coreAlbum;
+        private readonly IAlbum _album;
         private readonly IPlaybackHandlerService _playbackHandler;
-        private ArtistViewModel _coreArtist; // TODO: Expose this field from readonly property
+        private ArtistViewModel _artist; // TODO: Expose this field from readonly property
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumViewModel"/> class.
         /// </summary>
-        /// <param name="coreAlbum"><inheritdoc cref="ICoreAlbum"/></param>
-        public AlbumViewModel(ICoreAlbum coreAlbum)
+        /// <param name="album"><inheritdoc cref="IAlbum"/></param>
+        public AlbumViewModel(IAlbum album)
         {
-            _coreAlbum = coreAlbum;
+            _album = album;
 
-            SourceCore = MainViewModel.GetLoadedCore(_coreAlbum.SourceCore);
+            SourceCores = _album.GetSourceCores<ICoreAlbum>().Select(MainViewModel.GetLoadedCore).ToList();
 
             _playbackHandler = Ioc.Default.GetService<IPlaybackHandlerService>();
 
-            Images = new SynchronizedObservableCollection<ICoreImage>(_coreAlbum.Images);
+            Images = new SynchronizedObservableCollection<IImage>(_album.Images);
             Tracks = new SynchronizedObservableCollection<TrackViewModel>();
 
-            if (_coreAlbum.RelatedItems != null)
-                RelatedItems = new PlayableCollectionGroupViewModel(_coreAlbum.RelatedItems);
+            if (_album.RelatedItems != null)
+                RelatedItems = new PlayableCollectionGroupViewModel(_album.RelatedItems);
 
-            _coreArtist = new ArtistViewModel(_coreAlbum.Artist);
+            _artist = new ArtistViewModel(_album.Artist);
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -55,115 +57,114 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void AttachEvents()
         {
-            _coreAlbum.PlaybackStateChanged += CoreAlbumPlaybackStateChanged;
-            _coreAlbum.DescriptionChanged += CoreAlbumDescriptionChanged;
-            _coreAlbum.DatePublishedChanged += CoreAlbumDatePublishedChanged;
-            _coreAlbum.NameChanged += CoreAlbumNameChanged;
-            _coreAlbum.UrlChanged += CoreAlbumUrlChanged;
+            _album.PlaybackStateChanged += AlbumPlaybackStateChanged;
+            _album.DescriptionChanged += AlbumDescriptionChanged;
+            _album.DatePublishedChanged += AlbumDatePublishedChanged;
+            _album.NameChanged += AlbumNameChanged;
+            _album.UrlChanged += AlbumUrlChanged;
         }
 
         private void DetachEvents()
         {
-            _coreAlbum.PlaybackStateChanged -= CoreAlbumPlaybackStateChanged;
-            _coreAlbum.DescriptionChanged -= CoreAlbumDescriptionChanged;
-            _coreAlbum.DatePublishedChanged -= CoreAlbumDatePublishedChanged;
-            _coreAlbum.NameChanged -= CoreAlbumNameChanged;
-            _coreAlbum.UrlChanged -= CoreAlbumUrlChanged;
+            _album.PlaybackStateChanged -= AlbumPlaybackStateChanged;
+            _album.DescriptionChanged -= AlbumDescriptionChanged;
+            _album.DatePublishedChanged -= AlbumDatePublishedChanged;
+            _album.NameChanged -= AlbumNameChanged;
+            _album.UrlChanged -= AlbumUrlChanged;
         }
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
-            add => _coreAlbum.PlaybackStateChanged += value;
+            add => _album.PlaybackStateChanged += value;
 
-            remove => _coreAlbum.PlaybackStateChanged -= value;
+            remove => _album.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string>? NameChanged
         {
-            add => _coreAlbum.NameChanged += value;
+            add => _album.NameChanged += value;
 
-            remove => _coreAlbum.NameChanged -= value;
+            remove => _album.NameChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string?> DescriptionChanged
         {
-            add => _coreAlbum.DescriptionChanged += value;
+            add => _album.DescriptionChanged += value;
 
-            remove => _coreAlbum.DescriptionChanged -= value;
+            remove => _album.DescriptionChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<Uri?> UrlChanged
         {
-            add => _coreAlbum.UrlChanged += value;
+            add => _album.UrlChanged += value;
 
-            remove => _coreAlbum.UrlChanged -= value;
+            remove => _album.UrlChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged
         {
-            add => _coreAlbum.DurationChanged += value;
+            add => _album.DurationChanged += value;
 
-            remove => _coreAlbum.DurationChanged -= value;
+            remove => _album.DurationChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<DateTime?> DatePublishedChanged
         {
-            add => _coreAlbum.DatePublishedChanged += value;
+            add => _album.DatePublishedChanged += value;
 
-            remove => _coreAlbum.DatePublishedChanged -= value;
+            remove => _album.DatePublishedChanged -= value;
         }
 
-        private void CoreAlbumUrlChanged(object sender, Uri? e)
-        {
-            Url = e;
-        }
+        private void AlbumUrlChanged(object sender, Uri? e) => Url = e;
 
-        private void CoreAlbumNameChanged(object sender, string e)
-        {
-            Name = e;
-        }
+        private void AlbumNameChanged(object sender, string e) => Name = e;
 
-        private void CoreAlbumDescriptionChanged(object sender, string? e)
-        {
-            Description = e;
-        }
+        private void AlbumDescriptionChanged(object sender, string? e) => Description = e;
 
-        private void CoreAlbumPlaybackStateChanged(object sender, PlaybackState e)
-        {
-            PlaybackState = e;
-        }
+        private void AlbumPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
 
-        private void CoreAlbumDatePublishedChanged(object sender, DateTime? e)
-        {
-            DatePublished = e;
-        }
+        private void AlbumDatePublishedChanged(object sender, DateTime? e) => DatePublished = e;
 
         /// <inheritdoc />
-        public string Id => _coreAlbum.Id;
+        public string Id => _album.Id;
+
+        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
+        public IReadOnlyList<ICore> SourceCores { get; }
+
+        /// <summary>
+        /// The merged sources for this album.
+        /// </summary>
+        public IReadOnlyList<ICoreAlbum> Sources => _album.GetSources<ICoreAlbum>();
 
         /// <inheritdoc />
-        public ICore SourceCore { get; }
+        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        public TimeSpan Duration => _coreAlbum.Duration;
+        IReadOnlyList<ICoreTrackCollection> ISdkMember<ICoreTrackCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        public int TotalTracksCount => _coreAlbum.TotalTracksCount;
+        IReadOnlyList<ICoreAlbumCollectionItem> ISdkMember<ICoreAlbumCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
-        public IPlayableCollectionGroupBase? RelatedItems { get; }
+        public TimeSpan Duration => _album.Duration;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<ICoreImage> Images { get; }
+        public int TotalTracksCount => _album.TotalTracksCount;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<string>? Genres => _coreAlbum.Genres;
+        public IPlayableCollectionGroup? RelatedItems { get; }
+
+        /// <inheritdoc />
+        public SynchronizedObservableCollection<IImage> Images { get; }
+
+        /// <inheritdoc />
+        public SynchronizedObservableCollection<string>? Genres => _album.Genres;
 
         /// <summary>
         /// The tracks for this album.
@@ -173,99 +174,102 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public string Name
         {
-            get => _coreAlbum.Name;
-            private set => SetProperty(() => _coreAlbum.Name, value);
-        }
-
-        /// <inheritdoc cref="IAlbumBase.Artist" />
-        public ArtistViewModel Artist
-        {
-            get => _coreArtist;
-            set => SetProperty(ref _coreArtist, new ArtistViewModel(value));
+            get => _album.Name;
+            private set => SetProperty(() => _album.Name, value);
         }
 
         /// <inheritdoc />
-        ICoreArtist ICoreAlbum.CoreArtist => Artist;
+        public IReadOnlyList<ICoreAlbum> SourceAlbums { get; }
+
+        /// <inheritdoc cref="IAlbum.Artist" />
+        public ArtistViewModel Artist
+        {
+            get => _artist;
+            set => SetProperty(ref _artist, new ArtistViewModel(value));
+        }
+
+        /// <inheritdoc />
+        IArtist IAlbum.Artist => Artist;
 
         /// <inheritdoc />
         public Uri? Url
         {
-            get => _coreAlbum.Url;
-            private set => SetProperty(() => _coreAlbum.Url, value);
+            get => _album.Url;
+            private set => SetProperty(() => _album.Url, value);
         }
 
         /// <inheritdoc />
         public DateTime? DatePublished
         {
-            get => _coreAlbum.DatePublished;
-            set => SetProperty(() => _coreAlbum.DatePublished, value);
+            get => _album.DatePublished;
+            set => SetProperty(() => _album.DatePublished, value);
         }
 
         /// <inheritdoc />
         public string? Description
         {
-            get => _coreAlbum.Description;
-            private set => SetProperty(() => _coreAlbum.Description, value);
+            get => _album.Description;
+            private set => SetProperty(() => _album.Description, value);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
-            get => _coreAlbum.PlaybackState;
-            private set => SetProperty(() => _coreAlbum.PlaybackState, value);
+            get => _album.PlaybackState;
+            private set => SetProperty(() => _album.PlaybackState, value);
         }
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported
         {
-            get => _coreAlbum.IsPlayAsyncSupported;
-            set => SetProperty(() => _coreAlbum.IsPlayAsyncSupported, value);
+            get => _album.IsPlayAsyncSupported;
+            set => SetProperty(() => _album.IsPlayAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsPauseAsyncSupported
         {
-            get => _coreAlbum.IsPauseAsyncSupported;
-            set => SetProperty(() => _coreAlbum.IsPauseAsyncSupported, value);
+            get => _album.IsPauseAsyncSupported;
+            set => SetProperty(() => _album.IsPauseAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeNameAsyncSupported
         {
-            get => _coreAlbum.IsChangeNameAsyncSupported;
-            set => SetProperty(() => _coreAlbum.IsChangeNameAsyncSupported, value);
+            get => _album.IsChangeNameAsyncSupported;
+            set => SetProperty(() => _album.IsChangeNameAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeDescriptionAsyncSupported
         {
-            get => _coreAlbum.IsChangeDescriptionAsyncSupported;
-            set => SetProperty(() => _coreAlbum.IsChangeDescriptionAsyncSupported, value);
+            get => _album.IsChangeDescriptionAsyncSupported;
+            set => SetProperty(() => _album.IsChangeDescriptionAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeDatePublishedAsyncSupported
         {
-            get => _coreAlbum.IsChangeDatePublishedAsyncSupported;
-            set => SetProperty(() => _coreAlbum.IsChangeDatePublishedAsyncSupported, value);
+            get => _album.IsChangeDatePublishedAsyncSupported;
+            set => SetProperty(() => _album.IsChangeDatePublishedAsyncSupported, value);
         }
 
         /// <inheritdoc />
         public bool IsChangeDurationAsyncSupported
         {
-            get => _coreAlbum.IsChangeDurationAsyncSupported;
-            set => SetProperty(() => _coreAlbum.IsChangeDurationAsyncSupported, value);
+            get => _album.IsChangeDurationAsyncSupported;
+            set => SetProperty(() => _album.IsChangeDurationAsyncSupported, value);
         }
 
         /// <inheritdoc />
-        public Task PauseAsync() => _coreAlbum.PauseAsync();
+        public Task PauseAsync() => _album.PauseAsync();
 
         /// <inheritdoc />
         public async Task PlayAsync()
         {
             if (MainViewModel.Singleton?.ActiveDevice?.Type == DeviceType.Remote)
             {
-                await _coreAlbum.PlayAsync();
+                await _album.PlayAsync();
                 return;
             }
 
@@ -292,7 +296,9 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     var index = Tracks.IndexOf(item);
 
-                    var mediaSource = await SourceCore.GetMediaSource(item);
+                    // TODO: Use core of active device.
+
+                    var mediaSource = await SourceCores[0].GetMediaSource(item);
 
                     if (mediaSource is null)
                         continue;
@@ -302,7 +308,7 @@ namespace StrixMusic.Sdk.ViewModels
 
                 if (MainViewModel.Singleton?.LocalDevice?.Model is StrixDevice device)
                 {
-                    device.SetPlaybackData(_coreAlbum, Tracks[0].Model);
+                    device.SetPlaybackData(_album, Tracks[0].Model);
                 }
 
                 // Play the first thing in the album.
@@ -311,57 +317,57 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => _coreAlbum.ChangeNameAsync(name);
+        public Task ChangeNameAsync(string name) => _album.ChangeNameAsync(name);
 
         /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description) => _coreAlbum.ChangeDescriptionAsync(description);
+        public Task ChangeDescriptionAsync(string? description) => _album.ChangeDescriptionAsync(description);
 
         /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration) => _coreAlbum.ChangeDurationAsync(duration);
+        public Task ChangeDurationAsync(TimeSpan duration) => _album.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _coreAlbum.IsAddImageSupported(index);
+        public Task<bool> IsAddImageSupported(int index) => _album.IsAddImageSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index) => _coreAlbum.IsAddTrackSupported(index);
+        public Task<bool> IsAddTrackSupported(int index) => _album.IsAddTrackSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreSupported(int index) => _coreAlbum.IsAddGenreSupported(index);
+        public Task<bool> IsAddGenreSupported(int index) => _album.IsAddGenreSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _coreAlbum.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageSupported(int index) => _album.IsRemoveImageSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index) => _coreAlbum.IsRemoveGenreSupported(index);
+        public Task<bool> IsRemoveGenreSupported(int index) => _album.IsRemoveGenreSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index) => _coreAlbum.IsRemoveTrackSupported(index);
+        public Task<bool> IsRemoveTrackSupported(int index) => _album.IsRemoveTrackSupported(index);
 
         /// <inheritdoc />
-        public Task ChangeDatePublishedAsync(DateTime datePublished) => _coreAlbum.ChangeDatePublishedAsync(datePublished);
+        public Task ChangeDatePublishedAsync(DateTime datePublished) => _album.ChangeDatePublishedAsync(datePublished);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset) => _coreAlbum.GetTracksAsync(limit, offset);
+        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _album.GetTracksAsync(limit, offset);
 
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
-            await foreach (var item in _coreAlbum.GetTracksAsync(limit, Tracks.Count))
+            foreach (var item in await _album.GetTracksAsync(limit, Tracks.Count))
             {
                 Tracks.Add(new TrackViewModel(item));
             }
         }
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ICoreTrack track, int index)
+        public Task AddTrackAsync(ITrack track, int index)
         {
-            return _coreAlbum.AddTrackAsync(track, index);
+            return _album.AddTrackAsync(track, index);
         }
 
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index)
         {
-            return _coreAlbum.RemoveTrackAsync(index);
+            return _album.RemoveTrackAsync(index);
         }
 
         /// <inheritdoc />

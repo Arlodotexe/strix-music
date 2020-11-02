@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Data.Core
 {
     /// <inheritdoc cref="ITrackCollectionBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreTrackCollection : ITrackCollectionBase, ICoreMember
+    public interface ICoreTrackCollection : ITrackCollectionBase, ICoreImageCollection, ICoreMember
     {
         /// <summary>
         /// Gets a requested number of <see cref="ICoreTrack"/>s starting at the given offset in the backend.

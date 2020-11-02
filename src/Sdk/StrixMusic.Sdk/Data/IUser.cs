@@ -1,10 +1,13 @@
-﻿using StrixMusic.Sdk.Data.Base;
+﻿using System.Diagnostics.CodeAnalysis;
+using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="IUserBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface IUser : IUserBase, IUserProfile, ISdkMember
+    [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
+    public interface IUser : IUserBase, IUserProfile, ISdkMember<ICoreUser>
     {
         /// <summary>
         /// This user's library.

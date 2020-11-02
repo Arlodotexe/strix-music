@@ -1,19 +1,19 @@
 ﻿using System;
+using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="ICoreUser"/>
+    /// Contains bindable information about an <see cref="IUser"/>
     /// </summary>
     public class UserViewModel : UserProfileViewModel
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UserViewModel"/> class.
         /// </summary>
-        /// <param name="user">The <see cref="ICoreUser"/> to wrap.</param>
-        public UserViewModel(ICoreUser user)
+        /// <param name="user">The <see cref="IUser"/> to wrap.</param>
+        public UserViewModel(IUser user)
             : base(user)
         {
             if (user == null)

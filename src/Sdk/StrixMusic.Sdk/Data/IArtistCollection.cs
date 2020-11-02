@@ -1,20 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="IArtistCollectionBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface IArtistCollection : IArtistCollectionBase, IArtistCollectionItem, ISdkMember
+    [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
+    public interface IArtistCollection : IArtistCollectionBase, IArtistCollectionItem, IImageCollection, ISdkMember<ICoreArtistCollection>
     {
         /// <summary>
         /// Gets a requested number of <see cref="IArtist"/>s starting at the given offset in the backend.
         /// </summary>
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
-        /// <returns><see cref="IAsyncEnumerable{T}"/> that returns the items as they're retrieved.</returns>
-        IAsyncEnumerable<IArtistCollectionItem> GetArtistItemsAsync(int limit, int offset);
+        /// <returns><see cref="IReadOnlyList{T}"/> containing the requested items.</returns>
+        Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset);
 
         /// <summary>
         /// Adds a new artist to the collection on the backend.

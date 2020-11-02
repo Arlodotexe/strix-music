@@ -1,13 +1,22 @@
-﻿using StrixMusic.Sdk.Data.Base;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="IAlbumBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface IAlbum : IAlbumBase, IAlbumCollectionItem, ITrackCollection, ISdkMember
+    [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
+    public interface IAlbum : IAlbumBase, IAlbumCollectionItem, ITrackCollection, IImageCollection, ISdkMember<ICoreAlbum>
     {
         /// <summary>
-        /// An <see cref="IArtistBase"/> object that this album was created by.
+        /// The source albums that were merged into this <see cref="IAlbum"/>.
+        /// </summary>
+        IReadOnlyList<ICoreAlbum> SourceAlbums { get; }
+
+        /// <summary>
+        /// The artist that created this album.
         /// </summary>
         IArtist Artist { get; }
 

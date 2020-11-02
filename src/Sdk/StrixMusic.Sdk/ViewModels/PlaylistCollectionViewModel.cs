@@ -6,6 +6,7 @@ using OwlCore.Collections;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions.SdkMember;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -14,28 +15,45 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class PlaylistCollectionViewModel : ObservableObject, IPlaylistCollectionViewModel
     {
-        private readonly ICorePlaylistCollection _collection;
+        private readonly IPlaylistCollection _collection;
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistCollectionViewModel"/>.
         /// </summary>
-        /// <param name="collection">The <see cref="ICorePlaylistCollection"/> to wrap around.</param>
-        public PlaylistCollectionViewModel(ICorePlaylistCollection collection)
+        /// <param name="collection">The <see cref="IPlaylistCollection"/> to wrap around.</param>
+        public PlaylistCollectionViewModel(IPlaylistCollection collection)
         {
             _collection = collection;
 
-            Playlists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<ICorePlaylistCollectionItem>());
+            Playlists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IPlaylistCollectionItem>());
             PopulateMorePlaylistsCommand = new AsyncRelayCommand<int>(PopulateMorePlaylistsAsync);
         }
-
-        /// <inheritdoc />
-        public ICore SourceCore => _collection.SourceCore;
 
         /// <inheritdoc />
         public int TotalPlaylistItemsCount => _collection.TotalPlaylistItemsCount;
 
         /// <inheritdoc />
-        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index) => _collection.AddPlaylistItemAsync(playlist, index);
+        public SynchronizedObservableCollection<IImage> Images => _collection.Images;
+
+        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
+        public IReadOnlyList<ICore> SourceCores => _collection.GetSourceCores<ICorePlaylistCollection>();
+
+        /// <inheritdoc />
+        IReadOnlyList<ICorePlaylistCollectionItem> ISdkMember<ICorePlaylistCollectionItem>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICorePlaylistCollection> ISdkMember<ICorePlaylistCollection>.Sources => Sources;
+
+        /// <summary>
+        /// The merged sources that form this item.
+        /// </summary>
+        public IReadOnlyList<ICorePlaylistCollection> Sources => _collection.GetSources<ICorePlaylistCollection>();
+
+        /// <inheritdoc />
+        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index) => _collection.AddPlaylistItemAsync(playlist, index);
 
         /// <inheritdoc />
         public Task RemovePlaylistItemAsync(int index) => _collection.RemovePlaylistItemAsync(index);
@@ -47,10 +65,16 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemovePlaylistItemSupported(int index) => _collection.IsRemovePlaylistItemSupported(index);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset) => _collection.GetPlaylistItemsAsync(limit, offset);
+        public Task<bool> IsAddImageSupported(int index) => _collection.IsAddImageSupported(index);
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<ICorePlaylistCollectionItem> Playlists { get; }
+        public Task<bool> IsRemoveImageSupported(int index) => _collection.IsRemoveImageSupported(index);
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset) => _collection.GetPlaylistItemsAsync(limit, offset);
+
+        /// <inheritdoc />
+        public SynchronizedObservableCollection<IPlaylistCollectionItem> Playlists { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }
@@ -58,14 +82,14 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMorePlaylistsAsync(int limit)
         {
-            await foreach (var item in _collection.GetPlaylistItemsAsync(limit, Playlists.Count))
+            foreach (var item in await _collection.GetPlaylistItemsAsync(limit, Playlists.Count))
             {
                 switch (item)
                 {
-                    case ICorePlaylist playlist:
+                    case IPlaylist playlist:
                         Playlists.Add(new PlaylistViewModel(playlist));
                         break;
-                    case ICorePlaylistCollection collection:
+                    case IPlaylistCollection collection:
                         Playlists.Add(new PlaylistCollectionViewModel(collection));
                         break;
                 }

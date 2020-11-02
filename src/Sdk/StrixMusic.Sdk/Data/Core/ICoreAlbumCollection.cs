@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Data.Core
 {
     /// <inheritdoc cref="IAlbumCollectionBase"/>
     /// <remarks>This interface should be implemented in a core.</remarks>
-    public interface ICoreAlbumCollection : IAlbumCollectionBase, ICoreMember
+    public interface ICoreAlbumCollection : IAlbumCollectionBase, ICoreAlbumCollectionItem, ICoreImageCollection, ICoreMember
     {
         /// <summary>
         /// Gets a requested number of <see cref="IAlbumCollectionItemBase"/>s starting at the given offset in the backend.

@@ -1,19 +1,20 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
+using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// An observable <see cref="ICoreAlbumCollection" />
+    /// An observable <see cref="IAlbumCollection" />
     /// </summary>
-    public interface IAlbumCollectionViewModel : ICoreAlbumCollection
+    public interface IAlbumCollectionViewModel : IAlbumCollection
     {
         /// <summary>
         /// The albums in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<ICoreAlbumCollectionItem> Albums { get; }
+        public SynchronizedObservableCollection<IAlbumCollectionItem> Albums { get; }
 
         /// <summary>
         /// Populates the next set of albums into the collection.

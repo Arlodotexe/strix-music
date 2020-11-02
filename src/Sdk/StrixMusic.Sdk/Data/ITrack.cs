@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="ITrackBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface ITrack : ITrackBase, IArtistCollection, IGenreCollection, ISdkMember
+    [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
+    public interface ITrack : ITrackBase, IArtistCollection, IGenreCollection, ISdkMember<ICoreTrack>
     {
         /// <summary>
         /// An <see cref="IAlbum"/> object that this track belongs to.
@@ -43,8 +47,8 @@ namespace StrixMusic.Sdk.Data
         /// <summary>
         /// Changes the album for this track.
         /// </summary>
-        /// <param name="albums">The new album.</param>
+        /// <param name="album">The new album.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task ChangeAlbumAsync(IAlbum? albums);
+        Task ChangeAlbumAsync(IAlbum? album);
     }
 }

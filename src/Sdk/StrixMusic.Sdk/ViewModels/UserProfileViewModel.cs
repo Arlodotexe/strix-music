@@ -1,31 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions.SdkMember;
 
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="ICoreUserProfile"/>
+    /// Contains bindable information about an <see cref="IUserProfile"/>
     /// </summary>
-    public class UserProfileViewModel : ObservableObject, ICoreUserProfile
+    public class UserProfileViewModel : ObservableObject, IUserProfile
     {
-        private readonly ICoreUserProfile _userProfile;
+        private readonly IUserProfile _userProfile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserProfileViewModel"/> class.
         /// </summary>
-        /// <param name="userProfile">The base <see cref="ICoreUserProfile"/></param>
-        public UserProfileViewModel(ICoreUserProfile userProfile)
+        /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
+        public UserProfileViewModel(IUserProfile userProfile)
         {
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
-            SourceCore = MainViewModel.GetLoadedCore(_userProfile.SourceCore);
+            SourceCores = userProfile.GetSourceCores<ICoreUserProfile>().Select(MainViewModel.GetLoadedCore).ToList();
             Urls = new SynchronizedObservableCollection<Uri>(userProfile.Urls);
-            Images = new SynchronizedObservableCollection<ICoreImage>(userProfile.Images);
+            Images = new SynchronizedObservableCollection<IImage>(userProfile.Images);
         }
 
         /// <inheritdoc />
@@ -69,7 +72,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public ICore SourceCore { get; }
+        public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
         public string Id => _userProfile.Id;
@@ -87,7 +90,7 @@ namespace StrixMusic.Sdk.ViewModels
         public DateTime? Birthdate => _userProfile.Birthdate;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<ICoreImage> Images { get; }
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<Uri>? Urls { get; }

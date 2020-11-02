@@ -1,19 +1,20 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
+using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// An observable <see cref="ICorePlaylistCollection"/>.
+    /// An observable <see cref="IPlaylistCollection"/>.
     /// </summary>
-    public interface IPlaylistCollectionViewModel : ICorePlaylistCollection
+    public interface IPlaylistCollectionViewModel : IPlaylistCollection
     {
         /// <summary>
         /// The playlists in this collection
         /// </summary>
-        public SynchronizedObservableCollection<ICorePlaylistCollectionItem> Playlists { get; }
+        public SynchronizedObservableCollection<IPlaylistCollectionItem> Playlists { get; }
 
         /// <summary>
         /// Populates the next set of playlists into the collection.

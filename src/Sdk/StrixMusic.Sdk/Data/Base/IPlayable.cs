@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// Represents an item that can be played.
     /// </summary>
-    public interface IPlayable : ICoreImageCollection
+    public interface IPlayable : IImageCollectionBase
     {
         /// <summary>
         /// The ID of the playable item.

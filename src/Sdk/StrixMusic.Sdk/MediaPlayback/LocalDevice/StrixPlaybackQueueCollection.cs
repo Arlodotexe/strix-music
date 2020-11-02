@@ -15,20 +15,24 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
     /// <summary>
     /// The playback queue for the local <see cref="StrixDevice"/>.
     /// </summary>
-    public class StrixPlaybackQueueCollection : ITrackCollectionBase
+    public class StrixPlaybackQueueCollection : ITrackCollection
     {
         private readonly IPlaybackHandlerService _playbackHandler = Ioc.Default.GetService<IPlaybackHandlerService>();
 
         /// <inheritdoc />
-        public ICore? SourceCore => IsPlaybackQueueSameSource() ? _playbackHandler.CurrentItem?.Track.SourceCore : null;
+        public IReadOnlyList<ICore> SourceCores { get; } = new List<ICore>();
 
         /// <inheritdoc />
         public int TotalTracksCount { get; }
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ICoreTrack track, int index)
+        public Task AddTrackAsync(ITrack track, int index)
         {
-            throw new NotImplementedException();
+            // solve me:
+            // 1. convert SdkMember back to CoreMember (un-merge)
+            // 2. 
+            track.SourceCores.First().GetMediaSource()
+            _playbackHandler.InsertNext(0, );
         }
 
         /// <inheritdoc />
@@ -44,24 +48,9 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public Task<bool> IsRemoveTrackSupported(int index) => Task.FromResult(true);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
+        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset)
         {
             throw new NotImplementedException();
-        }
-
-        private bool IsPlaybackQueueSameSource()
-        {
-            var prevSources = _playbackHandler.PreviousItems.DistinctBy(x => x.Track.SourceCore);
-            var nextSources = _playbackHandler.NextItems.DistinctBy(x => x.Track.SourceCore);
-
-            // Handle possible multiple enumeration
-            var prevMediaSources = prevSources as IMediaSourceConfig[] ?? prevSources.ToArray();
-            var nextMediaSources = nextSources as IMediaSourceConfig[] ?? nextSources.ToArray();
-
-            return !(prevMediaSources.Length > 1 ||
-                     nextMediaSources.Length > 1 ||
-                     !nextMediaSources.Contains(_playbackHandler.CurrentItem) ||
-                     !prevMediaSources.Contains(_playbackHandler.CurrentItem));
         }
     }
 }

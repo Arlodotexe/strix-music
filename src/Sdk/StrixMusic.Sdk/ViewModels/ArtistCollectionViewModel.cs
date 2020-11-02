@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -6,6 +8,7 @@ using OwlCore.Collections;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions.SdkMember;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -14,28 +17,47 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class ArtistCollectionViewModel : ObservableObject, IArtistCollectionViewModel
     {
-        private readonly ICoreArtistCollection _collection;
+        private readonly IArtistCollection _collection;
 
         /// <summary>
         /// Creates a new instance of <see cref="ArtistCollectionViewModel"/>.
         /// </summary>
-        /// <param name="collection">The <see cref="ICoreArtistCollection"/> to wrap around.</param>
-        public ArtistCollectionViewModel(ICoreArtistCollection collection)
+        /// <param name="collection">The <see cref="IArtistCollection"/> to wrap around.</param>
+        public ArtistCollectionViewModel(IArtistCollection collection)
         {
-            _collection = collection;
+            _collection = collection ?? throw new ArgumentNullException(nameof(collection));
+
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
 
-            Artists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<ICoreArtistCollectionItem>());
+            SourceCores = collection.GetSourceCores<ICoreArtistCollection>().Select(MainViewModel.GetLoadedCore).ToList();
+            Artists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IArtistCollectionItem>());
         }
 
+        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
+        public IReadOnlyList<ICore> SourceCores { get; }
+
+        /// <summary>
+        /// The sources that were merged to form this member.
+        /// </summary>
+        public IReadOnlyList<ICoreArtistCollection> Sources => this.GetSources<ICoreArtistCollection>();
+
         /// <inheritdoc />
-        public ICore SourceCore => _collection.SourceCore;
+        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
         public int TotalArtistItemsCount => _collection.TotalArtistItemsCount;
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index) =>
+        public SynchronizedObservableCollection<IImage> Images => _collection.Images;
+
+        /// <inheritdoc />
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) =>
             _collection.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
@@ -48,30 +70,36 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveArtistSupported(int index) => _collection.IsRemoveArtistSupported(index);
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset) =>
+        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) =>
             _collection.GetArtistItemsAsync(limit, offset);
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<ICoreArtistCollectionItem> Artists { get; }
+        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            await foreach (var item in _collection.GetArtistItemsAsync(limit, Artists.Count))
+            foreach (var item in await _collection.GetArtistItemsAsync(limit, Artists.Count))
             {
                 switch (item)
                 {
-                    case ICoreArtist artist:
+                    case IArtist artist:
                         Artists.Add(new ArtistViewModel(artist));
                         break;
-                    case ICoreArtistCollection collection:
+                    case IArtistCollection collection:
                         Artists.Add(new ArtistCollectionViewModel(collection));
                         break;
                 }
             }
         }
+
+        /// <inheritdoc />
+        public Task<bool> IsAddImageSupported(int index) => _collection.IsAddImageSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveImageSupported(int index) => _collection.IsRemoveImageSupported(index);
     }
 }

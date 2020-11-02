@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// Interface representing an album.
     /// </summary>
-    public interface IAlbumBase : IPlayable, IAlbumCollectionItemBase, ITrackCollectionBase, IGenreCollectionBase
+    public interface IAlbumBase : IPlayable, IAlbumCollectionItemBase, ITrackCollectionBase, IImageCollectionBase, IGenreCollectionBase
     {
         /// <summary>
         /// The date the album was released.

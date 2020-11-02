@@ -1,20 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="ITrackCollectionBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ITrackCollection : ITrackCollectionBase, ISdkMember
+    public interface ITrackCollection : ITrackCollectionBase, ISdkMember<ICoreTrackCollection>
     {
         /// <summary>
         /// Gets a requested number of <see cref="ITrack"/>s starting at the given offset in the backend.
         /// </summary>
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
-        /// <returns><see cref="IAsyncEnumerable{T}"/> that returns the items as they're retrieved.</returns>
-        IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset);
+        /// <returns><see cref="IReadOnlyList{T}"/> containing the requested items.</returns>
+        Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset);
 
         /// <summary>
         /// Adds a new track to the collection on the backend.

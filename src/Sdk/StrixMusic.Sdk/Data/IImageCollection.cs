@@ -1,11 +1,12 @@
 ﻿using OwlCore.Collections;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="IImageCollectionBase"/>
     /// <remarks>This interface should be implemented in the Sdk.</remarks>
-    public interface IImageCollection : IImageCollectionBase, ISdkMember
+    public interface IImageCollection : IImageCollectionBase, ISdkMember<ICoreImageCollection>
     {
         /// <summary>
         /// Relevant images for the collection.

@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Collections;
-using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions.SdkMember;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -13,20 +13,20 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A concrete class that merged multiple <see cref="ICoreTrack"/>s.
     /// </summary>
-    public class MergedTrack : ICoreTrack, IEquatable<ICoreTrack>
+    public class MergedTrack : ITrack, IEquatable<ITrack>
     {
         private readonly ICoreTrack _preferredSource;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroupBase"/> class.
+        /// Initializes a new instance of the <see cref="MergedTrack"/> class.
         /// </summary>
         /// <param name="tracks">The <see cref="ICoreTrack"/>s to merge together.</param>
         public MergedTrack(ICoreTrack[] tracks)
         {
             if (tracks == null)
-            {
                 throw new ArgumentNullException(nameof(tracks));
-            }
+
+            Sources = tracks.ToList();
 
             // TODO: Use top Preferred core.
             _preferredSource = tracks.First();
@@ -37,10 +37,12 @@ namespace StrixMusic.Sdk.Data.Merged
                 // TODO: Deal with merged artists
                 TotalArtistItemsCount += item.TotalArtistItemsCount;
             }
+
+            Images = new SynchronizedObservableCollection<IImage>();
         }
 
         /// <inheritdoc/>
-        public event EventHandler<ICoreAlbum?>? AlbumChanged;
+        public event EventHandler<IAlbum?>? AlbumChanged;
 
         /// <inheritdoc/>
         public event EventHandler<int?>? TrackNumberChanged;
@@ -49,7 +51,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public event EventHandler<CultureInfo?>? LanguageChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<ICoreLyrics?>? LyricsChanged;
+        public event EventHandler<ILyrics?>? LyricsChanged;
 
         /// <inheritdoc/>
         public event EventHandler<bool>? IsExplicitChanged;
@@ -70,9 +72,6 @@ namespace StrixMusic.Sdk.Data.Merged
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc/>
-        public ICore SourceCore => _preferredSource.SourceCore;
-
-        /// <inheritdoc/>
         public string Id => _preferredSource.Id;
 
         /// <inheritdoc/>
@@ -88,16 +87,16 @@ namespace StrixMusic.Sdk.Data.Merged
         public int TotalArtistItemsCount { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres => _preferredSource.Genres;
+        public SynchronizedObservableCollection<string>? Genres { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<ICoreImage> Images => _preferredSource.Images;
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroupBase? RelatedItems => _preferredSource.RelatedItems;
+        public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc/>
-        public ICoreAlbum? Album => _preferredSource.Album;
+        public IAlbum? Album { get; }
 
         /// <inheritdoc/>
         public int? TrackNumber => _preferredSource.TrackNumber;
@@ -109,7 +108,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public CultureInfo? Language => _preferredSource.Language;
 
         /// <inheritdoc/>
-        public ICoreLyrics? Lyrics => _preferredSource.Lyrics;
+        public ILyrics? Lyrics { get; }
 
         /// <inheritdoc/>
         public bool IsExplicit => _preferredSource.IsExplicit;
@@ -184,9 +183,11 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        public Task ChangeAlbumAsync(ICoreAlbum? albums)
+        public Task ChangeAlbumAsync(IAlbum? album)
         {
-            return _preferredSource.ChangeAlbumAsync(albums);
+            var sourceToChange = album.GetSources<ICoreAlbum>().First(x => x.SourceCore == _preferredSource.SourceCore);
+
+            return _preferredSource.ChangeAlbumAsync(sourceToChange);
         }
 
         /// <inheritdoc/>
@@ -202,9 +203,11 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        public Task ChangeLyricsAsync(ICoreLyrics? lyrics)
+        public Task ChangeLyricsAsync(ILyrics? lyrics)
         {
-            return _preferredSource.ChangeLyricsAsync(lyrics);
+            var sourceToChange = lyrics.GetSources().First(x => x.SourceCore == _preferredSource.SourceCore);
+
+            return _preferredSource.ChangeLyricsAsync(sourceToChange);
         }
 
         /// <inheritdoc/>
@@ -236,7 +239,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         /// <param name="other">The item to check against.</param>
         /// <returns><see langword="True"/> if the item can be merged, otherwise <see langword="false"/></returns>
-        public bool Equals(ICoreTrack? other)
+        public bool Equals(ITrack? other)
         {
             return other?.Name == Name
                 && other?.Type.Equals(Type) == true
@@ -250,7 +253,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj) => Equals(obj as ICoreTrack);
+        public override bool Equals(object? obj) => Equals(obj as ITrack);
 
         /// <inheritdoc/>
         public override int GetHashCode() => _preferredSource.Id.GetHashCode();
@@ -258,31 +261,31 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public Task<bool> IsAddArtistSupported(int index)
         {
-            throw new NotImplementedException();
+            return _preferredSource.IsAddArtistSupported(index);
         }
 
         /// <inheritdoc/>
         public Task<bool> IsAddImageSupported(int index)
         {
-            throw new NotImplementedException();
+            return _preferredSource.IsAddImageSupported(index);
         }
 
         /// <inheritdoc/>
         public Task<bool> IsAddGenreSupported(int index)
         {
-            throw new NotImplementedException();
+            return _preferredSource.IsAddGenreSupported(index);
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistsAsync(int limit, int offset)
+        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<IReadOnlyList<IArtistCollectionItem>>(new List<IArtistCollectionItem>());
         }
 
         /// <inheritdoc/>
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
@@ -290,5 +293,28 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc cref="ISdkMember{T}.SourceCores"/>
+        public IReadOnlyList<ICore> SourceCores => Sources.Select(x => x.SourceCore).ToList();
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreTrack> ISdkMember<ICoreTrack>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreGenreCollection> ISdkMember<ICoreGenreCollection>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
+
+        /// <summary>
+        /// The original sources for this merged item.
+        /// </summary>
+        public IReadOnlyList<ICoreTrack> Sources { get; }
     }
 }
