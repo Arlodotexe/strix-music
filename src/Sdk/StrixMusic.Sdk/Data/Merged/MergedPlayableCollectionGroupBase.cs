@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Extensions.AsyncExtensions;
 using StrixMusic.Sdk.Data.Base;
@@ -17,13 +18,15 @@ namespace StrixMusic.Sdk.Data.Merged
     public abstract class MergedPlayableCollectionGroupBase<TCoreBase> : IPlayableCollectionGroup
         where TCoreBase : ICorePlayableCollectionGroup
     {
+        private readonly List<TCoreBase> _sources;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroupBase{T}"/> class.
         /// </summary>
         /// <param name="sources">The search results to merge.</param>
         protected MergedPlayableCollectionGroupBase(IReadOnlyList<TCoreBase> sources)
         {
-            Sources = sources;
+            _sources = sources.ToList();
 
             // TODO: Use top Preferred core.
             if (sources is null)
@@ -116,8 +119,11 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         IReadOnlyList<ICorePlayableCollectionGroup> ISdkMember<ICorePlayableCollectionGroup>.Sources => this.GetSources<ICorePlayableCollectionGroup>();
 
+        /// <inheritdoc />
+        IReadOnlyList<ICoreAlbumCollectionItem> ISdkMember<ICoreAlbumCollectionItem>.Sources => this.GetSources<ICoreAlbumCollectionItem>();
+
         /// <inheritdoc cref="ISdkMember{T}.Sources"/>
-        public virtual IReadOnlyList<TCoreBase> Sources { get; }
+        public virtual IReadOnlyList<TCoreBase> Sources => _sources;
 
         /// <inheritdoc/>
         public string Id => PreferredSource.Id;
@@ -171,88 +177,46 @@ namespace StrixMusic.Sdk.Data.Merged
         public virtual bool IsChangeDurationAsyncSupported => PreferredSource.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index)
-        {
-            return PreferredSource.IsAddTrackSupported(index);
-        }
+        public Task<bool> IsAddTrackSupported(int index) => PreferredSource.IsAddTrackSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumItemSupported(int index)
-        {
-            return PreferredSource.IsAddAlbumItemSupported(index);
-        }
+        public Task<bool> IsAddAlbumItemSupported(int index) => PreferredSource.IsAddAlbumItemSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistSupported(int index)
-        {
-            return PreferredSource.IsAddArtistSupported(index);
-        }
+        public Task<bool> IsAddArtistSupported(int index) => PreferredSource.IsAddArtistSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddPlaylistItemSupported(int index)
-        {
-            return PreferredSource.IsAddPlaylistItemSupported(index);
-        }
+        public Task<bool> IsAddPlaylistItemSupported(int index) => PreferredSource.IsAddPlaylistItemSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddChildSupported(int index)
-        {
-            return PreferredSource.IsAddChildSupported(index);
-        }
+        public Task<bool> IsAddChildSupported(int index) => PreferredSource.IsAddChildSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index)
-        {
-            return PreferredSource.IsAddImageSupported(index);
-        }
+        public Task<bool> IsAddImageSupported(int index) => PreferredSource.IsAddImageSupported(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveImageSupported(int index)
-        {
-            return PreferredSource.IsRemoveImageSupported(index);
-        }
+        public Task<bool> IsRemoveImageSupported(int index) => PreferredSource.IsRemoveImageSupported(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveTrackSupported(int index)
-        {
-            return PreferredSource.IsRemoveTrackSupported(index);
-        }
+        public Task<bool> IsRemoveTrackSupported(int index) => PreferredSource.IsRemoveTrackSupported(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveArtistSupported(int index)
-        {
-            return PreferredSource.IsRemoveArtistSupported(index);
-        }
+        public Task<bool> IsRemoveArtistSupported(int index) => PreferredSource.IsRemoveArtistSupported(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveAlbumItemSupported(int index)
-        {
-            return PreferredSource.IsRemoveAlbumItemSupported(index);
-        }
+        public Task<bool> IsRemoveAlbumItemSupported(int index) => PreferredSource.IsRemoveAlbumItemSupported(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemovePlaylistItemSupported(int index)
-        {
-            return PreferredSource.IsRemovePlaylistItemSupported(index);
-        }
+        public Task<bool> IsRemovePlaylistItemSupported(int index) => PreferredSource.IsRemovePlaylistItemSupported(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveChildSupported(int index)
-        {
-            return PreferredSource.IsRemoveChildSupported(index);
-        }
+        public Task<bool> IsRemoveChildSupported(int index) => PreferredSource.IsRemoveChildSupported(index);
 
         /// <inheritdoc/>
-        public Task PauseAsync()
-        {
-            return PreferredSource.PauseAsync();
-        }
+        public Task PauseAsync() => PreferredSource.PauseAsync();
 
         /// <inheritdoc/>
-        public Task PlayAsync()
-        {
-            return PreferredSource.PlayAsync();
-        }
+        public Task PlayAsync() => PreferredSource.PlayAsync();
 
         /// <inheritdoc/>
         public async Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset)
@@ -385,33 +349,27 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        public Task RemoveTrackAsync(int index)
-        {
-            return PreferredSource.RemoveTrackAsync(index);
-        }
+        public Task RemoveTrackAsync(int index) => PreferredSource.RemoveTrackAsync(index);
 
         /// <inheritdoc/>
-        public Task RemoveArtistAsync(int index)
-        {
-            return PreferredSource.RemoveArtistAsync(index);
-        }
+        public Task RemoveArtistAsync(int index) => PreferredSource.RemoveArtistAsync(index);
 
         /// <inheritdoc/>
-        public Task RemoveAlbumItemAsync(int index)
-        {
-            return PreferredSource.RemoveAlbumItemAsync(index);
-        }
+        public Task RemoveAlbumItemAsync(int index) => PreferredSource.RemoveAlbumItemAsync(index);
 
         /// <inheritdoc/>
-        public Task RemovePlaylistItemAsync(int index)
-        {
-            return PreferredSource.RemovePlaylistItemAsync(index);
-        }
+        public Task RemovePlaylistItemAsync(int index) => PreferredSource.RemovePlaylistItemAsync(index);
 
         /// <inheritdoc/>
-        public Task RemoveChildAsync(int index)
+        public Task RemoveChildAsync(int index) => PreferredSource.RemoveChildAsync(index);
+
+        /// <inheritdoc cref="IMerged{TCoreBase}" />
+        public void AddSource(TCoreBase itemToAdd)
         {
-            return PreferredSource.RemoveChildAsync(index);
+            if (!Equals(itemToAdd))
+                ThrowHelper.ThrowArgumentException<TCoreBase>("Tried to merge an artist that doesn't match. Verify that the item matches before merging the source.");
+
+            _sources.Add(itemToAdd);
         }
     }
 }

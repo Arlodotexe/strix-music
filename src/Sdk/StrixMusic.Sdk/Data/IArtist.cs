@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Data
     public interface IArtist : IArtistBase, IArtistCollectionItem, IAlbumCollection, ITrackCollection, IGenreCollection, ISdkMember<ICoreArtist>
     {
         /// <summary>
-        /// A <see cref="IPlayableCollectionGroupBase"/> of items related to this item.
+        /// A <see cref="IPlayableCollectionGroup"/> of items related to this item.
         /// </summary>
         IPlayableCollectionGroup? RelatedItems { get; }
     }

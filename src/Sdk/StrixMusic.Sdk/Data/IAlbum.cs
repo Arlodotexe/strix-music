@@ -11,11 +11,6 @@ namespace StrixMusic.Sdk.Data
     public interface IAlbum : IAlbumBase, IAlbumCollectionItem, ITrackCollection, IImageCollection, ISdkMember<ICoreAlbum>
     {
         /// <summary>
-        /// The source albums that were merged into this <see cref="IAlbum"/>.
-        /// </summary>
-        IReadOnlyList<ICoreAlbum> SourceAlbums { get; }
-
-        /// <summary>
         /// The artist that created this album.
         /// </summary>
         IArtist Artist { get; }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -9,7 +10,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A concrete class that merges multiple <see cref="ICoreSearchResults"/>.
     /// </summary>
-    public class MergedSearchResults : MergedPlayableCollectionGroupBase<ICoreSearchResults>, ISearchResults
+    public class MergedSearchResults : MergedPlayableCollectionGroupBase<ICoreSearchResults>, ISearchResults, IMerged<ICoreSearchResults>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchResults"/> class.
@@ -22,5 +23,26 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         IReadOnlyList<ICoreSearchResults> ISdkMember<ICoreSearchResults>.Sources => this.GetSources<ICoreSearchResults>();
+
+        /// <inheritdoc cref="Equals(object?)" />
+        public bool Equals(ICoreSearchResults? other)
+        {
+            throw new NotImplementedException();
+
+            // TODO: Merge together based on query (post search refactor)
+            return other?.Name == Name;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            return ReferenceEquals(this, obj) || (obj is ICoreSearchResults other && Equals(other));
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return PreferredSource.GetHashCode();
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A concrete class that merges multiple <see cref="ICoreDiscoverables"/>.
     /// </summary>
-    public class MergedDiscoverables : MergedPlayableCollectionGroupBase<ICoreDiscoverables>, IDiscoverables, IEquatable<ICoreDiscoverables>
+    public class MergedDiscoverables : MergedPlayableCollectionGroupBase<ICoreDiscoverables>, IDiscoverables, IMerged<ICoreDiscoverables>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedDiscoverables"/> class.

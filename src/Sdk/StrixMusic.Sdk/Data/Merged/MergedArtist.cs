@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
@@ -11,26 +12,39 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// Merged multiple <see cref="ICoreArtist"/> into a single <see cref="IArtist"/>
     /// </summary>
-    public class MergedArtist : IArtist
+    public class MergedArtist : IArtist, IMerged<ICoreArtist>
     {
         private readonly ICoreArtist _preferredSource;
+        private readonly List<ICoreArtist> _sources;
 
         /// <summary>
         /// Creates a new instance of <see cref="MergedArtist"/>.
         /// </summary>
-        /// <param name="sources"></param>
+        /// <param name="sources">The sources used</param>
         public MergedArtist(IReadOnlyList<ICoreArtist> sources)
         {
-            Sources = sources;
+            _sources = sources?.ToList() ?? throw new ArgumentNullException();
 
             Images = new SynchronizedObservableCollection<IImage>();
 
             // TODO: Get the actual preferred source.
-            _preferredSource = sources.First();
+            _preferredSource = _sources[0];
         }
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores => Sources.Select(x => x.SourceCore).ToList();
+
+        /// <summary>
+        /// Adds a new source to this merged item.
+        /// </summary>
+        /// <param name="itemToMerge">The item to merge into this Artist</param>
+        public void AddSource(ICoreArtist itemToMerge)
+        {
+            if (!Equals(itemToMerge))
+                ThrowHelper.ThrowArgumentException(nameof(itemToMerge), "Tried to merge an artist that doesn't match. Verify that the item matches before merging the source.");
+
+            _sources.Add(itemToMerge);
+        }
 
         /// <inheritdoc />
         IReadOnlyList<ICoreGenreCollection> ISdkMember<ICoreGenreCollection>.Sources => Sources;
@@ -48,12 +62,15 @@ namespace StrixMusic.Sdk.Data.Merged
         IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
+        IReadOnlyList<ICoreAlbumCollectionItem> ISdkMember<ICoreAlbumCollectionItem>.Sources => Sources;
+
+        /// <inheritdoc />
         IReadOnlyList<ICoreArtist> ISdkMember<ICoreArtist>.Sources => Sources;
 
         /// <summary>
         /// The merged sources for this <see cref="IArtist"/>
         /// </summary>
-        public IReadOnlyList<ICoreArtist> Sources { get; }
+        public IReadOnlyList<ICoreArtist> Sources => _sources;
 
         /// <inheritdoc />
         public string Id => _preferredSource.Id;
@@ -104,57 +121,53 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index)
-        {
-            return _preferredSource.IsAddTrackSupported(index);
-        }
+        public Task<bool> IsAddTrackSupported(int index) => _preferredSource.IsAddTrackSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumItemSupported(int index)
-        {
-            return _preferredSource.IsAddAlbumItemSupported(index);
-        }
+        public Task<bool> IsAddAlbumItemSupported(int index) => _preferredSource.IsAddAlbumItemSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index)
-        {
-            return _preferredSource.IsAddImageSupported(index);
-        }
+        public Task<bool> IsAddImageSupported(int index) => _preferredSource.IsAddImageSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreSupported(int index)
-        {
-            return _preferredSource.IsAddGenreSupported(index);
-        }
+        public Task<bool> IsAddGenreSupported(int index) => _preferredSource.IsAddGenreSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index)
-        {
-            return _preferredSource.IsRemoveTrackSupported(index);
-        }
+        public Task<bool> IsRemoveTrackSupported(int index) => _preferredSource.IsRemoveTrackSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemSupported(int index)
-        {
-            return _preferredSource.IsRemoveAlbumItemSupported(index);
-        }
+        public Task<bool> IsRemoveAlbumItemSupported(int index) => _preferredSource.IsRemoveAlbumItemSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index)
-        {
-            return _preferredSource.IsRemoveImageSupported(index);
-        }
+        public Task<bool> IsRemoveImageSupported(int index) => _preferredSource.IsRemoveImageSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index)
-        {
-            return _preferredSource.IsRemoveGenreSupported(index);
-        }
+        public Task<bool> IsRemoveGenreSupported(int index) => _preferredSource.IsRemoveGenreSupported(index);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset)
+        public async Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            var albums = new List<ICoreAlbum>();
+            var albumCollections = new List<ICoreAlbumCollection>();
+
+            // Using one source for now.
+            await foreach (var item in _preferredSource.GetAlbumItemsAsync(limit, offset))
+            {
+                if (item is ICoreAlbum album)
+                    albums.Add(album);
+
+                if (item is ICoreAlbumCollection collection)
+                    albumCollections.Add(collection);
+            }
+
+            // Turn each item into an Sdk Member
+            var mergedAlbums = albums.Select(x => new MergedAlbum(new List<ICoreAlbum> { x }));
+            var mergedCollections = albumCollections.Select(x => new MergedAlbumCollection(new List<ICoreAlbumCollection> {x}));
+
+            // Handle possible multiple enumeration.
+            var albumCollectionItems = mergedAlbums as MergedAlbum[] ?? mergedAlbums.ToArray();
+
+            return mergedCollections.Union<IAlbumCollectionItem>(albumCollectionItems).ToList();
         }
 
         /// <inheritdoc />
@@ -250,6 +263,24 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             add => _preferredSource.DurationChanged += value;
             remove => _preferredSource.DurationChanged -= value;
+        }
+
+        /// <inheritdoc cref="Equals(object?)" />
+        public bool Equals(ICoreArtist? other)
+        {
+            return other?.Name == Name;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            return ReferenceEquals(this, obj) || (obj is ICoreArtist other && Equals(other));
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return _preferredSource.GetHashCode();
         }
     }
 }

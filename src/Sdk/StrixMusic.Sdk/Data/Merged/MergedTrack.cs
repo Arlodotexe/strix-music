@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions.SdkMember;
@@ -185,7 +187,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public Task ChangeAlbumAsync(IAlbum? album)
         {
-            var sourceToChange = album.GetSources<ICoreAlbum>().First(x => x.SourceCore == _preferredSource.SourceCore);
+            var sourceToChange = album?.GetSources<ICoreAlbum>().First(x => x.SourceCore == _preferredSource.SourceCore);
 
             return _preferredSource.ChangeAlbumAsync(sourceToChange);
         }
@@ -205,28 +207,19 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public Task ChangeLyricsAsync(ILyrics? lyrics)
         {
-            var sourceToChange = lyrics.GetSources().First(x => x.SourceCore == _preferredSource.SourceCore);
+            var sourceToChange = lyrics?.GetSources().First(x => x.SourceCore == _preferredSource.SourceCore);
 
             return _preferredSource.ChangeLyricsAsync(sourceToChange);
         }
 
         /// <inheritdoc/>
-        public Task ChangeIsExplicitAsync(bool isExplicit)
-        {
-            return _preferredSource.ChangeIsExplicitAsync(isExplicit);
-        }
+        public Task ChangeIsExplicitAsync(bool isExplicit) => _preferredSource.ChangeIsExplicitAsync(isExplicit);
 
         /// <inheritdoc/>
-        public Task ChangeNameAsync(string name)
-        {
-            return _preferredSource.ChangeNameAsync(name);
-        }
+        public Task ChangeNameAsync(string name) => _preferredSource.ChangeNameAsync(name);
 
         /// <inheritdoc/>
-        public Task ChangeDescriptionAsync(string? description)
-        {
-            return _preferredSource.ChangeDescriptionAsync(description);
-        }
+        public Task ChangeDescriptionAsync(string? description) => _preferredSource.ChangeDescriptionAsync(description);
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
@@ -242,14 +235,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool Equals(ITrack? other)
         {
             return other?.Name == Name
-                && other?.Type.Equals(Type) == true
-                && other?.Album?.Equals(Album) == true
-                && other?.Language?.Equals(Language) == true
-                && other?.TrackNumber?.Equals(TrackNumber) == true
-
-                // Commented out for now. Might need again later. Removed while removing the collection properties from interfaces.
-                // && other?.Artists?.SequenceEqual(Artists) == true
-                ;
+                   && other?.Type.Equals(Type) == true
+                   && other?.Album?.Equals(Album) == true
+                   && other?.Language?.Equals(Language) == true
+                   && other?.TrackNumber?.Equals(TrackNumber) == true;
         }
 
         /// <inheritdoc/>
@@ -265,34 +254,39 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageSupported(int index)
-        {
-            return _preferredSource.IsAddImageSupported(index);
-        }
+        public Task<bool> IsAddImageSupported(int index) => _preferredSource.IsAddImageSupported(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreSupported(int index)
-        {
-            return _preferredSource.IsAddGenreSupported(index);
-        }
+        public Task<bool> IsAddGenreSupported(int index) => _preferredSource.IsAddGenreSupported(index);
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset)
+        public async Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset)
         {
-            return Task.FromResult<IReadOnlyList<IArtistCollectionItem>>(new List<IArtistCollectionItem>());
+            foreach (var coreTrack in Sources)
+            {
+                await foreach (var item in coreTrack.GetArtistItemsAsync(limit, offset))
+                {
+
+                }
+            }
         }
+
+        private List<IArtist> Artists { get; } = new List<IArtist>();
+
+        private List<IArtistCollection> ArtistCollections { get; } = new List<IArtistCollection>();
 
         /// <inheritdoc/>
         public Task AddArtistItemAsync(IArtistCollectionItem artist, int index)
         {
-            return Task.CompletedTask;
+            var sourceToChange = artist?.GetSources().First(x => x.SourceCore == _preferredSource.SourceCore);
+
+            Guard.IsNotNull(sourceToChange, nameof(sourceToChange));
+
+            return _preferredSource.AddArtistItemAsync(sourceToChange, index);
         }
 
         /// <inheritdoc/>
-        public Task RemoveArtistAsync(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public Task RemoveArtistAsync(int index) => _preferredSource.RemoveArtistAsync(index);
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores"/>
         public IReadOnlyList<ICore> SourceCores => Sources.Select(x => x.SourceCore).ToList();
