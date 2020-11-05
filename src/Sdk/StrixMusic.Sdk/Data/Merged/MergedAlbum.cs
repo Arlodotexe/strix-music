@@ -19,9 +19,8 @@ namespace StrixMusic.Sdk.Data.Merged
         private readonly List<ICoreAlbum> _sources;
 
         /// <summary>
-        /// Creates a new instance of <see cref="MergedAlbum"/>.
+        /// Initializes a new instance of the <see cref="MergedImage"/> class.
         /// </summary>
-        /// <param name="sources"></param>
         public MergedAlbum(IReadOnlyList<ICoreAlbum> sources)
         {
             Guard.IsNotNull(sources, nameof(sources));
