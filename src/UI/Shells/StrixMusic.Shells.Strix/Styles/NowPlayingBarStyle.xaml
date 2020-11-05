@@ -68,7 +68,7 @@
                                     <Button Style="{StaticResource MediaButton}">
                                         <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </Button>
-                                    <launchpad:ToggleContentButton Style="{StaticResource StrixToggleContentButtonStyle}">
+                                    <launchpad:ToggleContentButton Style="{StaticResource StrixPlayPauseToggleContentButtonStyle}">
                                         <launchpad:ToggleContentButton.CheckedContent>
                                             <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </launchpad:ToggleContentButton.CheckedContent>
@@ -86,9 +86,9 @@
                                         </launchpad:ToggleContentButton.CheckedContent>
                                         <FontIcon Glyph="&#xE194;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </launchpad:ToggleContentButton>
-                                    <Button Style="{StaticResource MediaButton}">
+                                    <ToggleButton Style="{StaticResource StrixMediaToggleButtonStyle}">
                                         <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                    </Button>
+                                    </ToggleButton>
                                 </StackPanel>
                             </Grid>
                         </UserControl>
