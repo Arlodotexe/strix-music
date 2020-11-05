@@ -87,12 +87,12 @@
                                     </Button>
                                     <launchpad:ToggleContentButton IsThreeState="True" Style="{StaticResource MediaToggleContentButton}">
                                         <launchpad:ToggleContentButton.IndeterminateContent>
-                                            <FontIcon Glyph="&#xE1CC;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                            <FontIcon Glyph="&#xE8ED;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </launchpad:ToggleContentButton.IndeterminateContent>
                                         <launchpad:ToggleContentButton.CheckedContent>
-                                            <FontIcon Glyph="&#xE1CD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                            <FontIcon Glyph="&#xE8EE;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </launchpad:ToggleContentButton.CheckedContent>
-                                        <FontIcon Glyph="&#xE194;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                        <FontIcon Glyph="&#xE8EE;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </launchpad:ToggleContentButton>
                                 </StackPanel>
                                 
