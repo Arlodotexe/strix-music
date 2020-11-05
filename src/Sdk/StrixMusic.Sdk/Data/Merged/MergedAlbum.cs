@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
@@ -28,6 +29,10 @@ namespace StrixMusic.Sdk.Data.Merged
 
             Images = new SynchronizedObservableCollection<IImage>();
 
+            Artist = new MergedArtist(_sources.Select(x => x.Artist).ToList());
+
+            RelatedItems = new MergedPlayableCollectionGroup(sources.Select(x=>x.RelatedItems).PruneNull().ToList());
+
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
         }
@@ -39,16 +44,16 @@ namespace StrixMusic.Sdk.Data.Merged
         public IReadOnlyList<ICoreAlbum> Sources => _sources;
 
         /// <inheritdoc/>
-        public IArtist Artist => new MergedArtist(_sources.Select(x => x.Artist).ToList());
+        public IArtist Artist { get; }
 
         /// <inheritdoc/>
-        IPlayableCollectionGroup? IAlbum.RelatedItems => (IPlayableCollectionGroup?)_preferredSource.RelatedItems;
+        public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc/>
-        DateTime? IAlbumBase.DatePublished => _preferredSource.DatePublished;
+        public DateTime? DatePublished => _preferredSource.DatePublished;
 
         /// <inheritdoc/>
-        bool IAlbumBase.IsChangeDatePublishedAsyncSupported => _preferredSource.IsChangeDatePublishedAsyncSupported;
+        public bool IsChangeDatePublishedAsyncSupported => _preferredSource.IsChangeDatePublishedAsyncSupported;
 
         /// <inheritdoc/>
         SynchronizedObservableCollection<string>? IGenreCollectionBase.Genres => _preferredSource.Genres;
@@ -159,7 +164,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        public Task RemoveTrackAsync(int index) => RemoveTrackAsync(index);
+        public Task RemoveTrackAsync(int index) => _preferredSource.RemoveTrackAsync(index);
 
         /// <inheritdoc/>
         public Task AddTrackAsync(ITrack track, int index)
