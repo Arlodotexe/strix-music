@@ -7,7 +7,6 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions.SdkMember;
 using StrixMusic.Sdk.MediaPlayback;
@@ -62,6 +61,7 @@ namespace StrixMusic.Sdk.ViewModels
             _album.DatePublishedChanged += AlbumDatePublishedChanged;
             _album.NameChanged += AlbumNameChanged;
             _album.UrlChanged += AlbumUrlChanged;
+            _album.TrackItemsCountChanged += AlbumOnTrackItemsCountChanged;
         }
 
         private void DetachEvents()
@@ -121,6 +121,14 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _album.DatePublishedChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event EventHandler<int> TrackItemsCountChanged
+        {
+            add => _album.TrackItemsCountChanged += value;
+
+            remove => _album.TrackItemsCountChanged -= value;
+        }
+
         private void AlbumUrlChanged(object sender, Uri? e) => Url = e;
 
         private void AlbumNameChanged(object sender, string e) => Name = e;
@@ -130,6 +138,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void AlbumPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
 
         private void AlbumDatePublishedChanged(object sender, DateTime? e) => DatePublished = e;
+
+        private void AlbumOnTrackItemsCountChanged(object sender, int e) => TotalTracksCount = e;
 
         /// <inheritdoc />
         public string Id => _album.Id;
@@ -142,6 +152,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         public IReadOnlyList<ICoreAlbum> Sources => _album.GetSources<ICoreAlbum>();
 
+        /// <summary>
+        /// The merged sources for this album.
+        /// </summary>
+        IReadOnlyList<ICoreAlbum> ISdkMember<ICoreAlbum>.Sources => Sources;
+
         /// <inheritdoc />
         IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
 
@@ -153,9 +168,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public TimeSpan Duration => _album.Duration;
-
-        /// <inheritdoc />
-        public int TotalTracksCount => _album.TotalTracksCount;
 
         /// <inheritdoc />
         public IPlayableCollectionGroup? RelatedItems { get; }
@@ -179,7 +191,11 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<ICoreAlbum> SourceAlbums { get; }
+        public int TotalTracksCount
+        {
+            get => _album.TotalTracksCount;
+            private set => SetProperty(() => _album.TotalTracksCount, value);
+        }
 
         /// <inheritdoc cref="IAlbum.Artist" />
         public ArtistViewModel Artist
@@ -298,7 +314,7 @@ namespace StrixMusic.Sdk.ViewModels
 
                     // TODO: Use core of active device.
 
-                    var mediaSource = await SourceCores[0].GetMediaSource(item);
+                    var mediaSource = await SourceCores[0].GetMediaSource(item.Model.GetSources<ICoreTrack>()[0]);
 
                     if (mediaSource is null)
                         continue;

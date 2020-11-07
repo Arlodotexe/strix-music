@@ -42,6 +42,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += OnNameChanged;
             DescriptionChanged += OnDescriptionChanged;
             UrlChanged += OnUrlChanged;
+            AlbumItemsCountChanged += OnAlbumItemsCountChanged;
         }
 
         private void DetachEvents()
@@ -50,6 +51,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= OnNameChanged;
             DescriptionChanged -= OnDescriptionChanged;
             UrlChanged -= OnUrlChanged;
+            AlbumItemsCountChanged -= OnAlbumItemsCountChanged;
         }
 
         private void OnUrlChanged(object sender, Uri? e) => Url = e;
@@ -59,6 +61,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void OnDescriptionChanged(object sender, string? e) => Description = e;
 
         private void OnPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+
+        private void OnAlbumItemsCountChanged(object sender, int e) => TotalAlbumItemsCount = e;
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState> PlaybackStateChanged
@@ -95,6 +99,13 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _collection.DurationChanged -= value;
         }
 
+        /// <inheritdoc/>
+        public event EventHandler<int> AlbumItemsCountChanged
+        {
+            add => _collection.AlbumItemsCountChanged += value;
+            remove => _collection.AlbumItemsCountChanged -= value;
+        }
+
         /// <inheritdoc />
         public async Task PopulateMoreAlbumsAsync(int limit)
         {
@@ -117,9 +128,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IImage> Images => _collection.Images;
-
-        /// <inheritdoc />
-        public int TotalAlbumItemsCount => _collection.TotalAlbumItemsCount;
 
         /// <inheritdoc />
         public string Id => _collection.Id;
@@ -157,6 +165,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             get => _collection.Duration;
             set => SetProperty(() => _collection.Duration, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalAlbumItemsCount
+        {
+            get => _collection.TotalAlbumItemsCount;
+            set => SetProperty(() => _collection.TotalAlbumItemsCount, value);
         }
 
         /// <inheritdoc />

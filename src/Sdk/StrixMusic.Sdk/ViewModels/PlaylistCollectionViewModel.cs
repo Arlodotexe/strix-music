@@ -39,6 +39,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += OnNameChanged;
             DescriptionChanged += OnDescriptionChanged;
             UrlChanged += OnUrlChanged;
+            PlaylistItemsCountChanged += OnPlaylistItemsCountChanged;
         }
 
         private void DetachEvents()
@@ -47,6 +48,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= OnNameChanged;
             DescriptionChanged -= OnDescriptionChanged;
             UrlChanged -= OnUrlChanged;
+            PlaylistItemsCountChanged -= OnPlaylistItemsCountChanged;
         }
 
         private void OnUrlChanged(object sender, Uri? e) => Url = e;
@@ -56,6 +58,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void OnDescriptionChanged(object sender, string? e) => Description = e;
 
         private void OnPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+
+        private void OnPlaylistItemsCountChanged(object sender, int e) => TotalPlaylistItemsCount = e;
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState> PlaybackStateChanged
@@ -93,6 +97,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public event EventHandler<int> PlaylistItemsCountChanged
+        {
+            add => _collection.PlaylistItemsCountChanged += value;
+            remove => _collection.PlaylistItemsCountChanged -= value;
+        }
+
+        /// <inheritdoc />
         public string Id => _collection.Id;
 
         /// <inheritdoc />
@@ -122,6 +133,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             get => _collection.Name;
             set => SetProperty(() => _collection.Name, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalPlaylistItemsCount
+        {
+            get => _collection.TotalPlaylistItemsCount;
+            set => SetProperty(() => _collection.TotalPlaylistItemsCount, value);
         }
 
         /// <inheritdoc />
@@ -165,9 +183,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task ChangeDurationAsync(TimeSpan duration) => _collection.ChangeDurationAsync(duration);
-
-        /// <inheritdoc />
-        public int TotalPlaylistItemsCount => _collection.TotalPlaylistItemsCount;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IImage> Images => _collection.Images;

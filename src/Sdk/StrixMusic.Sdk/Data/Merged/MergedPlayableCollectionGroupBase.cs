@@ -221,13 +221,14 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public async Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset)
         {
-            // The items in this Merged source are its own thing once we merge it, so any offset / limit passed here are completely disregarding the original source
+            // create a collection that represents all possible items and maps to the original indices
 
-            // Create a new collection that contains all data from the merged sources, even for data we don't have. Store the original offset of each and get it as needed.
 
-            // Two ways of sorting the data:
-            // Alternating until all sources run out
-            // In order by rank
+
+
+
+
+
             var limitRemainder = limit % Sources.Count;
             var limitPerSource = (limit - limitRemainder) / Sources.Count;
 

@@ -71,8 +71,19 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _userProfile.EmailChanged -= value;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
+
+        /// <summary>
+        /// The merged sources for this model.
+        /// </summary>
+        public IReadOnlyList<ICoreUserProfile> Sources => _userProfile.GetSources<ICoreUserProfile>();
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreUserProfile> ISdkMember<ICoreUserProfile>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
         public string Id => _userProfile.Id;

@@ -55,6 +55,7 @@ namespace StrixMusic.Sdk.ViewModels
             _playlist.NameChanged += CorePlaylistNameChanged;
             _playlist.PlaybackStateChanged += CorePlaylistPlaybackStateChanged;
             _playlist.UrlChanged += CorePlaylistUrlChanged;
+            _playlist.TrackItemsCountChanged += PlaylistOnTrackItemsCountChanged;
         }
 
         private void DetachEvents()
@@ -63,6 +64,7 @@ namespace StrixMusic.Sdk.ViewModels
             _playlist.NameChanged -= CorePlaylistNameChanged;
             _playlist.PlaybackStateChanged -= CorePlaylistPlaybackStateChanged;
             _playlist.UrlChanged -= CorePlaylistUrlChanged;
+            _playlist.TrackItemsCountChanged -= PlaylistOnTrackItemsCountChanged;
         }
 
         /// <inheritdoc />
@@ -104,6 +106,13 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _playlist.DurationChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event EventHandler<int> TrackItemsCountChanged
+        {
+            add => _playlist.TrackItemsCountChanged += value;
+            remove => _playlist.TrackItemsCountChanged -= value;
+        }
+
         private void CorePlaylistUrlChanged(object sender, Uri? e) => Url = e;
 
         private void CorePlaylistPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
@@ -111,6 +120,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void CorePlaylistNameChanged(object sender, string e) => Name = e;
 
         private void CorePlaylistDescriptionChanged(object sender, string? e) => Description = e;
+
+        private void PlaylistOnTrackItemsCountChanged(object sender, int e) => TotalTracksCount = e;
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
@@ -144,9 +155,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public IPlayableCollectionGroup? RelatedItems { get; }
 
-        /// <inheritdoc />
-        public int TotalTracksCount => _playlist.TotalTracksCount;
-
         /// <summary>
         /// The tracks in this playlist.
         /// </summary>
@@ -177,6 +185,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             get => _playlist.Name;
             set => SetProperty(() => _playlist.Name, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalTracksCount
+        {
+            get => _playlist.TotalTracksCount;
+            set => SetProperty(() => _playlist.TotalTracksCount, value);
         }
 
         /// <inheritdoc />

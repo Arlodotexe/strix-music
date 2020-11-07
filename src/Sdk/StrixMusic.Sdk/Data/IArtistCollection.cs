@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Data.Base;
@@ -26,5 +27,10 @@ namespace StrixMusic.Sdk.Data
         /// <param name="index">the position to insert the artist at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task AddArtistItemAsync(IArtistCollectionItem artist, int index);
+
+        /// <summary>
+        /// Fires when the merged <see cref="IArtistCollectionBase.TotalArtistItemsCount"/> changes.
+        /// </summary>
+        event EventHandler<int> ArtistItemsCountChanged;
     }
 }

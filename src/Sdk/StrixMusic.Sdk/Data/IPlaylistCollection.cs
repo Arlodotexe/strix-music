@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Data.Base;
@@ -26,5 +27,10 @@ namespace StrixMusic.Sdk.Data
         /// <param name="index">the position to insert the playlist at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index);
+
+        /// <summary>
+        /// Fires when the merged <see cref="IPlaylistCollectionBase.TotalPlaylistItemsCount"/> changes.
+        /// </summary>
+        event EventHandler<int> PlaylistItemsCountChanged;
     }
 }

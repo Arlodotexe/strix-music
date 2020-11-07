@@ -43,6 +43,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += OnNameChanged;
             DescriptionChanged += OnDescriptionChanged;
             UrlChanged += OnUrlChanged;
+            TrackItemsCountChanged += OnTrackItemsCountChanged;
         }
 
         private void DetachEvents()
@@ -51,6 +52,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= OnNameChanged;
             DescriptionChanged -= OnDescriptionChanged;
             UrlChanged -= OnUrlChanged;
+            TrackItemsCountChanged -= OnTrackItemsCountChanged;
         }
 
         private void OnUrlChanged(object sender, Uri? e) => Url = e;
@@ -60,6 +62,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void OnDescriptionChanged(object sender, string? e) => Description = e;
 
         private void OnPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+
+        private void OnTrackItemsCountChanged(object sender, int e) => TotalTracksCount = e;
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState> PlaybackStateChanged
@@ -97,6 +101,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public event EventHandler<int> TrackItemsCountChanged
+        {
+            add => _collection.TrackItemsCountChanged += value;
+            remove => _collection.TrackItemsCountChanged -= value;
+        }
+
+        /// <inheritdoc />
         public string Id => _collection.Id;
 
         /// <inheritdoc />
@@ -129,6 +140,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public int TotalTracksCount
+        {
+            get => _collection.TotalTracksCount;
+            set => SetProperty(() => _collection.TotalTracksCount, value);
+        }
+
+        /// <inheritdoc />
         public string? Description
         {
             get => _collection.Description;
@@ -151,9 +169,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }
-
-        /// <inheritdoc />
-        public int TotalTracksCount => _collection.TotalTracksCount;
 
         /// <inheritdoc />
         public IReadOnlyList<ICore> SourceCores { get; }

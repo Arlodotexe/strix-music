@@ -58,6 +58,12 @@ namespace StrixMusic.Sdk.ViewModels
             _collectionGroup.DescriptionChanged += CollectionGroupDescriptionChanged;
             _collectionGroup.NameChanged += CollectionGroupNameChanged;
             _collectionGroup.UrlChanged += CollectionGroupUrlChanged;
+
+            _collectionGroup.AlbumItemsCountChanged += CollectionGroupOnAlbumItemsCountChanged;
+            _collectionGroup.TrackItemsCountChanged += CollectionGroupOnTrackItemsCountChanged;
+            _collectionGroup.ArtistItemsCountChanged += CollectionGroupOnArtistItemsCountChanged;
+            _collectionGroup.PlaylistItemsCountChanged += CollectionGroupOnPlaylistItemsCountChanged;
+            _collectionGroup.TotalChildrenCountChanged += CollectionGroupOnTotalChildrenCountChanged;
         }
 
         private void DetachPropertyEvents()
@@ -66,6 +72,12 @@ namespace StrixMusic.Sdk.ViewModels
             _collectionGroup.DescriptionChanged -= CollectionGroupDescriptionChanged;
             _collectionGroup.NameChanged -= CollectionGroupNameChanged;
             _collectionGroup.UrlChanged -= CollectionGroupUrlChanged;
+
+            _collectionGroup.AlbumItemsCountChanged -= CollectionGroupOnAlbumItemsCountChanged;
+            _collectionGroup.TrackItemsCountChanged -= CollectionGroupOnTrackItemsCountChanged;
+            _collectionGroup.ArtistItemsCountChanged -= CollectionGroupOnArtistItemsCountChanged;
+            _collectionGroup.PlaylistItemsCountChanged -= CollectionGroupOnPlaylistItemsCountChanged;
+            _collectionGroup.TotalChildrenCountChanged -= CollectionGroupOnTotalChildrenCountChanged;
         }
 
         /// <inheritdoc />
@@ -105,6 +117,34 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _collectionGroup.DurationChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event EventHandler<int> TrackItemsCountChanged
+        {
+            add => _collectionGroup.TrackItemsCountChanged += value;
+            remove => _collectionGroup.TrackItemsCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int> ArtistItemsCountChanged
+        {
+            add => _collectionGroup.ArtistItemsCountChanged += value;
+            remove => _collectionGroup.ArtistItemsCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int> AlbumItemsCountChanged
+        {
+            add => _collectionGroup.AlbumItemsCountChanged += value;
+            remove => _collectionGroup.AlbumItemsCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int> PlaylistItemsCountChanged
+        {
+            add => _collectionGroup.PlaylistItemsCountChanged += value;
+            remove => _collectionGroup.PlaylistItemsCountChanged -= value;
+        }
+
         private void CollectionGroupUrlChanged(object sender, Uri? e) => Url = e;
 
         private void CollectionGroupNameChanged(object sender, string e) => Name = e;
@@ -112,6 +152,16 @@ namespace StrixMusic.Sdk.ViewModels
         private void CollectionGroupDescriptionChanged(object sender, string? e) => Description = e;
 
         private void CollectionGroupPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+
+        private void CollectionGroupOnTotalChildrenCountChanged(object sender, int e) => TotalChildrenCount = e;
+
+        private void CollectionGroupOnPlaylistItemsCountChanged(object sender, int e) => TotalPlaylistItemsCount = e;
+
+        private void CollectionGroupOnArtistItemsCountChanged(object sender, int e) => TotalArtistItemsCount = e;
+
+        private void CollectionGroupOnTrackItemsCountChanged(object sender, int e) => TotalTracksCount = e;
+
+        private void CollectionGroupOnAlbumItemsCountChanged(object sender, int e) => TotalAlbumItemsCount = e;
 
         /// <inheritdoc />
         public string Id => _collectionGroup.Id;
@@ -158,21 +208,6 @@ namespace StrixMusic.Sdk.ViewModels
         public TimeSpan Duration => _collectionGroup.Duration;
 
         /// <inheritdoc />
-        public int TotalPlaylistItemsCount => _collectionGroup.TotalPlaylistItemsCount;
-
-        /// <inheritdoc />
-        public int TotalTracksCount => _collectionGroup.TotalTracksCount;
-
-        /// <inheritdoc />
-        public int TotalAlbumItemsCount => _collectionGroup.TotalAlbumItemsCount;
-
-        /// <inheritdoc />
-        public int TotalArtistItemsCount => _collectionGroup.TotalArtistItemsCount;
-
-        /// <inheritdoc />
-        public int TotalChildrenCount => _collectionGroup.TotalChildrenCount;
-
-        /// <inheritdoc />
         public SynchronizedObservableCollection<IImage> Images => _collectionGroup.Images;
 
         /// <inheritdoc />
@@ -202,6 +237,41 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public int TotalPlaylistItemsCount
+        {
+            get => _collectionGroup.TotalPlaylistItemsCount;
+            private set => SetProperty(() => _collectionGroup.TotalPlaylistItemsCount, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalTracksCount
+        {
+            get => _collectionGroup.TotalTracksCount;
+            private set => SetProperty(() => _collectionGroup.TotalTracksCount, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalAlbumItemsCount
+        {
+            get => _collectionGroup.TotalAlbumItemsCount;
+            private set => SetProperty(() => _collectionGroup.TotalAlbumItemsCount, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalArtistItemsCount
+        {
+            get => _collectionGroup.TotalArtistItemsCount;
+            private set => SetProperty(() => _collectionGroup.TotalArtistItemsCount, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalChildrenCount
+        {
+            get => _collectionGroup.TotalChildrenCount;
+            private set => SetProperty(() => _collectionGroup.TotalChildrenCount, value);
+        }
+
+        /// <inheritdoc />
         public Uri? Url
         {
             get => _collectionGroup.Url;
@@ -220,6 +290,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             get => _collectionGroup.PlaybackState;
             private set => SetProperty(() => _collectionGroup.PlaybackState, value);
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int> TotalChildrenCountChanged
+        {
+            add => _collectionGroup.TotalChildrenCountChanged += value;
+            remove => _collectionGroup.TotalChildrenCountChanged -= value;
         }
 
         /// <inheritdoc />

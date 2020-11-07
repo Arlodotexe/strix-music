@@ -42,7 +42,10 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += OnNameChanged;
             DescriptionChanged += OnDescriptionChanged;
             UrlChanged += OnUrlChanged;
+            ArtistItemsCountChanged += OnArtistItemsCountChanged;
         }
+
+        private void OnArtistItemsCountChanged(object sender, int e) => TotalArtistItemsCount = e;
 
         private void DetachEvents()
         {
@@ -50,6 +53,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= OnNameChanged;
             DescriptionChanged -= OnDescriptionChanged;
             UrlChanged -= OnUrlChanged;
+            ArtistItemsCountChanged -= OnArtistItemsCountChanged;
         }
 
         private void OnUrlChanged(object sender, Uri? e) => Url = e;
@@ -93,6 +97,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _collection.DurationChanged += value;
             remove => _collection.DurationChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int> ArtistItemsCountChanged
+        {
+            add => _collection.ArtistItemsCountChanged += value;
+            remove => _collection.ArtistItemsCountChanged -= value;
         }
 
         /// <inheritdoc />
@@ -149,6 +160,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public int TotalArtistItemsCount
+        {
+            get => _collection.TotalArtistItemsCount;
+            set => SetProperty(() => _collection.TotalArtistItemsCount, value);
+        }
+
+        /// <inheritdoc />
         public Task PlayAsync()
         {
             return _collection.PlayAsync();
@@ -188,9 +206,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
-
-        /// <inheritdoc />
-        public int TotalArtistItemsCount => _collection.TotalArtistItemsCount;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IImage> Images => _collection.Images;

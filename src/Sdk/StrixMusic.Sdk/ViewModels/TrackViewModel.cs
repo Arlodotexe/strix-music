@@ -57,6 +57,7 @@ namespace StrixMusic.Sdk.ViewModels
             Model.PlaybackStateChanged += Track_PlaybackStateChanged;
             Model.TrackNumberChanged += Track_TrackNumberChanged;
             Model.UrlChanged += Track_UrlChanged;
+            Model.ArtistItemsCountChanged += ModelOnArtistItemsCountChanged;
         }
 
         private void DetachEvents()
@@ -70,6 +71,7 @@ namespace StrixMusic.Sdk.ViewModels
             Model.PlaybackStateChanged -= Track_PlaybackStateChanged;
             Model.TrackNumberChanged -= Track_TrackNumberChanged;
             Model.UrlChanged -= Track_UrlChanged;
+            Model.ArtistItemsCountChanged += ModelOnArtistItemsCountChanged;
         }
 
         /// <inheritdoc />
@@ -152,6 +154,13 @@ namespace StrixMusic.Sdk.ViewModels
             remove => Model.DurationChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event EventHandler<int> ArtistItemsCountChanged
+        {
+            add => Model.ArtistItemsCountChanged += value;
+            remove => Model.ArtistItemsCountChanged -= value;
+        }
+
         private void Track_UrlChanged(object sender, Uri? e) => Url = e;
 
         private void Track_TrackNumberChanged(object sender, int? e) => TrackNumber = e;
@@ -169,6 +178,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void Track_DescriptionChanged(object sender, string? e) => Description = e;
 
         private void Track_AlbumChanged(object sender, IAlbum? e) => Album = e != null ? new AlbumViewModel(e) : null;
+
+        private void ModelOnArtistItemsCountChanged(object sender, int e) => TotalArtistItemsCount = e;
 
         /// <summary>
         /// The wrapped model for this <see cref="TrackViewModel"/>.
@@ -213,9 +224,6 @@ namespace StrixMusic.Sdk.ViewModels
         public TrackType Type => Model.Type;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount => Model.TotalArtistItemsCount;
-
-        /// <inheritdoc />
         public TimeSpan Duration => Model.Duration;
 
         /// <inheritdoc />
@@ -229,6 +237,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             get => Model.Name;
             set => SetProperty(() => Model.Name, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalArtistItemsCount
+        {
+            get => Model.TotalArtistItemsCount;
+            set => SetProperty(() => Model.TotalArtistItemsCount, value);
         }
 
         /// <inheritdoc />

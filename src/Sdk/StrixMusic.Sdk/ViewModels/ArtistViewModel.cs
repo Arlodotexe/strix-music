@@ -52,6 +52,8 @@ namespace StrixMusic.Sdk.ViewModels
             _artist.DescriptionChanged += ArtistDescriptionChanged;
             _artist.NameChanged += ArtistNameChanged;
             _artist.UrlChanged += ArtistUrlChanged;
+            _artist.AlbumItemsCountChanged += Artist_AlbumItemsCountChanged;
+            _artist.TrackItemsCountChanged += ArtistOnTrackItemsCountChanged;
         }
 
         private void DetachEvents()
@@ -60,6 +62,8 @@ namespace StrixMusic.Sdk.ViewModels
             _artist.DescriptionChanged -= ArtistDescriptionChanged;
             _artist.NameChanged -= ArtistNameChanged;
             _artist.UrlChanged -= ArtistUrlChanged;
+            _artist.AlbumItemsCountChanged -= Artist_AlbumItemsCountChanged;
+            _artist.TrackItemsCountChanged -= ArtistOnTrackItemsCountChanged;
         }
 
         /// <inheritdoc />
@@ -102,6 +106,20 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _artist.UrlChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event EventHandler<int> TrackItemsCountChanged
+        {
+            add => _artist.TrackItemsCountChanged += value;
+            remove => _artist.TrackItemsCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int> AlbumItemsCountChanged
+        {
+            add => _artist.AlbumItemsCountChanged += value;
+            remove => _artist.AlbumItemsCountChanged -= value;
+        }
+
         private void ArtistUrlChanged(object sender, Uri? e) => Url = e;
 
         private void ArtistNameChanged(object sender, string e) => Name = e;
@@ -109,6 +127,10 @@ namespace StrixMusic.Sdk.ViewModels
         private void ArtistDescriptionChanged(object sender, string? e) => Description = e;
 
         private void ArtistPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+
+        private void ArtistOnTrackItemsCountChanged(object sender, int e) => TotalTracksCount = e;
+
+        private void Artist_AlbumItemsCountChanged(object sender, int e) => TotalAlbumItemsCount = e;
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
@@ -142,12 +164,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public string Id => _artist.Id;
 
-        /// <inheritdoc />
-        public int TotalAlbumItemsCount => _artist.TotalAlbumItemsCount;
-
-        /// <inheritdoc />
-        public int TotalTracksCount => _artist.TotalTracksCount;
-
         /// <inheritdoc cref="IPlayable.Duration" />
         public TimeSpan Duration => _artist.Duration;
 
@@ -175,6 +191,20 @@ namespace StrixMusic.Sdk.ViewModels
         {
             get => _artist.Name;
             private set => SetProperty(() => _artist.Name, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalAlbumItemsCount
+        {
+            get => _artist.TotalAlbumItemsCount;
+            private set => SetProperty(() => _artist.TotalAlbumItemsCount, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalTracksCount
+        {
+            get => _artist.TotalTracksCount;
+            private set => SetProperty(() => _artist.TotalTracksCount, value);
         }
 
         /// <inheritdoc />

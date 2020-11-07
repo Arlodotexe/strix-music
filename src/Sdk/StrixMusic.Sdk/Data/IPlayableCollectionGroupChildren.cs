@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -24,5 +25,10 @@ namespace StrixMusic.Sdk.Data
         /// <param name="index">the position to insert the child at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task AddChildAsync(IPlayableCollectionGroup child, int index);
+
+        /// <summary>
+        /// Fires when the merged <see cref="IPlayableCollectionGroupChildrenBase.TotalChildrenCount"/> changes.
+        /// </summary>
+        event EventHandler<int> TotalChildrenCountChanged;
     }
 }
