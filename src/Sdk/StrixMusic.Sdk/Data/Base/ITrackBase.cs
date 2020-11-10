@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// Metadata about a track.
     /// </summary>
-    public interface ITrackBase : IPlayable, IArtistCollectionBase, IGenreCollectionBase
+    public interface ITrackBase : IPlayable, IArtistCollectionBase, IGenreCollectionBase, ICollectionItemBase
     {
         /// <inheritdoc cref="TrackType"/>
         TrackType Type { get; }

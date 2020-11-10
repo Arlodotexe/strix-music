@@ -21,22 +21,4 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         IReadOnlyList<T> Sources { get; }
     }
-
-    /// <summary>
-    /// helpers for merging together 
-    /// </summary>
-    public static partial class MergedHelpers
-    {
-        /// <summary>
-        /// Takes a list of <typeparamref name="TCoreMember"/> and makes items distinct by merging items together.
-        /// </summary>
-        /// <typeparam name="TCoreMember">The type of the member to merge together.</typeparam>
-        /// <param name="sources">The items to merge</param>
-        /// <returns>A list of distinct, merged items.</returns>
-        public static IEnumerable<ISdkMember<TCoreMember>> UnionAndMerge<TCoreMember>(this IEnumerable<TCoreMember> sources)
-            where TCoreMember : ICoreMember
-        {
-
-        }
-    }
 }

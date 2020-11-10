@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Collections;
 using OwlCore.Extensions.AsyncExtensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions.SdkMember;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Data.Merged
 {
@@ -44,17 +47,20 @@ namespace StrixMusic.Sdk.Data.Merged
                 TotalAlbumItemsCount += item.TotalAlbumItemsCount;
                 TotalArtistItemsCount += item.TotalArtistItemsCount;
                 Duration += item.Duration;
-
-                // todo: merge data as needed
-                // todo 2: Don't do this in the ctor. Cores shouldn't supply data unless it's requested, otherwise we'd have data scattered around.
-                // removed
             }
+
+            AlbumItemMap = new MergedCollectionMap<IPlayableCollectionGroup, ICoreAlbumCollection>(this);
         }
 
         /// <summary>
         /// The top preferred source for this item, used for property getters.
         /// </summary>
         protected ICorePlayableCollectionGroup PreferredSource { get; }
+
+        /// <summary>
+        /// Maps and ranks the indices for the original <see cref="ICoreMember"/> sources to new indices that can be used in a list containing the items, merged.
+        /// </summary>
+        public MergedCollectionMap<IPlayableCollectionGroup, ICoreAlbumCollection> AlbumItemMap { get; }
 
         private void AttachPropertyChangedEvents(IPlayable source)
         {
@@ -223,16 +229,20 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             // create a collection that represents all possible items and maps to the original indices
 
+            // to decide which index goes where, you need to:
+            // know the rank of each each item
 
+            // This collection will be modified as we merge in new sources
 
+            // When a merged collection is asked for an offset / limit, point them to the MergedSdkMemberMap
 
-
-
-
+            // this is wrong, assumes an equal number of items in each core
             var limitRemainder = limit % Sources.Count;
             var limitPerSource = (limit - limitRemainder) / Sources.Count;
 
-            var result = new List<IAlbumCollectionItem>();
+            // example - highest to lowest priority.
+            // Use our MergedSdkMemberMap to find the indices for this sorting type
+            // TODO add sorting types to settings.
 
             foreach (var source in Sources)
             {
@@ -242,17 +252,21 @@ namespace StrixMusic.Sdk.Data.Merged
 
                 if (remainingItems > 0)
                 {
-                    // TODO: Offset is not 0, map it correctly
+                    // Try getting from different sources in parallel
+                    // Sources.InParallel(x => x.GetAlbumItemsAsync())
+
                     await foreach (var item in source.GetAlbumItemsAsync(limitPerSource, 0))
                     {
-                        // TODO: wrap with another merged and yield that
-
-                        if (item is IAlbumBase)
+                        if (item is ICoreAlbum album)
                         {
                             // merge to IAlbum and add to end result
+
+                            var merged = new MergedAlbum(new List<ICoreAlbum>() { album });
+
+                            result.Add(merged);
                         }
 
-                        if (item is IAlbumCollectionBase)
+                        if (item is ICoreAlbumCollection)
                         {
                             // merge to IAlbumCollection and add to return result
                         }
