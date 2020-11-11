@@ -129,12 +129,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <summary>
         /// Fires when the <see cref="NextItems"/> are updated.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<IMediaSourceConfig>>? NextItemsChanged;
+        event CollectionChangedEventHandler<IMediaSourceConfig>? NextItemsChanged;
 
         /// <summary>
         /// Fires when the <see cref="PreviousItems"/> are updated.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<IMediaSourceConfig>>? PreviousItemsChanged;
+        event CollectionChangedEventHandler<IMediaSourceConfig>? PreviousItemsChanged;
 
         /// <summary>
         /// Fires when the <see cref="CurrentItem"/> is changed.

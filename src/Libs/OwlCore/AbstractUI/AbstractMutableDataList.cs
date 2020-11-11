@@ -54,20 +54,15 @@ namespace OwlCore.AbstractUI
         {
             Items.Add(item);
 
-            var removedItems = Array.Empty<CollectionChangedEventArgsItem<AbstractUIMetadata>>();
+            var removedItems = Array.Empty<CollectionChangedEventItem<AbstractUIMetadata>>();
 
-            var addedItems = new List<CollectionChangedEventArgsItem<AbstractUIMetadata>>()
+            var addedItems = new List<CollectionChangedEventItem<AbstractUIMetadata>>()
             {
-                new CollectionChangedEventArgsItem<AbstractUIMetadata>(item, index)
+                new CollectionChangedEventItem<AbstractUIMetadata>(item, index)
             };
 
-            ItemAdded?.Invoke(this, new CollectionChangedEventArgs<AbstractUIMetadata>(addedItems, removedItems));
+            ItemAdded?.Invoke(this, addedItems, removedItems);
         }
-
-        /// <summary>
-        /// Fired when a new item is added to the <see cref="AbstractDataList.Items"/>.
-        /// </summary>
-        public event EventHandler<CollectionChangedEventArgs<AbstractUIMetadata>>? ItemAdded;
 
         /// <summary>
         /// Removes an item from the <see cref="AbstractDataList.Items"/>.
@@ -90,19 +85,24 @@ namespace OwlCore.AbstractUI
             var item = Items.ElementAt(index);
             Items.RemoveAt(index);
 
-            var removedItems = new List<CollectionChangedEventArgsItem<AbstractUIMetadata>>()
+            var removedItems = new List<CollectionChangedEventItem<AbstractUIMetadata>>()
             {
-                new CollectionChangedEventArgsItem<AbstractUIMetadata>(item, index)
+                new CollectionChangedEventItem<AbstractUIMetadata>(item, index)
             };
 
-            var addedItems = Array.Empty<CollectionChangedEventArgsItem<AbstractUIMetadata>>();
+            var addedItems = Array.Empty<CollectionChangedEventItem<AbstractUIMetadata>>();
 
-            ItemRemoved?.Invoke(this, new CollectionChangedEventArgs<AbstractUIMetadata>(addedItems, removedItems));
+            ItemRemoved?.Invoke(this,addedItems, removedItems);
         }
 
         /// <summary>
         /// Fires when <see cref="RemoveItem"/> is called.
         /// </summary>
-        public event EventHandler<CollectionChangedEventArgs<AbstractUIMetadata>>? ItemRemoved;
+        public event CollectionChangedEventHandler<AbstractUIMetadata>? ItemRemoved;
+
+        /// <summary>
+        /// Fired when a new item is added to the <see cref="AbstractDataList.Items"/>.
+        /// </summary>
+        public event CollectionChangedEventHandler<AbstractUIMetadata>? ItemAdded;
     }
 }

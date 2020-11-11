@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Events;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -38,6 +39,8 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public IReadOnlyList<TSourceCollection> Sources => _collection.Sources;
+
+        
 
         /// <summary>
         /// Initializes a new instance of <see cref="MergedCollectionMap{TCollection,TCollectionItem,TMerged}"/>.
