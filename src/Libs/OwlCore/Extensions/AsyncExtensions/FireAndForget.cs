@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
-namespace OwlCore.Extensions.AsyncExtensions
+// ReSharper disable once CheckNamespace
+namespace OwlCore.Extensions
 {
     public static partial class AsyncExtensions
     {

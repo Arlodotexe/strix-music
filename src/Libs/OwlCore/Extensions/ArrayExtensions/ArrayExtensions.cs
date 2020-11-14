@@ -1,6 +1,7 @@
 ﻿using System;
 
-namespace OwlCore.Extensions.ArrayExtensions
+// ReSharper disable once CheckNamespace
+namespace OwlCore.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="Array"/>s.
