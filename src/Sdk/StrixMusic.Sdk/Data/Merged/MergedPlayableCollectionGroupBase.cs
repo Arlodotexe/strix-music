@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Collections;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions.SdkMember;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Data.Merged
 {
@@ -67,22 +64,34 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         protected ICorePlayableCollectionGroup PreferredSource { get; }
 
-        private void AttachPropertyChangedEvents(IPlayable source)
+        private void AttachPropertyChangedEvents(ICorePlayableCollectionGroup source)
         {
             source.PlaybackStateChanged += PlaybackStateChanged;
             source.NameChanged += NameChanged;
             source.DescriptionChanged += DescriptionChanged;
             source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
+
+            source.AlbumItemsCountChanged += AlbumItemsCountChanged;
+            source.ArtistItemsCountChanged += ArtistItemsCountChanged;
+            source.PlaylistItemsCountChanged += PlaylistItemsCountChanged;
+            source.TrackItemsCountChanged += TrackItemsCountChanged;
+            source.TotalChildrenCountChanged += TotalChildrenCountChanged;
         }
 
-        private void DetachPropertyChangedEvents(IPlayable source)
+        private void DetachPropertyChangedEvents(ICorePlayableCollectionGroup source)
         {
             source.PlaybackStateChanged -= PlaybackStateChanged;
             source.NameChanged -= NameChanged;
             source.DescriptionChanged -= DescriptionChanged;
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
+
+            source.AlbumItemsCountChanged -= AlbumItemsCountChanged;
+            source.ArtistItemsCountChanged -= ArtistItemsCountChanged;
+            source.PlaylistItemsCountChanged -= PlaylistItemsCountChanged;
+            source.TrackItemsCountChanged -= TrackItemsCountChanged;
+            source.TotalChildrenCountChanged -= TotalChildrenCountChanged;
         }
 
         /// <inheritdoc/>
@@ -271,8 +280,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset = 0)
         {
-            // TODO
-            return Task.FromResult<IReadOnlyList<ITrack>>(new List<ITrack>());
+            return _trackCollectionMap.GetItems(limit, offset);
         }
 
         /// <inheritdoc/>

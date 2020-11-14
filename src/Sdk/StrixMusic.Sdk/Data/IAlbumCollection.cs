@@ -28,10 +28,5 @@ namespace StrixMusic.Sdk.Data
         /// <param name="index">the position to insert the album at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task AddAlbumItemAsync(IAlbumCollectionItem album, int index);
-
-        /// <summary>
-        /// Fires when the merged <see cref="IAlbumCollectionBase.TotalAlbumItemsCount"/> changes.
-        /// </summary>
-        event EventHandler<int> AlbumItemsCountChanged;
     }
 }

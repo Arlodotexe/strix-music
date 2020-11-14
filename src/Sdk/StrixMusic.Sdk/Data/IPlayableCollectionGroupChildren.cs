@@ -25,10 +25,5 @@ namespace StrixMusic.Sdk.Data
         /// <param name="index">the position to insert the child at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task AddChildAsync(IPlayableCollectionGroup child, int index);
-
-        /// <summary>
-        /// Fires when the merged <see cref="IPlayableCollectionGroupChildrenBase.TotalChildrenCount"/> changes.
-        /// </summary>
-        event EventHandler<int> TotalChildrenCountChanged;
     }
 }

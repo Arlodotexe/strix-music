@@ -36,10 +36,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         private readonly List<MappedData> _sortedMap = new List<MappedData>();
 
-        /// <summary>
-        /// The same as <see cref="_sortedMap"/>, but data is merged.
-        /// </summary>
-        private readonly List<IMerged<TCoreCollectionItem>> _mergedSortedMap = new List<IMerged<TCoreCollectionItem>>();
+        private readonly List<MergedMappedData> _mergedMappedData = new List<MergedMappedData>();
 
         private IReadOnlyList<Type>? _coreRanking;
         private MergedCollectionSorting? _sortingMethod;
@@ -87,64 +84,193 @@ namespace StrixMusic.Sdk.Data.Merged
             };
         }
 
-        private static void MergeOrAdd(List<IMerged<TCoreCollectionItem>> collection, TCoreCollectionItem itemToMerge)
+        /// <summary>
+        /// Inserts an item into the compatible source collections.
+        /// </summary>
+        /// <param name="item">The item to insert.</param>
+        /// <param name="index">The index to place this item at.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task InsertItem(TCollectionItem item, int index)
+        {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
+
+            // TODO
+            // This does not handle adding NEW items to a list, only existing items from elsewhere. 
+            // e.g. cannot create a new playlist or playableCollectionGroup.
+            // Plan on having a new type that implements ICoreSomething for the UI to fill out the data + create a merged item from.
+            foreach (var source in item.Sources)
+            {
+                var addedRecord = new Dictionary<TCoreCollection, bool>();
+
+                foreach (var mappedData in _sortedMap)
+                {
+                    if (mappedData.CollectionItem is null)
+                        continue;
+
+                    var sourceCollection = mappedData.SourceCollection;
+
+                    // Make sure the source cores are the same.
+                    if (sourceCollection.SourceCore != source.SourceCore)
+                        continue;
+
+                    // Only add to this source collection once.
+                    if (addedRecord.ContainsKey(sourceCollection))
+                        continue;
+
+                    addedRecord.Add(sourceCollection, true);
+
+                    switch (sourceCollection)
+                    {
+                        case ICorePlayableCollectionGroup playableCollection:
+                            if (await playableCollection.IsAddChildSupported(index))
+                                await playableCollection.AddChildAsync((ICorePlayableCollectionGroup)source, mappedData.OriginalIndex);
+                            break;
+                        case ICoreAlbumCollection albumCollection:
+                            if (await albumCollection.IsAddAlbumItemSupported(index))
+                                await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)source, mappedData.OriginalIndex);
+                            break;
+                        case ICoreArtistCollection artistCollection:
+                            if (await artistCollection.IsAddArtistSupported(index))
+                                await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)source, mappedData.OriginalIndex);
+                            break;
+                        case ICorePlaylistCollection playlistCollection:
+                            if (await playlistCollection.IsAddPlaylistItemSupported(index))
+                                await playlistCollection.AddPlaylistItemAsync((ICorePlaylistCollectionItem)source, mappedData.OriginalIndex);
+                            break;
+                        case ICoreTrackCollection trackCollection:
+                            if (await trackCollection.IsAddTrackSupported(index))
+                                await trackCollection.AddTrackAsync((ICoreTrack)source, mappedData.OriginalIndex);
+                            break;
+                        default:
+                            ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
+                            break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Inserts an item into the compatible source collections.
+        /// </summary>
+        /// <param name="index">The index to place this item at.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task RemoveAt(int index)
+        {
+            // Externally, the app sees non-core items as this internal collection of merged and sorted items and data.
+            // When they ask for an item at an index, they're asking for an item at that index that could be merged.
+            // So we go through each of the mapped sources for the item at this index and handle removing from the core side.
+            var targetItem = _mergedMappedData[index];
+
+            foreach (var mappedData in targetItem.MergedMapData)
+            {
+                Guard.IsNotNull(mappedData.CollectionItem, nameof(mappedData.CollectionItem));
+
+                var sourceCollection = mappedData.SourceCollection;
+                var source = mappedData.CollectionItem;
+
+                switch (sourceCollection)
+                {
+                    case ICorePlayableCollectionGroup playableCollection:
+                        if (await playableCollection.IsAddChildSupported(index))
+                            await playableCollection.AddChildAsync((ICorePlayableCollectionGroup)source, mappedData.OriginalIndex);
+                        break;
+                    case ICoreAlbumCollection albumCollection:
+                        if (await albumCollection.IsAddAlbumItemSupported(index))
+                            await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)source, mappedData.OriginalIndex);
+                        break;
+                    case ICoreArtistCollection artistCollection:
+                        if (await artistCollection.IsAddArtistSupported(index))
+                            await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)source, mappedData.OriginalIndex);
+                        break;
+                    case ICorePlaylistCollection playlistCollection:
+                        if (await playlistCollection.IsAddPlaylistItemSupported(index))
+                            await playlistCollection.AddPlaylistItemAsync((ICorePlaylistCollectionItem)source, mappedData.OriginalIndex);
+                        break;
+                    case ICoreTrackCollection trackCollection:
+                        if (await trackCollection.IsAddTrackSupported(index))
+                            await trackCollection.AddTrackAsync((ICoreTrack)source, mappedData.OriginalIndex);
+                        break;
+                    default:
+                        ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
+                        break;
+                }
+            }
+        }
+
+        private static IMerged<TCoreCollectionItem> MergeOrAdd(List<IMerged<TCoreCollectionItem>> collection, TCoreCollectionItem itemToMerge)
         {
             foreach (var item in collection)
             {
                 if (item.Equals(itemToMerge))
                 {
                     item.AddSource(itemToMerge);
-                    return;
+                    return item;
                 }
             }
+
+            IMerged<TCoreCollectionItem>? returnData = null;
 
             // if the collection doesn't contain IMerged<TCollectionItem> at all, create a new Merged
             switch (itemToMerge)
             {
                 case ICoreArtist artist:
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedArtist(artist.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedArtist(artist.IntoList());
+                    collection.Add(returnData);
                     break;
                 case ICoreAlbum album:
                     // no idea why this isn't working. will attempt to fix the other errors and see if it builds anyway.
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedAlbum(album.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedAlbum(album.IntoList());
+                    collection.Add(returnData);
                     break;
                 case ICorePlaylist playlist:
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedPlaylist(playlist.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedPlaylist(playlist.IntoList());
+                    collection.Add(returnData);
                     break;
                 case ICoreTrack track:
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedTrack(track.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedTrack(track.IntoList());
+                    collection.Add(returnData);
                     break;
                 case ICoreDiscoverables discoverables:
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedDiscoverables(discoverables.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedDiscoverables(discoverables.IntoList());
+                    collection.Add(returnData);
                     break;
                 case ICoreLibrary library:
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedLibrary(library.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedLibrary(library.IntoList());
+                    collection.Add(returnData);
                     break;
                 case ICoreRecentlyPlayed recentlyPlayed:
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedRecentlyPlayed(recentlyPlayed.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedRecentlyPlayed(recentlyPlayed.IntoList());
+                    collection.Add(returnData);
                     break;
-
                 // TODO: Search results post search redo
                 case ICorePlayableCollectionGroup playableCollection:
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedPlayableCollectionGroup(playableCollection.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedPlayableCollectionGroup(playableCollection.IntoList());
+                    collection.Add(returnData);
                     break;
                 case ICoreAlbumCollection albumCollection:
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedAlbumCollection(albumCollection.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedAlbumCollection(albumCollection.IntoList());
+                    collection.Add(returnData);
                     break;
                 case ICoreArtistCollection artistCollection:
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedArtistCollection(artistCollection.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedArtistCollection(artistCollection.IntoList());
+                    collection.Add(returnData);
                     break;
                 case ICorePlaylistCollection playlistCollection:
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedPlaylistCollection(playlistCollection.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedPlaylistCollection(playlistCollection.IntoList());
+                    collection.Add(returnData);
                     break;
                 case ICoreTrackCollection trackCollection:
-                    collection.Add((IMerged<TCoreCollectionItem>)new MergedTrackCollection(trackCollection.IntoList()));
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedTrackCollection(trackCollection.IntoList());
+                    collection.Add(returnData);
                     break;
                 default:
                     throw new NotImplementedException();
                     // Remove the above when this is fully finished.
                     ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
             }
+
+            return returnData;
         }
 
         private async Task<IReadOnlyList<TCollectionItem>> GetItemsByRank(int limit, int offset)
@@ -192,6 +318,37 @@ namespace StrixMusic.Sdk.Data.Merged
             return merged;
         }
 
+        private List<IMerged<TCoreCollectionItem>> MergeMappedData(IList<MappedData> sortedData)
+        {
+            _mergedMappedData.Clear();
+
+            var returnedData = new List<IMerged<TCoreCollectionItem>>();
+
+            var mergedItemMaps = new Dictionary<IMerged<TCoreCollectionItem>, List<MappedData>>();
+
+            foreach (var item in sortedData)
+            {
+                if (item.CollectionItem is null)
+                    continue;
+
+                var mergedInto = MergeOrAdd(returnedData, item.CollectionItem);
+
+                bool exists = mergedItemMaps.TryGetValue(mergedInto, out var mergedMapItems);
+                mergedMapItems ??= new List<MappedData>();
+
+                mergedMapItems.Add(item);
+                if (!exists)
+                    mergedItemMaps.Add(mergedInto, mergedMapItems);
+            }
+
+            foreach (var item in mergedItemMaps)
+            {
+                _mergedMappedData.Add(new MergedMappedData(item.Key, item.Value));
+            }
+
+            return returnedData;
+        }
+
         private List<MappedData> BuildSortedMap()
         {
             Guard.IsNotNull(_sortingMethod, nameof(_sortingMethod));
@@ -229,21 +386,6 @@ namespace StrixMusic.Sdk.Data.Merged
             }
 
             return itemsMap;
-        }
-
-        private List<IMerged<TCoreCollectionItem>> MergeMappedData(IList<MappedData> sortedData)
-        {
-            var returnedValue = new List<IMerged<TCoreCollectionItem>>();
-
-            foreach (var item in sortedData)
-            {
-                if (item.CollectionItem is null)
-                    continue;
-
-                MergeOrAdd(returnedValue, item.CollectionItem);
-            }
-
-            return returnedValue;
         }
 
         private async Task<IReadOnlyList<Type>> GetCoreRankings()
@@ -288,6 +430,7 @@ namespace StrixMusic.Sdk.Data.Merged
             // By firing the event with removed, then again with added
             Task.Run(async () =>
                 {
+                    // This is assuming the data in _sortedMap is sorted by rank
                     var itemsFromPreviousMerge = _sortedMap.ToList();
                     _sortedMap.Clear();
 
@@ -357,6 +500,19 @@ namespace StrixMusic.Sdk.Data.Merged
             public TCoreCollection SourceCollection { get; }
 
             public TCoreCollectionItem? CollectionItem { get; set; }
+        }
+
+        private class MergedMappedData
+        {
+            public MergedMappedData(IMerged<TCoreCollectionItem> collectionItem, IEnumerable<MappedData> mergedMapData)
+            {
+                CollectionItem = collectionItem;
+                MergedMapData = mergedMapData;
+            }
+
+            public IMerged<TCoreCollectionItem> CollectionItem { get; }
+
+            public IEnumerable<MappedData> MergedMapData { get; }
         }
     }
 }

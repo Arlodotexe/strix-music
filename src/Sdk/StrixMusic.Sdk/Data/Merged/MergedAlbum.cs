@@ -6,6 +6,7 @@ using OwlCore.Collections;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions.SdkMember;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -17,6 +18,7 @@ namespace StrixMusic.Sdk.Data.Merged
     {
         private readonly ICoreAlbum _preferredSource;
         private readonly List<ICoreAlbum> _sources;
+        private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackCollectionMap;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedImage"/> class.
@@ -37,6 +39,44 @@ namespace StrixMusic.Sdk.Data.Merged
 
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
+
+            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
+
+            AttachEvents(_preferredSource);
+        }
+
+        private void AttachEvents(ICoreAlbum source)
+        {
+            AttachPropertyEvents(source);
+            _trackCollectionMap.ItemsChanged += TrackCollectionMap_ItemsChanged;
+        }
+
+        private void DetachEvents(ICoreAlbum source)
+        {
+            DetachPropertyEvents(source);
+            _trackCollectionMap.ItemsChanged -= TrackCollectionMap_ItemsChanged;
+        }
+
+        private void AttachPropertyEvents(ICoreAlbum source)
+        {
+            source.PlaybackStateChanged += PlaybackStateChanged;
+            source.NameChanged += NameChanged;
+            source.DescriptionChanged += DescriptionChanged;
+            source.UrlChanged += UrlChanged;
+            source.DurationChanged += DurationChanged;
+
+            source.TrackItemsCountChanged += TrackItemsCountChanged;
+        }
+
+        private void DetachPropertyEvents(ICoreAlbum source)
+        {
+            source.PlaybackStateChanged -= PlaybackStateChanged;
+            source.NameChanged -= NameChanged;
+            source.DescriptionChanged -= DescriptionChanged;
+            source.UrlChanged -= UrlChanged;
+            source.DurationChanged -= DurationChanged;
+
+            source.TrackItemsCountChanged -= TrackItemsCountChanged;
         }
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
@@ -112,46 +152,25 @@ namespace StrixMusic.Sdk.Data.Merged
         public Uri? Url => _preferredSource.Url;
 
         /// <inheritdoc />
-        public event EventHandler<DateTime?> DatePublishedChanged
-        {
-            add => _preferredSource.DatePublishedChanged += value;
-            remove => _preferredSource.DatePublishedChanged -= value;
-        }
+        public event EventHandler<DateTime?>? DatePublishedChanged;
 
         /// <inheritdoc />
-        public event EventHandler<string> NameChanged
-        {
-            add => _preferredSource.NameChanged += value;
-            remove => _preferredSource.NameChanged -= value;
-        }
+        public event EventHandler<string>? NameChanged;
 
         /// <inheritdoc />
-        public event EventHandler<string?> DescriptionChanged
-        {
-            add => _preferredSource.DescriptionChanged += value;
-            remove => _preferredSource.DescriptionChanged -= value;
-        }
+        public event EventHandler<string?>? DescriptionChanged;
 
         /// <inheritdoc />
-        public event EventHandler<PlaybackState> PlaybackStateChanged
-        {
-            add => _preferredSource.PlaybackStateChanged += value;
-            remove => _preferredSource.PlaybackStateChanged -= value;
-        }
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc />
-        public event EventHandler<Uri?> UrlChanged
-        {
-            add => _preferredSource.UrlChanged += value;
-            remove => _preferredSource.UrlChanged -= value;
-        }
+        public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc />
-        public event EventHandler<TimeSpan>? DurationChanged
-        {
-            add => _preferredSource.DurationChanged += value;
-            remove => _preferredSource.DurationChanged -= value;
-        }
+        public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? TrackItemsCountChanged;
 
         /// <inheritdoc/>
         public void AddSource(ICoreAlbum itemToMerge)
@@ -169,13 +188,12 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task RemoveTrackAsync(int index) => _preferredSource.RemoveTrackAsync(index);
 
         /// <inheritdoc/>
-        public Task AddTrackAsync(ITrack track, int index)
+        public async Task AddTrackAsync(ITrack track, int index)
         {
-            throw new NotImplementedException();
-        }
+            var source = track.GetSources<ICoreTrack>().Where(x => x.SourceCore == _preferredSource.SourceCore);
 
-        /// <inheritdoc />
-        public event EventHandler<int>? TrackItemsCountChanged;
+            await _preferredSource.AddTrackAsync(source, index);
+        }
 
         /// <inheritdoc/>
         public Task ChangeDatePublishedAsync(DateTime datePublished)
@@ -199,6 +217,11 @@ namespace StrixMusic.Sdk.Data.Merged
         Task IPlayable.ChangeNameAsync(string name)
         {
             return _preferredSource.ChangeNameAsync(name);
+        }
+
+        private void TrackCollectionMap_ItemsChanged(object sender, IReadOnlyList<OwlCore.Events.CollectionChangedEventItem<ICoreTrack>> AddedItems, IReadOnlyList<OwlCore.Events.CollectionChangedEventItem<ICoreTrack>> RemovedItems)
+        {
+            
         }
 
         /// <inheritdoc/>

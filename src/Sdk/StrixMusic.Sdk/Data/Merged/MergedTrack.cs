@@ -36,8 +36,6 @@ namespace StrixMusic.Sdk.Data.Merged
 
             foreach (var item in coreTracks)
             {
-                // TODO: Don't populate here
-                // TODO: Deal with merged artists
                 TotalArtistItemsCount += item.TotalArtistItemsCount;
             }
 

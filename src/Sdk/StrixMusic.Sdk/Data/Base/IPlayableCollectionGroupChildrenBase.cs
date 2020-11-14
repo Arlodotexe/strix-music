@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Data.Base
 {
@@ -30,5 +31,10 @@ namespace StrixMusic.Sdk.Data.Base
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the item can be removed.</returns>
         Task<bool> IsRemoveChildSupported(int index);
+
+        /// <summary>
+        /// Fires when the merged <see cref="TotalChildrenCount"/> changes.
+        /// </summary>
+        event EventHandler<int> TotalChildrenCountChanged;
     }
 }

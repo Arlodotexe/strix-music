@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions.SdkMember;
 
 namespace StrixMusic.Sdk.Data.Merged
 {

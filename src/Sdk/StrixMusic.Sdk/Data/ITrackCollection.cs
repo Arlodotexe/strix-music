@@ -27,10 +27,5 @@ namespace StrixMusic.Sdk.Data
         /// <param name="index">the position to insert the track at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task AddTrackAsync(ITrack track, int index);
-
-        /// <summary>
-        /// Fires when the merged <see cref="ITrackCollectionBase.TotalTracksCount"/> changes.
-        /// </summary>
-        event EventHandler<int> TrackItemsCountChanged;
     }
 }
