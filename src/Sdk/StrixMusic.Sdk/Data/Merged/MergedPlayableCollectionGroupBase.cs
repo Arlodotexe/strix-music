@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Collections;
-using OwlCore.Extensions.AsyncExtensions;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions.SdkMember;
@@ -23,11 +23,17 @@ namespace StrixMusic.Sdk.Data.Merged
     {
         private readonly List<TCoreBase> _sources;
 
+        private readonly MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem> _albumCollectionMap;
+        private readonly MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem> _artistCollectionMap;
+        private readonly MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem> _playlistCollectionMap;
+        private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackCollectionMap;
+        private readonly MergedCollectionMap<IPlayableCollectionGroup, ICorePlayableCollectionGroup, IPlayableCollectionGroup, ICorePlayableCollectionGroup> _playableCollectionGroupMap;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroupBase{T}"/> class.
         /// </summary>
         /// <param name="sources">The search results to merge.</param>
-        protected MergedPlayableCollectionGroupBase(IReadOnlyList<TCoreBase> sources)
+        protected MergedPlayableCollectionGroupBase(IEnumerable<TCoreBase> sources)
         {
             _sources = sources.ToList();
 
@@ -35,11 +41,17 @@ namespace StrixMusic.Sdk.Data.Merged
             if (sources is null)
                 throw new ArgumentNullException(nameof(sources));
 
-            PreferredSource = sources[0];
+            PreferredSource = _sources[0];
+
+            _albumCollectionMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this);
+            _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this);
+            _playlistCollectionMap = new MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem>(this);
+            _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
+            _playableCollectionGroupMap = new MergedCollectionMap<IPlayableCollectionGroup, ICorePlayableCollectionGroup, IPlayableCollectionGroup, ICorePlayableCollectionGroup>(this);
 
             AttachPropertyChangedEvents(PreferredSource);
 
-            foreach (var item in sources)
+            foreach (var item in _sources)
             {
                 TotalChildrenCount += item.TotalChildrenCount;
                 TotalPlaylistItemsCount += item.TotalPlaylistItemsCount;
@@ -48,19 +60,12 @@ namespace StrixMusic.Sdk.Data.Merged
                 TotalArtistItemsCount += item.TotalArtistItemsCount;
                 Duration += item.Duration;
             }
-
-            AlbumItemMap = new MergedCollectionMap<IPlayableCollectionGroup, ICoreAlbumCollection>(this);
         }
 
         /// <summary>
         /// The top preferred source for this item, used for property getters.
         /// </summary>
         protected ICorePlayableCollectionGroup PreferredSource { get; }
-
-        /// <summary>
-        /// Maps and ranks the indices for the original <see cref="ICoreMember"/> sources to new indices that can be used in a list containing the items, merged.
-        /// </summary>
-        public MergedCollectionMap<IPlayableCollectionGroup, ICoreAlbumCollection> AlbumItemMap { get; }
 
         private void AttachPropertyChangedEvents(IPlayable source)
         {
@@ -94,6 +99,21 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? TrackItemsCountChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? ArtistItemsCountChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? AlbumItemsCountChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? PlaylistItemsCountChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? TotalChildrenCountChanged;
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores"/>
         public IReadOnlyList<ICore> SourceCores => Sources.Select(x => x.SourceCore).ToList();
@@ -225,77 +245,27 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task PlayAsync() => PreferredSource.PlayAsync();
 
         /// <inheritdoc/>
-        public async Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset)
+        public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset)
         {
-            // create a collection that represents all possible items and maps to the original indices
-
-            // to decide which index goes where, you need to:
-            // know the rank of each each item
-
-            // This collection will be modified as we merge in new sources
-
-            // When a merged collection is asked for an offset / limit, point them to the MergedSdkMemberMap
-
-            // this is wrong, assumes an equal number of items in each core
-            var limitRemainder = limit % Sources.Count;
-            var limitPerSource = (limit - limitRemainder) / Sources.Count;
-
-            // example - highest to lowest priority.
-            // Use our MergedSdkMemberMap to find the indices for this sorting type
-            // TODO add sorting types to settings.
-
-            foreach (var source in Sources)
-            {
-                // TODO: private field, keep track of albums you've already populated for this core.
-                // var remainingItems = source.TotalAlbumItemsCount - source.Albums.Count;
-                var remainingItems = source.TotalAlbumItemsCount;
-
-                if (remainingItems > 0)
-                {
-                    // Try getting from different sources in parallel
-                    // Sources.InParallel(x => x.GetAlbumItemsAsync())
-
-                    await foreach (var item in source.GetAlbumItemsAsync(limitPerSource, 0))
-                    {
-                        if (item is ICoreAlbum album)
-                        {
-                            // merge to IAlbum and add to end result
-
-                            var merged = new MergedAlbum(new List<ICoreAlbum>() { album });
-
-                            result.Add(merged);
-                        }
-
-                        if (item is ICoreAlbumCollection)
-                        {
-                            // merge to IAlbumCollection and add to return result
-                        }
-                    }
-                }
-            }
-
-            return result;
+            return _albumCollectionMap.GetItems(limit, offset);
         }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset)
         {
-            // TODO
-            return Task.FromResult<IReadOnlyList<IArtistCollectionItem>>(new List<IArtistCollectionItem>());
+            return _artistCollectionMap.GetItems(limit, offset);
         }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IPlayableCollectionGroup>> GetChildrenAsync(int limit, int offset = 0)
         {
-            // TODO
-            return Task.FromResult<IReadOnlyList<IPlayableCollectionGroup>>(new List<IPlayableCollectionGroup>());
+            return _playableCollectionGroupMap.GetItems(limit, offset);
         }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset)
         {
-            // TODO
-            return Task.FromResult<IReadOnlyList<IPlaylistCollectionItem>>(new List<IPlaylistCollectionItem>());
+            return _playlistCollectionMap.GetItems(limit, offset);
         }
 
         /// <inheritdoc/>

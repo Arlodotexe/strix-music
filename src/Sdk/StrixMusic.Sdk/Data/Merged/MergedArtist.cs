@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// Creates a new instance of <see cref="MergedArtist"/>.
         /// </summary>
         /// <param name="sources">The sources used</param>
-        public MergedArtist(IReadOnlyList<ICoreArtist> sources)
+        public MergedArtist(IEnumerable<ICoreArtist> sources)
         {
             _sources = sources?.ToList() ?? throw new ArgumentNullException();
 
@@ -30,6 +30,12 @@ namespace StrixMusic.Sdk.Data.Merged
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
         }
+
+        /// <inheritdoc />
+        public event EventHandler<int>? AlbumItemsCountChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? TrackItemsCountChanged;
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores => Sources.Select(x => x.SourceCore).ToList();

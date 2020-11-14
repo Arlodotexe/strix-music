@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
@@ -22,16 +21,19 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedImage"/> class.
         /// </summary>
-        public MergedAlbum(IReadOnlyList<ICoreAlbum> sources)
+        public MergedAlbum(IEnumerable<ICoreAlbum> sources)
         {
-            Guard.IsNotNull(sources, nameof(sources));
-            _sources = sources.ToList();
+            if (sources == null)
+                throw new ArgumentNullException(nameof(sources));
+
+            var coreAlbums = sources as ICoreAlbum[] ?? sources.ToArray();
+            _sources = coreAlbums.ToList();
 
             Images = new SynchronizedObservableCollection<IImage>();
 
             Artist = new MergedArtist(_sources.Select(x => x.Artist).ToList());
 
-            RelatedItems = new MergedPlayableCollectionGroup(sources.Select(x=>x.RelatedItems).PruneNull().ToList());
+            RelatedItems = new MergedPlayableCollectionGroup(coreAlbums.Select(x => x.RelatedItems).PruneNull().ToList());
 
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
@@ -171,6 +173,9 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc />
+        public event EventHandler<int>? TrackItemsCountChanged;
 
         /// <inheritdoc/>
         public Task ChangeDatePublishedAsync(DateTime datePublished)

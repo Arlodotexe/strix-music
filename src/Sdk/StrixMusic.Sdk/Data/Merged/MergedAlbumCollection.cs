@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// Creates a new instance of <see cref="MergedAlbumCollection"/>.
         /// </summary>
         /// <param name="sources">The initial sources to merge together.</param>
-        public MergedAlbumCollection(IReadOnlyList<ICoreAlbumCollection> sources)
+        public MergedAlbumCollection(IEnumerable<ICoreAlbumCollection> sources)
         {
             _sources = sources.ToList();
             Images = new SynchronizedObservableCollection<IImage>();

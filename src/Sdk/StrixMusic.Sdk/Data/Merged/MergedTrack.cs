@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data.Core;
@@ -15,7 +14,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A concrete class that merged multiple <see cref="ICoreTrack"/>s.
     /// </summary>
-    public class MergedTrack : ITrack, IEquatable<ITrack>
+    public class MergedTrack : ITrack, IMerged<ICoreTrack>
     {
         private readonly ICoreTrack _preferredSource;
 
@@ -23,17 +22,19 @@ namespace StrixMusic.Sdk.Data.Merged
         /// Initializes a new instance of the <see cref="MergedTrack"/> class.
         /// </summary>
         /// <param name="tracks">The <see cref="ICoreTrack"/>s to merge together.</param>
-        public MergedTrack(ICoreTrack[] tracks)
+        public MergedTrack(IEnumerable<ICoreTrack> tracks)
         {
             if (tracks == null)
                 throw new ArgumentNullException(nameof(tracks));
 
-            Sources = tracks.ToList();
+            var coreTracks = tracks as ICoreTrack[] ?? tracks.ToArray();
+
+            Sources = coreTracks.ToList();
 
             // TODO: Use top Preferred core.
-            _preferredSource = tracks.First();
+            _preferredSource = coreTracks.First();
 
-            foreach (var item in tracks)
+            foreach (var item in coreTracks)
             {
                 // TODO: Don't populate here
                 // TODO: Deal with merged artists

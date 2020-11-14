@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -8,7 +9,8 @@ namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="ITrackCollectionBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ITrackCollection : ITrackCollectionBase, ISdkMember<ICoreTrackCollection>
+    [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
+    public interface ITrackCollection : ITrackCollectionBase, IImageCollection, ISdkMember<ICoreTrackCollection>
     {
         /// <summary>
         /// Gets a requested number of <see cref="ITrack"/>s starting at the given offset in the backend.

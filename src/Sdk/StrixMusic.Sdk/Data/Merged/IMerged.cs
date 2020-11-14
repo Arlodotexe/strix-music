@@ -9,6 +9,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// </summary>
     /// <typeparam name="T">The type that makes up this merged item.</typeparam>
     public interface IMerged<T> : IEquatable<T>
+        where T : ICoreMember
     {
         /// <summary>
         /// Adds a new source to this merged item.

@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroup"/> class.
         /// </summary>
         /// <param name="source"></param>
-        public MergedPlayableCollectionGroup(IReadOnlyList<ICorePlayableCollectionGroup> source)
+        public MergedPlayableCollectionGroup(IEnumerable<ICorePlayableCollectionGroup> source)
             : base(source)
         {
         }
