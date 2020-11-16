@@ -91,7 +91,7 @@ namespace StrixMusic.Core.MusicBrainz
         }
 
         /// <inheritdoc/>
-        public async IAsyncEnumerable<object?> GetContextById(string id)
+        public async IAsyncEnumerable<ICoreMember> GetContextById(string id)
         {
             if (_musicBrainzClient != null && _artistHelperService != null)
             {

@@ -97,7 +97,7 @@ namespace StrixMusic.Sdk.Data
         /// Gets the object against a context.
         /// </summary>
         /// <returns>Returns the requested context, cast down to an <see cref="object"/>.</returns>
-        public IAsyncEnumerable<object?> GetContextById(string id);
+        public IAsyncEnumerable<ICoreMember> GetContextById(string id);
 
         /// <summary>
         /// Converts a <see cref="ICoreTrack"/> into a <see cref="IMediaSourceConfig"/> that can be used to play the track.
