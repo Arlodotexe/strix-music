@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 
 namespace StrixMusic.Sdk.Data.Core
@@ -23,5 +24,10 @@ namespace StrixMusic.Sdk.Data.Core
         /// <param name="index">the position to insert the track at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task AddTrackAsync(ICoreTrack track, int index);
+
+        /// <summary>
+        /// Fires when the items in the backend are changed by something external.
+        /// </summary>
+        event CollectionChangedEventHandler<ICoreTrack> TrackItemsChanged;
     }
 }

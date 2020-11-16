@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 
@@ -27,5 +28,10 @@ namespace StrixMusic.Sdk.Data
         /// <param name="index">the position to insert the artist at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task AddArtistItemAsync(IArtistCollectionItem artist, int index);
+
+        /// <summary>
+        /// Fires when the items in the backend are changed by something external.
+        /// </summary>
+        event CollectionChangedEventHandler<IArtistCollectionItem> ArtistItemsChanged;
     }
 }

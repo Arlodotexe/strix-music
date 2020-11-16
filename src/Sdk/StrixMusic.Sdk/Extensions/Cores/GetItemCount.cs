@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 
@@ -17,8 +16,7 @@ namespace StrixMusic.Sdk.Extensions
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-
-
+            
             return typeof(TCollection) switch
             {
                 IPlayableCollectionGroupBase _ => ((IPlayableCollectionGroupBase)source).TotalChildrenCount,

@@ -2,7 +2,7 @@
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 
-namespace StrixMusic.Sdk.Extensions.SdkMember
+namespace StrixMusic.Sdk.Extensions
 {
     internal static partial class SdkMember
     {

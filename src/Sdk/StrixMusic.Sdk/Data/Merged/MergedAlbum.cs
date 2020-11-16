@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions.SdkMember;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackCollectionMap;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MergedImage"/> class.
+        /// Initializes a new instance of the <see cref="MergedAlbum"/> class.
         /// </summary>
         public MergedAlbum(IEnumerable<ICoreAlbum> sources)
         {
@@ -65,7 +65,9 @@ namespace StrixMusic.Sdk.Data.Merged
             source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
 
-            source.TrackItemsCountChanged += TrackItemsCountChanged;
+            // Don't need to sub to this here, instead sub to items changed from core and handle in map.
+            // emit from map and delegate here.
+            //source.TrackItemsCountChanged += TrackItemsCountChanged;
         }
 
         private void DetachPropertyEvents(ICoreAlbum source)
@@ -76,7 +78,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
 
-            source.TrackItemsCountChanged -= TrackItemsCountChanged;
+            //source.TrackItemsCountChanged -= TrackItemsCountChanged;
         }
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
@@ -172,6 +174,9 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public event EventHandler<int>? TrackItemsCountChanged;
 
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ITrack> TrackItemsChanged;
+
         /// <inheritdoc/>
         public void AddSource(ICoreAlbum itemToMerge)
         {
@@ -188,11 +193,9 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task RemoveTrackAsync(int index) => _preferredSource.RemoveTrackAsync(index);
 
         /// <inheritdoc/>
-        public async Task AddTrackAsync(ITrack track, int index)
+        public Task AddTrackAsync(ITrack track, int index)
         {
-            var source = track.GetSources<ICoreTrack>().Where(x => x.SourceCore == _preferredSource.SourceCore);
-
-            await _preferredSource.AddTrackAsync(source, index);
+            return _trackCollectionMap.InsertItem(track, index);
         }
 
         /// <inheritdoc/>
@@ -214,10 +217,13 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        Task IPlayable.ChangeNameAsync(string name)
+        public Task ChangeNameAsync(string name)
         {
             return _preferredSource.ChangeNameAsync(name);
         }
+
+        /// <inheritdoc/>
+        Task IPlayable.ChangeNameAsync(string name) => ChangeNameAsync(name);
 
         private void TrackCollectionMap_ItemsChanged(object sender, IReadOnlyList<OwlCore.Events.CollectionChangedEventItem<ICoreTrack>> AddedItems, IReadOnlyList<OwlCore.Events.CollectionChangedEventItem<ICoreTrack>> RemovedItems)
         {
@@ -225,25 +231,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        public async Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset)
-        {
-            var tracks = new List<ICoreTrack>();
-            var trackCollections = new List<ICoreTrackCollection>();
-
-            // Using one source for now.
-            await foreach (var item in _preferredSource.GetTracksAsync(limit, offset))
-            {
-                if (item is ICoreTrack track)
-                    tracks.Add(track);
-
-                if (item is ICoreTrackCollection collection)
-                    trackCollections.Add(collection);
-            }
-
-            // Turn each item into an Sdk Member
-            var mergedTracks = tracks.Select(x => new MergedTrack(new ICoreTrack[] { x }));
-            return mergedTracks.ToList();
-        }
+        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _trackCollectionMap.GetItems(limit, offset);
 
         /// <inheritdoc/>
         public Task<bool> IsAddGenreSupported(int index) => _preferredSource.IsAddGenreSupported(index);

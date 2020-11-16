@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions.SdkMember;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -94,6 +95,16 @@ namespace StrixMusic.Sdk.Data.Merged
             source.TotalChildrenCountChanged -= TotalChildrenCountChanged;
         }
 
+        private void AttachCollectionChangedEvents(ICorePlayableCollection source)
+        {
+            _artistCollectionMap.ItemsChanged += ArtistCollectionMap_ItemsChanged;
+        }
+
+        private void ArtistCollectionMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> removedItems)
+        {
+            ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
@@ -123,6 +134,21 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public event EventHandler<int>? TotalChildrenCountChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ITrack>? TrackItemsChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IAlbumCollectionItem>? AlbumItemsChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IPlaylistCollectionItem>? PlaylistItemsChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IPlayableCollectionGroup>? ChildItemsChanged;
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores"/>
         public IReadOnlyList<ICore> SourceCores => Sources.Select(x => x.SourceCore).ToList();
@@ -304,57 +330,62 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public Task AddTrackAsync(ITrack track, int index)
         {
-            var trackToAdd = track.GetSources<ICoreTrack>().First(x => x.SourceCore == PreferredSource.SourceCore);
-
-            return PreferredSource.AddTrackAsync(trackToAdd, index);
+            return _trackCollectionMap.InsertItem(track, index);
         }
 
         /// <inheritdoc/>
         public Task AddArtistItemAsync(IArtistCollectionItem artist, int index)
         {
-            var artistToAdd = artist.GetSources().First(x => x.SourceCore == PreferredSource.SourceCore);
-            return PreferredSource.AddArtistItemAsync(artistToAdd, index);
+            return _artistCollectionMap.InsertItem(artist, index);
         }
 
         /// <inheritdoc/>
         public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index)
         {
-            var albumItemToAdd = album.GetSources().First(x => x.SourceCore == PreferredSource.SourceCore);
-
-            return PreferredSource.AddAlbumItemAsync(albumItemToAdd, index);
+            return _albumCollectionMap.InsertItem(album, index);
         }
 
         /// <inheritdoc/>
         public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index)
         {
-            var playlistToAdd = playlist.GetSources().First(x => x.SourceCore == PreferredSource.SourceCore);
-
-            return PreferredSource.AddPlaylistItemAsync(playlistToAdd, index);
+            return _playlistCollectionMap.InsertItem(playlist, index);
         }
 
         /// <inheritdoc/>
         public Task AddChildAsync(IPlayableCollectionGroup child, int index)
         {
-            var childToAdd = child.GetSources<ICorePlayableCollectionGroup>()
-                .First(x => x.SourceCore == PreferredSource.SourceCore);
-
-            return PreferredSource.AddChildAsync(childToAdd, index);
+            return _playableCollectionGroupMap.InsertItem(child, index);
         }
 
         /// <inheritdoc/>
-        public Task RemoveTrackAsync(int index) => PreferredSource.RemoveTrackAsync(index);
+        public Task RemoveTrackAsync(int index)
+        {
+            return _trackCollectionMap.RemoveAt(index);
+        }
 
         /// <inheritdoc/>
-        public Task RemoveArtistAsync(int index) => PreferredSource.RemoveArtistAsync(index);
+        public Task RemoveArtistAsync(int index)
+        {
+            return _artistCollectionMap.RemoveAt(index);
+        }
 
         /// <inheritdoc/>
-        public Task RemoveAlbumItemAsync(int index) => PreferredSource.RemoveAlbumItemAsync(index);
+        public Task RemoveAlbumItemAsync(int index)
+        {
+            return _albumCollectionMap.RemoveAt(index);
+        }
 
         /// <inheritdoc/>
-        public Task RemovePlaylistItemAsync(int index) => PreferredSource.RemovePlaylistItemAsync(index);
+        public Task RemovePlaylistItemAsync(int index)
+        {
+            return _playlistCollectionMap.RemoveAt(index);
+        }
 
         /// <inheritdoc/>
-        public Task RemoveChildAsync(int index) => PreferredSource.RemoveChildAsync(index);
+        public Task RemoveChildAsync(int index)
+        {
+            return _playableCollectionGroupMap.RemoveAt(index);
+        }
 
         /// <inheritdoc cref="IMerged{TCoreBase}" />
         public void AddSource(TCoreBase itemToAdd)
@@ -362,6 +393,11 @@ namespace StrixMusic.Sdk.Data.Merged
             if (!Equals(itemToAdd))
                 ThrowHelper.ThrowArgumentException<TCoreBase>("Tried to merge an artist that doesn't match. Verify that the item matches before merging the source.");
 
+            _albumCollectionMap.AddSource(itemToAdd);
+            _artistCollectionMap.AddSource(itemToAdd);
+            _playableCollectionGroupMap.AddSource(itemToAdd);
+            _playlistCollectionMap.AddSource(itemToAdd);
+            _trackCollectionMap.AddSource(itemToAdd);
             _sources.Add(itemToAdd);
         }
     }
