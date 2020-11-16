@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.Extensions
         /// <typeparam name="TCollection">The collection type to check the item count.</typeparam>
         /// <returns>The number of items for the given collection.</returns>
         public static int GetItemsCount<TCollection>(this ICoreMember source)
-            where TCollection : IPlayableCollectionBase
+            where TCollection : ICollectionBase
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -24,6 +24,7 @@ namespace StrixMusic.Sdk.Extensions
                 IArtistCollectionBase _ => ((IArtistCollectionBase)source).TotalArtistItemsCount,
                 IPlaylistCollectionBase _ => ((IPlaylistCollectionBase)source).TotalPlaylistItemsCount,
                 ITrackCollectionBase _ => ((ITrackCollectionBase)source).TotalTracksCount,
+                IImageCollectionBase _ => ((IImageCollectionBase)source).TotalImageCount,
                 _ => throw new ArgumentOutOfRangeException(nameof(source))
             };
         }

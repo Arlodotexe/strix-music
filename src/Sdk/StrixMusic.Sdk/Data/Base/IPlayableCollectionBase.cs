@@ -3,7 +3,7 @@
     /// <summary>
     /// A base class for playable collections.
     /// </summary>
-    public interface IPlayableCollectionBase : IPlayable
+    public interface IPlayableCollectionBase : ICollectionBase, IPlayable
     {
     }
 }

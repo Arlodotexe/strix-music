@@ -23,8 +23,8 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <typeparam name="TCollectionItem">The type of the item returned from the merged collection.</typeparam>
     /// <typeparam name="TCoreCollectionItem">The type of the items returned from the original source collections.</typeparam>
     public class MergedCollectionMap<TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem> : IMerged<TCoreCollection>, IAsyncInit
-        where TCollection : class, IPlayableCollectionBase, ISdkMember<TCoreCollection>
-        where TCoreCollection : class, ICorePlayableCollection
+        where TCollection : class, ICollectionBase, ISdkMember<TCoreCollection>
+        where TCoreCollection : class, ICoreCollection
         where TCollectionItem : class, ICollectionItemBase, ISdkMember<TCoreCollectionItem>
         where TCoreCollectionItem : class, ICollectionItemBase, ICoreMember
     {
@@ -55,7 +55,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public event EventHandler<int>? ItemsCountChanged;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="MergedCollectionMap{TCollection,TCollectionItem,TMerged}"/>.
+        /// Initializes a new instance of <see cref="MergedCollectionMap{TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem}"/>.
         /// </summary>
         /// <param name="collection">The collection that contains the items </param>
         public MergedCollectionMap(TCollection collection)
@@ -246,6 +246,10 @@ namespace StrixMusic.Sdk.Data.Merged
                     break;
                 case ICoreRecentlyPlayed recentlyPlayed:
                     returnData = (IMerged<TCoreCollectionItem>)new MergedRecentlyPlayed(recentlyPlayed.IntoList());
+                    collection.Add(returnData);
+                    break;
+                case ICoreImage coreImage:
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedImage(coreImage.IntoList());
                     collection.Add(returnData);
                     break;
                 // TODO: Search results post search redo

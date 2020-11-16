@@ -5,7 +5,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// Contains details about an image.
     /// </summary>
-    public interface IImageBase
+    public interface IImageBase : ICollectionItemBase
     {
         /// <summary>
         /// Local or remote resource pointing to the image.

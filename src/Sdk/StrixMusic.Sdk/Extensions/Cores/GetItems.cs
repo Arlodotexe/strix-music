@@ -16,8 +16,8 @@ namespace StrixMusic.Sdk.Extensions
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
         /// <returns>An <see cref="IAsyncEnumerable{T}"/> of the requested items.</returns>
-        public static IAsyncEnumerable<TResult> GetItems<TCollection, TResult>(this ICorePlayableCollection source, int limit, int offset)
-            where TCollection : ICoreMember, IPlayableCollectionBase
+        public static IAsyncEnumerable<TResult> GetItems<TCollection, TResult>(this ICoreCollection source, int limit, int offset)
+            where TCollection : ICoreMember, ICollectionBase
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -29,6 +29,7 @@ namespace StrixMusic.Sdk.Extensions
                 IArtistCollectionBase _ => (IAsyncEnumerable<TResult>)((ICoreArtistCollection)source).GetArtistItemsAsync(limit, offset),
                 IPlaylistCollectionBase _ => (IAsyncEnumerable<TResult>)((ICorePlaylistCollection)source).GetPlaylistItemsAsync(limit, offset),
                 ITrackCollectionBase _ => (IAsyncEnumerable<TResult>)((ICoreTrackCollection)source).GetTracksAsync(limit, offset),
+                IImageCollectionBase _ => (IAsyncEnumerable<TResult>)((ICoreImageCollection)source).GetImagesAsync(limit, offset),
                 _ => throw new NotSupportedException("Collection type not handled"),
             };
         }

@@ -6,12 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
-using OwlCore.Extensions.AsyncExtensions;
-using OwlCore.Helpers;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
-using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.ViewModels;
 
@@ -70,7 +68,7 @@ namespace StrixMusic.Sdk
 
                 await core.InitAsync(services);
 
-                Users.Add(new UserProfileViewModel(core.User));
+                Users.Add(new UserProfileViewModel());
             });
 
             var mergedLibrary = new MergedLibrary(_cores.Select(x => x.Library));
