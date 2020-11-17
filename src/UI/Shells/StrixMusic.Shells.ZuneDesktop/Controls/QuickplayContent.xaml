@@ -64,7 +64,7 @@
                                              BeginTime="0:0:0" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -72,7 +72,7 @@
                                              BeginTime="0:0:0" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -80,7 +80,7 @@
                                              BeginTime="0:0:0.133" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -88,7 +88,7 @@
                                              BeginTime="0:0:0.133" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -96,7 +96,7 @@
                                              BeginTime="0:0:0.267" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -104,7 +104,7 @@
                                              BeginTime="0:0:0.267" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -140,7 +140,7 @@
                                              BeginTime="0:0:0" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -148,7 +148,7 @@
                                              BeginTime="0:0:0" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -156,7 +156,7 @@
                                              BeginTime="0:0:0.08" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -164,7 +164,7 @@
                                              BeginTime="0:0:0.08" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -172,7 +172,7 @@
                                              BeginTime="0:0:0.16" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -180,7 +180,7 @@
                                              BeginTime="0:0:0.16" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -188,7 +188,7 @@
                                              BeginTime="0:0:0.24" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -196,7 +196,7 @@
                                              BeginTime="0:0:0.24" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -204,7 +204,7 @@
                                              BeginTime="0:0:0.32" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -212,7 +212,7 @@
                                              BeginTime="0:0:0.32" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -220,7 +220,7 @@
                                              BeginTime="0:0:0" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseInOut"/>
+                                        <QuadraticEase EasingMode="EaseInOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -228,7 +228,7 @@
                                              BeginTime="0:0:0.08" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseInOut"/>
+                                        <QuadraticEase EasingMode="EaseInOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -236,7 +236,7 @@
                                                            BeginTime="0:0:0.16" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseInOut"/>
+                                        <QuadraticEase EasingMode="EaseInOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -244,7 +244,7 @@
                                                            BeginTime="0:0:0.24" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseInOut"/>
+                                        <QuadraticEase EasingMode="EaseInOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -252,7 +252,7 @@
                                                            BeginTime="0:0:0.32" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseInOut"/>
+                                        <QuadraticEase EasingMode="EaseInOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -275,7 +275,7 @@
                                              BeginTime="0:0:0" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -283,7 +283,7 @@
                                              BeginTime="0:0:0" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -291,7 +291,7 @@
                                              BeginTime="0:0:0.133" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -299,7 +299,7 @@
                                              BeginTime="0:0:0.133" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -307,7 +307,7 @@
                                              BeginTime="0:0:0.267" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -315,7 +315,7 @@
                                              BeginTime="0:0:0.267" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -351,7 +351,7 @@
                                              BeginTime="0:0:0" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -359,7 +359,7 @@
                                                            BeginTime="0:0:0" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -367,7 +367,7 @@
                                                            BeginTime="0:0:0.08" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -375,7 +375,7 @@
                                              BeginTime="0:0:0.08" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -383,7 +383,7 @@
                                                            BeginTime="0:0:0.16" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -391,7 +391,7 @@
                                                            BeginTime="0:0:0.16" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -399,7 +399,7 @@
                                              BeginTime="0:0:0.24" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -407,7 +407,7 @@
                                              BeginTime="0:0:0.24" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -415,7 +415,7 @@
                                              BeginTime="0:0:0.32" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
@@ -423,7 +423,7 @@
                                              BeginTime="0:0:0.32" Duration="0:0:.5">
                                 <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.5">
                                     <EasingDoubleKeyFrame.EasingFunction>
-                                        <ExponentialEase EasingMode="EaseOut"/>
+                                        <QuadraticEase EasingMode="EaseOut"/>
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
