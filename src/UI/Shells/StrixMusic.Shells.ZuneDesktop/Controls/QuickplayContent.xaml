@@ -60,158 +60,202 @@
                             <DoubleAnimation Storyboard.TargetName="MainWrapper" Storyboard.TargetProperty="Opacity"
                                              Duration="0:0:0" To="1"/>
 
-                            <DoubleAnimation Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.133" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.133" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.267" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.267" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0" Duration="0:0:.4" To="0">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.133" Duration="0:0:.4" To="0">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.267" Duration="0:0:.4" To="0">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
+                            <DoubleAnimationUsingKeyFrames  Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0.133" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0.133" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0.267" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0.267" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="TranslateY"
+                                             BeginTime="0:0:0" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="TranslateY"
+                                             BeginTime="0:0:0.133" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="TranslateY"
+                                             BeginTime="0:0:0.267" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
 
                             <DoubleAnimation Storyboard.TargetName="Recommendations" Storyboard.TargetProperty="Opacity"
-                                             Duration="0:0:0"  To=".5">
-                                
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseInOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.08" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.08" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.16" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.16" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.24" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.24" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.32" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.32" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0" Duration="0:0:.4" To="270">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.08" Duration="0:0:.4" To="270">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.16" Duration="0:0:.4" To="270">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.24" Duration="0:0:.4" To="270">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.32" Duration="0:0:.4" To="270">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
+                                             Duration="0:0:0" To="0.5"/>
+
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0.08" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0.08" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0.16" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0.16" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0.24" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0.24" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0.32" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0.32" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0.5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="TranslateY"
+                                             BeginTime="0:0:0" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseInOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="TranslateY"
+                                             BeginTime="0:0:0.08" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="TranslateY"
+                                                           BeginTime="0:0:0.16" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="TranslateY"
+                                                           BeginTime="0:0:0.24" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="TranslateY"
+                                                           BeginTime="0:0:0.32" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualState.Storyboard>
                     <VisualState.Setters>
@@ -224,159 +268,205 @@
                 <VisualState x:Name="Secondary">
                     <VisualState.Storyboard>
                         <Storyboard>
-                            
                             <DoubleAnimation Storyboard.TargetName="MainWrapper" Storyboard.TargetProperty="Opacity"
                                              Duration="0:0:0" To=".5"/>
-                            
-                            <DoubleAnimation Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.133" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.133" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.267" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.267" Duration="0:0:.4" To=".5">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="TranslateY"
-                                             Duration="0:0:.4" To="270">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.133" Duration="0:0:.4" To="270">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.267" Duration="0:0:.4" To="270">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
 
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0.133" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0.133" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0.267" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0.267" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value=".5" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PinsTransform" Storyboard.TargetProperty="TranslateY"
+                                             Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="NewTransform" Storyboard.TargetProperty="TranslateY"
+                                             BeginTime="0:0:0.133" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HistoryTransform" Storyboard.TargetProperty="TranslateY"
+                                             BeginTime="0:0:0.267" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="270" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
 
                             <DoubleAnimation Storyboard.TargetName="Recommendations" Storyboard.TargetProperty="Opacity"
-                                             Duration="0:0:0"  To="1"/>
+                                             Duration="0:0:0" To="1"/>
 
-                            <DoubleAnimation Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.08" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.08" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.16" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.16" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.24" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.24" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="ScaleX"
-                                             BeginTime="0:0:0.32" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="ScaleY"
-                                             BeginTime="0:0:0.32" Duration="0:0:.4" To="1">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseOut"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0" Duration="0:0:.4" To="0">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.08" Duration="0:0:.4" To="0">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.16" Duration="0:0:.4" To="0">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.24" Duration="0:0:.4" To="0">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                            <DoubleAnimation Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="TranslateY"
-                                             BeginTime="0:0:0.32" Duration="0:0:.4" To="0">
-                                <DoubleAnimation.EasingFunction>
-                                    <ExponentialEase EasingMode="EaseIn"/>
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="ScaleY"
+                                                           BeginTime="0:0:0" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="ScaleX"
+                                                           BeginTime="0:0:0.08" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0.08" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="ScaleX"
+                                                           BeginTime="0:0:0.16" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="ScaleY"
+                                                           BeginTime="0:0:0.16" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0.24" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0.24" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="ScaleX"
+                                             BeginTime="0:0:0.32" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="ScaleY"
+                                             BeginTime="0:0:0.32" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="1" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec1Transform" Storyboard.TargetProperty="TranslateY"
+                                             BeginTime="0:0:0" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec2Transform" Storyboard.TargetProperty="TranslateY"
+                                             BeginTime="0:0:0.08" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec3Transform" Storyboard.TargetProperty="TranslateY"
+                                                           BeginTime="0:0:0.16" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec4Transform" Storyboard.TargetProperty="TranslateY"
+                                                           BeginTime="0:0:0.24" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Rec5Transform" Storyboard.TargetProperty="TranslateY"
+                                             BeginTime="0:0:0.32" Duration="0:0:.4">
+                                <EasingDoubleKeyFrame Value="0" KeyTime="0:0:.4">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <ExponentialEase EasingMode="EaseIn"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualState.Storyboard>
                     <VisualState.Setters>
