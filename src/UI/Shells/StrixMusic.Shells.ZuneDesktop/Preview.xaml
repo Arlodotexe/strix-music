@@ -15,8 +15,8 @@
                                                Width="16" Height="48" Margin="0,24,0,0">
                                         <Rectangle.Fill>
                                             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                                <GradientStop Color="#F10EA0" Offset="0.0" />
-                                                <GradientStop Color="#E95214" Offset="1.0" />
+                                                <GradientStop Color="{StaticResource ZunePink}" Offset="0.0" />
+                                                <GradientStop Color="{StaticResource ZuneOrange}" Offset="1.0" />
                                             </LinearGradientBrush>
                                         </Rectangle.Fill>
                                     </Rectangle>
@@ -34,7 +34,7 @@
                                     <Rectangle Fill="#FFFFFF" Width="36" Height="8" RadiusX="4" RadiusY="4" Margin="0,16,256,0" Opacity=".5" VerticalAlignment="Top"/>
 
                                     <Rectangle Fill="#FFFFFF" Width="48" Height="12" RadiusX="6" RadiusY="6" Margin="0,16,0,0" Opacity=".5" VerticalAlignment="Top"/>
-                                    <Rectangle Fill="#F10EA0" Width="48" Height="48" Margin="8,0,128,0" VerticalAlignment="Top"/>
+                                    <Rectangle Fill="{StaticResource ZunePink}" Width="48" Height="48" Margin="8,0,128,0" VerticalAlignment="Top"/>
                                 </StackPanel>
                             </Grid>
 
@@ -56,7 +56,7 @@
                                         <RowDefinition/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <Rectangle Fill="#F10EA0" Width="64" Height="64" Grid.RowSpan="3"/>
+                                    <Rectangle Fill="{StaticResource ZunePink}" Width="64" Height="64" Grid.RowSpan="3"/>
                                     <Rectangle Fill="#FFFFFF" Width="96" Height="12" Grid.Column="1" Margin="8,8,0,0"
                                                RadiusX="6" RadiusY="6" Opacity=".5" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                                     <Rectangle Fill="#FFFFFF" Height="5" Grid.Column="1" Grid.Row="1" Margin="8,12,0,0"
@@ -76,7 +76,7 @@
                                                VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,20,0,0"/>
                                     <Rectangle Fill="#FFFFFF" Width="32" Height="32" RadiusX="16" RadiusY="16" Opacity=".2"
                                                VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,20,0,0"/>
-                                    <Rectangle Fill="#F10EA0" Width="24" Height="24" RadiusX="12" RadiusY="12" Opacity="1"
+                                    <Rectangle Fill="{StaticResource ZunePink}" Width="24" Height="24" RadiusX="12" RadiusY="12" Opacity="1"
                                                VerticalAlignment="Center" HorizontalAlignment="Left" Margin="4,20,0,0"/>
                                 </StackPanel>
                             </Grid>
@@ -86,5 +86,4 @@
             </Setter>
         </Style.Setters>
     </Style>
-    
 </ResourceDictionary>

@@ -172,5 +172,8 @@
             <SolidColorBrush x:Key="SliderRemainingBackground" Color="#40000000"/>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
+
+    <UI:Color x:Key="ZunePink">#F10EA0</UI:Color>
+    <UI:Color x:Key="ZuneOrange">#E95214</UI:Color>
     
 </ResourceDictionary>

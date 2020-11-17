@@ -100,8 +100,8 @@
         <Rectangle Width="16" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,20,0,0">
             <Rectangle.Fill>
                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Color="#F10EA0" Offset="0.0" />
-                    <GradientStop Color="#E95214" Offset="1.0" />
+                    <GradientStop Color="{StaticResource ZunePink}" Offset="0.0" />
+                    <GradientStop Color="{StaticResource ZuneOrange}" Offset="1.0" />
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
