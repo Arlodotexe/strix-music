@@ -43,9 +43,6 @@ namespace StrixMusic.Sdk.Data.Merged
         public int TotalAlbumItemsCount { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
-
-        /// <inheritdoc />
         public Task<bool> IsAddAlbumItemSupported(int index)
         {
             throw new System.NotImplementedException();

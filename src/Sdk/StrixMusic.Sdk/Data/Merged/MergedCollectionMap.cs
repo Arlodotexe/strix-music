@@ -203,6 +203,26 @@ namespace StrixMusic.Sdk.Data.Merged
             }
         }
 
+        /// <summary>
+        /// Checks if adding an item to the sorted map is supported.
+        /// </summary>
+        /// <param name="index">The index to remove.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
+        public Task<bool> IsAddItemSupported(int index)
+        {
+            return _sortedMap[index].SourceCollection.IsAddSupported(_sortedMap[index].OriginalIndex);
+        }
+
+        /// <summary>
+        /// Checks if removing an item from the sorted map is supported.
+        /// </summary>
+        /// <param name="index">The index to remove.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
+        public Task<bool> IsRemoveItemSupport(int index)
+        {
+            return _sortedMap[index].SourceCollection.IsRemoveSupported(_sortedMap[index].OriginalIndex);
+        }
+
         private static IMerged<TCoreCollectionItem> MergeOrAdd(List<IMerged<TCoreCollectionItem>> collection, TCoreCollectionItem itemToMerge)
         {
             foreach (var item in collection)
