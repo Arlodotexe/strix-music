@@ -212,7 +212,7 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             var sourceResults = await _mergedMappedData[index].MergedMapData
                 .InParallel(async x => await x.SourceCollection.IsAddSupported(x.OriginalIndex));
-            
+
             return sourceResults.Any();
         }
 
@@ -466,12 +466,13 @@ namespace StrixMusic.Sdk.Data.Merged
             Task.Run(async () =>
                 {
                     // This is assuming the data in _sortedMap is sorted by rank
-                    var itemsFromPreviousMerge = _sortedMap.ToList();
+                    var previouslySortedItems = _sortedMap.ToList();
+                    var previousMergedMap = _mergedMappedData.ToList();
                     _sortedMap.Clear();
 
-                    foreach (var item in itemsFromPreviousMerge)
+                    foreach (var item in previouslySortedItems)
                     {
-                        var i = itemsFromPreviousMerge.IndexOf(item);
+                        var i = previouslySortedItems.IndexOf(item);
 
                         // If the currentSource and the previous source are the same, skip this iteration
                         // because we get and re-emit the range of items for this source.
@@ -485,27 +486,26 @@ namespace StrixMusic.Sdk.Data.Merged
                     var addedItems = new List<CollectionChangedEventItem<TCollectionItem>>();
 
                     // For each item that we just retrieved, find the index in the sorted map and assign the item.
-                    for (var o = 0; o < _sortedMap.Count; o++)
+                    for (var o = 0; o < _mergedMappedData.Count; o++)
                     {
-                        var addedItem = _sortedMap[o];
+                        var addedItem = _mergedMappedData[o];
 
                         Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
 
-                        var x = new CollectionChangedEventItem<TCoreCollectionItem>(addedItem.CollectionItem, o);
+                        var x = new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
                         addedItems.Add(x);
                     }
 
                     // logic for removed was copy-pasted and tweaked from the added logic. Not checked or tested.
                     var removedItems = new List<CollectionChangedEventItem<TCollectionItem>>();
 
-                    for (var o = 0; o < itemsFromPreviousMerge.Count; o++)
+                    for (var o = 0; o < previousMergedMap.Count; o++)
                     {
-                        var addedItem = itemsFromPreviousMerge[o];
+                        var addedItem = previousMergedMap[o];
 
-                        // TODO Use MergedMap instead of _sortedMap
                         Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
 
-                        var x = new CollectionChangedEventItem<TCoreCollectionItem>(addedItem.CollectionItem, o);
+                        var x = new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
                         removedItems.Add(x);
                     }
 
@@ -546,7 +546,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 MergedMapData = mergedMapData;
             }
 
-            private IMerged<TCoreCollectionItem> CollectionItem { get; }
+            public IMerged<TCoreCollectionItem> CollectionItem { get; }
 
             public IEnumerable<MappedData> MergedMapData { get; }
         }
