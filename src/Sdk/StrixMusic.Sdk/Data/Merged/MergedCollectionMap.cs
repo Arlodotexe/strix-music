@@ -208,9 +208,12 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         /// <param name="index">The index to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public Task<bool> IsAddItemSupported(int index)
+        public async Task<bool> IsAddItemSupported(int index)
         {
-            return _sortedMap[index].SourceCollection.IsAddSupported(_sortedMap[index].OriginalIndex);
+            var sourceResults = await _mergedMappedData[index].MergedMapData
+                .InParallel(async x => await x.SourceCollection.IsAddSupported(x.OriginalIndex));
+            
+            return sourceResults.Any();
         }
 
         /// <summary>
@@ -218,9 +221,12 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         /// <param name="index">The index to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public Task<bool> IsRemoveItemSupport(int index)
+        public async Task<bool> IsRemoveItemSupport(int index)
         {
-            return _sortedMap[index].SourceCollection.IsRemoveSupported(_sortedMap[index].OriginalIndex);
+            var sourceResults = await _mergedMappedData[index].MergedMapData
+                .InParallel(async x => await x.SourceCollection.IsAddSupported(x.OriginalIndex));
+
+            return sourceResults.Any();
         }
 
         private static IMerged<TCoreCollectionItem> MergeOrAdd(List<IMerged<TCoreCollectionItem>> collection, TCoreCollectionItem itemToMerge)
