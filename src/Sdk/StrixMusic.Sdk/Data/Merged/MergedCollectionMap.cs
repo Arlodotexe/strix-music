@@ -208,9 +208,12 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         /// <param name="index">The index to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public Task<bool> IsAddItemSupported(int index)
+        public async Task<bool> IsAddItemSupported(int index)
         {
-            return _sortedMap[index].SourceCollection.IsAddSupported(_sortedMap[index].OriginalIndex);
+            var sourceResults = await _mergedMappedData[index].MergedMapData
+                .InParallel(async x => await x.SourceCollection.IsAddSupported(x.OriginalIndex));
+
+            return sourceResults.Any();
         }
 
         /// <summary>
@@ -218,9 +221,12 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         /// <param name="index">The index to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public Task<bool> IsRemoveItemSupport(int index)
+        public async Task<bool> IsRemoveItemSupport(int index)
         {
-            return _sortedMap[index].SourceCollection.IsRemoveSupported(_sortedMap[index].OriginalIndex);
+            var sourceResults = await _mergedMappedData[index].MergedMapData
+                .InParallel(async x => await x.SourceCollection.IsAddSupported(x.OriginalIndex));
+
+            return sourceResults.Any();
         }
 
         private static IMerged<TCoreCollectionItem> MergeOrAdd(List<IMerged<TCoreCollectionItem>> collection, TCoreCollectionItem itemToMerge)
@@ -234,7 +240,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 }
             }
 
-            IMerged<TCoreCollectionItem>? returnData = null;
+            IMerged<TCoreCollectionItem>? returnData;
 
             // if the collection doesn't contain IMerged<TCollectionItem> at all, create a new Merged
             switch (itemToMerge)
@@ -244,8 +250,10 @@ namespace StrixMusic.Sdk.Data.Merged
                     collection.Add(returnData);
                     break;
                 case ICoreAlbum album:
-                    // no idea why this isn't working. will attempt to fix the other errors and see if it builds anyway.
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedAlbum(album.IntoList());
+                    // This wasn't allowing explicit casting to IMerged<TCoreCollectionItem>.
+                    // The inherited types on MergedAlbum (IMerged<ICoreAlbum>) seem to match up, but it still wasn't working.
+                    // Something might be wrong with ICoreAlbum that it doesn't match the constraints set by TCoreCollectionItem, but I've checked 5 times, the types definitely match up D:
+                    returnData = new MergedAlbum(album.IntoList()) as IMerged<TCoreCollectionItem> ?? ThrowHelper.ThrowInvalidOperationException<IMerged<TCoreCollectionItem>>("Cast was invalid.");
                     collection.Add(returnData);
                     break;
                 case ICorePlaylist playlist:
@@ -460,12 +468,13 @@ namespace StrixMusic.Sdk.Data.Merged
             Task.Run(async () =>
                 {
                     // This is assuming the data in _sortedMap is sorted by rank
-                    var itemsFromPreviousMerge = _sortedMap.ToList();
+                    var previouslySortedItems = _sortedMap.ToList();
+                    var previousMergedMap = _mergedMappedData.ToList();
                     _sortedMap.Clear();
 
-                    foreach (var item in itemsFromPreviousMerge)
+                    foreach (var item in previouslySortedItems)
                     {
-                        var i = itemsFromPreviousMerge.IndexOf(item);
+                        var i = previouslySortedItems.IndexOf(item);
 
                         // If the currentSource and the previous source are the same, skip this iteration
                         // because we get and re-emit the range of items for this source.
@@ -479,27 +488,26 @@ namespace StrixMusic.Sdk.Data.Merged
                     var addedItems = new List<CollectionChangedEventItem<TCollectionItem>>();
 
                     // For each item that we just retrieved, find the index in the sorted map and assign the item.
-                    for (var o = 0; o < _sortedMap.Count; o++)
+                    for (var o = 0; o < _mergedMappedData.Count; o++)
                     {
-                        var addedItem = _sortedMap[o];
+                        var addedItem = _mergedMappedData[o];
 
                         Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
 
-                        var x = new CollectionChangedEventItem<TCoreCollectionItem>(addedItem.CollectionItem, o);
+                        var x = new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
                         addedItems.Add(x);
                     }
 
                     // logic for removed was copy-pasted and tweaked from the added logic. Not checked or tested.
                     var removedItems = new List<CollectionChangedEventItem<TCollectionItem>>();
 
-                    for (var o = 0; o < itemsFromPreviousMerge.Count; o++)
+                    for (var o = 0; o < previousMergedMap.Count; o++)
                     {
-                        var addedItem = itemsFromPreviousMerge[o];
+                        var addedItem = previousMergedMap[o];
 
-                        // TODO Use MergedMap instead of _sortedMap
                         Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
 
-                        var x = new CollectionChangedEventItem<TCoreCollectionItem>(addedItem.CollectionItem, o);
+                        var x = new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
                         removedItems.Add(x);
                     }
 
@@ -540,7 +548,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 MergedMapData = mergedMapData;
             }
 
-            private IMerged<TCoreCollectionItem> CollectionItem { get; }
+            public IMerged<TCoreCollectionItem> CollectionItem { get; }
 
             public IEnumerable<MappedData> MergedMapData { get; }
         }

@@ -272,19 +272,19 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsAddGenreSupported(int index) => _preferredSource.IsAddGenreSupported(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageSupported(int index) => _preferredSource.IsAddImageSupported(index);
+        public Task<bool> IsAddImageSupported(int index) => _imageCollectionMap.IsAddItemSupported(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddTrackSupported(int index) => _preferredSource.IsAddTrackSupported(index);
+        public Task<bool> IsAddTrackSupported(int index) => _trackCollectionMap.IsAddItemSupported(index);
 
         /// <inheritdoc/>
         public Task<bool> IsRemoveGenreSupported(int index) => _preferredSource.IsRemoveGenreSupported(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveImageSupported(int index) => _preferredSource.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageSupported(int index) => _imageCollectionMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveTrackSupported(int index) => _preferredSource.IsRemoveTrackSupported(index);
+        public Task<bool> IsRemoveTrackSupported(int index) => _trackCollectionMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc/>
         public Task PauseAsync() => _preferredSource.PauseAsync();
