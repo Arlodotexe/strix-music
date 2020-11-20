@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// The total number of images in the collection.
         /// </summary>
-        int TotalImageCount { get; set; }
+        int TotalImageCount { get; }
 
         /// <summary>
         /// Fires when the merged number of images in the collection changes.
