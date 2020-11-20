@@ -21,6 +21,13 @@ namespace StrixMusic.Sdk.Data.Base
         Task<bool> IsRemoveImageSupported(int index);
 
         /// <summary>
+        /// Removes the image from the collection on the backend.
+        /// </summary>
+        /// <param name="index">The index of the image to remove.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task RemoveImageAsync(int index);
+
+        /// <summary>
         /// The total number of images in the collection.
         /// </summary>
         int TotalImageCount { get; }
