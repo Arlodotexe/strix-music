@@ -44,10 +44,10 @@ namespace StrixMusic.Sdk.Data.Merged
         IReadOnlyList<ICoreImage> ISdkMember<ICoreImage>.Sources => Sources;
 
         /// <inheritdoc/>
-        public void AddSource(ICoreImage itemToMerge)
-        {
-            _sources.Add(itemToMerge);
-        }
+        public void AddSource(ICoreImage itemToMerge) => _sources.Add(itemToMerge);
+
+        /// <inheritdoc />
+        public void RemoveSource(ICoreImage itemToRemove) => _sources.Remove(itemToRemove);
 
         /// <inheritdoc/>
         public bool Equals(ICoreImage other)

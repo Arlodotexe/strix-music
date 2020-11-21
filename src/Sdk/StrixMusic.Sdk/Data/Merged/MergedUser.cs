@@ -239,5 +239,11 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             throw new NotSupportedException();
         }
+
+        /// <inheritdoc />
+        public void RemoveSource(ICoreUser itemToRemove)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

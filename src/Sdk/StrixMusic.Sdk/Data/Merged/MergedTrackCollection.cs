@@ -280,6 +280,14 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
+        public void RemoveSource(ICoreTrackCollection itemToRemove)
+        {
+            _sources.Remove(itemToRemove);
+            _trackMap.RemoveSource(itemToRemove);
+            _imageMap.RemoveSource(itemToRemove);
+        }
+
+        /// <inheritdoc />
         public bool Equals(ICoreTrackCollection other)
         {
             return other?.Name == Name;

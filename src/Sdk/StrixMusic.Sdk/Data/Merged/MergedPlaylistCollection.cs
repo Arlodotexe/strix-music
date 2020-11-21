@@ -11,7 +11,7 @@ using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
 {
-    /// <summary>
+        /// <summary>
     /// A concrete class that merged multiple <see cref="ICorePlaylistCollection"/>s.
     /// </summary>
     public class MergedPlaylistCollection : IPlaylistCollection, IMerged<ICorePlaylistCollection>
@@ -280,6 +280,14 @@ namespace StrixMusic.Sdk.Data.Merged
             _sources.Add(itemToMerge);
             _playlistMap.AddSource(itemToMerge);
             _imageMap.AddSource(itemToMerge);
+        }
+
+        /// <inheritdoc />
+        public void RemoveSource(ICorePlaylistCollection itemToRemove)
+        {
+            _sources.Remove(itemToRemove);
+            _playlistMap.RemoveSource(itemToRemove);
+            _imageMap.RemoveSource(itemToRemove);
         }
 
         /// <inheritdoc />

@@ -164,21 +164,6 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores => Sources.Select(x => x.SourceCore).ToList();
 
-        /// <summary>
-        /// Adds a new source to this merged item.
-        /// </summary>
-        /// <param name="itemToMerge">The item to merge into this Artist</param>
-        public void AddSource(ICoreArtist itemToMerge)
-        {
-            if (!Equals(itemToMerge))
-                ThrowHelper.ThrowArgumentException(nameof(itemToMerge), "Tried to merge an artist that doesn't match. Verify that the item matches before merging the source.");
-
-            _albumCollectionItemMap.AddSource(itemToMerge);
-            _trackCollectionMap.AddSource(itemToMerge);
-            _imageCollectionMap.AddSource(itemToMerge);
-            _sources.Add(itemToMerge);
-        }
-
         /// <inheritdoc />
         IReadOnlyList<ICoreGenreCollection> ISdkMember<ICoreGenreCollection>.Sources => Sources;
 
@@ -318,6 +303,30 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public Task RemoveAlbumItemAsync(int index) => _albumCollectionItemMap.RemoveAt(index);
+
+        /// <summary>
+        /// Adds a new source to this merged item.
+        /// </summary>
+        /// <param name="itemToMerge">The item to merge into this Artist</param>
+        public void AddSource(ICoreArtist itemToMerge)
+        {
+            if (!Equals(itemToMerge))
+                ThrowHelper.ThrowArgumentException(nameof(itemToMerge), "Tried to merge an artist that doesn't match. Verify that the item matches before merging the source.");
+
+            _albumCollectionItemMap.AddSource(itemToMerge);
+            _trackCollectionMap.AddSource(itemToMerge);
+            _imageCollectionMap.AddSource(itemToMerge);
+            _sources.Add(itemToMerge);
+        }
+
+        /// <inheritdoc />
+        public void RemoveSource(ICoreArtist itemToRemove)
+        {
+            _sources.Remove(itemToRemove);
+            _imageCollectionMap.RemoveSource(itemToRemove);
+            _albumCollectionItemMap.RemoveSource(itemToRemove);
+            _trackCollectionMap.RemoveSource(itemToRemove);
+        }
 
         /// <inheritdoc cref="Equals(object?)" />
         public bool Equals(ICoreArtist? other)

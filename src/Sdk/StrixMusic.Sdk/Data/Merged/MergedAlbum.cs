@@ -206,6 +206,16 @@ namespace StrixMusic.Sdk.Data.Merged
         public void AddSource(ICoreAlbum itemToMerge)
         {
             _sources.Add(itemToMerge);
+            _imageCollectionMap.AddSource(itemToMerge);
+            _trackCollectionMap.AddSource(itemToMerge);
+        }
+
+        /// <inheritdoc />
+        public void RemoveSource(ICoreAlbum itemToRemove)
+        {
+            _sources.Remove(itemToRemove);
+            _imageCollectionMap.RemoveSource(itemToRemove);
+            _trackCollectionMap.RemoveSource(itemToRemove);
         }
 
         /// <inheritdoc/>
