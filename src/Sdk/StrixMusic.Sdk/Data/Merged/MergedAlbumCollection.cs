@@ -49,6 +49,10 @@ namespace StrixMusic.Sdk.Data.Merged
         private void DetachEvents(ICoreAlbumCollection source)
         {
             DetachPlayableEvents(source);
+            _albumMap.ItemsChanged -= AlbumMap_ItemsChanged;
+            _imageMap.ItemsChanged -= ImageMap_ItemsChanged;
+            _albumMap.ItemsCountChanged -= AlbumMap_ItemsCountChanged;
+            _imageMap.ItemsCountChanged -= ImageMap_ItemsCountChanged;
         }
 
         private void AttachPlayableEvents(IPlayable source)
@@ -70,51 +74,52 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public event EventHandler<PlaybackState> PlaybackStateChanged;
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc />
-        public event EventHandler<string> NameChanged;
+        public event EventHandler<string>? NameChanged;
 
         /// <inheritdoc />
-        public event EventHandler<string?> DescriptionChanged;
+        public event EventHandler<string?>? DescriptionChanged;
 
         /// <inheritdoc />
-        public event EventHandler<Uri?> UrlChanged;
+        public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IImage> ImagesChanged;
+        public event CollectionChangedEventHandler<IImage>? ImagesChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int> ImagesCountChanged;
+        public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IAlbumCollectionItem> AlbumItemsChanged;
+        public event CollectionChangedEventHandler<IAlbumCollectionItem>? AlbumItemsChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int> AlbumItemsCountChanged;
+        public event EventHandler<int>? AlbumItemsCountChanged;
 
         private void ImageMap_ItemsCountChanged(object sender, int e)
         {
             TotalImageCount = e;
-
-        }
-
-        private void ImageMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
-        {
-            throw new NotImplementedException();
+            ImagesCountChanged?.Invoke(this, e);
         }
 
         private void AlbumMap_ItemsCountChanged(object sender, int e)
         {
-            throw new NotImplementedException();
+            TotalAlbumItemsCount = e;
+            AlbumItemsCountChanged?.Invoke(this, e);
+        }
+
+        private void ImageMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        {
+            ImagesChanged?.Invoke(this, addedItems, removedItems);
         }
 
         private void AlbumMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> removedItems)
         {
-            throw new NotImplementedException();
+            AlbumItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
@@ -133,141 +138,107 @@ namespace StrixMusic.Sdk.Data.Merged
         IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        public int TotalAlbumItemsCount { get; }
+        public string Id => _preferredSource.Id;
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumItemSupported(int index)
-        {
-            throw new System.NotImplementedException();
-        }
+        public Uri? Url => _preferredSource.Url;
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemSupported(int index)
-        {
-            throw new System.NotImplementedException();
-        }
+        public string Name => _preferredSource.Name;
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index)
-        {
-            throw new System.NotImplementedException();
-        }
+        public string? Description => _preferredSource.Description;
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index)
-        {
-            throw new System.NotImplementedException();
-        }
+        public PlaybackState PlaybackState => _preferredSource.PlaybackState;
 
         /// <inheritdoc />
-        public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index)
-        {
-            throw new System.NotImplementedException();
-        }
+        public TimeSpan Duration => _preferredSource.Duration;
 
         /// <inheritdoc />
-        public Task RemoveAlbumItemAsync(int index)
-        {
-            throw new System.NotImplementedException();
-        }
+        public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset)
-        {
-            throw new System.NotImplementedException();
-        }
+        public bool IsPauseAsyncSupported => _preferredSource.IsPauseAsyncSupported;
 
         /// <inheritdoc />
-        public void AddSource(ICoreAlbumCollection itemToMerge)
-        {
-            throw new System.NotImplementedException();
-        }
+        public bool IsChangeNameAsyncSupported => _preferredSource.IsChangeNameAsyncSupported;
 
         /// <inheritdoc />
-        public bool Equals(ICoreAlbumCollection other)
-        {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+        public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
 
-            return other.Name.Equals(this.Name, StringComparison.InvariantCulture);
-        }
+        /// <inheritdoc />
+        public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
+
+        /// <inheritdoc />
+        public int TotalAlbumItemsCount { get; private set; }
 
         /// <inheritdoc />
         public int TotalImageCount { get; private set; }
 
         /// <inheritdoc />
-        public string Id { get; }
+        public Task<bool> IsAddAlbumItemSupported(int index) => _albumMap.IsAddItemSupported(index);
 
         /// <inheritdoc />
-        public Uri? Url { get; }
+        public Task<bool> IsRemoveAlbumItemSupported(int index) => _albumMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc />
-        public string Name { get; }
+        public Task<bool> IsAddImageSupported(int index) => _imageMap.IsAddItemSupported(index);
 
         /// <inheritdoc />
-        public string? Description { get; }
+        public Task<bool> IsRemoveImageSupported(int index) => _imageMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState { get; }
+        public Task PlayAsync() => _preferredSource.PlayAsync();
 
         /// <inheritdoc />
-        public TimeSpan Duration { get; }
+        public Task PauseAsync() => _preferredSource.PauseAsync();
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported { get; }
+        public Task ChangeNameAsync(string name) => _preferredSource.ChangeNameAsync(name);
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported { get; }
+        public Task ChangeDescriptionAsync(string? description) => _preferredSource.ChangeDescriptionAsync(description);
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported { get; }
+        public Task ChangeDurationAsync(TimeSpan duration) => _preferredSource.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported { get; }
+        public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index) => _albumMap.InsertItem(album, index);
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported { get; }
+        public Task RemoveAlbumItemAsync(int index) => _albumMap.RemoveAt(index);
 
         /// <inheritdoc />
-        public Task PlayAsync()
-        {
-            return TODO_IMPLEMENT_ME;
-        }
+        public Task AddImageAsync(IImage image, int index) => _imageMap.InsertItem(image, index);
 
         /// <inheritdoc />
-        public Task PauseAsync()
-        {
-            return TODO_IMPLEMENT_ME;
-        }
-
-        /// <inheritdoc />
-        public Task ChangeNameAsync(string name)
-        {
-            return TODO_IMPLEMENT_ME;
-        }
-
-        /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description)
-        {
-            return TODO_IMPLEMENT_ME;
-        }
-
-        /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration)
-        {
-            return TODO_IMPLEMENT_ME;
-        }
+        public Task RemoveImageAsync(int index) => _imageMap.RemoveAt(index);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
         {
-            return TODO_IMPLEMENT_ME;
+            return _imageMap.GetItems(limit, offset);
         }
 
         /// <inheritdoc />
-        public Task AddImageAsync(IImage image, int index)
+        public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset)
         {
-            return TODO_IMPLEMENT_ME;
+            return _albumMap.GetItems(limit, offset);
+        }
+
+        /// <inheritdoc />
+        public void AddSource(ICoreAlbumCollection itemToMerge)
+        {
+            _sources.Add(itemToMerge);
+            _imageMap.AddSource(itemToMerge);
+            _albumMap.AddSource(itemToMerge);
+        }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollection other)
+        {
+            return other?.Name.Equals(Name, StringComparison.InvariantCulture) ?? false;
         }
     }
 }
