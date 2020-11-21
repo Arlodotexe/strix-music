@@ -40,7 +40,8 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private IReadOnlyList<Type>? _coreRanking;
         private MergedCollectionSorting? _sortingMethod;
-
+        private bool _isInit;
+        
         /// <inheritdoc />
         public IReadOnlyList<TCoreCollection> Sources => _collection.Sources;
 
@@ -59,10 +60,17 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public async Task InitAsync()
         {
+            if (_isInit)
+                return;
+
             _coreRanking = await GetCoreRankings();
             _sortingMethod = await GetSortingMethod();
             _settingsService.SettingChanged += SettingsServiceOnSettingChanged;
+
+            _isInit = true;
         }
+
+        private Task TryInitAsync() => InitAsync();
 
         /// <summary>
         /// Fires when a source has been added and the merged collection needs to be re-emitted to include the new source.
@@ -283,14 +291,15 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
         /// <returns>The requested range of items, sorted and merged from the sources in the input collection.</returns>
-        public Task<IReadOnlyList<TCollectionItem>> GetItems(int limit, int offset)
+        public async Task<IReadOnlyList<TCollectionItem>> GetItems(int limit, int offset)
         {
+            await TryInitAsync();
             Guard.IsNotNull(_sortingMethod, nameof(_sortingMethod));
 
             return _sortingMethod switch
             {
-                MergedCollectionSorting.Ranked => GetItemsByRank(limit, offset),
-                _ => ThrowHelper.ThrowNotSupportedException<Task<IReadOnlyList<TCollectionItem>>>($"Merged collection sorting by \"{_sortingMethod}\" not supported.")
+                MergedCollectionSorting.Ranked => await GetItemsByRank(limit, offset),
+                _ => ThrowHelper.ThrowNotSupportedException<IReadOnlyList<TCollectionItem>>($"Merged collection sorting by \"{_sortingMethod}\" not supported.")
             };
         }
 
@@ -302,6 +311,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task InsertItem(TCollectionItem item, int index)
         {
+            await TryInitAsync();
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
 
@@ -371,6 +381,8 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task RemoveAt(int index)
         {
+            await TryInitAsync();
+
             // Externally, the app sees non-core items as this internal collection of merged and sorted items and data.
             // When they ask for an item at an index, they're asking for an item at that index that could be merged.
             // So we go through each of the mapped sources for the item at this index and handle removing from the core side.
@@ -419,6 +431,8 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
         public async Task<bool> IsAddItemSupported(int index)
         {
+            await TryInitAsync();
+
             var sourceResults = await _mergedMappedData[index].MergedMapData
                 .InParallel(async x => await x.SourceCollection.IsAddSupported(x.OriginalIndex));
 
@@ -432,6 +446,8 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
         public async Task<bool> IsRemoveItemSupport(int index)
         {
+            await TryInitAsync();
+
             var sourceResults = await _mergedMappedData[index].MergedMapData
                 .InParallel(async x => await x.SourceCollection.IsAddSupported(x.OriginalIndex));
 
@@ -511,9 +527,9 @@ namespace StrixMusic.Sdk.Data.Merged
                     collection.Add(returnData);
                     break;
                 default:
+                    // Replace throw with this when verified that this is fully finished.
+                    // ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
                     throw new NotImplementedException();
-                    // Remove the above when this is fully finished.
-                    ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
             }
 
             return returnData;
@@ -661,6 +677,8 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private async Task ResetDataRanked()
         {
+            await TryInitAsync();
+
             // TODO: Optimize this (these instruction for ranked sorting only)
             // Find where this source lies in the ranking
             // If the items have already been requested and another source returned them
