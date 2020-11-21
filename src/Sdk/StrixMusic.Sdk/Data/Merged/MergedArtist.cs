@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
@@ -39,6 +40,8 @@ namespace StrixMusic.Sdk.Data.Merged
             _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
             _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
             _albumCollectionItemMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this);
+            
+            RelatedItems = new MergedPlayableCollectionGroup(_sources.Select(x => x.RelatedItems).PruneNull().ToList());
 
             // TODO: Get the actual preferred source.
             PreferredSource = _sources[0];
