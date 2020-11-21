@@ -29,8 +29,11 @@ namespace StrixMusic.Sdk.Data.Merged
             _sources = sources.ToList();
             _preferredSource = _sources[0];
 
-            TotalAlbumItemsCount = _preferredSource.TotalAlbumItemsCount;
-            TotalImageCount = _preferredSource.TotalImageCount;
+            foreach (var source in _sources)
+            {
+                TotalAlbumItemsCount = source.TotalAlbumItemsCount;
+                TotalImageCount = source.TotalImageCount;
+            }
 
             _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
             _albumMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this);
