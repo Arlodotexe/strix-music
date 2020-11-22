@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -26,15 +27,11 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         public MergedAlbum(IEnumerable<ICoreAlbum> sources)
         {
-            if (sources == null)
-                throw new ArgumentNullException(nameof(sources));
-
-            var coreAlbums = sources as ICoreAlbum[] ?? sources.ToArray();
-            _sources = coreAlbums.ToList();
+            _sources = sources?.ToList() ?? ThrowHelper.ThrowArgumentNullException<List<ICoreAlbum>>(nameof(sources));
 
             Artist = new MergedArtist(_sources.Select(x => x.Artist).ToList());
 
-            RelatedItems = new MergedPlayableCollectionGroup(coreAlbums.Select(x => x.RelatedItems).PruneNull().ToList());
+            RelatedItems = new MergedPlayableCollectionGroup(_sources.Select(x => x.RelatedItems).PruneNull().ToList());
 
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
@@ -47,7 +44,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private void AttachEvents(ICoreAlbum source)
         {
-            AttachPropertyEvents(source);
+            AttachPlayableEvents(source);
             _trackCollectionMap.ItemsChanged += TrackCollectionMap_ItemsChanged;
             _trackCollectionMap.ItemsCountChanged += TrackCollectionMap_ItemsCountChanged;
             _imageCollectionMap.ItemsChanged += ImageCollectionMap_ItemsChanged;
@@ -56,14 +53,14 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private void DetachEvents(ICoreAlbum source)
         {
-            DetachPropertyEvents(source);
+            DetachPlayableEvents(source);
             _trackCollectionMap.ItemsChanged -= TrackCollectionMap_ItemsChanged;
             _trackCollectionMap.ItemsCountChanged -= TrackCollectionMap_ItemsCountChanged;
             _imageCollectionMap.ItemsChanged -= ImageCollectionMap_ItemsChanged;
             _imageCollectionMap.ItemsCountChanged -= ImageCollectionMap_ItemsCountChanged;
         }
 
-        private void AttachPropertyEvents(ICoreAlbum source)
+        private void AttachPlayableEvents(IPlayable source)
         {
             source.PlaybackStateChanged += PlaybackStateChanged;
             source.NameChanged += NameChanged;
@@ -72,7 +69,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.DurationChanged += DurationChanged;
         }
 
-        private void DetachPropertyEvents(ICoreAlbum source)
+        private void DetachPlayableEvents(IPlayable source)
         {
             source.PlaybackStateChanged -= PlaybackStateChanged;
             source.NameChanged -= NameChanged;
@@ -209,6 +206,16 @@ namespace StrixMusic.Sdk.Data.Merged
         public void AddSource(ICoreAlbum itemToMerge)
         {
             _sources.Add(itemToMerge);
+            _imageCollectionMap.AddSource(itemToMerge);
+            _trackCollectionMap.AddSource(itemToMerge);
+        }
+
+        /// <inheritdoc />
+        public void RemoveSource(ICoreAlbum itemToRemove)
+        {
+            _sources.Remove(itemToRemove);
+            _imageCollectionMap.RemoveSource(itemToRemove);
+            _trackCollectionMap.RemoveSource(itemToRemove);
         }
 
         /// <inheritdoc/>

@@ -483,24 +483,43 @@ namespace StrixMusic.Sdk.Data.Merged
             return _playlistCollectionMap.RemoveAt(index);
         }
 
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index)
+        {
+            return _imagesCollectionMap.RemoveAt(index);
+        }
+
         /// <inheritdoc/>
         public Task RemoveChildAsync(int index)
         {
             return _playableCollectionGroupMap.RemoveAt(index);
         }
 
-        /// <inheritdoc cref="IMerged{TCoreBase}" />
+        /// <inheritdoc cref="IMerged{TCoreBase}.AddSource" />
         public void AddSource(TCoreBase itemToAdd)
         {
             if (!Equals(itemToAdd))
                 ThrowHelper.ThrowArgumentException<TCoreBase>("Tried to merge an artist that doesn't match. Verify that the item matches before merging the source.");
+            
+            _sources.Add(itemToAdd);
 
             _albumCollectionMap.AddSource(itemToAdd);
             _artistCollectionMap.AddSource(itemToAdd);
             _playableCollectionGroupMap.AddSource(itemToAdd);
             _playlistCollectionMap.AddSource(itemToAdd);
             _trackCollectionMap.AddSource(itemToAdd);
-            _sources.Add(itemToAdd);
+        }
+
+        /// <inheritdoc cref="IMerged{TCoreBase}.RemoveSource(TCoreBase)" />
+        public void RemoveSource(TCoreBase itemToRemove)
+        {
+            _sources.Remove(itemToRemove);
+            _imagesCollectionMap.RemoveSource(itemToRemove);
+            _albumCollectionMap.RemoveSource(itemToRemove);
+            _artistCollectionMap.RemoveSource(itemToRemove);
+            _trackCollectionMap.RemoveSource(itemToRemove);
+            _playableCollectionGroupMap.RemoveSource(itemToRemove);
+            _playlistCollectionMap.RemoveSource(itemToRemove);
         }
     }
 }

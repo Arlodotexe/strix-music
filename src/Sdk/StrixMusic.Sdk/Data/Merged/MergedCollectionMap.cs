@@ -40,9 +40,37 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private IReadOnlyList<Type>? _coreRanking;
         private MergedCollectionSorting? _sortingMethod;
-
+        private bool _isInit;
+        
         /// <inheritdoc />
         public IReadOnlyList<TCoreCollection> Sources => _collection.Sources;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="MergedCollectionMap{TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem}"/>.
+        /// </summary>
+        /// <param name="collection">The collection that contains the items </param>
+        public MergedCollectionMap(TCollection collection)
+        {
+            _collection = collection;
+            _settingsService = Ioc.Default.GetService<ISettingsService>();
+
+            AttachEvents();
+        }
+
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            if (_isInit)
+                return;
+
+            _coreRanking = await GetCoreRankings();
+            _sortingMethod = await GetSortingMethod();
+            _settingsService.SettingChanged += SettingsServiceOnSettingChanged;
+
+            _isInit = true;
+        }
+
+        private Task TryInitAsync() => InitAsync();
 
         /// <summary>
         /// Fires when a source has been added and the merged collection needs to be re-emitted to include the new source.
@@ -54,22 +82,207 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         public event EventHandler<int>? ItemsCountChanged;
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="MergedCollectionMap{TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem}"/>.
-        /// </summary>
-        /// <param name="collection">The collection that contains the items </param>
-        public MergedCollectionMap(TCollection collection)
+        private void AttachEvents()
         {
-            _collection = collection;
-            _settingsService = Ioc.Default.GetService<ISettingsService>();
+            foreach (var item in Sources)
+            {
+                AttachEvents(item);
+            }
         }
 
-        /// <inheritdoc />
-        public async Task InitAsync()
+        private void DetachEvents()
         {
-            _coreRanking = await GetCoreRankings();
-            _sortingMethod = await GetSortingMethod();
-            _settingsService.SettingChanged += SettingsServiceOnSettingChanged;
+            foreach (var item in Sources)
+            {
+                DetachEvents(item);
+            }
+        }
+
+        private void AttachEvents(TCoreCollection item)
+        {
+            switch (typeof(TCoreCollection))
+            {
+                case ICorePlayableCollectionGroup _:
+                    ((ICorePlayableCollectionGroup)item).ChildItemsChanged += MergedCollectionMap_ChildItemsChanged;
+                    ((ICorePlayableCollectionGroup)item).TotalChildrenCountChanged += MergedCollectionMap_CountChanged;
+                    break;
+                case ICoreAlbumCollection _:
+                    ((ICoreAlbumCollection)item).AlbumItemsCountChanged += MergedCollectionMap_CountChanged;
+                    ((ICoreAlbumCollection)item).AlbumItemsChanged += MergedCollectionMap_AlbumItemsChanged;
+                    break;
+                case ICoreArtistCollection _:
+                    ((ICoreArtistCollection)item).ArtistItemsCountChanged += MergedCollectionMap_CountChanged;
+                    ((ICoreArtistCollection)item).ArtistItemsChanged += MergedCollectionMap_ArtistItemsChanged;
+                    break;
+                case ICorePlaylistCollection _:
+                    ((ICoreArtistCollection)item).ArtistItemsCountChanged += MergedCollectionMap_CountChanged;
+                    ((ICoreArtistCollection)item).ArtistItemsChanged += MergedCollectionMap_ArtistItemsChanged;
+                    break;
+                case ICoreTrackCollection _:
+                    ((ICoreTrackCollection)item).TrackItemsCountChanged += MergedCollectionMap_CountChanged;
+                    ((ICoreTrackCollection)item).TrackItemsChanged += MergedCollectionMap_TrackItemsChanged;
+                    break;
+                case ICoreImageCollection _:
+                    ((ICoreImageCollection)item).ImagesCountChanged += MergedCollectionMap_CountChanged;
+                    ((ICoreImageCollection)item).ImagesChanged += MergedCollectionMap_ImagesChanged;
+                    break;
+                default:
+                    ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't attach events. Type not supported.");
+                    break;
+            }
+        }
+
+        private void DetachEvents(TCoreCollection item)
+        {
+            switch (typeof(TCoreCollection))
+            {
+                case ICorePlayableCollectionGroup _:
+                    ((ICorePlayableCollectionGroup)item).ChildItemsChanged -= MergedCollectionMap_ChildItemsChanged;
+                    ((ICorePlayableCollectionGroup)item).TotalChildrenCountChanged -= MergedCollectionMap_CountChanged;
+                    break;
+                case ICoreAlbumCollection _:
+                    ((ICoreAlbumCollection)item).AlbumItemsCountChanged -= MergedCollectionMap_CountChanged;
+                    ((ICoreAlbumCollection)item).AlbumItemsChanged -= MergedCollectionMap_AlbumItemsChanged;
+                    break;
+                case ICoreArtistCollection _:
+                    ((ICoreArtistCollection)item).ArtistItemsCountChanged -= MergedCollectionMap_CountChanged;
+                    ((ICoreArtistCollection)item).ArtistItemsChanged -= MergedCollectionMap_ArtistItemsChanged;
+                    break;
+                case ICorePlaylistCollection _:
+                    ((ICoreArtistCollection)item).ArtistItemsCountChanged -= MergedCollectionMap_CountChanged;
+                    ((ICoreArtistCollection)item).ArtistItemsChanged -= MergedCollectionMap_ArtistItemsChanged;
+                    break;
+                case ICoreTrackCollection _:
+                    ((ICoreTrackCollection)item).TrackItemsCountChanged -= MergedCollectionMap_CountChanged;
+                    ((ICoreTrackCollection)item).TrackItemsChanged -= MergedCollectionMap_TrackItemsChanged;
+                    break;
+                case ICoreImageCollection _:
+                    ((ICoreImageCollection)item).ImagesCountChanged -= MergedCollectionMap_CountChanged;
+                    ((ICoreImageCollection)item).ImagesChanged -= MergedCollectionMap_ImagesChanged;
+                    break;
+                default:
+                    ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't attach events. Type not supported.");
+                    break;
+            }
+        }
+
+        private void MergedCollectionMap_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreImage>> removedItems)
+        {
+            MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
+        }
+
+        private void MergedCollectionMap_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreTrack>> removedItems)
+        {
+            MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
+        }
+
+        private void MergedCollectionMap_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreArtistCollectionItem>> removedItems)
+        {
+            MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
+        }
+
+        private void MergedCollectionMap_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreAlbumCollectionItem>> removedItems)
+        {
+            MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
+        }
+
+        private void MergedCollectionMap_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICorePlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICorePlayableCollectionGroup>> removedItems)
+        {
+            MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
+        }
+
+        private void MergedCollectionMap_ItemsChanged<T>(object sender,
+            IReadOnlyList<CollectionChangedEventItem<T>> addedItems,
+            IReadOnlyList<CollectionChangedEventItem<T>> removedItems)
+        where T : class, ICollectionItemBase, ICoreMember
+        {
+            var addedMergedItems = CheckAddedItems();
+            var removedMergedItems = CheckRemovedItems();
+
+            List<CollectionChangedEventItem<TCollectionItem>> CheckAddedItems()
+            {
+                var added = new List<CollectionChangedEventItem<TCollectionItem>>();
+                var newItems = new List<IMerged<TCoreCollectionItem>>();
+
+                foreach (var item in addedItems)
+                {
+                    if (!(item.Data is TCoreCollectionItem collectionItemData))
+                        return ThrowHelper.ThrowInvalidOperationException<List<CollectionChangedEventItem<TCollectionItem>>>($"{nameof(item.Data)} couldn't be cast to {nameof(TCoreCollectionItem)}.");
+
+                    // Check for an existing IMerged that matches this item
+                    foreach (var mergedItem in _mergedMappedData)
+                    {
+                        // Using "?? false" breaks nullable assertion?
+                        if (mergedItem?.CollectionItem.Equals(collectionItemData) == true)
+                        {
+                            mergedItem.CollectionItem.AddSource(collectionItemData);
+                            return added;
+                        }
+                    }
+
+                    // TODO: Sorting is not handled.
+                    var mergedImpl = MergeOrAdd(newItems, collectionItemData);
+
+                    var mappedData = new MappedData(item.Index, (TCoreCollection)sender, collectionItemData);
+                    _sortedMap.Add(mappedData);
+                    _mergedMappedData.Add(new MergedMappedData(mergedImpl, new[] { mappedData }));
+                }
+
+                return added;
+            }
+
+            List<CollectionChangedEventItem<TCollectionItem>> CheckRemovedItems()
+            {
+                var removed = new List<CollectionChangedEventItem<TCollectionItem>>();
+
+                foreach (var item in removedItems)
+                {
+                    var mappedData = _sortedMap.FirstOrDefault(x => x.OriginalIndex == item.Index && item.Data.SourceCore == x.SourceCollection.SourceCore);
+
+                    if (mappedData == null)
+                        continue;
+
+                    foreach (var mergedData in _mergedMappedData)
+                    {
+                        foreach (var mergedSource in mergedData.CollectionItem.Sources)
+                        {
+                            if (mappedData.CollectionItem != mergedSource)
+                                continue;
+
+                            _sortedMap.Remove(mappedData);
+
+                            mergedData.CollectionItem.RemoveSource(mergedSource);
+
+                            mergedData.MergedMapData.RemoveAll(x => x.OriginalIndex == item.Index && item.Data.SourceCore == x.SourceCollection.SourceCore);
+
+                            if (mergedData.CollectionItem.Sources.Count == 0)
+                            {
+                                _mergedMappedData.Remove(mergedData);
+
+                                var index = _mergedMappedData.IndexOf(mergedData);
+                                removed.Add(new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)mergedData.CollectionItem, index));
+                            }
+
+                            return removed;
+                        }
+                    }
+                }
+
+                return removed;
+            }
+
+            ItemsChanged?.Invoke(this, addedMergedItems, removedMergedItems);
+            ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
+        }
+
+        private void MergedCollectionMap_CountChanged(object sender, int e)
+        {
+            // This is sent from each core.
+            // The count would be wrong if we tried to re-emit it as is.
+            // We emit CountChanged for the Map elsewhere when items are changed.
+
+            // Instead, maybe we can use it this event verify the size of the collection is correct?
+            // Can't think of a better use.
         }
 
         /// <summary>
@@ -78,32 +291,34 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
         /// <returns>The requested range of items, sorted and merged from the sources in the input collection.</returns>
-        public Task<IReadOnlyList<TCollectionItem>> GetItems(int limit, int offset)
+        public async Task<IReadOnlyList<TCollectionItem>> GetItems(int limit, int offset)
         {
+            await TryInitAsync();
             Guard.IsNotNull(_sortingMethod, nameof(_sortingMethod));
 
             return _sortingMethod switch
             {
-                MergedCollectionSorting.Ranked => GetItemsByRank(limit, offset),
-                _ => ThrowHelper.ThrowNotSupportedException<Task<IReadOnlyList<TCollectionItem>>>($"Merged collection sorting by \"{_sortingMethod}\" not supported.")
+                MergedCollectionSorting.Ranked => await GetItemsByRank(limit, offset),
+                _ => ThrowHelper.ThrowNotSupportedException<IReadOnlyList<TCollectionItem>>($"Merged collection sorting by \"{_sortingMethod}\" not supported.")
             };
         }
 
         /// <summary>
-        /// Inserts an item into the compatible source collections.
+        /// Inserts an item into the compatible source collections on the backend.
         /// </summary>
         /// <param name="item">The item to insert.</param>
         /// <param name="index">The index to place this item at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task InsertItem(TCollectionItem item, int index)
         {
+            await TryInitAsync();
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
 
             // TODO
             // This does not handle adding NEW items to a list, only existing items from elsewhere. 
             // e.g. cannot create a new playlist or playableCollectionGroup.
-            // Plan on having a new type that implements ICoreSomething for the UI to fill out the data + create a merged item from.
+            // Plan on having a new type that implements ICoreSomething for the UI to create a merged item + fill out data.
             foreach (var source in item.Sources)
             {
                 var addedRecord = new Dictionary<TCoreCollection, bool>();
@@ -147,6 +362,10 @@ namespace StrixMusic.Sdk.Data.Merged
                             if (await trackCollection.IsAddTrackSupported(index))
                                 await trackCollection.AddTrackAsync((ICoreTrack)source, mappedData.OriginalIndex);
                             break;
+                        case ICoreImageCollection imageCollection:
+                            if (await imageCollection.IsAddImageSupported(index))
+                                await imageCollection.AddImageAsync((ICoreImage)source, mappedData.OriginalIndex);
+                            break;
                         default:
                             ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
                             break;
@@ -156,12 +375,14 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <summary>
-        /// Inserts an item into the compatible source collections.
+        /// Inserts an item into the compatible source collections on the backend.
         /// </summary>
         /// <param name="index">The index to place this item at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task RemoveAt(int index)
         {
+            await TryInitAsync();
+
             // Externally, the app sees non-core items as this internal collection of merged and sorted items and data.
             // When they ask for an item at an index, they're asking for an item at that index that could be merged.
             // So we go through each of the mapped sources for the item at this index and handle removing from the core side.
@@ -210,6 +431,8 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
         public async Task<bool> IsAddItemSupported(int index)
         {
+            await TryInitAsync();
+
             var sourceResults = await _mergedMappedData[index].MergedMapData
                 .InParallel(async x => await x.SourceCollection.IsAddSupported(x.OriginalIndex));
 
@@ -223,6 +446,8 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
         public async Task<bool> IsRemoveItemSupport(int index)
         {
+            await TryInitAsync();
+
             var sourceResults = await _mergedMappedData[index].MergedMapData
                 .InParallel(async x => await x.SourceCollection.IsAddSupported(x.OriginalIndex));
 
@@ -302,9 +527,9 @@ namespace StrixMusic.Sdk.Data.Merged
                     collection.Add(returnData);
                     break;
                 default:
+                    // Replace throw with this when verified that this is fully finished.
+                    // ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
                     throw new NotImplementedException();
-                    // Remove the above when this is fully finished.
-                    ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
             }
 
             return returnData;
@@ -383,6 +608,8 @@ namespace StrixMusic.Sdk.Data.Merged
                 _mergedMappedData.Add(new MergedMappedData(item.Key, item.Value));
             }
 
+            ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
+
             return returnedData;
         }
 
@@ -448,16 +675,9 @@ namespace StrixMusic.Sdk.Data.Merged
             }
         }
 
-        /// <inheritdoc />
-        /// <remarks>
-        /// Handles the internal merged map when a source is added (when one collection is merged into another)
-        /// </remarks>
-        public void AddSource(TCoreCollection itemToMerge)
+        private async Task ResetDataRanked()
         {
-            // When a new source is added, that source could be anywhere in a ranked map, or the data could be scattered or mingled arbitrarily.
-            // To keep the collection sorted by the user's preferred method
-            // We re-get all the data, which includes rebuilding the collection map 
-            // Then re-emit ALL data
+            await TryInitAsync();
 
             // TODO: Optimize this (these instruction for ranked sorting only)
             // Find where this source lies in the ranking
@@ -465,62 +685,81 @@ namespace StrixMusic.Sdk.Data.Merged
             // Get all the items from ONLY the new source 
             // "insert" these and every item that shifted from the insert
             // By firing the event with removed, then again with added
-            Task.Run(async () =>
-                {
-                    // This is assuming the data in _sortedMap is sorted by rank
-                    var previouslySortedItems = _sortedMap.ToList();
-                    var previousMergedMap = _mergedMappedData.ToList();
-                    _sortedMap.Clear();
+            var previouslySortedItems = _sortedMap.ToList();
+            var previousMergedMap = _mergedMappedData.ToList();
+            _sortedMap.Clear();
 
-                    foreach (var item in previouslySortedItems)
-                    {
-                        var i = previouslySortedItems.IndexOf(item);
+            foreach (var item in previouslySortedItems)
+            {
+                var i = previouslySortedItems.IndexOf(item);
 
-                        // If the currentSource and the previous source are the same, skip this iteration
-                        // because we get and re-emit the range of items for this source.
-                        if (i > 0 && item.SourceCollection.SourceCore == _sortedMap[i - 1].SourceCollection.SourceCore)
-                            continue;
+                // If the currentSource and the previous source are the same, skip this iteration
+                // because we get and re-emit the range of items for this source.
+                if (i > 0 && item.SourceCollection.SourceCore == _sortedMap[i - 1].SourceCollection.SourceCore)
+                    continue;
 
-                        // The items retrieved will exist in the sorted map.
-                        await GetItems(item.OriginalIndex, i);
-                    }
+                // The items retrieved will exist in the sorted map.
+                await GetItems(item.OriginalIndex, i);
+            }
 
-                    var addedItems = new List<CollectionChangedEventItem<TCollectionItem>>();
+            var addedItems = new List<CollectionChangedEventItem<TCollectionItem>>();
 
-                    // For each item that we just retrieved, find the index in the sorted map and assign the item.
-                    for (var o = 0; o < _mergedMappedData.Count; o++)
-                    {
-                        var addedItem = _mergedMappedData[o];
+            // For each item that we just retrieved, find the index in the sorted map and assign the item.
+            for (var o = 0; o < _mergedMappedData.Count; o++)
+            {
+                var addedItem = _mergedMappedData[o];
 
-                        Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
+                Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
 
-                        var x = new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
-                        addedItems.Add(x);
-                    }
+                var x = new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
+                addedItems.Add(x);
+            }
 
-                    // logic for removed was copy-pasted and tweaked from the added logic. Not checked or tested.
-                    var removedItems = new List<CollectionChangedEventItem<TCollectionItem>>();
+            // logic for removed was copy-pasted and tweaked from the added logic. Not checked or tested.
+            var removedItems = new List<CollectionChangedEventItem<TCollectionItem>>();
 
-                    for (var o = 0; o < previousMergedMap.Count; o++)
-                    {
-                        var addedItem = previousMergedMap[o];
+            for (var o = 0; o < previousMergedMap.Count; o++)
+            {
+                var addedItem = previousMergedMap[o];
 
-                        Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
+                Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
 
-                        var x = new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
-                        removedItems.Add(x);
-                    }
+                var x = new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
+                removedItems.Add(x);
+            }
 
-                    ItemsChanged?.Invoke(this, addedItems, removedItems);
-                    ItemsCountChanged?.Invoke(this, addedItems.Count);
-                }).FireAndForget();
+            ItemsChanged?.Invoke(this, addedItems, removedItems);
+            ItemsCountChanged?.Invoke(this, addedItems.Count);
         }
 
         /// <inheritdoc />
+        /// <remarks>
+        /// Handles the internal merged map when a source is added (when one collection is merged into another).
+        /// <para>
+        /// When a new source is added, that source could be anywhere in a ranked map, or the data could be scattered or mingled arbitrarily.
+        /// To keep the collection sorted by the user's preferred method
+        /// We re-get all the data, which includes rebuilding the collection map 
+        /// Then re-emit ALL data
+        /// </para>
+        /// </remarks>
+        public void AddSource(TCoreCollection itemToMerge)
+        {
+            ResetDataRanked().FireAndForget();
+        }
+
+        /// <inheritdoc />
+        public void RemoveSource(TCoreCollection itemToRemove)
+        {
+            ResetDataRanked().FireAndForget();
+        }
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// We're just here for the Merged, not the Equatable.
+        /// TSourceCollection and MergedCollectionMap have no overlap and never equal each other.
+        /// </remarks>
         public bool Equals(TCoreCollection other)
         {
-            // We're just here for the Merged, not the Equatable.
-            // TSourceCollection and MergedCollectionMap have no overlap and never equal each other.
             return false;
         }
 
@@ -545,12 +784,12 @@ namespace StrixMusic.Sdk.Data.Merged
             public MergedMappedData(IMerged<TCoreCollectionItem> collectionItem, IEnumerable<MappedData> mergedMapData)
             {
                 CollectionItem = collectionItem;
-                MergedMapData = mergedMapData;
+                MergedMapData = mergedMapData.ToList();
             }
 
             public IMerged<TCoreCollectionItem> CollectionItem { get; }
 
-            public IEnumerable<MappedData> MergedMapData { get; }
+            public List<MappedData> MergedMapData { get; }
         }
     }
 }

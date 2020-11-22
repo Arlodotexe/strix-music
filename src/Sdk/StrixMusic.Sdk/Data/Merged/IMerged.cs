@@ -14,8 +14,14 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <summary>
         /// Adds a new source to this merged item.
         /// </summary>
-        /// <param name="itemToMerge"></param>
+        /// <param name="itemToMerge">The source to remove.</param>
         void AddSource(T itemToMerge);
+
+        /// <summary>
+        /// Removes a source from the merged collection.
+        /// </summary>
+        /// <param name="itemToRemove">The source to remove.</param>
+        void RemoveSource(T itemToRemove);
 
         /// <summary>
         /// The sources that make up this merged item.
