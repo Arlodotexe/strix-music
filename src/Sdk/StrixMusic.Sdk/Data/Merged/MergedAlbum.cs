@@ -265,6 +265,12 @@ namespace StrixMusic.Sdk.Data.Merged
             return _imageCollectionMap.InsertItem(image, index);
         }
 
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index)
+        {
+            return _imageCollectionMap.RemoveAt(index);
+        }
+
         /// <inheritdoc/>
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _trackCollectionMap.GetItems(limit, offset);
 

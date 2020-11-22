@@ -41,8 +41,6 @@ namespace StrixMusic.Sdk.Data.Merged
             AttachEvents(PreferredSource);
         }
 
-
-
         private void AttachEvents(ICoreArtist preferredSource)
         {
             AttachPropertyEvents(preferredSource);
@@ -233,8 +231,6 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public bool IsChangeDurationAsyncSupported => PreferredSource.IsChangeDurationAsyncSupported;
 
-
-
         /// <inheritdoc />
         public Task<bool> IsAddTrackSupported(int index) => _trackCollectionMap.IsAddItemSupported(index);
 
@@ -317,7 +313,6 @@ namespace StrixMusic.Sdk.Data.Merged
             return PreferredSource.ChangeNameAsync(name);
         }
 
-
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
         {
@@ -328,6 +323,12 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task AddImageAsync(IImage image, int index)
         {
             return _imageCollectionMap.InsertItem(image, index);
+        }
+
+        /// <inheritdoc />
+        public async Task RemoveImageAsync(int index)
+        {
+            await _albumCollectionItemMap.RemoveAt(index);
         }
 
         /// <inheritdoc />
