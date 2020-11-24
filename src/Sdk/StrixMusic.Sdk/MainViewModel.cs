@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
@@ -18,9 +17,10 @@ namespace StrixMusic.Sdk
     /// <summary>
     /// The MainViewModel used throughout the app
     /// </summary>
-    public partial class MainViewModel : ObservableRecipient
+    public partial class MainViewModel : ObservableRecipient, IAppCore
     {
-        private readonly List<ICore> _cores = new List<ICore>();
+        private readonly List<ICore> _sources = new List<ICore>();
+        private readonly SynchronizedObservableCollection<IDevice> _devices = new SynchronizedObservableCollection<IDevice>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
@@ -30,14 +30,10 @@ namespace StrixMusic.Sdk
             Singleton = this;
 
             Devices = new SynchronizedObservableCollection<DeviceViewModel>();
-            SearchAutoComplete = new SynchronizedObservableCollection<string>();
 
             Cores = new SynchronizedObservableCollection<CoreViewModel>();
             Users = new SynchronizedObservableCollection<UserProfileViewModel>();
             PlaybackQueue = new SynchronizedObservableCollection<TrackViewModel>();
-
-            GetSearchResultsAsyncCommand = new AsyncRelayCommand<string>(GlobalSearchResultsAsync);
-            GetSearchAutoSuggestAsyncCommand = new RelayCommand<string>(GlobalSearchSuggestions);
         }
 
         /// <summary>
@@ -48,13 +44,12 @@ namespace StrixMusic.Sdk
         {
             var cores = initData.Select(x => x.core);
 
-            _cores.AddRange(cores);
+            _sources.AddRange(cores);
 
             await Cores.InParallel(x => x.DisposeAsync().AsTask());
 
             // These collections should be empty, no matter how many times the method is called.
             Devices.Clear();
-            SearchAutoComplete.Clear();
             Cores.Clear();
             Users.Clear();
             PlaybackQueue.Clear();
@@ -68,51 +63,57 @@ namespace StrixMusic.Sdk
 
                 await core.InitAsync(services);
 
-                Users.Add(new UserProfileViewModel());
+                Users.Add(new UserViewModel(new MergedUser(core.User)));
+
+                foreach (var device in core.Devices)
+                    _devices.Add(new MergedDevice(device));
             });
 
-            var mergedLibrary = new MergedLibrary(_cores.Select(x => x.Library));
-            Library = new LibraryViewModel(mergedLibrary);
+            Library = new LibraryViewModel(new MergedLibrary(_sources.Select(x => x.Library)));
 
-            var mergedRecentlyPlayed = new MergedRecentlyPlayed(_cores.Select(x => x.CoreRecentlyPlayed));
-            RecentlyPlayed = new RecentlyPlayedViewModel(mergedRecentlyPlayed);
+            RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed)));
 
-            var mergedDiscoverables = new MergedDiscoverables(_cores.Select(x => x.CoreDiscoverables));
-            Discoverables = new DiscoverablesViewModel(mergedDiscoverables);
+            Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_sources.Select(x => x.Discoverables)));
+
+            Devices = new SynchronizedObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new MergedDevice(device))));
         }
 
-        /// <summary>
-        /// Gets search suggestions from all cores and asynchronously populate it into <see cref="SearchAutoComplete"/>.
-        /// </summary>
-        /// <param name="query">The query to search for.</param>
-        public void GlobalSearchSuggestions(string query)
+        private void AttachEvents()
         {
-            SearchAutoComplete.Clear();
-
-            Parallel.ForEach(_cores, async core =>
+            foreach (var source in _sources)
             {
-                await foreach (var item in core.GetSearchAutoCompleteAsync(query))
-                {
-                    if (!SearchAutoComplete.Contains(item))
-                        SearchAutoComplete.Add(item);
-                }
-            });
+                source.Devices.CollectionChanged += Devices_CollectionChanged;
+            }
         }
 
-        /// <summary>
-        /// Performs a search on all loaded cores, and loads it into <see cref="SearchResults"/>.
-        /// </summary>
-        /// <param name="query">The query to search for.</param>
-        /// <returns>The merged search results.</returns>
-        public async Task<ICoreSearchResults> GlobalSearchResultsAsync(string query)
+        private void DetachEvents()
         {
-            var searchResults = await _cores.InParallel(core => core.GetSearchResultsAsync(query));
+            foreach (var source in _sources)
+            {
+                source.Devices.CollectionChanged -= Devices_CollectionChanged;
+            }
+        }
 
-            var merged = new MergedSearchResults(searchResults);
+        private void Devices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            foreach (var item in e.NewItems)
+            {
+                if (item is IDevice device)
+                {
+                    _devices.Add(device);
+                    Devices.Add(new DeviceViewModel(device));
+                }
+            }
 
-            SearchResults = new SearchResultsViewModel(merged);
-
-            return merged;
+            foreach (var item in e.OldItems)
+            {
+                if (item is IDevice device)
+                {
+                    _devices.Remove(device);
+                    var vmToRemove = Devices.FirstOrDefault(x => x.Id == device.Id && x.Name == device.Name);
+                    Devices.Remove(vmToRemove);
+                }
+            }
         }
 
         /// <summary>
@@ -138,7 +139,22 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// All available devices.
         /// </summary>
-        public SynchronizedObservableCollection<DeviceViewModel> Devices { get; }
+        public SynchronizedObservableCollection<DeviceViewModel> Devices { get; private set; }
+
+        /// <inheritdoc />
+        SynchronizedObservableCollection<IDevice> IAppCore.Devices => _devices;
+
+        /// <inheritdoc />
+        ILibrary IAppCore.Library { get; } = null!;
+
+        /// <inheritdoc />
+        public IPlayableCollectionGroup Pins { get; } = null!;
+
+        /// <inheritdoc />
+        IRecentlyPlayed IAppCore.RecentlyPlayed { get; } = null!;
+
+        /// <inheritdoc />
+        IDiscoverables IAppCore.Discoverables { get; } = null!;
 
         /// <summary>
         /// Gets the active device in <see cref="Devices"/>.
@@ -166,28 +182,14 @@ namespace StrixMusic.Sdk
         public DiscoverablesViewModel? Discoverables { get; private set; }
 
         /// <summary>
-        /// Gets search results for a query.
-        /// </summary>
-        public IAsyncRelayCommand<string> GetSearchResultsAsyncCommand { get; }
-
-        /// <summary>
-        /// Gets autocomplete suggestions for a search query.
-        /// </summary>
-        public IRelayCommand<string> GetSearchAutoSuggestAsyncCommand { get; }
-
-        /// <summary>
-        /// Contains search results.
-        /// </summary>
-        public SearchResultsViewModel? SearchResults { get; private set; }
-
-        /// <summary>
-        /// The autocomplete strings for the search results.
-        /// </summary>
-        public ObservableCollection<string> SearchAutoComplete { get; }
-
-        /// <summary>
         /// The current playback queue. First item plays next.
         /// </summary>
         public ObservableCollection<TrackViewModel> PlaybackQueue { get; }
+
+        /// <inheritdoc />
+        public IReadOnlyList<ICore> SourceCores => _sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICore> ISdkMember<ICore>.Sources => _sources;
     }
 }

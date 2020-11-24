@@ -8,7 +8,7 @@ using OwlCore.Collections;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions.SdkMember;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -125,9 +125,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IAlbumCollectionItem> Albums { get; set; }
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images => _collection.Images;
 
         /// <inheritdoc />
         public string Id => _collection.Id;

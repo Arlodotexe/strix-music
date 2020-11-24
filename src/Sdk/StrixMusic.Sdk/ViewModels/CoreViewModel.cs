@@ -36,9 +36,9 @@ namespace StrixMusic.Sdk.ViewModels
 
             Devices = new SynchronizedObservableCollection<ICoreDevice>(_core.Devices.Select(x => new DeviceViewModel(x)));
             Library = new LibraryViewModel(_core.Library);
-            CoreRecentlyPlayed = new RecentlyPlayedViewModel(_core.CoreRecentlyPlayed);
+            CoreRecentlyPlayed = new RecentlyPlayedViewModel(_core.RecentlyPlayed);
             Pins = new SynchronizedObservableCollection<IPlayable>(_core.Pins);
-            CoreDiscoverables = new DiscoverablesViewModel(_core.CoreDiscoverables);
+            Discoverables = new DiscoverablesViewModel(_core.Discoverables);
 
             AttachEvents();
         }
@@ -81,11 +81,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="ICore.Library" />
         public ILibraryBase Library { get; }
 
-        /// <inheritdoc cref="ICore.CoreRecentlyPlayed" />
+        /// <inheritdoc cref="ICore.RecentlyPlayed" />
         public ICoreRecentlyPlayed CoreRecentlyPlayed { get; }
 
-        /// <inheritdoc cref="ICore.CoreDiscoverables" />
-        public ICoreDiscoverables CoreDiscoverables { get; }
+        /// <inheritdoc cref="ICore.Discoverables" />
+        public ICoreDiscoverables Discoverables { get; }
 
         /// <inheritdoc cref="ICore.Pins" />
         public SynchronizedObservableCollection<IPlayable> Pins { get; }

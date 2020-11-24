@@ -1,7 +1,7 @@
 ﻿namespace StrixMusic.Sdk.Data.Base
 {
     /// <summary>
-    /// Represents search results.
+    /// Relevant items requested with a query from a core.
     /// </summary>
     public interface ISearchResultsBase : IPlayableCollectionGroupBase
     {
