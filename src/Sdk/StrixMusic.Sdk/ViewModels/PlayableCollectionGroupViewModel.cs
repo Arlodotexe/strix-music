@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
@@ -42,42 +44,60 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
+            PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
             Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
             Playlists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IPlaylistCollectionItem>());
             Albums = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IAlbumCollectionItem>());
             Artists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IArtistCollectionItem>());
             Children = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<PlayableCollectionGroupViewModel>());
+            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
 
             AttachPropertyEvents();
         }
 
         private void AttachPropertyEvents()
         {
-            _collectionGroup.PlaybackStateChanged += CollectionGroupPlaybackStateChanged;
-            _collectionGroup.DescriptionChanged += CollectionGroupDescriptionChanged;
-            _collectionGroup.NameChanged += CollectionGroupNameChanged;
-            _collectionGroup.UrlChanged += CollectionGroupUrlChanged;
+            PlaybackStateChanged += CollectionGroupPlaybackStateChanged;
+            DescriptionChanged += CollectionGroupDescriptionChanged;
+            NameChanged += CollectionGroupNameChanged;
+            UrlChanged += CollectionGroupUrlChanged;
 
-            _collectionGroup.AlbumItemsCountChanged += CollectionGroupOnAlbumItemsCountChanged;
-            _collectionGroup.TrackItemsCountChanged += CollectionGroupOnTrackItemsCountChanged;
-            _collectionGroup.ArtistItemsCountChanged += CollectionGroupOnArtistItemsCountChanged;
-            _collectionGroup.PlaylistItemsCountChanged += CollectionGroupOnPlaylistItemsCountChanged;
-            _collectionGroup.TotalChildrenCountChanged += CollectionGroupOnTotalChildrenCountChanged;
+            AlbumItemsCountChanged += CollectionGroupOnAlbumItemsCountChanged;
+            TrackItemsCountChanged += CollectionGroupOnTrackItemsCountChanged;
+            ArtistItemsCountChanged += CollectionGroupOnArtistItemsCountChanged;
+            PlaylistItemsCountChanged += CollectionGroupOnPlaylistItemsCountChanged;
+            TotalChildrenCountChanged += CollectionGroupOnTotalChildrenCountChanged;
+            ImagesCountChanged += PlayableCollectionGroupViewModel_ImagesCountChanged;
+
+            AlbumItemsChanged += PlayableCollectionGroupViewModel_AlbumItemsChanged;
+            TrackItemsChanged += PlayableCollectionGroupViewModel_TrackItemsChanged;
+            ArtistItemsChanged += PlayableCollectionGroupViewModel_ArtistItemsChanged;
+            PlaylistItemsChanged += PlayableCollectionGroupViewModel_PlaylistItemsChanged;
+            ChildItemsChanged += PlayableCollectionGroupViewModel_ChildItemsChanged;
+            ImagesChanged += PlayableCollectionGroupViewModel_ImagesChanged;
         }
 
         private void DetachPropertyEvents()
         {
-            _collectionGroup.PlaybackStateChanged -= CollectionGroupPlaybackStateChanged;
-            _collectionGroup.DescriptionChanged -= CollectionGroupDescriptionChanged;
-            _collectionGroup.NameChanged -= CollectionGroupNameChanged;
-            _collectionGroup.UrlChanged -= CollectionGroupUrlChanged;
+            PlaybackStateChanged -= CollectionGroupPlaybackStateChanged;
+            DescriptionChanged -= CollectionGroupDescriptionChanged;
+            NameChanged -= CollectionGroupNameChanged;
+            UrlChanged -= CollectionGroupUrlChanged;
 
-            _collectionGroup.AlbumItemsCountChanged -= CollectionGroupOnAlbumItemsCountChanged;
-            _collectionGroup.TrackItemsCountChanged -= CollectionGroupOnTrackItemsCountChanged;
-            _collectionGroup.ArtistItemsCountChanged -= CollectionGroupOnArtistItemsCountChanged;
-            _collectionGroup.PlaylistItemsCountChanged -= CollectionGroupOnPlaylistItemsCountChanged;
-            _collectionGroup.TotalChildrenCountChanged -= CollectionGroupOnTotalChildrenCountChanged;
+            AlbumItemsCountChanged -= CollectionGroupOnAlbumItemsCountChanged;
+            TrackItemsCountChanged -= CollectionGroupOnTrackItemsCountChanged;
+            ArtistItemsCountChanged -= CollectionGroupOnArtistItemsCountChanged;
+            PlaylistItemsCountChanged -= CollectionGroupOnPlaylistItemsCountChanged;
+            TotalChildrenCountChanged -= CollectionGroupOnTotalChildrenCountChanged;
+            ImagesCountChanged += PlayableCollectionGroupViewModel_ImagesCountChanged;
+
+            AlbumItemsChanged -= PlayableCollectionGroupViewModel_AlbumItemsChanged;
+            TrackItemsChanged -= PlayableCollectionGroupViewModel_TrackItemsChanged;
+            ArtistItemsChanged -= PlayableCollectionGroupViewModel_ArtistItemsChanged;
+            PlaylistItemsChanged -= PlayableCollectionGroupViewModel_PlaylistItemsChanged;
+            ChildItemsChanged -= PlayableCollectionGroupViewModel_ChildItemsChanged;
+            ImagesChanged -= PlayableCollectionGroupViewModel_ImagesChanged;
         }
 
         /// <inheritdoc />
@@ -145,6 +165,55 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _collectionGroup.PlaylistItemsCountChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event EventHandler<int> ImagesCountChanged
+        {
+            add => _collectionGroup.ImagesCountChanged += value;
+            remove => _collectionGroup.ImagesCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        {
+            add => _collectionGroup.ImagesChanged += value;
+            remove => _collectionGroup.ImagesChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IPlaylistCollectionItem> PlaylistItemsChanged
+        {
+            add => _collectionGroup.PlaylistItemsChanged += value;
+            remove => _collectionGroup.PlaylistItemsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ITrack> TrackItemsChanged
+        {
+            add => _collectionGroup.TrackItemsChanged += value;
+            remove => _collectionGroup.TrackItemsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IAlbumCollectionItem> AlbumItemsChanged
+        {
+            add => _collectionGroup.AlbumItemsChanged += value;
+            remove => _collectionGroup.AlbumItemsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IArtistCollectionItem> ArtistItemsChanged
+        {
+            add => _collectionGroup.ArtistItemsChanged += value;
+            remove => _collectionGroup.ArtistItemsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IPlayableCollectionGroup> ChildItemsChanged
+        {
+            add => _collectionGroup.ChildItemsChanged += value;
+            remove => _collectionGroup.ChildItemsChanged -= value;
+        }
+
         private void CollectionGroupUrlChanged(object sender, Uri? e) => Url = e;
 
         private void CollectionGroupNameChanged(object sender, string e) => Name = e;
@@ -162,6 +231,125 @@ namespace StrixMusic.Sdk.ViewModels
         private void CollectionGroupOnTrackItemsCountChanged(object sender, int e) => TotalTracksCount = e;
 
         private void CollectionGroupOnAlbumItemsCountChanged(object sender, int e) => TotalAlbumItemsCount = e;
+
+        private void PlayableCollectionGroupViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+
+        private void PlayableCollectionGroupViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                Images.Insert(item.Index, item.Data);
+            }
+
+            foreach (var item in removedItems)
+            {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
+                Images.RemoveAt(item.Index);
+            }
+        }
+
+        private void PlayableCollectionGroupViewModel_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IPlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedEventItem<IPlayableCollectionGroup>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                Children.Insert(item.Index, new PlayableCollectionGroupViewModel(item.Data));
+            }
+
+            foreach (var item in removedItems)
+            {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IPlayableCollectionGroup>)Children, nameof(Children));
+                Tracks.RemoveAt(item.Index);
+            }
+        }
+
+        private void PlayableCollectionGroupViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IPlaylistCollectionItem>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                switch (item.Data)
+                {
+                    case IArtist artist:
+                        Artists.Insert(item.Index, new ArtistViewModel(artist));
+                        break;
+                    case IArtistCollection collection:
+                        Artists.Insert(item.Index, new ArtistCollectionViewModel(collection));
+                        break;
+                    default:
+                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
+                        break;
+                }
+            }
+
+            foreach (var item in removedItems)
+            {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IArtistCollectionItem>)Artists, nameof(Artists));
+                Artists.RemoveAt(item.Index);
+            }
+        }
+
+        private void PlayableCollectionGroupViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                switch (item.Data)
+                {
+                    case IArtist artist:
+                        Artists.Insert(item.Index, new ArtistViewModel(artist));
+                        break;
+                    case IArtistCollection collection:
+                        Artists.Insert(item.Index, new ArtistCollectionViewModel(collection));
+                        break;
+                    default:
+                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
+                        break;
+                }
+            }
+
+            foreach (var item in removedItems)
+            {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IArtistCollectionItem>)Artists, nameof(Artists));
+                Artists.RemoveAt(item.Index);
+            }
+        }
+
+        private void PlayableCollectionGroupViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                Tracks.Insert(item.Index, new TrackViewModel(item.Data));
+            }
+
+            foreach (var item in removedItems)
+            {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
+                Tracks.RemoveAt(item.Index);
+            }
+        }
+
+        private void PlayableCollectionGroupViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                switch (item.Data)
+                {
+                    case IAlbum album:
+                        Albums.Insert(item.Index, new AlbumViewModel(album));
+                        break;
+                    case IAlbumCollection collection:
+                        Albums.Insert(item.Index, new AlbumCollectionViewModel(collection));
+                        break;
+                    default:
+                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
+                        break;
+                }
+            }
+
+            foreach (var item in removedItems)
+            {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IAlbumCollectionItem>)Albums, nameof(Albums));
+                Albums.RemoveAt(item.Index);
+            }
+        }
 
         /// <inheritdoc />
         public string Id => _collectionGroup.Id;
@@ -208,7 +396,7 @@ namespace StrixMusic.Sdk.ViewModels
         public TimeSpan Duration => _collectionGroup.Duration;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images => _collectionGroup.Images;
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IPlaylistCollectionItem> Playlists { get; }
@@ -269,6 +457,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             get => _collectionGroup.TotalChildrenCount;
             private set => SetProperty(() => _collectionGroup.TotalChildrenCount, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalImageCount
+        {
+            get => _collectionGroup.TotalImageCount;
+            private set => SetProperty(() => _collectionGroup.TotalImageCount, value);
         }
 
         /// <inheritdoc />
@@ -411,6 +606,15 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _collectionGroup.GetArtistItemsAsync(limit, offset);
 
         /// <inheritdoc />
+        public Task RemoveImageAsync(int index) => _collectionGroup.RemoveImageAsync(index);
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _collectionGroup.GetImagesAsync(limit, offset);
+
+        /// <inheritdoc />
+        public Task AddImageAsync(IImage image, int index) => _collectionGroup.AddImageAsync(image, index);
+
+        /// <inheritdoc />
         public async Task PopulateMorePlaylistsAsync(int limit)
         {
             foreach (var item in await _collectionGroup.GetPlaylistItemsAsync(limit, Playlists.Count))
@@ -479,6 +683,15 @@ namespace StrixMusic.Sdk.ViewModels
             }
         }
 
+        /// <inheritdoc />
+        public async Task PopulateMoreImagesAsync(int limit)
+        {
+            foreach (var item in await _collectionGroup.GetImagesAsync(limit, Images.Count))
+            {
+                Images.Add(item);
+            }
+        }
+
         /// <summary>
         /// Attempts to play the album.
         /// </summary>
@@ -518,5 +731,8 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreChildrenCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
     }
 }
