@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
+using OwlCore.Events;
+using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -15,7 +18,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A bindable wrapper for <see cref="IPlaylist"/>.
     /// </summary>
-    public class PlaylistViewModel : ObservableObject, IPlaylist, ITrackCollectionViewModel
+    public class PlaylistViewModel : ObservableObject, IPlaylist, ITrackCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IPlaylist _playlist;
 
@@ -29,12 +32,17 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _playlist = playlist ?? throw new ArgumentNullException(nameof(playlist));
 
+            SourceCores = playlist.GetSourceCores<ICorePlaylist>().Select(MainViewModel.GetLoadedCore).ToList();
+
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
+
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
+            PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
             if (_playlist.Owner != null)
                 _owner = new UserProfileViewModel(_playlist.Owner);
@@ -42,30 +50,36 @@ namespace StrixMusic.Sdk.ViewModels
             if (_playlist.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(_playlist.RelatedItems);
 
-            Tracks = new SynchronizedObservableCollection<TrackViewModel>();
-            Images = new SynchronizedObservableCollection<IImage>();
-
-            SourceCores = playlist.GetSourceCores<ICorePlaylist>().Select(MainViewModel.GetLoadedCore).ToList();
+            Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
+            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
 
             AttachEvents();
         }
 
         private void AttachEvents()
         {
-            _playlist.DescriptionChanged += CorePlaylistDescriptionChanged;
-            _playlist.NameChanged += CorePlaylistNameChanged;
-            _playlist.PlaybackStateChanged += CorePlaylistPlaybackStateChanged;
-            _playlist.UrlChanged += CorePlaylistUrlChanged;
-            _playlist.TrackItemsCountChanged += PlaylistOnTrackItemsCountChanged;
+            DescriptionChanged += CorePlaylistDescriptionChanged;
+            NameChanged += CorePlaylistNameChanged;
+            PlaybackStateChanged += CorePlaylistPlaybackStateChanged;
+            UrlChanged += CorePlaylistUrlChanged;
+
+            TrackItemsCountChanged += PlaylistOnTrackItemsCountChanged;
+            TrackItemsChanged += PlaylistViewModel_TrackItemsChanged;
+            ImagesCountChanged += PlaylistViewModel_ImagesCountChanged;
+            ImagesChanged += PlaylistViewModel_ImagesChanged;
         }
 
         private void DetachEvents()
         {
-            _playlist.DescriptionChanged -= CorePlaylistDescriptionChanged;
-            _playlist.NameChanged -= CorePlaylistNameChanged;
-            _playlist.PlaybackStateChanged -= CorePlaylistPlaybackStateChanged;
-            _playlist.UrlChanged -= CorePlaylistUrlChanged;
-            _playlist.TrackItemsCountChanged -= PlaylistOnTrackItemsCountChanged;
+            DescriptionChanged -= CorePlaylistDescriptionChanged;
+            NameChanged -= CorePlaylistNameChanged;
+            PlaybackStateChanged -= CorePlaylistPlaybackStateChanged;
+            UrlChanged -= CorePlaylistUrlChanged;
+
+            TrackItemsCountChanged -= PlaylistOnTrackItemsCountChanged;
+            TrackItemsChanged -= PlaylistViewModel_TrackItemsChanged;
+            ImagesCountChanged -= PlaylistViewModel_ImagesCountChanged;
+            ImagesChanged -= PlaylistViewModel_ImagesChanged;
         }
 
         /// <inheritdoc />
@@ -114,6 +128,27 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _playlist.TrackItemsCountChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event EventHandler<int> ImagesCountChanged
+        {
+            add => _playlist.ImagesCountChanged += value;
+            remove => _playlist.ImagesCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        {
+            add => _playlist.ImagesChanged += value;
+            remove => _playlist.ImagesChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ITrack> TrackItemsChanged
+        {
+            add => _playlist.TrackItemsChanged += value;
+            remove => _playlist.TrackItemsChanged -= value;
+        }
+
         private void CorePlaylistUrlChanged(object sender, Uri? e) => Url = e;
 
         private void CorePlaylistPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
@@ -123,6 +158,36 @@ namespace StrixMusic.Sdk.ViewModels
         private void CorePlaylistDescriptionChanged(object sender, string? e) => Description = e;
 
         private void PlaylistOnTrackItemsCountChanged(object sender, int e) => TotalTracksCount = e;
+
+        private void PlaylistViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+
+        private void PlaylistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                Images.Insert(item.Index, item.Data);
+            }
+
+            foreach (var item in removedItems)
+            {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
+                Images.RemoveAt(item.Index);
+            }
+        }
+
+        private void PlaylistViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                Tracks.Insert(item.Index, new TrackViewModel(item.Data));
+            }
+
+            foreach (var item in removedItems)
+            {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
+                Tracks.RemoveAt(item.Index);
+            }
+        }
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
@@ -189,13 +254,6 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public int TotalTracksCount
-        {
-            get => _playlist.TotalTracksCount;
-            set => SetProperty(() => _playlist.TotalTracksCount, value);
-        }
-
-        /// <inheritdoc />
         public string? Description
         {
             get => _playlist.Description;
@@ -207,6 +265,20 @@ namespace StrixMusic.Sdk.ViewModels
         {
             get => _playlist.PlaybackState;
             set => SetProperty(() => _playlist.PlaybackState, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalTracksCount
+        {
+            get => _playlist.TotalTracksCount;
+            set => SetProperty(() => _playlist.TotalTracksCount, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalImageCount
+        {
+            get => _playlist.TotalImageCount;
+            set => SetProperty(() => _playlist.TotalImageCount, value);
         }
 
         /// <inheritdoc />
@@ -261,6 +333,21 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset = 0) => _playlist.GetTracksAsync(limit, offset);
 
         /// <inheritdoc />
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _playlist.GetImagesAsync(limit, offset);
+
+        /// <inheritdoc />
+        public Task AddTrackAsync(ITrack track, int index) => _playlist.AddTrackAsync(track, index);
+
+        /// <inheritdoc />
+        public Task RemoveTrackAsync(int index) => _playlist.RemoveTrackAsync(index);
+
+        /// <inheritdoc />
+        public Task AddImageAsync(IImage image, int index) => _playlist.AddImageAsync(image, index);
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index) => _playlist.RemoveImageAsync(index);
+
+        /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
             foreach (var item in await _playlist.GetTracksAsync(limit, Tracks.Count))
@@ -272,10 +359,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ITrack track, int index) => _playlist.AddTrackAsync(track, index);
-
-        /// <inheritdoc />
-        public Task RemoveTrackAsync(int index) => _playlist.RemoveTrackAsync(index);
+        public async Task PopulateMoreImagesAsync(int limit)
+        {
+            foreach (var item in await _playlist.GetImagesAsync(limit, Images.Count))
+            {
+                Images.Add(item);
+            }
+        }
 
         /// <summary>
         /// Attempts to play the playlist.
@@ -304,5 +394,8 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
     }
 }

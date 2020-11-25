@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A wrapper for <see cref="ICoreArtistCollection"/> that contains props and methods for a ViewModel.
     /// </summary>
-    public class PlaylistCollectionViewModel : ObservableObject, IPlaylistCollectionViewModel
+    public class PlaylistCollectionViewModel : ObservableObject, IPlaylistCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IPlaylistCollection _collection;
 

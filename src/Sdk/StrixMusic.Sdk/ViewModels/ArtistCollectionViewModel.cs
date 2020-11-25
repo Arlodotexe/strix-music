@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A wrapper for <see cref="ICoreArtistCollection"/> that contains props and methods for a ViewModel.
     /// </summary>
-    public class ArtistCollectionViewModel : ObservableObject, IArtistCollectionViewModel
+    public class ArtistCollectionViewModel : ObservableObject, IArtistCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IArtistCollection _collection;
 
@@ -30,10 +30,11 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _collection = collection ?? throw new ArgumentNullException(nameof(collection));
 
+            SourceCores = collection.GetSourceCores<ICoreArtistCollection>().Select(MainViewModel.GetLoadedCore).ToList();
+
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
-
-            SourceCores = collection.GetSourceCores<ICoreArtistCollection>().Select(MainViewModel.GetLoadedCore).ToList();
+            
             Artists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IArtistCollectionItem>());
             Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
 

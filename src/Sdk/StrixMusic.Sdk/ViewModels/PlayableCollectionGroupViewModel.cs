@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// An observable wrapper for a <see cref="IPlayableCollectionGroupBase"/>.
     /// </summary>
-    public class PlayableCollectionGroupViewModel : ObservableObject, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel
+    public class PlayableCollectionGroupViewModel : ObservableObject, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IPlayableCollectionGroup _collectionGroup;
 
