@@ -32,7 +32,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             SourceCores = device.GetSourceCores().Select(MainViewModel.GetLoadedCore).ToList();
 
-            PlaybackQueue = new TrackCollectionViewModel(Model.PlaybackQueue);
+            if (Model.PlaybackQueue != null)
+                PlaybackQueue = new TrackCollectionViewModel(Model.PlaybackQueue);
 
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
@@ -91,7 +92,7 @@ namespace StrixMusic.Sdk.ViewModels
         private void Device_NowPlayingChanged(object sender, ITrack e) => NowPlaying = new TrackViewModel(e);
 
         private void Device_IsActiveChanged(object sender, bool e) => IsActive = e;
-        
+
         /// <summary>
         /// The wrapped model for this <see cref="DeviceViewModel"/>.
         /// </summary>
@@ -118,7 +119,7 @@ namespace StrixMusic.Sdk.ViewModels
         public DeviceType Type => Model.Type;
 
         /// <inheritdoc />
-        public ITrackCollection PlaybackQueue { get; }
+        public ITrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc />
         public bool IsActive

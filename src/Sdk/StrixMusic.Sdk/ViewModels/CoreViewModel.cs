@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.Collections;
+using OwlCore.Extensions;
+using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -32,13 +33,10 @@ namespace StrixMusic.Sdk.ViewModels
 
             MainViewModel.Singleton?.Cores.Add(this);
 
-            // TODO: Create merged items
-
-            Devices = new SynchronizedObservableCollection<ICoreDevice>(_core.Devices.Select(x => new DeviceViewModel(x)));
-            Library = new LibraryViewModel(_core.Library);
-            CoreRecentlyPlayed = new RecentlyPlayedViewModel(_core.RecentlyPlayed);
-            Pins = new SynchronizedObservableCollection<IPlayable>(_core.Pins);
-            Discoverables = new DiscoverablesViewModel(_core.Discoverables);
+            Library = new LibraryViewModel(new MergedLibrary(_core.Library.IntoList()));
+            RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_core.RecentlyPlayed.IntoList()));
+            Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_core.Discoverables.IntoList()));
+            Pins = new PlayableCollectionGroupViewModel(new MergedPlayableCollectionGroup(_core.Pins.IntoList()));
 
             AttachEvents();
         }
@@ -76,27 +74,33 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
+        public SynchronizedObservableCollection<ICoreDevice> Devices => _core.Devices;
 
         /// <inheritdoc cref="ICore.Library" />
-        public ILibraryBase Library { get; }
+        ICoreLibrary ICore.Library => _core.Library;
+
+        /// <inheritdoc cref="LibraryViewModel"/>
+        public LibraryViewModel Library { get; }
 
         /// <inheritdoc cref="ICore.RecentlyPlayed" />
-        public ICoreRecentlyPlayed CoreRecentlyPlayed { get; }
+        ICoreRecentlyPlayed ICore.RecentlyPlayed => _core.RecentlyPlayed;
+
+        /// <inheritdoc cref="RecentlyPlayed"/>
+        public RecentlyPlayedViewModel RecentlyPlayed { get; }
 
         /// <inheritdoc cref="ICore.Discoverables" />
-        public ICoreDiscoverables Discoverables { get; }
+        ICoreDiscoverables ICore.Discoverables => _core.Discoverables;
+        
+        /// <inheritdoc cref="DiscoverablesViewModel" />
+        public DiscoverablesViewModel Discoverables { get; }
 
         /// <inheritdoc cref="ICore.Pins" />
-        public SynchronizedObservableCollection<IPlayable> Pins { get; }
+        ICorePlayableCollectionGroup ICore.Pins => _core.Pins;
 
-        /// <inheritdoc cref="ICore.GetSearchAutoCompleteAsync" />
-        public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query) => _core.GetSearchAutoCompleteAsync(query);
+        /// <inheritdoc cref="ICore.Pins" />
+        public PlayableCollectionGroupViewModel Pins { get; }
 
-        /// <inheritdoc cref="ICore.GetSearchResultsAsync" />
-        public Task<ICoreSearchResults> GetSearchResultsAsync(string query) => _core.GetSearchResultsAsync(query);
-
-        /// <inheritdoc cref="ICore.InitAsync" />
+        /// <inheritdoc cref="IAsyncInit.InitAsync" />
         public Task InitAsync(IServiceCollection services) => _core.InitAsync(services);
 
         /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
@@ -106,14 +110,8 @@ namespace StrixMusic.Sdk.ViewModels
             DetachEvents();
         }
 
-        /// <inheritdoc />
-        public Task<bool> IsAddPinSupported(int index) => _core.IsAddPinSupported(index);
-
-        /// <inheritdoc />
-        public Task<bool> IsRemovePinSupported(int index) => _core.IsRemovePinSupported(index);
-
         /// <inheritdoc/>
-        public IAsyncEnumerable<object?> GetContextById(string id) => _core.GetContextById(id);
+        public IAsyncEnumerable<ICoreMember> GetContextById(string id) => _core.GetContextById(id);
 
         /// <inheritdoc />
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track) => _core.GetMediaSource(track);
@@ -124,6 +122,15 @@ namespace StrixMusic.Sdk.ViewModels
             add => _core.CoreStateChanged += value;
 
             remove => _core.CoreStateChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public ICore SourceCore => _core.SourceCore;
+
+        /// <inheritdoc />
+        public Task InitAsync()
+        {
+            return _core.InitAsync();
         }
     }
 }

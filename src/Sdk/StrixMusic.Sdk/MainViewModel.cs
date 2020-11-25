@@ -76,6 +76,8 @@ namespace StrixMusic.Sdk
             Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_sources.Select(x => x.Discoverables)));
 
             Devices = new SynchronizedObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new MergedDevice(device))));
+
+            AttachEvents();
         }
 
         private void AttachEvents()
