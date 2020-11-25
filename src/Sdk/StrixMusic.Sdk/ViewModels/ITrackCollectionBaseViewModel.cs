@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
+using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -16,13 +17,28 @@ namespace StrixMusic.Sdk.ViewModels
         public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }
 
         /// <summary>
+        /// The tracks in this collection.
+        /// </summary>
+        public SynchronizedObservableCollection<IImage> Images { get; }
+
+        /// <summary>
         /// Populates the next set of tracks into the collection.
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PopulateMoreTracksAsync(int limit);
 
+        /// <summary>
+        /// Populates the next set of images into the collection.
+        /// </summary>
+        /// <param name="limit">The number of items to load.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task PopulateMoreImagesAsync(int limit);
+
         /// <inheritdoc cref="PopulateMoreTracksAsync" />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
+
+        /// <inheritdoc cref="PopulateMoreImagesAsync" />
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
     }
 }

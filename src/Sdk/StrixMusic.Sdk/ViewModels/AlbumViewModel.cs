@@ -6,9 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
+using OwlCore.Events;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions.SdkMember;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Services.MediaPlayback;
@@ -36,7 +37,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             _playbackHandler = Ioc.Default.GetService<IPlaybackHandlerService>();
 
-            Images = new SynchronizedObservableCollection<IImage>(_album.Images);
+            Images = new SynchronizedObservableCollection<IImage>();
             Tracks = new SynchronizedObservableCollection<TrackViewModel>();
 
             if (_album.RelatedItems != null)
@@ -50,27 +51,35 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
+            PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
             AttachEvents();
         }
 
         private void AttachEvents()
         {
-            _album.PlaybackStateChanged += AlbumPlaybackStateChanged;
-            _album.DescriptionChanged += AlbumDescriptionChanged;
-            _album.DatePublishedChanged += AlbumDatePublishedChanged;
-            _album.NameChanged += AlbumNameChanged;
-            _album.UrlChanged += AlbumUrlChanged;
-            _album.TrackItemsCountChanged += AlbumOnTrackItemsCountChanged;
+            PlaybackStateChanged += AlbumPlaybackStateChanged;
+            DescriptionChanged += AlbumDescriptionChanged;
+            DatePublishedChanged += AlbumDatePublishedChanged;
+            NameChanged += AlbumNameChanged;
+            UrlChanged += AlbumUrlChanged;
+            TrackItemsCountChanged += AlbumOnTrackItemsCountChanged;
+            TrackItemsChanged += AlbumViewModel_TrackItemsChanged;
+            ImagesCountChanged += AlbumViewModel_ImagesCountChanged;
+            ImagesChanged += AlbumViewModel_ImagesChanged;
         }
 
         private void DetachEvents()
         {
-            _album.PlaybackStateChanged -= AlbumPlaybackStateChanged;
-            _album.DescriptionChanged -= AlbumDescriptionChanged;
-            _album.DatePublishedChanged -= AlbumDatePublishedChanged;
-            _album.NameChanged -= AlbumNameChanged;
-            _album.UrlChanged -= AlbumUrlChanged;
+            PlaybackStateChanged -= AlbumPlaybackStateChanged;
+            DescriptionChanged -= AlbumDescriptionChanged;
+            DatePublishedChanged -= AlbumDatePublishedChanged;
+            NameChanged -= AlbumNameChanged;
+            UrlChanged -= AlbumUrlChanged;
+            TrackItemsCountChanged += AlbumOnTrackItemsCountChanged;
+            TrackItemsChanged -= AlbumViewModel_TrackItemsChanged;
+            ImagesCountChanged -= AlbumViewModel_ImagesCountChanged;
+            ImagesChanged -= AlbumViewModel_ImagesChanged;
         }
 
         /// <inheritdoc />
@@ -129,6 +138,30 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _album.TrackItemsCountChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ITrack> TrackItemsChanged
+        {
+            add => _album.TrackItemsChanged += value;
+
+            remove => _album.TrackItemsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        {
+            add => _album.ImagesChanged += value;
+
+            remove => _album.ImagesChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int> ImagesCountChanged
+        {
+            add => _album.ImagesCountChanged += value;
+
+            remove => _album.ImagesCountChanged -= value;
+        }
+
         private void AlbumUrlChanged(object sender, Uri? e) => Url = e;
 
         private void AlbumNameChanged(object sender, string e) => Name = e;
@@ -140,6 +173,34 @@ namespace StrixMusic.Sdk.ViewModels
         private void AlbumDatePublishedChanged(object sender, DateTime? e) => DatePublished = e;
 
         private void AlbumOnTrackItemsCountChanged(object sender, int e) => TotalTracksCount = e;
+
+        private void AlbumViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+
+        private void AlbumViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                Tracks.Insert(item.Index, new TrackViewModel(item.Data));
+            }
+
+            foreach (var item in removedItems)
+            {
+                Tracks.RemoveAt(item.Index);
+            }
+        }
+
+        private void AlbumViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                Images.Insert(item.Index, item.Data);
+            }
+
+            foreach (var item in removedItems)
+            {
+                Images.RemoveAt(item.Index);
+            }
+        }
 
         /// <inheritdoc />
         public string Id => _album.Id;
@@ -194,6 +255,13 @@ namespace StrixMusic.Sdk.ViewModels
         public int TotalTracksCount
         {
             get => _album.TotalTracksCount;
+            private set => SetProperty(() => _album.TotalTracksCount, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalImageCount
+        {
+            get => _album.TotalImageCount;
             private set => SetProperty(() => _album.TotalTracksCount, value);
         }
 
@@ -385,6 +453,36 @@ namespace StrixMusic.Sdk.ViewModels
         {
             return _album.RemoveTrackAsync(index);
         }
+
+        /// <inheritdoc />
+        public Task AddImageAsync(IImage image, int index)
+        {
+            return _album.AddImageAsync(image, index);
+        }
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index)
+        {
+            return _album.RemoveImageAsync(index);
+        }
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
+        {
+            return _album.GetImagesAsync(limit, offset);
+        }
+
+        /// <inheritdoc />
+        public async Task PopulateMoreImagesAsync(int limit)
+        {
+            foreach (var item in await _album.GetImagesAsync(limit, Images.Count))
+            {
+                Images.Add(item);
+            }
+        }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
