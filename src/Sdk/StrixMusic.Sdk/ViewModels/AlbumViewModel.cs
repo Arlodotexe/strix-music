@@ -7,6 +7,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using OwlCore.Events;
+using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -37,8 +38,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             _playbackHandler = Ioc.Default.GetService<IPlaybackHandlerService>();
 
-            Images = new SynchronizedObservableCollection<IImage>();
-            Tracks = new SynchronizedObservableCollection<TrackViewModel>();
+            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
+            Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
 
             if (_album.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(_album.RelatedItems);

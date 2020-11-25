@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions.SdkMember;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -29,9 +31,11 @@ namespace StrixMusic.Sdk.ViewModels
             _collection = collection ?? throw new ArgumentNullException(nameof(collection));
 
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
+            PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
             SourceCores = collection.GetSourceCores<ICoreArtistCollection>().Select(MainViewModel.GetLoadedCore).ToList();
             Artists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IArtistCollectionItem>());
+            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
 
             AttachEvents();
         }
@@ -43,9 +47,10 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged += OnDescriptionChanged;
             UrlChanged += OnUrlChanged;
             ArtistItemsCountChanged += OnArtistItemsCountChanged;
+            ArtistItemsChanged += ArtistCollectionViewModel_ArtistItemsChanged;
+            ImagesCountChanged += ArtistCollectionViewModel_ImagesCountChanged;
+            ImagesChanged += ArtistCollectionViewModel_ImagesChanged;
         }
-
-        private void OnArtistItemsCountChanged(object sender, int e) => TotalArtistItemsCount = e;
 
         private void DetachEvents()
         {
@@ -63,6 +68,48 @@ namespace StrixMusic.Sdk.ViewModels
         private void OnDescriptionChanged(object sender, string? e) => Description = e;
 
         private void OnPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+
+        private void ArtistCollectionViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+
+        private void OnArtistItemsCountChanged(object sender, int e) => TotalArtistItemsCount = e;
+
+        private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                Images.Insert(item.Index, item.Data);
+            }
+
+            foreach (var item in removedItems)
+            {
+                Images.RemoveAt(item.Index);
+            }
+        }
+
+        private void ArtistCollectionViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                switch (item.Data)
+                {
+                    case IArtist artist:
+                        Artists.Insert(item.Index, new ArtistViewModel(artist));
+                        break;
+                    case IArtistCollection collection:
+                        Artists.Insert(item.Index, new ArtistCollectionViewModel(collection));
+                        break;
+                    default:
+                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not a supported artist item for {nameof(ArtistCollectionViewModel)}");
+                        break;
+                }
+            }
+
+            foreach (var item in removedItems)
+            {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IArtistCollectionItem>)Artists, nameof(Artists));
+                Artists.RemoveAt(item.Index);
+            }
+        }
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState> PlaybackStateChanged
@@ -104,6 +151,27 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _collection.ArtistItemsCountChanged += value;
             remove => _collection.ArtistItemsCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IArtistCollectionItem> ArtistItemsChanged
+        {
+            add => _collection.ArtistItemsChanged += value;
+            remove => _collection.ArtistItemsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        {
+            add => _collection.ImagesChanged += value;
+            remove => _collection.ImagesChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int> ImagesCountChanged
+        {
+            add => _collection.ImagesCountChanged += value;
+            remove => _collection.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc />
@@ -167,6 +235,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public int TotalImageCount
+        {
+            get => _collection.TotalImageCount;
+            set => SetProperty(() => _collection.TotalImageCount, value);
+        }
+
+        /// <inheritdoc />
         public Task PlayAsync()
         {
             return _collection.PlayAsync();
@@ -208,7 +283,7 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images => _collection.Images;
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public Task<bool> IsAddArtistSupported(int index) => _collection.IsAddArtistSupported(index);
@@ -244,12 +319,33 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public async Task PopulateMoreImagesAsync(int limit)
+        {
+            foreach (var item in await _collection.GetImagesAsync(limit, Images.Count))
+            {
+                Images.Add(item);
+            }
+        }
+
+        /// <inheritdoc />
         public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _collection.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
         public Task RemoveArtistAsync(int index) => _collection.RemoveArtistAsync(index);
 
         /// <inheritdoc />
+        public Task RemoveImageAsync(int index) => _collection.RemoveImageAsync(index);
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _collection.GetImagesAsync(limit, offset);
+
+        /// <inheritdoc />
+        public Task AddImageAsync(IImage image, int index) => _collection.AddImageAsync(image, index);
+
+        /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
     }
 }

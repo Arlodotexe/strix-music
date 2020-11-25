@@ -8,17 +8,12 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// An observable <see cref="IAlbumCollection" />
     /// </summary>
-    public interface IAlbumCollectionViewModel : IAlbumCollection
+    public interface IAlbumCollectionViewModel : IAlbumCollection, IImageCollectionViewModel
     {
         /// <summary>
         /// The albums in this collection.
         /// </summary>
         public SynchronizedObservableCollection<IAlbumCollectionItem> Albums { get; }
-
-        /// <summary>
-        /// The images in this collection.
-        /// </summary>
-        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <summary>
         /// Populates the next set of albums into the collection.
@@ -28,20 +23,8 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PopulateMoreAlbumsAsync(int limit);
 
         /// <summary>
-        /// Populates the next set of images into the collection.
-        /// </summary>
-        /// <param name="limit">The number of items to load.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task PopulateMoreImagesAsync(int limit);
-
-        /// <summary>
         /// <inheritdoc cref="PopulateMoreAlbumsAsync"/>
         /// </summary>
         public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }
-
-        /// <summary>
-        /// <inheritdoc cref="PopulateMoreImagesAsync"/>
-        /// </summary>
-        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
     }
 }
