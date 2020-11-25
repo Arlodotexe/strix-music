@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
@@ -17,7 +18,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A ViewModel for <see cref="IAlbumCollection"/>.
     /// </summary>
-    public class AlbumCollectionViewModel : ObservableObject, IAlbumCollectionViewModel
+    public class AlbumCollectionViewModel : ObservableObject, IAlbumCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IAlbumCollection _collection;
 
@@ -90,11 +91,23 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in addedItems)
             {
-                Albums.Insert(item.Index, item.Data);
+                switch (item.Data)
+                {
+                    case IAlbum album:
+                        Albums.Insert(item.Index, new AlbumViewModel(album));
+                        break;
+                    case IAlbumCollection collection:
+                        Albums.Insert(item.Index, new AlbumCollectionViewModel(collection));
+                        break;
+                    default:
+                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
+                        break;
+                }
             }
 
             foreach (var item in removedItems)
             {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IAlbumCollectionItem>)Albums, nameof(Albums));
                 Albums.RemoveAt(item.Index);
             }
         }

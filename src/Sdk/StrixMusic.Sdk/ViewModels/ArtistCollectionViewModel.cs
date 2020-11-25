@@ -82,6 +82,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             foreach (var item in removedItems)
             {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
                 Images.RemoveAt(item.Index);
             }
         }
@@ -298,8 +299,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveImageSupported(int index) => _collection.IsRemoveImageSupported(index);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) =>
-            _collection.GetArtistItemsAsync(limit, offset);
+        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _collection.GetArtistItemsAsync(limit, offset);
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)

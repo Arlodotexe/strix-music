@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
@@ -20,7 +21,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains bindable information about an <see cref="IAlbum"/>.
     /// </summary>
-    public class AlbumViewModel : MergeableObjectViewModel<IAlbum>, IAlbum, ITrackCollectionViewModel
+    public class AlbumViewModel : MergeableObjectViewModel<IAlbum>, IAlbum, ITrackCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IAlbum _album;
         private readonly IPlaybackHandlerService _playbackHandler;
@@ -186,6 +187,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             foreach (var item in removedItems)
             {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
                 Tracks.RemoveAt(item.Index);
             }
         }
@@ -199,6 +201,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             foreach (var item in removedItems)
             {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
                 Images.RemoveAt(item.Index);
             }
         }

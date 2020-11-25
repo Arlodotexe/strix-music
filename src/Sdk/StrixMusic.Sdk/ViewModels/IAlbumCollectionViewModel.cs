@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// An observable <see cref="IAlbumCollection" />
     /// </summary>
-    public interface IAlbumCollectionViewModel : IAlbumCollection, IImageCollectionViewModel
+    public interface IAlbumCollectionViewModel : IAlbumCollection
     {
         /// <summary>
         /// The albums in this collection.
