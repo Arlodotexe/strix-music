@@ -50,6 +50,33 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         }
 
         /// <inheritdoc />
+        public event EventHandler<bool>? IsActiveChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<IPlayable>? PlaybackContextChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<ITrack>? NowPlayingChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? ShuffleStateChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<TimeSpan>? PositionChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<RepeatState>? RepeatStateChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<double>? VolumeChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<double>? PlaybackSpeedChanged;
+
+        /// <inheritdoc />
         public TimeSpan Position => _playbackHandler.Position;
 
         /// <inheritdoc />
@@ -78,6 +105,9 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
 
         /// <inheritdoc />
         public IReadOnlyList<ICore> SourceCores { get; } = new List<ICore>();
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreDevice> ISdkMember<ICoreDevice>.Sources { get; } = new List<ICoreDevice>();
 
         /// <inheritdoc />
         public string Id => "609EBD5A-EBA1-4DDE-9828-C72B096D35DF";
@@ -168,32 +198,5 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
 
         /// <inheritdoc />
         public Task ToggleRepeatAsync() => _playbackHandler.ToggleRepeatAsync();
-
-        /// <inheritdoc />
-        public event EventHandler<bool>? IsActiveChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<IPlayable>? PlaybackContextChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<ITrack>? NowPlayingChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<bool>? ShuffleStateChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<TimeSpan>? PositionChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<RepeatState>? RepeatStateChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<PlaybackState>? PlaybackStateChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<double>? VolumeChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<double>? PlaybackSpeedChanged;
     }
 }
