@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
@@ -29,9 +30,12 @@ namespace StrixMusic.Sdk.ViewModels
             _collection = collection ?? throw new ArgumentNullException(nameof(collection));
 
             Albums = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IAlbumCollectionItem>());
+            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
+
             SourceCores = collection.GetSourceCores<ICoreAlbumCollection>().Select(MainViewModel.GetLoadedCore).ToList();
 
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
+            PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
             AttachEvents();
         }
@@ -43,6 +47,9 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged += OnDescriptionChanged;
             UrlChanged += OnUrlChanged;
             AlbumItemsCountChanged += OnAlbumItemsCountChanged;
+            AlbumItemsChanged += AlbumCollectionViewModel_AlbumItemsChanged;
+            ImagesCountChanged += AlbumCollectionViewModel_ImagesCountChanged;
+            ImagesChanged += AlbumCollectionViewModel_ImagesChanged;
         }
 
         private void DetachEvents()
@@ -63,6 +70,34 @@ namespace StrixMusic.Sdk.ViewModels
         private void OnPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
 
         private void OnAlbumItemsCountChanged(object sender, int e) => TotalAlbumItemsCount = e;
+
+        private void AlbumCollectionViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+
+        private void AlbumCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                Images.Insert(item.Index, item.Data);
+            }
+
+            foreach(var item in removedItems)
+            {
+                Images.RemoveAt(item.Index);
+            }
+        }
+
+        private void AlbumCollectionViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                Albums.Insert(item.Index, item.Data);
+            }
+
+            foreach (var item in removedItems)
+            {
+                Albums.RemoveAt(item.Index);
+            }
+        }
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState> PlaybackStateChanged
@@ -107,6 +142,27 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        {
+            add => _collection.ImagesChanged += value;
+            remove => _collection.ImagesChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int> ImagesCountChanged
+        {
+            add => _collection.ImagesCountChanged += value;
+            remove => _collection.ImagesCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IAlbumCollectionItem> AlbumItemsChanged
+        {
+            add => _collection.AlbumItemsChanged += value;
+            remove => _collection.AlbumItemsChanged -= value;
+        }
+
+        /// <inheritdoc />
         public async Task PopulateMoreAlbumsAsync(int limit)
         {
             foreach (var item in await _collection.GetAlbumItemsAsync(limit, Albums.Count))
@@ -124,7 +180,20 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public async Task PopulateMoreImagesAsync(int limit)
+        {
+            foreach (var item in await _collection.GetImagesAsync(limit, Images.Count))
+            {
+                Images.Add(item);
+            }
+        }
+
+        /// <inheritdoc />
         public SynchronizedObservableCollection<IAlbumCollectionItem> Albums { get; set; }
+
+
+        /// <inheritdoc />
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public string Id => _collection.Id;
@@ -169,6 +238,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             get => _collection.TotalAlbumItemsCount;
             set => SetProperty(() => _collection.TotalAlbumItemsCount, value);
+        }
+
+        /// <inheritdoc />
+        public int TotalImageCount
+        {
+            get => _collection.TotalImageCount;
+            set => SetProperty(() => _collection.TotalImageCount, value);
         }
 
         /// <inheritdoc />
@@ -243,9 +319,21 @@ namespace StrixMusic.Sdk.ViewModels
         public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index) => _collection.AddAlbumItemAsync(album, index);
 
         /// <inheritdoc />
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _collection.GetImagesAsync(limit, offset);
+
+        /// <inheritdoc />
         public Task RemoveAlbumItemAsync(int index) => _collection.RemoveAlbumItemAsync(index);
 
         /// <inheritdoc />
+        public Task RemoveImageAsync(int index) => _collection.RemoveImageAsync(index);
+
+        /// <inheritdoc />
+        public Task AddImageAsync(IImage image, int index) => _collection.AddImageAsync(image, index);
+
+        /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
     }
 }

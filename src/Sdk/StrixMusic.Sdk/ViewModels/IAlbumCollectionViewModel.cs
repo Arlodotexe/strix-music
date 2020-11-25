@@ -2,7 +2,6 @@
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -17,6 +16,11 @@ namespace StrixMusic.Sdk.ViewModels
         public SynchronizedObservableCollection<IAlbumCollectionItem> Albums { get; }
 
         /// <summary>
+        /// The images in this collection.
+        /// </summary>
+        public SynchronizedObservableCollection<IImage> Images { get; }
+
+        /// <summary>
         /// Populates the next set of albums into the collection.
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
@@ -24,8 +28,20 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PopulateMoreAlbumsAsync(int limit);
 
         /// <summary>
+        /// Populates the next set of images into the collection.
+        /// </summary>
+        /// <param name="limit">The number of items to load.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task PopulateMoreImagesAsync(int limit);
+
+        /// <summary>
         /// <inheritdoc cref="PopulateMoreAlbumsAsync"/>
         /// </summary>
         public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }
+
+        /// <summary>
+        /// <inheritdoc cref="PopulateMoreImagesAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
     }
 }
