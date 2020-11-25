@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions.SdkMember;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -15,7 +16,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains bindable information about an <see cref="ITrack"/>
     /// </summary>
-    public class TrackViewModel : MergeableObjectViewModel<ITrack>, ITrack, IArtistCollectionViewModel
+    public class TrackViewModel : ObservableObject, ITrack, IArtistCollectionViewModel
     {
         private IAlbum? _album;
 

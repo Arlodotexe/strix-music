@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using OwlCore.Events;
@@ -18,7 +19,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains bindable information about an <see cref="ICoreArtist"/>.
     /// </summary>
-    public class ArtistViewModel : MergeableObjectViewModel<IArtist>, IArtist, IAlbumCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel
+    public class ArtistViewModel : ObservableObject, IArtist, IAlbumCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IArtist _artist;
 

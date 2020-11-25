@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions.SdkMember;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -14,7 +15,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A bindable wrapper for <see cref="IPlaylist"/>.
     /// </summary>
-    public class PlaylistViewModel : MergeableObjectViewModel<IPlaylist>, IPlaylist, ITrackCollectionViewModel
+    public class PlaylistViewModel : ObservableObject, IPlaylist, ITrackCollectionViewModel
     {
         private readonly IPlaylist _playlist;
 

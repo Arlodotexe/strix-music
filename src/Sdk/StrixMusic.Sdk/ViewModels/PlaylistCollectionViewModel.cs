@@ -7,7 +7,7 @@ using OwlCore.Collections;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions.SdkMember;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels

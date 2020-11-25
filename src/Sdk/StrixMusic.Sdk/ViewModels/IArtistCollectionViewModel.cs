@@ -2,7 +2,6 @@
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.ViewModels
 {

@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains bindable information about an <see cref="IAlbum"/>.
     /// </summary>
-    public class AlbumViewModel : MergeableObjectViewModel<IAlbum>, IAlbum, ITrackCollectionViewModel, IImageCollectionViewModel
+    public class AlbumViewModel : ObservableObject, IAlbum, ITrackCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IAlbum _album;
         private readonly IPlaybackHandlerService _playbackHandler;
