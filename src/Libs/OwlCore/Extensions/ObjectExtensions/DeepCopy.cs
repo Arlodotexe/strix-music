@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using OwlCore.EqualityComparers;
-using OwlCore.Extensions.ArrayExtensions;
 
 // ReSharper disable once CheckNamespace
 namespace OwlCore.Extensions
