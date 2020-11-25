@@ -4,7 +4,10 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
+using OwlCore.Events;
+using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -14,7 +17,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains bindable information about an <see cref="IUserProfile"/>
     /// </summary>
-    public class UserProfileViewModel : ObservableObject, IUserProfile
+    public class UserProfileViewModel : ObservableObject, IUserProfile, IImageCollectionViewModel
     {
         private readonly IUserProfile _userProfile;
 
@@ -27,8 +30,20 @@ namespace StrixMusic.Sdk.ViewModels
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
             SourceCores = userProfile.GetSourceCores<ICoreUserProfile>().Select(MainViewModel.GetLoadedCore).ToList();
-            Urls = new SynchronizedObservableCollection<Uri>(userProfile.Urls);
-            Images = new SynchronizedObservableCollection<IImage>(userProfile.Images);
+            PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
+
+            Urls = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<Uri>(userProfile.Urls));
+            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
+        }
+
+        private void AttachEvents()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DetachEvents()
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -71,6 +86,20 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _userProfile.EmailChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event EventHandler<int> ImagesCountChanged
+        {
+            add => _userProfile.ImagesCountChanged += value;
+            remove => _userProfile.ImagesCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        {
+            add => _userProfile.ImagesChanged += value;
+            remove => _userProfile.ImagesChanged -= value;
+        }
+
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
@@ -87,6 +116,13 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public string Id => _userProfile.Id;
+
+        /// <inheritdoc />
+        public int TotalImageCount
+        {
+            get => _userProfile.TotalImageCount;
+            private set => SetProperty(() => _userProfile.TotalImageCount, value);
+        }
 
         /// <inheritdoc />
         public string DisplayName => _userProfile.DisplayName;
@@ -150,5 +186,35 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task ChangeEmailAsync(string? email) => _userProfile.ChangeEmailAsync(email);
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
+        {
+            return _userProfile.GetImagesAsync(limit, offset);
+        }
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index)
+        {
+            return _userProfile.RemoveImageAsync(index);
+        }
+
+        /// <inheritdoc />
+        public Task AddImageAsync(IImage image, int index)
+        {
+            return _userProfile.AddImageAsync(image, index);
+        }
+
+        /// <inheritdoc />
+        public async Task PopulateMoreImagesAsync(int limit)
+        {
+            foreach (var item in await GetImagesAsync(limit, Images.Count))
+            {
+                Images.Add(item);
+            }
+        }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
     }
 }
