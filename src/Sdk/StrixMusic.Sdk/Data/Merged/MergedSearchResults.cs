@@ -26,10 +26,9 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc cref="Equals(object?)" />
         public bool Equals(ICoreSearchResults? other)
         {
-            throw new NotImplementedException();
-
             // TODO: Merge together based on query (post search refactor)
-            return other?.Name == Name;
+            // return other?.Name == Name;
+            return false;
         }
 
         /// <inheritdoc />

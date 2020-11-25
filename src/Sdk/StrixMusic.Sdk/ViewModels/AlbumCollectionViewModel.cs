@@ -204,7 +204,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public SynchronizedObservableCollection<IAlbumCollectionItem> Albums { get; set; }
 
-
         /// <inheritdoc />
         public SynchronizedObservableCollection<IImage> Images { get; }
 

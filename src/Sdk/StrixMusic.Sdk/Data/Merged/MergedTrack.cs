@@ -52,6 +52,13 @@ namespace StrixMusic.Sdk.Data.Merged
         private void AttachEvents(ICoreTrack source)
         {
             AttachPlayableEvents(source);
+
+            source.LanguageChanged += LanguageChanged;
+            source.LyricsChanged += Source_LyricsChanged;
+            source.IsExplicitChanged += IsExplicitChanged;
+            source.AlbumChanged += Source_AlbumChanged;
+            source.TrackNumberChanged += TrackNumberChanged;
+
             _imageCollectionMap.ItemsChanged += ImageCollectionMap_ItemsChanged;
             _imageCollectionMap.ItemsCountChanged += ImageCollectionMap_ItemsCountChanged;
             _artistMap.ItemsChanged += ArtistMap_ItemsChanged;
@@ -61,8 +68,17 @@ namespace StrixMusic.Sdk.Data.Merged
         private void DetachEvents(ICoreTrack source)
         {
             DetachPlayableEvents(source);
+
+            source.LanguageChanged -= LanguageChanged;
+            source.LyricsChanged -= Source_LyricsChanged;
+            source.IsExplicitChanged -= IsExplicitChanged;
+            source.AlbumChanged -= Source_AlbumChanged;
+            source.TrackNumberChanged -= TrackNumberChanged;
+
             _imageCollectionMap.ItemsChanged -= ImageCollectionMap_ItemsChanged;
             _imageCollectionMap.ItemsCountChanged -= ImageCollectionMap_ItemsCountChanged;
+            _artistMap.ItemsChanged -= ArtistMap_ItemsChanged;
+            _artistMap.ItemsCountChanged -= ArtistMap_ItemsCountChanged;
         }
 
         private void AttachPlayableEvents(IPlayable source)
@@ -105,41 +121,59 @@ namespace StrixMusic.Sdk.Data.Merged
             ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
+        private void Source_LyricsChanged(object sender, ICoreLyrics? e)
+        {
+            if (e is null)
+                return;
+
+            var merged = new MergedLyrics(e);
+            LyricsChanged?.Invoke(this, merged);
+        }
+
+        private void Source_AlbumChanged(object sender, ICoreAlbum? e)
+        {
+            if (e is null)
+                return;
+
+            var merged = new MergedAlbum(e.IntoList());
+            AlbumChanged?.Invoke(this, merged);
+        }
+
         /// <inheritdoc/>
         public event EventHandler<IAlbum?>? AlbumChanged;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler<int?>? TrackNumberChanged;
 
-        /// <inheritdoc/>
-        public event EventHandler<CultureInfo?>? LanguageChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<ILyrics?>? LyricsChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<bool>? IsExplicitChanged;
-
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
+        public event EventHandler<CultureInfo?>? LanguageChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<ILyrics?>? LyricsChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsExplicitChanged;
+
+        /// <inheritdoc />
         public event EventHandler<string>? NameChanged;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler<string?>? DescriptionChanged;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler<Uri?>? UrlChanged;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int>? ImagesCountChanged;
+        public event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int>? ArtistItemsCountChanged;
+        public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IImage>? ImagesChanged;

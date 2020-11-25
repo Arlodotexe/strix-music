@@ -191,9 +191,7 @@ namespace StrixMusic.Sdk.Data.Merged
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
-        private void MergedCollectionMap_ItemsChanged<T>(object sender,
-            IReadOnlyList<CollectionChangedEventItem<T>> addedItems,
-            IReadOnlyList<CollectionChangedEventItem<T>> removedItems)
+        private void MergedCollectionMap_ItemsChanged<T>(object sender, IReadOnlyList<CollectionChangedEventItem<T>> addedItems, IReadOnlyList<CollectionChangedEventItem<T>> removedItems)
         where T : class, ICollectionItemBase, ICoreMember
         {
             var addedMergedItems = CheckAddedItems();
@@ -505,6 +503,7 @@ namespace StrixMusic.Sdk.Data.Merged
                     returnData = (IMerged<TCoreCollectionItem>)new MergedImage(coreImage.IntoList());
                     collection.Add(returnData);
                     break;
+
                 // TODO: Search results post search redo
                 case ICorePlayableCollectionGroup playableCollection:
                     returnData = (IMerged<TCoreCollectionItem>)new MergedPlayableCollectionGroup(playableCollection.IntoList());

@@ -386,7 +386,6 @@ namespace StrixMusic.Sdk.ViewModels
                     var index = Tracks.IndexOf(item);
 
                     // TODO: Use core of active device.
-
                     var mediaSource = await SourceCores[0].GetMediaSource(item.Model.GetSources<ICoreTrack>()[0]);
 
                     if (mediaSource is null)

@@ -24,8 +24,8 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         {
             PlaybackContext = null;
 
-            PlaybackQueue = new StrixPlaybackQueueCollection();
-
+            // TODO: Implement StrixPlaybackQueueCollection
+            //PlaybackQueue = new StrixPlaybackQueueCollection();
             AttachEvents();
         }
 
@@ -119,7 +119,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public bool IsActive { get; private set; }
 
         /// <inheritdoc />
-        public ITrackCollection PlaybackQueue { get; }
+        public ITrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc />
         public IPlayable? PlaybackContext { get; private set; }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace StrixMusic.Sdk
     /// <summary>
     /// The MainViewModel used throughout the app
     /// </summary>
-    public partial class MainViewModel : ObservableRecipient, IAppCore
+    public partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncDisposable
     {
         private readonly List<ICore> _sources = new List<ICore>();
         private readonly SynchronizedObservableCollection<IDevice> _devices = new SynchronizedObservableCollection<IDevice>();
@@ -193,5 +194,12 @@ namespace StrixMusic.Sdk
 
         /// <inheritdoc />
         IReadOnlyList<ICore> ISdkMember<ICore>.Sources => _sources;
+
+        /// <inheritdoc />
+        public async ValueTask DisposeAsync()
+        {
+            // TODO
+            await Task.CompletedTask;
+        }
     }
 }

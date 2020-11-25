@@ -45,6 +45,9 @@ namespace StrixMusic.Sdk.Data.Merged
         private void AttachEvents(ICoreAlbum source)
         {
             AttachPlayableEvents(source);
+
+            source.DatePublishedChanged += DatePublishedChanged;
+
             _trackCollectionMap.ItemsChanged += TrackCollectionMap_ItemsChanged;
             _trackCollectionMap.ItemsCountChanged += TrackCollectionMap_ItemsCountChanged;
             _imageCollectionMap.ItemsChanged += ImageCollectionMap_ItemsChanged;
@@ -54,6 +57,9 @@ namespace StrixMusic.Sdk.Data.Merged
         private void DetachEvents(ICoreAlbum source)
         {
             DetachPlayableEvents(source);
+
+            source.DatePublishedChanged -= DatePublishedChanged;
+
             _trackCollectionMap.ItemsChanged -= TrackCollectionMap_ItemsChanged;
             _trackCollectionMap.ItemsCountChanged -= TrackCollectionMap_ItemsCountChanged;
             _imageCollectionMap.ItemsChanged -= ImageCollectionMap_ItemsChanged;

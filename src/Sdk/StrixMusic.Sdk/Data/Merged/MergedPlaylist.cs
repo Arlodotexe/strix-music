@@ -1,12 +1,13 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Collections;
-using OwlCore.Events;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.MediaPlayback;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Collections;
+using OwlCore.Events;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
 {
@@ -33,6 +34,12 @@ namespace StrixMusic.Sdk.Data.Merged
 
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
+
+            if (_preferredSource.RelatedItems != null)
+                RelatedItems = new MergedPlayableCollectionGroup(_preferredSource.RelatedItems.IntoList());
+
+            if (_preferredSource.Owner != null)
+                Owner = new MergedUserProfile(_preferredSource.Owner);
 
             AttachEvents(_preferredSource);
         }
@@ -178,10 +185,10 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        public IUserProfile? Owner => throw new NotImplementedException();
+        public IUserProfile? Owner { get; }
 
         /// <inheritdoc/>
-        public IPlayableCollectionGroup? RelatedItems => throw new NotImplementedException();
+        public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc/>
         public int TotalTracksCount { get; private set; }

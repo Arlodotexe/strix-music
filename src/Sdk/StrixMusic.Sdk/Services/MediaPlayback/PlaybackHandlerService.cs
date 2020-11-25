@@ -1,12 +1,12 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Events;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.MediaPlayback;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Data;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Events;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {
@@ -182,7 +182,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             AttachEvents();
 
             // TODO shift queue, move tracks before the played item into previous
-
             await _currentPlayerService.Play(mediaSource);
             CurrentItem = mediaSource;
             CurrentItemChanged?.Invoke(this, mediaSource);
@@ -204,7 +203,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             AttachEvents();
 
             // TODO shift queue, move tracks after the played item into next
-
             await _currentPlayerService.Play(mediaSource);
             CurrentItem = mediaSource;
             CurrentItemChanged?.Invoke(this, mediaSource);
@@ -360,6 +358,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 _shuffledNextItemsIndices = null;
             }
 
+            ShuffleStateChanged?.Invoke(this, _shuffleState);
+
             return Task.CompletedTask;
         }
 
@@ -373,6 +373,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 RepeatState.All => RepeatState.None,
                 _ => ThrowHelper.ThrowArgumentOutOfRangeException<RepeatState>(nameof(RepeatState)),
             };
+
+            RepeatStateChanged?.Invoke(this, _repeatState);
 
             return Task.CompletedTask;
         }
