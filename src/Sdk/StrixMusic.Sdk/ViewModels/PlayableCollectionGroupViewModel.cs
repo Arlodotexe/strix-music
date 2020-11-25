@@ -268,11 +268,11 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item.Data)
                 {
-                    case IArtist artist:
-                        Artists.Insert(item.Index, new ArtistViewModel(artist));
+                    case IPlaylist playlist:
+                        Playlists.Insert(item.Index, new PlaylistViewModel(playlist));
                         break;
-                    case IArtistCollection collection:
-                        Artists.Insert(item.Index, new ArtistCollectionViewModel(collection));
+                    case IPlaylistCollection collection:
+                        Playlists.Insert(item.Index, new PlaylistCollectionViewModel(collection));
                         break;
                     default:
                         ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
@@ -282,8 +282,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             foreach (var item in removedItems)
             {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IArtistCollectionItem>)Artists, nameof(Artists));
-                Artists.RemoveAt(item.Index);
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IPlaylistCollectionItem>)Playlists, nameof(Playlists));
+                Playlists.RemoveAt(item.Index);
             }
         }
 

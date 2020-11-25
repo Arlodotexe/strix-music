@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
@@ -28,7 +30,10 @@ namespace StrixMusic.Sdk.ViewModels
             _collection = collection;
 
             Playlists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IPlaylistCollectionItem>());
+            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
+
             PopulateMorePlaylistsCommand = new AsyncRelayCommand<int>(PopulateMorePlaylistsAsync);
+            PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
             AttachEvents();
         }
@@ -39,7 +44,12 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += OnNameChanged;
             DescriptionChanged += OnDescriptionChanged;
             UrlChanged += OnUrlChanged;
+
             PlaylistItemsCountChanged += OnPlaylistItemsCountChanged;
+            ImagesCountChanged += PlaylistCollectionViewModel_ImagesCountChanged;
+
+            PlaylistItemsChanged += PlaylistCollectionViewModel_PlaylistItemsChanged;
+            ImagesChanged += PlaylistCollectionViewModel_ImagesChanged;
         }
 
         private void DetachEvents()
@@ -48,7 +58,12 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= OnNameChanged;
             DescriptionChanged -= OnDescriptionChanged;
             UrlChanged -= OnUrlChanged;
+
             PlaylistItemsCountChanged -= OnPlaylistItemsCountChanged;
+            ImagesCountChanged -= PlaylistCollectionViewModel_ImagesCountChanged;
+
+            PlaylistItemsChanged -= PlaylistCollectionViewModel_PlaylistItemsChanged;
+            ImagesChanged -= PlaylistCollectionViewModel_ImagesChanged;
         }
 
         private void OnUrlChanged(object sender, Uri? e) => Url = e;
@@ -60,6 +75,47 @@ namespace StrixMusic.Sdk.ViewModels
         private void OnPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
 
         private void OnPlaylistItemsCountChanged(object sender, int e) => TotalPlaylistItemsCount = e;
+
+        private void PlaylistCollectionViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+
+        private void PlaylistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                Images.Insert(item.Index, item.Data);
+            }
+
+            foreach (var item in removedItems)
+            {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
+                Images.RemoveAt(item.Index);
+            }
+        }
+
+        private void PlaylistCollectionViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IPlaylistCollectionItem>> removedItems)
+        {
+            foreach (var item in addedItems)
+            {
+                switch (item.Data)
+                {
+                    case IPlaylist playlist:
+                        Playlists.Insert(item.Index, new PlaylistViewModel(playlist));
+                        break;
+                    case IPlaylistCollection collection:
+                        Playlists.Insert(item.Index, new PlaylistCollectionViewModel(collection));
+                        break;
+                    default:
+                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
+                        break;
+                }
+            }
+
+            foreach (var item in removedItems)
+            {
+                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IPlaylistCollectionItem>)Playlists, nameof(Playlists));
+                Playlists.RemoveAt(item.Index);
+            }
+        }
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState> PlaybackStateChanged
@@ -104,6 +160,27 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public event EventHandler<int> ImagesCountChanged
+        {
+            add => _collection.ImagesCountChanged += value;
+            remove => _collection.ImagesCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        {
+            add => _collection.ImagesChanged += value;
+            remove => _collection.ImagesChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IPlaylistCollectionItem> PlaylistItemsChanged
+        {
+            add => _collection.PlaylistItemsChanged += value;
+            remove => _collection.PlaylistItemsChanged -= value;
+        }
+
+        /// <inheritdoc />
         public string Id => _collection.Id;
 
         /// <inheritdoc />
@@ -143,6 +220,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public int TotalImageCount
+        {
+            get => _collection.TotalImageCount;
+            set => SetProperty(() => _collection.TotalImageCount, value);
+        }
+
+        /// <inheritdoc />
         public string? Description
         {
             get => _collection.Description;
@@ -162,6 +246,9 @@ namespace StrixMusic.Sdk.ViewModels
             get => _collection.Duration;
             set => SetProperty(() => _collection.Duration, value);
         }
+
+        /// <inheritdoc />
+        public SynchronizedObservableCollection<IPlaylistCollectionItem> Playlists { get; }
 
         /// <inheritdoc />
         public Task PlayAsync()
@@ -185,7 +272,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration) => _collection.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images => _collection.Images;
+        public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores => _collection.GetSourceCores<ICorePlaylistCollection>();
@@ -205,12 +292,6 @@ namespace StrixMusic.Sdk.ViewModels
         public IReadOnlyList<ICorePlaylistCollection> Sources => _collection.GetSources<ICorePlaylistCollection>();
 
         /// <inheritdoc />
-        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index) => _collection.AddPlaylistItemAsync(playlist, index);
-
-        /// <inheritdoc />
-        public Task RemovePlaylistItemAsync(int index) => _collection.RemovePlaylistItemAsync(index);
-
-        /// <inheritdoc />
         public Task<bool> IsAddPlaylistItemSupported(int index) => _collection.IsAddPlaylistItemSupported(index);
 
         /// <inheritdoc />
@@ -223,13 +304,22 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveImageSupported(int index) => _collection.IsRemoveImageSupported(index);
 
         /// <inheritdoc />
+        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index) => _collection.AddPlaylistItemAsync(playlist, index);
+
+        /// <inheritdoc />
+        public Task RemovePlaylistItemAsync(int index) => _collection.RemovePlaylistItemAsync(index);
+
+        /// <inheritdoc />
+        public Task AddImageAsync(IImage image, int index) => _collection.AddImageAsync(image, index);
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index) => _collection.RemoveImageAsync(index);
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _collection.GetImagesAsync(limit, offset);
+
+        /// <inheritdoc />
         public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset) => _collection.GetPlaylistItemsAsync(limit, offset);
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<IPlaylistCollectionItem> Playlists { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }
 
         /// <inheritdoc />
         public async Task PopulateMorePlaylistsAsync(int limit)
@@ -247,5 +337,20 @@ namespace StrixMusic.Sdk.ViewModels
                 }
             }
         }
+
+        /// <inheritdoc />
+        public async Task PopulateMoreImagesAsync(int limit)
+        {
+            foreach (var item in await  _collection.GetImagesAsync(limit, Images.Count))
+            {
+                Images.Add(item);
+            }
+        }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
     }
 }
