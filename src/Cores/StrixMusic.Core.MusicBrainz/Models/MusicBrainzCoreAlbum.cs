@@ -20,8 +20,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// </summary>
     public class MusicBrainzCoreAlbum : ICoreAlbum
     {
-        private readonly MusicBrainzClient _musicBrainzClient;
         //private readonly MusicBrainzArtistHelpersService _artistHelpersService;
+        private readonly MusicBrainzClient _musicBrainzClient;
         private readonly MusicBrainzCoreArtist _coreArtist;
 
         /// <summary>

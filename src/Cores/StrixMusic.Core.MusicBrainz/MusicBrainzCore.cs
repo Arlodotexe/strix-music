@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +8,6 @@ using StrixMusic.Core.MusicBrainz.Models;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
@@ -40,13 +38,16 @@ namespace StrixMusic.Core.MusicBrainz
             // The UI isn't loaded until InitAsync is called, where we set up the actual library.
             Library = new MusicBrainzLibrary(this);
             Devices = new SynchronizedObservableCollection<ICoreDevice>();
-            CoreRecentlyPlayed = new MusicBrainzCoreRecentlyPlayed(this);
-            CoreDiscoverables = new MusicBrainzCoreDiscoverables(this);
+            RecentlyPlayed = new MusicBrainzCoreRecentlyPlayed(this);
+            Discoverables = new MusicBrainzCoreDiscoverables(this);
             User = new MusicBrainzCoreUser(this);
         }
 
         /// <inheritdoc/>
         public ICoreConfig CoreConfig { get; }
+
+        /// <inheritdoc />
+        public ICore SourceCore => this;
 
         /// <inheritdoc/>
         public CoreState CoreState { get; internal set; } = CoreState.Unloaded;
@@ -64,16 +65,16 @@ namespace StrixMusic.Core.MusicBrainz
         public ICoreLibrary Library { get; private set; }
 
         /// <inheritdoc/>
-        public ICoreRecentlyPlayed CoreRecentlyPlayed { get; }
+        public ICoreRecentlyPlayed RecentlyPlayed { get; }
 
         /// <inheritdoc/>
-        public ICoreDiscoverables CoreDiscoverables { get; }
+        public ICoreDiscoverables Discoverables { get; }
 
         /// <inheritdoc/>
         public string InstanceId { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<IPlayable> Pins { get; } = new SynchronizedObservableCollection<IPlayable>();
+        public ICorePlayableCollectionGroup? Pins { get; }
 
         /// <inheritdoc/>
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
@@ -145,14 +146,7 @@ namespace StrixMusic.Core.MusicBrainz
             }
         }
 
-        /// <inheritdoc/>
-        public IAsyncEnumerable<string> GetSearchAutoCompleteAsync(string query)
-        {
-            return AsyncEnumerable.Empty<string>();
-        }
-
-        /// <inheritdoc/>
-        public async Task<ICoreSearchResults> GetSearchResultsAsync(string query)
+        private async Task<ICoreSearchResults> GetSearchResultsAsync(string query)
         {
             if (_musicBrainzClient != null)
             {
@@ -208,18 +202,6 @@ namespace StrixMusic.Core.MusicBrainz
             CoreStateChanged?.Invoke(this, CoreState);
 
             Devices.Add(new MusicBrainzCoreDevice(this, "TestDevice", true)); // Hardcoded for now.
-        }
-
-        /// <inheritdoc/>
-        public Task<bool> IsAddPinSupported(int index)
-        {
-            return Task.FromResult(false);
-        }
-
-        /// <inheritdoc/>
-        public Task<bool> IsRemovePinSupported(int index)
-        {
-            return Task.FromResult(false);
         }
     }
 }
