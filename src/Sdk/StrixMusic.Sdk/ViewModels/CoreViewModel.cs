@@ -36,7 +36,9 @@ namespace StrixMusic.Sdk.ViewModels
             Library = new LibraryViewModel(new MergedLibrary(_core.Library.IntoList()));
             RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_core.RecentlyPlayed.IntoList()));
             Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_core.Discoverables.IntoList()));
-            Pins = new PlayableCollectionGroupViewModel(new MergedPlayableCollectionGroup(_core.Pins.IntoList()));
+
+            if (_core.Pins != null)
+                Pins = new PlayableCollectionGroupViewModel(new MergedPlayableCollectionGroup(_core.Pins.IntoList()));
 
             AttachEvents();
         }
@@ -90,15 +92,15 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="ICore.Discoverables" />
         ICoreDiscoverables ICore.Discoverables => _core.Discoverables;
-        
+
         /// <inheritdoc cref="DiscoverablesViewModel" />
         public DiscoverablesViewModel Discoverables { get; }
 
         /// <inheritdoc cref="ICore.Pins" />
-        ICorePlayableCollectionGroup ICore.Pins => _core.Pins;
+        ICorePlayableCollectionGroup? ICore.Pins => _core.Pins;
 
         /// <inheritdoc cref="ICore.Pins" />
-        public PlayableCollectionGroupViewModel Pins { get; }
+        public PlayableCollectionGroupViewModel? Pins { get; }
 
         /// <inheritdoc cref="IAsyncInit.InitAsync" />
         public Task InitAsync(IServiceCollection services) => _core.InitAsync(services);
@@ -126,11 +128,5 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public ICore SourceCore => _core.SourceCore;
-
-        /// <inheritdoc />
-        public Task InitAsync()
-        {
-            return _core.InitAsync();
-        }
     }
 }

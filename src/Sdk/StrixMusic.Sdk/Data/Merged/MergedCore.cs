@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -24,7 +25,7 @@ namespace StrixMusic.Sdk.Data.Merged
             Discoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables));
             Library = new MergedLibrary(_sources.Select(x => x.Library));
             SourceCores = _sources.Select(x => x.SourceCore).ToList();
-            Pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins));
+            Pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull());
             RecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed));
             Devices = new SynchronizedObservableCollection<IDevice>(_sources.SelectMany(x => x.Devices, (core, device) => new MergedDevice(device)));
 

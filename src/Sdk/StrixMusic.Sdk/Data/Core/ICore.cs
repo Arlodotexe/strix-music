@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Data.Core
 {
     /// <inheritdoc cref="ICoreBase"/>
     /// <remarks>In a core's constructor, only do basic object initialization. For heavy work, use <see cref="InitAsync"/>.</remarks>
-    public interface ICore : ICoreMember, ICoreBase, IAsyncDisposable, IAsyncInit
+    public interface ICore : ICoreMember, ICoreBase, IAsyncDisposable
     {
         /// <summary>
         /// Identifies this instance of the core.
@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.Data.Core
         /// <summary>
         /// A list of pinned playable items.
         /// </summary>
-        public ICorePlayableCollectionGroup Pins { get; }
+        public ICorePlayableCollectionGroup? Pins { get; }
 
         /// <summary>
         /// Gets the recently played items for this core.
