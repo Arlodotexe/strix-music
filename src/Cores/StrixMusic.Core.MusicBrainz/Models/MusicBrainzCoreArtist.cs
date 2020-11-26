@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using OwlCore.Collections;
+using OwlCore.Events;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Data;
@@ -35,7 +36,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
             TotalTracksCount = totalTracksCount;
 
             _artist = artist;
-            Images = null!;
 
             _musicBrainzClient = SourceCore.GetService<MusicBrainzClient>();
             _artistHelperService = SourceCore.GetService<MusicBrainzArtistHelpersService>();
@@ -56,11 +56,32 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged;
 
+        /// <inheritdoc />
+        public event EventHandler<int>? ImagesCountChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? AlbumItemsCountChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? TrackItemsCountChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+
         /// <inheritdoc/>
         public string Id => _artist.Id;
 
         /// <inheritdoc/>
         public int TotalAlbumItemsCount => _artist.Releases?.Count ?? 0;
+
+        /// <inheritdoc />
+        public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc/>
         public int TotalTracksCount { get; }
@@ -73,9 +94,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public string Name => _artist.Name;
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<ICoreImage> Images { get; }
 
         /// <inheritdoc/>
         public string Description => _artist.SortName;
@@ -240,25 +258,43 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public Task AddTrackAsync(ICoreTrack track, int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveAlbumItemAsync(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddImageAsync(ICoreImage image, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<ICoreImage>> GetImagesAsync(int limit, int offset)
+        {
+            return Task.FromResult<IReadOnlyList<ICoreImage>>(Array.Empty<ICoreImage>());
         }
     }
 }
