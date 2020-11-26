@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using OwlCore.Collections;
-using StrixMusic.Sdk.Data;
+using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
@@ -39,6 +38,42 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
+        public event EventHandler<int>? ImagesCountChanged;
+
+        /// <inheritdoc />?
+        public event EventHandler<int>? PlaylistItemsCountChanged;
+
+        /// <inheritdoc />?
+        public event EventHandler<int>? TrackItemsCountChanged;
+
+        /// <inheritdoc />?
+        public event EventHandler<int>? AlbumItemsCountChanged;
+
+        /// <inheritdoc />?
+        public event EventHandler<int>? ArtistItemsCountChanged;
+
+        /// <inheritdoc />?
+        public event EventHandler<int>? TotalChildrenCountChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
+
+        /// <inheritdoc />
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
@@ -49,9 +84,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public abstract string Name { get; protected set; }
-
-        /// <inheritdoc />
-        public abstract SynchronizedObservableCollection<ICoreImage> Images { get; protected set; }
 
         /// <inheritdoc />
         public abstract string? Description { get; protected set; }
@@ -76,6 +108,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public abstract int TotalChildrenCount { get; internal set; }
+
+        /// <inheritdoc />
+        public abstract int TotalImageCount { get; internal set; }
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported => false;
@@ -265,6 +300,21 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public Task RemoveChildAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public abstract Task<IReadOnlyList<ICoreImage>> GetImagesAsync(int limit, int offset);
+
+        /// <inheritdoc />
+        public Task AddImageAsync(ICoreImage image, int index)
         {
             throw new NotSupportedException();
         }
