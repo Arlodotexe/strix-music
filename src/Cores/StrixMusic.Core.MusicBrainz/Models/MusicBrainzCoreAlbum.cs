@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Models.Enums;
-using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
-using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
@@ -22,7 +21,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
     public class MusicBrainzCoreAlbum : ICoreAlbum
     {
         private readonly MusicBrainzClient _musicBrainzClient;
-        private readonly MusicBrainzArtistHelpersService _artistHelpersService;
+        //private readonly MusicBrainzArtistHelpersService _artistHelpersService;
         private readonly MusicBrainzCoreArtist _coreArtist;
 
         /// <summary>
@@ -40,8 +39,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// </remarks>
         public MusicBrainzCoreAlbum(ICore sourceCore, Release release, MusicBrainzCoreArtist coreArtist)
         {
+            //_artistHelpersService = sourceCore.GetService<MusicBrainzArtistHelpersService>();
             _musicBrainzClient = sourceCore.GetService<MusicBrainzClient>();
-            _artistHelpersService = sourceCore.GetService<MusicBrainzArtistHelpersService>();
 
             if (release.Media != null)
             {
@@ -49,7 +48,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
 
             Release = release;
-            Images = CreateImagesForRelease();
 
             SourceCore = sourceCore;
             _coreArtist = coreArtist;
@@ -72,6 +70,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? TrackItemsCountChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? ImagesCountChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
 
         /// <summary>
         /// The <see cref="Release"/> for this album.
@@ -98,9 +108,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public DateTime? DatePublished => CreateReleaseDate(Release?.Date);
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<ICoreImage> Images { get; }
 
         /// <inheritdoc/>
         public string? Description => Release.TextRepresentation?.Script;
@@ -221,10 +228,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 if (sourceArtist is null)
                     yield break;
 
-                var totalTrackCountForArtist = await _artistHelpersService.GetTotalTracksCount(sourceArtist);
+                // var totalTrackCountForArtist = await _artistHelpersService.GetTotalTracksCount(sourceArtist);
 
                 // TODO: ???
-                var artist = new MusicBrainzCoreArtist(SourceCore, sourceArtist, totalTrackCountForArtist);
+                //var artist = new MusicBrainzCoreArtist(SourceCore, sourceArtist, totalTrackCountForArtist);
             }
 
             // Get full list of tracks from all sources
@@ -295,16 +302,32 @@ namespace StrixMusic.Core.MusicBrainz.Models
             return date;
         }
 
-        private SynchronizedObservableCollection<ICoreImage> CreateImagesForRelease()
+        /// <inheritdoc />
+        public int TotalImageCount { get; } = 3;
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<ICoreImage>> GetImagesAsync(int limit, int offset)
         {
-            var returnData = new SynchronizedObservableCollection<ICoreImage>();
+            var returnData = new List<ICoreImage>();
 
             foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
             {
                 returnData.Add(new MusicBrainzCoreImage(SourceCore, Release.Id, item));
             }
 
-            return returnData;
+            return Task.FromResult<IReadOnlyList<ICoreImage>>(returnData);
+        }
+
+        /// <inheritdoc />
+        public Task AddImageAsync(ICoreImage image, int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index)
+        {
+            throw new NotImplementedException();
         }
     }
 }
