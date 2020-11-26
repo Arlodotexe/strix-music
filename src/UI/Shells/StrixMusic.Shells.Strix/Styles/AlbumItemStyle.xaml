@@ -5,10 +5,10 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    xmlns:core1="using:StrixMusic.Sdk.Data.Core"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.Strix.Styles.AlbumItemStyle">
 
-    <DataTemplate x:Key="StrixAlbumItemTemplate" x:DataType="core1:ICoreAlbum">
+    <DataTemplate x:Key="StrixAlbumItemTemplate" x:DataType="viewModels:AlbumViewModel">
         <UserControl>
             <Grid Padding="24,16" Background="Transparent">
                 <interactivity:Interaction.Behaviors>
