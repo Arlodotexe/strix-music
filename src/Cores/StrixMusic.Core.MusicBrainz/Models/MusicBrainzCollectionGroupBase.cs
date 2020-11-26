@@ -110,7 +110,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public abstract int TotalChildrenCount { get; internal set; }
 
         /// <inheritdoc />
-        public abstract int TotalImageCount { get; internal set; }
+        public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported => false;
@@ -311,7 +311,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public abstract Task<IReadOnlyList<ICoreImage>> GetImagesAsync(int limit, int offset);
+        public Task<IReadOnlyList<ICoreImage>> GetImagesAsync(int limit, int offset)
+        {
+            return Task.FromResult<IReadOnlyList<ICoreImage>>(Array.Empty<ICoreImage>());
+        }
 
         /// <inheritdoc />
         public Task AddImageAsync(ICoreImage image, int index)

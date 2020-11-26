@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using OwlCore.AbstractUI;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Utils;
-using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 
