@@ -4,7 +4,7 @@
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
-    xmlns:viewModels="clr-namespace:StrixMusic.Sdk.ViewModels;assembly=StrixMusic.Sdk"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.Strix.Styles.ArtistViewStyle">
 
     <DataTemplate x:Key="StrixArtistViewTemplate" x:DataType="viewModels:ArtistViewModel">

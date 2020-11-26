@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml.Media.Imaging;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data;
 
 namespace StrixMusic.Sdk.Uno.Converters
 {
@@ -27,11 +27,11 @@ namespace StrixMusic.Sdk.Uno.Converters
             {
                 Uri.TryCreate(sValue, UriKind.Absolute, out uri);
             }
-            else if (value is ICoreImage iValue)
+            else if (value is IImage iValue)
             {
                 uri = iValue.Uri;
             }
-            else if (value is ICollection<ICoreImage> imageCollection && imageCollection.Any())
+            else if (value is ICollection<IImage> imageCollection && imageCollection.Any())
             {
                 uri = imageCollection.First().Uri;
             }

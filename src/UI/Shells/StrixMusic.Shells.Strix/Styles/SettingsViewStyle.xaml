@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
-    xmlns:viewModels="clr-namespace:StrixMusic.Sdk.ViewModels;assembly=StrixMusic.Sdk"
-    xmlns:base="clr-namespace:StrixMusic.Sdk.Data.Base;assembly=StrixMusic.Sdk"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:base="using:StrixMusic.Sdk.Data.Base"
     x:Class="StrixMusic.Shells.Strix.Styles.SettingsViewStyle">
 
     <DataTemplate x:Key="StrixSettingsViewTemplate" x:DataType="viewModels:LibraryViewModel">

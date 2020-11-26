@@ -9,7 +9,7 @@
     <DataTemplate x:Key="DefaultSearchViewTemplate" x:DataType="sdk:MainViewModel">
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Search results for &quot;"/>
-            <TextBlock Text="{x:Bind SearchResults.Name, Mode=OneWay}"/>
+            <TextBlock Text="Not implemented"/>
             <TextBlock Text="&quot;"/>
         </StackPanel>
     </DataTemplate>

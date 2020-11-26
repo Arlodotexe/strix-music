@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    xmlns:viewModels="clr-namespace:StrixMusic.Sdk.ViewModels;assembly=StrixMusic.Sdk"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Sdk.Uno.Styles.AlbumItemStyle">
 
     <DataTemplate x:Key="DefaultAlbumItemDataTemplate" x:DataType="viewModels:AlbumViewModel">

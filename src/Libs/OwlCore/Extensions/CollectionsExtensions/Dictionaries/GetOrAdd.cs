@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
-namespace OwlCore.Extensions.Dictionaries
+namespace OwlCore.Extensions
 {
     /// <summary>
     /// Extensions for collections and dictionaries.

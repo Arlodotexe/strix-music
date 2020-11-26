@@ -5,7 +5,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    xmlns:core1="clr-namespace:StrixMusic.Sdk.Data.Core;assembly=StrixMusic.Sdk"
+    xmlns:core1="using:StrixMusic.Sdk.Data.Core"
     x:Class="StrixMusic.Shells.Strix.Styles.AlbumItemStyle">
 
     <DataTemplate x:Key="StrixAlbumItemTemplate" x:DataType="core1:ICoreAlbum">
