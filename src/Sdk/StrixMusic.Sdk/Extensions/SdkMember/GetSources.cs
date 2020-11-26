@@ -9,11 +9,11 @@ namespace StrixMusic.Sdk.Extensions
         /// <summary>
         /// Syntax sugar for getting and casting the sources of an <see cref="ISdkMember{T}"/>.
         /// </summary>
-        /// <typeparam name="T">The type to cast to</typeparam>
+        /// <typeparam name="TSource">The explicit source type to get sources from.</typeparam>
         /// <param name="sdkMember">The <see cref="ISdkMember{T}"/> to operate on.</param>
         /// <returns>The sources of the given <see cref="ISdkMember{T}"/></returns>
-        internal static IReadOnlyList<T> GetSources<T>(this ISdkMember<T> sdkMember)
-            where T : ICoreMember
+        internal static IReadOnlyList<TSource> GetSources<TSource>(this ISdkMember<TSource> sdkMember)
+            where TSource : ICoreMember
         {
             return sdkMember.Sources;
         }

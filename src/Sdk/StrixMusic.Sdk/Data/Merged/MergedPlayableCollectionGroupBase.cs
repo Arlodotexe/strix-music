@@ -7,7 +7,6 @@ using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -16,16 +15,15 @@ namespace StrixMusic.Sdk.Data.Merged
     /// A base that merges multiple <see cref="IPlayableCollectionGroupBase"/>s.
     /// </summary>
     public abstract class MergedPlayableCollectionGroupBase<TCoreBase> : IPlayableCollectionGroup
-        where TCoreBase : ICorePlayableCollectionGroup
+        where TCoreBase : class, ICorePlayableCollectionGroup
     {
-        private readonly List<TCoreBase> _sources;
-
         private readonly MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem> _albumCollectionMap;
         private readonly MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem> _artistCollectionMap;
         private readonly MergedCollectionMap<IPlaylistCollection, ICorePlaylistCollection, IPlaylistCollectionItem, ICorePlaylistCollectionItem> _playlistCollectionMap;
         private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackCollectionMap;
         private readonly MergedCollectionMap<IPlayableCollectionGroup, ICorePlayableCollectionGroup, IPlayableCollectionGroup, ICorePlayableCollectionGroup> _playableCollectionGroupMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imagesCollectionMap;
+        private readonly List<ICore> _sourceCores;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroupBase{T}"/> class.
@@ -33,13 +31,13 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="sources">The search results to merge.</param>
         protected MergedPlayableCollectionGroupBase(IEnumerable<TCoreBase> sources)
         {
-            _sources = sources.ToList();
-
             // TODO: Use top Preferred core.
             if (sources is null)
                 throw new ArgumentNullException(nameof(sources));
 
-            PreferredSource = _sources[0];
+            StoredSources = sources.ToList();
+            PreferredSource = StoredSources[0];
+            _sourceCores = StoredSources.Select(x => x.SourceCore).ToList();
 
             _albumCollectionMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this);
             _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this);
@@ -49,8 +47,9 @@ namespace StrixMusic.Sdk.Data.Merged
             _imagesCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
 
             AttachPropertyChangedEvents(PreferredSource);
+            AttachCollectionChangedEvents();
 
-            foreach (var item in _sources)
+            foreach (var item in StoredSources)
             {
                 TotalChildrenCount += item.TotalChildrenCount;
                 TotalPlaylistItemsCount += item.TotalPlaylistItemsCount;
@@ -66,6 +65,11 @@ namespace StrixMusic.Sdk.Data.Merged
         /// The top preferred source for this item, used for property getters.
         /// </summary>
         protected ICorePlayableCollectionGroup PreferredSource { get; }
+
+        /// <summary>
+        /// The source items that were merged to create this <see cref="MergedPlayableCollectionGroupBase{T}"/>
+        /// </summary>
+        protected List<TCoreBase> StoredSources { get; }
 
         private void AttachPropertyChangedEvents(ICorePlayableCollectionGroup source)
         {
@@ -97,7 +101,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.TotalChildrenCountChanged -= TotalChildrenCountChanged;
         }
 
-        private void AttachCollectionChangedEvents(ICorePlayableCollection source)
+        private void AttachCollectionChangedEvents()
         {
             _albumCollectionMap.ItemsChanged += AlbumCollectionMap_ItemsChanged;
             _artistCollectionMap.ItemsChanged += ArtistCollectionMap_ItemsChanged;
@@ -113,7 +117,7 @@ namespace StrixMusic.Sdk.Data.Merged
             _imagesCollectionMap.ItemsCountChanged += ImagesCollectionMap_ItemsCountChanged;
         }
 
-        private void DetachCollectionChangedEvents(ICorePlayableCollection source)
+        private void DetachCollectionChangedEvents()
         {
             _albumCollectionMap.ItemsChanged -= AlbumCollectionMap_ItemsChanged;
             _artistCollectionMap.ItemsChanged -= ArtistCollectionMap_ItemsChanged;
@@ -241,40 +245,40 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores"/>
-        public IReadOnlyList<ICore> SourceCores => Sources.Select(x => x.SourceCore).ToList();
+        public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlayableCollectionGroupChildren> ISdkMember<ICorePlayableCollectionGroupChildren>.Sources => this.GetSources<ICorePlayableCollectionGroup>();
+        IReadOnlyList<ICorePlayableCollectionGroupChildren> ISdkMember<ICorePlayableCollectionGroupChildren>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => this.GetSources<ICorePlayableCollectionGroup>();
+        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => this.GetSources<ICorePlayableCollectionGroup>();
+        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollection> ISdkMember<ICoreAlbumCollection>.Sources => this.GetSources<ICorePlayableCollectionGroup>();
+        IReadOnlyList<ICoreAlbumCollection> ISdkMember<ICoreAlbumCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreTrackCollection> ISdkMember<ICoreTrackCollection>.Sources => this.GetSources<ICorePlayableCollectionGroup>();
+        IReadOnlyList<ICoreTrackCollection> ISdkMember<ICoreTrackCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlaylistCollection> ISdkMember<ICorePlaylistCollection>.Sources => this.GetSources<ICorePlayableCollectionGroup>();
+        IReadOnlyList<ICorePlaylistCollection> ISdkMember<ICorePlaylistCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlaylistCollectionItem> ISdkMember<ICorePlaylistCollectionItem>.Sources => this.GetSources<ICorePlayableCollectionGroup>();
+        IReadOnlyList<ICorePlaylistCollectionItem> ISdkMember<ICorePlaylistCollectionItem>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => this.GetSources<ICorePlayableCollectionGroup>();
+        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlayableCollectionGroup> ISdkMember<ICorePlayableCollectionGroup>.Sources => this.GetSources<ICorePlayableCollectionGroup>();
+        IReadOnlyList<ICorePlayableCollectionGroup> ISdkMember<ICorePlayableCollectionGroup>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollectionItem> ISdkMember<ICoreAlbumCollectionItem>.Sources => this.GetSources<ICoreAlbumCollectionItem>();
+        IReadOnlyList<ICoreAlbumCollectionItem> ISdkMember<ICoreAlbumCollectionItem>.Sources => StoredSources;
 
         /// <inheritdoc cref="ISdkMember{T}.Sources"/>
-        public virtual IReadOnlyList<TCoreBase> Sources => _sources;
+        public virtual IReadOnlyList<TCoreBase> Sources => StoredSources;
 
         /// <inheritdoc/>
         public string Id => PreferredSource.Id;
@@ -498,10 +502,13 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc cref="IMerged{TCoreBase}.AddSource" />
         public void AddSource(TCoreBase itemToAdd)
         {
+            Guard.IsNotNull(itemToAdd, nameof(itemToAdd));
+
             if (!Equals(itemToAdd))
                 ThrowHelper.ThrowArgumentException<TCoreBase>("Tried to merge an artist that doesn't match. Verify that the item matches before merging the source.");
-            
-            _sources.Add(itemToAdd);
+
+            StoredSources.Add(itemToAdd);
+            _sourceCores.Add(itemToAdd.SourceCore);
 
             _albumCollectionMap.AddSource(itemToAdd);
             _artistCollectionMap.AddSource(itemToAdd);
@@ -513,7 +520,11 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc cref="IMerged{TCoreBase}.RemoveSource(TCoreBase)" />
         public void RemoveSource(TCoreBase itemToRemove)
         {
-            _sources.Remove(itemToRemove);
+            Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
+
+            StoredSources.Remove(itemToRemove);
+            _sourceCores.Remove(itemToRemove.SourceCore);
+
             _imagesCollectionMap.RemoveSource(itemToRemove);
             _albumCollectionMap.RemoveSource(itemToRemove);
             _artistCollectionMap.RemoveSource(itemToRemove);

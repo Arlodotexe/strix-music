@@ -19,6 +19,7 @@ namespace StrixMusic.Sdk.Data.Merged
     {
         private readonly ICoreAlbum _preferredSource;
         private readonly List<ICoreAlbum> _sources;
+        private readonly List<ICore> _sourceCores;
         private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackCollectionMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageCollectionMap;
 
@@ -28,6 +29,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public MergedAlbum(IEnumerable<ICoreAlbum> sources)
         {
             _sources = sources?.ToList() ?? ThrowHelper.ThrowArgumentNullException<List<ICoreAlbum>>(nameof(sources));
+            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             Artist = new MergedArtist(_sources.Select(x => x.Artist).ToList());
 
@@ -107,7 +109,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores => Sources.Select(x => x.SourceCore).ToList();
+        public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICoreAlbum> Sources => _sources;
@@ -211,7 +213,10 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public void AddSource(ICoreAlbum itemToMerge)
         {
+            Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
+
             _sources.Add(itemToMerge);
+            _sourceCores.Add(itemToMerge.SourceCore);
             _imageCollectionMap.AddSource(itemToMerge);
             _trackCollectionMap.AddSource(itemToMerge);
         }
@@ -219,7 +224,10 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public void RemoveSource(ICoreAlbum itemToRemove)
         {
+            Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
+
             _sources.Remove(itemToRemove);
+            _sourceCores.Remove(itemToRemove.SourceCore);
             _imageCollectionMap.RemoveSource(itemToRemove);
             _trackCollectionMap.RemoveSource(itemToRemove);
         }

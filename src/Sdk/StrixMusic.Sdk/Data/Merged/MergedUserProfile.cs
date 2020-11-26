@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
 
 namespace StrixMusic.Sdk.Data.Merged
 {
@@ -26,7 +27,9 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="userProfile">The user to wrap around.</param>
         public MergedUserProfile(ICoreUserProfile userProfile)
         {
-            _userProfile = userProfile;
+            _userProfile = userProfile ?? ThrowHelper.ThrowArgumentNullException<ICoreUserProfile>(nameof(userProfile));
+            Sources = _userProfile.IntoList();
+            SourceCores = _userProfile.SourceCore.IntoList();
 
             _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
 
@@ -202,10 +205,10 @@ namespace StrixMusic.Sdk.Data.Merged
         IReadOnlyList<ICoreUserProfile> IMerged<ICoreUserProfile>.Sources => Sources;
 
         /// <inheritdoc cref="ISdkMember{T}.Sources" />
-        public IReadOnlyList<ICoreUserProfile> Sources => this.GetSources<ICoreUserProfile>();
+        public IReadOnlyList<ICoreUserProfile> Sources { get; }
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores => this.GetSourceCores<ICoreUserProfile>();
+        public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)

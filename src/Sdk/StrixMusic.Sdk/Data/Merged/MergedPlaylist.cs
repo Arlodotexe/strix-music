@@ -20,6 +20,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackCollectionMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageCollectionMap;
         private readonly ICorePlaylist _preferredSource;
+        private readonly List<ICore> _sourceCores;
 
         /// <summary>
         /// Creates a new instance of <see cref="MergedPlaylist"/>.
@@ -28,6 +29,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public MergedPlaylist(IEnumerable<ICorePlaylist> sources)
         {
             _sources = sources?.ToList() ?? throw new ArgumentNullException();
+            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
             _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
@@ -108,10 +110,14 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public void AddSource(ICorePlaylist itemToMerge)
         {
+            Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
+
             if (!Equals(itemToMerge))
                 ThrowHelper.ThrowArgumentException(nameof(itemToMerge), "Tried to merge an artist that doesn't match. Verify that the item matches before merging the source.");
 
             _sources.Add(itemToMerge);
+            _sourceCores.Add(itemToMerge.SourceCore);
+
             _trackCollectionMap.AddSource(itemToMerge);
             _imageCollectionMap.AddSource(itemToMerge);
         }
@@ -119,7 +125,11 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public void RemoveSource(ICorePlaylist itemToRemove)
         {
+            Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
+
             _sources.Remove(itemToRemove);
+            _sourceCores.Remove(itemToRemove.SourceCore);
+
             _trackCollectionMap.RemoveSource(itemToRemove);
             _imageCollectionMap.RemoveSource(itemToRemove);
         }
@@ -227,7 +237,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores => Sources.Select(x => x.SourceCore).ToList();
+        public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc/>
         public int TotalImageCount { get; private set; }

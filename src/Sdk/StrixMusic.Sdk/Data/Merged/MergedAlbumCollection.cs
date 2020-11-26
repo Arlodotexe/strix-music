@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -15,6 +16,7 @@ namespace StrixMusic.Sdk.Data.Merged
     public class MergedAlbumCollection : IAlbumCollection, IMerged<ICoreAlbumCollection>
     {
         private readonly List<ICoreAlbumCollection> _sources;
+        private readonly List<ICore> _sourceCores;
         private readonly ICoreAlbumCollection _preferredSource;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageMap;
         private readonly MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem> _albumMap;
@@ -26,6 +28,8 @@ namespace StrixMusic.Sdk.Data.Merged
         public MergedAlbumCollection(IEnumerable<ICoreAlbumCollection> sources)
         {
             _sources = sources.ToList();
+            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
+
             _preferredSource = _sources[0];
 
             foreach (var source in _sources)
@@ -125,7 +129,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores => _sources.Select(x => x.SourceCore).ToList();
+        public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICoreAlbumCollection> Sources => _sources;
@@ -232,7 +236,10 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public void AddSource(ICoreAlbumCollection itemToMerge)
         {
+            Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
+
             _sources.Add(itemToMerge);
+            _sourceCores.Remove(itemToMerge.SourceCore);
             _imageMap.AddSource(itemToMerge);
             _albumMap.AddSource(itemToMerge);
         }
@@ -240,7 +247,10 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public void RemoveSource(ICoreAlbumCollection itemToRemove)
         {
+            Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
+
             _sources.Remove(itemToRemove);
+            _sourceCores.Remove(itemToRemove.SourceCore);
             _imageMap.RemoveSource(itemToRemove);
             _albumMap.RemoveSource(itemToRemove);
         }

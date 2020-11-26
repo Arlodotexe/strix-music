@@ -18,6 +18,7 @@ namespace StrixMusic.Sdk.Data.Merged
     public class MergedArtist : IArtist, IMerged<ICoreArtist>
     {
         private readonly List<ICoreArtist> _sources;
+        private readonly List<ICore> _sourceCores;
         private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackCollectionMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageCollectionMap;
         private readonly MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem> _albumCollectionItemMap;
@@ -29,6 +30,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public MergedArtist(IEnumerable<ICoreArtist> sources)
         {
             _sources = sources?.ToList() ?? throw new ArgumentNullException();
+            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             foreach (var source in _sources)
             {
@@ -162,7 +164,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores => Sources.Select(x => x.SourceCore).ToList();
+        public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreGenreCollection> ISdkMember<ICoreGenreCollection>.Sources => Sources;
@@ -310,19 +312,25 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="itemToMerge">The item to merge into this Artist</param>
         public void AddSource(ICoreArtist itemToMerge)
         {
+            Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
+
             if (!Equals(itemToMerge))
                 ThrowHelper.ThrowArgumentException(nameof(itemToMerge), "Tried to merge an artist that doesn't match. Verify that the item matches before merging the source.");
 
+            _sources.Add(itemToMerge);
+            _sourceCores.Add(itemToMerge.SourceCore);
             _albumCollectionItemMap.AddSource(itemToMerge);
             _trackCollectionMap.AddSource(itemToMerge);
             _imageCollectionMap.AddSource(itemToMerge);
-            _sources.Add(itemToMerge);
         }
 
         /// <inheritdoc />
         public void RemoveSource(ICoreArtist itemToRemove)
         {
+            Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
+
             _sources.Remove(itemToRemove);
+            _sourceCores.Remove(itemToRemove.SourceCore);
             _imageCollectionMap.RemoveSource(itemToRemove);
             _albumCollectionItemMap.RemoveSource(itemToRemove);
             _trackCollectionMap.RemoveSource(itemToRemove);

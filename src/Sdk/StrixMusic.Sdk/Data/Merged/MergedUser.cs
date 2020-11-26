@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
 
 namespace StrixMusic.Sdk.Data.Merged
 {
@@ -27,7 +27,9 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="user">The user to wrap around.</param>
         public MergedUser(ICoreUser user)
         {
-            _user = user;
+            _user = user ?? ThrowHelper.ThrowArgumentNullException<ICoreUser>(nameof(user));
+            Sources = _user.IntoList();
+            SourceCores = _user.SourceCore.IntoList();
 
             _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
             Library = new MergedLibrary(_user.Library.IntoList());
@@ -207,10 +209,10 @@ namespace StrixMusic.Sdk.Data.Merged
         IReadOnlyList<ICoreUser> IMerged<ICoreUser>.Sources => Sources;
 
         /// <inheritdoc cref="ISdkMember{T}.Sources" />
-        public IReadOnlyList<ICoreUser> Sources => this.GetSources<ICoreUser>();
+        public IReadOnlyList<ICoreUser> Sources { get; }
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores => this.GetSourceCores<ICoreUser>();
+        public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
         public ILibrary Library { get; }

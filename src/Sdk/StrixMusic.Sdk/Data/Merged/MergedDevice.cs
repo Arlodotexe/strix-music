@@ -24,6 +24,7 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             _source = source;
             _sources = _source.IntoList();
+            
             SourceCores = _source.SourceCore.IntoList();
 
             if (!(_source.PlaybackQueue is null))

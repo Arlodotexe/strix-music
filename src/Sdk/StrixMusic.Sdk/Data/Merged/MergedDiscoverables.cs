@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
 
 namespace StrixMusic.Sdk.Data.Merged
 {
@@ -13,14 +12,14 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedDiscoverables"/> class.
         /// </summary>
-        /// <param name="source">The <see cref="ICoreDiscoverables"/> objects to merge.</param>
-        public MergedDiscoverables(IEnumerable<ICoreDiscoverables> source)
-            : base(source.ToArray())
+        /// <param name="sources">The <see cref="ICoreDiscoverables"/> objects to merge.</param>
+        public MergedDiscoverables(IEnumerable<ICoreDiscoverables> sources)
+            : base(sources.ToArray())
         {
         }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreDiscoverables> ISdkMember<ICoreDiscoverables>.Sources => this.GetSources<ICoreDiscoverables>();
+        IReadOnlyList<ICoreDiscoverables> ISdkMember<ICoreDiscoverables>.Sources => StoredSources;
 
         /// <inheritdoc cref="Equals(object?)" />
         public bool Equals(ICoreDiscoverables? other)

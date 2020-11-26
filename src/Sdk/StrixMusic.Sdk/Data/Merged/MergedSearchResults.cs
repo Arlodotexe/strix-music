@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
 
 namespace StrixMusic.Sdk.Data.Merged
 {
@@ -21,7 +19,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreSearchResults> ISdkMember<ICoreSearchResults>.Sources => this.GetSources<ICoreSearchResults>();
+        IReadOnlyList<ICoreSearchResults> ISdkMember<ICoreSearchResults>.Sources => StoredSources;
 
         /// <inheritdoc cref="Equals(object?)" />
         public bool Equals(ICoreSearchResults? other)

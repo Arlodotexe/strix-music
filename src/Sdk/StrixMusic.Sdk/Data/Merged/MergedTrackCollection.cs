@@ -6,7 +6,6 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -20,6 +19,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private readonly ICoreTrackCollection _preferredSource;
         private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageMap;
+        private readonly List<ICore> _sourceCores;
 
         /// <summary>
         /// Creates a new instance of <see cref="MergedTrackCollection"/>.
@@ -28,6 +28,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public MergedTrackCollection(IEnumerable<ICoreTrackCollection> collections)
         {
             _sources = collections?.ToList() ?? ThrowHelper.ThrowArgumentNullException<List<ICoreTrackCollection>>(nameof(collections));
+            _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _preferredSource = _sources[0];
 
@@ -236,7 +237,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc cref="ISdkMember{T}.Sources" />
-        public IReadOnlyList<ICore> SourceCores => this.GetSourceCores<ICoreTrackCollection>();
+        public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => _sources;
@@ -274,7 +275,11 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public void AddSource(ICoreTrackCollection itemToMerge)
         {
+            Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
+
             _sources.Add(itemToMerge);
+            _sourceCores.Add(itemToMerge.SourceCore);
+
             _trackMap.AddSource(itemToMerge);
             _imageMap.AddSource(itemToMerge);
         }
@@ -282,7 +287,11 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public void RemoveSource(ICoreTrackCollection itemToRemove)
         {
+            Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
+
             _sources.Remove(itemToRemove);
+            _sourceCores.Remove(itemToRemove.SourceCore);
+
             _trackMap.RemoveSource(itemToRemove);
             _imageMap.RemoveSource(itemToRemove);
         }
