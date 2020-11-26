@@ -22,16 +22,25 @@ namespace StrixMusic.Sdk.Extensions
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return typeof(TCollection) switch
-            {
-                IPlayableCollectionGroupBase _ => (IAsyncEnumerable<TResult>)((ICorePlayableCollectionGroup)source).GetChildrenAsync(limit, offset),
-                IAlbumCollectionBase _ => (IAsyncEnumerable<TResult>)((ICoreAlbumCollection)source).GetAlbumItemsAsync(limit, offset),
-                IArtistCollectionBase _ => (IAsyncEnumerable<TResult>)((ICoreArtistCollection)source).GetArtistItemsAsync(limit, offset),
-                IPlaylistCollectionBase _ => (IAsyncEnumerable<TResult>)((ICorePlaylistCollection)source).GetPlaylistItemsAsync(limit, offset),
-                ITrackCollectionBase _ => (IAsyncEnumerable<TResult>)((ICoreTrackCollection)source).GetTracksAsync(limit, offset),
-                IImageCollectionBase _ => (IAsyncEnumerable<TResult>)((ICoreImageCollection)source).GetImagesAsync(limit, offset),
-                _ => throw new NotSupportedException("Collection type not handled"),
-            };
+            if (typeof(TCollection) == typeof(ICorePlayableCollectionGroup))
+                return (IAsyncEnumerable<TResult>)((ICorePlayableCollectionGroup)source).GetChildrenAsync(limit, offset);
+
+            if (typeof(TCollection) == typeof(ICoreAlbumCollection))
+                return (IAsyncEnumerable<TResult>)((ICoreAlbumCollection)source).GetAlbumItemsAsync(limit, offset);
+
+            if (typeof(TCollection) == typeof(ICoreArtistCollection))
+                return (IAsyncEnumerable<TResult>)((ICoreArtistCollection)source).GetArtistItemsAsync(limit, offset);
+
+            if (typeof(TCollection) == typeof(ICorePlaylistCollection))
+                return (IAsyncEnumerable<TResult>)((ICorePlaylistCollection)source).GetPlaylistItemsAsync(limit, offset);
+
+            if (typeof(TCollection) == typeof(ICoreTrackCollection))
+                return (IAsyncEnumerable<TResult>)((ICoreTrackCollection)source).GetTracksAsync(limit, offset);
+
+            if (typeof(TCollection) == typeof(ICoreImageCollection))
+                return (IAsyncEnumerable<TResult>)((ICoreImageCollection)source).GetImagesAsync(limit, offset);
+
+            throw new NotSupportedException("Collection type not handled");
         }
     }
 }

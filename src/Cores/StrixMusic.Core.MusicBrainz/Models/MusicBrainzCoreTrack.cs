@@ -7,7 +7,6 @@ using Hqub.MusicBrainz.API.Entities;
 using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Core.MusicBrainz.Models.Enums;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Data;
@@ -103,7 +102,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TrackType Type => TrackType.Song;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount => _track.Recording.Credits.Count;
+        public int TotalArtistItemsCount => _track.Recording.Credits?.Count ?? 0;
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 0;
@@ -316,9 +315,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ICoreImage>> GetImagesAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            return Task.FromResult<IReadOnlyList<ICoreImage>>(Array.Empty<ICoreImage>());
+            await Task.CompletedTask;
+            yield break;
         }
     }
 }

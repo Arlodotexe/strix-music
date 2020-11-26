@@ -306,16 +306,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public int TotalImageCount { get; } = 3;
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ICoreImage>> GetImagesAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            var returnData = new List<ICoreImage>();
-
             foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
             {
-                returnData.Add(new MusicBrainzCoreImage(SourceCore, Release.Id, item));
+                yield return new MusicBrainzCoreImage(SourceCore, Release.Id, item);
             }
-
-            return Task.FromResult<IReadOnlyList<ICoreImage>>(returnData);
+            await Task.CompletedTask;
         }
 
         /// <inheritdoc />

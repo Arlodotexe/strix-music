@@ -42,8 +42,11 @@ namespace StrixMusic.Sdk.Data.Merged
             _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
             _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
             _albumCollectionItemMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this);
-            
-            RelatedItems = new MergedPlayableCollectionGroup(_sources.Select(x => x.RelatedItems).PruneNull().ToList());
+
+            var relatedItems = _sources.Select(x => x.RelatedItems).PruneNull().ToList();
+
+            if (relatedItems.Count > 0)
+                RelatedItems = new MergedPlayableCollectionGroup(relatedItems);
 
             // TODO: Get the actual preferred source.
             PreferredSource = _sources[0];

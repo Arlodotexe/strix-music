@@ -95,7 +95,7 @@ namespace StrixMusic.Sdk.Uno.Services
             {
                 fileHandle = await pathHandle.GetFileAsync(filename);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 fileHandle = await pathHandle.CreateFileAsync(filename);
             }

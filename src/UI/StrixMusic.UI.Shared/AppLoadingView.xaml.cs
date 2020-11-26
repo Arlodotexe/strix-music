@@ -126,6 +126,9 @@ namespace StrixMusic.Shared
             UpdateStatus($"Adding temp {nameof(MusicBrainzCore)} instance");
             cores.Add(new MusicBrainzCore("testInstance"));
 
+            UpdateStatus("Setting up ranking for temp cores.");
+            await _settingsService.SetValue<IReadOnlyList<Type>>(nameof(SettingsKeys.CoreRanking), new List<Type> { typeof(MusicBrainzCore) }).RunInBackground();
+
             UpdateStatus("Initializing cores");
             var initData = cores.Select(x => new ValueTuple<ICore, IServiceCollection>(x, new ServiceCollection())).ToArray();
             await Task.Run(() => CurrentWindow.MainViewModel.InitializeCores(initData));

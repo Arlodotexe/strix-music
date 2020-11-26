@@ -1,4 +1,5 @@
 ﻿using System;
+using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 
@@ -16,17 +17,26 @@ namespace StrixMusic.Sdk.Extensions
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            
-            return typeof(TCollection) switch
-            {
-                IPlayableCollectionGroupBase _ => ((IPlayableCollectionGroupBase)source).TotalChildrenCount,
-                IAlbumCollectionBase _ => ((IAlbumCollectionBase)source).TotalAlbumItemsCount,
-                IArtistCollectionBase _ => ((IArtistCollectionBase)source).TotalArtistItemsCount,
-                IPlaylistCollectionBase _ => ((IPlaylistCollectionBase)source).TotalPlaylistItemsCount,
-                ITrackCollectionBase _ => ((ITrackCollectionBase)source).TotalTracksCount,
-                IImageCollectionBase _ => ((IImageCollectionBase)source).TotalImageCount,
-                _ => throw new ArgumentOutOfRangeException(nameof(source))
-            };
+
+            if (typeof(TCollection) == typeof(IPlayableCollectionGroup))
+                return ((IPlayableCollectionGroupBase)source).TotalChildrenCount;
+
+            if (typeof(TCollection) == typeof(IAlbumCollection))
+                return ((IAlbumCollectionBase)source).TotalAlbumItemsCount;
+
+            if (typeof(TCollection) == typeof(IArtistCollection))
+                return ((IArtistCollectionBase)source).TotalArtistItemsCount;
+
+            if (typeof(TCollection) == typeof(IPlaylistCollection))
+                return ((IPlaylistCollectionBase)source).TotalPlaylistItemsCount;
+
+            if (typeof(TCollection) == typeof(ITrackCollection))
+                return ((ITrackCollectionBase)source).TotalTracksCount;
+
+            if (typeof(TCollection) == typeof(IImageCollection))
+                return ((IImageCollectionBase)source).TotalImageCount;
+
+            throw new ArgumentOutOfRangeException(nameof(source));
         }
     }
 }

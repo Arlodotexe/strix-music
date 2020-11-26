@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 
@@ -16,7 +15,7 @@ namespace StrixMusic.Sdk.Data.Core
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
         /// <returns><see cref="IReadOnlyList{T}"/> containing the requested items.</returns>
-        Task<IReadOnlyList<ICoreImage>> GetImagesAsync(int limit, int offset);
+        IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset);
 
         /// <summary>
         /// Adds a new image to the collection on the backend.

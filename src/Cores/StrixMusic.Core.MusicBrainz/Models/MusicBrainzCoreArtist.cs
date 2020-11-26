@@ -292,9 +292,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ICoreImage>> GetImagesAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            return Task.FromResult<IReadOnlyList<ICoreImage>>(Array.Empty<ICoreImage>());
+            await Task.CompletedTask;
+            yield break;
         }
     }
 }

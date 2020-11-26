@@ -41,7 +41,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private IReadOnlyList<Type>? _coreRanking;
         private MergedCollectionSorting? _sortingMethod;
         private bool _isInit;
-        
+
         /// <inheritdoc />
         public IReadOnlyList<TCoreCollection> Sources => _collection.Sources;
 
@@ -100,69 +100,79 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private void AttachEvents(TCoreCollection item)
         {
-            switch (typeof(TCoreCollection))
+            if (typeof(TCoreCollection) == typeof(ICorePlayableCollectionGroup))
             {
-                case ICorePlayableCollectionGroup _:
-                    ((ICorePlayableCollectionGroup)item).ChildItemsChanged += MergedCollectionMap_ChildItemsChanged;
-                    ((ICorePlayableCollectionGroup)item).TotalChildrenCountChanged += MergedCollectionMap_CountChanged;
-                    break;
-                case ICoreAlbumCollection _:
-                    ((ICoreAlbumCollection)item).AlbumItemsCountChanged += MergedCollectionMap_CountChanged;
-                    ((ICoreAlbumCollection)item).AlbumItemsChanged += MergedCollectionMap_AlbumItemsChanged;
-                    break;
-                case ICoreArtistCollection _:
-                    ((ICoreArtistCollection)item).ArtistItemsCountChanged += MergedCollectionMap_CountChanged;
-                    ((ICoreArtistCollection)item).ArtistItemsChanged += MergedCollectionMap_ArtistItemsChanged;
-                    break;
-                case ICorePlaylistCollection _:
-                    ((ICoreArtistCollection)item).ArtistItemsCountChanged += MergedCollectionMap_CountChanged;
-                    ((ICoreArtistCollection)item).ArtistItemsChanged += MergedCollectionMap_ArtistItemsChanged;
-                    break;
-                case ICoreTrackCollection _:
-                    ((ICoreTrackCollection)item).TrackItemsCountChanged += MergedCollectionMap_CountChanged;
-                    ((ICoreTrackCollection)item).TrackItemsChanged += MergedCollectionMap_TrackItemsChanged;
-                    break;
-                case ICoreImageCollection _:
-                    ((ICoreImageCollection)item).ImagesCountChanged += MergedCollectionMap_CountChanged;
-                    ((ICoreImageCollection)item).ImagesChanged += MergedCollectionMap_ImagesChanged;
-                    break;
-                default:
-                    ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't attach events. Type not supported.");
-                    break;
+                ((ICorePlayableCollectionGroup)item).ChildItemsChanged += MergedCollectionMap_ChildItemsChanged;
+                ((ICorePlayableCollectionGroup)item).TotalChildrenCountChanged += MergedCollectionMap_CountChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreAlbumCollection))
+            {
+                ((ICoreAlbumCollection)item).AlbumItemsCountChanged += MergedCollectionMap_CountChanged;
+                ((ICoreAlbumCollection)item).AlbumItemsChanged += MergedCollectionMap_AlbumItemsChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreArtistCollection))
+            {
+                ((ICoreArtistCollection)item).ArtistItemsCountChanged += MergedCollectionMap_CountChanged;
+                ((ICoreArtistCollection)item).ArtistItemsChanged += MergedCollectionMap_ArtistItemsChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICorePlaylistCollection))
+            {
+                ((ICoreArtistCollection)item).ArtistItemsCountChanged += MergedCollectionMap_CountChanged;
+                ((ICoreArtistCollection)item).ArtistItemsChanged += MergedCollectionMap_ArtistItemsChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreTrackCollection))
+            {
+                ((ICoreTrackCollection)item).TrackItemsCountChanged += MergedCollectionMap_CountChanged;
+                ((ICoreTrackCollection)item).TrackItemsChanged += MergedCollectionMap_TrackItemsChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreImageCollection))
+            {
+                ((ICoreImageCollection)item).ImagesCountChanged += MergedCollectionMap_CountChanged;
+                ((ICoreImageCollection)item).ImagesChanged += MergedCollectionMap_ImagesChanged;
+            }
+            else
+            {
+                ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>(
+                    $"Couldn't attach events. Type \"{typeof(TCoreCollection)}\" not supported.");
             }
         }
 
         private void DetachEvents(TCoreCollection item)
         {
-            switch (typeof(TCoreCollection))
+            if (typeof(TCoreCollection) is ICorePlayableCollectionGroup _)
             {
-                case ICorePlayableCollectionGroup _:
-                    ((ICorePlayableCollectionGroup)item).ChildItemsChanged -= MergedCollectionMap_ChildItemsChanged;
-                    ((ICorePlayableCollectionGroup)item).TotalChildrenCountChanged -= MergedCollectionMap_CountChanged;
-                    break;
-                case ICoreAlbumCollection _:
-                    ((ICoreAlbumCollection)item).AlbumItemsCountChanged -= MergedCollectionMap_CountChanged;
-                    ((ICoreAlbumCollection)item).AlbumItemsChanged -= MergedCollectionMap_AlbumItemsChanged;
-                    break;
-                case ICoreArtistCollection _:
-                    ((ICoreArtistCollection)item).ArtistItemsCountChanged -= MergedCollectionMap_CountChanged;
-                    ((ICoreArtistCollection)item).ArtistItemsChanged -= MergedCollectionMap_ArtistItemsChanged;
-                    break;
-                case ICorePlaylistCollection _:
-                    ((ICoreArtistCollection)item).ArtistItemsCountChanged -= MergedCollectionMap_CountChanged;
-                    ((ICoreArtistCollection)item).ArtistItemsChanged -= MergedCollectionMap_ArtistItemsChanged;
-                    break;
-                case ICoreTrackCollection _:
-                    ((ICoreTrackCollection)item).TrackItemsCountChanged -= MergedCollectionMap_CountChanged;
-                    ((ICoreTrackCollection)item).TrackItemsChanged -= MergedCollectionMap_TrackItemsChanged;
-                    break;
-                case ICoreImageCollection _:
-                    ((ICoreImageCollection)item).ImagesCountChanged -= MergedCollectionMap_CountChanged;
-                    ((ICoreImageCollection)item).ImagesChanged -= MergedCollectionMap_ImagesChanged;
-                    break;
-                default:
-                    ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't attach events. Type not supported.");
-                    break;
+                ((ICorePlayableCollectionGroup)item).ChildItemsChanged -= MergedCollectionMap_ChildItemsChanged;
+                ((ICorePlayableCollectionGroup)item).TotalChildrenCountChanged -= MergedCollectionMap_CountChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreAlbumCollection))
+            {
+                ((ICoreAlbumCollection)item).AlbumItemsCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICoreAlbumCollection)item).AlbumItemsChanged -= MergedCollectionMap_AlbumItemsChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreArtistCollection))
+            {
+                ((ICoreArtistCollection)item).ArtistItemsCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICoreArtistCollection)item).ArtistItemsChanged -= MergedCollectionMap_ArtistItemsChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICorePlaylistCollection))
+            {
+                ((ICoreArtistCollection)item).ArtistItemsCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICoreArtistCollection)item).ArtistItemsChanged -= MergedCollectionMap_ArtistItemsChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreTrackCollection))
+            {
+                ((ICoreTrackCollection)item).TrackItemsCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICoreTrackCollection)item).TrackItemsChanged -= MergedCollectionMap_TrackItemsChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreImageCollection))
+            {
+                ((ICoreImageCollection)item).ImagesCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICoreImageCollection)item).ImagesChanged -= MergedCollectionMap_ImagesChanged;
+            }
+            else
+            {
+                ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>(
+                    "Couldn't attach events. Type not supported.");
             }
         }
 
@@ -574,7 +584,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 }
             }
 
-            var merged = (IReadOnlyList<TCollectionItem>)MergeMappedData(_sortedMap);
+            var merged = MergeMappedData(_sortedMap).Select(x=> (TCollectionItem)x).ToList();
 
             return merged;
         }
