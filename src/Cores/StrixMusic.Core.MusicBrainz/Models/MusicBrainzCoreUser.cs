@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using OwlCore.Collections;
-using StrixMusic.Sdk.Data;
+using OwlCore.Events;
 using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -18,6 +19,27 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             SourceCore = sourceCore;
         }
+
+        /// <inheritdoc />
+        public event EventHandler<int>? ImagesCountChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<string>? FullNameChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<CultureInfo>? RegionChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<string?>? EmailChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<string>? DisplayNameChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<DateTime>? BirthDateChanged;
 
         /// <inheritdoc />
         public ICore SourceCore { get; }
@@ -38,10 +60,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public string? Email => null;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<ICoreImage> Images { get; } = new SynchronizedObservableCollection<ICoreImage>();
+        public DateTime? Birthdate => null;
 
         /// <inheritdoc />
-        public DateTime? Birthdate => null;
+        public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<Uri>? Urls { get; } = new SynchronizedObservableCollection<Uri>();
@@ -119,18 +141,21 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public event EventHandler<string>? FullNameChanged;
+        public Task AddImageAsync(ICoreImage image, int index)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<CultureInfo>? RegionChanged;
+        public Task RemoveImageAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
-        public event EventHandler<string?>? EmailChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<string>? DisplayNameChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<DateTime>? BirthDateChanged;
+        public Task<IReadOnlyList<ICoreImage>> GetImagesAsync(int limit, int offset)
+        {
+            return Task.FromResult<IReadOnlyList<ICoreImage>>(Array.Empty<ICoreImage>());
+        }
     }
 }

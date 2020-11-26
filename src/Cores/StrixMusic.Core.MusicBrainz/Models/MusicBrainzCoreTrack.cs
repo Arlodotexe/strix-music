@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Models.Enums;
 using StrixMusic.Core.MusicBrainz.Services;
@@ -83,6 +84,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged;
 
+        /// <inheritdoc />
+        public event EventHandler<int>? ImagesCountChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? ArtistItemsCountChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
+
         /// <inheritdoc/>
         public string Id => _track.Id;
 
@@ -91,6 +104,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public int TotalArtistItemsCount => _track.Recording.Credits.Count;
+
+        /// <inheritdoc />
+        public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc/>
         public ICoreAlbum? Album { get; }
@@ -122,9 +138,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public string Name => _track.Recording.Title;
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<ICoreImage> Images => CreateImagesForRelease(_track.Recording.Releases);
 
         /// <inheritdoc/>
         public string? Description => null;
@@ -278,6 +291,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc />
+        public Task AddImageAsync(ICoreImage image, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
@@ -290,19 +315,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
         }
 
-        private SynchronizedObservableCollection<ICoreImage> CreateImagesForRelease(IEnumerable<Release> releases)
+        /// <inheritdoc />
+        public Task<IReadOnlyList<ICoreImage>> GetImagesAsync(int limit, int offset)
         {
-            var returnData = new SynchronizedObservableCollection<ICoreImage>();
-
-            foreach (var release in releases)
-            {
-                foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
-                {
-                    returnData.Add(new MusicBrainzCoreImage(SourceCore, release.Id, item));
-                }
-            }
-
-            return returnData;
+            return Task.FromResult<IReadOnlyList<ICoreImage>>(Array.Empty<ICoreImage>());
         }
     }
 }
