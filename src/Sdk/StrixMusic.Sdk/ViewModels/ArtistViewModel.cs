@@ -287,84 +287,84 @@ namespace StrixMusic.Sdk.ViewModels
         public string Name
         {
             get => _artist.Name;
-            private set => SetProperty(() => _artist.Name, value);
+            private set => SetProperty(_artist.Name, value, _artist, (m, v) => m.Name = v);
         }
 
         /// <inheritdoc />
         public int TotalAlbumItemsCount
         {
             get => _artist.TotalAlbumItemsCount;
-            private set => SetProperty(() => _artist.TotalAlbumItemsCount, value);
+            private set => SetProperty(_artist.TotalAlbumItemsCount, value, _artist, (m, v) => m.TotalAlbumItemsCount = v);
         }
 
         /// <inheritdoc />
         public int TotalTracksCount
         {
             get => _artist.TotalTracksCount;
-            private set => SetProperty(() => _artist.TotalTracksCount, value);
+            private set => SetProperty(_artist.TotalTracksCount, value, _artist, (m, v) => m.TotalTracksCount = v);
         }
 
         /// <inheritdoc />
         public int TotalImageCount
         {
             get => _artist.TotalTracksCount;
-            private set => SetProperty(() => _artist.TotalTracksCount, value);
+            private set => SetProperty(_artist.TotalTracksCount, value, _artist, (m, v) => m.TotalTracksCount = v);
         }
 
         /// <inheritdoc />
         public Uri? Url
         {
             get => _artist.Url;
-            private set => SetProperty(() => _artist.Url, value);
+            private set => SetProperty(_artist.Url, value, _artist, (m, v) => m.Url = v);
         }
 
         /// <inheritdoc />
         public string? Description
         {
             get => _artist.Description;
-            private set => SetProperty(() => _artist.Description, value);
+            private set => SetProperty(_artist.Description, value, _artist, (m, v) => m.Description = v);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => _artist.PlaybackState;
-            private set => SetProperty(() => _artist.PlaybackState, value);
+            private set => SetProperty(_artist.PlaybackState, value, _artist, (m, v) => m.PlaybackState = v);
         }
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported
         {
             get => _artist.IsPlayAsyncSupported;
-            set => SetProperty(() => _artist.IsPlayAsyncSupported, value);
+            set => SetProperty(_artist.IsPlayAsyncSupported, value, _artist, (m, v) => m.IsPlayAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsPauseAsyncSupported
         {
             get => _artist.IsPauseAsyncSupported;
-            set => SetProperty(() => _artist.IsPauseAsyncSupported, value);
+            set => SetProperty(_artist.IsPauseAsyncSupported, value, _artist, (m, v) => m.IsPauseAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeNameAsyncSupported
         {
             get => _artist.IsChangeNameAsyncSupported;
-            set => SetProperty(() => _artist.IsChangeNameAsyncSupported, value);
+            set => SetProperty(_artist.IsChangeNameAsyncSupported, value, _artist, (m, v) => m.IsChangeNameAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeDescriptionAsyncSupported
         {
             get => _artist.IsChangeDescriptionAsyncSupported;
-            set => SetProperty(() => _artist.IsChangeDescriptionAsyncSupported, value);
+            set => SetProperty(_artist.IsChangeDescriptionAsyncSupported, value, _artist, (m, v) => m.IsChangeDescriptionAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeDurationAsyncSupported
         {
             get => _artist.IsChangeDurationAsyncSupported;
-            set => SetProperty(() => _artist.IsChangeDurationAsyncSupported, value);
+            set => SetProperty(_artist.IsChangeDurationAsyncSupported, value, _artist, (m, v) => m.IsChangeDurationAsyncSupported = v);
         }
 
         /// <inheritdoc />

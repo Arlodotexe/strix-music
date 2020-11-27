@@ -421,70 +421,70 @@ namespace StrixMusic.Sdk.ViewModels
         public string Name
         {
             get => _collectionGroup.Name;
-            private set => SetProperty(() => _collectionGroup.Name, value);
+            private set => SetProperty(_collectionGroup.Name, value, _collectionGroup, (m, v) => m.Name = v);
         }
 
         /// <inheritdoc />
         public int TotalPlaylistItemsCount
         {
             get => _collectionGroup.TotalPlaylistItemsCount;
-            private set => SetProperty(() => _collectionGroup.TotalPlaylistItemsCount, value);
+            private set => SetProperty(_collectionGroup.TotalPlaylistItemsCount, value, _collectionGroup, (m, v) => m.TotalPlaylistItemsCount = v);
         }
 
         /// <inheritdoc />
         public int TotalTracksCount
         {
             get => _collectionGroup.TotalTracksCount;
-            private set => SetProperty(() => _collectionGroup.TotalTracksCount, value);
+            private set => SetProperty(_collectionGroup.TotalTracksCount, value, _collectionGroup, (m, v) => m.TotalTracksCount = v);
         }
 
         /// <inheritdoc />
         public int TotalAlbumItemsCount
         {
             get => _collectionGroup.TotalAlbumItemsCount;
-            private set => SetProperty(() => _collectionGroup.TotalAlbumItemsCount, value);
+            private set => SetProperty(_collectionGroup.TotalAlbumItemsCount, value, _collectionGroup, (m, v) => m.TotalAlbumItemsCount = v);
         }
 
         /// <inheritdoc />
         public int TotalArtistItemsCount
         {
             get => _collectionGroup.TotalArtistItemsCount;
-            private set => SetProperty(() => _collectionGroup.TotalArtistItemsCount, value);
+            private set => SetProperty(_collectionGroup.TotalArtistItemsCount, value, _collectionGroup, (m, v) => m.TotalArtistItemsCount = v);
         }
 
         /// <inheritdoc />
         public int TotalChildrenCount
         {
             get => _collectionGroup.TotalChildrenCount;
-            private set => SetProperty(() => _collectionGroup.TotalChildrenCount, value);
+            private set => SetProperty(_collectionGroup.TotalChildrenCount, value, _collectionGroup, (m, v) => m.TotalChildrenCount = v);
         }
 
         /// <inheritdoc />
         public int TotalImageCount
         {
             get => _collectionGroup.TotalImageCount;
-            private set => SetProperty(() => _collectionGroup.TotalImageCount, value);
+            private set => SetProperty(_collectionGroup.TotalImageCount, value, _collectionGroup, (m, v) => m.TotalImageCount = v);
         }
 
         /// <inheritdoc />
         public Uri? Url
         {
             get => _collectionGroup.Url;
-            private set => SetProperty(() => _collectionGroup.Url, value);
+            private set => SetProperty(_collectionGroup.Url, value, _collectionGroup, (m, v) => m.Url = v);
         }
 
         /// <inheritdoc />
         public string? Description
         {
             get => _collectionGroup.Description;
-            private set => SetProperty(() => _collectionGroup.Description, value);
+            private set => SetProperty(_collectionGroup.Description, value, _collectionGroup, (m, v) => m.Description = v);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => _collectionGroup.PlaybackState;
-            private set => SetProperty(() => _collectionGroup.PlaybackState, value);
+            private set => SetProperty(_collectionGroup.PlaybackState, value, _collectionGroup, (m, v) => m.PlaybackState = v);
         }
 
         /// <inheritdoc />

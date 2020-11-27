@@ -243,42 +243,42 @@ namespace StrixMusic.Sdk.ViewModels
         public Uri? Url
         {
             get => _playlist.Url;
-            set => SetProperty(() => _playlist.Url, value);
+            set => SetProperty(_playlist.Url, value, _playlist, (m, v) => m.Url = v);
         }
 
         /// <inheritdoc />
         public string Name
         {
             get => _playlist.Name;
-            set => SetProperty(() => _playlist.Name, value);
+            set => SetProperty(_playlist.Name, value, _playlist, (m, v) => m.Name = v);
         }
 
         /// <inheritdoc />
         public string? Description
         {
             get => _playlist.Description;
-            set => SetProperty(() => _playlist.Description, value);
+            set => SetProperty(_playlist.Description, value, _playlist, (m, v) => m.Description = v);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => _playlist.PlaybackState;
-            set => SetProperty(() => _playlist.PlaybackState, value);
+            set => SetProperty(_playlist.PlaybackState, value, _playlist, (m, v) => m.PlaybackState = v);
         }
 
         /// <inheritdoc />
         public int TotalTracksCount
         {
             get => _playlist.TotalTracksCount;
-            set => SetProperty(() => _playlist.TotalTracksCount, value);
+            set => SetProperty(_playlist.TotalTracksCount, value, _playlist, (m, v) => m.TotalTracksCount = v);
         }
 
         /// <inheritdoc />
         public int TotalImageCount
         {
             get => _playlist.TotalImageCount;
-            set => SetProperty(() => _playlist.TotalImageCount, value);
+            set => SetProperty(_playlist.TotalImageCount, value, _playlist, (m, v) => m.TotalImageCount = v);
         }
 
         /// <inheritdoc />

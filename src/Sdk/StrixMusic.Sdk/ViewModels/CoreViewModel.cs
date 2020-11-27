@@ -72,7 +72,7 @@ namespace StrixMusic.Sdk.ViewModels
         public CoreState CoreState
         {
             get => _core.CoreState;
-            set => SetProperty(() => _core.CoreState, value);
+            set => SetProperty(_core.CoreState, value, _core, (m, v) => m.CoreState = v);
         }
 
         /// <inheritdoc />

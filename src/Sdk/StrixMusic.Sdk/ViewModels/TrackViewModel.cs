@@ -311,28 +311,28 @@ namespace StrixMusic.Sdk.ViewModels
         public string Name
         {
             get => Model.Name;
-            set => SetProperty(() => Model.Name, value);
+            set => SetProperty(Model.Name, value, Model, (m, v) => m.Name = v);
         }
 
         /// <inheritdoc />
         public int TotalArtistItemsCount
         {
             get => Model.TotalArtistItemsCount;
-            set => SetProperty(() => Model.TotalArtistItemsCount, value);
+            set => SetProperty(Model.TotalArtistItemsCount, value, Model, (m, v) => m.TotalArtistItemsCount = v);
         }
 
         /// <inheritdoc />
         public int TotalImageCount
         {
             get => Model.TotalImageCount;
-            set => SetProperty(() => Model.TotalImageCount, value);
+            set => SetProperty(Model.TotalImageCount, value, Model, (m, v) => m.TotalImageCount = v);
         }
 
         /// <inheritdoc />
         public Uri? Url
         {
             get => Model.Url;
-            set => SetProperty(() => Model.Url, value);
+            set => SetProperty(Model.Url, value, Model, (m, v) => m.Url = v);
         }
 
         /// <inheritdoc />
@@ -346,7 +346,7 @@ namespace StrixMusic.Sdk.ViewModels
         public int? TrackNumber
         {
             get => Model.TrackNumber;
-            set => SetProperty(() => Model.TrackNumber, value);
+            set => SetProperty(Model.TrackNumber, value, Model, (m, v) => m.TrackNumber = v);
         }
 
         /// <inheritdoc/>
@@ -356,105 +356,105 @@ namespace StrixMusic.Sdk.ViewModels
         public CultureInfo? Language
         {
             get => Model.Language;
-            set => SetProperty(() => Model.Language, value);
+            set => SetProperty(Model.Language, value, Model, (m, v) => m.Language = v);
         }
 
         /// <inheritdoc />
         public ILyrics? Lyrics
         {
             get => Model.Lyrics;
-            set => SetProperty(() => Model.Lyrics, value);
+            set => SetProperty(Model.Lyrics, value, Model, (m, v) => m.Lyrics = v);
         }
 
         /// <inheritdoc />
         public bool IsExplicit
         {
             get => Model.IsExplicit;
-            set => SetProperty(() => Model.IsExplicit, value);
+            set => SetProperty(Model.IsExplicit, value, Model, (m, v) => m.IsExplicit = v);
         }
 
         /// <inheritdoc />
         public string? Description
         {
             get => Model.Description;
-            set => SetProperty(() => Model.Description, value);
+            set => SetProperty(Model.Description, value, Model, (m, v) => m.Description = v);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => Model.PlaybackState;
-            set => SetProperty(() => Model.PlaybackState, value);
+            set => SetProperty(Model.PlaybackState, value, Model, (m, v) => m.PlaybackState = v);
         }
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported
         {
             get => Model.IsPlayAsyncSupported;
-            set => SetProperty(() => Model.IsPlayAsyncSupported, value);
+            set => SetProperty(Model.IsPlayAsyncSupported, value, Model, (m, v) => m.IsPlayAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsPauseAsyncSupported
         {
             get => Model.IsPauseAsyncSupported;
-            set => SetProperty(() => Model.IsPauseAsyncSupported, value);
+            set => SetProperty(Model.IsPauseAsyncSupported, value, Model, (m, v) => m.IsPauseAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeNameAsyncSupported
         {
             get => Model.IsChangeNameAsyncSupported;
-            set => SetProperty(() => Model.IsChangeNameAsyncSupported, value);
+            set => SetProperty(Model.IsChangeNameAsyncSupported, value, Model, (m, v) => m.IsChangeNameAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeDescriptionAsyncSupported
         {
             get => Model.IsChangeDescriptionAsyncSupported;
-            set => SetProperty(() => Model.IsChangeDescriptionAsyncSupported, value);
+            set => SetProperty(Model.IsChangeDescriptionAsyncSupported, value, Model, (m, v) => m.IsChangeDescriptionAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeDurationAsyncSupported
         {
             get => Model.IsChangeDurationAsyncSupported;
-            set => SetProperty(() => Model.IsChangeDurationAsyncSupported, value);
+            set => SetProperty(Model.IsChangeDurationAsyncSupported, value, Model, (m, v) => m.IsChangeDurationAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeAlbumAsyncSupported
         {
             get => Model.IsChangeAlbumAsyncSupported;
-            set => SetProperty(() => Model.IsChangeAlbumAsyncSupported, value);
+            set => SetProperty(Model.IsChangeAlbumAsyncSupported, value, Model, (m, v) => m.IsChangeAlbumAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeTrackNumberAsyncSupported
         {
             get => Model.IsChangeTrackNumberAsyncSupported;
-            set => SetProperty(() => Model.IsChangeTrackNumberAsyncSupported, value);
+            set => SetProperty(Model.IsChangeTrackNumberAsyncSupported, value, Model, (m, v) => m.IsChangeTrackNumberAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeLanguageAsyncSupported
         {
             get => Model.IsChangeLanguageAsyncSupported;
-            set => SetProperty(() => Model.IsChangeLanguageAsyncSupported, value);
+            set => SetProperty(Model.IsChangeLanguageAsyncSupported, value, Model, (m, v) => m.IsChangeLanguageAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeLyricsAsyncSupported
         {
             get => Model.IsChangeLyricsAsyncSupported;
-            set => SetProperty(() => Model.IsChangeLyricsAsyncSupported, value);
+            set => SetProperty(Model.IsChangeLyricsAsyncSupported, value, Model, (m, v) => m.IsChangeLyricsAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeIsExplicitAsyncSupported
         {
             get => Model.IsChangeIsExplicitAsyncSupported;
-            set => SetProperty(() => Model.IsChangeIsExplicitAsyncSupported, value);
+            set => SetProperty(Model.IsChangeIsExplicitAsyncSupported, value, Model, (m, v) => m.IsChangeIsExplicitAsyncSupported = v);
         }
 
         /// <inheritdoc />

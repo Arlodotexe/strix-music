@@ -253,21 +253,21 @@ namespace StrixMusic.Sdk.ViewModels
         public string Name
         {
             get => _album.Name;
-            private set => SetProperty(() => _album.Name, value);
+            private set => SetProperty(_album.Name, value, _album, (m, v) => m.Name = v);
         }
 
         /// <inheritdoc />
         public int TotalTracksCount
         {
             get => _album.TotalTracksCount;
-            private set => SetProperty(() => _album.TotalTracksCount, value);
+            private set => SetProperty(_album.TotalTracksCount, value, _album, (m, v) => m.TotalTracksCount = v);
         }
 
         /// <inheritdoc />
         public int TotalImageCount
         {
             get => _album.TotalImageCount;
-            private set => SetProperty(() => _album.TotalTracksCount, value);
+            private set => SetProperty(_album.TotalTracksCount, value, _album, (m, v) => m.TotalTracksCount = v);
         }
 
         /// <inheritdoc cref="IAlbum.Artist" />
@@ -284,70 +284,70 @@ namespace StrixMusic.Sdk.ViewModels
         public Uri? Url
         {
             get => _album.Url;
-            private set => SetProperty(() => _album.Url, value);
+            private set => SetProperty(_album.Url, value, _album, (m, v) => m.Url = v);
         }
 
         /// <inheritdoc />
         public DateTime? DatePublished
         {
             get => _album.DatePublished;
-            set => SetProperty(() => _album.DatePublished, value);
+            set => SetProperty(_album.DatePublished, value, _album, (m, v) => m.DatePublished = v);
         }
 
         /// <inheritdoc />
         public string? Description
         {
             get => _album.Description;
-            private set => SetProperty(() => _album.Description, value);
+            private set => SetProperty(_album.Description, value, _album, (m, v) => m.Description = v);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => _album.PlaybackState;
-            private set => SetProperty(() => _album.PlaybackState, value);
+            private set => SetProperty(_album.PlaybackState, value, _album, (m, v) => m.PlaybackState = v);
         }
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported
         {
             get => _album.IsPlayAsyncSupported;
-            set => SetProperty(() => _album.IsPlayAsyncSupported, value);
+            set => SetProperty(_album.IsPlayAsyncSupported, value, _album, (m, v) => m.IsPlayAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsPauseAsyncSupported
         {
             get => _album.IsPauseAsyncSupported;
-            set => SetProperty(() => _album.IsPauseAsyncSupported, value);
+            set => SetProperty(_album.IsPauseAsyncSupported, value, _album, (m, v) => m.IsPauseAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeNameAsyncSupported
         {
             get => _album.IsChangeNameAsyncSupported;
-            set => SetProperty(() => _album.IsChangeNameAsyncSupported, value);
+            set => SetProperty(_album.IsChangeNameAsyncSupported, value, _album, (m, v) => m.IsChangeNameAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeDescriptionAsyncSupported
         {
             get => _album.IsChangeDescriptionAsyncSupported;
-            set => SetProperty(() => _album.IsChangeDescriptionAsyncSupported, value);
+            set => SetProperty(_album.IsChangeDescriptionAsyncSupported, value, _album, (m, v) => m.IsChangeDescriptionAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeDatePublishedAsyncSupported
         {
             get => _album.IsChangeDatePublishedAsyncSupported;
-            set => SetProperty(() => _album.IsChangeDatePublishedAsyncSupported, value);
+            set => SetProperty(_album.IsChangeDatePublishedAsyncSupported, value, _album, (m, v) => m.IsChangeDatePublishedAsyncSupported = v);
         }
 
         /// <inheritdoc />
         public bool IsChangeDurationAsyncSupported
         {
             get => _album.IsChangeDurationAsyncSupported;
-            set => SetProperty(() => _album.IsChangeDurationAsyncSupported, value);
+            set => SetProperty(_album.IsChangeDurationAsyncSupported, value, _album, (m, v) => m.IsChangeDurationAsyncSupported = v);
         }
 
         /// <inheritdoc />

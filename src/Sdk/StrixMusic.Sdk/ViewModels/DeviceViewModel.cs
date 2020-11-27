@@ -125,14 +125,14 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsActive
         {
             get => Model.IsActive;
-            private set => SetProperty(() => Model.IsActive, value);
+            private set => SetProperty(Model.IsActive, value, Model, (m, v) => m.IsActive = v);
         }
 
         /// <inheritdoc />
         public IPlayable? PlaybackContext
         {
             get => Model.PlaybackContext;
-            internal set => SetProperty(() => Model.PlaybackContext, value);
+            internal set => SetProperty(Model.PlaybackContext, value, Model, (m, v) => m.PlaybackContext = v);
         }
 
         /// <inheritdoc />
@@ -146,42 +146,42 @@ namespace StrixMusic.Sdk.ViewModels
         public TimeSpan Position
         {
             get => Model.Position;
-            private set => SetProperty(() => Model.Position, value);
+            private set => SetProperty(Model.Position, value, Model, (m, v) => m.Position = v);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => Model.PlaybackState;
-            private set => SetProperty(() => Model.PlaybackState, value);
+            private set => SetProperty(Model.PlaybackState, value, Model, (m, v) => m.PlaybackState = v);
         }
 
         /// <inheritdoc />
         public bool ShuffleState
         {
             get => Model.ShuffleState;
-            private set => SetProperty(() => Model.ShuffleState, value);
+            private set => SetProperty(Model.ShuffleState, value, Model, (m, v) => m.ShuffleState = v);
         }
 
         /// <inheritdoc />
         public RepeatState RepeatState
         {
             get => Model.RepeatState;
-            private set => SetProperty(() => Model.RepeatState, value);
+            private set => SetProperty(Model.RepeatState, value, Model, (m, v) => m.RepeatState = v);
         }
 
         /// <inheritdoc />
         public double Volume
         {
             get => Model.Volume;
-            private set => SetProperty(() => Model.Volume, value);
+            private set => SetProperty(Model.Volume, value, Model, (m, v) => m.Volume = v);
         }
 
         /// <inheritdoc />
         public double PlaybackSpeed
         {
             get => Model.PlaybackSpeed;
-            private set => SetProperty(() => Model.PlaybackSpeed, value);
+            private set => SetProperty(Model.PlaybackSpeed, value, Model, (m, v) => m.PlaybackSpeed = v);
         }
 
         /// <inheritdoc />

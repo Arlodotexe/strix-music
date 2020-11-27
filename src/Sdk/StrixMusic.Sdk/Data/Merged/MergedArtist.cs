@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// Merged multiple <see cref="ICoreArtist"/> into a single <see cref="IArtist"/>
     /// </summary>
-    public class MergedArtist : IArtist, IMerged<ICoreArtist>
+    public class MergedArtist : IArtist, IMerged<ICoreArtist>, IMerged<ICoreArtistCollectionItem>
     {
         private readonly List<ICoreArtist> _sources;
         private readonly List<ICore> _sourceCores;
@@ -168,6 +168,21 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
+
+        /// <inheritdoc />
+        public void AddSource(ICoreArtistCollectionItem itemToMerge)
+        {
+            
+        }
+
+        /// <inheritdoc />
+        public void RemoveSource(ICoreArtistCollectionItem itemToRemove)
+        {
+
+        }
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreGenreCollection> ISdkMember<ICoreGenreCollection>.Sources => Sources;
@@ -343,6 +358,12 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool Equals(ICoreArtist? other)
         {
             return other?.Name == Name;
+        }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollectionItem other)
+        {
+            return false;
         }
 
         /// <inheritdoc />
