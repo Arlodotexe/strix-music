@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -11,7 +10,9 @@ using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
@@ -24,7 +25,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class AlbumViewModel : ObservableObject, IAlbum, ITrackCollectionViewModel, IImageCollectionViewModel
     {
-        private readonly IAlbum _album;
+        private readonly MergedAlbum _album;
         private readonly IPlaybackHandlerService _playbackHandler;
         private ArtistViewModel _artist; // TODO: Expose this field from readonly property
 
@@ -32,13 +33,13 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="AlbumViewModel"/> class.
         /// </summary>
         /// <param name="album"><inheritdoc cref="IAlbum"/></param>
-        public AlbumViewModel(IAlbum album)
+        public AlbumViewModel(MergedAlbum album)
         {
             _album = album;
 
             SourceCores = _album.GetSourceCores<ICoreAlbum>().Select(MainViewModel.GetLoadedCore).ToList();
 
-            _playbackHandler = Ioc.Default.GetService<IPlaybackHandlerService>();
+            _playbackHandler = Ioc.Default.GetService<IPlaybackHandlerService>() ?? throw new InvalidOperationException();
 
             Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
             Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
@@ -242,7 +243,7 @@ namespace StrixMusic.Sdk.ViewModels
         public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<string>? Genres => _album.Genres;
+        public SynchronizedObservableCollection<string>? Genres => ((IGenreCollectionBase) _album).Genres;
 
         /// <summary>
         /// The tracks for this album.
@@ -253,28 +254,28 @@ namespace StrixMusic.Sdk.ViewModels
         public string Name
         {
             get => _album.Name;
-            private set => SetProperty(_album.Name, value, _album, (m, v) => m.Name = v);
+            internal set => SetProperty(_album.Name, value, _album, (m, v) => m.Name = v);
         }
 
         /// <inheritdoc />
         public int TotalTracksCount
         {
             get => _album.TotalTracksCount;
-            private set => SetProperty(_album.TotalTracksCount, value, _album, (m, v) => m.TotalTracksCount = v);
+            internal set => SetProperty(_album.TotalTracksCount, value, _album, (m, v) => m.TotalTracksCount = v);
         }
 
         /// <inheritdoc />
         public int TotalImageCount
         {
             get => _album.TotalImageCount;
-            private set => SetProperty(_album.TotalTracksCount, value, _album, (m, v) => m.TotalTracksCount = v);
+            internal set => SetProperty(_album.TotalTracksCount, value, _album, (m, v) => m.TotalTracksCount = v);
         }
 
         /// <inheritdoc cref="IAlbum.Artist" />
         public ArtistViewModel Artist
         {
             get => _artist;
-            set => SetProperty(ref _artist, new ArtistViewModel(value));
+            internal set => SetProperty(ref _artist, new ArtistViewModel(value));
         }
 
         /// <inheritdoc />
@@ -284,71 +285,47 @@ namespace StrixMusic.Sdk.ViewModels
         public Uri? Url
         {
             get => _album.Url;
-            private set => SetProperty(_album.Url, value, _album, (m, v) => m.Url = v);
+            internal set => SetProperty(_album.Url, value, _album, (m, v) => m.Url = v);
         }
 
         /// <inheritdoc />
         public DateTime? DatePublished
         {
             get => _album.DatePublished;
-            set => SetProperty(_album.DatePublished, value, _album, (m, v) => m.DatePublished = v);
+            internal set => SetProperty(_album.DatePublished, value, _album, (m, v) => m.DatePublished = v);
         }
 
         /// <inheritdoc />
         public string? Description
         {
             get => _album.Description;
-            private set => SetProperty(_album.Description, value, _album, (m, v) => m.Description = v);
+            internal set => SetProperty(_album.Description, value, _album, (m, v) => m.Description = v);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => _album.PlaybackState;
-            private set => SetProperty(_album.PlaybackState, value, _album, (m, v) => m.PlaybackState = v);
+            internal set => SetProperty(_album.PlaybackState, value, _album, (m, v) => m.PlaybackState = v);
         }
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported
-        {
-            get => _album.IsPlayAsyncSupported;
-            set => SetProperty(_album.IsPlayAsyncSupported, value, _album, (m, v) => m.IsPlayAsyncSupported = v);
-        }
+        public bool IsPlayAsyncSupported => _album.IsPlayAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported
-        {
-            get => _album.IsPauseAsyncSupported;
-            set => SetProperty(_album.IsPauseAsyncSupported, value, _album, (m, v) => m.IsPauseAsyncSupported = v);
-        }
+        public bool IsPauseAsyncSupported => _album.IsPauseAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported
-        {
-            get => _album.IsChangeNameAsyncSupported;
-            set => SetProperty(_album.IsChangeNameAsyncSupported, value, _album, (m, v) => m.IsChangeNameAsyncSupported = v);
-        }
+        public bool IsChangeNameAsyncSupported => _album.IsChangeNameAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported
-        {
-            get => _album.IsChangeDescriptionAsyncSupported;
-            set => SetProperty(_album.IsChangeDescriptionAsyncSupported, value, _album, (m, v) => m.IsChangeDescriptionAsyncSupported = v);
-        }
+        public bool IsChangeDescriptionAsyncSupported => _album.IsChangeDescriptionAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeDatePublishedAsyncSupported
-        {
-            get => _album.IsChangeDatePublishedAsyncSupported;
-            set => SetProperty(_album.IsChangeDatePublishedAsyncSupported, value, _album, (m, v) => m.IsChangeDatePublishedAsyncSupported = v);
-        }
+        public bool IsChangeDatePublishedAsyncSupported => _album.IsChangeDatePublishedAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported
-        {
-            get => _album.IsChangeDurationAsyncSupported;
-            set => SetProperty(_album.IsChangeDurationAsyncSupported, value, _album, (m, v) => m.IsChangeDurationAsyncSupported = v);
-        }
+        public bool IsChangeDurationAsyncSupported => _album.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
         public Task PauseAsync() => _album.PauseAsync();

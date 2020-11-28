@@ -38,6 +38,11 @@ namespace StrixMusic.Sdk.Data.Merged
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
 
+            Name = _preferredSource.Name;
+            Url = _preferredSource.Url;
+            DatePublished = _preferredSource.DatePublished;
+            PlaybackState = _preferredSource.PlaybackState;
+
             _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
             _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
 
@@ -121,7 +126,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc/>
-        public DateTime? DatePublished => _preferredSource.DatePublished;
+        public DateTime? DatePublished { get; internal set; }
 
         /// <inheritdoc/>
         public bool IsChangeDatePublishedAsyncSupported => _preferredSource.IsChangeDatePublishedAsyncSupported;
@@ -142,22 +147,22 @@ namespace StrixMusic.Sdk.Data.Merged
         IReadOnlyList<ICoreAlbum> ISdkMember<ICoreAlbum>.Sources => Sources;
 
         /// <inheritdoc/>
-        public int TotalTracksCount { get; private set; }
-
-        /// <inheritdoc />
-        public int TotalImageCount { get; set; }
-
-        /// <inheritdoc/>
         public string Id => _preferredSource.Id;
 
         /// <inheritdoc/>
-        public string Name => _preferredSource.Name;
+        public string Name { get; internal set; }
 
         /// <inheritdoc/>
-        public string? Description => _preferredSource.Description;
+        public int TotalTracksCount { get; internal set; }
+
+        /// <inheritdoc />
+        public int TotalImageCount { get; internal set; }
 
         /// <inheritdoc/>
-        public PlaybackState PlaybackState => _preferredSource.PlaybackState;
+        public string? Description { get; internal set; }
+
+        /// <inheritdoc/>
+        public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc/>
         public TimeSpan Duration => _preferredSource.Duration;
@@ -178,7 +183,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc/>
-        public Uri? Url => _preferredSource.Url;
+        public Uri? Url { get; internal set; }
 
         /// <inheritdoc />
         public event EventHandler<DateTime?>? DatePublishedChanged;
@@ -317,6 +322,6 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task PauseAsync() => _preferredSource.PauseAsync();
 
         /// <inheritdoc/>
-        Task IPlayable.PlayAsync() => _preferredSource.PlayAsync();
+        public Task PlayAsync() => _preferredSource.PlayAsync();
     }
 }
