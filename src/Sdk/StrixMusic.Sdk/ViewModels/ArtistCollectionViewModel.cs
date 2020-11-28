@@ -10,6 +10,7 @@ using OwlCore.Events;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -20,13 +21,13 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class ArtistCollectionViewModel : ObservableObject, IArtistCollectionViewModel, IImageCollectionViewModel
     {
-        private readonly IArtistCollection _collection;
+        private readonly MergedArtistCollection _collection;
 
         /// <summary>
         /// Creates a new instance of <see cref="ArtistCollectionViewModel"/>.
         /// </summary>
-        /// <param name="collection">The <see cref="IArtistCollection"/> to wrap around.</param>
-        public ArtistCollectionViewModel(IArtistCollection collection)
+        /// <param name="collection">The <see cref="MergedArtistCollection"/> to wrap around.</param>
+        public ArtistCollectionViewModel(MergedArtistCollection collection)
         {
             _collection = collection ?? throw new ArgumentNullException(nameof(collection));
 
@@ -94,10 +95,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item.Data)
                 {
-                    case IArtist artist:
+                    case MergedArtist artist:
                         Artists.Insert(item.Index, new ArtistViewModel(artist));
                         break;
-                    case IArtistCollection collection:
+                    case MergedArtistCollection collection:
                         Artists.Insert(item.Index, new ArtistCollectionViewModel(collection));
                         break;
                     default:
@@ -198,49 +199,49 @@ namespace StrixMusic.Sdk.ViewModels
         public Uri? Url
         {
             get => _collection.Url;
-            set => SetProperty(_collection.Url, value, _collection, (m, v) => m.Url = v);
+            internal set => SetProperty(_collection.Url, value, _collection, (m, v) => m.Url = v);
         }
 
         /// <inheritdoc />
         public string Name
         {
             get => _collection.Name;
-            set => SetProperty(_collection.Name, value, _collection, (m, v) => m.Name = v);
+            internal set => SetProperty(_collection.Name, value, _collection, (m, v) => m.Name = v);
         }
 
         /// <inheritdoc />
         public string? Description
         {
             get => _collection.Description;
-            set => SetProperty(_collection.Description, value, _collection, (m, v) => m.Description = v);
+            internal set => SetProperty(_collection.Description, value, _collection, (m, v) => m.Description = v);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => _collection.PlaybackState;
-            set => SetProperty(_collection.PlaybackState, value, _collection, (m, v) => m.PlaybackState = v);
+            internal set => SetProperty(_collection.PlaybackState, value, _collection, (m, v) => m.PlaybackState = v);
         }
 
         /// <inheritdoc />
         public TimeSpan Duration
         {
             get => _collection.Duration;
-            set => SetProperty(_collection.Duration, value, _collection, (m, v) => m.Duration = v);
+            internal set => SetProperty(_collection.Duration, value, _collection, (m, v) => m.Duration = v);
         }
 
         /// <inheritdoc />
         public int TotalArtistItemsCount
         {
             get => _collection.TotalArtistItemsCount;
-            set => SetProperty(_collection.TotalArtistItemsCount, value, _collection, (m, v) => m.TotalArtistItemsCount = v);
+            internal set => SetProperty(_collection.TotalArtistItemsCount, value, _collection, (m, v) => m.TotalArtistItemsCount = v);
         }
 
         /// <inheritdoc />
         public int TotalImageCount
         {
             get => _collection.TotalImageCount;
-            set => SetProperty(_collection.TotalImageCount, value, _collection, (m, v) => m.TotalImageCount = v);
+            internal set => SetProperty(_collection.TotalImageCount, value, _collection, (m, v) => m.TotalImageCount = v);
         }
 
         /// <inheritdoc />
@@ -309,10 +310,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item)
                 {
-                    case IArtist artist:
+                    case MergedArtist artist:
                         Artists.Add(new ArtistViewModel(artist));
                         break;
-                    case IArtistCollection collection:
+                    case MergedArtistCollection collection:
                         Artists.Add(new ArtistCollectionViewModel(collection));
                         break;
                 }

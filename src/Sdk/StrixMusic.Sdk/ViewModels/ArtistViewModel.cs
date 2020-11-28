@@ -11,6 +11,7 @@ using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -21,13 +22,13 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class ArtistViewModel : ObservableObject, IArtist, IAlbumCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel
     {
-        private readonly IArtist _artist;
+        private readonly MergedArtist _artist;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArtistViewModel"/> class.
         /// </summary>
-        /// <param name="artist">The <see cref="IArtist"/> to wrap.</param>
-        public ArtistViewModel(IArtist artist)
+        /// <param name="artist">The <see cref="MergedArtist"/> to wrap.</param>
+        public ArtistViewModel(MergedArtist artist)
         {
             _artist = artist;
 

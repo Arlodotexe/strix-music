@@ -35,6 +35,12 @@ namespace StrixMusic.Sdk.Data.Merged
             _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
             _artistMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this);
 
+            Url = _preferredSource.Url;
+            Name = _preferredSource.Name;
+            Description = _preferredSource.Description;
+            PlaybackState = _preferredSource.PlaybackState;
+            Duration = _preferredSource.Duration;
+
             foreach (var item in _sources)
             {
                 TotalArtistItemsCount += item.TotalArtistItemsCount;
@@ -135,25 +141,25 @@ namespace StrixMusic.Sdk.Data.Merged
         public string Id => _preferredSource.Id;
 
         /// <inheritdoc />
-        public Uri? Url => _preferredSource.Url;
+        public Uri? Url { get; internal set; }
 
         /// <inheritdoc />
-        public string Name => _preferredSource.Name;
+        public string Name { get; internal set; }
 
         /// <inheritdoc />
-        public string? Description => _preferredSource.Description;
+        public string? Description { get; internal set; }
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState => _preferredSource.PlaybackState;
+        public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc />
-        public TimeSpan Duration => _preferredSource.Duration;
+        public TimeSpan Duration { get; internal set; }
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount { get; private set; }
+        public int TotalArtistItemsCount { get; internal set; }
 
         /// <inheritdoc />
-        public int TotalImageCount { get; private set; }
+        public int TotalImageCount { get; internal set; }
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;

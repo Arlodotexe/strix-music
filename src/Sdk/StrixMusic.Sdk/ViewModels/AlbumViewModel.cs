@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumViewModel"/> class.
         /// </summary>
-        /// <param name="album"><inheritdoc cref="IAlbum"/></param>
+        /// <param name="album"><inheritdoc cref="MergedAlbum"/></param>
         public AlbumViewModel(MergedAlbum album)
         {
             _album = album;

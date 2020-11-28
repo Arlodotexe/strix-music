@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Creates a new instance of <see cref="AlbumCollectionViewModel"/>.
         /// </summary>
-        /// <param name="collection">The <see cref="IAlbumCollection"/> to wrap around.</param>
+        /// <param name="collection">The <see cref="MergedAlbumCollection"/> to wrap around.</param>
         public AlbumCollectionViewModel(MergedAlbumCollection collection)
         {
             _collection = collection;
@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.ViewModels
             Albums = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IAlbumCollectionItem>());
             Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
 
-            SourceCores = collection.GetSourceCores<ICoreAlbumCollection>().Select(MainViewModel.GetLoadedCore).ToList();
+            SourceCores = _collection.GetSourceCores<ICoreAlbumCollection>().Select(MainViewModel.GetLoadedCore).ToList();
 
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
