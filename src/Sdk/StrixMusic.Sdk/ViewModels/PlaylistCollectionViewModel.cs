@@ -25,7 +25,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistCollectionViewModel"/>.
         /// </summary>
-        /// <param name="collection">The <see cref="IPlaylistCollection"/> to wrap around.</param>
+        /// <param name="collection">The <see cref="MergedPlaylistCollection"/> to wrap around.</param>
         public PlaylistCollectionViewModel(MergedPlaylistCollection collection)
         {
             _collection = collection;

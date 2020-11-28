@@ -10,6 +10,7 @@ using OwlCore.Events;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -20,15 +21,15 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class PlaylistViewModel : ObservableObject, IPlaylist, ITrackCollectionViewModel, IImageCollectionViewModel
     {
-        private readonly IPlaylist _playlist;
+        private readonly MergedPlaylist _playlist;
 
         private IUserProfile? _owner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.
         /// </summary>
-        /// <param name="playlist">The <see cref="IPlaylist"/> to wrap.</param>
-        public PlaylistViewModel(IPlaylist playlist)
+        /// <param name="playlist">The <see cref="MergedPlaylist"/> to wrap.</param>
+        public PlaylistViewModel(MergedPlaylist playlist)
         {
             _playlist = playlist ?? throw new ArgumentNullException(nameof(playlist));
 
@@ -47,8 +48,10 @@ namespace StrixMusic.Sdk.ViewModels
             if (_playlist.Owner != null)
                 _owner = new UserProfileViewModel(_playlist.Owner);
 
-            if (_playlist.RelatedItems != null)
-                RelatedItems = new PlayableCollectionGroupViewModel(_playlist.RelatedItems);
+            if (_playlist.RelatedItems is MergedPlayableCollectionGroup mergedRelatedItems)
+            {
+                RelatedItems = new PlayableCollectionGroupViewModel(mergedRelatedItems);
+            }
 
             Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
             Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
@@ -236,49 +239,49 @@ namespace StrixMusic.Sdk.ViewModels
         public IUserProfile? Owner
         {
             get => _owner;
-            set => SetProperty(ref _owner, value);
+            internal set => SetProperty(ref _owner, value);
         }
 
         /// <inheritdoc />
         public Uri? Url
         {
             get => _playlist.Url;
-            set => SetProperty(_playlist.Url, value, _playlist, (m, v) => m.Url = v);
+            internal set => SetProperty(_playlist.Url, value, _playlist, (m, v) => m.Url = v);
         }
 
         /// <inheritdoc />
         public string Name
         {
             get => _playlist.Name;
-            set => SetProperty(_playlist.Name, value, _playlist, (m, v) => m.Name = v);
+            internal set => SetProperty(_playlist.Name, value, _playlist, (m, v) => m.Name = v);
         }
 
         /// <inheritdoc />
         public string? Description
         {
             get => _playlist.Description;
-            set => SetProperty(_playlist.Description, value, _playlist, (m, v) => m.Description = v);
+            internal set => SetProperty(_playlist.Description, value, _playlist, (m, v) => m.Description = v);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => _playlist.PlaybackState;
-            set => SetProperty(_playlist.PlaybackState, value, _playlist, (m, v) => m.PlaybackState = v);
+            internal set => SetProperty(_playlist.PlaybackState, value, _playlist, (m, v) => m.PlaybackState = v);
         }
 
         /// <inheritdoc />
         public int TotalTracksCount
         {
             get => _playlist.TotalTracksCount;
-            set => SetProperty(_playlist.TotalTracksCount, value, _playlist, (m, v) => m.TotalTracksCount = v);
+            internal set => SetProperty(_playlist.TotalTracksCount, value, _playlist, (m, v) => m.TotalTracksCount = v);
         }
 
         /// <inheritdoc />
         public int TotalImageCount
         {
             get => _playlist.TotalImageCount;
-            set => SetProperty(_playlist.TotalImageCount, value, _playlist, (m, v) => m.TotalImageCount = v);
+            internal set => SetProperty(_playlist.TotalImageCount, value, _playlist, (m, v) => m.TotalImageCount = v);
         }
 
         /// <inheritdoc />

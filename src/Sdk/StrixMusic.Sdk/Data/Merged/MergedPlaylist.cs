@@ -37,14 +37,56 @@ namespace StrixMusic.Sdk.Data.Merged
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
 
+            Url = _preferredSource.Url;
+            Name = _preferredSource.Name;
+            Description = _preferredSource.Description;
+            PlaybackState = _preferredSource.PlaybackState;
+
+            foreach (var source in _sources)
+            {
+                TotalImageCount += source.TotalImageCount;
+                TotalTracksCount += source.TotalTracksCount;
+            }
+
             if (_preferredSource.RelatedItems != null)
+            {
                 RelatedItems = new MergedPlayableCollectionGroup(_preferredSource.RelatedItems.IntoList());
+            }
 
             if (_preferredSource.Owner != null)
+            {
                 Owner = new MergedUserProfile(_preferredSource.Owner);
+            }
 
             AttachEvents(_preferredSource);
         }
+
+        /// <inheritdoc/>
+        public event CollectionChangedEventHandler<ITrack>? TrackItemsChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<int>? TrackItemsCountChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<string>? NameChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<string?>? DescriptionChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<Uri?>? UrlChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc/>
+        public event CollectionChangedEventHandler<IImage>? ImagesChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<int>? ImagesCountChanged;
 
         private void TrackCollectionMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
         {
@@ -201,25 +243,28 @@ namespace StrixMusic.Sdk.Data.Merged
         public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc/>
-        public int TotalTracksCount { get; private set; }
+        public int TotalTracksCount { get; internal set; }
+
+        /// <inheritdoc/>
+        public int TotalImageCount { get; internal set; }
 
         /// <inheritdoc/>
         public string Id => _preferredSource.Id;
 
         /// <inheritdoc/>
-        public Uri? Url => _preferredSource.Url;
+        public Uri? Url { get; internal set; }
 
         /// <inheritdoc/>
-        public string Name => _preferredSource.Name;
+        public string Name { get; internal set; }
 
         /// <inheritdoc/>
-        public string? Description => _preferredSource.Description;
+        public string? Description { get; internal set; }
 
         /// <inheritdoc/>
-        public PlaybackState PlaybackState => _preferredSource.PlaybackState;
+        public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc/>
-        public TimeSpan Duration => _preferredSource.Duration;
+        public TimeSpan Duration { get; internal set; }
 
         /// <inheritdoc/>
         public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
@@ -238,9 +283,6 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
-
-        /// <inheritdoc/>
-        public int TotalImageCount { get; private set; }
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<string>? Genres => _preferredSource.Genres;
@@ -262,33 +304,6 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc/>
         public IReadOnlyList<ICorePlaylist> Sources => _sources;
-
-        /// <inheritdoc/>
-        public event CollectionChangedEventHandler<ITrack>? TrackItemsChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<int>? TrackItemsCountChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<PlaybackState>? PlaybackStateChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<string>? NameChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<string?>? DescriptionChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<Uri?>? UrlChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<TimeSpan>? DurationChanged;
-
-        /// <inheritdoc/>
-        public event CollectionChangedEventHandler<IImage>? ImagesChanged;
-
-        /// <inheritdoc/>
-        public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc cref="Equals(object?)" />
         public bool Equals(ICorePlaylist? other)
