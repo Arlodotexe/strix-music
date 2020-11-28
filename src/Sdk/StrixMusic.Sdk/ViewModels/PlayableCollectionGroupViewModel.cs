@@ -11,6 +11,7 @@ using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -21,13 +22,13 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class PlayableCollectionGroupViewModel : ObservableObject, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel
     {
-        private readonly IPlayableCollectionGroup _collectionGroup;
+        private readonly MergedPlayableCollectionGroup _collectionGroup;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupViewModel"/> class.
         /// </summary>
-        /// <param name="collectionGroup">The base <see cref="IPlayableCollectionGroup"/> containing properties about this class.</param>
-        public PlayableCollectionGroupViewModel(IPlayableCollectionGroup collectionGroup)
+        /// <param name="collectionGroup">The base <see cref="MergedPlayableCollectionGroup"/> containing properties about this class.</param>
+        public PlayableCollectionGroupViewModel(MergedPlayableCollectionGroup collectionGroup)
         {
             _collectionGroup = collectionGroup ?? throw new ArgumentNullException(nameof(collectionGroup));
 
@@ -214,6 +215,13 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _collectionGroup.ChildItemsChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event EventHandler<int> TotalChildrenCountChanged
+        {
+            add => _collectionGroup.TotalChildrenCountChanged += value;
+            remove => _collectionGroup.TotalChildrenCountChanged -= value;
+        }
+
         private void CollectionGroupUrlChanged(object sender, Uri? e) => Url = e;
 
         private void CollectionGroupNameChanged(object sender, string e) => Name = e;
@@ -252,7 +260,8 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in addedItems)
             {
-                Children.Insert(item.Index, new PlayableCollectionGroupViewModel(item.Data));
+                if (item.Data is MergedPlayableCollectionGroup merged)
+                    Children.Insert(item.Index, new PlayableCollectionGroupViewModel(merged));
             }
 
             foreach (var item in removedItems)
@@ -268,10 +277,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item.Data)
                 {
-                    case IPlaylist playlist:
+                    case MergedPlaylist playlist:
                         Playlists.Insert(item.Index, new PlaylistViewModel(playlist));
                         break;
-                    case IPlaylistCollection collection:
+                    case MergedPlaylistCollection collection:
                         Playlists.Insert(item.Index, new PlaylistCollectionViewModel(collection));
                         break;
                     default:
@@ -293,10 +302,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item.Data)
                 {
-                    case IArtist artist:
+                    case MergedArtist artist:
                         Artists.Insert(item.Index, new ArtistViewModel(artist));
                         break;
-                    case IArtistCollection collection:
+                    case MergedArtistCollection collection:
                         Artists.Insert(item.Index, new ArtistCollectionViewModel(collection));
                         break;
                     default:
@@ -332,10 +341,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item.Data)
                 {
-                    case IAlbum album:
+                    case MergedAlbum album:
                         Albums.Insert(item.Index, new AlbumViewModel(album));
                         break;
-                    case IAlbumCollection collection:
+                    case MergedAlbumCollection collection:
                         Albums.Insert(item.Index, new AlbumCollectionViewModel(collection));
                         break;
                     default:
@@ -485,13 +494,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             get => _collectionGroup.PlaybackState;
             private set => SetProperty(_collectionGroup.PlaybackState, value, _collectionGroup, (m, v) => m.PlaybackState = v);
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<int> TotalChildrenCountChanged
-        {
-            add => _collectionGroup.TotalChildrenCountChanged += value;
-            remove => _collectionGroup.TotalChildrenCountChanged -= value;
         }
 
         /// <inheritdoc />
@@ -647,10 +649,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item)
                 {
-                    case IAlbum album:
+                    case MergedAlbum album:
                         Albums.Add(new AlbumViewModel(album));
                         break;
-                    case IAlbumCollection collection:
+                    case MergedAlbumCollection collection:
                         Albums.Add(new AlbumCollectionViewModel(collection));
                         break;
                 }
@@ -662,12 +664,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in await _collectionGroup.GetArtistItemsAsync(limit, Artists.Count))
             {
-                if (item is IArtist artist)
+                if (item is MergedArtist artist)
                 {
                     Artists.Add(new ArtistViewModel(artist));
                 }
 
-                if (item is IArtistCollection collection)
+                if (item is MergedArtistCollection collection)
                 {
                     Artists.Add(new ArtistCollectionViewModel(collection));
                 }
@@ -679,7 +681,10 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in await _collectionGroup.GetChildrenAsync(limit, Albums.Count))
             {
-                Children.Add(new PlayableCollectionGroupViewModel(item));
+                if (item is MergedPlayableCollectionGroup merged)
+                {
+                    Children.Add(new PlayableCollectionGroupViewModel(merged));
+                }
             }
         }
 

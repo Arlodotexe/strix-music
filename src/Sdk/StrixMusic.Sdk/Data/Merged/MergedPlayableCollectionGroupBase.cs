@@ -59,6 +59,11 @@ namespace StrixMusic.Sdk.Data.Merged
                 TotalImageCount += item.TotalImageCount;
                 Duration += item.Duration;
             }
+            
+            Name = PreferredSource.Name;
+            Url = PreferredSource.Url;
+            Description = PreferredSource.Description;
+            PlaybackState = PreferredSource.PlaybackState;
         }
 
         /// <summary>
@@ -284,37 +289,37 @@ namespace StrixMusic.Sdk.Data.Merged
         public string Id => PreferredSource.Id;
 
         /// <inheritdoc/>
-        public Uri? Url => PreferredSource.Url;
+        public Uri? Url { get; internal set; }
 
         /// <inheritdoc/>
-        public string Name => PreferredSource.Name;
+        public string Name { get; internal set; }
 
         /// <inheritdoc/>
-        public string? Description => PreferredSource.Description;
+        public string? Description { get; internal set; }
 
         /// <inheritdoc/>
-        public PlaybackState PlaybackState => PreferredSource.PlaybackState;
+        public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc/>
-        public TimeSpan Duration { get; } = new TimeSpan(0);
+        public TimeSpan Duration { get; internal set; } = new TimeSpan(0);
 
         /// <inheritdoc/>
-        public int TotalChildrenCount { get; set; }
+        public int TotalChildrenCount { get; internal set; }
 
         /// <inheritdoc/>
-        public int TotalPlaylistItemsCount { get; set; }
+        public int TotalPlaylistItemsCount { get; internal set; }
 
         /// <inheritdoc/>
-        public int TotalTracksCount { get; set; }
+        public int TotalTracksCount { get; internal set; }
 
         /// <inheritdoc/>
-        public int TotalAlbumItemsCount { get; set; }
+        public int TotalAlbumItemsCount { get; internal set; }
 
         /// <inheritdoc/>
-        public int TotalArtistItemsCount { get; set; }
+        public int TotalArtistItemsCount { get; internal set; }
 
         /// <inheritdoc />
-        public int TotalImageCount { get; set; }
+        public int TotalImageCount { get; internal set; }
 
         /// <inheritdoc/>
         public virtual bool IsPlayAsyncSupported => PreferredSource.IsPlayAsyncSupported;
