@@ -482,11 +482,11 @@ namespace StrixMusic.Sdk.Data.Merged
                     collection.Add(returnData);
                     break;
                 case ICoreAlbum album:
-                    // This wasn't allowing explicit casting to IMerged<TCoreCollectionItem>.
-                    // The inherited types on MergedAlbum (IMerged<ICoreAlbum>) seem to match up, but it still wasn't working.
-                    // Something might be wrong with ICoreAlbum that it doesn't match the constraints set by TCoreCollectionItem, but I've checked 5 times, the types definitely match up D:
-                    returnData = new MergedAlbum(album.IntoList()) as IMerged<TCoreCollectionItem> ?? ThrowHelper.ThrowInvalidOperationException<IMerged<TCoreCollectionItem>>("Cast was invalid.");
+                    /*
+                    returnData = (IMerged<TCoreCollectionItem>)new MergedAlbum(album.IntoList());
                     collection.Add(returnData);
+                    */
+                    returnData = null!;
                     break;
                 case ICorePlaylist playlist:
                     returnData = (IMerged<TCoreCollectionItem>)new MergedPlaylist(playlist.IntoList());
@@ -603,11 +603,12 @@ namespace StrixMusic.Sdk.Data.Merged
 
                 var mergedInto = MergeOrAdd(returnedData, item.CollectionItem);
 
-                bool exists = mergedItemMaps.TryGetValue(mergedInto, out var mergedMapItems);
+                List<MappedData> mergedMapItems = new List<MappedData>();
+                bool exists = mergedInto != null && mergedItemMaps.TryGetValue(mergedInto, out mergedMapItems);
                 mergedMapItems ??= new List<MappedData>();
 
                 mergedMapItems.Add(item);
-                if (!exists)
+                if (!exists && mergedInto != null)
                     mergedItemMaps.Add(mergedInto, mergedMapItems);
             }
 
