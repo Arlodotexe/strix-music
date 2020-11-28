@@ -38,8 +38,15 @@ namespace StrixMusic.Sdk.Data.Merged
                 TotalImageCount = source.TotalImageCount;
             }
 
+            Duration = _preferredSource.Duration;
+            PlaybackState = _preferredSource.PlaybackState;
+            Description = _preferredSource.Description;
+            Name = _preferredSource.Name;
+            Url = _preferredSource.Url;
+
             _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
             _albumMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this);
+
             AttachEvents(_preferredSource);
         }
 
@@ -147,19 +154,19 @@ namespace StrixMusic.Sdk.Data.Merged
         public string Id => _preferredSource.Id;
 
         /// <inheritdoc />
-        public Uri? Url => _preferredSource.Url;
+        public Uri? Url { get; internal set; }
 
         /// <inheritdoc />
-        public string Name => _preferredSource.Name;
+        public string Name { get; internal set; }
 
         /// <inheritdoc />
-        public string? Description => _preferredSource.Description;
+        public string? Description { get; internal set; }
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState => _preferredSource.PlaybackState;
+        public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc />
-        public TimeSpan Duration => _preferredSource.Duration;
+        public TimeSpan Duration { get; internal set; }
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
@@ -177,10 +184,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
-        public int TotalAlbumItemsCount { get; private set; }
+        public int TotalAlbumItemsCount { get; internal set; }
 
         /// <inheritdoc />
-        public int TotalImageCount { get; private set; }
+        public int TotalImageCount { get; internal set; }
 
         /// <inheritdoc />
         public Task<bool> IsAddAlbumItemSupported(int index) => _albumMap.IsAddItemSupported(index);
