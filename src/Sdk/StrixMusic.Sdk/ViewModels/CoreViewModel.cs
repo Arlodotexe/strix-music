@@ -37,6 +37,8 @@ namespace StrixMusic.Sdk.ViewModels
             RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_core.RecentlyPlayed.IntoList()));
             Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_core.Discoverables.IntoList()));
 
+            CoreState = _core.CoreState;
+
             if (_core.Pins != null)
                 Pins = new PlayableCollectionGroupViewModel(new MergedPlayableCollectionGroup(_core.Pins.IntoList()));
 
@@ -54,7 +56,11 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc cref="ICore.CoreState" />
-        private void Core_CoreStateChanged(object sender, CoreState e) => CoreState = e;
+        private void Core_CoreStateChanged(object sender, CoreState e)
+        {
+            CoreState = e;
+            OnPropertyChanged(nameof(CoreState));
+        }
 
         /// <inheritdoc />
         public string InstanceId => _core.InstanceId;
@@ -69,11 +75,7 @@ namespace StrixMusic.Sdk.ViewModels
         public ICoreConfig CoreConfig => _core.CoreConfig;
 
         /// <inheritdoc cref="ICore.CoreState" />
-        public CoreState CoreState
-        {
-            get => _core.CoreState;
-            set => SetProperty(_core.CoreState, value, _core, (m, v) => m.CoreState = v);
-        }
+        public CoreState CoreState { get; internal set; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<ICoreDevice> Devices => _core.Devices;
