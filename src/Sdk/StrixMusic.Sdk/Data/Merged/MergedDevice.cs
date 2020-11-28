@@ -27,6 +27,16 @@ namespace StrixMusic.Sdk.Data.Merged
             
             SourceCores = _source.SourceCore.IntoList();
 
+            Name = _source.Name;
+            IsActive = _source.IsActive;
+            PlaybackContext = _source.PlaybackContext;
+            Position = _source.Position;
+            PlaybackState = _source.PlaybackState;
+            ShuffleState = _source.ShuffleState;
+            RepeatState = _source.RepeatState;
+            Volume = _source.Volume;
+            PlaybackSpeed = _source.PlaybackSpeed;
+
             if (!(_source.PlaybackQueue is null))
                 PlaybackQueue = new MergedTrackCollection(_source.PlaybackQueue.IntoList());
 
@@ -109,37 +119,37 @@ namespace StrixMusic.Sdk.Data.Merged
         public event EventHandler<ITrack>? NowPlayingChanged;
 
         /// <inheritdoc />
-        public TimeSpan Position => _source.Position;
-
-        /// <inheritdoc />
-        public PlaybackState PlaybackState => _source.PlaybackState;
-
-        /// <inheritdoc />
         public string Id => _source.Id;
 
         /// <inheritdoc />
-        public string Name => _source.Name;
+        public string Name { get; internal set; }
 
         /// <inheritdoc />
-        public bool IsActive => _source.IsActive;
+        public bool IsActive { get; internal set; }
 
         /// <inheritdoc />
-        public DeviceType Type => _source.Type;
+        public DeviceType Type { get; internal set; }
 
         /// <inheritdoc />
-        public double PlaybackSpeed => _source.PlaybackSpeed;
+        public double PlaybackSpeed { get; internal set; }
 
         /// <inheritdoc />
-        public IPlayable? PlaybackContext => _source.PlaybackContext;
+        public IPlayable? PlaybackContext { get; internal set; }
 
         /// <inheritdoc />
-        public double Volume => _source.Volume;
+        public double Volume { get; internal set; }
 
         /// <inheritdoc />
-        public bool ShuffleState => _source.ShuffleState;
+        public bool ShuffleState { get; internal set; }
 
         /// <inheritdoc />
-        public RepeatState RepeatState => _source.RepeatState;
+        public RepeatState RepeatState { get; internal set; }
+
+        /// <inheritdoc />
+        public TimeSpan Position { get; internal set; }
+
+        /// <inheritdoc />
+        public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc />
         public bool IsSeekAsyncSupported => _source.IsSeekAsyncSupported;
