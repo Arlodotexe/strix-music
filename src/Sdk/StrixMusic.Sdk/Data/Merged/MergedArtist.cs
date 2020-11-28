@@ -22,6 +22,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackCollectionMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageCollectionMap;
         private readonly MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem> _albumCollectionItemMap;
+        private readonly ICoreArtist _preferredSource;
 
         /// <summary>
         /// Creates a new instance of <see cref="MergedArtist"/>.
@@ -32,12 +33,21 @@ namespace StrixMusic.Sdk.Data.Merged
             _sources = sources?.ToList() ?? throw new ArgumentNullException();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
+            // TODO: Get the actual preferred source.
+            _preferredSource = _sources[0];
+
             foreach (var source in _sources)
             {
                 TotalAlbumItemsCount += source.TotalAlbumItemsCount;
                 TotalImageCount += source.TotalImageCount;
                 TotalTracksCount += source.TotalTracksCount;
             }
+
+            Url = _preferredSource.Url;
+            Name = _preferredSource.Name;
+            Description = _preferredSource.Description;
+            PlaybackState = _preferredSource.PlaybackState;
+            Duration = _preferredSource.Duration;
 
             _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
             _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
@@ -48,10 +58,7 @@ namespace StrixMusic.Sdk.Data.Merged
             if (relatedItems.Count > 0)
                 RelatedItems = new MergedPlayableCollectionGroup(relatedItems);
 
-            // TODO: Get the actual preferred source.
-            PreferredSource = _sources[0];
-
-            AttachEvents(PreferredSource);
+            AttachEvents(_preferredSource);
         }
 
         private void AttachEvents(ICoreArtist preferredSource)
@@ -127,11 +134,6 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             TrackItemsChanged?.Invoke(this, addedItems, removedItems);
         }
-
-        /// <summary>
-        /// The preferred source for this artist.
-        /// </summary>
-        internal ICoreArtist PreferredSource { get; }
 
         /// <inheritdoc />
         public event EventHandler<int>? AlbumItemsCountChanged;
@@ -211,52 +213,52 @@ namespace StrixMusic.Sdk.Data.Merged
         public IReadOnlyList<ICoreArtist> Sources => _sources;
 
         /// <inheritdoc />
-        public string Id => PreferredSource.Id;
+        public string Id => _preferredSource.Id;
 
         /// <inheritdoc />
-        public Uri? Url => PreferredSource.Url;
+        public Uri? Url { get; internal set; }
 
         /// <inheritdoc />
-        public string Name => PreferredSource.Name;
+        public string Name { get; internal set; }
 
         /// <inheritdoc />
-        public string? Description => PreferredSource.Description;
+        public string? Description { get; internal set; }
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState => PreferredSource.PlaybackState;
+        public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc />
-        public TimeSpan Duration => PreferredSource.Duration;
+        public TimeSpan Duration { get; internal set; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<string>? Genres => PreferredSource.Genres;
+        public int TotalTracksCount { get; internal set; }
+
+        /// <inheritdoc />
+        public int TotalAlbumItemsCount { get; internal set; }
+
+        /// <inheritdoc />
+        public int TotalImageCount { get; internal set; }
+
+        /// <inheritdoc />
+        public SynchronizedObservableCollection<string>? Genres => _preferredSource.Genres;
 
         /// <inheritdoc />
         public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc />
-        public int TotalTracksCount { get; private set; }
+        public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
 
         /// <inheritdoc />
-        public int TotalAlbumItemsCount { get; private set; }
+        public bool IsPauseAsyncSupported => _preferredSource.IsPauseAsyncSupported;
 
         /// <inheritdoc />
-        public int TotalImageCount { get; private set; }
+        public bool IsChangeNameAsyncSupported => _preferredSource.IsChangeNameAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => PreferredSource.IsPlayAsyncSupported;
+        public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => PreferredSource.IsPauseAsyncSupported;
-
-        /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => PreferredSource.IsChangeNameAsyncSupported;
-
-        /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => PreferredSource.IsChangeDescriptionAsyncSupported;
-
-        /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => PreferredSource.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
         public Task<bool> IsAddTrackSupported(int index) => _trackCollectionMap.IsAddItemSupported(index);
@@ -268,7 +270,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsAddImageSupported(int index) => _imageCollectionMap.IsAddItemSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreSupported(int index) => PreferredSource.IsAddGenreSupported(index);
+        public Task<bool> IsAddGenreSupported(int index) => _preferredSource.IsAddGenreSupported(index);
 
         /// <inheritdoc />
         public Task<bool> IsRemoveTrackSupported(int index) => _trackCollectionMap.IsRemoveItemSupport(index);
@@ -280,7 +282,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsRemoveImageSupported(int index) => _imageCollectionMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index) => PreferredSource.IsRemoveGenreSupported(index);
+        public Task<bool> IsRemoveGenreSupported(int index) => _preferredSource.IsRemoveGenreSupported(index);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => _albumCollectionItemMap.GetItems(limit, offset);
@@ -295,13 +297,13 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task AddTrackAsync(ITrack track, int index) => _trackCollectionMap.InsertItem(track, index);
 
         /// <inheritdoc />
-        public Task PlayAsync() => PreferredSource.PlayAsync();
+        public Task PlayAsync() => _preferredSource.PlayAsync();
 
         /// <inheritdoc />
-        public Task PauseAsync() => PreferredSource.PauseAsync();
+        public Task PauseAsync() => _preferredSource.PauseAsync();
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => PreferredSource.ChangeNameAsync(name);
+        public Task ChangeNameAsync(string name) => _preferredSource.ChangeNameAsync(name);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _imageCollectionMap.GetItems(limit, offset);
@@ -310,10 +312,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task AddImageAsync(IImage image, int index) => _imageCollectionMap.InsertItem(image, index);
 
         /// <inheritdoc />
-        public Task ChangeDescriptionAsync(string? description) => PreferredSource.ChangeDescriptionAsync(description);
+        public Task ChangeDescriptionAsync(string? description) => _preferredSource.ChangeDescriptionAsync(description);
 
         /// <inheritdoc />
-        public Task ChangeDurationAsync(TimeSpan duration) => PreferredSource.ChangeDurationAsync(duration);
+        public Task ChangeDurationAsync(TimeSpan duration) => _preferredSource.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index) => _trackCollectionMap.RemoveAt(index);
@@ -375,7 +377,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return PreferredSource.GetHashCode();
+            return _preferredSource.GetHashCode();
         }
     }
 }

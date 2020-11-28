@@ -211,10 +211,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item.Data)
                 {
-                    case IAlbum album:
+                    case MergedAlbum album:
                         Albums.Insert(item.Index, new AlbumViewModel(album));
                         break;
-                    case IAlbumCollection collection:
+                    case MergedAlbumCollection collection:
                         Albums.Insert(item.Index, new AlbumCollectionViewModel(collection));
                         break;
                     default:
@@ -288,85 +288,65 @@ namespace StrixMusic.Sdk.ViewModels
         public string Name
         {
             get => _artist.Name;
-            private set => SetProperty(_artist.Name, value, _artist, (m, v) => m.Name = v);
+            internal set => SetProperty(_artist.Name, value, _artist, (m, v) => m.Name = v);
         }
 
         /// <inheritdoc />
         public int TotalAlbumItemsCount
         {
             get => _artist.TotalAlbumItemsCount;
-            private set => SetProperty(_artist.TotalAlbumItemsCount, value, _artist, (m, v) => m.TotalAlbumItemsCount = v);
+            internal set => SetProperty(_artist.TotalAlbumItemsCount, value, _artist, (m, v) => m.TotalAlbumItemsCount = v);
         }
 
         /// <inheritdoc />
         public int TotalTracksCount
         {
             get => _artist.TotalTracksCount;
-            private set => SetProperty(_artist.TotalTracksCount, value, _artist, (m, v) => m.TotalTracksCount = v);
+            internal set => SetProperty(_artist.TotalTracksCount, value, _artist, (m, v) => m.TotalTracksCount = v);
         }
 
         /// <inheritdoc />
         public int TotalImageCount
         {
             get => _artist.TotalTracksCount;
-            private set => SetProperty(_artist.TotalTracksCount, value, _artist, (m, v) => m.TotalTracksCount = v);
+            internal set => SetProperty(_artist.TotalTracksCount, value, _artist, (m, v) => m.TotalTracksCount = v);
         }
 
         /// <inheritdoc />
         public Uri? Url
         {
             get => _artist.Url;
-            private set => SetProperty(_artist.Url, value, _artist, (m, v) => m.Url = v);
+            internal set => SetProperty(_artist.Url, value, _artist, (m, v) => m.Url = v);
         }
 
         /// <inheritdoc />
         public string? Description
         {
             get => _artist.Description;
-            private set => SetProperty(_artist.Description, value, _artist, (m, v) => m.Description = v);
+            internal set => SetProperty(_artist.Description, value, _artist, (m, v) => m.Description = v);
         }
 
         /// <inheritdoc />
         public PlaybackState PlaybackState
         {
             get => _artist.PlaybackState;
-            private set => SetProperty(_artist.PlaybackState, value, _artist, (m, v) => m.PlaybackState = v);
+            internal set => SetProperty(_artist.PlaybackState, value, _artist, (m, v) => m.PlaybackState = v);
         }
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported
-        {
-            get => _artist.IsPlayAsyncSupported;
-            set => SetProperty(_artist.IsPlayAsyncSupported, value, _artist, (m, v) => m.IsPlayAsyncSupported = v);
-        }
+        public bool IsPlayAsyncSupported => _artist.IsPlayAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported
-        {
-            get => _artist.IsPauseAsyncSupported;
-            set => SetProperty(_artist.IsPauseAsyncSupported, value, _artist, (m, v) => m.IsPauseAsyncSupported = v);
-        }
+        public bool IsPauseAsyncSupported => _artist.IsPauseAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported
-        {
-            get => _artist.IsChangeNameAsyncSupported;
-            set => SetProperty(_artist.IsChangeNameAsyncSupported, value, _artist, (m, v) => m.IsChangeNameAsyncSupported = v);
-        }
+        public bool IsChangeNameAsyncSupported => _artist.IsChangeNameAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported
-        {
-            get => _artist.IsChangeDescriptionAsyncSupported;
-            set => SetProperty(_artist.IsChangeDescriptionAsyncSupported, value, _artist, (m, v) => m.IsChangeDescriptionAsyncSupported = v);
-        }
+        public bool IsChangeDescriptionAsyncSupported => _artist.IsChangeDescriptionAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported
-        {
-            get => _artist.IsChangeDurationAsyncSupported;
-            set => SetProperty(_artist.IsChangeDurationAsyncSupported, value, _artist, (m, v) => m.IsChangeDurationAsyncSupported = v);
-        }
+        public bool IsChangeDurationAsyncSupported => _artist.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
         public Task PlayAsync() => _artist.PlayAsync();
@@ -418,7 +398,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in await _artist.GetAlbumItemsAsync(limit, Albums.Count))
             {
-                if (item is IAlbum album)
+                if (item is MergedAlbum album)
                 {
                     Albums.Add(new AlbumViewModel(album));
                 }
