@@ -33,7 +33,11 @@ namespace StrixMusic.Sdk.Data.Merged
 
             Artist = new MergedArtist(_sources.Select(x => x.Artist).ToList());
 
-            RelatedItems = new MergedPlayableCollectionGroup(_sources.Select(x => x.RelatedItems).PruneNull().ToList());
+            var relatedItemsSources = _sources.Select(x => x.RelatedItems).PruneNull().ToList();
+            if (relatedItemsSources.Count > 0)
+            {
+                RelatedItems = new MergedPlayableCollectionGroup(relatedItemsSources);
+            }
 
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];

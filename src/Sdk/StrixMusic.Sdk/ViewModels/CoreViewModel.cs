@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.Collections;
 using OwlCore.Extensions;
+using OwlCore.Helpers;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
@@ -59,7 +60,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void Core_CoreStateChanged(object sender, CoreState e)
         {
             CoreState = e;
-            OnPropertyChanged(nameof(CoreState));
+
+            Threading.InvokeOnUI(() => OnPropertyChanged(nameof(CoreState)));
         }
 
         /// <inheritdoc />

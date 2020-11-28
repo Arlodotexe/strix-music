@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.Helpers;
@@ -23,8 +22,6 @@ namespace StrixMusic.Shared
         private readonly List<MediaPlayerElement> _mediaPlayerElements = new List<MediaPlayerElement>();
         private ShellModel? _activeShell;
         private ShellModel? _preferredShell;
-        private ISettingsService? _settingsService;
-        private IFileSystemService? _fileSystemService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -43,13 +40,10 @@ namespace StrixMusic.Shared
             LoadRegisteredMediaPlayerElements();
             await SetupInitialShell();
 
-            _settingsService = Ioc.Default.GetService<ISettingsService>() ?? ThrowHelper.ThrowInvalidOperationException<ISettingsService>();
-            _fileSystemService = Ioc.Default.GetService<IFileSystemService>() ?? ThrowHelper.ThrowInvalidOperationException<IFileSystemService>();
-
             AttachEvents();
 
             // Events must be attached before initializing if you want them to fire correctly.
-            await _fileSystemService.InitAsync();
+            await Ioc.Default.GetRequiredService<IFileSystemService>().InitAsync();
         }
 
         private void MainPage_Unloaded(object sender, RoutedEventArgs e)
@@ -67,16 +61,14 @@ namespace StrixMusic.Shared
 
         private void AttachEvents()
         {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-            _settingsService.SettingChanged += SettingsService_SettingChanged;
+            Ioc.Default.GetRequiredService<ISettingsService>().SettingChanged += SettingsService_SettingChanged;
         }
 
         private void DetachEvents()
         {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
             Unloaded -= MainPage_Unloaded;
 
-            _settingsService.SettingChanged -= SettingsService_SettingChanged;
+            Ioc.Default.GetRequiredService<ISettingsService>().SettingChanged -= SettingsService_SettingChanged;
         }
 
         private async void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)
@@ -97,10 +89,8 @@ namespace StrixMusic.Shared
 
         private async Task SetupInitialShell()
         {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-
             // Gets the preferred shell from settings.
-            string preferredShell = await _settingsService.GetValue<string>(nameof(SettingsKeys.PreferredShell));
+            string preferredShell = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
             ShellModel shellModel = Constants.Shells.DefaultShellModel!;
             if (Constants.Shells.LoadedShells.ContainsKey(preferredShell))
             {

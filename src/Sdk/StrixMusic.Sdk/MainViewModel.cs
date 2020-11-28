@@ -99,22 +99,28 @@ namespace StrixMusic.Sdk
 
         private void Devices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            foreach (var item in e.NewItems)
+            if (e.NewItems != null)
             {
-                if (item is IDevice device)
+                foreach (var item in e.NewItems)
                 {
-                    _devices.Add(device);
-                    Devices.Add(new DeviceViewModel(device));
+                    if (item is IDevice device)
+                    {
+                        _devices.Add(device);
+                        Devices.Add(new DeviceViewModel(device));
+                    }
                 }
             }
 
-            foreach (var item in e.OldItems)
+            if (e.OldItems != null)
             {
-                if (item is IDevice device)
+                foreach (var item in e.OldItems)
                 {
-                    _devices.Remove(device);
-                    var vmToRemove = Devices.FirstOrDefault(x => x.Id == device.Id && x.Name == device.Name);
-                    Devices.Remove(vmToRemove);
+                    if (item is IDevice device)
+                    {
+                        _devices.Remove(device);
+                        var vmToRemove = Devices.FirstOrDefault(x => x.Id == device.Id && x.Name == device.Name);
+                        Devices.Remove(vmToRemove);
+                    }
                 }
             }
         }
