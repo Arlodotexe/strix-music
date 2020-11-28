@@ -12,7 +12,6 @@ using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
@@ -25,15 +24,15 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class AlbumViewModel : ObservableObject, IAlbum, ITrackCollectionViewModel, IImageCollectionViewModel
     {
-        private readonly MergedAlbum _album;
+        private readonly IAlbum _album;
         private readonly IPlaybackHandlerService _playbackHandler;
         private ArtistViewModel _artist; // TODO: Expose this field from readonly property
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumViewModel"/> class.
         /// </summary>
-        /// <param name="album"><inheritdoc cref="MergedAlbum"/></param>
-        public AlbumViewModel(MergedAlbum album)
+        /// <param name="album"><inheritdoc cref="IAlbum"/></param>
+        public AlbumViewModel(IAlbum album)
         {
             _album = album;
 
@@ -166,19 +165,19 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _album.ImagesCountChanged -= value;
         }
 
-        private void AlbumUrlChanged(object sender, Uri? e) => Url = e;
+        private void AlbumUrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
 
-        private void AlbumNameChanged(object sender, string e) => Name = e;
+        private void AlbumNameChanged(object sender, string e) => OnPropertyChanged(nameof(Name));
 
-        private void AlbumDescriptionChanged(object sender, string? e) => Description = e;
+        private void AlbumDescriptionChanged(object sender, string? e) => OnPropertyChanged(nameof(Description));
 
-        private void AlbumPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+        private void AlbumPlaybackStateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState));
 
-        private void AlbumDatePublishedChanged(object sender, DateTime? e) => DatePublished = e;
+        private void AlbumDatePublishedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(DatePublished));
 
-        private void AlbumOnTrackItemsCountChanged(object sender, int e) => TotalTracksCount = e;
+        private void AlbumOnTrackItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalTracksCount));
 
-        private void AlbumViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+        private void AlbumViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
         private void AlbumViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
         {
@@ -251,25 +250,13 @@ namespace StrixMusic.Sdk.ViewModels
         public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }
 
         /// <inheritdoc />
-        public string Name
-        {
-            get => _album.Name;
-            internal set => SetProperty(_album.Name, value, _album, (m, v) => m.Name = v);
-        }
+        public string Name => _album.Name;
 
         /// <inheritdoc />
-        public int TotalTracksCount
-        {
-            get => _album.TotalTracksCount;
-            internal set => SetProperty(_album.TotalTracksCount, value, _album, (m, v) => m.TotalTracksCount = v);
-        }
+        public int TotalTracksCount => _album.TotalTracksCount;
 
         /// <inheritdoc />
-        public int TotalImageCount
-        {
-            get => _album.TotalImageCount;
-            internal set => SetProperty(_album.TotalTracksCount, value, _album, (m, v) => m.TotalTracksCount = v);
-        }
+        public int TotalImageCount => _album.TotalImageCount;
 
         /// <inheritdoc cref="IAlbum.Artist" />
         public ArtistViewModel Artist
@@ -282,32 +269,16 @@ namespace StrixMusic.Sdk.ViewModels
         IArtist IAlbum.Artist => Artist;
 
         /// <inheritdoc />
-        public Uri? Url
-        {
-            get => _album.Url;
-            internal set => SetProperty(_album.Url, value, _album, (m, v) => m.Url = v);
-        }
+        public Uri? Url => _album.Url;
 
         /// <inheritdoc />
-        public DateTime? DatePublished
-        {
-            get => _album.DatePublished;
-            internal set => SetProperty(_album.DatePublished, value, _album, (m, v) => m.DatePublished = v);
-        }
+        public DateTime? DatePublished => _album.DatePublished;
 
         /// <inheritdoc />
-        public string? Description
-        {
-            get => _album.Description;
-            internal set => SetProperty(_album.Description, value, _album, (m, v) => m.Description = v);
-        }
+        public string? Description => _album.Description;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState
-        {
-            get => _album.PlaybackState;
-            internal set => SetProperty(_album.PlaybackState, value, _album, (m, v) => m.PlaybackState = v);
-        }
+        public PlaybackState PlaybackState => _album.PlaybackState;
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported => _album.IsPlayAsyncSupported;

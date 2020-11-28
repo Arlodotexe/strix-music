@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.Services;
@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Services.StorageService
         /// </summary>
         protected CacheServiceBase()
         {
-            var contextContextualServiceLocator = Ioc.Default.GetService<ContextualServiceLocator>();
+            var contextContextualServiceLocator = Ioc.Default.GetService<ContextualServiceLocator>() ?? ThrowHelper.ThrowInvalidOperationException<ContextualServiceLocator>();
 
             _cacheStorageService = contextContextualServiceLocator.GetServiceByContext<IFileSystemService>(typeof(CacheServiceBase));
         }
@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.Services.StorageService
         public IFolderData RootFolder => _cacheStorageService.RootFolder;
 
         /// <inheritdoc/>
-        public Task Init() => _cacheStorageService.Init();
+        public Task InitAsync() => _cacheStorageService.InitAsync();
 
         /// <inheritdoc/>
         public Task<IFolderData?> PickFolder() => _cacheStorageService.PickFolder();

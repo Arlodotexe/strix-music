@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Events;
@@ -52,7 +51,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public MergedCollectionMap(TCollection collection)
         {
             _collection = collection;
-            _settingsService = Ioc.Default.GetService<ISettingsService>();
+            _settingsService = Ioc.Default.GetService<ISettingsService>() ?? ThrowHelper.ThrowInvalidOperationException<ISettingsService>();
 
             AttachEvents();
         }
@@ -139,7 +138,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private void DetachEvents(TCoreCollection item)
         {
-            if (typeof(TCoreCollection) is ICorePlayableCollectionGroup _)
+            if (typeof(TCoreCollection) == typeof(ICorePlayableCollectionGroup))
             {
                 ((ICorePlayableCollectionGroup)item).ChildItemsChanged -= MergedCollectionMap_ChildItemsChanged;
                 ((ICorePlayableCollectionGroup)item).TotalChildrenCountChanged -= MergedCollectionMap_CountChanged;

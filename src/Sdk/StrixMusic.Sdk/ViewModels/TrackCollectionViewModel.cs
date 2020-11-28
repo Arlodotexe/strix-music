@@ -67,17 +67,17 @@ namespace StrixMusic.Sdk.ViewModels
             ImagesCountChanged -= TrackCollectionViewModel_ImagesCountChanged;
         }
 
-        private void OnUrlChanged(object sender, Uri? e) => Url = e;
+        private void OnUrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
 
-        private void OnNameChanged(object sender, string e) => Name = e;
+        private void OnNameChanged(object sender, string e) => OnPropertyChanged(nameof(Name));
 
-        private void OnDescriptionChanged(object sender, string? e) => Description = e;
+        private void OnDescriptionChanged(object sender, string? e) => OnPropertyChanged(nameof(Description));
 
-        private void OnPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+        private void OnPlaybackStateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState)); 
 
-        private void OnTrackItemsCountChanged(object sender, int e) => TotalTracksCount = e;
+        private void OnTrackItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalTracksCount));
 
-        private void TrackCollectionViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+        private void TrackCollectionViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
         private void TrackCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
@@ -189,53 +189,25 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeDurationAsyncSupported => _collection.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
-        public Uri? Url
-        {
-            get => _collection.Url;
-            set => SetProperty(_collection.Url, value, _collection, (m, v) => m.Url = v);
-        }
+        public Uri? Url => _collection.Url;
 
         /// <inheritdoc />
-        public string Name
-        {
-            get => _collection.Name;
-            set => SetProperty(_collection.Name, value, _collection, (m, v) => m.Name = v);
-        }
+        public string Name => _collection.Name;
 
         /// <inheritdoc />
-        public int TotalTracksCount
-        {
-            get => _collection.TotalTracksCount;
-            set => SetProperty(_collection.TotalTracksCount, value, _collection, (m, v) => m.TotalTracksCount = v);
-        }
+        public int TotalTracksCount => _collection.TotalTracksCount;
 
         /// <inheritdoc />
-        public int TotalImageCount
-        {
-            get => _collection.TotalImageCount;
-            set => SetProperty(_collection.TotalImageCount, value, _collection, (m, v) => m.TotalImageCount = v);
-        }
+        public int TotalImageCount => _collection.TotalImageCount;
 
         /// <inheritdoc />
-        public string? Description
-        {
-            get => _collection.Description;
-            set => SetProperty(_collection.Description, value, _collection, (m, v) => m.Description = v);
-        }
+        public string? Description => _collection.Description;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState
-        {
-            get => _collection.PlaybackState;
-            set => SetProperty(_collection.PlaybackState, value, _collection, (m, v) => m.PlaybackState = v);
-        }
+        public PlaybackState PlaybackState => _collection.PlaybackState;
 
         /// <inheritdoc />
-        public TimeSpan Duration
-        {
-            get => _collection.Duration;
-            set => SetProperty(_collection.Duration, value, _collection, (m, v) => m.Duration = v);
-        }
+        public TimeSpan Duration => _collection.Duration;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }

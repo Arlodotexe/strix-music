@@ -7,7 +7,6 @@ using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -24,12 +23,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// Initializes a new instance of the <see cref="DeviceViewModel"/> class.
         /// </summary>
         /// <param name="device">The base <see cref="IDevice"/></param>
-        public DeviceViewModel(MergedDevice device)
+        public DeviceViewModel(IDevice device)
         {
             Model = device ?? throw new ArgumentNullException(nameof(device));
 
             if (Model.NowPlaying != null)
-                NowPlaying = new TrackViewModel(Model.NowPlaying);
+                _nowPlaying = new TrackViewModel(Model.NowPlaying);
 
             SourceCores = device.GetSourceCores().Select(MainViewModel.GetLoadedCore).ToList();
 
@@ -76,34 +75,38 @@ namespace StrixMusic.Sdk.ViewModels
             Model.VolumeChanged -= Device_VolumeChanged;
         }
 
-        private void Device_VolumeChanged(object sender, double e) => Volume = e;
+        private void Device_VolumeChanged(object sender, double e) => OnPropertyChanged(nameof(Volume));
 
-        private void Device_StateChanged(object sender, PlaybackState e) => PlaybackState = e;
+        private void Device_StateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState));
 
-        private void Device_ShuffleStateChanged(object sender, bool e) => ShuffleState = e;
+        private void Device_ShuffleStateChanged(object sender, bool e) => OnPropertyChanged(nameof(ShuffleState));
 
-        private void Device_RepeatStateChanged(object sender, RepeatState e) => RepeatState = e;
+        private void Device_RepeatStateChanged(object sender, RepeatState e) => OnPropertyChanged(nameof(RepeatState));
 
-        private void Device_PositionChanged(object sender, TimeSpan e) => Position = e;
+        private void Device_PositionChanged(object sender, TimeSpan e) => OnPropertyChanged(nameof(Position));
 
-        private void Device_PlaybackSpeedChanged(object sender, double e) => PlaybackSpeed = e;
+        private void Device_PlaybackSpeedChanged(object sender, double e) => OnPropertyChanged(nameof(PlaybackSpeed));
 
-        private void Device_PlaybackContextChanged(object sender, IPlayable e) => PlaybackContext = e;
+        private void Device_PlaybackContextChanged(object sender, IPlayable e) => OnPropertyChanged(nameof(PlaybackContext));
 
-        private void Device_NowPlayingChanged(object sender, ITrack e) => NowPlaying = new TrackViewModel(e);
+        private void Device_NowPlayingChanged(object sender, ITrack e)
+        {
+            OnPropertyChanged(nameof(NowPlaying));
+            _nowPlaying = new TrackViewModel(e);
+        }
 
-        private void Device_IsActiveChanged(object sender, bool e) => IsActive = e;
+        private void Device_IsActiveChanged(object sender, bool e) => OnPropertyChanged(nameof(IsActive));
 
         /// <summary>
         /// The wrapped model for this <see cref="DeviceViewModel"/>.
         /// </summary>
-        internal MergedDevice Model { get; set; }
+        internal IDevice Model { get; set; }
 
         /// <inheritdoc />
         public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <summary>
-        /// The merged sources that form this member.
+        /// The I sources that form this member.
         /// </summary>
         public IReadOnlyList<ICoreDevice> Sources => this.GetSources();
 
@@ -123,67 +126,31 @@ namespace StrixMusic.Sdk.ViewModels
         public ITrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc />
-        public ITrack? NowPlaying
-        {
-            get => _nowPlaying;
-            internal set => SetProperty(ref _nowPlaying, value is null ? null : new TrackViewModel(value));
-        }
+        public ITrack? NowPlaying => _nowPlaying;
 
         /// <inheritdoc />
-        public bool IsActive
-        {
-            get => Model.IsActive;
-            internal set => SetProperty(Model.IsActive, value, Model, (m, v) => m.IsActive = v);
-        }
+        public bool IsActive => Model.IsActive;
 
         /// <inheritdoc />
-        public IPlayable? PlaybackContext
-        {
-            get => Model.PlaybackContext;
-            internal set => SetProperty(Model.PlaybackContext, value, Model, (m, v) => m.PlaybackContext = v);
-        }
+        public IPlayable? PlaybackContext => Model.PlaybackContext;
 
         /// <inheritdoc />
-        public TimeSpan Position
-        {
-            get => Model.Position;
-            internal set => SetProperty(Model.Position, value, Model, (m, v) => m.Position = v);
-        }
+        public TimeSpan Position => Model.Position;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState
-        {
-            get => Model.PlaybackState;
-            internal set => SetProperty(Model.PlaybackState, value, Model, (m, v) => m.PlaybackState = v);
-        }
+        public PlaybackState PlaybackState => Model.PlaybackState;
 
         /// <inheritdoc />
-        public bool ShuffleState
-        {
-            get => Model.ShuffleState;
-            internal set => SetProperty(Model.ShuffleState, value, Model, (m, v) => m.ShuffleState = v);
-        }
+        public bool ShuffleState => Model.ShuffleState;
 
         /// <inheritdoc />
-        public RepeatState RepeatState
-        {
-            get => Model.RepeatState;
-            internal set => SetProperty(Model.RepeatState, value, Model, (m, v) => m.RepeatState = v);
-        }
+        public RepeatState RepeatState => Model.RepeatState;
 
         /// <inheritdoc />
-        public double Volume
-        {
-            get => Model.Volume;
-            internal set => SetProperty(Model.Volume, value, Model, (m, v) => m.Volume = v);
-        }
+        public double Volume => Model.Volume;
 
         /// <inheritdoc />
-        public double PlaybackSpeed
-        {
-            get => Model.PlaybackSpeed;
-            internal set => SetProperty(Model.PlaybackSpeed, value, Model, (m, v) => m.PlaybackSpeed = v);
-        }
+        public double PlaybackSpeed => Model.PlaybackSpeed;
 
         /// <inheritdoc />
         public bool IsToggleShuffleAsyncSupported => Model.IsToggleShuffleAsyncSupported;

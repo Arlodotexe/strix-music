@@ -174,13 +174,13 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public void AddSource(ICoreArtistCollectionItem itemToMerge)
         {
-            
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
         public void RemoveSource(ICoreArtistCollectionItem itemToRemove)
         {
-
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />

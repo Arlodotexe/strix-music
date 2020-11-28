@@ -10,7 +10,6 @@ using OwlCore.Events;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -21,13 +20,13 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class AlbumCollectionViewModel : ObservableObject, IAlbumCollectionViewModel, IImageCollectionViewModel
     {
-        private readonly MergedAlbumCollection _collection;
+        private readonly IAlbumCollection _collection;
 
         /// <summary>
         /// Creates a new instance of <see cref="AlbumCollectionViewModel"/>.
         /// </summary>
-        /// <param name="collection">The <see cref="MergedAlbumCollection"/> to wrap around.</param>
-        public AlbumCollectionViewModel(MergedAlbumCollection collection)
+        /// <param name="collection">The <see cref="IAlbumCollection"/> to wrap around.</param>
+        public AlbumCollectionViewModel(IAlbumCollection collection)
         {
             _collection = collection;
 
@@ -63,17 +62,17 @@ namespace StrixMusic.Sdk.ViewModels
             AlbumItemsCountChanged -= OnAlbumItemsCountChanged;
         }
 
-        private void OnUrlChanged(object sender, Uri? e) => Url = e;
+        private void OnUrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
 
-        private void OnNameChanged(object sender, string e) => Name = e;
+        private void OnNameChanged(object sender, string e) => OnPropertyChanged(nameof(Name));
 
-        private void OnDescriptionChanged(object sender, string? e) => Description = e;
+        private void OnDescriptionChanged(object sender, string? e) => OnPropertyChanged(nameof(Description));
 
-        private void OnPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+        private void OnPlaybackStateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState));
 
-        private void OnAlbumItemsCountChanged(object sender, int e) => TotalAlbumItemsCount = e;
+        private void OnAlbumItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalAlbumItemsCount));
 
-        private void AlbumCollectionViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+        private void AlbumCollectionViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
         private void AlbumCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
@@ -94,10 +93,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item.Data)
                 {
-                    case MergedAlbum album:
+                    case IAlbum album:
                         Albums.Insert(item.Index, new AlbumViewModel(album));
                         break;
-                    case MergedAlbumCollection collection:
+                    case IAlbumCollection collection:
                         Albums.Insert(item.Index, new AlbumCollectionViewModel(collection));
                         break;
                     default:
@@ -183,10 +182,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item)
                 {
-                    case MergedAlbum album:
+                    case IAlbum album:
                         Albums.Add(new AlbumViewModel(album));
                         break;
-                    case MergedAlbumCollection collection:
+                    case IAlbumCollection collection:
                         Albums.Add(new AlbumCollectionViewModel(collection));
                         break;
                 }
@@ -212,53 +211,25 @@ namespace StrixMusic.Sdk.ViewModels
         public string Id => _collection.Id;
 
         /// <inheritdoc />
-        public Uri? Url
-        {
-            get => _collection.Url;
-            internal set => SetProperty(_collection.Url, value, _collection, (m, v) => m.Url = v);
-        }
+        public Uri? Url => _collection.Url;
 
         /// <inheritdoc />
-        public string Name
-        {
-            get => _collection.Name;
-            internal set => SetProperty(_collection.Name, value, _collection, (m, v) => m.Name = v);
-        }
+        public string Name => _collection.Name;
 
         /// <inheritdoc />
-        public string? Description
-        {
-            get => _collection.Description;
-            internal set => SetProperty(_collection.Description, value, _collection, (m, v) => m.Description = v);
-        }
+        public string? Description => _collection.Description;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState
-        {
-            get => _collection.PlaybackState;
-            internal set => SetProperty(_collection.PlaybackState, value, _collection, (m, v) => m.PlaybackState = v);
-        }
+        public PlaybackState PlaybackState => _collection.PlaybackState;
 
         /// <inheritdoc />
-        public TimeSpan Duration
-        {
-            get => _collection.Duration;
-            internal set => SetProperty(_collection.Duration, value, _collection, (m, v) => m.Duration = v);
-        }
+        public TimeSpan Duration => _collection.Duration;
 
         /// <inheritdoc />
-        public int TotalAlbumItemsCount
-        {
-            get => _collection.TotalAlbumItemsCount;
-            internal set => SetProperty(_collection.TotalAlbumItemsCount, value, _collection, (m, v) => m.TotalAlbumItemsCount = v);
-        }
+        public int TotalAlbumItemsCount => _collection.TotalAlbumItemsCount;
 
         /// <inheritdoc />
-        public int TotalImageCount
-        {
-            get => _collection.TotalImageCount;
-            internal set => SetProperty(_collection.TotalImageCount, value, _collection, (m, v) => m.TotalImageCount = v);
-        }
+        public int TotalImageCount => _collection.TotalImageCount;
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported => _collection.IsPlayAsyncSupported;
@@ -303,7 +274,7 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => _collection.GetSources<ICoreImageCollection>();
 
         /// <summary>
-        /// The sources for this merged item.
+        /// The sources for this I item.
         /// </summary>
         public IReadOnlyList<ICoreAlbumCollection> Sources => _collection.GetSources<ICoreAlbumCollection>();
 

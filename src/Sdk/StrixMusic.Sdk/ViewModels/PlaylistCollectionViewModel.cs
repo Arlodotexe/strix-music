@@ -9,7 +9,6 @@ using OwlCore.Events;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -20,13 +19,13 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class PlaylistCollectionViewModel : ObservableObject, IPlaylistCollectionViewModel, IImageCollectionViewModel
     {
-        private readonly MergedPlaylistCollection _collection;
+        private readonly IPlaylistCollection _collection;
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistCollectionViewModel"/>.
         /// </summary>
-        /// <param name="collection">The <see cref="MergedPlaylistCollection"/> to wrap around.</param>
-        public PlaylistCollectionViewModel(MergedPlaylistCollection collection)
+        /// <param name="collection">The <see cref="IPlaylistCollection"/> to wrap around.</param>
+        public PlaylistCollectionViewModel(IPlaylistCollection collection)
         {
             _collection = collection;
 
@@ -67,17 +66,17 @@ namespace StrixMusic.Sdk.ViewModels
             ImagesChanged -= PlaylistCollectionViewModel_ImagesChanged;
         }
 
-        private void OnUrlChanged(object sender, Uri? e) => Url = e;
+        private void OnUrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
 
-        private void OnNameChanged(object sender, string e) => Name = e;
+        private void OnNameChanged(object sender, string e) => OnPropertyChanged(nameof(Name));
 
-        private void OnDescriptionChanged(object sender, string? e) => Description = e;
+        private void OnDescriptionChanged(object sender, string? e) => OnPropertyChanged(nameof(Description));
 
-        private void OnPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+        private void OnPlaybackStateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState));
 
-        private void OnPlaylistItemsCountChanged(object sender, int e) => TotalPlaylistItemsCount = e;
+        private void OnPlaylistItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalPlaylistItemsCount));
 
-        private void PlaylistCollectionViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+        private void PlaylistCollectionViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
         private void PlaylistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
@@ -99,10 +98,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item.Data)
                 {
-                    case MergedPlaylist playlist:
+                    case IPlaylist playlist:
                         Playlists.Insert(item.Index, new PlaylistViewModel(playlist));
                         break;
-                    case MergedPlaylistCollection collection:
+                    case IPlaylistCollection collection:
                         Playlists.Insert(item.Index, new PlaylistCollectionViewModel(collection));
                         break;
                     default:
@@ -200,53 +199,25 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeDurationAsyncSupported => _collection.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
-        public Uri? Url
-        {
-            get => _collection.Url;
-            internal set => SetProperty(_collection.Url, value, _collection, (m, v) => m.Url = v);
-        }
+        public Uri? Url => _collection.Url;
 
         /// <inheritdoc />
-        public string Name
-        {
-            get => _collection.Name;
-            internal set => SetProperty(_collection.Name, value, _collection, (m, v) => m.Name = v);
-        }
+        public string Name => _collection.Name;
 
         /// <inheritdoc />
-        public int TotalPlaylistItemsCount
-        {
-            get => _collection.TotalPlaylistItemsCount;
-            internal set => SetProperty(_collection.TotalPlaylistItemsCount, value, _collection, (m, v) => m.TotalPlaylistItemsCount = v);
-        }
+        public int TotalPlaylistItemsCount => _collection.TotalPlaylistItemsCount;
 
         /// <inheritdoc />
-        public int TotalImageCount
-        {
-            get => _collection.TotalImageCount;
-            internal set => SetProperty(_collection.TotalImageCount, value, _collection, (m, v) => m.TotalImageCount = v);
-        }
+        public int TotalImageCount => _collection.TotalImageCount;
 
         /// <inheritdoc />
-        public string? Description
-        {
-            get => _collection.Description;
-            internal set => SetProperty(_collection.Description, value, _collection, (m, v) => m.Description = v);
-        }
+        public string? Description => _collection.Description;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState
-        {
-            get => _collection.PlaybackState;
-            internal set => SetProperty(_collection.PlaybackState, value, _collection, (m, v) => m.PlaybackState = v);
-        }
+        public PlaybackState PlaybackState => _collection.PlaybackState;
 
         /// <inheritdoc />
-        public TimeSpan Duration
-        {
-            get => _collection.Duration;
-            internal set => SetProperty(_collection.Duration, value, _collection, (m, v) => m.Duration = v);
-        }
+        public TimeSpan Duration => _collection.Duration;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IPlaylistCollectionItem> Playlists { get; }
@@ -329,10 +300,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item)
                 {
-                    case MergedPlaylist playlist:
+                    case IPlaylist playlist:
                         Playlists.Add(new PlaylistViewModel(playlist));
                         break;
-                    case MergedPlaylistCollection collection:
+                    case IPlaylistCollection collection:
                         Playlists.Add(new PlaylistCollectionViewModel(collection));
                         break;
                 }

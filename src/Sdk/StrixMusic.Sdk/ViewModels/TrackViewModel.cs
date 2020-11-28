@@ -21,8 +21,6 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class TrackViewModel : ObservableObject, ITrack, IArtistCollectionViewModel, IImageCollectionViewModel
     {
-        private IAlbum? _album;
-
         /// <summary>
         /// Creates a bindable wrapper around an <see cref="ITrack"/>.
         /// </summary>
@@ -195,27 +193,31 @@ namespace StrixMusic.Sdk.ViewModels
             remove => Model.ArtistItemsChanged -= value;
         }
 
-        private void Track_UrlChanged(object sender, Uri? e) => Url = e;
+        private void Track_UrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
 
-        private void Track_TrackNumberChanged(object sender, int? e) => TrackNumber = e;
+        private void Track_TrackNumberChanged(object sender, int? e) => OnPropertyChanged(nameof(TrackNumber));
 
-        private void Track_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+        private void Track_PlaybackStateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState));
 
-        private void Track_NameChanged(object sender, string e) => Name = e;
+        private void Track_NameChanged(object sender, string e) => OnPropertyChanged(nameof(Name));
 
-        private void Track_LyricsChanged(object sender, ILyrics? e) => Lyrics = e;
+        private void Track_LyricsChanged(object sender, ILyrics? e) => OnPropertyChanged(nameof(Lyrics));
 
-        private void Track_LanguageChanged(object sender, CultureInfo? e) => Language = e;
+        private void Track_LanguageChanged(object sender, CultureInfo? e) => OnPropertyChanged(nameof(Language));
 
-        private void Track_IsExplicitChanged(object sender, bool e) => IsExplicit = e;
+        private void Track_IsExplicitChanged(object sender, bool e) => OnPropertyChanged(nameof(IsExplicit));
 
-        private void Track_DescriptionChanged(object sender, string? e) => Description = e;
+        private void Track_DescriptionChanged(object sender, string? e) => OnPropertyChanged(nameof(Description));
 
-        private void Track_AlbumChanged(object sender, IAlbum? e) => Album = e != null ? new AlbumViewModel(e) : null;
+        private void Track_AlbumChanged(object sender, IAlbum? e)
+        {
+            Album = e is null ? null : new AlbumViewModel(e);
+            OnPropertyChanged(nameof(Album));
+        }
 
-        private void ModelOnArtistItemsCountChanged(object sender, int e) => TotalArtistItemsCount = e;
+        private void ModelOnArtistItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalArtistItemsCount));
 
-        private void TrackViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+        private void TrackViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
         private void TrackViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
@@ -308,154 +310,70 @@ namespace StrixMusic.Sdk.ViewModels
         public string Id => Model.Id;
 
         /// <inheritdoc />
-        public string Name
-        {
-            get => Model.Name;
-            set => SetProperty(Model.Name, value, Model, (m, v) => m.Name = v);
-        }
+        public string Name => Model.Name;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount
-        {
-            get => Model.TotalArtistItemsCount;
-            set => SetProperty(Model.TotalArtistItemsCount, value, Model, (m, v) => m.TotalArtistItemsCount = v);
-        }
+        public int TotalArtistItemsCount => Model.TotalArtistItemsCount;
 
         /// <inheritdoc />
-        public int TotalImageCount
-        {
-            get => Model.TotalImageCount;
-            set => SetProperty(Model.TotalImageCount, value, Model, (m, v) => m.TotalImageCount = v);
-        }
+        public int TotalImageCount => Model.TotalImageCount;
 
         /// <inheritdoc />
-        public Uri? Url
-        {
-            get => Model.Url;
-            set => SetProperty(Model.Url, value, Model, (m, v) => m.Url = v);
-        }
+        public Uri? Url => Model.Url;
 
         /// <inheritdoc />
-        public IAlbum? Album
-        {
-            get => _album;
-            set => SetProperty(ref _album, value);
-        }
+        public IAlbum? Album { get; private set; }
 
         /// <inheritdoc />
-        public int? TrackNumber
-        {
-            get => Model.TrackNumber;
-            set => SetProperty(Model.TrackNumber, value, Model, (m, v) => m.TrackNumber = v);
-        }
+        public int? TrackNumber => Model.TrackNumber;
 
         /// <inheritdoc/>
         public int? DiscNumber => Model.DiscNumber;
 
         /// <inheritdoc />
-        public CultureInfo? Language
-        {
-            get => Model.Language;
-            set => SetProperty(Model.Language, value, Model, (m, v) => m.Language = v);
-        }
+        public CultureInfo? Language => Model.Language;
 
         /// <inheritdoc />
-        public ILyrics? Lyrics
-        {
-            get => Model.Lyrics;
-            set => SetProperty(Model.Lyrics, value, Model, (m, v) => m.Lyrics = v);
-        }
+        public ILyrics? Lyrics => Model.Lyrics;
 
         /// <inheritdoc />
-        public bool IsExplicit
-        {
-            get => Model.IsExplicit;
-            set => SetProperty(Model.IsExplicit, value, Model, (m, v) => m.IsExplicit = v);
-        }
+        public bool IsExplicit => Model.IsExplicit;
 
         /// <inheritdoc />
-        public string? Description
-        {
-            get => Model.Description;
-            set => SetProperty(Model.Description, value, Model, (m, v) => m.Description = v);
-        }
+        public string? Description => Model.Description;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState
-        {
-            get => Model.PlaybackState;
-            set => SetProperty(Model.PlaybackState, value, Model, (m, v) => m.PlaybackState = v);
-        }
+        public PlaybackState PlaybackState => Model.PlaybackState;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported
-        {
-            get => Model.IsPlayAsyncSupported;
-            set => SetProperty(Model.IsPlayAsyncSupported, value, Model, (m, v) => m.IsPlayAsyncSupported = v);
-        }
+        public bool IsPlayAsyncSupported => Model.IsPlayAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported
-        {
-            get => Model.IsPauseAsyncSupported;
-            set => SetProperty(Model.IsPauseAsyncSupported, value, Model, (m, v) => m.IsPauseAsyncSupported = v);
-        }
+        public bool IsPauseAsyncSupported => Model.IsPauseAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported
-        {
-            get => Model.IsChangeNameAsyncSupported;
-            set => SetProperty(Model.IsChangeNameAsyncSupported, value, Model, (m, v) => m.IsChangeNameAsyncSupported = v);
-        }
+        public bool IsChangeNameAsyncSupported => Model.IsChangeNameAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported
-        {
-            get => Model.IsChangeDescriptionAsyncSupported;
-            set => SetProperty(Model.IsChangeDescriptionAsyncSupported, value, Model, (m, v) => m.IsChangeDescriptionAsyncSupported = v);
-        }
+        public bool IsChangeDescriptionAsyncSupported => Model.IsChangeDescriptionAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported
-        {
-            get => Model.IsChangeDurationAsyncSupported;
-            set => SetProperty(Model.IsChangeDurationAsyncSupported, value, Model, (m, v) => m.IsChangeDurationAsyncSupported = v);
-        }
+        public bool IsChangeDurationAsyncSupported => Model.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeAlbumAsyncSupported
-        {
-            get => Model.IsChangeAlbumAsyncSupported;
-            set => SetProperty(Model.IsChangeAlbumAsyncSupported, value, Model, (m, v) => m.IsChangeAlbumAsyncSupported = v);
-        }
+        public bool IsChangeAlbumAsyncSupported => Model.IsChangeAlbumAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeTrackNumberAsyncSupported
-        {
-            get => Model.IsChangeTrackNumberAsyncSupported;
-            set => SetProperty(Model.IsChangeTrackNumberAsyncSupported, value, Model, (m, v) => m.IsChangeTrackNumberAsyncSupported = v);
-        }
+        public bool IsChangeTrackNumberAsyncSupported => Model.IsChangeTrackNumberAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeLanguageAsyncSupported
-        {
-            get => Model.IsChangeLanguageAsyncSupported;
-            set => SetProperty(Model.IsChangeLanguageAsyncSupported, value, Model, (m, v) => m.IsChangeLanguageAsyncSupported = v);
-        }
+        public bool IsChangeLanguageAsyncSupported => Model.IsChangeLanguageAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeLyricsAsyncSupported
-        {
-            get => Model.IsChangeLyricsAsyncSupported;
-            set => SetProperty(Model.IsChangeLyricsAsyncSupported, value, Model, (m, v) => m.IsChangeLyricsAsyncSupported = v);
-        }
+        public bool IsChangeLyricsAsyncSupported => Model.IsChangeLyricsAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeIsExplicitAsyncSupported
-        {
-            get => Model.IsChangeIsExplicitAsyncSupported;
-            set => SetProperty(Model.IsChangeIsExplicitAsyncSupported, value, Model, (m, v) => m.IsChangeIsExplicitAsyncSupported = v);
-        }
+        public bool IsChangeIsExplicitAsyncSupported => Model.IsChangeIsExplicitAsyncSupported;
 
         /// <inheritdoc />
         public Task<bool> IsAddArtistSupported(int index) => Model.IsAddArtistSupported(index);

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore.AbstractStorage;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Models;
@@ -14,6 +11,7 @@ namespace StrixMusic.Shared
 {
     public sealed partial class SuperShell : UserControl
     {
+        private readonly ISettingsService _settingsService;
         private bool _loadingShells = true;
 
         /// <summary>
@@ -29,6 +27,7 @@ namespace StrixMusic.Shared
             this.InitializeComponent();
 
             Skins = new ObservableCollection<ShellModel>();
+            _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
 
             Loaded += SuperShell_Loaded;
         }
@@ -42,7 +41,7 @@ namespace StrixMusic.Shared
         private async Task InitSkins()
         {
             // Gets the preferred shell's assembly name
-            var preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
+            var preferredShell = await _settingsService.GetValue<string>(nameof(SettingsKeys.PreferredShell));
 
             // Gets the list of loaded shells.
             foreach (ShellModel shell in Constants.Shells.LoadedShells.Values)
@@ -76,14 +75,7 @@ namespace StrixMusic.Shared
             }
 
             // Saves the assembly name.
-            await Ioc.Default.GetService<ISettingsService>().SetValue<string>(nameof(SettingsKeys.PreferredShell), newPreferredSkin.AssemblyName);
-        }
-
-        private async void ButtonFolderSelect_Clicked(object sender, RoutedEventArgs e)
-        {
-            var fileSystemSvc = Ioc.Default.GetService<IFileSystemService>();
-
-            var folder = await fileSystemSvc.PickFolder();
+            await _settingsService.SetValue<string>(nameof(SettingsKeys.PreferredShell), newPreferredSkin.AssemblyName);
         }
     }
 }

@@ -118,11 +118,7 @@ namespace StrixMusic.Sdk.ViewModels
         public string Id => _userProfile.Id;
 
         /// <inheritdoc />
-        public int TotalImageCount
-        {
-            get => _userProfile.TotalImageCount;
-            private set => SetProperty(_userProfile.TotalImageCount, value, _userProfile, (m, v) => m.TotalImageCount = v);
-        }
+        public int TotalImageCount => _userProfile.TotalImageCount;
 
         /// <inheritdoc />
         public string DisplayName => _userProfile.DisplayName;

@@ -2,7 +2,7 @@
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Uno.Styles
@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Uno.Styles
         {
             if ((sender as Control)?.DataContext is AlbumViewModel viewModel)
             {
-                INavigationService<Control> navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>();
+                INavigationService<Control> navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
                 navigationService.NavigateTo(typeof(ArtistView), false, viewModel.Artist);
             }
         }

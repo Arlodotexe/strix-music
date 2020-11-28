@@ -21,13 +21,13 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class ArtistCollectionViewModel : ObservableObject, IArtistCollectionViewModel, IImageCollectionViewModel
     {
-        private readonly MergedArtistCollection _collection;
+        private readonly IArtistCollection _collection;
 
         /// <summary>
         /// Creates a new instance of <see cref="ArtistCollectionViewModel"/>.
         /// </summary>
-        /// <param name="collection">The <see cref="MergedArtistCollection"/> to wrap around.</param>
-        public ArtistCollectionViewModel(MergedArtistCollection collection)
+        /// <param name="collection">The <see cref="IArtistCollection"/> to wrap around.</param>
+        public ArtistCollectionViewModel(IArtistCollection collection)
         {
             _collection = collection ?? throw new ArgumentNullException(nameof(collection));
 
@@ -63,17 +63,17 @@ namespace StrixMusic.Sdk.ViewModels
             ArtistItemsCountChanged -= OnArtistItemsCountChanged;
         }
 
-        private void OnUrlChanged(object sender, Uri? e) => Url = e;
+        private void OnUrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
 
-        private void OnNameChanged(object sender, string e) => Name = e;
+        private void OnNameChanged(object sender, string e) => OnPropertyChanged(nameof(Name));
 
-        private void OnDescriptionChanged(object sender, string? e) => Description = e;
+        private void OnDescriptionChanged(object sender, string? e) => OnPropertyChanged(nameof(Description));
 
-        private void OnPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+        private void OnPlaybackStateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState));
 
-        private void ArtistCollectionViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+        private void ArtistCollectionViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
-        private void OnArtistItemsCountChanged(object sender, int e) => TotalArtistItemsCount = e;
+        private void OnArtistItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalArtistItemsCount));
 
         private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
@@ -95,10 +95,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item.Data)
                 {
-                    case MergedArtist artist:
+                    case IArtist artist:
                         Artists.Insert(item.Index, new ArtistViewModel(artist));
                         break;
-                    case MergedArtistCollection collection:
+                    case IArtistCollection collection:
                         Artists.Insert(item.Index, new ArtistCollectionViewModel(collection));
                         break;
                     default:
@@ -196,53 +196,25 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeDurationAsyncSupported => _collection.IsChangeDurationAsyncSupported;
 
         /// <inheritdoc />
-        public Uri? Url
-        {
-            get => _collection.Url;
-            internal set => SetProperty(_collection.Url, value, _collection, (m, v) => m.Url = v);
-        }
+        public Uri? Url => _collection.Url;
 
         /// <inheritdoc />
-        public string Name
-        {
-            get => _collection.Name;
-            internal set => SetProperty(_collection.Name, value, _collection, (m, v) => m.Name = v);
-        }
+        public string Name => _collection.Name;
 
         /// <inheritdoc />
-        public string? Description
-        {
-            get => _collection.Description;
-            internal set => SetProperty(_collection.Description, value, _collection, (m, v) => m.Description = v);
-        }
+        public string? Description => _collection.Description;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState
-        {
-            get => _collection.PlaybackState;
-            internal set => SetProperty(_collection.PlaybackState, value, _collection, (m, v) => m.PlaybackState = v);
-        }
+        public PlaybackState PlaybackState => _collection.PlaybackState;
 
         /// <inheritdoc />
-        public TimeSpan Duration
-        {
-            get => _collection.Duration;
-            internal set => SetProperty(_collection.Duration, value, _collection, (m, v) => m.Duration = v);
-        }
+        public TimeSpan Duration => _collection.Duration;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount
-        {
-            get => _collection.TotalArtistItemsCount;
-            internal set => SetProperty(_collection.TotalArtistItemsCount, value, _collection, (m, v) => m.TotalArtistItemsCount = v);
-        }
+        public int TotalArtistItemsCount => _collection.TotalArtistItemsCount;
 
         /// <inheritdoc />
-        public int TotalImageCount
-        {
-            get => _collection.TotalImageCount;
-            internal set => SetProperty(_collection.TotalImageCount, value, _collection, (m, v) => m.TotalImageCount = v);
-        }
+        public int TotalImageCount => _collection.TotalImageCount;
 
         /// <inheritdoc />
         public Task PlayAsync()
@@ -310,10 +282,10 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 switch (item)
                 {
-                    case MergedArtist artist:
+                    case IArtist artist:
                         Artists.Add(new ArtistViewModel(artist));
                         break;
-                    case MergedArtistCollection collection:
+                    case IArtistCollection collection:
                         Artists.Add(new ArtistCollectionViewModel(collection));
                         break;
                 }

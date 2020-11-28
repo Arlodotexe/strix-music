@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Services.Settings;
@@ -120,7 +121,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         /// </summary>
         public PlayableCollectionGroupPivot()
         {
-            _settingsService = Ioc.Default.GetService<DefaultSettingsService>();
+            _settingsService = Ioc.Default.GetService<DefaultSettingsService>() ?? ThrowHelper.ThrowInvalidOperationException<DefaultSettingsService>();
         }
 
         /// <inheritdoc />

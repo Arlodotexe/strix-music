@@ -67,7 +67,7 @@ namespace OwlCore.AbstractStorage
         }
 
         /// <inheritdoc/>
-        public Task Init()
+        public Task InitAsync()
         {
             // TODO
             return Task.CompletedTask;

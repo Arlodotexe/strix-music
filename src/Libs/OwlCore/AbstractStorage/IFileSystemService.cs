@@ -1,23 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using OwlCore.Provisos;
 
 namespace OwlCore.AbstractStorage
 {
     /// <summary>
     /// Provides safe interactions with the file system.
     /// </summary>
-    public interface IFileSystemService
+    public interface IFileSystemService : IAsyncInit
     {
         /// <summary>
         /// Defines the root folder where new files and folders are created.
         /// </summary>
         IFolderData RootFolder { get; }
-
-        /// <summary>
-        /// Initializes the service, performing first time setup tasks.
-        /// </summary>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
-        Task Init();
 
         /// <summary>
         /// Prompts the user to select a folder to access. Upon selection, the folder is scanned and ingested.

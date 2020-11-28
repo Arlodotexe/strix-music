@@ -22,10 +22,11 @@ namespace StrixMusic.Sdk.Uno
         public static void Initialize()
         {
             Ioc = new Ioc();
-            Ioc.ConfigureServices(services =>
-            {
-                services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
-            });
+
+            var services = new ServiceCollection();
+            services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
+
+            Ioc.ConfigureServices(services.BuildServiceProvider());
         }
     }
 }

@@ -10,7 +10,6 @@ using OwlCore.Events;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -21,15 +20,14 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class PlaylistViewModel : ObservableObject, IPlaylist, ITrackCollectionViewModel, IImageCollectionViewModel
     {
-        private readonly MergedPlaylist _playlist;
-
-        private IUserProfile? _owner;
+        private readonly IPlaylist _playlist;
+        private readonly IUserProfile? _owner;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.
         /// </summary>
-        /// <param name="playlist">The <see cref="MergedPlaylist"/> to wrap.</param>
-        public PlaylistViewModel(MergedPlaylist playlist)
+        /// <param name="playlist">The <see cref="IPlaylist"/> to wrap.</param>
+        public PlaylistViewModel(IPlaylist playlist)
         {
             _playlist = playlist ?? throw new ArgumentNullException(nameof(playlist));
 
@@ -48,9 +46,9 @@ namespace StrixMusic.Sdk.ViewModels
             if (_playlist.Owner != null)
                 _owner = new UserProfileViewModel(_playlist.Owner);
 
-            if (_playlist.RelatedItems is MergedPlayableCollectionGroup mergedRelatedItems)
+            if (_playlist.RelatedItems != null)
             {
-                RelatedItems = new PlayableCollectionGroupViewModel(mergedRelatedItems);
+                RelatedItems = new PlayableCollectionGroupViewModel(_playlist.RelatedItems);
             }
 
             Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
@@ -152,17 +150,17 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _playlist.TrackItemsChanged -= value;
         }
 
-        private void CorePlaylistUrlChanged(object sender, Uri? e) => Url = e;
+        private void CorePlaylistUrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
 
-        private void CorePlaylistPlaybackStateChanged(object sender, PlaybackState e) => PlaybackState = e;
+        private void CorePlaylistPlaybackStateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState));
 
-        private void CorePlaylistNameChanged(object sender, string e) => Name = e;
+        private void CorePlaylistNameChanged(object sender, string e) => OnPropertyChanged(nameof(Name));
 
-        private void CorePlaylistDescriptionChanged(object sender, string? e) => Description = e;
+        private void CorePlaylistDescriptionChanged(object sender, string? e) => OnPropertyChanged(nameof(Description));
 
-        private void PlaylistOnTrackItemsCountChanged(object sender, int e) => TotalTracksCount = e;
+        private void PlaylistOnTrackItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalTracksCount));
 
-        private void PlaylistViewModel_ImagesCountChanged(object sender, int e) => TotalImageCount = e;
+        private void PlaylistViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
         private void PlaylistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
@@ -236,53 +234,25 @@ namespace StrixMusic.Sdk.ViewModels
         public SynchronizedObservableCollection<string>? Genres => _playlist.Genres;
 
         /// <inheritdoc />
-        public IUserProfile? Owner
-        {
-            get => _owner;
-            internal set => SetProperty(ref _owner, value);
-        }
+        public IUserProfile? Owner => _owner;
 
         /// <inheritdoc />
-        public Uri? Url
-        {
-            get => _playlist.Url;
-            internal set => SetProperty(_playlist.Url, value, _playlist, (m, v) => m.Url = v);
-        }
+        public Uri? Url => _playlist.Url;
 
         /// <inheritdoc />
-        public string Name
-        {
-            get => _playlist.Name;
-            internal set => SetProperty(_playlist.Name, value, _playlist, (m, v) => m.Name = v);
-        }
+        public string Name => _playlist.Name;
 
         /// <inheritdoc />
-        public string? Description
-        {
-            get => _playlist.Description;
-            internal set => SetProperty(_playlist.Description, value, _playlist, (m, v) => m.Description = v);
-        }
+        public string? Description => _playlist.Description;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState
-        {
-            get => _playlist.PlaybackState;
-            internal set => SetProperty(_playlist.PlaybackState, value, _playlist, (m, v) => m.PlaybackState = v);
-        }
+        public PlaybackState PlaybackState => _playlist.PlaybackState;
 
         /// <inheritdoc />
-        public int TotalTracksCount
-        {
-            get => _playlist.TotalTracksCount;
-            internal set => SetProperty(_playlist.TotalTracksCount, value, _playlist, (m, v) => m.TotalTracksCount = v);
-        }
+        public int TotalTracksCount => _playlist.TotalTracksCount;
 
         /// <inheritdoc />
-        public int TotalImageCount
-        {
-            get => _playlist.TotalImageCount;
-            internal set => SetProperty(_playlist.TotalImageCount, value, _playlist, (m, v) => m.TotalImageCount = v);
-        }
+        public int TotalImageCount => _playlist.TotalImageCount;
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported => _playlist.IsPlayAsyncSupported;

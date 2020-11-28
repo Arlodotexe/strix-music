@@ -2,7 +2,7 @@
 using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace StrixMusic.Sdk.Uno.Styles
 {
@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.Uno.Styles
 
         private void OpenAlbum(object sender, ItemClickEventArgs e)
         {
-            INavigationService<Control> navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>();
+            INavigationService<Control> navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>(); ;
             navigationService.NavigateTo(typeof(AlbumView), false, e.ClickedItem);
         }
     }

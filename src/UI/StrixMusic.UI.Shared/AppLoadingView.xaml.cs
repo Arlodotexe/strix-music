@@ -27,6 +27,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shared
 {
+    /// <summary>
+    /// The loading view used to initialize the app on startup. The user sees a splash screen, a text status indicator, and icons representing each core.
+    /// </summary>
     public sealed partial class AppLoadingView : UserControl
     {
         private DefaultSettingsService? _settingsService;
@@ -84,7 +87,7 @@ namespace StrixMusic.Shared
 
             UpdateStatus("Initializing filesystem");
 
-            await fileSystemServices.InParallel(x => x.Init());
+            await fileSystemServices.InParallel(x => x.InitAsync());
 
             contextualServiceLocator.Register<IFileSystemService>(cacheFileSystemService, typeof(CacheServiceBase));
 
@@ -100,7 +103,7 @@ namespace StrixMusic.Shared
             _playbackHandlerService = new PlaybackHandlerService();
             services.AddSingleton(_playbackHandlerService);
 
-            Ioc.Default.ConfigureServices(services);
+            Ioc.Default.ConfigureServices(services.BuildServiceProvider());
         }
 
         // TODO: Rename this method or split up the code better.

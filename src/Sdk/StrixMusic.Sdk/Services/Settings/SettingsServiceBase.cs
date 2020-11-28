@@ -7,7 +7,7 @@ using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Newtonsoft.Json;
 using StrixMusic.Sdk.Services.StorageService;
@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.Services.Settings
         /// </summary>
         protected SettingsServiceBase()
         {
-            _textStorageService = Ioc.Default.GetService<ITextStorageService>();
+            _textStorageService = Ioc.Default.GetService<ITextStorageService>() ?? ThrowHelper.ThrowInvalidOperationException<ITextStorageService>();
         }
 
         /// <summary>

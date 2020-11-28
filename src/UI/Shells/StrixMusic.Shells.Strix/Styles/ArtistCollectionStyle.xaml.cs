@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Xaml;
@@ -21,7 +21,8 @@ namespace StrixMusic.Shells.Strix.Styles
 
         private void OpenArtist(object sender, ItemClickEventArgs e)
         {
-            INavigationService<Control> navigationService = StrixShellIoc.Ioc.GetService<INavigationService<Control>>();
+            var navigationService = StrixShellIoc.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
+
             navigationService.NavigateTo(typeof(ArtistView), false, e.ClickedItem);
         }
     }

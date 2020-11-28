@@ -312,6 +312,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             {
                 yield return new MusicBrainzCoreImage(SourceCore, Release.Id, item);
             }
+
             await Task.CompletedTask;
         }
 
