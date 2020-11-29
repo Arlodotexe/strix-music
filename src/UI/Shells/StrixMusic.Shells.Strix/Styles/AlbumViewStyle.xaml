@@ -53,7 +53,7 @@
 
                         <Rectangle Grid.RowSpan="2" Margin="32">
                             <Rectangle.Fill>
-                                <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
+                                <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images, 0)}"/>
                             </Rectangle.Fill>
                         </Rectangle>
 

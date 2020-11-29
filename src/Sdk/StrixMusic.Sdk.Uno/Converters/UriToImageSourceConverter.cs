@@ -11,27 +11,50 @@ namespace StrixMusic.Sdk.Uno.Converters
     /// </summary>
     public sealed class UriToImageSourceConverter
     {
+        /// <inheritdoc cref="Convert(object, int)"/>
+        public static BitmapImage? Convert(object value)
+        {
+            return Convert(value, 0);
+        }
+
         /// <summary>
         /// Converts a <see cref="Uri"/> or url string to a <see cref="BitmapImage"/>.
         /// </summary>
         /// <param name="value">The uri or url string.</param>
+        /// <param name="index">The index to get from the collection.</param>
         /// <returns>A <see cref="BitmapImage"/>.</returns>
-        public static BitmapImage? Convert(object value)
+        public static BitmapImage? Convert(object value, int index)
         {
+            object? data = null;
+            if (value is IEnumerable<object> uris)
+            {
+                var requestedItem = uris.ElementAtOrDefault(index);
+                
+                if (requestedItem is null)
+                {
+                    return null;
+                }
+                else
+                {
+                    data = requestedItem;
+                }
+            }
+
             Uri? uri = null;
-            if (value is Uri)
+
+            if (data is Uri)
             {
-                uri = value as Uri;
+                uri = data as Uri;
             }
-            else if (value is string sValue)
+            else if (data is string stringUri)
             {
-                Uri.TryCreate(sValue, UriKind.Absolute, out uri);
+                Uri.TryCreate(stringUri, UriKind.Absolute, out uri);
             }
-            else if (value is IImage iValue)
+            else if (data is IImage image)
             {
-                uri = iValue.Uri;
+                uri = image.Uri;
             }
-            else if (value is ICollection<IImage> imageCollection && imageCollection.Any())
+            else if (data is ICollection<IImage> imageCollection && imageCollection.Any())
             {
                 uri = imageCollection.First().Uri;
             }

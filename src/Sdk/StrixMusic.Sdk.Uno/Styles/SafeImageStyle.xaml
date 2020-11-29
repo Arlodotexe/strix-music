@@ -19,7 +19,7 @@
 
             <Rectangle x:Name="PART_ImageRectangle">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images[0])}"/>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images, 0)}"/>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
@@ -50,7 +50,7 @@
 
             <Rectangle x:Name="PART_ImageRectangle" RadiusX="10000" RadiusY="10000">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images[0])}"/>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images, 0)}"/>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>

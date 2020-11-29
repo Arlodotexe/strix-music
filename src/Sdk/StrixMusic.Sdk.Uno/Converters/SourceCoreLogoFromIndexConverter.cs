@@ -12,14 +12,14 @@ namespace StrixMusic.Sdk.Uno.Converters
     public sealed class SourceCoreLogoFromIndexConverter
     {
         /// <inheritdoc cref="SourceCoreLogoFromIndexConverter"/>
-        public static Uri Convert(object value, int index)
+        public static Uri? Convert(object value, int index)
         {
             if (value is IEnumerable<ICore> cores)
             {
-                return cores.ElementAt(index).CoreConfig.LogoSvgUrl;
+                return cores.ElementAtOrDefault(index)?.CoreConfig.LogoSvgUrl;
             }
 
-            return ThrowHelper.ThrowArgumentOutOfRangeException<Uri>(nameof(index));
+            return ThrowHelper.ThrowInvalidOperationException<Uri>(nameof(value));
         }
     }
 }
