@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.Helpers;
@@ -44,7 +43,7 @@ namespace StrixMusic.Shared
             AttachEvents();
 
             // Events must be attached before initializing if you want them to fire correctly.
-            await Ioc.Default.GetService<IFileSystemService>().Init();
+            await Ioc.Default.GetRequiredService<IFileSystemService>().InitAsync();
         }
 
         private void MainPage_Unloaded(object sender, RoutedEventArgs e)
@@ -62,16 +61,14 @@ namespace StrixMusic.Shared
 
         private void AttachEvents()
         {
-            var settingsSvc = Ioc.Default.GetService<ISettingsService>();
-
-            settingsSvc.SettingChanged += SettingsService_SettingChanged;
+            Ioc.Default.GetRequiredService<ISettingsService>().SettingChanged += SettingsService_SettingChanged;
         }
 
         private void DetachEvents()
         {
             Unloaded -= MainPage_Unloaded;
 
-            Ioc.Default.GetService<ISettingsService>().SettingChanged -= SettingsService_SettingChanged;
+            Ioc.Default.GetRequiredService<ISettingsService>().SettingChanged -= SettingsService_SettingChanged;
         }
 
         private async void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)
@@ -93,7 +90,7 @@ namespace StrixMusic.Shared
         private async Task SetupInitialShell()
         {
             // Gets the preferred shell from settings.
-            string preferredShell = await Ioc.Default.GetService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
+            string preferredShell = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
             ShellModel shellModel = Constants.Shells.DefaultShellModel!;
             if (Constants.Shells.LoadedShells.ContainsKey(preferredShell))
             {

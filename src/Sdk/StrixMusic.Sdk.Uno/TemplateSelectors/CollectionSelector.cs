@@ -1,12 +1,12 @@
-﻿using StrixMusic.Sdk.Core.Data;
-using StrixMusic.Sdk.Core.ViewModels;
+﻿using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.TemplateSelectors
 {
     /// <summary>
-    /// A <see cref="DataTemplateSelector"/> for the collections in a <see cref="IPlayableCollectionGroup"/> library.
+    /// A <see cref="DataTemplateSelector"/> for the collections in a <see cref="IPlayableCollectionGroupBase"/> library.
     /// </summary>
     public class CollectionSelector : DataTemplateSelector
     {
@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Uno.TemplateSelectors
         public DataTemplate? AlbumListTemplate { get; set; }
 
         /// <summary>
-        /// The <see cref="DataTemplate"/> for any <see cref="IPlayableCollectionGroup"/>.
+        /// The <see cref="DataTemplate"/> for any <see cref="IPlayableCollectionGroupBase"/>.
         /// </summary>
         public DataTemplate? PlayableCollectionGroupTemplate { get; set; }
 

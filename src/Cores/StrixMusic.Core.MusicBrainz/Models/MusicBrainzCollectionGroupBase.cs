@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using OwlCore.Collections;
-using StrixMusic.Sdk.Core.Data;
+using OwlCore.Events;
+using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
     /// <summary>
-    /// A MusicBrainz implementation of <see cref="IPlayableCollectionGroup"/>.
+    /// A MusicBrainz implementation of <see cref="IPlayableCollectionGroupBase"/>.
     /// </summary>
-    public abstract class MusicBrainzCollectionGroupBase : IPlayableCollectionGroup
+    public abstract class MusicBrainzCollectionGroupBase : ICorePlayableCollectionGroup
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCollectionGroupBase"/> class.
@@ -37,6 +38,42 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
+        public event EventHandler<int>? ImagesCountChanged;
+
+        /// <inheritdoc />?
+        public event EventHandler<int>? PlaylistItemsCountChanged;
+
+        /// <inheritdoc />?
+        public event EventHandler<int>? TrackItemsCountChanged;
+
+        /// <inheritdoc />?
+        public event EventHandler<int>? AlbumItemsCountChanged;
+
+        /// <inheritdoc />?
+        public event EventHandler<int>? ArtistItemsCountChanged;
+
+        /// <inheritdoc />?
+        public event EventHandler<int>? TotalChildrenCountChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
+
+        /// <inheritdoc />?
+        public event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
+
+        /// <inheritdoc />
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
@@ -47,9 +84,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public abstract string Name { get; protected set; }
-
-        /// <inheritdoc />
-        public abstract SynchronizedObservableCollection<IImage> Images { get; protected set; }
 
         /// <inheritdoc />
         public abstract string? Description { get; protected set; }
@@ -74,6 +108,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public abstract int TotalChildrenCount { get; internal set; }
+
+        /// <inheritdoc />
+        public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported => false;
@@ -193,46 +230,46 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<IAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset);
+        public abstract IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset);
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<IArtistCollectionItem> GetArtistsAsync(int limit, int offset);
+        public abstract IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset);
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<IPlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0);
+        public abstract IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<IPlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset);
+        public abstract IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset);
 
         /// <inheritdoc />
-        public abstract IAsyncEnumerable<ITrack> GetTracksAsync(int limit, int offset = 0);
+        public abstract IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ITrack track, int index)
+        public Task AddTrackAsync(ICoreTrack track, int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index)
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index)
+        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index)
+        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task AddChildAsync(IPlayableCollectionGroup child, int index)
+        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index)
         {
             throw new NotSupportedException();
         }
@@ -263,6 +300,25 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public Task RemoveChildAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        {
+            await Task.CompletedTask;
+            yield break;
+        }
+
+        /// <inheritdoc />
+        public Task AddImageAsync(ICoreImage image, int index)
         {
             throw new NotSupportedException();
         }

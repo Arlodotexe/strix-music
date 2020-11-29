@@ -128,6 +128,7 @@ namespace StrixMusic.Core.MusicBrainz.Utils
             }
             catch (Exception)
             {
+                // ignore
             }
 
             // Set the position of the response stream back to 0.

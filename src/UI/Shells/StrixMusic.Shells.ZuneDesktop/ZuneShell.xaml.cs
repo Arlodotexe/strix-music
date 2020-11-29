@@ -12,6 +12,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace StrixMusic.Shells.ZuneDesktop
 {
@@ -43,7 +44,8 @@ namespace StrixMusic.Shells.ZuneDesktop
 
         private async void SetupBackgroundImage()
         {
-            ZuneDesktopSettingsService settingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>();
+            ZuneDesktopSettingsService settingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>() ?? ThrowHelper.ThrowInvalidOperationException<ZuneDesktopSettingsService>();
+
             ZuneDesktopBackgroundImage backgroundImage = await settingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -157,7 +159,8 @@ namespace StrixMusic.Shells.ZuneDesktop
         {
             ZuneDesktopShellIoc.Initialize();
             _navigationService = ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>();
-            ZuneDesktopSettingsService settingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>();
+
+            ZuneDesktopSettingsService settingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>() ?? ThrowHelper.ThrowInvalidOperationException<ZuneDesktopSettingsService>();
             settingsService.SettingChanged += SettingsService_SettingChanged;
         }
 

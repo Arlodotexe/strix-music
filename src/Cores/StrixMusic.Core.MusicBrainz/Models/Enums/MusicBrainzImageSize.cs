@@ -1,7 +1,7 @@
 ﻿namespace StrixMusic.Core.MusicBrainz.Models.Enums
 {
     /// <summary>
-    /// The images that can be retrieved for a <see cref="MusicBrainzImage"/>.
+    /// The images that can be retrieved for a <see cref="MusicBrainzCoreImage"/>.
     /// </summary>
     public enum MusicBrainzImageSize
     {

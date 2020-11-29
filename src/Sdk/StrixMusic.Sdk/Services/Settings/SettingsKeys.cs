@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StrixMusic.Sdk.Data.Merged;
 
 namespace StrixMusic.Sdk.Services.Settings
 {
@@ -25,5 +26,15 @@ namespace StrixMusic.Sdk.Services.Settings
         /// Contains keyed information for the last selected Pivot item in various pivots throughout the app. Key is a unique ID for the pivot, value is the index of the selected pivot.
         /// </summary>
         public static readonly Dictionary<string, int> PivotSelectionMemo = new Dictionary<string, int>();
+
+        /// <summary>
+        /// The user's preferred ranking for each core. Highest ranking first.
+        /// </summary>
+        public static readonly IReadOnlyList<Type> CoreRanking = new List<Type>();
+
+        /// <summary>
+        /// The user's preference for how items in a collection from multiple sources are sorted. 
+        /// </summary>
+        public static readonly MergedCollectionSorting MergedCollectionSorting = MergedCollectionSorting.Ranked;
     }
 }

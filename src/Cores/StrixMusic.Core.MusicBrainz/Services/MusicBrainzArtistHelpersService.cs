@@ -8,7 +8,7 @@ using StrixMusic.Core.MusicBrainz.Statics;
 namespace StrixMusic.Core.MusicBrainz.Services
 {
     /// <summary>
-    /// Various helper methods for interacting and creating <see cref="MusicBrainzArtist"/>
+    /// Various helper methods for interacting and creating <see cref="MusicBrainzCoreArtist"/>
     /// </summary>
     public class MusicBrainzArtistHelpersService
     {

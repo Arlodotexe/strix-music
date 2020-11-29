@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk;
 
 namespace StrixMusic.Shells.ZuneDesktop.Settings
@@ -36,7 +37,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         /// </summary>
         public ZuneDesktopSettingsViewModel()
         {
-            _zuneDesktopSettingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>();
+            _zuneDesktopSettingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>() ?? ThrowHelper.ThrowInvalidOperationException<ZuneDesktopSettingsService>();
             LoadInitalValues();
         }
 

@@ -32,12 +32,47 @@ namespace OwlCore.Helpers
             {
                 page = await endpoint(list.Count);
 
-                if (page is null) 
+                if (page is null)
                     return list;
 
                 list.AddRange(page);
 
-                if (list.Count == total) 
+                if (list.Count >= total)
+                    break;
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Loads a list of items of a given type from the given endpoints
+        /// </summary>
+        /// <param name="total">The total number of items to get.</param>
+        /// <param name="startingOffset">The offset to start at.</param>
+        /// <param name="endpoint">A <see cref="Func{T,Result}"/> used to load paginated results</param>
+        /// <remarks>
+        /// Thanks to Sergio Pedri for the original version of this.
+        /// https://discordapp.com/channels/372137812037730304/521423927613063190/570575449483378688
+        /// </remarks>
+        public static async Task<IReadOnlyList<TResult>> GetAllItemsAsync<TResult>(int total, int startingOffset, Func<int, Task<IEnumerable<TResult>>> endpoint)
+        {
+            // Get the items from the first page
+            var list = new List<TResult>();
+            var page = await endpoint(startingOffset);
+
+            list.AddRange(page);
+
+            // Get the remaining items
+            while (true)
+            {
+                page = await endpoint(list.Count + startingOffset);
+
+                if (page is null)
+                    return list;
+
+                list.AddRange(page);
+
+                if (list.Count - startingOffset >= total)
                     break;
             }
 

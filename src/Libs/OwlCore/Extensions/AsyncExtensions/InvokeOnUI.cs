@@ -3,7 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.Helpers;
 
-namespace OwlCore.Extensions.AsyncExtensions
+// ReSharper disable once CheckNamespace
+namespace OwlCore.Extensions
 {
     public static partial class AsyncExtensions
     {

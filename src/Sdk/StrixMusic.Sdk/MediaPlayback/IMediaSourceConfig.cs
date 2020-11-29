@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {
@@ -10,9 +10,9 @@ namespace StrixMusic.Sdk.MediaPlayback
     public interface IMediaSourceConfig
     {
         /// <summary>
-        /// The <see cref="ITrack"/> being played.
+        /// The <see cref="ICoreTrack"/> being played.
         /// </summary>
-        public ITrack Track { get; }
+        public ICoreTrack Track { get; }
 
         /// <summary>
         /// An identifier for this source.

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.MediaPlayback
 {
@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <param name="licenseAcquisitionUri"><inheritdoc cref="LicenseAcquisitionUri"/></param>
         /// <param name="mediaSourceUri"><inheritdoc cref="IMediaSourceConfig.MediaSourceUri"/></param>
         /// <param name="expirationDate">The expiration date for the PlayReady uris.</param>
-        public PlayReadyMediaSourceConfig(ITrack track, string id, Uri licenseAcquisitionUri, Uri mediaSourceUri, DateTime expirationDate)
+        public PlayReadyMediaSourceConfig(ICoreTrack track, string id, Uri licenseAcquisitionUri, Uri mediaSourceUri, DateTime expirationDate)
         {
             Track = track;
             Id = id;
@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <param name="fileStream"><inheritdoc cref="IMediaSourceConfig.FileStreamSource"/></param>
         /// <param name="contentType">The content type for the <paramref name="fileStream"/>.</param>
         /// <param name="licenseAcquisitionUri">URL of the License Server</param>
-        public PlayReadyMediaSourceConfig(ITrack track, string id, Stream fileStream, string contentType, Uri licenseAcquisitionUri)
+        public PlayReadyMediaSourceConfig(ICoreTrack track, string id, Stream fileStream, string contentType, Uri licenseAcquisitionUri)
         {
             Track = track;
             Id = id;
@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         }
 
         /// <inheritdoc/>
-        public ITrack Track { get; }
+        public ICoreTrack Track { get; }
 
         /// <inheritdoc/>
         public string Id { get; }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.Events;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
@@ -28,6 +28,19 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// Items that precede the currently playing item. Used to go to the previous track in the playback context.
         /// </summary>
         IReadOnlyCollection<IMediaSourceConfig> PreviousItems { get; }
+
+        /// <summary>
+        /// The currently playing item.
+        /// </summary>
+        IMediaSourceConfig? CurrentItem { get; }
+
+        /// <summary>
+        /// True if the player is using a shuffled track list.
+        /// </summary>
+        bool ShuffleState { get; }
+
+        /// <inheritdoc cref="Sdk.MediaPlayback.RepeatState"/>
+        RepeatState RepeatState { get; }
 
         /// <summary>
         /// Plays a specific media from <see cref="NextItems"/>.
@@ -94,21 +107,38 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <summary>
         /// Toggles shuffle on or off.
         /// </summary>
-        void ToggleShuffleAsync();
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ToggleShuffleAsync();
 
         /// <summary>
         /// Asks the device to toggle to the next repeat state.
         /// </summary>
-        void ToggleRepeatAsync(RepeatState repeatState);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ToggleRepeatAsync();
+
+        /// <summary>
+        /// Fires when <see cref="ShuffleState"/> changes.
+        /// </summary>
+        event EventHandler<bool> ShuffleStateChanged;
+
+        /// <summary>
+        /// Fires when <see cref="RepeatState"/> changes.
+        /// </summary>
+        event EventHandler<RepeatState> RepeatStateChanged;
 
         /// <summary>
         /// Fires when the <see cref="NextItems"/> are updated.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<IMediaSourceConfig>>? NextItemsChanged;
+        event CollectionChangedEventHandler<IMediaSourceConfig>? NextItemsChanged;
 
         /// <summary>
         /// Fires when the <see cref="PreviousItems"/> are updated.
         /// </summary>
-        event EventHandler<CollectionChangedEventArgs<IMediaSourceConfig>>? PreviousItemsChanged;
+        event CollectionChangedEventHandler<IMediaSourceConfig>? PreviousItemsChanged;
+
+        /// <summary>
+        /// Fires when the <see cref="CurrentItem"/> is changed.
+        /// </summary>
+        event EventHandler<IMediaSourceConfig>? CurrentItemChanged;
     }
 }

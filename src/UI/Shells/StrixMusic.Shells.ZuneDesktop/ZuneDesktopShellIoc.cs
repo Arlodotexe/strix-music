@@ -23,14 +23,15 @@ namespace StrixMusic.Shells.ZuneDesktop
         internal static void Initialize()
         {
             Ioc = new Ioc();
+            var services = new ServiceCollection();
+
             var textStorageService = new TextStorageService();
             var settingsService = new ZuneDesktopSettingsService(textStorageService);
 
-            Ioc.ConfigureServices(services =>
-            {
-                services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
-                services.AddSingleton(settingsService);
-            });
+            services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
+            services.AddSingleton(settingsService);
+
+            Ioc.ConfigureServices(services.BuildServiceProvider());
         }
     }
 }

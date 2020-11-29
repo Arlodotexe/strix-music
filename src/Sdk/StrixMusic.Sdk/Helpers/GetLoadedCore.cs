@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Core.Data;
-using StrixMusic.Sdk.Core.ViewModels;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.ViewModels;
 
 // ReSharper disable CheckNamespace
 namespace StrixMusic.Sdk

@@ -80,3 +80,6 @@ dotnet_analyzer_diagnostic.category-StyleCop.CSharp.SpacingRules.severity = none
 
 # SA1208: System using directives should be placed before other using directives
 dotnet_diagnostic.SA1208.severity = none
+
+# CA1062: Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = suggestion

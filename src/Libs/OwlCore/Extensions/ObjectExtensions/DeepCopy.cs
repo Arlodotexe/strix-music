@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using OwlCore.EqualityComparers;
-using OwlCore.Extensions.ArrayExtensions;
 
-namespace OwlCore.Extensions.ObjectExtensions
+// ReSharper disable once CheckNamespace
+namespace OwlCore.Extensions
 {
     /// <summary>
     /// Provides extension methods for <see cref="object"/>.

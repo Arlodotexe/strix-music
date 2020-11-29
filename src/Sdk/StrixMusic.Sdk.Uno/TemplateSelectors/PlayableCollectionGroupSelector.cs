@@ -1,11 +1,12 @@
-﻿using StrixMusic.Sdk.Core.Data;
+﻿using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.Data.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.TemplateSelectors
 {
     /// <summary>
-    /// A <see cref="DataTemplateSelector"/> for the collections in a <see cref="IPlayableCollectionGroup"/> library.
+    /// A <see cref="DataTemplateSelector"/> for the collections in a <see cref="IPlayableCollectionGroupBase"/> library.
     /// </summary>
     public class PlayableCollectionGroupSelector : DataTemplateSelector
     {
@@ -15,7 +16,7 @@ namespace StrixMusic.Sdk.Uno.TemplateSelectors
         public DataTemplate? AlbumTemplate { get; set; }
 
         /// <summary>
-        /// The <see cref="DataTemplate"/> for any <see cref="IPlayableCollectionGroup"/>.
+        /// The <see cref="DataTemplate"/> for any <see cref="IPlayableCollectionGroupBase"/>.
         /// </summary>
         public DataTemplate? ArtistTemplate { get; set; }
 
@@ -24,9 +25,9 @@ namespace StrixMusic.Sdk.Uno.TemplateSelectors
         {
             switch (item)
             {
-                case IAlbum _:
+                case ICoreAlbum _:
                     return AlbumTemplate!;
-                case IArtist _:
+                case ICoreArtist _:
                     return ArtistTemplate!;
                 default:
                     return ArtistTemplate!;

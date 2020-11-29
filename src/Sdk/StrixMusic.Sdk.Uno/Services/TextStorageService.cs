@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Nito.AsyncEx;
-using OwlCore.Extensions.CollectionsExtensions.Dictionaries;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.StorageService;
 
 namespace StrixMusic.Sdk.Uno.Services
@@ -95,7 +95,7 @@ namespace StrixMusic.Sdk.Uno.Services
             {
                 fileHandle = await pathHandle.GetFileAsync(filename);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 fileHandle = await pathHandle.CreateFileAsync(filename);
             }

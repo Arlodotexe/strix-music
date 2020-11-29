@@ -89,7 +89,7 @@ namespace OwlCore.AbstractStorage
         }
 
         /// <inheritdoc/>
-        public async Task Init()
+        public async Task InitAsync()
         {
             await RootFolder.EnsureExists();
         }

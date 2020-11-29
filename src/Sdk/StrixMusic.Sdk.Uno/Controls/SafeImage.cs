@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
-using StrixMusic.Sdk.Core.Data;
+using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Uno.Helpers;
-using Uno.Extensions.Specialized;
+using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -38,7 +38,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         /// <summary>
         /// The <see cref="IImageCollection"/> ViewModel of the control.
         /// </summary>
-        public IImageCollection ViewModel => (DataContext as IImageCollection)!;
+        public IImageCollectionViewModel ViewModel => (IImageCollectionViewModel)DataContext;
 
         private Rectangle? PART_ImageRectangle { get; set; }
 
@@ -105,9 +105,7 @@ namespace StrixMusic.Sdk.Uno.Controls
             PART_Fallback!.Visibility = Visibility.Collapsed;
             PART_ImageRectangle!.Visibility = Visibility.Visible;
 
-            if (ViewModel == null ||
-                ViewModel.Images == null ||
-                !ViewModel.Images.Any())
+            if (ViewModel?.Images == null || ViewModel.Images.Count == 0)
             {
                 GoToFallback();
             }

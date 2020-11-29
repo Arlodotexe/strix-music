@@ -1,8 +1,7 @@
-﻿using StrixMusic.Sdk.Core.Data;
-using StrixMusic.Sdk.Core.ViewModels;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using System.Threading.Tasks;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {

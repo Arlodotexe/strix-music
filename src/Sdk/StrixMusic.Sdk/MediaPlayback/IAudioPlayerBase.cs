@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// </summary>
         TimeSpan Position { get; }
 
-        /// <inheritdoc cref="PlaybackState"/>
+        /// <inheritdoc cref="MediaPlayback.PlaybackState"/>
         PlaybackState PlaybackState { get; }
 
         /// <summary>
