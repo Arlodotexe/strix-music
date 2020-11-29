@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// Merged multiple <see cref="ICoreAlbum"/> into a single <see cref="IAlbum"/>
     /// </summary>
-    public class MergedAlbum : IAlbum, IMerged<ICoreAlbum>
+    public class MergedAlbum : IAlbum, IMerged<ICoreAlbum>, IMerged<ICoreAlbumCollectionItem>
     {
         private readonly ICoreAlbum _preferredSource;
         private readonly List<ICoreAlbum> _sources;
@@ -120,6 +120,21 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
+        /// <inheritdoc />
+        public void AddSource(ICoreAlbumCollectionItem itemToMerge)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public void RemoveSource(ICoreAlbumCollectionItem itemToRemove)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreAlbumCollectionItem> IMerged<ICoreAlbumCollectionItem>.Sources => Sources;
+
         /// <inheritdoc/>
         public IReadOnlyList<ICoreAlbum> Sources => _sources;
 
@@ -220,34 +235,6 @@ namespace StrixMusic.Sdk.Data.Merged
         public event CollectionChangedEventHandler<IImage>? ImagesChanged;
 
         /// <inheritdoc/>
-        public void AddSource(ICoreAlbum itemToMerge)
-        {
-            Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
-
-            _sources.Add(itemToMerge);
-            _sourceCores.Add(itemToMerge.SourceCore);
-            _imageCollectionMap.AddSource(itemToMerge);
-            _trackCollectionMap.AddSource(itemToMerge);
-        }
-
-        /// <inheritdoc />
-        public void RemoveSource(ICoreAlbum itemToRemove)
-        {
-            Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
-
-            _sources.Remove(itemToRemove);
-            _sourceCores.Remove(itemToRemove.SourceCore);
-            _imageCollectionMap.RemoveSource(itemToRemove);
-            _trackCollectionMap.RemoveSource(itemToRemove);
-        }
-
-        /// <inheritdoc/>
-        public bool Equals(ICoreAlbum other)
-        {
-            return other?.Name == Name;
-        }
-
-        /// <inheritdoc/>
         public Task RemoveTrackAsync(int index) => _preferredSource.RemoveTrackAsync(index);
 
         /// <inheritdoc/>
@@ -327,5 +314,39 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc/>
         public Task PlayAsync() => _preferredSource.PlayAsync();
+
+        /// <inheritdoc/>
+        public void AddSource(ICoreAlbum itemToMerge)
+        {
+            Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
+
+            _sources.Add(itemToMerge);
+            _sourceCores.Add(itemToMerge.SourceCore);
+            _imageCollectionMap.AddSource(itemToMerge);
+            _trackCollectionMap.AddSource(itemToMerge);
+        }
+
+        /// <inheritdoc />
+        public void RemoveSource(ICoreAlbum itemToRemove)
+        {
+            Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
+
+            _sources.Remove(itemToRemove);
+            _sourceCores.Remove(itemToRemove.SourceCore);
+            _imageCollectionMap.RemoveSource(itemToRemove);
+            _trackCollectionMap.RemoveSource(itemToRemove);
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(ICoreAlbum other)
+        {
+            return other?.Name == Name;
+        }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollectionItem other)
+        {
+            return false;
+        }
     }
 }

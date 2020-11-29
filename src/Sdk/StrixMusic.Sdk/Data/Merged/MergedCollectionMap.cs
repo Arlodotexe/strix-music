@@ -482,11 +482,8 @@ namespace StrixMusic.Sdk.Data.Merged
                     collection.Add(returnData);
                     break;
                 case ICoreAlbum album:
-                    /*
                     returnData = (IMerged<TCoreCollectionItem>)new MergedAlbum(album.IntoList());
                     collection.Add(returnData);
-                    */
-                    returnData = null!;
                     break;
                 case ICorePlaylist playlist:
                     returnData = (IMerged<TCoreCollectionItem>)new MergedPlaylist(playlist.IntoList());
@@ -583,7 +580,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 }
             }
 
-            var merged = MergeMappedData(_sortedMap).Select(x=> (TCollectionItem)x).ToList();
+            var merged = MergeMappedData(_sortedMap).Select(x => (TCollectionItem)x).ToList();
 
             return merged;
         }

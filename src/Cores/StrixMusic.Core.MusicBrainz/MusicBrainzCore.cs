@@ -185,15 +185,16 @@ namespace StrixMusic.Core.MusicBrainz
             _musicBrainzClient = this.GetService<MusicBrainzClient>();
             _artistHelperService = this.GetService<MusicBrainzArtistHelpersService>();
 
-            var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*", 1);
-            var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1);
-            var artists = await _musicBrainzClient.Artists.SearchAsync("*", 1);
+            //var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*", 1);
+            //var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1);
+            //var artists = await _musicBrainzClient.Artists.SearchAsync("*", 1);
 
             Library = new MusicBrainzLibrary(this)
             {
-                TotalTracksCount = recordings.Count,
-                TotalAlbumItemsCount = releases.Count,
-                TotalArtistItemsCount = artists.Count,
+                // Temporarily limited to reduce memory usage in merged collection map.
+                TotalTracksCount = 1000,
+                TotalAlbumItemsCount = 1000,
+                TotalArtistItemsCount = 1000,
                 TotalPlaylistItemsCount = 0,
                 TotalChildrenCount = 0,
             };

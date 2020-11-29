@@ -4,6 +4,8 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Shells.Strix;
+using StrixMusic.Shells.ZuneDesktop;
 
 namespace StrixMusic.Shared
 {
@@ -30,6 +32,9 @@ namespace StrixMusic.Shared
         public AppFrame()
         {
             this.InitializeComponent();
+
+            var zune = typeof(ZuneShell);
+            var strix = typeof(StrixShell);
 
             Threading.SetUISynchronizationContext(SynchronizationContext.Current);
 
