@@ -547,6 +547,9 @@ namespace StrixMusic.Sdk.Data.Merged
             // Rebuild the sorted map so we're sure it's sorted correctly.
             _sortedMap.AddRange(BuildSortedMapRanked());
 
+            if (limit > _sortedMap.Count)
+                limit = _sortedMap.Count;
+
             // Get all requested items using the sorted map
             for (var i = offset; i < limit; i++)
             {
