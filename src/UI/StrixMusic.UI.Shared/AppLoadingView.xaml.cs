@@ -133,7 +133,7 @@ namespace StrixMusic.Shared
             await _settingsService.SetValue<IReadOnlyList<Type>>(nameof(SettingsKeys.CoreRanking), new List<Type> { typeof(MusicBrainzCore) }).RunInBackground();
 
             UpdateStatus("Initializing cores");
-            var initData = cores.Select(x => new ValueTuple<ICore, IServiceCollection>(x, new ServiceCollection())).ToArray();
+            var initData = cores.Select(x => new ValueTuple<ICore, IServiceCollection>(x, CreateInitialServicesForCore())).ToArray();
             await Task.Run(() => CurrentWindow.MainViewModel.InitializeCores(initData));
 
             UpdateStatus("Setting up media players");
@@ -141,6 +141,13 @@ namespace StrixMusic.Shared
 
             UpdateStatus($"Done loading, navigating to {nameof(MainPage)}");
             CurrentWindow.NavigationService?.NavigateTo(typeof(MainPage));
+        }
+
+        private IServiceCollection CreateInitialServicesForCore()
+        {
+            var services = new ServiceCollection();
+
+            return services;
         }
 
         private void SetupMediaPlayerAsync(ICore core)

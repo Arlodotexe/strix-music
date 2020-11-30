@@ -36,6 +36,8 @@ namespace StrixMusic.Sdk.Data.Merged
                 throw new ArgumentNullException(nameof(sources));
 
             StoredSources = sources.ToList();
+            Guard.HasSizeGreaterThan(StoredSources, 0, nameof(StoredSources));
+
             PreferredSource = StoredSources[0];
             _sourceCores = StoredSources.Select(x => x.SourceCore).ToList();
 

@@ -13,6 +13,16 @@ namespace StrixMusic.Sdk.Data
         Unloaded,
 
         /// <summary>
+        /// The core need configuration data and has requested that the setup process be started.
+        /// </summary>
+        ConfigRequested,
+
+        /// <summary>
+        /// The setup process has finished and the core can be initialized.
+        /// </summary>
+        Configured,
+
+        /// <summary>
         /// The core is currently loading.
         /// </summary>
         Loading,

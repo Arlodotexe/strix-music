@@ -258,7 +258,12 @@
       <Name>StrixMusic.Shells.ZuneDesktop</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="Hqub.MusicBrainz.API, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Cores\StrixMusic.Core.MusicBrainz\Dependencies\Hqub.MusicBrainz.API.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <Import Project="..\..\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

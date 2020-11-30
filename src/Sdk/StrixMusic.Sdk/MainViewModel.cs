@@ -59,10 +59,10 @@ namespace StrixMusic.Sdk
             {
                 var (core, services) = data;
 
+                await core.InitAsync(services);
+
                 // Registers itself into Cores
                 _ = new CoreViewModel(core);
-
-                await core.InitAsync(services);
 
                 Users.Add(new UserViewModel(new MergedUser(core.User)));
 

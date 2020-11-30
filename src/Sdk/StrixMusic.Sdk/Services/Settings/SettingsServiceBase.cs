@@ -118,7 +118,7 @@ namespace StrixMusic.Sdk.Services.Settings
                 return default!;
             }
 
-            // Try to get the setting value
+            // Try to get the default setting value
             if (obj == null)
             {
                 return (T)SettingsKeysType.GetField(key).GetValue(null);

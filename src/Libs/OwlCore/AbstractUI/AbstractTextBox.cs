@@ -23,8 +23,8 @@ namespace OwlCore.AbstractUI
         /// Creates a new instance of <see cref="AbstractTextBox"/>.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="value"><inheritdoc cref="Value"/></param>
-        /// <param name="placeholderText"><inheritdoc cref="PlaceholderText"/></param>
+        /// <param name="value">The initial value of the text box.</param>
+        /// <param name="placeholderText">Placeholder text to show when the text box is empty.</param>
         public AbstractTextBox(string id, string value, string placeholderText)
             : base(id)
         {
