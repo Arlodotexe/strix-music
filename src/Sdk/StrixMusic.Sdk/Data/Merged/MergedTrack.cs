@@ -46,6 +46,9 @@ namespace StrixMusic.Sdk.Data.Merged
             {
                 TotalArtistItemsCount += item.TotalArtistItemsCount;
                 TotalImageCount += item.TotalImageCount;
+
+                if (item.IsExplicit)
+                    IsExplicit = true;
             }
 
             AttachEvents(_preferredSource);
@@ -246,7 +249,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public ILyrics? Lyrics { get; }
 
         /// <inheritdoc/>
-        public bool IsExplicit => _preferredSource.IsExplicit;
+        public bool IsExplicit { get; }
 
         /// <inheritdoc/>
         public string? Description => _preferredSource.Description;
