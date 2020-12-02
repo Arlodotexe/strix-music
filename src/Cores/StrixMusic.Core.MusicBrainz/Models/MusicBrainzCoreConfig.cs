@@ -30,7 +30,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IServiceProvider? Services { get; private set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<AbstractUIElementGroup> CoreDataUIElements => new List<AbstractUIElementGroup>()
+        public IReadOnlyList<AbstractUIElementGroup> AbstractUiElements => new List<AbstractUIElementGroup>()
         {
             new AbstractUIElementGroup("about", PreferredOrientation.Horizontal, new List<AbstractUIElement>()
             {
