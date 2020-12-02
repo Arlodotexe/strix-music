@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:defaultabstract="using:StrixMusic.Sdk.Uno.Controls.AbstractUI"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors">
+    xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
+    x:Class="StrixMusic.Sdk.Uno.Styles.AbstractUIStyles">
 
     <!--<selectors:AbstractUIElementGroupTemplateSelector BooleanUIElementTemplate="{StaticResource }"/>-->
 
