@@ -8,6 +8,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// An observable <see cref="ITrackCollectionBase"/>.
     /// </summary>
+    /// <remarks>TODO: Why do we need this base class? Why not directly implement <see cref="ITrackCollectionViewModel"/>?</remarks>
     public interface ITrackCollectionBaseViewModel : ITrackCollectionBase
     {
         /// <summary>

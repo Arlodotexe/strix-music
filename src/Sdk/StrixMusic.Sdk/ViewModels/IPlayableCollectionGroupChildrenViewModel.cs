@@ -6,7 +6,7 @@ using StrixMusic.Sdk.Data;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// An observable <see cref="IPlayableCollectionGroup"/>.
+    /// The children-specific ViewModel properties for <see cref="IPlayableCollectionGroup"/>. This is needed so because multiple view models implement <see cref="IPlayableCollectionGroup"/>, and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IPlayableCollectionGroup"/>.
     /// </summary>
     public interface IPlayableCollectionGroupChildrenViewModel : IPlayableCollectionGroupChildren
     {
