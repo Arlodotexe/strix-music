@@ -6,7 +6,7 @@ using StrixMusic.Sdk.Data;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// An observable <see cref="IArtistCollection"/>.
+    /// An interfaced ViewModel for <see cref="IArtistCollection" />. This is needed so because multiple view models implement <see cref="IArtistCollection"/>, and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IArtistCollection"/>.
     /// </summary>
     public interface IArtistCollectionViewModel : IArtistCollection
     {
