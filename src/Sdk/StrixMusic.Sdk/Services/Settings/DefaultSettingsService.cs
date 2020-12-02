@@ -65,5 +65,8 @@ namespace StrixMusic.Sdk.Services.Settings
 
         /// <inheritdoc/>
         public override string Id => "Default";
+
+        /// <inheritdoc/>
+        public override System.Type SettingsKeysType =>  typeof(SettingsKeys);
     }
 }

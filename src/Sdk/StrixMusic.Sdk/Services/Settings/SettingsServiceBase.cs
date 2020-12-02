@@ -135,7 +135,7 @@ namespace StrixMusic.Sdk.Services.Settings
         /// <summary>
         /// The Type used to hold settings keys and default value for this implementation of the Settings Service.
         /// </summary>
-        public virtual Type SettingsKeysType { get; } = typeof(SettingsKeys);
+        public abstract Type SettingsKeysType { get; }
 
         /// <inheritdoc cref="ISettingsService.SettingChanged"/>
         public event EventHandler<SettingChangedEventArgs>? SettingChanged;
