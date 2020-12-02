@@ -27,44 +27,40 @@ namespace OwlCore.Extensions
         /// <summary>
         /// Waits for an event to fire.
         /// </summary>
-        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Default (nullable) if the task fails.</returns>
         public static async Task<TResult> TryOrSkip<TException, TResult>(this Task<TResult> task)
             where TException : Exception
+            where TResult : class
         {
-            var taskResult = default(TResult);
-
             try
             {
-                taskResult = await task;
+                return await task;
             }
             catch (Exception ex)
             {
+                // todo fix null silencing. Can't use a class constraint.
                 if (ex.GetType() == typeof(TException))
-                    return taskResult;
+                    return default!;
 
                 throw;
             }
-
-            return taskResult;
         }
 
         /// <summary>
         /// Waits for an event to fire.
         /// </summary>
-        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Default (nullable) if the task fails.</returns>
         public static async Task<TResult> TryOrSkip<TResult>(this Task<TResult> task)
         {
-            var taskResult = default(TResult);
-
             try
             {
-                taskResult = await task;
+                return await task;
             }
             catch (Exception ex)
             {
-                return taskResult;
+                // todo fix null silencing. Can't use a class constraint.
+                return default!; 
             }
-
-            return taskResult;
         }
     }
+}
