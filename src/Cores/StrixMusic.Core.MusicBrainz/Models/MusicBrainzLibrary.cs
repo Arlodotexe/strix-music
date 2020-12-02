@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Data.Core;
@@ -14,8 +16,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// </summary>
     public class MusicBrainzLibrary : MusicBrainzCollectionGroupBase, ICoreLibrary
     {
-        private readonly MusicBrainzClient _musicBrainzClient;
-        private readonly MusicBrainzArtistHelpersService _artistHelpersService;
+        private readonly MusicBrainzClient? _musicBrainzClient;
+        private readonly MusicBrainzArtistHelpersService? _artistHelpersService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzLibrary"/> class.
@@ -24,8 +26,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public MusicBrainzLibrary(ICore sourceCore)
             : base(sourceCore)
         {
-            _musicBrainzClient = SourceCore.GetServiceSafe<MusicBrainzClient>() ?? new MusicBrainzClient();
-            _artistHelpersService = SourceCore.GetServiceSafe<MusicBrainzArtistHelpersService>() ?? new MusicBrainzArtistHelpersService(_musicBrainzClient);
+            _musicBrainzClient = SourceCore.GetServiceSafe<MusicBrainzClient>();
+
+            if (_musicBrainzClient != null)
+                _artistHelpersService = SourceCore.GetServiceSafe<MusicBrainzArtistHelpersService>() ?? new MusicBrainzArtistHelpersService(_musicBrainzClient);
         }
 
         /// <inheritdoc />
@@ -62,14 +66,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
+        public override async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
-            return AsyncEnumerable.Empty<ICorePlaylist>();
+            await Task.CompletedTask;
+            yield break;
         }
 
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
+            Guard.IsNotNull(_musicBrainzClient, nameof(_musicBrainzClient));
+            Guard.IsNotNull(_artistHelpersService, nameof(_artistHelpersService));
+
             var albumsList = await _musicBrainzClient.Releases.SearchAsync("*", limit, offset);
             var albums = albumsList.Items;
 
@@ -86,6 +94,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
+            Guard.IsNotNull(_musicBrainzClient, nameof(_musicBrainzClient));
+            Guard.IsNotNull(_artistHelpersService, nameof(_artistHelpersService));
+
             var artists = await _musicBrainzClient.Artists.SearchAsync($"*", limit, offset);
 
             foreach (var artist in artists.Items)
@@ -99,6 +110,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
+            Guard.IsNotNull(_musicBrainzClient, nameof(_musicBrainzClient));
+            Guard.IsNotNull(_artistHelpersService, nameof(_artistHelpersService));
+
             var recordings = await _musicBrainzClient.Recordings.SearchAsync("*", limit, offset);
 
             foreach (var recording in recordings.Items)

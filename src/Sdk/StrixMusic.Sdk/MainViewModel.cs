@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -22,6 +23,8 @@ namespace StrixMusic.Sdk
     {
         private readonly List<ICore> _sources = new List<ICore>();
         private readonly SynchronizedObservableCollection<IDevice> _devices = new SynchronizedObservableCollection<IDevice>();
+
+        private readonly List<(ICore core, CancellationTokenSource cancellationToken)> _coreInitData = new List<(ICore, CancellationTokenSource)>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
@@ -55,20 +58,7 @@ namespace StrixMusic.Sdk
             Users.Clear();
             PlaybackQueue.Clear();
 
-            await initData.InParallel(async data =>
-            {
-                var (core, services) = data;
-
-                await core.InitAsync(services);
-
-                // Registers itself into Cores
-                _ = new CoreViewModel(core);
-
-                Users.Add(new UserViewModel(new MergedUser(core.User)));
-
-                foreach (var device in core.Devices)
-                    _devices.Add(new MergedDevice(device));
-            });
+            await initData.InParallel(InitCore);
 
             Library = new LibraryViewModel(new MergedLibrary(_sources.Select(x => x.Library)));
 
@@ -79,6 +69,65 @@ namespace StrixMusic.Sdk
             Devices = new SynchronizedObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new MergedDevice(device))));
 
             AttachEvents();
+        }
+
+        private async Task InitCore((ICore core, IServiceCollection services) data)
+        {
+            var (core, services) = data;
+
+            var cancellationToken = new CancellationTokenSource();
+            _coreInitData.Add(new ValueTuple<ICore, CancellationTokenSource>(core, cancellationToken));
+
+            // If the core requests config, cancel the init task.
+            // Show the UI - TODO
+            // Then wait for the core state to change to Configured.
+            core.CoreStateChanged += OnCoreStateChanged_HandleConfigRequest;
+
+            await core.InitAsync(services).RunInBackground(cancellationToken.Token).TryOrSkip<TaskCanceledException>();
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                var timeAllowedForUISetup = TimeSpan.FromMinutes(10);
+
+                // UNTESTED
+                var updatedState = await AsyncExtensions.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, timeAllowedForUISetup);
+
+                if (updatedState.Result == CoreState.Configured)
+                {
+                    await InitCore(data);
+                }
+
+                cancellationToken.Dispose();
+                return;
+            }
+
+            // Registers itself into Cores
+#pragma warning disable CA2000 // Dispose objects before losing scope
+            _ = new CoreViewModel(core);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+
+            Users.Add(new UserViewModel(new MergedUser(core.User)));
+
+            foreach (var device in core.Devices)
+                _devices.Add(new MergedDevice(device));
+
+            core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
+            cancellationToken.Dispose();
+        }
+
+        private void OnCoreStateChanged_HandleConfigRequest(object sender, CoreState e)
+        {
+            if (!(sender is ICore core))
+                return;
+
+            if (e == CoreState.ConfigRequested)
+            {
+                var cancellationToken = _coreInitData.First(x => x.core == core).cancellationToken;
+
+                cancellationToken.Cancel();
+
+                core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
+            }
         }
 
         private void AttachEvents()

@@ -24,6 +24,7 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Core.Scops;
 
 namespace StrixMusic.Shared
 {
@@ -134,7 +135,7 @@ namespace StrixMusic.Shared
 
             UpdateStatus("Initializing cores");
             var initData = cores.Select(x => new ValueTuple<ICore, IServiceCollection>(x, CreateInitialServicesForCore())).ToArray();
-            await Task.Run(() => CurrentWindow.MainViewModel.InitializeCores(initData));
+            await CurrentWindow.MainViewModel.InitializeCores(initData).RunInBackground();
 
             UpdateStatus("Setting up media players");
             cores.ForEach(SetupMediaPlayerAsync);

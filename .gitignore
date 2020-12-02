@@ -208,3 +208,5 @@ project.lock.json
 docs/api/*.yml
 docs/api/.manifest
 docs/wwwroot/**
+**/*MusicBrainz*/Dependencies/**
+**/*MusicBrainz*/Dependencies/*API.dll
