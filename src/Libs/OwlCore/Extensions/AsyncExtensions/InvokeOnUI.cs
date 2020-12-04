@@ -16,7 +16,7 @@ namespace OwlCore.Extensions
         {
             var originalContext = SynchronizationContext.Current;
 
-            if (Threading.UISyncContext is null)
+            if (Helpers.Threading.UISyncContext is null)
                 throw new InvalidOperationException($"UI context not found. {nameof(Threading.SetUISynchronizationContext)} was not called.");
 
             SynchronizationContext.SetSynchronizationContext(Threading.UISyncContext);

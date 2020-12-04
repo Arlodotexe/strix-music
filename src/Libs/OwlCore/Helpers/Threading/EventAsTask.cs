@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using OwlCore.Extensions;
 
 // ReSharper disable once CheckNamespace
-namespace OwlCore.Extensions
+namespace OwlCore.Helpers
 {
     /// <summary>
     /// Helpers related to Threading.
