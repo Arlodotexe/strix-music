@@ -8,8 +8,8 @@ namespace OwlCore.Extensions
         /// <summary>
         /// Runs a <see cref="Task"/> in a fire-and-forget manner.
         /// </summary>
-        /// <param name="task">The task to fire and forget.</param>
-        public static void FireAndForget(this Task task)
+        /// <param name="_">The task to fire and forget.</param>
+        public static void FireAndForget(this Task _)
         {
         }
     }
