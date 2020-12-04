@@ -24,7 +24,6 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Core.Scops;
 
 namespace StrixMusic.Shared
 {
