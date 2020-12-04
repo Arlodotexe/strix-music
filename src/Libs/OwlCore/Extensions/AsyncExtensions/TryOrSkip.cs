@@ -8,7 +8,7 @@ namespace OwlCore.Extensions
     public static partial class AsyncExtensions
     {
         /// <summary>
-        /// Waits for an event to fire.
+        /// Syntactic sugar for catching any exception that may occur in a <see cref="Task"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
         public static async Task TryOrSkip<TException>(this Task task)
@@ -18,14 +18,14 @@ namespace OwlCore.Extensions
             {
                 await task;
             }
-            catch (Exception ex)
+            catch (TException)
             {
                 // ignored
             }
         }
 
         /// <summary>
-        /// Waits for an event to fire.
+        /// Syntactic sugar for catching a specific exception that may occur in a <see cref="Task"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Default (nullable) if the task fails.</returns>
         public static async Task<TResult> TryOrSkip<TException, TResult>(this Task<TResult> task)
@@ -36,18 +36,14 @@ namespace OwlCore.Extensions
             {
                 return await task;
             }
-            catch (Exception ex)
+            catch (TException)
             {
-                // todo fix null silencing. Can't use a class constraint.
-                if (ex.GetType() == typeof(TException))
-                    return default!;
-
-                throw;
+                return default!;
             }
         }
 
         /// <summary>
-        /// Waits for an event to fire.
+        /// Syntactic sugar for catching any exception that may occur in a <see cref="Task"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Default (nullable) if the task fails.</returns>
         public static async Task<TResult> TryOrSkip<TResult>(this Task<TResult> task)
@@ -56,10 +52,10 @@ namespace OwlCore.Extensions
             {
                 return await task;
             }
-            catch (Exception ex)
+            catch
             {
                 // todo fix null silencing. Can't use a class constraint.
-                return default!; 
+                return default!;
             }
         }
     }
