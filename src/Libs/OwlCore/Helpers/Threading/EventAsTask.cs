@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 // ReSharper disable once CheckNamespace
 namespace OwlCore.Extensions
 {
-    public static partial class AsyncExtensions
+    /// <summary>
+    /// Helpers related to Threading.
+    /// </summary>
+    public static partial class Threading
     {
         /// <summary>
         /// Waits for an event to fire.
