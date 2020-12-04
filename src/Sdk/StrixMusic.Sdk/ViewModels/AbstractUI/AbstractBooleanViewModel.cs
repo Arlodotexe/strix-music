@@ -11,6 +11,10 @@ namespace StrixMusic.Sdk.ViewModels.AbstractUI
     /// </summary>
     public class AbstractBooleanViewModel : ObservableObject
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AbstractBooleanViewModel"/> class.
+        /// </summary>
+        /// <param name="id"></param>
         public AbstractBooleanViewModel(string id)
         {
         }
