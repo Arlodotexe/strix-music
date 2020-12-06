@@ -25,7 +25,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             var textBlock =
                 new AbstractTextBox("testBox", "The initial value")
                 {
-                    Title = "Test text box.",
+                    Title = "AbstractUI TextBox Demo",
                     Subtitle = "Enter something useful.",
                 };
 
