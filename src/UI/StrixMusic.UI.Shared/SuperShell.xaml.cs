@@ -7,6 +7,7 @@ using StrixMusic.Helpers;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Models;
+using Uno.Extensions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -25,7 +26,7 @@ namespace StrixMusic.Shared
         /// <summary>
         /// TEMPORARY. Allows binding to a group of <see cref="AbstractUIElementGroup"/>s.
         /// </summary>
-        public List<AbstractUIElementGroup> AbstractUIGroups { get; set; } = new List<AbstractUIElementGroup>();
+        public ObservableCollection<AbstractUIElementGroup> AbstractUIGroups { get; set; } = new ObservableCollection<AbstractUIElementGroup>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperShell"/> class.

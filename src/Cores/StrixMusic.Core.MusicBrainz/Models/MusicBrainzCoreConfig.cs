@@ -46,7 +46,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         private void TextBlock_ValueChanged(object sender, string e)
         {
-            if (e == "All done!")
+            if (e == "something useful")
             {
                 ((MusicBrainzCore)SourceCore).ChangeCoreState(Sdk.Data.CoreState.Configured);
             }

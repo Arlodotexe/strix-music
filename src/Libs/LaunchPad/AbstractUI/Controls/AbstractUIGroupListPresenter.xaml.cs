@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using LaunchPad.AbstractUI.ViewModels;
@@ -14,9 +15,9 @@ namespace LaunchPad.AbstractUI.Controls
         /// <summary>
         /// The groups of abstract UI elements to display.
         /// </summary>
-        private List<AbstractUIElementGroupViewModel> ViewModel
+        private ObservableCollection<AbstractUIElementGroupViewModel> ViewModel
         {
-            get => (List<AbstractUIElementGroupViewModel>)GetValue(ViewModelProperty);
+            get => (ObservableCollection<AbstractUIElementGroupViewModel>)GetValue(ViewModelProperty);
             set => SetValue(ViewModelProperty, value);
         }
 
@@ -24,7 +25,7 @@ namespace LaunchPad.AbstractUI.Controls
         /// Backing property for <see cref="ViewModel"/>.
         /// </summary>
         private static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(nameof(AbstractUIElementGroup), typeof(List<AbstractUIElementGroupViewModel>), typeof(AbstractUIGroupListPresenter), new PropertyMetadata(new List<AbstractUIElementGroupViewModel>()));
+            DependencyProperty.Register(nameof(AbstractUIElementGroup), typeof(ObservableCollection<AbstractUIElementGroupViewModel>), typeof(AbstractUIGroupListPresenter), new PropertyMetadata(new ObservableCollection<AbstractUIElementGroupViewModel>()));
 
         /// <summary>
         /// The template selector used to display Abstract UI elements. Use this to define your own custom styles for each control. You may specify the existing, default styles for those you don't want to override.
@@ -39,7 +40,7 @@ namespace LaunchPad.AbstractUI.Controls
         /// Backing property for <see cref="TemplateSelector"/>.
         /// </summary>
         public static readonly DependencyProperty TemplateSelectorProperty =
-            DependencyProperty.Register(nameof(TemplateSelector), typeof(DataTemplateSelector), typeof(AbstractUIGroupListPresenter), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(TemplateSelector), typeof(DataTemplateSelector), typeof(AbstractUIGroupListPresenter), new PropertyMetadata(new AbstractUIGroupPresentationTemplateSelector()));
 
         /// <summary>
         /// Creates a new instance of <see cref="AbstractUIGroupListPresenter"/>.
@@ -48,6 +49,11 @@ namespace LaunchPad.AbstractUI.Controls
         {
             this.InitializeComponent();
 
+            Loaded += AbstractUIGroupListPresenter_Loaded;
+        }
+
+        private void AbstractUIGroupListPresenter_Loaded(object sender, RoutedEventArgs e)
+        {
             ViewModel.Clear();
 
             if (DataContext is IEnumerable<AbstractUIElementGroup> groups)
@@ -58,11 +64,6 @@ namespace LaunchPad.AbstractUI.Controls
                 }
             }
 
-            Loaded += AbstractUIGroupListPresenter_Loaded;
-        }
-
-        private void AbstractUIGroupListPresenter_Loaded(object sender, RoutedEventArgs e)
-        {
             AttachEvents();
         }
 

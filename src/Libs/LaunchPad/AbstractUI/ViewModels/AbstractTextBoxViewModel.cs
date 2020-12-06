@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Helpers;
@@ -21,7 +22,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         : base(model)
         {
             _model = model;
-            ValueChangedCommand = new AsyncRelayCommand<string>(SaveValue);
+            ValueChangedCommand = new AsyncRelayCommand<TextChangedEventArgs>(HandleValueChanged);
         }
 
         /// <summary>
@@ -48,11 +49,16 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <param name="newValue">The new value.</param>
         public async Task SaveValue(string newValue)
         {
-            if (await Threading.Debounce(_model.Id, TimeSpan.FromMilliseconds(1000)))
+            if (await Threading.Debounce(_model.Id, TimeSpan.FromMilliseconds(3000)))
             {
-                Value = newValue;
-                ValueChanged?.Invoke(this, newValue);
+                _model.SaveValue(Value);
+                ValueChanged?.Invoke(this, Value);
             }
+        }
+
+        private Task HandleValueChanged(TextChangedEventArgs args)
+        {
+            return SaveValue(Value);
         }
 
         /// <summary>
@@ -63,6 +69,6 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <summary>
         /// Fire to notify that the value of the text box has been changed.
         /// </summary>
-        public IRelayCommand<string> ValueChangedCommand;
+        public IRelayCommand<TextChangedEventArgs> ValueChangedCommand;
     }
 }
