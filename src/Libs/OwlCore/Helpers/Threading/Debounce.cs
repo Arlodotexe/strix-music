@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace OwlCore.Helpers
 {
     public static partial class Threading
     {
-        private static readonly Dictionary<string, DebouncerData> _inUseDebouncers = new Dictionary<string, DebouncerData>();
+        private static readonly ConcurrentDictionary<string, DebouncerData> _inUseDebouncers = new ConcurrentDictionary<string, DebouncerData>();
 
         /// <summary>
         /// Debouncing enforces that a function not be called again until a certain amount of time has passed without it being called.
@@ -25,7 +26,7 @@ namespace OwlCore.Helpers
             else
             {
                 debouncerData = new DebouncerData();
-                _inUseDebouncers.Add(debouncerKey, debouncerData);
+                _inUseDebouncers.TryAdd(debouncerKey, debouncerData);
                 await debouncerData.Lock.WaitAsync();
             }
 
@@ -33,7 +34,7 @@ namespace OwlCore.Helpers
             {
                 await Task.Delay(timeToWait, debouncerData.TokenSource.Token);
                 debouncerData.Lock.Release();
-                _inUseDebouncers.Remove(debouncerKey);
+                _inUseDebouncers.TryRemove(debouncerKey, out _);
                 return true;
             }
             catch (TaskCanceledException)
