@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Extensions;
 using OwlCore.Helpers;
 
 namespace LaunchPad.AbstractUI.ViewModels
@@ -40,7 +41,14 @@ namespace LaunchPad.AbstractUI.ViewModels
         public string Value
         {
             get => _model.Value;
-            set => SetProperty(_model.Value, value, _model, (u, n) => _model.Value = n);
+            set
+            {
+                if (value == _model.Value)
+                    return;
+
+                SaveValue(value).FireAndForget();
+                SetProperty(_model.Value, value, _model, (u, n) => _model.Value = n);
+            }
         }
 
         /// <summary>
@@ -49,10 +57,10 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <param name="newValue">The new value.</param>
         public async Task SaveValue(string newValue)
         {
-            if (await Threading.Debounce(_model.Id, TimeSpan.FromMilliseconds(3000)))
+            if (await Threading.Debounce(_model.Id, TimeSpan.FromMilliseconds(1000)))
             {
-                _model.SaveValue(Value);
-                ValueChanged?.Invoke(this, Value);
+                ValueChanged?.Invoke(this, newValue);
+                _model.SaveValue(newValue);
             }
         }
 
