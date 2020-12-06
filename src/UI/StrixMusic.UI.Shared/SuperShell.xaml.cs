@@ -1,7 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.AbstractUI.Models;
 using StrixMusic.Helpers;
+using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Models;
 using Windows.UI.Xaml;
@@ -20,6 +23,11 @@ namespace StrixMusic.Shared
         public ObservableCollection<ShellModel> Skins { get; set; }
 
         /// <summary>
+        /// TEMPORARY. Allows binding to a group of <see cref="AbstractUIElementGroup"/>s.
+        /// </summary>
+        public List<AbstractUIElementGroup> AbstractUIGroups { get; set; } = new List<AbstractUIElementGroup>();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SuperShell"/> class.
         /// </summary>
         public SuperShell()
@@ -32,10 +40,26 @@ namespace StrixMusic.Shared
             Loaded += SuperShell_Loaded;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SuperShell"/> class, and displays a core's <see cref="AbstractUIElement"/>s.
+        /// </summary>
+        public SuperShell(ICore core)
+            : this()
+        {
+            SetupAbstractUI(core);
+        }
+
         private async void SuperShell_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= SuperShell_Loaded;
             await InitSkins();
+        }
+
+        // This is temporary, to test abstract UI.
+        private void SetupAbstractUI(ICore core)
+        {
+            AbstractUIGroups.Clear();
+            AbstractUIGroups.AddRange(core.CoreConfig.AbstractUIElements);
         }
 
         private async Task InitSkins()

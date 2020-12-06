@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace OwlCore.AbstractUI
+namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// Presents a group of abstracted UI elements to the user.
@@ -18,11 +17,9 @@ namespace OwlCore.AbstractUI
         /// </summary>
         /// <param name="id"></param>
         /// <param name="preferredOrientation"></param>
-        /// <param name="items"></param>
-        public AbstractUIElementGroup(string id, PreferredOrientation preferredOrientation, IEnumerable<AbstractUIElement> items)
+        public AbstractUIElementGroup(string id, PreferredOrientation preferredOrientation)
             : base(id)
         {
-            Items = items;
             PreferredOrientation = preferredOrientation;
         }
 
@@ -35,9 +32,9 @@ namespace OwlCore.AbstractUI
         /// <summary>
         /// The items in this group.
         /// </summary>
-        public IEnumerable<AbstractUIElement> Items { get; }
+        public IEnumerable<AbstractUIElement> Items { get; set; } = new List<AbstractUIElement>();
 
-        /// <inheritdoc cref="AbstractUI.PreferredOrientation"/>
+        /// <inheritdoc cref="Models.PreferredOrientation"/>
         public PreferredOrientation PreferredOrientation { get; }
     }
 }

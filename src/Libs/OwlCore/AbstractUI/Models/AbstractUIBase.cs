@@ -1,4 +1,4 @@
-﻿namespace OwlCore.AbstractUI
+﻿namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// The base for all AbstractUI objects. Contains abstracted metadata.

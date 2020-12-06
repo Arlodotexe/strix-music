@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OwlCore.AbstractUI;
+using OwlCore.AbstractUI.Models;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Base
@@ -13,7 +14,7 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// Abstract UI elements that will be presented to the user for Settings, About, Legal notices, Donation links, etc.
         /// </summary>
-        IReadOnlyList<AbstractUIElementGroup> AbstractUiElements { get; }
+        IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; }
 
         /// <summary>
         /// A local path or url pointing to a SVG file containing the logo for this core.

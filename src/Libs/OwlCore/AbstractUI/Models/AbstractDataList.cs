@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace OwlCore.AbstractUI
+namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// Presents a list of metadata in a Grid or List.

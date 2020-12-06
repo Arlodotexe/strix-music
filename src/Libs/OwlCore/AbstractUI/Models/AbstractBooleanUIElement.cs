@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 
-namespace OwlCore.AbstractUI
+namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// Represents a UI element that has a changeable boolean value. (Checkbox, Toggle Buttons, Switches, etc)

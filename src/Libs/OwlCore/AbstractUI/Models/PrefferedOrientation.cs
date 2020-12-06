@@ -1,4 +1,4 @@
-﻿namespace OwlCore.AbstractUI
+﻿namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// The Preferred orientation for items in an <see cref="AbstractUIElementGroup"/>.

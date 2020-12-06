@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:StrixMusic.Sdk.Uno.Models"
+    xmlns:controls="using:LaunchPad.AbstractUI.Controls"
     mc:Ignorable="d"
     MinHeight="250"
     MinWidth="400"
@@ -23,6 +24,8 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+
+        <controls:AbstractUIGroupListPresenter ViewModel="{x:Bind AbstractUIGroups}" />
 
     </StackPanel>
 </UserControl>

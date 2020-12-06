@@ -1,19 +1,19 @@
-﻿namespace OwlCore.AbstractUI
+﻿namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// The preferred display mode for a <see cref="AbstractDataList"/>.
     /// </summary>
     /// <remarks>The UI may choose not to respect this.</remarks>
-    public enum AbstractDataListPreferredDisplayMode
+    public enum AbstractMultiChoicePreferredDisplayMode
     {
         /// <summary>
-        /// Displays the items in a grid.
+        /// Displays items in a dropdown menu.
         /// </summary>
-        Grid,
+        Dropdown,
 
         /// <summary>
-        /// Displays the items in a vertical list.
+        /// Displays items as multiple radio buttons.
         /// </summary>
-        List,
+        RadioButtons,
     }
 }

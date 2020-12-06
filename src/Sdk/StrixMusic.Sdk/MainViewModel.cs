@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.Collections;
 using OwlCore.Extensions;
+using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
@@ -38,6 +39,27 @@ namespace StrixMusic.Sdk
             Cores = new SynchronizedObservableCollection<CoreViewModel>();
             Users = new SynchronizedObservableCollection<UserProfileViewModel>();
             PlaybackQueue = new SynchronizedObservableCollection<TrackViewModel>();
+        }
+
+        /// <summary>
+        /// Raised when top-level navigation is needed.
+        /// </summary>
+        public event EventHandler<AppNavigationTarget>? AppNavigationRequested;
+
+        private void AttachEvents()
+        {
+            foreach (var source in _sources)
+            {
+                source.Devices.CollectionChanged += Devices_CollectionChanged;
+            }
+        }
+
+        private void DetachEvents()
+        {
+            foreach (var source in _sources)
+            {
+                source.Devices.CollectionChanged -= Devices_CollectionChanged;
+            }
         }
 
         /// <summary>
@@ -79,7 +101,6 @@ namespace StrixMusic.Sdk
             _coreInitData.Add(new ValueTuple<ICore, CancellationTokenSource>(core, cancellationToken));
 
             // If the core requests config, cancel the init task.
-            // Show the UI - TODO
             // Then wait for the core state to change to Configured.
             core.CoreStateChanged += OnCoreStateChanged_HandleConfigRequest;
 
@@ -87,12 +108,18 @@ namespace StrixMusic.Sdk
 
             if (cancellationToken.IsCancellationRequested)
             {
+                AppNavigationRequested?.Invoke(core, AppNavigationTarget.Settings);
+
                 var timeAllowedForUISetup = TimeSpan.FromMinutes(10);
 
                 // UNTESTED
-                var updatedState = await AsyncExtensions.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, timeAllowedForUISetup);
+                var updatedState = await Threading.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, timeAllowedForUISetup);
 
-                if (updatedState.Result == CoreState.Configured)
+                if (updatedState is null)
+                {
+                    // Timed out. Roll back changes? Unregister core? TODO.
+                }
+                else if (updatedState.Value.Result == CoreState.Configured)
                 {
                     await InitCore(data);
                 }
@@ -127,22 +154,6 @@ namespace StrixMusic.Sdk
                 cancellationToken.Cancel();
 
                 core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
-            }
-        }
-
-        private void AttachEvents()
-        {
-            foreach (var source in _sources)
-            {
-                source.Devices.CollectionChanged += Devices_CollectionChanged;
-            }
-        }
-
-        private void DetachEvents()
-        {
-            foreach (var source in _sources)
-            {
-                source.Devices.CollectionChanged -= Devices_CollectionChanged;
             }
         }
 
@@ -253,8 +264,8 @@ namespace StrixMusic.Sdk
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
-            // TODO
             await Task.CompletedTask;
+            DetachEvents();
         }
     }
 }

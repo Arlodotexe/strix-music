@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
-using OwlCore.AbstractUI;
+using OwlCore.AbstractUI.Models;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Utils;
 using StrixMusic.Sdk.Data.Core;
@@ -30,14 +30,20 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IServiceProvider? Services { get; private set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<AbstractUIElementGroup> AbstractUiElements => new List<AbstractUIElementGroup>()
+        public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements => new List<AbstractUIElementGroup>()
         {
-            new AbstractUIElementGroup("about", PreferredOrientation.Horizontal, new List<AbstractUIElement>()
+            new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
             {
-                new AbstractTextBox("testbox", "Test value", "Placeholder"),
-                new AbstractRichTextBlock("richblock", "**Hello world!**"),
-                new AbstractBooleanUIElement("boolbox", "Did this work?"),
-            }),
+                Title = "About",
+                Items =  new List<AbstractUIElement>()
+                {
+                    new AbstractTextBox("testBox", "The initial value")
+                    {
+                        Title = "Test text box.",
+                        Subtitle = "Enter something useful.",
+                    },
+                },
+            },
         };
 
         /// <inheritdoc/>

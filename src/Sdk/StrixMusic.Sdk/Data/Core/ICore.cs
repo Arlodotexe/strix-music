@@ -61,7 +61,7 @@ namespace StrixMusic.Sdk.Data.Core
         /// <summary>
         /// Initializes the core asynchronously, allowing for API setup, service configuration, and other asynchronous tasks to be performed.
         /// </summary>
-        /// <remarks>If the core state is changed to <see cref="CoreState.ConfigRequested"/>, this task will be canceled. The app will then display your current <see cref="ICoreConfigBase.AbstractUiElements"/> to the user. Once the core state has been changed back to <see cref="CoreState.Configured"/>, this method will fire again.</remarks>
+        /// <remarks>If the core state is changed to <see cref="CoreState.ConfigRequested"/>, this task will be canceled. The app will then display your current <see cref="ICoreConfigBase.AbstractUIElements"/> to the user. Once the core state has been changed back to <see cref="CoreState.Configured"/>, this method will fire again.</remarks>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task InitAsync(IServiceCollection services);
 

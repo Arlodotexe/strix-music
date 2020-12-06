@@ -12,10 +12,10 @@ namespace OwlCore.Helpers
     public static partial class Threading
     {
         /// <summary>
-        /// Waits for an event to fire.
+        /// Waits for an event to fire. If the event doesn't fire within the given timeout, a default value is returned.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public static async Task<(object? Sender, TResult Result)> EventAsTask<TResult>(Action<EventHandler<TResult>> subscribe, Action<EventHandler<TResult>> unsubscribe, TimeSpan timeout)
+        public static async Task<(object? Sender, TResult Result)?> EventAsTask<TResult>(Action<EventHandler<TResult>> subscribe, Action<EventHandler<TResult>> unsubscribe, TimeSpan timeout)
         {
             var resultCancellationToken = new CancellationTokenSource();
             resultCancellationToken.CancelAfter(timeout);

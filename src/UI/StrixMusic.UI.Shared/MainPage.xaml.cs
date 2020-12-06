@@ -20,8 +20,6 @@ namespace StrixMusic.Shared
     public sealed partial class MainPage : UserControl
     {
         private readonly List<MediaPlayerElement> _mediaPlayerElements = new List<MediaPlayerElement>();
-        private ShellModel? _activeShell;
-        private ShellModel? _preferredShell;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -31,6 +29,16 @@ namespace StrixMusic.Shared
             InitializeComponent();
             Loaded += MainPage_Loaded;
         }
+
+        /// <summary>
+        /// The currently loaded shell, if any.
+        /// </summary>
+        internal ShellModel? ActiveShell { get; private set; }
+
+        /// <summary>
+        /// The user's preferred shell.
+        /// </summary>
+        internal ShellModel? PreferredShell { get; private set; }
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
@@ -95,7 +103,7 @@ namespace StrixMusic.Shared
             if (Constants.Shells.LoadedShells.ContainsKey(preferredShell))
             {
                 shellModel = Constants.Shells.LoadedShells[preferredShell];
-                _preferredShell = shellModel;
+                PreferredShell = shellModel;
             }
 
             await SetupShell(shellModel);
@@ -131,7 +139,7 @@ namespace StrixMusic.Shared
                     Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
                 }
 
-                _activeShell = shell;
+                ActiveShell = shell;
                 ShellDisplay.Content = CreateShellControl(shell.ShellAttribute.ShellBaseSubType);
             }
 
@@ -164,20 +172,20 @@ namespace StrixMusic.Shared
 
         private async void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (_activeShell == null || _preferredShell == null)
+            if (ActiveShell == null || PreferredShell == null)
             {
                 // Ignore this during initialization
                 return;
             }
 
-            if (_activeShell != _preferredShell)
+            if (ActiveShell != PreferredShell)
             {
-                if (CheckShellModelSupport(_preferredShell!))
+                if (CheckShellModelSupport(PreferredShell!))
                 {
-                    await SetupShell(_preferredShell);
+                    await SetupShell(PreferredShell);
                 }
             }
-            else if (!CheckShellModelSupport(_activeShell!))
+            else if (!CheckShellModelSupport(ActiveShell!))
             {
                 await SetupShell(Constants.Shells.DefaultShellModel);
             }

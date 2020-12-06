@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace OwlCore.AbstractUI
+namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// Presents a link to the user.

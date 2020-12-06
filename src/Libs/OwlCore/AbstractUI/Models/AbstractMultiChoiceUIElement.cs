@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace OwlCore.AbstractUI
+namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// Presents a list of multiple choices to the user for selection.

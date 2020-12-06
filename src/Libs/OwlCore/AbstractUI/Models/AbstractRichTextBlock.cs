@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OwlCore.AbstractUI
+namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// Presents markdown-formatted text to the user.

@@ -1,4 +1,4 @@
-﻿namespace OwlCore.AbstractUI
+﻿namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// The preferred display mode for <see cref="AbstractButton"/>.

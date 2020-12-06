@@ -1,11 +1,13 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using OwlCore.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using StrixMusic.Shells.Strix;
 using StrixMusic.Shells.ZuneDesktop;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Shared
 {
@@ -47,6 +49,35 @@ namespace StrixMusic.Shared
             NavigationService.RegisterCommonPage(MainPage);
         }
 
+        private void AttachEvents()
+        {
+            Unloaded += AppFrame_Unloaded;
+            MainViewModel.AppNavigationRequested += MainViewModel_AppNavigationRequested;
+        }
+
+        private void MainViewModel_AppNavigationRequested(object sender, AppNavigationTarget e)
+        {
+            if (e == AppNavigationTarget.Settings && sender is ICore core)
+            {
+                if (MainPage.ActiveShell != null)
+                {
+                    // TODO post shell service refactor (need one common, injected ioc where we have access to the navigation service.
+                    throw new NotImplementedException();
+                }
+                else
+                {
+                    NavigationService.NavigateTo(typeof(SuperShell), false, core);
+                }
+            }
+        }
+
+        private void DetachEvents()
+        {
+            Unloaded -= AppFrame_Unloaded;
+        }
+
+        private void AppFrame_Unloaded(object sender, RoutedEventArgs e) => DetachEvents();
+
         private void AppFrame_OnLoaded(object sender, RoutedEventArgs e)
         {
             NavigationService.NavigationRequested += NavServiceOnNavigationRequested;
@@ -59,7 +90,11 @@ namespace StrixMusic.Shared
             switch (e.Page)
             {
                 case SuperShell superShell:
-                    OverlayPresenter.Show(superShell, "Settings");
+                    if (e.IsOverlay)
+                        OverlayPresenter.Show(superShell, "Settings");
+                    else
+                        PART_ContentPresenter.Content = superShell;
+
                     break;
                 case MainPage mainPage:
                     PART_ContentPresenter.Content = mainPage;

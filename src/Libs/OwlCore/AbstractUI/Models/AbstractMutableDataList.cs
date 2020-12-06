@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Events;
 
-namespace OwlCore.AbstractUI
+namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// A <see cref="AbstractDataList"/> that can be changed by the user.

@@ -20,6 +20,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview4" />
+    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.0.2-uno.79" />
+    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.79" />
     <PackageReference Include="Uno.UI" Version="3.1.6" />
   </ItemGroup>
   <ItemGroup>
@@ -32,10 +34,17 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="AbstractUI\AbstractUIGroupListPresenter.xaml" />
+    <None Remove="AbstractUI\AbstractUIGroupPresenterTemplateSelector.xaml" />
+    <None Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
     <None Remove="Controls\ContentOverlay.xaml" />
     <None Remove="Themes\Generic.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenterTemplateSelector.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
     <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml" />
     <UpToDateCheckInput Remove="Themes\Generic.xaml" />
   </ItemGroup>
@@ -43,8 +52,22 @@
     <ProjectReference Include="..\OwlCore\OwlCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml.cs">
+      <DependentUpon>AbstractUIGroupListPresenter.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Controls\ContentOverlay.xaml.cs">
       <DependentUpon>ContentOverlay.xaml</DependentUpon>
     </Compile>
+    <Compile Update="AbstractUI\Themes\AbstractTextBoxTemplate.xaml.cs">
+      <DependentUpon>AbstractTextBoxTemplate.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml.cs">
+      <DependentUpon>AbstractTextBoxTemplate.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.17763'">
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
+      <Version>2.0.1</Version>
+    </PackageReference>
   </ItemGroup>
 </Project>

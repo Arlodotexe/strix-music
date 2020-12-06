@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 
-namespace OwlCore.AbstractUI
+namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// Presents a text box to the user, with actions for saving any entered data.
@@ -15,8 +14,17 @@ namespace OwlCore.AbstractUI
         public AbstractTextBox(string id)
             : base(id)
         {
-            Value = string.Empty;
-            PlaceholderText = string.Empty;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="AbstractTextBox"/>.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value">The initial value of the text box.</param>
+        public AbstractTextBox(string id, string value)
+            : base(id)
+        {
+            Value = value;
         }
 
         /// <summary>
@@ -35,12 +43,12 @@ namespace OwlCore.AbstractUI
         /// <summary>
         /// Placeholder text to show when the text box is empty.
         /// </summary>
-        public string PlaceholderText { get; }
+        public string PlaceholderText { get; set; } = string.Empty;
 
         /// <summary>
         /// The initial or current value of the text box.
         /// </summary>
-        public string Value { get; private set; }
+        public string Value { get; set; } = string.Empty;
 
         /// <summary>
         /// Called to tell the core about the new value.

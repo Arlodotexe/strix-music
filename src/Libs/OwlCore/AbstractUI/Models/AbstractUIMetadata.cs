@@ -1,4 +1,4 @@
-﻿namespace OwlCore.AbstractUI
+﻿namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// Abstracted metadata that can be displayed inside of certain <see cref="AbstractUIElement"/>s.
