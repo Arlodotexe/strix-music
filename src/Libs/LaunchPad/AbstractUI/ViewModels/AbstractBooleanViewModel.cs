@@ -1,7 +1,6 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using OwlCore.AbstractUI.Models;
+﻿using OwlCore.AbstractUI.Models;
 
-namespace OwlCore.AbstractUI.ViewModels
+namespace LaunchPad.AbstractUI.ViewModels
 {
     /// <summary>
     /// Contains bindable information about an <see cref="AbstractBooleanUIElement"/>.

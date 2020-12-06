@@ -32,7 +32,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// The items in this group.
         /// </summary>
-        public IEnumerable<AbstractUIElement> Items { get; set; } = new List<AbstractUIElement>();
+        public List<AbstractUIElement> Items { get; set; } = new List<AbstractUIElement>();
 
         /// <inheritdoc cref="Models.PreferredOrientation"/>
         public PreferredOrientation PreferredOrientation { get; }

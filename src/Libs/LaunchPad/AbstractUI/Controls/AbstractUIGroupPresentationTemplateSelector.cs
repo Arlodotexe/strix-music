@@ -1,7 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using LaunchPad.AbstractUI.ViewModels;
 using OwlCore.AbstractUI.Models;
-using OwlCore.AbstractUI.ViewModels;
 
 namespace LaunchPad.AbstractUI.Controls
 {

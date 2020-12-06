@@ -21,6 +21,35 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public MusicBrainzCoreConfig(ICore sourceCore)
         {
             SourceCore = sourceCore;
+
+            var textBlock =
+                new AbstractTextBox("testBox", "The initial value")
+                {
+                    Title = "Test text box.",
+                    Subtitle = "Enter something useful.",
+                };
+
+            textBlock.ValueChanged += TextBlock_ValueChanged;
+
+            AbstractUIElements = new List<AbstractUIElementGroup>()
+            {
+                new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
+                {
+                    Title = "About",
+                    Items =  new List<AbstractUIElement>()
+                    {
+                        textBlock,
+                    },
+                },
+            };
+        }
+
+        private void TextBlock_ValueChanged(object sender, string e)
+        {
+            if (e == "All done!")
+            {
+                ((MusicBrainzCore)SourceCore).ChangeCoreState(Sdk.Data.CoreState.Configured);
+            }
         }
 
         /// <inheritdoc />
@@ -30,22 +59,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public IServiceProvider? Services { get; private set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements => new List<AbstractUIElementGroup>()
-        {
-            new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
-            {
-                Title = "About",
-                Items =  new List<AbstractUIElement>()
-                {
-                    new AbstractTextBox("testBox", "The initial value")
-                    {
-                        Title = "Test text box.",
-                        Subtitle = "Enter something useful.",
-                    },
-                },
-            },
-        };
-
+        public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; }
         /// <inheritdoc/>
         public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/MusicBrainz/logo.svg");
 

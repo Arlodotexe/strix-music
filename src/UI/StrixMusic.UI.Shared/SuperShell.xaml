@@ -25,7 +25,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <controls:AbstractUIGroupListPresenter ViewModel="{x:Bind AbstractUIGroups}" />
+        <controls:AbstractUIGroupListPresenter DataContext="{x:Bind AbstractUIGroups}" />
 
     </StackPanel>
 </UserControl>

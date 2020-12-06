@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.AbstractUI.Models;
 
-namespace OwlCore.AbstractUI.ViewModels
+namespace LaunchPad.AbstractUI.ViewModels
 {
     /// <summary>
     /// Base view model for all AbstractUI elements.

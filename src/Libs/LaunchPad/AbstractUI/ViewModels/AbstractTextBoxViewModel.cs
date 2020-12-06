@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Helpers;
 
-namespace OwlCore.AbstractUI.ViewModels
+namespace LaunchPad.AbstractUI.ViewModels
 {
     /// <summary>
     /// A ViewModel for the <see cref="AbstractTextBox"/>.

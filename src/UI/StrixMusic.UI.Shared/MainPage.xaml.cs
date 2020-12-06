@@ -64,7 +64,7 @@ namespace StrixMusic.Shared
         /// </summary>
         public void Button_Click(object sender, RoutedEventArgs e)
         {
-            CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell));
+            CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell), true);
         }
 
         private void AttachEvents()

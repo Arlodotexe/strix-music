@@ -2,8 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="LaunchPad.AbstractUI.Themes.AbstractTextBoxTemplate"
-    xmlns:abstractUI="using:OwlCore.AbstractUI.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:abstractUI="using:LaunchPad.AbstractUI.ViewModels"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core">
 
     <DataTemplate x:Key="DefaultAbstractTextBoxTemplate" x:DataType="abstractUI:AbstractTextBoxViewModel">

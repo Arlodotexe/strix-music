@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using LaunchPad.AbstractUI.ViewModels;
 using OwlCore.AbstractUI.Models;
 
 namespace LaunchPad.AbstractUI.Controls
@@ -13,17 +14,17 @@ namespace LaunchPad.AbstractUI.Controls
         /// <summary>
         /// The groups of abstract UI elements to display.
         /// </summary>
-        public List<AbstractUIElementGroup> ViewModel
+        private List<AbstractUIElementGroupViewModel> ViewModel
         {
-            get => (List<AbstractUIElementGroup>)GetValue(ViewModelProperty);
+            get => (List<AbstractUIElementGroupViewModel>)GetValue(ViewModelProperty);
             set => SetValue(ViewModelProperty, value);
         }
 
         /// <summary>
         /// Backing property for <see cref="ViewModel"/>.
         /// </summary>
-        public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(nameof(AbstractUIElementGroup), typeof(List<AbstractUIElementGroup>), typeof(AbstractUIGroupListPresenter), new PropertyMetadata(new List<AbstractUIGroupListPresenter>()));
+        private static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(nameof(AbstractUIElementGroup), typeof(List<AbstractUIElementGroupViewModel>), typeof(AbstractUIGroupListPresenter), new PropertyMetadata(new List<AbstractUIElementGroupViewModel>()));
 
         /// <summary>
         /// The template selector used to display Abstract UI elements. Use this to define your own custom styles for each control. You may specify the existing, default styles for those you don't want to override.
@@ -46,6 +47,16 @@ namespace LaunchPad.AbstractUI.Controls
         public AbstractUIGroupListPresenter()
         {
             this.InitializeComponent();
+
+            ViewModel.Clear();
+
+            if (DataContext is IEnumerable<AbstractUIElementGroup> groups)
+            {
+                foreach (var group in groups)
+                {
+                    ViewModel.Add(new AbstractUIElementGroupViewModel(group, TemplateSelector));
+                }
+            }
 
             Loaded += AbstractUIGroupListPresenter_Loaded;
         }
@@ -74,9 +85,14 @@ namespace LaunchPad.AbstractUI.Controls
 
         private void AbstractUIGroupListPresenter_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
         {
-            if (DataContext is List<AbstractUIElementGroup> groups)
+            ViewModel.Clear();
+
+            if (DataContext is IEnumerable<AbstractUIElementGroup> groups)
             {
-                ViewModel = groups;
+                foreach(var group in groups)
+                {
+                    ViewModel.Add(new AbstractUIElementGroupViewModel(group, TemplateSelector));
+                }
             }
         }
     }

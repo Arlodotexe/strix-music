@@ -35,9 +35,6 @@ namespace StrixMusic.Shared
         {
             this.InitializeComponent();
 
-            var zune = typeof(ZuneShell);
-            var strix = typeof(StrixShell);
-
             Threading.SetUISynchronizationContext(SynchronizationContext.Current);
 
             NavigationService = new NavigationService<Control>();
@@ -47,6 +44,8 @@ namespace StrixMusic.Shared
             MainPage = new MainPage();
 
             NavigationService.RegisterCommonPage(MainPage);
+
+            AttachEvents();
         }
 
         private void AttachEvents()

@@ -85,6 +85,16 @@ namespace StrixMusic.Core.MusicBrainz
         /// <inheritdoc/>
         public event EventHandler<CoreState>? CoreStateChanged;
 
+        /// <summary>
+        /// Change the <see cref="CoreState"/>.
+        /// </summary>
+        /// <param name="state">The new state.</param>
+        internal void ChangeCoreState(CoreState state)
+        {
+            CoreState = state;
+            CoreStateChanged?.Invoke(this, state);
+        }
+
         /// <inheritdoc/>
         public ValueTask DisposeAsync()
         {
@@ -171,14 +181,22 @@ namespace StrixMusic.Core.MusicBrainz
             }
         }
 
+        private bool _configured = false;
+
         /// <inheritdoc/>
         public Task InitAsync(IServiceCollection services)
         {
-            CoreState = CoreState.Loading;
-            CoreStateChanged?.Invoke(this, CoreState);
+            ChangeCoreState(CoreState.Loading);
 
             if (!(CoreConfig is MusicBrainzCoreConfig coreConfig))
                 return Task.CompletedTask;
+
+            if (!_configured)
+            {
+                ChangeCoreState(CoreState.ConfigRequested);
+                _configured = true;
+                return Task.CompletedTask;
+            }
 
             coreConfig.ConfigureServices(services);
 
