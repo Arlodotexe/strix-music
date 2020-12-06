@@ -25,7 +25,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
             var textBlock =
                 new AbstractTextBox("testBox", "The initial value")
                 {
-                    Title = "AbstractUI TextBox Demo",
                     Subtitle = "Enter something useful.",
                 };
 
@@ -35,7 +34,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
             {
                 new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
                 {
-                    Title = "About",
+                    Title = "MusicBrainz",
+                    Subtitle = "AbstractUI Demo",
                     Items =  new List<AbstractUIElement>()
                     {
                         textBlock,
