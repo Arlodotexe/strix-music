@@ -40,7 +40,7 @@ namespace LaunchPad.AbstractUI.Controls
         /// Backing property for <see cref="TemplateSelector"/>.
         /// </summary>
         public static readonly DependencyProperty TemplateSelectorProperty =
-            DependencyProperty.Register(nameof(TemplateSelector), typeof(DataTemplateSelector), typeof(AbstractUIGroupListPresenter), new PropertyMetadata(new AbstractUIGroupPresentationTemplateSelector()));
+            DependencyProperty.Register(nameof(TemplateSelector), typeof(DataTemplateSelector), typeof(AbstractUIGroupListPresenter), new PropertyMetadata(new AbstractUIGroupItemTemplateSelector()));
 
         /// <summary>
         /// Creates a new instance of <see cref="AbstractUIGroupListPresenter"/>.

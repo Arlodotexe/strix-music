@@ -14,6 +14,7 @@ namespace LaunchPad.AbstractUI.ViewModels
     public class AbstractTextBoxViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractTextBox _model;
+        private readonly string _id;
 
         /// <summary>
         /// Initializes a new instance of see <see cref="AbstractTextBoxViewModel"/>.
@@ -23,6 +24,8 @@ namespace LaunchPad.AbstractUI.ViewModels
         : base(model)
         {
             _model = model;
+            _id = model.Id + Guid.NewGuid();
+
             ValueChangedCommand = new AsyncRelayCommand<TextChangedEventArgs>(HandleValueChanged);
         }
 
@@ -46,18 +49,18 @@ namespace LaunchPad.AbstractUI.ViewModels
                 if (value == _model.Value)
                     return;
 
-                SaveValue(value).FireAndForget();
+                _ = SaveValue(value);
                 SetProperty(_model.Value, value, _model, (u, n) => _model.Value = n);
             }
         }
 
         /// <summary>
-        /// Called to tell the core about the new value.
+        /// Submits the value when the user has finished entering text.
         /// </summary>
         /// <param name="newValue">The new value.</param>
         public async Task SaveValue(string newValue)
         {
-            if (await Threading.Debounce(_model.Id, TimeSpan.FromMilliseconds(1000)))
+            if (await Threading.Debounce(_id, TimeSpan.FromSeconds(1)))
             {
                 ValueChanged?.Invoke(this, newValue);
                 _model.SaveValue(newValue);

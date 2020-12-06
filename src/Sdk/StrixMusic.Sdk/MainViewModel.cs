@@ -106,13 +106,13 @@ namespace StrixMusic.Sdk
 
             await core.InitAsync(services).RunInBackground(cancellationToken.Token).TryOrSkip<TaskCanceledException>();
 
+            // TODO: if one core a already requested config, have a queue in case another tries.
             if (cancellationToken.IsCancellationRequested)
             {
                 AppNavigationRequested?.Invoke(core, AppNavigationTarget.Settings);
 
                 var timeAllowedForUISetup = TimeSpan.FromMinutes(10);
 
-                // UNTESTED
                 var updatedState = await Threading.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, timeAllowedForUISetup);
 
                 if (updatedState is null)
