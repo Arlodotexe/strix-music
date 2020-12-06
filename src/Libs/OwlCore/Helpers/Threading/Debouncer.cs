@@ -37,8 +37,8 @@ namespace OwlCore.Helpers
             else
             {
                 debouncerData = new DebouncerData();
-                await debouncerData.Lock.WaitAsync();
                 _inUseDebouncers.Add(debouncerKey, debouncerData);
+                await debouncerData.Lock.WaitAsync();
             }
 
             try
