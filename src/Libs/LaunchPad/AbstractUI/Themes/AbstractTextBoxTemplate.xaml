@@ -12,7 +12,7 @@
 
             <TextBlock Text="{x:Bind Subtitle}"  FontSize="16" FontWeight="SemiLight" Opacity="0.75" />
 
-            <TextBox Text="{x:Bind Value, Mode=TwoWay}"
+            <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      PlaceholderText="{x:Bind PlaceholderText}"
                      ToolTipService.ToolTip="{x:Bind TooltipText}" />
         </StackPanel>
