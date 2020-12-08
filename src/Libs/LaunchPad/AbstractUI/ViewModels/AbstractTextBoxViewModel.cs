@@ -26,7 +26,7 @@ namespace LaunchPad.AbstractUI.ViewModels
             _model = model;
             _id = model.Id + Guid.NewGuid();
 
-            ValueChangedCommand = new AsyncRelayCommand<TextChangedEventArgs>(HandleValueChanged);
+            ValueChangedCommand = new RelayCommand<TextBoxTextChangingEventArgs>(HandleValueChanged);
         }
 
         /// <summary>
@@ -44,32 +44,24 @@ namespace LaunchPad.AbstractUI.ViewModels
         public string Value
         {
             get => _model.Value;
-            set
-            {
-                if (value == _model.Value)
-                    return;
-
-                _ = SaveValue(value);
-                SetProperty(_model.Value, value, _model, (u, n) => _model.Value = n);
-            }
+            set => SetProperty(_model.Value, value, _model, (u, n) => _model.Value = n);
         }
 
         /// <summary>
         /// Submits the value when the user has finished entering text.
         /// </summary>
-        /// <param name="newValue">The new value.</param>
-        public async Task SaveValue(string newValue)
+        public async Task SaveValue()
         {
-            if (await Threading.Debounce(_id, TimeSpan.FromSeconds(1)))
+            if (await Threading.Debounce(_id, TimeSpan.FromSeconds(2)))
             {
-                ValueChanged?.Invoke(this, newValue);
-                _model.SaveValue(newValue);
+                ValueChanged?.Invoke(this, Value);
+                _model.SaveValue(Value);
             }
         }
 
-        private Task HandleValueChanged(TextChangedEventArgs args)
+        private void HandleValueChanged(TextBoxTextChangingEventArgs args)
         {
-            return SaveValue(Value);
+            SaveValue().RunInBackground();
         }
 
         /// <summary>
@@ -80,6 +72,6 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <summary>
         /// Fire to notify that the value of the text box has been changed.
         /// </summary>
-        public IRelayCommand<TextChangedEventArgs> ValueChangedCommand;
+        public IRelayCommand<TextBoxTextChangingEventArgs> ValueChangedCommand;
     }
 }

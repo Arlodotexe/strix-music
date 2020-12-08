@@ -14,7 +14,13 @@
 
             <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      PlaceholderText="{x:Bind PlaceholderText}"
-                     ToolTipService.ToolTip="{x:Bind TooltipText}" />
+                     ToolTipService.ToolTip="{x:Bind TooltipText}">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="TextChanging">
+                        <core:InvokeCommandAction Command="{x:Bind ValueChangedCommand}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </TextBox>
         </StackPanel>
     </DataTemplate>
     
