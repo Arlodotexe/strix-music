@@ -2,12 +2,10 @@
 using System.Threading;
 using OwlCore.Helpers;
 using StrixMusic.Sdk;
+using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Shells.Strix;
-using StrixMusic.Shells.ZuneDesktop;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Shared
 {
