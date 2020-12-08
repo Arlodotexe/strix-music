@@ -18,29 +18,46 @@ namespace OwlCore.Helpers
         /// </remarks>
         public static async Task<bool> Debounce(string debouncerKey, TimeSpan timeToWait)
         {
-            if (_inUseDebouncers.TryGetValue(debouncerKey, out var debouncerData))
+            // If the debouncer data doesn't exist
+            if (!_inUseDebouncers.TryGetValue(debouncerKey, out var debouncerData))
             {
-                await debouncerData.Lock.WaitAsync();
-                debouncerData.TokenSource.Cancel();
+                // Create new debounce data.
+                _inUseDebouncers.TryAdd(debouncerKey, debouncerData ??= new DebouncerData());
             }
             else
             {
-                debouncerData = new DebouncerData();
-                _inUseDebouncers.TryAdd(debouncerKey, debouncerData);
-                await debouncerData.Lock.WaitAsync();
+                // If the debouncer exists already
+                // cancel the previous Delay and create a new token for the next one.
+                debouncerData.TokenSource.Cancel();
+                debouncerData.TokenSource = new CancellationTokenSource();
+            }
+
+            await debouncerData.Lock.WaitAsync();
+
+            // If the token was already canceled (and not reset) by the time we get here, don't await.
+            if (debouncerData.TokenSource.IsCancellationRequested)
+            {
+                Cleanup();
+                return false;
             }
 
             try
             {
                 await Task.Delay(timeToWait, debouncerData.TokenSource.Token);
-                debouncerData.Lock.Release();
-                _inUseDebouncers.TryRemove(debouncerKey, out _);
+                Cleanup();
+
                 return true;
             }
             catch (TaskCanceledException)
             {
                 debouncerData.Lock.Release();
                 return false;
+            }
+
+            void Cleanup()
+            {
+                debouncerData.Lock.Release();
+                _inUseDebouncers.TryRemove(debouncerKey, out _);
             }
         }
 
@@ -55,7 +72,7 @@ namespace OwlCore.Helpers
             /// <summary>
             /// The <see cref="CancellationTokenSource"/> used to cancel a debounce task when reset.
             /// </summary>
-            public CancellationTokenSource TokenSource { get; } = new CancellationTokenSource();
+            public CancellationTokenSource TokenSource { get; set; } = new CancellationTokenSource();
         }
     }
 }
