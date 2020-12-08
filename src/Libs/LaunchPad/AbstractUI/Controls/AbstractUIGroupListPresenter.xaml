@@ -57,5 +57,6 @@
                 <StackPanel Spacing="15"/>
             </ItemsPanelTemplate>
         </ListView.ItemsPanel>
+    </ListView>
 
 </UserControl>
