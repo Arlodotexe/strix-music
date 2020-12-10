@@ -25,20 +25,54 @@ namespace StrixMusic.Core.MusicBrainz.Models
             var textBlock =
                 new AbstractTextBox("testBox", "The initial value")
                 {
-                    Subtitle = "Enter something useful.",
+                    Title = "Password entry",
+                    Subtitle = @"Enter ""something useful"".",
                 };
 
             textBlock.ValueChanged += TextBlock_ValueChanged;
+
+            var dataListItems = new List<AbstractUIMetadata>
+            {
+                new AbstractUIMetadata(Guid.NewGuid().ToString())
+                {
+                    Title = "Item 1",
+                    Subtitle = "Subtitle: The test",
+                    ImagePath = "https://image.redbull.com/rbcom/052/2017-06-19/3965fbe6-3488-40f8-88bc-b82eb8d1a230/0010/1/800/800/1/pogchamp-twitch.png",
+                },
+                new AbstractUIMetadata(Guid.NewGuid().ToString())
+                {
+                    Title = "Item 2",
+                    Subtitle = "Subtitle: The sequel",
+                    IconCode = "\uE2B1",
+                },
+                new AbstractUIMetadata(Guid.NewGuid().ToString())
+                {
+                    Title = "Item 3",
+                    IconCode = "\uE7F6",
+                },
+                new AbstractUIMetadata(Guid.NewGuid().ToString())
+                {
+                    Title = "Item 4",
+                    IconCode = "\uE753",
+                },
+            };
+
+            var dataList = new AbstractDataList(id: "testList", items: dataListItems)
+            {
+                PreferredDisplayMode = AbstractDataListPreferredDisplayMode.List,
+                Title = "DataList test",
+            };
 
             AbstractUIElements = new List<AbstractUIElementGroup>()
             {
                 new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
                 {
-                    Title = "MusicBrainz",
+                    Title = "MusicBrainz Core",
                     Subtitle = "AbstractUI Demo",
                     Items =  new List<AbstractUIElement>()
                     {
                         textBlock,
+                        dataList,
                     },
                 },
             };

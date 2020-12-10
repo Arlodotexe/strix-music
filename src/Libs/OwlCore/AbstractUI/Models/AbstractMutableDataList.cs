@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Events;
@@ -17,7 +16,7 @@ namespace OwlCore.AbstractUI.Models
         /// </summary>
         /// <param name="id"></param>
         protected AbstractMutableDataList(string id)
-            : base(id, new ObservableCollection<AbstractUIMetadata>())
+            : base(id, new List<AbstractUIMetadata>())
         {
         }
 

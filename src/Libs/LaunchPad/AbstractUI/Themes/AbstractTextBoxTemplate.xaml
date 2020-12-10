@@ -4,15 +4,18 @@
     x:Class="LaunchPad.AbstractUI.Themes.AbstractTextBoxTemplate"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:abstractUI="using:LaunchPad.AbstractUI.ViewModels"
+    xmlns:launchPad="using:LaunchPad"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core">
 
     <DataTemplate x:Key="DefaultAbstractTextBoxTemplate" x:DataType="abstractUI:AbstractTextBoxViewModel">
-        <StackPanel Spacing="5" Margin="10">
-            <TextBlock Text="{x:Bind Title}" FontSize="30" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+        <StackPanel>
+            <TextBlock Text="{x:Bind Title}" FontSize="26" ToolTipService.ToolTip="{x:Bind TooltipText}" />
 
-            <TextBlock Text="{x:Bind Subtitle}"  FontSize="16" FontWeight="SemiLight" Opacity="0.75" />
+            <TextBlock Text="{x:Bind Subtitle}" FontSize="16" FontWeight="SemiLight" Opacity="0.75"
+                       Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
 
             <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,5,0,0"
                      PlaceholderText="{x:Bind PlaceholderText}"
                      ToolTipService.ToolTip="{x:Bind TooltipText}">
                 <interactivity:Interaction.Behaviors>

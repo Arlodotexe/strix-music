@@ -9,7 +9,7 @@ namespace OwlCore.Extensions
     {
         private static readonly Random _rng = new Random();
 
-        /// <summary>Shuffles the specified array.</summary>
+        /// <summary>Shuffles the given array in place.</summary>
         /// <typeparam name="T">The type of the array elements.</typeparam>
         /// <param name="array">The array to shuffle.</param>
         public static void Shuffle<T>(this T[] array)

@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace OwlCore.AbstractUI.Models
@@ -13,7 +13,7 @@ namespace OwlCore.AbstractUI.Models
         /// </summary>
         /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
         /// <param name="items">The items in this collection.</param>
-        public AbstractDataList(string id, ObservableCollection<AbstractUIMetadata> items)
+        public AbstractDataList(string id, List<AbstractUIMetadata> items)
             : base(id)
         {
             Items = items;
@@ -28,9 +28,9 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// The items in this collection.
         /// </summary>
-        public ObservableCollection<AbstractUIMetadata> Items { get; protected set; }
+        public List<AbstractUIMetadata> Items { get; }
 
         /// <inheritdoc cref="AbstractDataListPreferredDisplayMode"/>
-        public AbstractDataListPreferredDisplayMode PreferredDisplayMode { get; protected set; }
+        public AbstractDataListPreferredDisplayMode PreferredDisplayMode { get; set; }
     }
 }

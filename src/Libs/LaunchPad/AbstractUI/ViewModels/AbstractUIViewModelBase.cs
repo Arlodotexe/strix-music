@@ -1,5 +1,12 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using System;
+using System.Diagnostics.Contracts;
+using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Extensions;
 
 namespace LaunchPad.AbstractUI.ViewModels
 {
@@ -9,6 +16,7 @@ namespace LaunchPad.AbstractUI.ViewModels
     public class AbstractUIViewModelBase : ObservableObject
     {
         private readonly AbstractUIBase _model;
+        private ImageSource _imageSource;
 
         /// <summary>
         /// Creates a new instance of <see cref="AbstractUIViewModelBase"/>.
@@ -17,6 +25,49 @@ namespace LaunchPad.AbstractUI.ViewModels
         public AbstractUIViewModelBase(AbstractUIBase model)
         {
             _model = model;
+            _imageSource = SetupImageSource(model);
+        }
+
+        [Pure]
+        private ImageSource SetupImageSource(AbstractUIBase model)
+        {
+            if (Uri.TryCreate(model.ImagePath ?? string.Empty, UriKind.RelativeOrAbsolute, out Uri uri) && string.IsNullOrWhiteSpace(model.ImagePath))
+            {
+                // If there's no image set, create a 1x1 transparent image as a placeholder.
+                // This ensures that bindings won't fail because of an unexpected null value.
+                return CreateEmptyImage();
+            }
+
+            var ext = Path.GetExtension(model.ImagePath);
+
+            if (ext == ".svg")
+            {
+                return new SvgImageSource(uri);
+            }
+
+            return new BitmapImage(uri)
+            {
+                DecodePixelType = DecodePixelType.Logical
+            };
+        }
+
+        /// <summary>
+        /// Creates an image with only a 1x1 transparent pixel.
+        /// </summary>
+        /// <returns>The <see cref="ImageSource"/> of the created image.</returns>
+        [Pure]
+        private ImageSource CreateEmptyImage()
+        {
+            var bytes = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=");
+            var buffer = bytes.AsBuffer();
+            var stream = buffer.AsStream();
+            var randomStream = stream.AsRandomAccessStream();
+            randomStream.Seek(0);
+
+            var image = new BitmapImage();
+            image.SetSourceAsync(randomStream).AsTask().RunInBackground();
+
+            return image;
         }
 
         /// <summary>
@@ -27,6 +78,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <summary>
         /// A title to display for this item.
         /// </summary>
+        /// <remarks>Shells are required to support this property on all AbstractUI elements.</remarks>
         public string? Title
         {
             get => _model.Title;
@@ -36,6 +88,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <summary>
         /// An optional subtitle to display with the title.
         /// </summary>
+        /// <remarks>Shells are required to support this property on all AbstractUI elements.</remarks>
         public string? Subtitle
         {
             get => _model.Subtitle;
@@ -45,6 +98,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <summary>
         /// Extended markdown-formatted text to display in an info-focused tooltip.
         /// </summary>
+        /// <remarks>Shells are required to support this property on all AbstractUI elements.</remarks>
         public string? TooltipText
         {
             get => _model.TooltipText;
@@ -62,12 +116,12 @@ namespace LaunchPad.AbstractUI.ViewModels
         }
 
         /// <summary>
-        /// A local path or url pointing to an image associated with this item (optional).
+        /// An image associated with this item (optional)
         /// </summary>
-        public string? ImagePath
+        public ImageSource ImageSource
         {
-            get => _model.ImagePath;
-            set => SetProperty(_model.ImagePath, value, _model, (u, n) => _model.ImagePath = n);
+            get => _imageSource;
+            set => SetProperty(_imageSource, value, _imageSource, (u, n) => _imageSource = n);
         }
     }
 }

@@ -37,6 +37,7 @@
     <None Remove="AbstractUI\AbstractUIGroupListPresenter.xaml" />
     <None Remove="AbstractUI\AbstractUIGroupPresenterTemplateSelector.xaml" />
     <None Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractDataListTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
     <None Remove="Controls\ContentOverlay.xaml" />
     <None Remove="Themes\Generic.xaml" />
@@ -44,6 +45,7 @@
   <ItemGroup>
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenterTemplateSelector.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
     <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml" />
     <UpToDateCheckInput Remove="Themes\Generic.xaml" />

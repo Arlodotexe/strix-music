@@ -1,6 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using LaunchPad.AbstractUI.ViewModels;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
 
 namespace LaunchPad.AbstractUI.Controls
@@ -15,9 +16,21 @@ namespace LaunchPad.AbstractUI.Controls
         /// </summary>
         public AbstractUIGroupItemTemplateSelector()
         {
-            // ReSharper disable once CollectionNeverUpdated.Local
-            var textBoxResource = new Themes.AbstractTextBoxTemplate();
-            TextBoxTemplate = (DataTemplate)textBoxResource["DefaultAbstractTextBoxTemplate"];
+            // ReSharper disable CollectionNeverUpdated.Local
+            if (!new Themes.AbstractTextBoxTemplate().TryGetValue("DefaultAbstractTextBoxTemplate", out var textBoxTemplate))
+            {
+                ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(textBoxTemplate));
+                return;
+            }
+
+            if (!new Themes.AbstractDataListTemplate().TryGetValue("DefaultAbstractDataListTemplate", out var dataListTemplate))
+            {
+                ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(dataListTemplate));
+                return;
+            }
+
+            TextBoxTemplate = (DataTemplate)textBoxTemplate;
+            DataListTemplate = (DataTemplate)dataListTemplate;
         }
 
         /// <summary>
@@ -25,11 +38,17 @@ namespace LaunchPad.AbstractUI.Controls
         /// </summary>
         public DataTemplate TextBoxTemplate { get; set; }
 
+        /// <summary>
+        /// The data template used to display an <see cref="AbstractDataList"/>.
+        /// </summary>
+        public DataTemplate DataListTemplate { get; set; }
+
         /// <inheritdoc />
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
             => item switch
             {
                 AbstractTextBoxViewModel _ => TextBoxTemplate,
+                AbstractDataListViewModel _ => DataListTemplate,
                 _ => base.SelectTemplateCore(item, container)
             };
     }

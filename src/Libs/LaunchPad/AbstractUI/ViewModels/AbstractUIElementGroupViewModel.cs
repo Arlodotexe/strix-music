@@ -28,6 +28,7 @@ namespace LaunchPad.AbstractUI.ViewModels
                 yield return item switch
                 {
                     AbstractTextBox textBox => new AbstractTextBoxViewModel(textBox),
+                    AbstractDataList dataList => new AbstractDataListViewModel(dataList),
                     _ => throw new NotImplementedException(),
                 };
             }

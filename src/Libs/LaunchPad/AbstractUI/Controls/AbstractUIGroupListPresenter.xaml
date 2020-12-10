@@ -5,17 +5,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:launchPad="using:LaunchPad"
     xmlns:abstractUI="using:LaunchPad.AbstractUI.ViewModels">
 
     <UserControl.Resources>
         <DataTemplate x:Key="AbstractUIGroupItemTemplate"  x:DataType="abstractUI:AbstractUIElementGroupViewModel">
             <StackPanel Spacing="5" Margin="10">
 
-                <TextBlock Text="{x:Bind Title}" FontSize="30" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+                <TextBlock Text="{x:Bind Title}" FontSize="32" ToolTipService.ToolTip="{x:Bind TooltipText}" />
 
-                <TextBlock Text="{x:Bind Subtitle}"  FontSize="16" FontWeight="SemiLight" Opacity="0.75" />
+                <TextBlock Text="{x:Bind Subtitle}" FontSize="20" FontWeight="SemiLight" Opacity="0.75"
+                           Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
 
                 <ListView ItemsSource="{x:Bind Items}"
+                          Margin="0,20,0,0"
                           ItemTemplateSelector="{x:Bind TemplateSelector}"
                           SelectionMode="None">
                     <ListView.ItemContainerStyle>
@@ -54,7 +57,7 @@
         </ListView.ItemContainerStyle>
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
-                <StackPanel Spacing="15"/>
+                <StackPanel Spacing="30"/>
             </ItemsPanelTemplate>
         </ListView.ItemsPanel>
     </ListView>
