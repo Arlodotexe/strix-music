@@ -63,6 +63,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 Title = "DataList test",
             };
 
+            var dataListGrid = new AbstractDataList(id: "testList", items: dataListItems)
+            {
+                PreferredDisplayMode = AbstractDataListPreferredDisplayMode.Grid,
+                Title = "DataList grid test",
+            };
+
             AbstractUIElements = new List<AbstractUIElementGroup>()
             {
                 new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
@@ -73,6 +79,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     {
                         textBlock,
                         dataList,
+                        dataListGrid,
                     },
                 },
             };

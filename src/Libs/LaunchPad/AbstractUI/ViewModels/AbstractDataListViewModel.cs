@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Windows.UI.Xaml;
 using OwlCore.AbstractUI.Models;
 
 namespace LaunchPad.AbstractUI.ViewModels
@@ -42,12 +43,12 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// </summary>
         /// <param name="name">The string representation of the <see cref="AbstractDataListPreferredDisplayMode"/> value.</param>
         /// <returns>A boolean indicating if the given string matches the current <see cref="PreferredDisplayMode"/>.</returns>
-        public bool IsDisplayMode(string name)
+        public Visibility IsDisplayMode(string name)
         {
             if (!Enum.TryParse<AbstractDataListPreferredDisplayMode>(name, out var result))
-                return false;
+                return Visibility.Collapsed;
 
-            return result == PreferredDisplayMode;
+            return result == PreferredDisplayMode ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }
