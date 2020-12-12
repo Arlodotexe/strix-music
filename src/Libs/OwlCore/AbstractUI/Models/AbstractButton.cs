@@ -12,7 +12,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// The label  that is displayed in the button.
         /// </summary>
-        public string Text { get; }
+        public string Text { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AbstractButton"/>.

@@ -31,6 +31,14 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             textBlock.ValueChanged += TextBlock_ValueChanged;
 
+            var button =
+                new AbstractButton(Guid.NewGuid().ToString(), "Button")
+                {
+                    Title = "Clickable Button",
+                    Subtitle = "This is a buttton.",
+                    IconCode = "\uE2B1",
+                };
+
             var dataListItems = new List<AbstractUIMetadata>
             {
                 new AbstractUIMetadata(Guid.NewGuid().ToString())
