@@ -1,18 +1,17 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
+﻿using System;
+using Windows.UI.Xaml;
+using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using OwlCore.Extensions;
 
 namespace LaunchPad.AbstractUI.ViewModels
 {
     /// <summary>
     /// Abstract button viewmodel.
     /// </summary>
-    public class AbstractButtonViewModel:AbstractUIViewModelBase
+    public class AbstractButtonViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractButton _model;
-        private readonly string _id;
 
         /// <summary>
         /// Initializes a new instance of see <see cref="AbstractTextBoxViewModel"/>.
@@ -22,10 +21,10 @@ namespace LaunchPad.AbstractUI.ViewModels
         : base(model)
         {
             _model = model;
-            _id = model.Id + Guid.NewGuid();
-            ClickCommand = new RelayCommand<EventArgs>(ButtonClicked);
+
+            ClickCommand = new RelayCommand<RoutedEventArgs>(ButtonClicked);
         }
-     
+
         /// <summary>
         /// Text to show when the button.
         /// </summary>
@@ -38,21 +37,24 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <summary>
         /// Event that fires when the button is clicked.
         /// </summary>
-        public event EventHandler? Clicked;
+        public event EventHandler Clicked
+        {
+            add => _model.Clicked += value;
+            remove => _model.Clicked -= value;
+        }
 
         /// <summary>
         /// Command for <see cref="AbstractButton"/> click.
         /// </summary>
-        public IRelayCommand<EventArgs> ClickCommand;
+        public IRelayCommand<RoutedEventArgs> ClickCommand;
 
         /// <summary>
         /// Button clicked command.
         /// </summary>
         /// <param name="e"></param>
-        private void ButtonClicked(EventArgs e)
+        private void ButtonClicked(RoutedEventArgs e)
         {
-            Clicked?.Invoke(this, e);
+            _model.Click().FireAndForget();
         }
-
     }
 }

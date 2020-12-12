@@ -29,6 +29,7 @@ namespace LaunchPad.AbstractUI.ViewModels
                 {
                     AbstractTextBox textBox => new AbstractTextBoxViewModel(textBox),
                     AbstractDataList dataList => new AbstractDataListViewModel(dataList),
+                    AbstractButton button => new AbstractButtonViewModel(button),
                     _ => throw new NotImplementedException(),
                 };
             }
@@ -45,7 +46,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// </summary>
         public IEnumerable<AbstractUIViewModelBase> Items { get; }
 
-        /// <inheritdoc cref="Models.PreferredOrientation"/>
+        /// <inheritdoc cref="OwlCore.AbstractUI.Models.PreferredOrientation"/>
         public PreferredOrientation PreferredOrientation => _model.PreferredOrientation;
 
         /// <summary>

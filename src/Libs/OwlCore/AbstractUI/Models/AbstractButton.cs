@@ -7,7 +7,7 @@ namespace OwlCore.AbstractUI.Models
     /// Presents a link to the user.
     /// </summary>
     /// <remarks>This can be displayed in the UI however it wants (Button, text link, Icons, custom, etc)</remarks>
-    public class AbstractButton : AbstractUIMetadata
+    public class AbstractButton : AbstractUIElement
     {
         /// <summary>
         /// The label  that is displayed in the button.

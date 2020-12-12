@@ -54,20 +54,23 @@ namespace LaunchPad.AbstractUI.ViewModels
         {
             if (await Threading.Debounce(_id, TimeSpan.FromSeconds(2)))
             {
-                ValueChanged?.Invoke(this, Value);
                 _model.SaveValue(Value);
             }
         }
 
         private void HandleValueChanged(TextBoxTextChangingEventArgs args)
         {
-            SaveValue().RunInBackground();
+            SaveValue().FireAndForget();
         }
 
         /// <summary>
         /// Fires when <see cref="Value"/> is changed.
         /// </summary>
-        public event EventHandler<string>? ValueChanged;
+        public event EventHandler<string>? ValueChanged
+        {
+            add => _model.ValueChanged += value;
+            remove => _model.ValueChanged -= value;
+        }
 
         /// <summary>
         /// Fire to notify that the value of the text box has been changed.
