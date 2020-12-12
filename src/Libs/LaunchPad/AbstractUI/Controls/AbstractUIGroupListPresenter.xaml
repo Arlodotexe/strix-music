@@ -10,11 +10,11 @@
 
     <UserControl.Resources>
         <DataTemplate x:Key="AbstractUIGroupItemTemplate"  x:DataType="abstractUI:AbstractUIElementGroupViewModel">
-            <StackPanel Spacing="7" Margin="10,20">
+            <StackPanel Margin="10,20">
 
-                <TextBlock Text="{x:Bind Title}" FontSize="32" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+                <TextBlock Text="{x:Bind Title}" FontSize="30" ToolTipService.ToolTip="{x:Bind TooltipText}" />
 
-                <TextBlock Text="{x:Bind Subtitle}" FontSize="20" FontWeight="SemiLight" Opacity="0.75"
+                <TextBlock Text="{x:Bind Subtitle}" FontSize="18" FontWeight="SemiLight" Opacity="0.5"
                            Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
 
                 <ListView ItemsSource="{x:Bind Items}"
@@ -34,7 +34,7 @@
                     </ListView.ItemContainerStyle>
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Spacing="5"/>
+                            <StackPanel Spacing="20"/>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>

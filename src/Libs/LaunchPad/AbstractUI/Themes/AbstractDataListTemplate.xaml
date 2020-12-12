@@ -7,12 +7,12 @@
 
     <DataTemplate x:Key="DefaultAbstractDataListTemplate" x:DataType="abstractUI:AbstractDataListViewModel">
         <StackPanel>
-            <TextBlock Text="{x:Bind Title}" FontSize="26" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+            <TextBlock Text="{x:Bind Title}" FontSize="24" ToolTipService.ToolTip="{x:Bind TooltipText}" />
 
             <TextBlock Text="{x:Bind Subtitle}"  FontSize="16" FontWeight="SemiLight" Opacity="0.75" 
                        Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
 
-            <ListView x:Name="PrimaryListView" Visibility="{x:Bind IsDisplayMode('List')}"  ItemsSource="{x:Bind Items}" SelectionMode="None">
+            <ListView x:Name="PrimaryListView" Visibility="{x:Bind IsDisplayMode('List')}"  ItemsSource="{x:Bind Items}" SelectionMode="None" Margin="10">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="Template">
@@ -26,7 +26,7 @@
                 </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="abstractUI:AbstractUIMetadataViewModel">
-                        <Grid ToolTipService.ToolTip="{x:Bind TooltipText}" Height="60" Margin="10">
+                        <Grid ToolTipService.ToolTip="{x:Bind TooltipText}" Height="60">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
@@ -75,23 +75,21 @@
                 </GridView.ItemContainerStyle>
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="abstractUI:AbstractUIMetadataViewModel">
-                        <Grid ToolTipService.ToolTip="{x:Bind TooltipText}" Height="200" Width="150" Margin="15">
+                        <Grid ToolTipService.ToolTip="{x:Bind TooltipText}" Width="150" Margin="15">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Grid BorderBrush="White" BorderThickness="1">
+                            <Grid BorderBrush="White" BorderThickness="1" Height="150" Width="150">
                                 <FontIcon Glyph="{x:Bind IconCode}" FontFamily="Segoe MDL2 Assets" FontSize="34" />
                                 <Image Source="{x:Bind ImageSource, Mode=OneWay}" />
                             </Grid>
 
-                            <TextBlock Text="{x:Bind Title}" FontSize="18" Grid.Row="1"
-                                       Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Title)}" />
+                            <TextBlock Text="{x:Bind Title}" FontSize="18" Grid.Row="1" />
 
                             <TextBlock x:Name="SubtitleTextBlock" Grid.Row="2"
-                                       Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"
                                        Text="{x:Bind Subtitle}"
                                        FontSize="14" FontWeight="SemiLight" Opacity="0.5" />
                         </Grid>

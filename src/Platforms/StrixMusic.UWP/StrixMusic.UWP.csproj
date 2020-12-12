@@ -242,18 +242,6 @@
       <Project>{d3792563-05ef-412a-8a84-0b11297e2104}</Project>
       <Name>StrixMusic.Shells.Default</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj">
-      <Project>{dcc78d0b-507c-44a4-a46e-c0929c2c039e}</Project>
-      <Name>StrixMusic.Shells.Groove</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.Strix\StrixMusic.Shells.Strix.csproj">
-      <Project>{892f59a6-d988-4e50-a8b6-b5beb501d1d1}</Project>
-      <Name>StrixMusic.Shells.Strix</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj">
-      <Project>{063715b5-1765-4269-8fb0-699fadc840e1}</Project>
-      <Name>StrixMusic.Shells.ZuneDesktop</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Hqub.MusicBrainz.API, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">

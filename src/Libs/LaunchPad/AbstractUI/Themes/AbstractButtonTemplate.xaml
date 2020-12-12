@@ -10,7 +10,7 @@
     <DataTemplate x:Key="DefaultAbstractButtonTemplate" x:DataType="abstractUI:AbstractButtonViewModel">
         
         <StackPanel>
-            <TextBlock Text="{x:Bind Title}" FontSize="26" ToolTipService.ToolTip="{x:Bind TooltipText}"
+            <TextBlock Text="{x:Bind Title}" FontSize="24" ToolTipService.ToolTip="{x:Bind TooltipText}"
                        Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Title)}" />
 
             <TextBlock Text="{x:Bind Subtitle}" FontSize="16" FontWeight="SemiLight" Opacity="0.75"
