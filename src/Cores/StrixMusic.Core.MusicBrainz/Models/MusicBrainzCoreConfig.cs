@@ -20,6 +20,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// </summary>
     public class MusicBrainzCoreConfig : ICoreConfig
     {
+        private IFileSystemService? _fileSystemService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCoreConfig"/> class.
         /// </summary>
@@ -45,12 +47,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             var allDoneButton = new AbstractButton(Guid.NewGuid().ToString(), "Done")
             {
-                IconCode = "\uE0AB",
+                IconCode = "\uE73E",
             };
 
             allDoneButton.Clicked += AllDoneButton_Clicked;
-
-            button.Clicked += Button_Clicked;
 
             var dataListItems = new List<AbstractUIMetadata>
             {
@@ -118,10 +118,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         private async void Button_Clicked(object sender, EventArgs e)
         {
-            var fileSystemService = SourceCore.GetServiceSafe<IFileSystemService>();
-            Guard.IsNotNull(fileSystemService, nameof(fileSystemService));
+            Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
 
-            var folder = await fileSystemService.PickFolder();
+            var folder = await _fileSystemService.PickFolder();
 
             if (folder != null)
             {
@@ -163,6 +162,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task ConfigureServices(IServiceCollection services)
         {
+            Services = null;
+
             var cacheService = new MusicBrainzCacheService();
             await cacheService.InitAsync();
 
@@ -177,6 +178,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
             services.Add(new ServiceDescriptor(typeof(MusicBrainzArtistHelpersService), musicBrainzArtistHelper));
 
             Services = services.BuildServiceProvider();
+        }
+
+        /// <summary>
+        /// Configures the minimum required services for core configuration in a safe manner and is guaranteed not to throw.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task SetupConfigurationServices(IServiceCollection services)
+        {
+            var provider = services.BuildServiceProvider();
+
+            _fileSystemService = provider.GetRequiredService<IFileSystemService>();
+            return _fileSystemService.InitAsync();
         }
     }
 }

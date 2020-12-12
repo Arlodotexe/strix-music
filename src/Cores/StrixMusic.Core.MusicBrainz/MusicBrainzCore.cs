@@ -184,21 +184,23 @@ namespace StrixMusic.Core.MusicBrainz
         private bool _configured = false;
 
         /// <inheritdoc/>
-        public Task InitAsync(IServiceCollection services)
+        public async Task InitAsync(IServiceCollection services)
         {
             ChangeCoreState(CoreState.Loading);
 
             if (!(CoreConfig is MusicBrainzCoreConfig coreConfig))
-                return Task.CompletedTask;
-
-            coreConfig.ConfigureServices(services);
+                return;
 
             if (!_configured)
             {
-                ChangeCoreState(CoreState.ConfigRequested);
+                await coreConfig.SetupConfigurationServices(services);
                 _configured = true;
-                return Task.CompletedTask;
+
+                ChangeCoreState(CoreState.ConfigRequested);
+                return;
             }
+
+            await coreConfig.ConfigureServices(services);
 
             _musicBrainzClient = this.GetService<MusicBrainzClient>();
             _artistHelperService = this.GetService<MusicBrainzArtistHelpersService>();
@@ -221,8 +223,6 @@ namespace StrixMusic.Core.MusicBrainz
             CoreStateChanged?.Invoke(this, CoreState);
 
             Devices.Add(new MusicBrainzCoreDevice(this, "TestDevice", true)); // Hardcoded for now.
-
-            return Task.CompletedTask;
         }
     }
 }

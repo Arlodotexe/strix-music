@@ -11,12 +11,17 @@
     MinWidth="400"
     Margin="20,5">
 
-    <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <!-- TODO: Destroy and replace with the default settings control -->
 
         <TextBlock Text="App Skin" FontSize="16" Margin="0,0,0,7" />
 
-        <ComboBox x:Name="ShellSelector" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
+        <ComboBox x:Name="ShellSelector" Grid.Row="1" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
                       SelectionChanged="ComboBox_SelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate x:DataType="models:ShellModel">
@@ -25,8 +30,10 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <controls:AbstractUIGroupListPresenter DataContext="{x:Bind AbstractUIGroups}" />
+        <ScrollViewer VerticalScrollMode="Auto" Grid.Row="2">
+            <controls:AbstractUIGroupListPresenter DataContext="{x:Bind AbstractUIGroups}" />
+        </ScrollViewer>
 
-    </StackPanel>
+    </Grid>
 </UserControl>
  

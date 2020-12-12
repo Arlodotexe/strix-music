@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API.Cache;
+using OwlCore.Extensions;
 
 namespace StrixMusic.Core.MusicBrainz.Utils
 {
@@ -24,7 +25,10 @@ namespace StrixMusic.Core.MusicBrainz.Utils
         public FileRequestCache(string path)
         {
             _path = Path.GetFullPath(path);
-            Task.Run(Cleanup);
+
+            Task.Run(Cleanup)
+                .TryOrSkip<Exception>()
+                .FireAndForget();
         }
 
         /// <inheritdoc/>

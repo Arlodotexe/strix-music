@@ -10,7 +10,7 @@
 
     <UserControl.Resources>
         <DataTemplate x:Key="AbstractUIGroupItemTemplate"  x:DataType="abstractUI:AbstractUIElementGroupViewModel">
-            <StackPanel Spacing="5" Margin="10">
+            <StackPanel Spacing="7" Margin="10,20">
 
                 <TextBlock Text="{x:Bind Title}" FontSize="32" ToolTipService.ToolTip="{x:Bind TooltipText}" />
 
@@ -57,7 +57,7 @@
         </ListView.ItemContainerStyle>
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
-                <StackPanel Spacing="30"/>
+                <StackPanel />
             </ItemsPanelTemplate>
         </ListView.ItemsPanel>
     </ListView>
