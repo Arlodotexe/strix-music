@@ -19,14 +19,12 @@ namespace LaunchPad.AbstractUI.Controls
             // ReSharper disable CollectionNeverUpdated.Local
             if (!new Themes.AbstractTextBoxTemplate().TryGetValue("DefaultAbstractTextBoxTemplate", out var textBoxTemplate))
             {
-                ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(textBoxTemplate));
-                return;
+                TextBoxTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(textBoxTemplate));
             }
 
             if (!new Themes.AbstractDataListTemplate().TryGetValue("DefaultAbstractDataListTemplate", out var dataListTemplate))
             {
-                ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(dataListTemplate));
-                return;
+                DataListTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(dataListTemplate));
             }
 
             TextBoxTemplate = (DataTemplate)textBoxTemplate;
