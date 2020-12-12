@@ -66,7 +66,7 @@ namespace StrixMusic.Sdk
         /// Initializes and loads the cores given.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitializeCores((ICore core, IServiceCollection services)[] initData)
+        public async Task InitializeCoresAsync((ICore core, IServiceCollection services)[] initData)
         {
             var cores = initData.Select(x => x.core);
 

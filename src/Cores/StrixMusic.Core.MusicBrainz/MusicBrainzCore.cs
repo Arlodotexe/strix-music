@@ -191,14 +191,14 @@ namespace StrixMusic.Core.MusicBrainz
             if (!(CoreConfig is MusicBrainzCoreConfig coreConfig))
                 return Task.CompletedTask;
 
+            coreConfig.ConfigureServices(services);
+
             if (!_configured)
             {
                 ChangeCoreState(CoreState.ConfigRequested);
                 _configured = true;
                 return Task.CompletedTask;
             }
-
-            coreConfig.ConfigureServices(services);
 
             _musicBrainzClient = this.GetService<MusicBrainzClient>();
             _artistHelperService = this.GetService<MusicBrainzArtistHelpersService>();

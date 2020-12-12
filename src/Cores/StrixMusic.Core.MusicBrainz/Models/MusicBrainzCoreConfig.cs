@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Utils;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -22,22 +27,21 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             SourceCore = sourceCore;
 
-            var textBlock =
-                new AbstractTextBox("testBox", "The initial value")
-                {
-                    Title = "Password entry",
-                    Subtitle = @"Enter ""something useful"".",
-                };
+            var textBlock = new AbstractTextBox("testBox", "The initial value")
+            {
+                Title = "Password entry",
+                Subtitle = @"Enter ""something useful"".",
+            };
 
             textBlock.ValueChanged += TextBlock_ValueChanged;
 
-            var button =
-                new AbstractButton(Guid.NewGuid().ToString(), "Button")
-                {
-                    Title = "Clickable Button",
-                    Subtitle = "This is a buttton.",
-                    IconCode = "\uE2B1",
-                };
+            var button = new AbstractButton(Guid.NewGuid().ToString(), "Pick folder")
+            {
+                Title = "Add a folder",
+                IconCode = "\uE2B1",
+            };
+
+            button.Clicked += Button_Clicked;
 
             var dataListItems = new List<AbstractUIMetadata>
             {
@@ -86,11 +90,30 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     Items =  new List<AbstractUIElement>()
                     {
                         textBlock,
+                        button,
                         dataList,
                         dataListGrid,
                     },
                 },
             };
+        }
+
+        private async void Button_Clicked(object sender, EventArgs e)
+        {
+            var fileSystemService = SourceCore.GetServiceSafe<IFileSystemService>();
+            Guard.IsNotNull(fileSystemService, nameof(fileSystemService));
+
+            var folder = await fileSystemService.PickFolder();
+
+            if (folder != null)
+            {
+                Debug.WriteLine(folder.Name);
+                Debug.WriteLine(folder.Path);
+            }
+            else
+            {
+                Debug.WriteLine("Nothing picked");
+            }
         }
 
         private void TextBlock_ValueChanged(object sender, string e)
@@ -109,6 +132,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; }
+
         /// <inheritdoc/>
         public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/MusicBrainz/logo.svg");
 
@@ -118,9 +142,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <summary>
         /// Configures services for this instance of the core.
         /// </summary>
-        public void ConfigureServices(IServiceCollection services)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task ConfigureServices(IServiceCollection services)
         {
             var cacheService = new MusicBrainzCacheService();
+            await cacheService.InitAsync();
 
             var musicBrainzClient = new MusicBrainzClient
             {

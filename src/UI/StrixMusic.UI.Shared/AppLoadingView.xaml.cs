@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,6 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Services.Navigation;
 
 namespace StrixMusic.Shared
 {
@@ -77,27 +77,16 @@ namespace StrixMusic.Shared
 
             var textStorageService = new TextStorageService();
             _settingsService = new DefaultSettingsService(textStorageService);
-            var cacheFileSystemService = new FileSystemService(ApplicationData.Current.LocalCacheFolder);
+
             var fileSystemService = new FileSystemService();
-
-            var fileSystemServices = new[]
-            {
-                cacheFileSystemService,
-                fileSystemService,
-            };
-
-            UpdateStatus("Initializing filesystem");
-
-            await fileSystemServices.InParallel(x => x.InitAsync());
-
-            contextualServiceLocator.Register<IFileSystemService>(cacheFileSystemService, typeof(CacheServiceBase));
+            var cacheFileSystemService = new DefaultCacheService();
 
             UpdateStatus("Initializing services");
 
             services.AddSingleton(contextualServiceLocator);
             services.AddSingleton<ITextStorageService>(textStorageService);
             services.AddSingleton<ISettingsService>(_settingsService);
-            services.AddSingleton<CacheServiceBase, DefaultCacheService>();
+            services.AddSingleton<CacheServiceBase>(cacheFileSystemService);
             services.AddSingleton<ISharedFactory, SharedFactory>();
             services.AddSingleton<IFileSystemService>(fileSystemService);
 
@@ -105,6 +94,10 @@ namespace StrixMusic.Shared
             services.AddSingleton(_playbackHandlerService);
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
+
+            UpdateStatus("Initializing filesystem");
+            await fileSystemService.InitAsync();
+            await cacheFileSystemService.InitAsync();
         }
 
         // TODO: Rename this method or split up the code better.
@@ -131,27 +124,46 @@ namespace StrixMusic.Shared
             cores.Add(new MusicBrainzCore("testInstance"));
 
             UpdateStatus("Setting up ranking for temp cores.");
-            await _settingsService.SetValue<IReadOnlyList<Type>>(nameof(SettingsKeys.CoreRanking), new List<Type> { typeof(MusicBrainzCore) }).RunInBackground();
+            await _settingsService.SetValue<IReadOnlyList<Type>>(nameof(SettingsKeys.CoreRanking), typeof(MusicBrainzCore).IntoList()).RunInBackground();
 
             UpdateStatus("Initializing cores");
-            var initData = cores.Select(x => new ValueTuple<ICore, IServiceCollection>(x, CreateInitialServicesForCore())).ToArray();
-            await CurrentWindow.MainViewModel.InitializeCores(initData).RunInBackground();
+            var initData = await cores.InParallel(CreateCoreInitDataAsync);
+
+            await CurrentWindow.MainViewModel.InitializeCoresAsync(initData).RunInBackground();
 
             UpdateStatus("Setting up media players");
-            cores.ForEach(SetupMediaPlayerAsync);
+            cores.ForEach(SetupMediaPlayer);
 
             UpdateStatus($"Done loading, navigating to {nameof(MainPage)}");
             CurrentWindow.NavigationService?.NavigateTo(typeof(MainPage));
         }
 
-        private IServiceCollection CreateInitialServicesForCore()
+        private async Task<(ICore core, IServiceCollection services)> CreateCoreInitDataAsync(ICore core)
+        {
+            var services = await CreateInitialServicesForCoreAsync(core);
+            return (core, services);
+        }
+
+        private async Task<IServiceCollection> CreateInitialServicesForCoreAsync(ICore core)
         {
             var services = new ServiceCollection();
+            StorageFolder rootStorageFolder;
+
+            try
+            {
+                rootStorageFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync(core.InstanceId);
+            }
+            catch (FileNotFoundException)
+            {
+                rootStorageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(core.InstanceId);
+            }
+
+            services.AddSingleton<IFileSystemService>(new FileSystemService(rootStorageFolder));
 
             return services;
         }
 
-        private void SetupMediaPlayerAsync(ICore core)
+        private void SetupMediaPlayer(ICore core)
         {
             Guard.IsNotNull(_playbackHandlerService, nameof(_playbackHandlerService));
 
