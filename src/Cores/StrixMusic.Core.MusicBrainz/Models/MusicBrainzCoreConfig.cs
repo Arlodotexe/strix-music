@@ -43,6 +43,15 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             button.Clicked += Button_Clicked;
 
+            var allDoneButton = new AbstractButton(Guid.NewGuid().ToString(), "Done")
+            {
+                IconCode = "\uE0AB",
+            };
+
+            allDoneButton.Clicked += AllDoneButton_Clicked;
+
+            button.Clicked += Button_Clicked;
+
             var dataListItems = new List<AbstractUIMetadata>
             {
                 new AbstractUIMetadata(Guid.NewGuid().ToString())
@@ -93,9 +102,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
                         button,
                         dataList,
                         dataListGrid,
+                        allDoneButton,
                     },
                 },
             };
+        }
+
+        private void AllDoneButton_Clicked(object sender, EventArgs e)
+        {
+            if (SourceCore is MusicBrainzCore core)
+            {
+                core.ChangeCoreState(Sdk.Data.CoreState.Configured);
+            }
         }
 
         private async void Button_Clicked(object sender, EventArgs e)
