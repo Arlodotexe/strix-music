@@ -90,6 +90,22 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 Title = "DataList grid test",
             };
 
+            var mutableDataListGrid = new AbstractMutableDataList(id: "mutableDataListGrid", dataListItems)
+            {
+                Title = "MutableDataList grid test",
+                Subtitle = "Add or remove something",
+                PreferredDisplayMode = AbstractDataListPreferredDisplayMode.Grid,
+            };
+
+            var mutableDataList = new AbstractMutableDataList(id: "mutableDataList", dataListItems)
+            {
+                Title = "MutableDataList test",
+                Subtitle = "Add or remove something",
+                PreferredDisplayMode = AbstractDataListPreferredDisplayMode.List,
+            };
+
+            mutableDataListGrid.AddRequested += MutableDataListGrid_AddRequested;
+
             AbstractUIElements = new List<AbstractUIElementGroup>()
             {
                 new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
@@ -99,13 +115,38 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     Items =  new List<AbstractUIElement>()
                     {
                         textBlock,
-                        button,
                         dataList,
                         dataListGrid,
+                        mutableDataListGrid,
+                        button,
+                        mutableDataList,
                         allDoneButton,
                     },
                 },
             };
+        }
+
+        private async void MutableDataListGrid_AddRequested(object sender, EventArgs e)
+        {
+            if (!(sender is AbstractMutableDataList dataList))
+                return;
+
+            Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
+
+            var folder = await _fileSystemService.PickFolder();
+
+            if (folder is null)
+                return;
+
+            var newItem = new AbstractUIMetadata(Guid.NewGuid().ToString())
+            {
+                IconCode = "\uED25",
+                Title = folder.Name,
+                Subtitle = folder.Path,
+                TooltipText = folder.Path,
+            };
+
+            dataList.AddItem(newItem);
         }
 
         private void AllDoneButton_Clicked(object sender, EventArgs e)

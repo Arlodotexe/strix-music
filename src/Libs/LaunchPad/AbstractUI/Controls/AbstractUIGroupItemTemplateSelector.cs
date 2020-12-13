@@ -27,6 +27,11 @@ namespace LaunchPad.AbstractUI.Controls
                 DataListTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(dataListTemplate));
             }
 
+            if (!new Themes.AbstractMutableDataListTemplate().TryGetValue("DefaultAbstractMutableDataListTemplate", out var mutableDataListTemplate))
+            {
+                MutableDataListTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(mutableDataListTemplate));
+            }
+
             if (!new Themes.AbstractButtonTemplate().TryGetValue("DefaultAbstractButtonTemplate", out var buttonTemplate))
             {
                 ButtonTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(buttonTemplate));
@@ -35,6 +40,7 @@ namespace LaunchPad.AbstractUI.Controls
             TextBoxTemplate = (DataTemplate)textBoxTemplate;
             DataListTemplate = (DataTemplate)dataListTemplate;
             ButtonTemplate = (DataTemplate)buttonTemplate;
+            MutableDataListTemplate = (DataTemplate)mutableDataListTemplate;
         }
 
         /// <summary>
@@ -48,6 +54,11 @@ namespace LaunchPad.AbstractUI.Controls
         public DataTemplate DataListTemplate { get; set; }
 
         /// <summary>
+        /// The data template used to display an <see cref="AbstractMutableDataList"/>.
+        /// </summary>
+        public DataTemplate MutableDataListTemplate { get; set; }
+
+        /// <summary>
         /// The data template used to display an <see cref="AbstractButton"/>.
         /// </summary>
         public DataTemplate ButtonTemplate { get; set; }
@@ -59,6 +70,7 @@ namespace LaunchPad.AbstractUI.Controls
                 AbstractTextBoxViewModel _ => TextBoxTemplate,
                 AbstractDataListViewModel _ => DataListTemplate,
                 AbstractButtonViewModel _ => ButtonTemplate,
+                AbstractMutableDataListViewModel _ => MutableDataListTemplate,
                 _ => base.SelectTemplateCore(item, container)
             };
     }

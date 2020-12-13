@@ -39,6 +39,7 @@
     <None Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
     <None Remove="AbstractUI\Themes\AbstractButtonTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractDataListTemplate.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractMutableDataListTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
     <None Remove="Controls\ContentOverlay.xaml" />
     <None Remove="Themes\Generic.xaml" />
@@ -48,6 +49,7 @@
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenterTemplateSelector.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListTemplate.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMutableDataListTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
     <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml" />
     <UpToDateCheckInput Remove="Themes\Generic.xaml" />
@@ -60,6 +62,9 @@
       <DependentUpon>AbstractUIGroupListPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractButtonTemplate.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="AbstractUI\Themes\AbstractMutableDataListTemplate.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Controls\ContentOverlay.xaml.cs">
@@ -76,5 +81,8 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SourceGeneratorInput Remove="AbstractUI\ViewModels\AbstractMutableDataListItemViewModel.cs" />
   </ItemGroup>
 </Project>

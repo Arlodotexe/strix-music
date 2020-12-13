@@ -11,17 +11,20 @@ namespace OwlCore.AbstractUI.Models
     /// </summary>
     public class AbstractMutableDataList : AbstractDataList
     {
+        private readonly CollectionChangedEventItem<AbstractUIMetadata>[] _emptyAbstractUIArray = Array.Empty<CollectionChangedEventItem<AbstractUIMetadata>>();
+
         /// <summary>
         /// Creates a new instance of <see cref="AbstractMutableDataList"/>.
         /// </summary>
-        /// <param name="id"></param>
-        protected AbstractMutableDataList(string id)
-            : base(id, new List<AbstractUIMetadata>())
+        /// <param name="id">A unique identifier for this item.</param>
+        /// <param name="items">The initial items for this collection.</param>
+        public AbstractMutableDataList(string id, List<AbstractUIMetadata> items)
+            : base(id, items)
         {
         }
 
         /// <summary>
-        /// Called when the user wants to add a new item in the list. Behavior is defined by the core.
+        /// Called when the user wants to add a new item in the list.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the added item.</returns>
         public void RequestNewItem()
@@ -40,12 +43,11 @@ namespace OwlCore.AbstractUI.Models
         /// <param name="item">The item to add.</param>
         public void AddItem(AbstractUIMetadata item)
         {
-            var index = Items.IndexOf(item);
-            InsertItem(item, index);
+            InsertItem(item, Items.Count);
         }
 
         /// <summary>
-        /// Inserts an item into <see cref="AbstractDataList.Items"/> at a specific index..
+        /// Inserts an item into <see cref="AbstractDataList.Items"/> at a specific index.
         /// </summary>
         /// <param name="index">The index to insert at.</param>
         /// <param name="item">The item to add.</param>
@@ -53,14 +55,12 @@ namespace OwlCore.AbstractUI.Models
         {
             Items.Add(item);
 
-            var removedItems = Array.Empty<CollectionChangedEventItem<AbstractUIMetadata>>();
-
-            var addedItems = new List<CollectionChangedEventItem<AbstractUIMetadata>>()
+            var addedItems = new List<CollectionChangedEventItem<AbstractUIMetadata>>
             {
                 new CollectionChangedEventItem<AbstractUIMetadata>(item, index)
             };
 
-            ItemAdded?.Invoke(this, addedItems, removedItems);
+            ItemsChanged?.Invoke(this, addedItems, _emptyAbstractUIArray);
         }
 
         /// <summary>
@@ -84,24 +84,17 @@ namespace OwlCore.AbstractUI.Models
             var item = Items.ElementAt(index);
             Items.RemoveAt(index);
 
-            var removedItems = new List<CollectionChangedEventItem<AbstractUIMetadata>>()
+            var removedItems = new List<CollectionChangedEventItem<AbstractUIMetadata>>
             {
                 new CollectionChangedEventItem<AbstractUIMetadata>(item, index)
             };
 
-            var addedItems = Array.Empty<CollectionChangedEventItem<AbstractUIMetadata>>();
-
-            ItemRemoved?.Invoke(this,addedItems, removedItems);
+            ItemsChanged?.Invoke(this, _emptyAbstractUIArray, removedItems);
         }
 
         /// <summary>
         /// Fires when <see cref="RemoveItem"/> is called.
         /// </summary>
-        public event CollectionChangedEventHandler<AbstractUIMetadata>? ItemRemoved;
-
-        /// <summary>
-        /// Fired when a new item is added to the <see cref="AbstractDataList.Items"/>.
-        /// </summary>
-        public event CollectionChangedEventHandler<AbstractUIMetadata>? ItemAdded;
+        public event CollectionChangedEventHandler<AbstractUIMetadata>? ItemsChanged;
     }
 }

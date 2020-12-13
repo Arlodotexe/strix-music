@@ -15,7 +15,6 @@ namespace LaunchPad.AbstractUI.ViewModels
     /// </summary>
     public class AbstractUIViewModelBase : ObservableObject
     {
-        private readonly AbstractUIBase _model;
         private ImageSource _imageSource;
 
         /// <summary>
@@ -24,8 +23,67 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <param name="model"></param>
         public AbstractUIViewModelBase(AbstractUIBase model)
         {
-            _model = model;
+            Model = model;
             _imageSource = SetupImageSource(model);
+        }
+
+        /// <summary>
+        /// The proxied model used by this class.
+        /// </summary>
+        public AbstractUIBase Model { get; }
+
+        /// <summary>
+        /// An identifier for this item.
+        /// </summary>
+        public string Id => Model.Id;
+
+        /// <summary>
+        /// A title to display for this item.
+        /// </summary>
+        /// <remarks>Shells are required to support this property on all AbstractUI elements.</remarks>
+        public string? Title
+        {
+            get => Model.Title;
+            set => SetProperty(Model.Title, value, Model, (u, n) => Model.Title = n);
+        }
+
+        /// <summary>
+        /// An optional subtitle to display with the title.
+        /// </summary>
+        /// <remarks>Shells are required to support this property on all AbstractUI elements.</remarks>
+        public string? Subtitle
+        {
+            get => Model.Subtitle;
+            set => SetProperty(Model.Subtitle, value, Model, (u, n) => Model.Subtitle = n);
+        }
+
+        /// <summary>
+        /// Extended markdown-formatted text to display in an info-focused tooltip.
+        /// </summary>
+        /// <remarks>Shells are required to support this property on all AbstractUI elements.</remarks>
+        public string? TooltipText
+        {
+            get => Model.TooltipText;
+            set => SetProperty(Model.TooltipText, value, Model, (u, n) => Model.TooltipText = n);
+        }
+
+        /// <summary>
+        /// A hex code representing an icon from the Segoe MDL2 Assets to display with this item (optional).
+        /// </summary>
+        /// <remarks>Example: <example><c>"\xE10F"</c></example></remarks>
+        public string? IconCode
+        {
+            get => Model.IconCode;
+            set => SetProperty(Model.IconCode, value, Model, (u, n) => Model.IconCode = n);
+        }
+
+        /// <summary>
+        /// An image associated with this item (optional)
+        /// </summary>
+        public ImageSource ImageSource
+        {
+            get => _imageSource;
+            set => SetProperty(_imageSource, value, _imageSource, (u, n) => _imageSource = n);
         }
 
         [Pure]
@@ -68,60 +126,6 @@ namespace LaunchPad.AbstractUI.ViewModels
             image.SetSourceAsync(randomStream).AsTask().RunInBackground();
 
             return image;
-        }
-
-        /// <summary>
-        /// An identifier for this item.
-        /// </summary>
-        public string Id => _model.Id;
-
-        /// <summary>
-        /// A title to display for this item.
-        /// </summary>
-        /// <remarks>Shells are required to support this property on all AbstractUI elements.</remarks>
-        public string? Title
-        {
-            get => _model.Title;
-            set => SetProperty(_model.Title, value, _model, (u, n) => _model.Title = n);
-        }
-
-        /// <summary>
-        /// An optional subtitle to display with the title.
-        /// </summary>
-        /// <remarks>Shells are required to support this property on all AbstractUI elements.</remarks>
-        public string? Subtitle
-        {
-            get => _model.Subtitle;
-            set => SetProperty(_model.Subtitle, value, _model, (u, n) => _model.Subtitle = n);
-        }
-
-        /// <summary>
-        /// Extended markdown-formatted text to display in an info-focused tooltip.
-        /// </summary>
-        /// <remarks>Shells are required to support this property on all AbstractUI elements.</remarks>
-        public string? TooltipText
-        {
-            get => _model.TooltipText;
-            set => SetProperty(_model.TooltipText, value, _model, (u, n) => _model.TooltipText = n);
-        }
-
-        /// <summary>
-        /// A hex code representing an icon from the Segoe MDL2 Assets to display with this item (optional).
-        /// </summary>
-        /// <remarks>Example: <example><c>"\xE10F"</c></example></remarks>
-        public string? IconCode
-        {
-            get => _model.IconCode;
-            set => SetProperty(_model.IconCode, value, _model, (u, n) => _model.IconCode = n);
-        }
-
-        /// <summary>
-        /// An image associated with this item (optional)
-        /// </summary>
-        public ImageSource ImageSource
-        {
-            get => _imageSource;
-            set => SetProperty(_imageSource, value, _imageSource, (u, n) => _imageSource = n);
         }
     }
 }
