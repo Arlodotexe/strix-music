@@ -50,6 +50,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 IconCode = "\uE73E",
             };
 
+            var richTextblock = new AbstractRichTextBlock(Guid.NewGuid().ToString(), "The initial value")
+            {
+                Title="RichTextBlock Example",
+                IconCode = "\uE2B1",
+            };
+
             allDoneButton.Clicked += AllDoneButton_Clicked;
 
             var dataListItems = new List<AbstractUIMetadata>
@@ -121,6 +127,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
                         button,
                         mutableDataList,
                         allDoneButton,
+                        richTextblock,
                     },
                 },
             };
