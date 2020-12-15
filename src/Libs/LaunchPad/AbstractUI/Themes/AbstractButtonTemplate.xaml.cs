@@ -4,7 +4,7 @@ using OwlCore.AbstractUI.Models;
 namespace LaunchPad.AbstractUI.Themes
 {
     /// <summary>
-    /// Default template for the <see cref="AbstractDataList"/>
+    /// Default template for the <see cref="AbstractButtonTemplate"/>
     /// </summary>
     public sealed partial class AbstractButtonTemplate : ResourceDictionary
     {

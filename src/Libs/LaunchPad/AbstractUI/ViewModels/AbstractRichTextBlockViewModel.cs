@@ -6,6 +6,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace LaunchPad.AbstractUI.ViewModels
 {
+    /// <summary>
+    /// Represents an abstract <see cref="RichTextBlock"/>.
+    /// </summary>
     public class AbstractRichTextBlockViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractRichTextBlock _model;
@@ -22,7 +25,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <summary>
         /// Text to show when the <see cref="RichTextBlock"/>.
         /// </summary>
-        public string Text
+        public string RichText
         {
             get => _model.RichText;
             set => SetProperty(_model.RichText, value, _model, (u, n) => _model.RichText = n);

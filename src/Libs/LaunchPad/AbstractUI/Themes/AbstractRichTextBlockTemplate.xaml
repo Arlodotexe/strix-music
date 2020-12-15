@@ -16,7 +16,7 @@
             <RichTextBlock >
                 <Paragraph>
                     <Paragraph.Inlines>
-                        <Run Text="{Binding RichText}"/>
+                        <Run Text="{x:Bind RichText}"/>
                     </Paragraph.Inlines>
                 </Paragraph>
             </RichTextBlock>
