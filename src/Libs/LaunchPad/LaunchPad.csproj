@@ -83,6 +83,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.17763'">
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Markdown">
+      <Version>7.0.0-preview4</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>

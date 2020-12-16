@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="LaunchPad.AbstractUI.Themes.AbstractRichTextBlockTemplate"
     xmlns:abstractUI="using:LaunchPad.AbstractUI.ViewModels"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls.Markdown"
     xmlns:launchPad="using:LaunchPad">
 
     <DataTemplate x:Key="DefaultAbstractRichTextBlockTemplate" x:DataType="abstractUI:AbstractRichTextBlockViewModel">
@@ -13,13 +14,8 @@
             <TextBlock Text="{x:Bind Subtitle}" FontSize="16" FontWeight="SemiLight" Opacity="0.75"
                        Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
 
-            <RichTextBlock >
-                <Paragraph>
-                    <Paragraph.Inlines>
-                        <Run Text="{x:Bind RichText}"/>
-                    </Paragraph.Inlines>
-                </Paragraph>
-            </RichTextBlock>
+            <controls:MarkdownTextBlock
+                Text="{x:Bind RichText}"/>
         </StackPanel>
     </DataTemplate>
 
