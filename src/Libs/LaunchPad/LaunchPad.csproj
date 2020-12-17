@@ -83,7 +83,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.17763'">
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Markdown">
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
+      <Version>7.0.0-preview4</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>7.0.0-preview4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
@@ -92,5 +95,10 @@
   </ItemGroup>
   <ItemGroup>
     <SourceGeneratorInput Remove="AbstractUI\ViewModels\AbstractMutableDataListItemViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <HintPath>C:\Users\arlog\.nuget\packages\uno.microsoft.toolkit.uwp.ui.controls\6.1.0-build.191.gc988bdd4ff\lib\monoandroid90\Microsoft.Toolkit.Uwp.UI.Controls.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
