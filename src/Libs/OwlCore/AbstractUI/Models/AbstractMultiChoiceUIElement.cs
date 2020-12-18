@@ -35,7 +35,7 @@ namespace OwlCore.AbstractUI.Models
         /// The current selected item.
         /// </summary>
         /// <remarks>Must be specified on object creation, even if the item is just a prompt to choose something.</remarks>
-        public AbstractUIMetadata SelectedItem { get; private set; }
+        public AbstractUIMetadata SelectedItem { get; set; }
 
         /// <summary>
         /// Called to change the <see cref="SelectedItem"/>.

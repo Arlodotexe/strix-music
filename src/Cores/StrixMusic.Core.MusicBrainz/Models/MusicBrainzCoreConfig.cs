@@ -121,6 +121,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 Title = "ComboBox test",
             };
 
+            comboBox.ItemSelected += ComboBox_ItemSelected;
+
             AbstractUIElements = new List<AbstractUIElementGroup>()
             {
                 new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
@@ -140,6 +142,14 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     },
                 },
             };
+        }
+
+        private void ComboBox_ItemSelected(object sender, AbstractUIMetadata e)
+        {
+            if (e.Title == "Item 3")
+            {
+                ((MusicBrainzCore)SourceCore).ChangeCoreState(Sdk.Data.CoreState.Configured);
+            }
         }
 
         private async void MutableDataListGrid_AddRequested(object sender, EventArgs e)

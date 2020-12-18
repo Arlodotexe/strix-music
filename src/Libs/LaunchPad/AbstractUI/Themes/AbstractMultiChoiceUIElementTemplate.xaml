@@ -15,7 +15,12 @@
             <TextBlock Text="{x:Bind Subtitle}"  FontSize="16" FontWeight="SemiLight" Opacity="0.75" 
                        Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
 
-            <ComboBox ItemsSource="{x:Bind Items}">
+            <ComboBox ItemsSource="{x:Bind Items}" SelectedItem="{x:Bind SelectedItem, Mode=OneWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="abstractUI:AbstractUIMetadataViewModel">
+                        <TextBlock Text="{x:Bind Title}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="SelectionChanged">
                         <core:InvokeCommandAction Command="{x:Bind ItemSelectedCommand}" />
