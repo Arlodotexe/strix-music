@@ -9,7 +9,7 @@ namespace LaunchPad.AbstractUI.ViewModels
     /// <summary>
     /// Represents an abstract <see cref="RichTextBlock"/>.
     /// </summary>
-    public class AbstractRichTextBlockViewModel : AbstractUIViewModelBase
+    public class AbstractRichTextBlockViewModel : AbstractUIViewModelBase<AbstractRichTextBlock>
     {
         private readonly AbstractRichTextBlock _model;
 

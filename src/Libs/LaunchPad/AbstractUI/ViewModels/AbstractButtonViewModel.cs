@@ -9,7 +9,7 @@ namespace LaunchPad.AbstractUI.ViewModels
     /// <summary>
     /// Abstract button viewmodel.
     /// </summary>
-    public class AbstractButtonViewModel : AbstractUIViewModelBase
+    public class AbstractButtonViewModel : AbstractUIViewModelBase<AbstractButton>
     {
         private readonly AbstractButton _model;
 
