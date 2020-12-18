@@ -14,7 +14,7 @@ namespace LaunchPad.AbstractUI.ViewModels
     /// <summary>
     /// A ViewModel for the <see cref="AbstractDataList"/>.
     /// </summary>
-    public class AbstractMutableDataListViewModel : AbstractUIViewModelBase<AbstractMutableDataList>
+    public class AbstractMutableDataListViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractMutableDataList _model;
 

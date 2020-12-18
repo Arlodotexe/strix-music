@@ -13,7 +13,7 @@ namespace LaunchPad.AbstractUI.ViewModels
     /// <summary>
     /// Base view model for all AbstractUI elements.
     /// </summary>
-    public class AbstractUIViewModelBase<T> : ObservableObject where T : AbstractUIBase
+    public class AbstractUIViewModelBase : ObservableObject
     {
         private ImageSource _imageSource;
 
@@ -21,7 +21,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// Creates a new instance of <see cref="AbstractUIViewModelBase"/>.
         /// </summary>
         /// <param name="model"></param>
-        public AbstractUIViewModelBase(T model)
+        public AbstractUIViewModelBase(AbstractUIBase model)
         {
             Model = model;
             _imageSource = SetupImageSource(model);
@@ -30,7 +30,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <summary>
         /// The proxied model used by this class.
         /// </summary>
-        public T Model { get; }
+        public AbstractUIBase Model { get; }
 
         /// <summary>
         /// An identifier for this item.

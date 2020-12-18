@@ -11,7 +11,7 @@ namespace LaunchPad.AbstractUI.ViewModels
     /// <summary>
     /// A ViewModel for the <see cref="AbstractTextBox"/>.
     /// </summary>
-    public class AbstractTextBoxViewModel : AbstractUIViewModelBase<AbstractTextBox>
+    public class AbstractTextBoxViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractTextBox _model;
         private readonly string _id;
