@@ -114,6 +114,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
             mutableDataListGrid.AddRequested += MutableDataListGrid_AddRequested;
             mutableDataList.AddRequested += MutableDataListGrid_AddRequested;
 
+            var multiChoiceItems = dataListItems.ToList();
+
+            var comboBox = new AbstractMultiChoiceUIElement(id: "comboBoxTest", multiChoiceItems[0], multiChoiceItems)
+            {
+                Title = "ComboBox test",
+            };
+
             AbstractUIElements = new List<AbstractUIElementGroup>()
             {
                 new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
@@ -123,6 +130,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     Items =  new List<AbstractUIElement>()
                     {
                         textBlock,
+                        comboBox,
                         dataList,
                         dataListGrid,
                         mutableDataListGrid,

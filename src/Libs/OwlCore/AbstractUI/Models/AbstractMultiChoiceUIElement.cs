@@ -14,14 +14,13 @@ namespace OwlCore.AbstractUI.Models
         /// </summary>
         /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
         /// <param name="defaultSelectedItem"><inheritdoc cref="SelectedItem"/></param>
-        /// <param name="preferredDisplayMode"><inheritdoc cref="PreferredDisplayMode"/></param>
         /// <param name="items"><inheritdoc cref="Items"/></param>
-        public AbstractMultiChoiceUIElement(string id, AbstractUIMetadata defaultSelectedItem, AbstractMultiChoicePreferredDisplayMode preferredDisplayMode, IEnumerable<AbstractUIMetadata> items)
+
+        public AbstractMultiChoiceUIElement(string id, AbstractUIMetadata defaultSelectedItem, IEnumerable<AbstractUIMetadata> items)
             : base(id)
         {
-            Items = items;
-            PreferredDisplayMode = preferredDisplayMode;
             SelectedItem = defaultSelectedItem;
+            Items = items;
         }
 
         /// <summary>

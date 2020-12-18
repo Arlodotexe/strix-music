@@ -37,10 +37,16 @@ namespace LaunchPad.AbstractUI.Controls
                 ButtonTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(buttonTemplate));
             }
 
+            if (!new Themes.AbstractMultiChoiceUIElementTemplate().TryGetValue("DefaultAbstractMultipleChoiceTemplate", out var multiChoiceTemplate))
+            {
+                MultiChoiceTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(multiChoiceTemplate));
+            }
+
             TextBoxTemplate = (DataTemplate)textBoxTemplate;
             DataListTemplate = (DataTemplate)dataListTemplate;
             ButtonTemplate = (DataTemplate)buttonTemplate;
             MutableDataListTemplate = (DataTemplate)mutableDataListTemplate;
+            MultiChoiceTemplate = (DataTemplate)multiChoiceTemplate;
         }
 
         /// <summary>
@@ -63,6 +69,11 @@ namespace LaunchPad.AbstractUI.Controls
         /// </summary>
         public DataTemplate ButtonTemplate { get; set; }
 
+        /// <summary>
+        /// The data template used to display an <see cref="AbstractButton"/>.
+        /// </summary>
+        public DataTemplate MultiChoiceTemplate { get; set; }
+
         /// <inheritdoc />
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
             => item switch
@@ -71,6 +82,7 @@ namespace LaunchPad.AbstractUI.Controls
                 AbstractDataListViewModel _ => DataListTemplate,
                 AbstractButtonViewModel _ => ButtonTemplate,
                 AbstractMutableDataListViewModel _ => MutableDataListTemplate,
+                AbstractMultiChoiceUIElementViewModel _ => MultiChoiceTemplate,
                 _ => base.SelectTemplateCore(item, container)
             };
     }

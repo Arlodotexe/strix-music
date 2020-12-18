@@ -39,6 +39,7 @@
     <None Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
     <None Remove="AbstractUI\Themes\AbstractButtonTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractDataListTemplate.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractMutableDataListTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractRichTextBlockTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
@@ -50,6 +51,7 @@
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenterTemplateSelector.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListTemplate.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMutableDataListTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
@@ -64,6 +66,9 @@
       <DependentUpon>AbstractUIGroupListPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractButtonTemplate.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="AbstractUI\Themes\AbstractMultiChoiceUIElementTemplate.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractRichTextBlockTemplate.xaml.cs">

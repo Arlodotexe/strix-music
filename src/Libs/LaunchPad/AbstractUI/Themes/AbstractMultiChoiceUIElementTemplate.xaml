@@ -1,0 +1,29 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="LaunchPad.AbstractUI.Themes.AbstractMultiChoiceUIElementTemplate"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:abstractUI="using:LaunchPad.AbstractUI.ViewModels"
+    xmlns:launchPad="using:LaunchPad"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:themes="using:LaunchPad.AbstractUI.Themes">
+
+    <DataTemplate x:Key="DefaultAbstractMultipleChoiceTemplate" x:DataType="abstractUI:AbstractMultiChoiceUIElementViewModel">
+        <StackPanel>
+            <TextBlock Text="{x:Bind Title}" FontSize="24" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+
+            <TextBlock Text="{x:Bind Subtitle}"  FontSize="16" FontWeight="SemiLight" Opacity="0.75" 
+                       Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+
+            <ComboBox ItemsSource="{x:Bind Items}">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="SelectionChanged">
+                        <core:InvokeCommandAction Command="{x:Bind ItemSelectedCommand}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </ComboBox>
+
+        </StackPanel>
+    </DataTemplate>
+
+</ResourceDictionary>

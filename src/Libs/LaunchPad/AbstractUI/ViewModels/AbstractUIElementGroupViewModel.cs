@@ -31,6 +31,7 @@ namespace LaunchPad.AbstractUI.ViewModels
                     AbstractMutableDataList mutableDataList => new AbstractMutableDataListViewModel(mutableDataList),
                     AbstractDataList dataList => new AbstractDataListViewModel(dataList),
                     AbstractButton button => new AbstractButtonViewModel(button),
+                    AbstractMultiChoiceUIElement multiChoiceUIElement => new AbstractMultiChoiceUIElementViewModel(multiChoiceUIElement),
                     _ => throw new NotImplementedException(),
                 };
             }
