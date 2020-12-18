@@ -8,7 +8,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core">
 
     <DataTemplate x:Key="DefaultAbstractButtonTemplate" x:DataType="abstractUI:AbstractButtonViewModel">
-        
+
         <StackPanel>
             <TextBlock Text="{x:Bind Title}" FontSize="24" ToolTipService.ToolTip="{x:Bind TooltipText}"
                        Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Title)}" />

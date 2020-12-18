@@ -80,7 +80,13 @@ namespace LaunchPad.AbstractUI.ViewModels
             {
                 foreach (var item in addedItems)
                 {
-                    Items.Insert(item.Index, new AbstractMutableDataListItemViewModel(item.Data));
+                    var newViewModel = new AbstractMutableDataListItemViewModel(item.Data);
+                    newViewModel.ItemRemoved += Items_ItemRemoved;
+
+                    if (item.Index == Items.Count)
+                        Items.Add(newViewModel);
+                    else
+                        Items.Insert(item.Index, newViewModel);
                 }
 
                 foreach (var item in removedItems)
@@ -164,7 +170,11 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public void RemoveItem(AbstractMutableDataListItemViewModel item)
         {
-            var index = Items.IndexOf(item);
+            var index = _model.Items.IndexOf((AbstractUIMetadata)item.Model);
+
+            if (index == -1)
+                return;
+
             RemoveItemAt(index);
         }
 

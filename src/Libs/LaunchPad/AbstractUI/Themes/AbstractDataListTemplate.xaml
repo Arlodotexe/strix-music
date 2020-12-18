@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="LaunchPad.AbstractUI.Themes.AbstractDataListTemplate"
     xmlns:abstractUI="using:LaunchPad.AbstractUI.ViewModels"
-    xmlns:launchPad="using:LaunchPad">
+    xmlns:launchPad="using:LaunchPad"
+    xmlns:themes="using:LaunchPad.AbstractUI.Themes">
 
     <DataTemplate x:Key="DefaultAbstractDataListTemplate" x:DataType="abstractUI:AbstractDataListViewModel">
         <StackPanel>

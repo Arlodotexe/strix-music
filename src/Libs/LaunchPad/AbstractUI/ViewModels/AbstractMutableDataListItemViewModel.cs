@@ -30,7 +30,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <summary>
         /// Run this command to request the removal of this item.
         /// </summary>
-        public IRelayCommand RequestRemoveCommand;
+        public IRelayCommand RequestRemoveCommand { get; set; }
 
         /// <summary>
         /// If the current data is for the item is used to request a new item, this returns <see cref="Visibility.Visible"/>.

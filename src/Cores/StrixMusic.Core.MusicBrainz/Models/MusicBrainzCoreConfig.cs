@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
@@ -96,14 +97,14 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 Title = "DataList grid test",
             };
 
-            var mutableDataListGrid = new AbstractMutableDataList(id: "mutableDataListGrid", dataListItems)
+            var mutableDataListGrid = new AbstractMutableDataList(id: "mutableDataListGrid", dataListItems.ToList())
             {
                 Title = "MutableDataList grid test",
                 Subtitle = "Add or remove something",
                 PreferredDisplayMode = AbstractDataListPreferredDisplayMode.Grid,
             };
 
-            var mutableDataList = new AbstractMutableDataList(id: "mutableDataList", dataListItems)
+            var mutableDataList = new AbstractMutableDataList(id: "mutableDataList", dataListItems.ToList())
             {
                 Title = "MutableDataList test",
                 Subtitle = "Add or remove something",
@@ -111,6 +112,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             };
 
             mutableDataListGrid.AddRequested += MutableDataListGrid_AddRequested;
+            mutableDataList.AddRequested += MutableDataListGrid_AddRequested;
 
             AbstractUIElements = new List<AbstractUIElementGroup>()
             {
@@ -127,7 +129,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
                         button,
                         mutableDataList,
                         allDoneButton,
-                        richTextblock,
                     },
                 },
             };
