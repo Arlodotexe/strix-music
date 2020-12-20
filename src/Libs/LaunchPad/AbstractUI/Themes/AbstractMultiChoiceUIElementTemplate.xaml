@@ -15,10 +15,10 @@
             <TextBlock Text="{x:Bind Subtitle}"  FontSize="16" FontWeight="SemiLight" Opacity="0.75" 
                        Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
 
-            <ComboBox ItemsSource="{x:Bind Items}" SelectedItem="{x:Bind SelectedItem, Mode=OneWay}">
+            <ComboBox ItemsSource="{x:Bind Items}" SelectedIndex="{x:Bind SelectedIndex, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate x:DataType="abstractUI:AbstractUIMetadataViewModel">
-                        <TextBlock Text="{x:Bind Title}" />
+                        <TextBlock Text="{Binding Title}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
                 <interactivity:Interaction.Behaviors>

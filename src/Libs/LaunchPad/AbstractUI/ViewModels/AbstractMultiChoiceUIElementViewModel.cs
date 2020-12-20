@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Extensions;
 
 namespace LaunchPad.AbstractUI.ViewModels
 {
@@ -12,15 +13,16 @@ namespace LaunchPad.AbstractUI.ViewModels
     /// </summary>
     public class AbstractMultiChoiceUIElementViewModel : AbstractUIViewModelBase
     {
-        private AbstractUIMetadataViewModel _selectedItem;
+        private int _selectedIndex;
 
         /// <inheritdoc />
         public AbstractMultiChoiceUIElementViewModel(AbstractMultiChoiceUIElement model)
             : base(model)
         {
             ItemSelectedCommand = new RelayCommand<SelectionChangedEventArgs>(OnItemSelected);
-            Items = model.Items.Select(x => new AbstractUIMetadataViewModel(x));
-            _selectedItem = new AbstractUIMetadataViewModel(model.SelectedItem);
+            Items = new ObservableCollection<AbstractUIMetadataViewModel>(model.Items.Select(x => new AbstractUIMetadataViewModel(x)));
+
+            SelectedIndex = model.Items.ToOrAsList().IndexOf(model.SelectedItem);
         }
 
         private void AttachEvents(AbstractMultiChoiceUIElement model)
@@ -35,22 +37,27 @@ namespace LaunchPad.AbstractUI.ViewModels
 
         private void Model_ItemSelected(object sender, AbstractUIMetadata e)
         {
-            SelectedItem = new AbstractUIMetadataViewModel(e);
-            ItemSelected?.Invoke(this, SelectedItem);
+            var selectedItem = new AbstractUIMetadataViewModel(e);
+            var index = Items.IndexOf(selectedItem);
+
+            SelectedIndex = index;
+
+            ItemSelected?.Invoke(this, selectedItem);
         }
 
         private void OnItemSelected(SelectionChangedEventArgs args)
         {
-            SelectedItem = (AbstractUIMetadataViewModel)args.AddedItems[0];
-            ItemSelected?.Invoke(this, SelectedItem);
+            var selectedItem = (AbstractUIMetadataViewModel)args.AddedItems[0];
 
-            ((AbstractMultiChoiceUIElement) Model).SelectItem((AbstractUIMetadata)SelectedItem.Model);
+            ItemSelected?.Invoke(this, selectedItem);
+
+            ((AbstractMultiChoiceUIElement) Model).SelectItem((AbstractUIMetadata)selectedItem.Model);
         }
 
         /// <summary>
         /// The list of items to be displayed in the UI.
         /// </summary>
-        public IEnumerable<AbstractUIMetadataViewModel> Items { get; }
+        public ObservableCollection<AbstractUIMetadataViewModel> Items { get; }
 
         /// <inheritdoc cref="AbstractMultiChoicePreferredDisplayMode"/>
         public AbstractMultiChoicePreferredDisplayMode PreferredDisplayMode => ((AbstractMultiChoiceUIElement)Model).PreferredDisplayMode;
@@ -59,14 +66,14 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// The current selected item.
         /// </summary>
         /// <remarks>Must be specified on object creation, even if the item is just a prompt to choose something.</remarks>
-        public AbstractUIMetadataViewModel SelectedItem
+        public int SelectedIndex
         {
-            get => _selectedItem;
-            set => SetProperty(ref _selectedItem, value, nameof(SelectedItem));
+            get => _selectedIndex;
+            set => SetProperty(ref _selectedIndex, value);
         }
 
         /// <summary>
-        /// Fires when the <see cref="SelectedItem"/> is changed.
+        /// Fires when the <see cref="SelectedIndex"/> is changed.
         /// </summary>
         public event EventHandler<AbstractUIMetadataViewModel>? ItemSelected;
 
