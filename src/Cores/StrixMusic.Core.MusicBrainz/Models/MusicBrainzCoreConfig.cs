@@ -130,6 +130,14 @@ namespace StrixMusic.Core.MusicBrainz.Models
             comboBox.ItemSelected += ComboBox_ItemSelected;
             radioButtons.ItemSelected += ComboBox_ItemSelected;
 
+            var boolUi = new AbstractBooleanUIElement("booleanTest", "On")
+            {
+                State = true,
+                Title = "AbstractBoolean test",
+            };
+
+            boolUi.StateChanged += BoolUi_StateChanged;
+
             AbstractUIElements = new List<AbstractUIElementGroup>()
             {
                 new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
@@ -139,6 +147,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     Items =  new List<AbstractUIElement>()
                     {
                         textBlock,
+                        boolUi,
                         comboBox,
                         radioButtons,
                         dataList,
@@ -150,6 +159,14 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     },
                 },
             };
+        }
+
+        private void BoolUi_StateChanged(object sender, bool e)
+        {
+            if (sender is AbstractBooleanUIElement boolUi)
+            {
+                boolUi.ChangeLabel(e ? "On" : "Off");
+            }
         }
 
         private void ComboBox_ItemSelected(object sender, AbstractUIMetadata e)

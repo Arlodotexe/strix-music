@@ -1,0 +1,28 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="LaunchPad.AbstractUI.Themes.AbstractBooleanUIElementTemplate"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:abstractUI="using:LaunchPad.AbstractUI.ViewModels"
+    xmlns:launchPad="using:LaunchPad"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core">
+
+    <DataTemplate x:Key="DefaultAbstractBooleanUIElementTemplate" x:DataType="abstractUI:AbstractBooleanViewModel">
+        <StackPanel>
+            <TextBlock Text="{x:Bind Title}" FontSize="24" ToolTipService.ToolTip="{x:Bind TooltipText}"
+                       Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Title)}" />
+
+            <TextBlock Text="{x:Bind Subtitle}" FontSize="16" FontWeight="SemiLight" Opacity="0.75"
+                       Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+
+            <ToggleSwitch ToolTipService.ToolTip="{x:Bind TooltipText}" OffContent="{Binding Label}" OnContent="{Binding Label}" IsOn="{Binding IsToggled, Mode=TwoWay}">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Toggled">
+                        <core:InvokeCommandAction Command="{x:Bind ToggledCommand}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </ToggleSwitch>
+        </StackPanel>
+    </DataTemplate>
+
+</ResourceDictionary>
