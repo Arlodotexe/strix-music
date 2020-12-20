@@ -36,7 +36,6 @@ namespace LaunchPad.AbstractUI.ViewModels
 
                 var requestAddMetadataItem = new AbstractUIMetadata("requestAddItem")
                 {
-                    IconCode = "\uE710",
                     Title = "Add new",
                 };
 
@@ -53,6 +52,8 @@ namespace LaunchPad.AbstractUI.ViewModels
             foreach (var item in Items)
             {
                 item.ItemRemoved += Items_ItemRemoved;
+                item.ItemAddRequested += Items_ItemAddRequested;
+
             }
         }
 
@@ -63,6 +64,7 @@ namespace LaunchPad.AbstractUI.ViewModels
             foreach (var item in Items)
             {
                 item.ItemRemoved -= Items_ItemRemoved;
+                item.ItemAddRequested -= Items_ItemAddRequested;
             }
         }
 
@@ -74,6 +76,8 @@ namespace LaunchPad.AbstractUI.ViewModels
             RemoveItem(viewModel);
         }
 
+        private void Items_ItemAddRequested(object sender, EventArgs e) => RequestNewItem();
+
         private void Model_ItemsChanged(object sender, System.Collections.Generic.IReadOnlyList<CollectionChangedEventItem<AbstractUIMetadata>> addedItems, System.Collections.Generic.IReadOnlyList<CollectionChangedEventItem<AbstractUIMetadata>> removedItems)
         {
             using (Threading.UIThread)
@@ -82,6 +86,7 @@ namespace LaunchPad.AbstractUI.ViewModels
                 {
                     var newViewModel = new AbstractMutableDataListItemViewModel(item.Data);
                     newViewModel.ItemRemoved += Items_ItemRemoved;
+                    newViewModel.ItemAddRequested += Items_ItemAddRequested;
 
                     if (item.Index == Items.Count)
                         Items.Add(newViewModel);

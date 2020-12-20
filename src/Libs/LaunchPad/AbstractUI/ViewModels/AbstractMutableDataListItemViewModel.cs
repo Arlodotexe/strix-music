@@ -18,23 +18,45 @@ namespace LaunchPad.AbstractUI.ViewModels
             : base(metadata)
         {
             RequestRemoveCommand = new RelayCommand(RemoveSelf);
+            RequestAddCommand = new RelayCommand(RequestAdd);
+
+            VisibleIfIsAddItem = Id == "requestAddItem" ? Visibility.Visible : Visibility.Collapsed;
+            CollapsedIfIsAddItem = Id == "requestAddItem" ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void RemoveSelf() => ItemRemoved?.Invoke(this, EventArgs.Empty);
 
+        private void RequestAdd() => ItemAddRequested?.Invoke(this, EventArgs.Empty);
+
         /// <summary>
-        /// Fires when the user requests to remove the item.
+        /// Raised when the user requests to remove the item.
         /// </summary>
         public event EventHandler? ItemRemoved;
 
         /// <summary>
-        /// Run this command to request the removal of this item.
+        /// Raised when the user wants to add a new item.
+        /// </summary>
+        public event EventHandler? ItemAddRequested;
+
+        /// <summary>
+        /// Run this command to request the removal of this item from the containing list.
         /// </summary>
         public IRelayCommand RequestRemoveCommand { get; set; }
 
         /// <summary>
+        /// Run this command to request a new item be added to the containing list.
+        /// </summary>
+        public IRelayCommand RequestAddCommand { get; set; }
+
+        /// <summary>
+        /// If the current data is for the item is used to request a new item, this returns <see cref="Visibility.Collapsed"/>.
+        /// </summary>
+        public Visibility CollapsedIfIsAddItem { get; }
+
+
+        /// <summary>
         /// If the current data is for the item is used to request a new item, this returns <see cref="Visibility.Visible"/>.
         /// </summary>
-        public Visibility CollapsedIfIsAddItem => Id == "requestAddItem" ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility VisibleIfIsAddItem { get; }
     }
 }
