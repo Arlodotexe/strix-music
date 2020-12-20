@@ -17,34 +17,26 @@
                     <core:InvokeCommandAction Command="{x:Bind RequestNewItemCommand}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
-            <ListView.Style>
-                <Style TargetType="ListView">
-                    <Setter Property="ItemsPanel">
+            <ListView.ItemContainerTransitions>
+                <TransitionCollection />
+            </ListView.ItemContainerTransitions>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Template">
                         <Setter.Value>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <ContentPresenter />
+                            </ControlTemplate>
                         </Setter.Value>
                     </Setter>
                 </Style>
-            </ListView.Style>
-            <ListView.Template>
-                <ControlTemplate x:Key="ScrollessListView" TargetType="ListView">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-
-                        <ItemsPresenter Padding="{TemplateBinding Padding}"
-                                        Footer="{TemplateBinding Footer}"
-                                        FooterTemplate="{TemplateBinding FooterTemplate}"
-                                        FooterTransitions="{TemplateBinding FooterTransitions}"
-                                        Header="{TemplateBinding Header}"
-                                        HeaderTemplate="{TemplateBinding HeaderTemplate}"
-                                        HeaderTransitions="{TemplateBinding HeaderTransitions}" />
-
-                    </Border>
-                </ControlTemplate>
-            </ListView.Template>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="abstractUI:AbstractMutableDataListItemViewModel">
                     <Grid ToolTipService.ToolTip="{Binding TooltipText, Mode=OneWay}" Height="60">
