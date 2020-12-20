@@ -86,15 +86,22 @@ namespace LaunchPad.AbstractUI.ViewModels
             set => SetProperty(_imageSource, value, _imageSource, (u, n) => _imageSource = n);
         }
 
-        [Pure]
+        /// <summary>
+        /// If true, the <see cref="ImageSource"/> is valid and should display an image.
+        /// </summary>
+        public bool ImageSourceIsValid { get; set; }
+
         private ImageSource SetupImageSource(AbstractUIBase model)
         {
             if (Uri.TryCreate(model.ImagePath ?? string.Empty, UriKind.RelativeOrAbsolute, out Uri uri) && string.IsNullOrWhiteSpace(model.ImagePath))
             {
                 // If there's no image set, create a 1x1 transparent image as a placeholder.
                 // This ensures that bindings won't fail because of an unexpected null value.
+                ImageSourceIsValid = false;
                 return CreateEmptyImage();
             }
+
+            ImageSourceIsValid = true;
 
             var ext = Path.GetExtension(model.ImagePath);
 
