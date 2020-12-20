@@ -138,7 +138,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             boolUi.StateChanged += BoolUi_StateChanged;
 
-            AbstractUIElements = new List<AbstractUIElementGroup>()
+            AbstractUIElements = new List<AbstractUIElementGroup>
             {
                 new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
                 {
