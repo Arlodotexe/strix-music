@@ -34,7 +34,7 @@ namespace LaunchPad.AbstractUI.Themes
                     _ => throw new NotImplementedException(),
                 };
             }
-            
+
             if (item is AbstractDataListViewModel viewModel)
             {
                 return viewModel.PreferredDisplayMode switch

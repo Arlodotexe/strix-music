@@ -29,7 +29,7 @@ namespace OwlCore.AbstractUI.Models
         public IEnumerable<AbstractUIMetadata> Items { get; }
 
         /// <inheritdoc cref="AbstractMultiChoicePreferredDisplayMode"/>
-        public AbstractMultiChoicePreferredDisplayMode PreferredDisplayMode { get; }
+        public AbstractMultiChoicePreferredDisplayMode PreferredDisplayMode { get; set; }
 
         /// <summary>
         /// The current selected item.

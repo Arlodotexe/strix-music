@@ -53,7 +53,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             var richTextblock = new AbstractRichTextBlock(Guid.NewGuid().ToString(), "The initial value")
             {
-                Title="RichTextBlock Example",
+                Title = "RichTextBlock Example",
                 IconCode = "\uE2B1",
             };
 
@@ -121,7 +121,14 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 Title = "ComboBox test",
             };
 
+            var radioButtons = new AbstractMultiChoiceUIElement(id: "radioButtonsTest", multiChoiceItems[0], multiChoiceItems)
+            {
+                Title = "RadioButtons test",
+                PreferredDisplayMode = AbstractMultiChoicePreferredDisplayMode.RadioButtons,
+            };
+
             comboBox.ItemSelected += ComboBox_ItemSelected;
+            radioButtons.ItemSelected += ComboBox_ItemSelected;
 
             AbstractUIElements = new List<AbstractUIElementGroup>()
             {
@@ -133,6 +140,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     {
                         textBlock,
                         comboBox,
+                        radioButtons,
                         dataList,
                         dataListGrid,
                         mutableDataListGrid,

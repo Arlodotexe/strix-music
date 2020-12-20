@@ -8,6 +8,36 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:themes="using:LaunchPad.AbstractUI.Themes">
 
+    <DataTemplate x:Key="DefaultAbstractMultipleChoiceComboBoxTemplate" x:DataType="abstractUI:AbstractMultiChoiceUIElementViewModel">
+        <ComboBox ItemsSource="{x:Bind Items}" SelectedIndex="{x:Bind SelectedIndex, Mode=TwoWay}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="abstractUI:AbstractMultiChoiceItemViewModel">
+                    <TextBlock Text="{Binding Title}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="SelectionChanged">
+                    <core:InvokeCommandAction Command="{x:Bind ItemSelectedCommand}" />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </ComboBox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DefaultAbstractMultipleChoiceRadioButtonTemplate" x:DataType="abstractUI:AbstractMultiChoiceUIElementViewModel">
+        <ItemsControl ItemsSource="{x:Bind Items}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="abstractUI:AbstractMultiChoiceItemViewModel">
+                    <RadioButton Command="{x:Bind ItemSelectedCommand}" Content="{Binding Title}" GroupName="{Binding GroupId}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"  />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </DataTemplate>
+
     <DataTemplate x:Key="DefaultAbstractMultipleChoiceTemplate" x:DataType="abstractUI:AbstractMultiChoiceUIElementViewModel">
         <StackPanel>
             <TextBlock Text="{x:Bind Title}" FontSize="24" ToolTipService.ToolTip="{x:Bind TooltipText}" />
@@ -15,18 +45,12 @@
             <TextBlock Text="{x:Bind Subtitle}"  FontSize="16" FontWeight="SemiLight" Opacity="0.75" 
                        Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
 
-            <ComboBox ItemsSource="{x:Bind Items}" SelectedIndex="{x:Bind SelectedIndex, Mode=TwoWay}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate x:DataType="abstractUI:AbstractUIMetadataViewModel">
-                        <TextBlock Text="{Binding Title}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="SelectionChanged">
-                        <core:InvokeCommandAction Command="{x:Bind ItemSelectedCommand}" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-            </ComboBox>
+            <ContentControl Content="{x:Bind}" Margin="0,5,0,0">
+                <ContentControl.ContentTemplateSelector>
+                    <themes:AbstractMultiChoiceTypeTemplateSelector ComboBoxTemplate="{StaticResource DefaultAbstractMultipleChoiceComboBoxTemplate}"
+                                                                    RadioButtonTemplate="{StaticResource DefaultAbstractMultipleChoiceRadioButtonTemplate}"/>
+                </ContentControl.ContentTemplateSelector>
+            </ContentControl>
 
         </StackPanel>
     </DataTemplate>

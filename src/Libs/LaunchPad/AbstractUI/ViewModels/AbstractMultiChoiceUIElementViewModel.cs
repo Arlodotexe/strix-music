@@ -20,14 +20,28 @@ namespace LaunchPad.AbstractUI.ViewModels
             : base(model)
         {
             ItemSelectedCommand = new RelayCommand<SelectionChangedEventArgs>(OnItemSelected);
-            Items = new ObservableCollection<AbstractUIMetadataViewModel>(model.Items.Select(x => new AbstractUIMetadataViewModel(x)));
+            Items = new ObservableCollection<AbstractMultiChoiceItemViewModel>(model.Items.Select(x => CreateItemViewModel(x, model)));
 
             SelectedIndex = model.Items.ToOrAsList().IndexOf(model.SelectedItem);
         }
 
+        private AbstractMultiChoiceItemViewModel CreateItemViewModel(AbstractUIMetadata itemModel, AbstractMultiChoiceUIElement model)
+        {
+            var newItem = new AbstractMultiChoiceItemViewModel(itemModel, Id)
+            {
+                IsSelected = itemModel == model.SelectedItem
+            };
+
+            AttachEvents(model);
+
+            newItem.ItemSelected += ViewModelItem_OnSelected;
+
+            return newItem;
+        }
+
         private void AttachEvents(AbstractMultiChoiceUIElement model)
         {
-            model.ItemSelected += Model_ItemSelected;   
+            model.ItemSelected += Model_ItemSelected;
         }
 
         private void DetachEvents(AbstractMultiChoiceUIElement model)
@@ -35,9 +49,28 @@ namespace LaunchPad.AbstractUI.ViewModels
             model.ItemSelected -= Model_ItemSelected;
         }
 
+        private void ViewModelItem_OnSelected(object sender, EventArgs e)
+        {
+            if (sender is AbstractMultiChoiceItemViewModel selectedItem)
+            {
+                foreach (var item in Items)
+                {
+                    item.IsSelected = item == selectedItem;
+                }
+
+                var index = Items.IndexOf(selectedItem);
+
+                SelectedIndex = index;
+
+                ItemSelected?.Invoke(this, selectedItem);
+
+                ((AbstractMultiChoiceUIElement)Model).SelectItem((AbstractUIMetadata)selectedItem.Model);
+            }
+        }
+
         private void Model_ItemSelected(object sender, AbstractUIMetadata e)
         {
-            var selectedItem = new AbstractUIMetadataViewModel(e);
+            var selectedItem = new AbstractMultiChoiceItemViewModel(e, Id);
             var index = Items.IndexOf(selectedItem);
 
             SelectedIndex = index;
@@ -51,13 +84,13 @@ namespace LaunchPad.AbstractUI.ViewModels
 
             ItemSelected?.Invoke(this, selectedItem);
 
-            ((AbstractMultiChoiceUIElement) Model).SelectItem((AbstractUIMetadata)selectedItem.Model);
+            ((AbstractMultiChoiceUIElement)Model).SelectItem((AbstractUIMetadata)selectedItem.Model);
         }
 
         /// <summary>
         /// The list of items to be displayed in the UI.
         /// </summary>
-        public ObservableCollection<AbstractUIMetadataViewModel> Items { get; }
+        public ObservableCollection<AbstractMultiChoiceItemViewModel> Items { get; }
 
         /// <inheritdoc cref="AbstractMultiChoicePreferredDisplayMode"/>
         public AbstractMultiChoicePreferredDisplayMode PreferredDisplayMode => ((AbstractMultiChoiceUIElement)Model).PreferredDisplayMode;
