@@ -15,22 +15,20 @@
                             <Grid>
                                 <Pivot x:Name="PART_Pivot">
                                     <Pivot.LeftHeader>
-                                        <TextBlock Grid.Column="1" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0"/>
+                                        <TextBlock x:Uid="/StrixUI/LibraryTB" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0" Grid.Column="1" />
                                     </Pivot.LeftHeader>
-                                    <PivotItem x:Name="PART_OverviewPivotItem" Header="Overview">
-
+                                    <PivotItem x:Uid="/StrixUI/OverviewPVI" x:Name="PART_OverviewPivotItem" Header="Overview">
                                     </PivotItem>
-                                    <PivotItem x:Name="PART_SongsPivotItem" Header="Songs">
+                                    <PivotItem x:Uid="/StrixUI/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs">
                                         <defaultcontrols:TrackCollection />
                                     </PivotItem>
-                                    <PivotItem x:Name="PART_AlbumsPivotItem" Header="Albums">
+                                    <PivotItem x:Uid="/StrixUI/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums">
                                         <defaultcontrols:AlbumCollection />
                                     </PivotItem>
-                                    <PivotItem x:Name="PART_ArtistsPivotItem" Header="Artists">
+                                    <PivotItem x:Uid="/StrixUI/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists">
                                         <defaultcontrols:ArtistCollection />
                                     </PivotItem>
-                                    <PivotItem x:Name="PART_PlaylistsPivotItem" Header="Playlists">
-
+                                    <PivotItem x:Uid="/StrixUI/PlaylistsPVI" x:Name="PART_PlaylistsPivotItem" Header="Playlists">
                                     </PivotItem>
                                 </Pivot>
 

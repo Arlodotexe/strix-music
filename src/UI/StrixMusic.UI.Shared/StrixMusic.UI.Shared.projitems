@@ -59,8 +59,14 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\MusicCommon.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\StrixStartup.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\StrixUI.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\MusicCommon.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Resources.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\StrixStartup.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\StrixUI.resw" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Assets\Strix\logo.svg" />
