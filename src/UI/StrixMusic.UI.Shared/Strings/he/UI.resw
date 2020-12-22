@@ -171,6 +171,18 @@
   <data name="LibraryTB.Text" xml:space="preserve">
     <value>הספרייה</value>
   </data>
+  <data name="MyMusic" xml:space="preserve">
+    <value>המוסיקה שלי</value>
+  </data>
+  <data name="MyMusicNVI.Content" xml:space="preserve">
+    <value>המוסיקה שלי</value>
+  </data>
+  <data name="MyMusicPIV.Title" xml:space="preserve">
+    <value>המוסיקה שלי</value>
+  </data>
+  <data name="MyMusicTB.Text" xml:space="preserve">
+    <value>המוסיקה שלי</value>
+  </data>
   <data name="NowPlaying" xml:space="preserve">
     <value>מנגן כעת</value>
   </data>
