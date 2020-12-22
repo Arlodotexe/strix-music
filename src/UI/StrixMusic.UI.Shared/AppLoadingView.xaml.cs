@@ -73,7 +73,7 @@ namespace StrixMusic.Shared
         {
             // UpdateStatus("Initializing services");
             UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.StrixStartup, 
+                Localization.StringContext.Startup, 
                 "InitServices"));
 
             IServiceCollection services = new ServiceCollection();
@@ -87,7 +87,7 @@ namespace StrixMusic.Shared
 
             // UpdateStatus("Initializing services");
             UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.StrixStartup,
+                Localization.StringContext.Startup,
                 "InitServices"));
 
             services.AddSingleton(contextualServiceLocator);
@@ -104,7 +104,7 @@ namespace StrixMusic.Shared
 
             // UpdateStatus("Initializing filesystem");
             UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.StrixStartup,
+                Localization.StringContext.Startup,
                 "InitFilesystem"));
 
             await fileSystemService.InitAsync();
@@ -118,14 +118,14 @@ namespace StrixMusic.Shared
             {
                 // UpdateStatus("Fatal internal error: Settings service wasn't initialized.");
                 UpdateStatus(Localization.GetLocalizedString(
-                    Localization.StringContext.StrixStartup,
+                    Localization.StringContext.Startup,
                     "ErrSettingsInit"));
                 return;
             }
 
             // UpdateStatus("Initializing core registry");
             UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.StrixStartup,
+                Localization.StringContext.Startup,
                 "InitCoreReg"));
             var coreRegistry = await Task.Run(() => _settingsService.GetValue<Dictionary<string, Type>>(nameof(SettingsKeys.CoreRegistry)));
 
@@ -136,7 +136,7 @@ namespace StrixMusic.Shared
 
             // UpdateStatus("Creating core instances");
             UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.StrixStartup,
+                Localization.StringContext.Startup,
                 "CreatingCores"));
             var cores = await Task.Run(() => coreRegistry.Select(x => (ICore)Activator.CreateInstance(x.Value, x.Key)).ToList());
 
@@ -148,7 +148,7 @@ namespace StrixMusic.Shared
 
             //UpdateStatus("Initializing cores");
             UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.StrixStartup,
+                Localization.StringContext.Startup,
                 "InitCores"));
             var initData = await cores.InParallel(CreateCoreInitDataAsync);
 
@@ -156,7 +156,7 @@ namespace StrixMusic.Shared
 
             // UpdateStatus("Setting up media players");
             UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.StrixStartup,
+                Localization.StringContext.Startup,
                 "SetupMedia"));
             cores.ForEach(SetupMediaPlayer);
 

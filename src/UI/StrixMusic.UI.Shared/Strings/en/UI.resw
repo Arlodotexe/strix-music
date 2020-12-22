@@ -117,17 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Albums" xml:space="preserve">
+    <value>Albums</value>
+  </data>
   <data name="AlbumsPVI.Header" xml:space="preserve">
     <value>Albums</value>
   </data>
   <data name="AlbumsTB.Text" xml:space="preserve">
     <value>Albums</value>
   </data>
+  <data name="Artists" xml:space="preserve">
+    <value>Artists</value>
+  </data>
   <data name="ArtistsPVI.Header" xml:space="preserve">
     <value>Artists</value>
   </data>
   <data name="ArtistsTB.Text" xml:space="preserve">
     <value>Artists</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Browse</value>
   </data>
   <data name="BrowseBTN.Content" xml:space="preserve">
     <value>Browse</value>
@@ -138,6 +147,9 @@
   <data name="BrowseTB.Text" xml:space="preserve">
     <value>Browse</value>
   </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
   <data name="HomeBTN.Content" xml:space="preserve">
     <value>Home</value>
   </data>
@@ -146,6 +158,9 @@
   </data>
   <data name="HomeTB.Text" xml:space="preserve">
     <value>Home</value>
+  </data>
+  <data name="Library" xml:space="preserve">
+    <value>Library</value>
   </data>
   <data name="LibraryBTN.Content" xml:space="preserve">
     <value>Library</value>
@@ -156,6 +171,9 @@
   <data name="LibraryTB.Text" xml:space="preserve">
     <value>Library</value>
   </data>
+  <data name="NowPlaying" xml:space="preserve">
+    <value>Now Playing</value>
+  </data>
   <data name="NowPlayingBTN.Content" xml:space="preserve">
     <value>Now Playing</value>
   </data>
@@ -165,8 +183,14 @@
   <data name="NowPlayingTB.Text" xml:space="preserve">
     <value>Now Playing</value>
   </data>
+  <data name="Overview" xml:space="preserve">
+    <value>Overview</value>
+  </data>
   <data name="OverviewPVI.Header" xml:space="preserve">
     <value>Overview</value>
+  </data>
+  <data name="Playlists" xml:space="preserve">
+    <value>Playlists</value>
   </data>
   <data name="PlaylistsPVI.Header" xml:space="preserve">
     <value>Playlists</value>
@@ -174,11 +198,17 @@
   <data name="PlaylistsTB.Text" xml:space="preserve">
     <value>Playlists</value>
   </data>
+  <data name="Recent" xml:space="preserve">
+    <value>Recent</value>
+  </data>
   <data name="RecentBTN.Content" xml:space="preserve">
     <value>Recent</value>
   </data>
   <data name="RecentNVI.Content" xml:space="preserve">
     <value>Recent</value>
+  </data>
+  <data name="RecentPlayed" xml:space="preserve">
+    <value>Recently Played</value>
   </data>
   <data name="RecentPlayedBTN.Content" xml:space="preserve">
     <value>Recently Played</value>
@@ -192,6 +222,15 @@
   <data name="RecentTB.Text" xml:space="preserve">
     <value>Recent</value>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SearchTB.Text" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Songs" xml:space="preserve">
+    <value>Songs</value>
+  </data>
   <data name="SongsPVI.Header" xml:space="preserve">
     <value>Songs</value>
   </data>
@@ -201,11 +240,17 @@
   <data name="SongTB.Text" xml:space="preserve">
     <value>Song</value>
   </data>
+  <data name="Tracks" xml:space="preserve">
+    <value>Tracks</value>
+  </data>
   <data name="TracksPVI.Header" xml:space="preserve">
     <value>Tracks</value>
   </data>
   <data name="TracksTB.Text" xml:space="preserve">
     <value>Tracks</value>
+  </data>
+  <data name="Your Library" xml:space="preserve">
+    <value>Your Library</value>
   </data>
   <data name="YourLibraryBTN.Content" xml:space="preserve">
     <value>Your Library</value>

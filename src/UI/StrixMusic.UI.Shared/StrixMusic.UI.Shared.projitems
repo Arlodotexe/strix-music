@@ -61,12 +61,14 @@
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\MusicCommon.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\StrixStartup.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\StrixUI.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Startup.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\SuperShell.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\UI.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\MusicCommon.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Resources.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\StrixStartup.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\StrixUI.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Startup.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\SuperShell.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\UI.resw" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Assets\Strix\logo.svg" />

@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
         <!-- TODO: Destroy and replace with the default settings control -->
 
-        <TextBlock Text="App Skin" FontSize="16" Margin="0,0,0,7" />
+        <TextBlock x:Uid="/SuperShell/AppSkinTB" Text="App Skin" FontSize="16" Margin="0,0,0,7" />
 
         <ComboBox x:Name="ShellSelector" Grid.Row="1" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
                       SelectionChanged="ComboBox_SelectionChanged">

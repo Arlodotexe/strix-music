@@ -15,12 +15,15 @@ namespace StrixMusic.Helpers
         /// </summary>
         public enum StringContext
         {
-            StrixStartup,
+            Startup,
+            SuperShell,
             MusicCommon,
             Resources,
         }
 
-        private static ResourceLoader StrixStartup { get; } = ResourceLoader.GetForCurrentView("StrixStartup");
+        private static ResourceLoader Startup { get; } = ResourceLoader.GetForCurrentView("Startup");
+
+        private static ResourceLoader SuperShell { get; } = ResourceLoader.GetForCurrentView("SuperShell");
 
         private static ResourceLoader MusicCommon { get; } = ResourceLoader.GetForCurrentView("MusicCommon");
 
@@ -36,8 +39,10 @@ namespace StrixMusic.Helpers
         {
             switch (context)
             {
-                case StringContext.StrixStartup:
-                    return StrixStartup.GetString(key);
+                case StringContext.Startup:
+                    return Startup.GetString(key);
+                case StringContext.SuperShell:
+                    return SuperShell.GetString(key);
                 case StringContext.MusicCommon:
                     return MusicCommon.GetString(key);
             }

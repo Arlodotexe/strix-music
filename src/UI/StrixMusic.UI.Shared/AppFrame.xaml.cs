@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using OwlCore.Helpers;
+using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.Navigation;
@@ -88,9 +89,17 @@ namespace StrixMusic.Shared
             {
                 case SuperShell superShell:
                     if (e.IsOverlay)
-                        OverlayPresenter.Show(superShell, "Settings");
+                    {
+                        OverlayPresenter.Show(
+                            superShell,
+                            Localization.GetLocalizedString(
+                                Localization.StringContext.SuperShell,
+                                "Settings"));
+                    }
                     else
+                    {
                         PART_ContentPresenter.Content = superShell;
+                    }
 
                     break;
                 case MainPage mainPage:
