@@ -17,11 +17,13 @@ namespace StrixMusic.Helpers
         {
             StrixStartup,
             MusicCommon,
-            Resources
+            Resources,
         }
 
         private static ResourceLoader StrixStartup { get; } = ResourceLoader.GetForCurrentView("StrixStartup");
+
         private static ResourceLoader MusicCommon { get; } = ResourceLoader.GetForCurrentView("MusicCommon");
+
         private static ResourceLoader Resources { get; } = ResourceLoader.GetForCurrentView("Resources");
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace StrixMusic.Helpers
         /// <returns>A localized string.</returns>
         public static string GetLocalizedString(StringContext context, string key)
         {
-            switch(context)
+            switch (context)
             {
                 case StringContext.StrixStartup:
                     return StrixStartup.GetString(key);
