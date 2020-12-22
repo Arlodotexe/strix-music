@@ -120,4 +120,7 @@
   <data name="AppDisplayName" xml:space="preserve">
     <value>סטריקס מוסיקה</value>
   </data>
+  <data name="ResourceError" xml:space="preserve">
+    <value>מקור משאבים לא נמצא</value>
+  </data>
 </root>

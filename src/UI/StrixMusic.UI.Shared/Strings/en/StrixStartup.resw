@@ -117,10 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AppDisplayName" xml:space="preserve">
-    <value>Strix Music</value>
+  <data name="CreatingCores" xml:space="preserve">
+    <value>Creating core instances</value>
   </data>
-  <data name="ResourceError" xml:space="preserve">
-    <value>Resource source not found</value>
+  <data name="ErrSettingsInit" xml:space="preserve">
+    <value>Fatal internal error: Settings service wasn't initialized.</value>
+  </data>
+  <data name="InitCoreReg" xml:space="preserve">
+    <value>Initializing core registry</value>
+  </data>
+  <data name="InitCores" xml:space="preserve">
+    <value>Initializing cores</value>
+  </data>
+  <data name="InitFilesystem" xml:space="preserve">
+    <value>Initializing filesystem</value>
+  </data>
+  <data name="InitServices" xml:space="preserve">
+    <value>Initializing services</value>
+  </data>
+  <data name="SetupMedia" xml:space="preserve">
+    <value>Setting up media players</value>
   </data>
 </root>
