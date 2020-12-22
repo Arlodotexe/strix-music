@@ -29,7 +29,7 @@
                         <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="/StrixUI/NowPlayingNVI" x:Name="NowPlaying" Content="Now Playing">
+                <NavigationViewItem x:Uid="/StrixUI/NowPlayingNVI" x:Name="NowPlayingItem" Content="Now Playing">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
