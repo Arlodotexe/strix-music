@@ -18,18 +18,18 @@
                 <AutoSuggestBox x:Name="AutoSuggest" QuerySubmitted="AutoSuggestBox_QuerySubmitted"/>
             </NavigationView.AutoSuggestBox>
             <NavigationView.MenuItems>
-                <NavigationViewItem x:Name="HomeItem" Content="Home">
+                <NavigationViewItem x:Uid="/StrixUI/HomeNVI" x:Name="HomeItem" Content="Home">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE10F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Recently Played" Tag="RecentlyPlayedItem">
+                <NavigationViewItem x:Uid="/StrixUI/RecentPlayedNVI" Content="Recently Played" Tag="RecentlyPlayedItem">
                     <NavigationViewItem.Icon>
                         <!--<SymbolIcon Symbol="Clock"/>-->
                         <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="NowPlaying" Content="Now Playing">
+                <NavigationViewItem x:Uid="/StrixUI/NowPlayingNVI" x:Name="NowPlaying" Content="Now Playing">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>

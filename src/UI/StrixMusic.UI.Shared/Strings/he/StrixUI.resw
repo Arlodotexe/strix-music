@@ -135,10 +135,10 @@
   <data name="HomeTB.Text" xml:space="preserve">
     <value>מסך הבית</value>
   </data>
-  <data name="NowPlayingBTN.Context" xml:space="preserve">
+  <data name="NowPlayingBTN.Content" xml:space="preserve">
     <value>משחקים כעת</value>
   </data>
-  <data name="NowPlayingNVI.Context" xml:space="preserve">
+  <data name="NowPlayingNVI.Content" xml:space="preserve">
     <value>משחקים כעת</value>
   </data>
   <data name="NowPlayingTB.Text" xml:space="preserve">
@@ -149,6 +149,15 @@
   </data>
   <data name="RecentNVI.Content" xml:space="preserve">
     <value>לאחרונה</value>
+  </data>
+  <data name="RecentPlayedBTN.Content" xml:space="preserve">
+    <value>שיחק לאחרונה</value>
+  </data>
+  <data name="RecentPlayedNVI.Content" xml:space="preserve">
+    <value>שיחק לאחרונה</value>
+  </data>
+  <data name="RecentPlayedTB.Text" xml:space="preserve">
+    <value>שיחק לאחרונה</value>
   </data>
   <data name="RecentTB.Text" xml:space="preserve">
     <value>לאחרונה</value>
