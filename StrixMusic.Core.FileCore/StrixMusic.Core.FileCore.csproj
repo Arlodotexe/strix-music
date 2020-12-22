@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\src\Libs\OwlCore\OwlCore.csproj" />
     <ProjectReference Include="..\src\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
 
