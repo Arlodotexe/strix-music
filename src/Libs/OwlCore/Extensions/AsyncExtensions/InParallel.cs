@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
@@ -20,13 +22,14 @@ namespace OwlCore.Extensions
         /// <returns>A task representing the completion of all tasks.</returns>
         public static Task InParallel<T>(this IEnumerable<T> items, Func<T, Task> func)
         {
+            // Since this overload is using existing tasks, we don't have any overhead creating them for use in <see cref="Task.WhenAll(IEnumerable{Task})"/>.
             var tasks = items.Select(func);
 
             return Task.WhenAll(tasks);
         }
 
         /// <summary>
-        /// Runs a specific task in parallel from a list of <typeparamref name="T"/>.
+        /// Runs a specific task in parallel from a list of <typeparamref name="T"/>, returning all the completed values.
         /// </summary>
         /// <typeparam name="T">The type to operate on.</typeparam>
         /// <typeparam name="T2">The return type.</typeparam>
@@ -35,46 +38,56 @@ namespace OwlCore.Extensions
         /// <returns>A <see cref="Task"/> representing the completion of all tasks. The result is an array of all the returned values.</returns>
         public static Task<T2[]> InParallel<T, T2>(this IEnumerable<T> items, Func<T, Task<T2>> func)
         {
+            // Since this overload is using existing tasks, we don't have any overhead creating them for use in <see cref="Task.WhenAll(IEnumerable{Task})"/>.
             var tasks = items.Select(func);
 
             return Task.WhenAll(tasks);
         }
 
         /// <summary>
-        /// Runs a specific task in parallel from a list of <typeparamref name="T"/>.
+        /// Runs an action in parallel from a list of <typeparamref name="T"/> on a background thread.
         /// </summary>
         /// <typeparam name="T">The type to operate on.</typeparam>
         /// <param name="items">The source items.</param>
         /// <param name="func">Returns the action to run in parallel, given <typeparamref name="T"/>.</param>
-        /// <returns>A <see cref="Task"/> representing the completion of all tasks. The result is an array of all the returned values.</returns>
-        public static Task InParallel<T>(this IEnumerable<T> items, Func<T, Action> func)
+        /// <param name="cancellationToken">A <see cref="CancellationTokenSource"/> used to cancel the task.</param>
+        /// <returns>A <see cref="Task"/> representing the completion of all tasks.</returns>
+        public static Task InParallel<T>(this IEnumerable<T> items, Func<T, Action> func, CancellationTokenSource? cancellationToken = null)
         {
-            var actions = items.Select(x =>
-            {
-                var action = func(x);
-                return Task.Run(action);
-            });
-
-            return Task.WhenAll(actions);
+            cancellationToken ??= new CancellationTokenSource();
+            return Task.Run(() => Parallel.ForEach(items, x => func(x)()), cancellationToken.Token);
         }
 
         /// <summary>
-        /// Runs a lambda in parallel from a list of <typeparamref name="T"/>.
+        /// Runs an action in parallel from a list of <typeparamref name="T"/>, returning all the completed values.
         /// </summary>
         /// <typeparam name="T">The type to operate on.</typeparam>
         /// <typeparam name="T2">The return type.</typeparam>
         /// <param name="items">The source items.</param>
         /// <param name="func">Returns the action to run in parallel, given <typeparamref name="T"/>.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationTokenSource"/> used to cancel the task.</param>
         /// <returns>A <see cref="Task"/> representing the completion of all tasks. The result is an array of all the returned values.</returns>
-        public static Task<T2[]> InParallel<T, T2>(this IEnumerable<T> items, Func<T, Func<T2>> func)
+        public static Task<T2[]> InParallel<T, T2>(this IEnumerable<T> items, Func<T, Func<T2>> func, CancellationTokenSource? cancellationToken = null)
         {
-            var actions = items.Select(x =>
-            {
-                var action = func(x);
-                return Task.Run(action);
-            });
+            cancellationToken ??= new CancellationTokenSource();
 
-            return Task.WhenAll(actions);
+            return Task.Run(() =>
+            {
+                object localLockObject = new object();
+                var enumerable = items as T[] ?? items.ToArray();
+
+                var resultCollection = new T2[enumerable.Length];
+
+                Parallel.For(0, enumerable.Length, (i, x) =>
+                {
+                    cancellationToken.Token.Register(x.Stop);
+
+                    lock (localLockObject)
+                        resultCollection[i] = (func(enumerable[i])());
+                });
+
+                return resultCollection.ToArray();
+            }, cancellationToken.Token);
         }
     }
 }
