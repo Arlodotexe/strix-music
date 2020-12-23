@@ -17,7 +17,8 @@ namespace StrixMusic.Helpers
         {
             Startup,
             SuperShell,
-            MusicCommon,
+            Common,
+            Music,
             Resources,
         }
 
@@ -25,7 +26,9 @@ namespace StrixMusic.Helpers
 
         private static ResourceLoader SuperShell { get; } = ResourceLoader.GetForCurrentView("SuperShell");
 
-        private static ResourceLoader MusicCommon { get; } = ResourceLoader.GetForCurrentView("MusicCommon");
+        private static ResourceLoader Common { get; } = ResourceLoader.GetForCurrentView("Common");
+
+        private static ResourceLoader Music { get; } = ResourceLoader.GetForCurrentView("Music");
 
         private static ResourceLoader Resources { get; } = ResourceLoader.GetForCurrentView("Resources");
 
@@ -43,8 +46,10 @@ namespace StrixMusic.Helpers
                     return Startup.GetString(key);
                 case StringContext.SuperShell:
                     return SuperShell.GetString(key);
-                case StringContext.MusicCommon:
-                    return MusicCommon.GetString(key);
+                case StringContext.Common:
+                    return Common.GetString(key);
+                case StringContext.Music:
+                    return Music.GetString(key);
             }
 
             return Resources.GetString("ResourceError");

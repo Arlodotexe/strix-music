@@ -87,26 +87,26 @@
                         <Button Grid.Column="0" Style="{StaticResource TopBarButton}">
                             <StackPanel Orientation="Horizontal">
                                 <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                <TextBlock x:Uid="/UI/NowPlayingTB" Text="Now Playing" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                <TextBlock x:Uid="/Music/NowPlayingTB" Text="Now Playing" VerticalAlignment="Center" Margin="8,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <Button x:Name="HomeTopButton" Grid.Column="1" Style="{StaticResource TopBarButton}" Click="NavButtonClicked">
                             <StackPanel Orientation="Horizontal">
                                 <FontIcon Glyph="&#xE10F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                <TextBlock x:Uid="/UI/HomeTB" Text="Home" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                <TextBlock x:Uid="/Common/HomeTB" Text="Home" VerticalAlignment="Center" Margin="8,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="2" Style="{StaticResource TopBarButton}">
                             <StackPanel Orientation="Horizontal">
                                 <!--<SymbolIcon Symbol="Clock"/>-->
                                 <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                <TextBlock x:Uid="/UI/RecentTB" Text="Recent" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                <TextBlock x:Uid="/Music/RecentTB" Text="Recent" VerticalAlignment="Center" Margin="8,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="3" Style="{StaticResource TopBarButton}">
                             <StackPanel Orientation="Horizontal">
                                 <FontIcon Glyph="&#xEB44;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                <TextBlock x:Uid="/UI/BrowseTB" Text="Browse" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                <TextBlock x:Uid="/Music/BrowseTB" Text="Browse" VerticalAlignment="Center" Margin="8,0,0,0"/>
                             </StackPanel>
                         </Button>
                     </Grid>
@@ -145,33 +145,33 @@
                         <Button Grid.Column="0" Style="{StaticResource GenericBarButton}">
                             <StackPanel>
                                 <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                <TextBlock x:Uid="/UI/NowPlayingTB" Text="Now Playing" FontSize="8"/>
+                                <TextBlock x:Uid="/Music/NowPlayingTB" Text="Now Playing" FontSize="8"/>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="1" Style="{StaticResource GenericBarButton}">
                             <StackPanel>
                                 <!--<SymbolIcon Symbol="Clock"/>-->
                                 <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                <TextBlock x:Uid="/UI/RecentTB" Text="Recent" FontSize="8"/>
+                                <TextBlock x:Uid="/Music/RecentTB" Text="Recent" FontSize="8"/>
                             </StackPanel>
                         </Button>
                         <Button x:Name="HomeBottomButton" Grid.Column="2" Style="{StaticResource GenericBarButton}" Click="NavButtonClicked">
                             <StackPanel>
                                 <FontIcon Glyph="&#xE10F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                <TextBlock x:Uid="/UI/HomeTB" Text="Home" FontSize="8"/>
+                                <TextBlock x:Uid="/Common/HomeTB" Text="Home" FontSize="8"/>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="3" Style="{StaticResource GenericBarButton}">
                             <StackPanel>
                                 <FontIcon Glyph="&#xEB44;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                <TextBlock x:Uid="/UI/BrowseTB" Text="Browse" FontSize="8"/>
+                                <TextBlock x:Uid="/Music/BrowseTB" Text="Browse" FontSize="8"/>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="4" Style="{StaticResource GenericBarButton}">
                             <StackPanel>
                                 <!--<SymbolIcon Symbol="Find"/>-->
                                 <FontIcon Glyph="&#xE094;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                <TextBlock x:Uid="/UI/SearchTB" Text="Search" FontSize="8"/>
+                                <TextBlock x:Uid="/Common/SearchTB" Text="Search" FontSize="8"/>
                             </StackPanel>
                         </Button>
                     </Grid>

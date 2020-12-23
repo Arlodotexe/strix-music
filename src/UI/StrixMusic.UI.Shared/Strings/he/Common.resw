@@ -117,31 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Album" xml:space="preserve">
-    <value>Album</value>
+  <data name="Home" xml:space="preserve">
+    <value>מסך הבית</value>
   </data>
-  <data name="Albums" xml:space="preserve">
-    <value>Albums</value>
+  <data name="HomeBTN.Content" xml:space="preserve">
+    <value>מסך הבית</value>
   </data>
-  <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+  <data name="HomeNVI.Content" xml:space="preserve">
+    <value>מסך הבית</value>
   </data>
-  <data name="Artists" xml:space="preserve">
-    <value>Artists</value>
+  <data name="HomeTB.Text" xml:space="preserve">
+    <value>מסך הבית</value>
   </data>
-  <data name="Music" xml:space="preserve">
-    <value>Music</value>
+  <data name="Overview" xml:space="preserve">
+    <value>סקירה כללית</value>
   </data>
-  <data name="Playlist" xml:space="preserve">
-    <value>Playlist</value>
+  <data name="OverviewPVI.Header" xml:space="preserve">
+    <value>סקירה כללית</value>
   </data>
-  <data name="Playlists" xml:space="preserve">
-    <value>Playlists</value>
+  <data name="Search" xml:space="preserve">
+    <value>חיפוש</value>
   </data>
-  <data name="Song" xml:space="preserve">
-    <value>Song</value>
-  </data>
-  <data name="Songs" xml:space="preserve">
-    <value>Songs</value>
+  <data name="SearchTB.Text" xml:space="preserve">
+    <value>חיפוש</value>
   </data>
 </root>

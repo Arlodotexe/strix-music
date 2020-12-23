@@ -15,20 +15,20 @@
                             <Grid>
                                 <Pivot x:Name="PART_Pivot">
                                     <Pivot.LeftHeader>
-                                        <TextBlock x:Uid="/UI/LibraryTB" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0" Grid.Column="1" />
+                                        <TextBlock x:Uid="/Music/LibraryTB" Text="Library" FontSize="30" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0" Grid.Column="1" />
                                     </Pivot.LeftHeader>
-                                    <PivotItem x:Uid="/UI/OverviewPVI" x:Name="PART_OverviewPivotItem" Header="Overview">
+                                    <PivotItem x:Uid="/Common/OverviewPVI" x:Name="PART_OverviewPivotItem" Header="Overview">
                                     </PivotItem>
-                                    <PivotItem x:Uid="/UI/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs">
+                                    <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs">
                                         <defaultcontrols:TrackCollection />
                                     </PivotItem>
-                                    <PivotItem x:Uid="/UI/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums">
+                                    <PivotItem x:Uid="/Music/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums">
                                         <defaultcontrols:AlbumCollection />
                                     </PivotItem>
-                                    <PivotItem x:Uid="/UI/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists">
+                                    <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists">
                                         <defaultcontrols:ArtistCollection />
                                     </PivotItem>
-                                    <PivotItem x:Uid="/UI/PlaylistsPVI" x:Name="PART_PlaylistsPivotItem" Header="Playlists">
+                                    <PivotItem x:Uid="/Music/PlaylistsPVI" x:Name="PART_PlaylistsPivotItem" Header="Playlists">
                                     </PivotItem>
                                 </Pivot>
 

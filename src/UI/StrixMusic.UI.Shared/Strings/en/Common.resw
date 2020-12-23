@@ -117,181 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Albums" xml:space="preserve">
-    <value>אלבומים</value>
-  </data>
-  <data name="AlbumsBTN.Content" xml:space="preserve">
-    <value>אלבומים</value>
-  </data>
-  <data name="AlbumsPVI.Header" xml:space="preserve">
-    <value>אלבומים</value>
-  </data>
-  <data name="AlbumsTB.Text" xml:space="preserve">
-    <value>אלבומים</value>
-  </data>
-  <data name="Artists" xml:space="preserve">
-    <value>אמנים</value>
-  </data>
-  <data name="ArtistsBTN.Content" xml:space="preserve">
-    <value>אמנים</value>
-  </data>
-  <data name="ArtistsPVI.Header" xml:space="preserve">
-    <value>אמנים</value>
-  </data>
-  <data name="ArtistsTB.Text" xml:space="preserve">
-    <value>אמנים</value>
-  </data>
-  <data name="Browse" xml:space="preserve">
-    <value>לדפדף</value>
-  </data>
-  <data name="BrowseBTN.Content" xml:space="preserve">
-    <value>לדפדף</value>
-  </data>
-  <data name="BrowseNVI.Content" xml:space="preserve">
-    <value>לדפדף</value>
-  </data>
-  <data name="BrowseTB.Text" xml:space="preserve">
-    <value>לדפדף</value>
-  </data>
-  <data name="Genres" xml:space="preserve">
-    <value>ז'אנרים</value>
-  </data>
-  <data name="GenresBTN.Content" xml:space="preserve">
-    <value>ז'אנרים</value>
-  </data>
   <data name="Home" xml:space="preserve">
-    <value>מסך הבית</value>
+    <value>Home</value>
   </data>
   <data name="HomeBTN.Content" xml:space="preserve">
-    <value>מסך הבית</value>
+    <value>Home</value>
   </data>
   <data name="HomeNVI.Content" xml:space="preserve">
-    <value>מסך הבית</value>
+    <value>Home</value>
   </data>
   <data name="HomeTB.Text" xml:space="preserve">
-    <value>מסך הבית</value>
-  </data>
-  <data name="Library" xml:space="preserve">
-    <value>הספרייה</value>
-  </data>
-  <data name="LibraryBTN.Content" xml:space="preserve">
-    <value>הספרייה</value>
-  </data>
-  <data name="LibraryNVI.Content" xml:space="preserve">
-    <value>הספרייה</value>
-  </data>
-  <data name="LibraryTB.Text" xml:space="preserve">
-    <value>הספרייה</value>
-  </data>
-  <data name="MyMusic" xml:space="preserve">
-    <value>המוסיקה שלי</value>
-  </data>
-  <data name="MyMusicNVI.Content" xml:space="preserve">
-    <value>המוסיקה שלי</value>
-  </data>
-  <data name="MyMusicPIV.Title" xml:space="preserve">
-    <value>המוסיקה שלי</value>
-  </data>
-  <data name="MyMusicTB.Text" xml:space="preserve">
-    <value>המוסיקה שלי</value>
-  </data>
-  <data name="NowPlaying" xml:space="preserve">
-    <value>מנגן כעת</value>
-  </data>
-  <data name="NowPlayingBTN.Content" xml:space="preserve">
-    <value>מנגן כעת</value>
-  </data>
-  <data name="NowPlayingNVI.Content" xml:space="preserve">
-    <value>מנגן כעת</value>
-  </data>
-  <data name="NowPlayingTB.Text" xml:space="preserve">
-    <value>מנגן כעת</value>
+    <value>Home</value>
   </data>
   <data name="Overview" xml:space="preserve">
-    <value>סקירה כללית</value>
+    <value>Overview</value>
   </data>
   <data name="OverviewPVI.Header" xml:space="preserve">
-    <value>סקירה כללית</value>
-  </data>
-  <data name="Playlists" xml:space="preserve">
-    <value>פלייליסטים</value>
-  </data>
-  <data name="PlaylistsBTN.Content" xml:space="preserve">
-    <value>פלייליסטים</value>
-  </data>
-  <data name="PlaylistsPVI.Header" xml:space="preserve">
-    <value>פלייליסטים</value>
-  </data>
-  <data name="PlaylistsTB.Text" xml:space="preserve">
-    <value>פלייליסטים</value>
-  </data>
-  <data name="Recent" xml:space="preserve">
-    <value>לאחרונה</value>
-  </data>
-  <data name="RecentBTN.Content" xml:space="preserve">
-    <value>לאחרונה</value>
-  </data>
-  <data name="RecentNVI.Content" xml:space="preserve">
-    <value>לאחרונה</value>
-  </data>
-  <data name="RecentPlayed" xml:space="preserve">
-    <value>מנגנה לאחרונה</value>
-  </data>
-  <data name="RecentPlayedBTN.Content" xml:space="preserve">
-    <value>מנגנה לאחרונה</value>
-  </data>
-  <data name="RecentPlayedNVI.Content" xml:space="preserve">
-    <value>מנגנה לאחרונה</value>
-  </data>
-  <data name="RecentPlayedTB.Text" xml:space="preserve">
-    <value>מנגנה לאחרונה</value>
-  </data>
-  <data name="RecentTB.Text" xml:space="preserve">
-    <value>לאחרונה</value>
+    <value>Overview</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>חיפוש</value>
+    <value>Search</value>
   </data>
   <data name="SearchTB.Text" xml:space="preserve">
-    <value>חיפוש</value>
-  </data>
-  <data name="Song" xml:space="preserve">
-    <value>שיר</value>
-  </data>
-  <data name="Songs" xml:space="preserve">
-    <value>שירים</value>
-  </data>
-  <data name="SongsBTN.Content" xml:space="preserve">
-    <value>שירים</value>
-  </data>
-  <data name="SongsPVI.Header" xml:space="preserve">
-    <value>שירים</value>
-  </data>
-  <data name="SongsTB.Text" xml:space="preserve">
-    <value>שירים</value>
-  </data>
-  <data name="SongTB.Text" xml:space="preserve">
-    <value>שיר</value>
-  </data>
-  <data name="Tracks" xml:space="preserve">
-    <value>שירים</value>
-  </data>
-  <data name="TracksPVI.Header" xml:space="preserve">
-    <value>שירים</value>
-  </data>
-  <data name="TracksTB.Text" xml:space="preserve">
-    <value>שירים</value>
-  </data>
-  <data name="YourLibrary" xml:space="preserve">
-    <value>הספרייה שלכם</value>
-  </data>
-  <data name="YourLibraryBTN.Content" xml:space="preserve">
-    <value>הספרייה שלכם</value>
-  </data>
-  <data name="YourLibraryNVI.Content" xml:space="preserve">
-    <value>הספרייה שלכם</value>
-  </data>
-  <data name="YourLibraryTB.Text" xml:space="preserve">
-    <value>הספרייה שלכם</value>
+    <value>Search</value>
   </data>
 </root>

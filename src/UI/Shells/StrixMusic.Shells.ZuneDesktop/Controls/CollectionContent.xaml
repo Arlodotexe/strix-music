@@ -79,15 +79,15 @@
 
         <!--Page Selector-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Margin="0,8,0,24">
-            <RadioButton x:Uid="/UI/ArtistsBTN" Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsChecked="True" Click="ArtistsPageSelected"
+            <RadioButton x:Uid="/Music/ArtistsBTN" Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsChecked="True" Click="ArtistsPageSelected"
                          a:TextHelpers.CharacterCasing="Upper"/>
-            <RadioButton x:Uid="/UI/GenresBTN" Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"
+            <RadioButton x:Uid="/Music/GenresBTN" Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"
                          a:TextHelpers.CharacterCasing="Upper"/>
-            <RadioButton x:Uid="/UI/AlbumsBTN" Content="ALBUMS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="AlbumsPageSelected"
+            <RadioButton x:Uid="/Music/AlbumsBTN" Content="ALBUMS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="AlbumsPageSelected"
                          a:TextHelpers.CharacterCasing="Upper"/>
-            <RadioButton x:Uid="/UI/SongsBTN" Content="SONGS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="SongsPageSelected"
+            <RadioButton x:Uid="/Music/SongsBTN" Content="SONGS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="SongsPageSelected"
                          a:TextHelpers.CharacterCasing="Upper"/>
-            <RadioButton x:Uid="/UI/PlaylistsBTN" Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"
+            <RadioButton x:Uid="/Music/PlaylistsBTN" Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"
                          a:TextHelpers.CharacterCasing="Upper"/>
         </StackPanel>
 

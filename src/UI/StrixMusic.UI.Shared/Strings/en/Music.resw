@@ -147,18 +147,6 @@
   <data name="BrowseTB.Text" xml:space="preserve">
     <value>Browse</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="HomeBTN.Content" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="HomeNVI.Content" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="HomeTB.Text" xml:space="preserve">
-    <value>Home</value>
-  </data>
   <data name="Library" xml:space="preserve">
     <value>Library</value>
   </data>
@@ -195,12 +183,6 @@
   <data name="NowPlayingTB.Text" xml:space="preserve">
     <value>Now Playing</value>
   </data>
-  <data name="Overview" xml:space="preserve">
-    <value>Overview</value>
-  </data>
-  <data name="OverviewPVI.Header" xml:space="preserve">
-    <value>Overview</value>
-  </data>
   <data name="Playlists" xml:space="preserve">
     <value>Playlists</value>
   </data>
@@ -234,12 +216,6 @@
   <data name="RecentTB.Text" xml:space="preserve">
     <value>Recent</value>
   </data>
-  <data name="Search" xml:space="preserve">
-    <value>Search</value>
-  </data>
-  <data name="SearchTB.Text" xml:space="preserve">
-    <value>Search</value>
-  </data>
   <data name="Songs" xml:space="preserve">
     <value>Songs</value>
   </data>
@@ -261,7 +237,7 @@
   <data name="TracksTB.Text" xml:space="preserve">
     <value>Tracks</value>
   </data>
-  <data name="Your Library" xml:space="preserve">
+  <data name="YourLibrary" xml:space="preserve">
     <value>Your Library</value>
   </data>
   <data name="YourLibraryBTN.Content" xml:space="preserve">
