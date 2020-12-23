@@ -123,10 +123,4 @@
   <data name="AppSkinTB.Text" xml:space="preserve">
     <value>סגנון אפליקציה</value>
   </data>
-  <data name="Settings" xml:space="preserve">
-    <value>הגדרות</value>
-  </data>
-  <data name="SettingsTB.Text" xml:space="preserve">
-    <value>הגדרות</value>
-  </data>
 </root>

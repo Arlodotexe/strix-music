@@ -93,7 +93,7 @@ namespace StrixMusic.Shared
                         OverlayPresenter.Show(
                             superShell,
                             Localization.GetLocalizedString(
-                                Localization.StringContext.SuperShell,
+                                Localization.StringContext.Common,
                                 "Settings"));
                     }
                     else

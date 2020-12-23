@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="HelpBTN.Content" xml:space="preserve">
+    <value>Help</value>
+  </data>
   <data name="Home" xml:space="preserve">
     <value>Home</value>
   </data>
@@ -140,5 +146,17 @@
   </data>
   <data name="SearchTB.Text" xml:space="preserve">
     <value>Search</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SettingsBTN.Content" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>Sign In</value>
+  </data>
+  <data name="SignInBTN.Content" xml:space="preserve">
+    <value>Sign In</value>
   </data>
 </root>

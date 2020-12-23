@@ -123,10 +123,4 @@
   <data name="AppSkinTB.Text" xml:space="preserve">
     <value>App Skin</value>
   </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="SettingsTB.Text" xml:space="preserve">
-    <value>Settings</value>
-  </data>
 </root>
