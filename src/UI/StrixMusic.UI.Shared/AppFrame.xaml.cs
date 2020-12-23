@@ -1,10 +1,12 @@
-﻿using System;
-using System.Threading;
+﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Helpers;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
+using System;
+using System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -16,6 +18,12 @@ namespace StrixMusic.Shared
         /// The navigation service used exclusively by the <see cref="AppFrame"/> to display various top-level app content.
         /// </summary>
         public INavigationService<Control> NavigationService { get; }
+
+        private ILocalizationService? _localizationService = null;
+        /// <summary>
+        /// A reference to the <see cref="ILocalizationService"/> used through out the app (except Cores).
+        /// </summary>
+        public ILocalizationService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<ILocalizationService>())!;
 
         /// <summary>
         /// The <see cref="MainViewModel"/> for the app.
@@ -92,9 +100,9 @@ namespace StrixMusic.Shared
                     {
                         OverlayPresenter.Show(
                             superShell,
-                            Localization.GetLocalizedString(
-                                Localization.StringContext.Common,
-                                "Settings"));
+                            LocalizationService[
+                                Constants.Localization.CommonResource,
+                                "Settings"]);
                     }
                     else
                     {

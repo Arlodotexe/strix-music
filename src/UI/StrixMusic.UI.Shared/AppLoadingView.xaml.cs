@@ -15,10 +15,12 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 using StrixMusic.Sdk.Uno.Services;
+using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Shared.Services;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
@@ -35,6 +37,7 @@ namespace StrixMusic.Shared
     public sealed partial class AppLoadingView : UserControl
     {
         private DefaultSettingsService? _settingsService;
+        private ILocalizationService? _localizationService;
         private IPlaybackHandlerService? _playbackHandlerService;
 
         /// <summary>
@@ -71,12 +74,21 @@ namespace StrixMusic.Shared
 
         private async Task InitializeServices()
         {
-            // UpdateStatus("Initializing services");
-            UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.Startup, 
-                "InitServices"));
+            //UpdateStatus("Initializing services");
 
             IServiceCollection services = new ServiceCollection();
+            _localizationService = new LocalizationService();
+            _localizationService.RegisterProvider(Constants.Localization.StartupResource);
+
+            // UpdateStatus("Initializing services");
+            UpdateStatus(_localizationService[
+                Constants.Localization.StartupResource,
+                "InitServices"]);
+
+            _localizationService.RegisterProvider(Constants.Localization.SuperShellResource);
+            _localizationService.RegisterProvider(Constants.Localization.CommonResource);
+            _localizationService.RegisterProvider(Constants.Localization.MusicResource);
+
             var contextualServiceLocator = new ContextualServiceLocator();
 
             var textStorageService = new TextStorageService();
@@ -85,11 +97,7 @@ namespace StrixMusic.Shared
             var fileSystemService = new FileSystemService();
             var cacheFileSystemService = new DefaultCacheService();
 
-            // UpdateStatus("Initializing services");
-            UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.Startup,
-                "InitServices"));
-
+            services.AddSingleton(_localizationService);
             services.AddSingleton(contextualServiceLocator);
             services.AddSingleton<ITextStorageService>(textStorageService);
             services.AddSingleton<ISettingsService>(_settingsService);
@@ -103,9 +111,9 @@ namespace StrixMusic.Shared
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
 
             // UpdateStatus("Initializing filesystem");
-            UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.Startup,
-                "InitFilesystem"));
+            UpdateStatus(_localizationService[
+                Constants.Localization.StartupResource,
+                "InitFilesystem"]);
 
             await fileSystemService.InitAsync();
             await cacheFileSystemService.InitAsync();
@@ -114,19 +122,25 @@ namespace StrixMusic.Shared
         // TODO: Rename this method or split up the code better.
         private async Task InitRegisteredCoresOrShowOOBE()
         {
+            if (_localizationService is null)
+            {
+                UpdateStatus("Localization service error.");
+                return;
+            }
+
             if (_settingsService is null)
             {
                 // UpdateStatus("Fatal internal error: Settings service wasn't initialized.");
-                UpdateStatus(Localization.GetLocalizedString(
-                    Localization.StringContext.Startup,
-                    "ErrSettingsInit"));
+                UpdateStatus(_localizationService[
+                    Constants.Localization.StartupResource,
+                    "ErrSettingsInit"]);
                 return;
             }
 
             // UpdateStatus("Initializing core registry");
-            UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.Startup,
-                "InitCoreReg"));
+            UpdateStatus(_localizationService[
+                Constants.Localization.StartupResource,
+                "InitCoreReg"]);
             var coreRegistry = await Task.Run(() => _settingsService.GetValue<Dictionary<string, Type>>(nameof(SettingsKeys.CoreRegistry)));
 
             // Todo: If coreRegistry is null, show out of box setup page.
@@ -135,9 +149,9 @@ namespace StrixMusic.Shared
             }
 
             // UpdateStatus("Creating core instances");
-            UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.Startup,
-                "CreatingCores"));
+            UpdateStatus(_localizationService[
+                Constants.Localization.StartupResource,
+                "CreatingCores"]);
             var cores = await Task.Run(() => coreRegistry.Select(x => (ICore)Activator.CreateInstance(x.Value, x.Key)).ToList());
 
             UpdateStatus($"Adding temp {nameof(MusicBrainzCore)} instance");
@@ -147,17 +161,17 @@ namespace StrixMusic.Shared
             await _settingsService.SetValue<IReadOnlyList<Type>>(nameof(SettingsKeys.CoreRanking), typeof(MusicBrainzCore).IntoList()).RunInBackground();
 
             //UpdateStatus("Initializing cores");
-            UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.Startup,
-                "InitCores"));
+            UpdateStatus(_localizationService[
+                Constants.Localization.StartupResource,
+                "InitCores"]);
             var initData = await cores.InParallel(CreateCoreInitDataAsync);
 
             await CurrentWindow.MainViewModel.InitializeCoresAsync(initData).RunInBackground();
 
             // UpdateStatus("Setting up media players");
-            UpdateStatus(Localization.GetLocalizedString(
-                Localization.StringContext.Startup,
-                "SetupMedia"));
+            UpdateStatus(_localizationService[
+                Constants.Localization.StartupResource,
+                "SetupMedia"]);
             cores.ForEach(SetupMediaPlayer);
 
             UpdateStatus($"Done loading, navigating to {nameof(MainPage)}");
