@@ -171,4 +171,7 @@
   <data name="Wired" xml:space="preserve">
     <value>Wired</value>
   </data>
+  <data name="Cells" xml:space="preserve">
+    <value>Cells</value>
+  </data>
 </root>

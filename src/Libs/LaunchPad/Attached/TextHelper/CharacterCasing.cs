@@ -4,7 +4,6 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 
 namespace LaunchPad.Attached
 {
@@ -33,7 +32,6 @@ namespace LaunchPad.Attached
         {
             var val = (CharacterCasing)e.NewValue;
             DependencyProperty prop;
-            var fe = (FrameworkElement)d;
 
             switch(d)
             {
@@ -50,26 +48,13 @@ namespace LaunchPad.Attached
                     throw new ArgumentException();
             }
 
-            fe.RegisterPropertyChangedCallback(prop, (s, e) =>
+            d.RegisterPropertyChangedCallback(prop, (s, e) =>
             {
                 if (mutex)
                     return;
 
                 mutex = true;
-                switch (d)
-                {
-                    case TextBlock txt:
-                        txt.Text = CaseConverter.Convert(txt.Text, val);
-                        break;
-                    case ButtonBase btn:
-                        btn.Content = CaseConverter.Convert((string)btn.Content, val);
-                        break;
-                    case PivotItem pvi:
-                        pvi.Header = CaseConverter.Convert((string)pvi.Header, val);
-                        break;
-                    default:
-                        throw new ArgumentException();
-                }
+                d.SetValue(prop, CaseConverter.Convert((string)d.GetValue(prop), val));
                 mutex = false;
             });
         }

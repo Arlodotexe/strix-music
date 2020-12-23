@@ -120,6 +120,9 @@
   <data name="Albums" xml:space="preserve">
     <value>Albums</value>
   </data>
+  <data name="AlbumsBTN.Content" xml:space="preserve">
+    <value>Albums</value>
+  </data>
   <data name="AlbumsPVI.Header" xml:space="preserve">
     <value>Albums</value>
   </data>
@@ -127,6 +130,9 @@
     <value>Albums</value>
   </data>
   <data name="Artists" xml:space="preserve">
+    <value>Artists</value>
+  </data>
+  <data name="ArtistsBTN.Content" xml:space="preserve">
     <value>Artists</value>
   </data>
   <data name="ArtistsPVI.Header" xml:space="preserve">
@@ -146,6 +152,9 @@
   </data>
   <data name="BrowseTB.Text" xml:space="preserve">
     <value>Browse</value>
+  </data>
+  <data name="GenresBTN.Content" xml:space="preserve">
+    <value>Genres</value>
   </data>
   <data name="Library" xml:space="preserve">
     <value>Library</value>
@@ -248,5 +257,17 @@
   </data>
   <data name="YourLibraryTB.Text" xml:space="preserve">
     <value>Your Library</value>
+  </data>
+  <data name="Genres" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="PlaylistsBTN.Content" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="Song" xml:space="preserve">
+    <value>Song</value>
+  </data>
+  <data name="SongsBTN.Content" xml:space="preserve">
+    <value>Songs</value>
   </data>
 </root>
