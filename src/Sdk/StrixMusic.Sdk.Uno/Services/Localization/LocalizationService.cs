@@ -28,6 +28,11 @@ namespace StrixMusic.Sdk.Uno.Services.Localization
         /// <inheritdoc/>
         public void RegisterProvider(string path)
         {
+            if (_providers.ContainsKey(path))
+            {
+                return;
+            }
+
             ResourceLoader loader = ResourceLoader.GetForCurrentView(path);
             _providers.Add(path, loader);
         }
