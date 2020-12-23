@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AuroraBorealis" xml:space="preserve">
+    <value>זוהר צפוני</value>
+  </data>
   <data name="Background" xml:space="preserve">
     <value>רקע</value>
   </data>
@@ -128,6 +131,12 @@
   </data>
   <data name="BehaviorBTN.Content" xml:space="preserve">
     <value>התנהגות</value>
+  </data>
+  <data name="Bubbles" xml:space="preserve">
+    <value>בועות</value>
+  </data>
+  <data name="Cells" xml:space="preserve">
+    <value>משושים</value>
   </data>
   <data name="Cores" xml:space="preserve">
     <value>ליבות</value>
@@ -141,7 +150,28 @@
   <data name="DisplayBTN.Content" xml:space="preserve">
     <value>מצג</value>
   </data>
+  <data name="Hero" xml:space="preserve">
+    <value>גיבור</value>
+  </data>
+  <data name="Meadow" xml:space="preserve">
+    <value>אחו</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>ריק</value>
+  </data>
+  <data name="RobotOwl" xml:space="preserve">
+    <value>ינשוף רובוט</value>
+  </data>
   <data name="Scale" xml:space="preserve">
     <value>קנה מידה</value>
+  </data>
+  <data name="Shards" xml:space="preserve">
+    <value>רסיסים</value>
+  </data>
+  <data name="Smooth" xml:space="preserve">
+    <value>חלק</value>
+  </data>
+  <data name="Wired" xml:space="preserve">
+    <value>קווית</value>
   </data>
 </root>

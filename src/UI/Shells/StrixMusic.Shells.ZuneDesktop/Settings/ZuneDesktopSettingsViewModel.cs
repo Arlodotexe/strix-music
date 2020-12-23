@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Diagnostics;
+﻿using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk;
+using StrixMusic.Sdk.Services.Localization;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StrixMusic.Shells.ZuneDesktop.Settings
 {
@@ -10,10 +12,16 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
     /// </summary>
     public class ZuneDesktopSettingsViewModel : SettingsViewModelBase
     {
+        private ILocalizationService? _localizationService = null;
+
+        private ILocalizationService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<ILocalizationService>())!;
+
+        private readonly Dictionary<string, string> _displayNameMap = new Dictionary<string, string>();
+
         private readonly Dictionary<string, ZuneDesktopBackgroundImage> _zuneBackgroundImages = new Dictionary<string, ZuneDesktopBackgroundImage>()
         {
             { "None", new ZuneDesktopBackgroundImage() },
-            { "Aurora Borealis", new ZuneDesktopBackgroundImage("Aurora Borealis", Windows.UI.Xaml.Media.AlignmentY.Top) },
+            { "AuroraBorealis", new ZuneDesktopBackgroundImage("AuroraBorealis", Windows.UI.Xaml.Media.AlignmentY.Top) },
             { "Bubbles", new ZuneDesktopBackgroundImage("Bubbles") },
             { "Cells", new ZuneDesktopBackgroundImage("Cells", Windows.UI.Xaml.Media.AlignmentY.Center) },
             { "Hero", new ZuneDesktopBackgroundImage("Hero", Windows.UI.Xaml.Media.AlignmentY.Center) },
@@ -27,7 +35,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         /// <summary>
         /// List of names for the images
         /// </summary>
-        public IEnumerable<string> ImageNames => _zuneBackgroundImages.Keys;
+        public IEnumerable<string> ImageNames => _displayNameMap.Keys;
 
         private readonly ZuneDesktopSettingsService _zuneDesktopSettingsService;
         private string _selectedBackgroundImage = string.Empty;
@@ -38,6 +46,10 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         public ZuneDesktopSettingsViewModel()
         {
             _zuneDesktopSettingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>() ?? ThrowHelper.ThrowInvalidOperationException<ZuneDesktopSettingsService>();
+
+            _displayNameMap = _zuneBackgroundImages.Keys
+                .ToDictionary(x => LocalizationService["StrixMusic.Shells.ZuneDesktop/ZuneSettings", x]);
+            
             LoadInitalValues();
         }
 
@@ -51,7 +63,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
             {
                 if (SetProperty(ref _selectedBackgroundImage, value))
                 {
-                    ZuneDesktopBackgroundImage image = _zuneBackgroundImages[value];
+                    ZuneDesktopBackgroundImage image = _zuneBackgroundImages[_displayNameMap[value]];
                     _ = _zuneDesktopSettingsService.SetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage), image);
                 }
             }
@@ -66,7 +78,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         private async void LoadInitalValues()
         {
             ZuneDesktopBackgroundImage backgroundImage = await _zuneDesktopSettingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
-            SetProperty(ref _selectedBackgroundImage, backgroundImage.Name);
+            var displayName = LocalizationService["StrixMusic.Shells.ZuneDesktop/ZuneSettings", backgroundImage.Name];
+            SetProperty(ref _selectedBackgroundImage, displayName);
         }
     }
 }

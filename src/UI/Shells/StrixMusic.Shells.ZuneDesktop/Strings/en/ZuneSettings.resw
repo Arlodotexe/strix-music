@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AuroraBorealis" xml:space="preserve">
+    <value>Aurora Borealis</value>
+  </data>
   <data name="Background" xml:space="preserve">
     <value>Background</value>
   </data>
@@ -128,6 +131,9 @@
   </data>
   <data name="BehaviorBTN.Content" xml:space="preserve">
     <value>Behavior</value>
+  </data>
+  <data name="Bubbles" xml:space="preserve">
+    <value>Bubbles</value>
   </data>
   <data name="Cores" xml:space="preserve">
     <value>Cores</value>
@@ -141,7 +147,28 @@
   <data name="DisplayBTN.Content" xml:space="preserve">
     <value>Display</value>
   </data>
+  <data name="Hero" xml:space="preserve">
+    <value>Hero</value>
+  </data>
+  <data name="Meadow" xml:space="preserve">
+    <value>Meadow</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="RobotOwl" xml:space="preserve">
+    <value>Robot Owl</value>
+  </data>
   <data name="Scale" xml:space="preserve">
     <value>Scale</value>
+  </data>
+  <data name="Shards" xml:space="preserve">
+    <value>Shards</value>
+  </data>
+  <data name="Smooth" xml:space="preserve">
+    <value>Smooth</value>
+  </data>
+  <data name="Wired" xml:space="preserve">
+    <value>Wired</value>
   </data>
 </root>
