@@ -16,7 +16,7 @@ namespace OwlCore.Extensions
         /// </summary>
         /// <typeparam name="T">The type to operate on.</typeparam>
         /// <param name="items">The source items.</param>
-        /// <param name="func">Returns the task to run in parallel from <typeparamref name="T"/>.</param>
+        /// <param name="func">Returns the task to run in parallel, given <typeparamref name="T"/>.</param>
         /// <returns>A task representing the completion of all tasks.</returns>
         public static Task InParallel<T>(this IEnumerable<T> items, Func<T, Task> func)
         {
@@ -31,13 +31,50 @@ namespace OwlCore.Extensions
         /// <typeparam name="T">The type to operate on.</typeparam>
         /// <typeparam name="T2">The return type.</typeparam>
         /// <param name="items">The source items.</param>
-        /// <param name="func">Returns the task to run in parallel from <typeparamref name="T"/>.</param>
+        /// <param name="func">Returns the task to run in parallel, given <typeparamref name="T"/>.</param>
         /// <returns>A <see cref="Task"/> representing the completion of all tasks. The result is an array of all the returned values.</returns>
         public static Task<T2[]> InParallel<T, T2>(this IEnumerable<T> items, Func<T, Task<T2>> func)
         {
             var tasks = items.Select(func);
 
             return Task.WhenAll(tasks);
+        }
+
+        /// <summary>
+        /// Runs a specific task in parallel from a list of <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type to operate on.</typeparam>
+        /// <param name="items">The source items.</param>
+        /// <param name="func">Returns the action to run in parallel, given <typeparamref name="T"/>.</param>
+        /// <returns>A <see cref="Task"/> representing the completion of all tasks. The result is an array of all the returned values.</returns>
+        public static Task InParallel<T>(this IEnumerable<T> items, Func<T, Action> func)
+        {
+            var actions = items.Select(x =>
+            {
+                var action = func(x);
+                return Task.Run(action);
+            });
+
+            return Task.WhenAll(actions);
+        }
+
+        /// <summary>
+        /// Runs a lambda in parallel from a list of <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type to operate on.</typeparam>
+        /// <typeparam name="T2">The return type.</typeparam>
+        /// <param name="items">The source items.</param>
+        /// <param name="func">Returns the action to run in parallel, given <typeparamref name="T"/>.</param>
+        /// <returns>A <see cref="Task"/> representing the completion of all tasks. The result is an array of all the returned values.</returns>
+        public static Task<T2[]> InParallel<T, T2>(this IEnumerable<T> items, Func<T, Func<T2>> func)
+        {
+            var actions = items.Select(x =>
+            {
+                var action = func(x);
+                return Task.Run(action);
+            });
+
+            return Task.WhenAll(actions);
         }
     }
 }
