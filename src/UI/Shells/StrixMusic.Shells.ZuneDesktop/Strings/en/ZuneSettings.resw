@@ -117,73 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="Background" xml:space="preserve">
+    <value>Background</value>
   </data>
-  <data name="CancelBTN.Content" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="Behavior" xml:space="preserve">
+    <value>Behavior</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="BehaviorBTN.Content" xml:space="preserve">
+    <value>Behavior</value>
   </data>
-  <data name="HelpBTN.Content" xml:space="preserve">
-    <value>Help</value>
+  <data name="Cores" xml:space="preserve">
+    <value>Cores</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
+  <data name="CoresBTN.Content" xml:space="preserve">
+    <value>Cores</value>
   </data>
-  <data name="HomeBTN.Content" xml:space="preserve">
-    <value>Home</value>
+  <data name="Display" xml:space="preserve">
+    <value>Display</value>
   </data>
-  <data name="HomeNVI.Content" xml:space="preserve">
-    <value>Home</value>
+  <data name="DisplayBTN.Content" xml:space="preserve">
+    <value>Display</value>
   </data>
-  <data name="HomeTB.Text" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="No" xml:space="preserve">
-    <value>No</value>
-  </data>
-  <data name="NoBTN.Content" xml:space="preserve">
-    <value>No</value>
-  </data>
-  <data name="Okay" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="OkayBTN.Content" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="Overview" xml:space="preserve">
-    <value>Overview</value>
-  </data>
-  <data name="OverviewPVI.Header" xml:space="preserve">
-    <value>Overview</value>
-  </data>
-  <data name="Search" xml:space="preserve">
-    <value>Search</value>
-  </data>
-  <data name="SearchTB.Text" xml:space="preserve">
-    <value>Search</value>
-  </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="SettingsBTN.Content" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="SettingsTB.Text" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="SignIn" xml:space="preserve">
-    <value>Sign In</value>
-  </data>
-  <data name="SignInBTN.Content" xml:space="preserve">
-    <value>Sign In</value>
-  </data>
-  <data name="Yes" xml:space="preserve">
-    <value>Yes</value>
-  </data>
-  <data name="YesBTN.Content" xml:space="preserve">
-    <value>Yes</value>
+  <data name="Scale" xml:space="preserve">
+    <value>Scale</value>
   </data>
 </root>

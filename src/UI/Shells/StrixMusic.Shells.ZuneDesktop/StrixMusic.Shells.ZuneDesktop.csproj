@@ -126,7 +126,9 @@
 		<ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<PRIResource Include="Strings\en\ZuneSettings.resw" />
 		<PRIResource Include="Strings\en\ZuneUI.resw" />
+		<PRIResource Include="Strings\he\ZuneSettings.resw" />
 		<PRIResource Include="Strings\he\ZuneUI.resw" />
 	</ItemGroup>
 	<ItemGroup>

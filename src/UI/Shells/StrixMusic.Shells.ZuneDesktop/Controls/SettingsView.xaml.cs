@@ -24,7 +24,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
 
         private readonly List<string> _displayPages = new List<string>()
         {
-            "BACKGROUNDS",
+            "BACKGROUND",
             "SCALING",
             "TEST1",
             "TEST2",

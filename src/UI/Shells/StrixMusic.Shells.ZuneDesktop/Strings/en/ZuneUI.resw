@@ -153,10 +153,4 @@
   <data name="QuickplayPVI.Header" xml:space="preserve">
     <value>Quickplay</value>
   </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="SettingsBTN.Content" xml:space="preserve">
-    <value>Settings</value>
-  </data>
 </root>

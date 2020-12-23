@@ -148,10 +148,10 @@
     <value>לא</value>
   </data>
   <data name="Okay" xml:space="preserve">
-    <value>אשור</value>
+    <value>אישור</value>
   </data>
   <data name="OkayBTN.Content" xml:space="preserve">
-    <value>אשור</value>
+    <value>אישור</value>
   </data>
   <data name="Overview" xml:space="preserve">
     <value>סקירה כללית</value>
@@ -169,6 +169,9 @@
     <value>הוגדות</value>
   </data>
   <data name="SettingsBTN.Content" xml:space="preserve">
+    <value>הוגדות</value>
+  </data>
+  <data name="SettingsTB.Text" xml:space="preserve">
     <value>הוגדות</value>
   </data>
   <data name="SignIn" xml:space="preserve">
