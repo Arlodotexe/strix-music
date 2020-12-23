@@ -120,6 +120,9 @@
   <data name="Background" xml:space="preserve">
     <value>רקע</value>
   </data>
+  <data name="BackgroundTB.Text" xml:space="preserve">
+    <value>רקע</value>
+  </data>
   <data name="Behavior" xml:space="preserve">
     <value>התנהגות</value>
   </data>

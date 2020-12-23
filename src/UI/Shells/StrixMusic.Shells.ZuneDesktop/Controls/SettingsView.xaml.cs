@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Shells.ZuneDesktop.Settings;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -12,28 +15,27 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
     /// </summary>
     public sealed partial class SettingsView : UserControl
     {
+        private ILocalizationService? _localizationService = null;
+        private ILocalizationService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<ILocalizationService>())!;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsView"/> class.
         /// </summary>
         public SettingsView()
         {
             this.InitializeComponent();
+            _displayPages = _displayPages.Select(x => LocalizationService["StrixMusic.Shells.ZuneDesktop/ZuneSettings", x].ToUpper()).ToList();
         }
 
         private ZuneDesktopSettingsViewModel? ViewModel => DataContext as ZuneDesktopSettingsViewModel;
 
-        private readonly List<string> _displayPages = new List<string>()
+        /// <remarks>
+        /// Translated in constructor.
+        /// </remarks>
+        private readonly List<string> _displayPages = new List<string>
         {
-            "BACKGROUND",
-            "SCALING",
-            "TEST1",
-            "TEST2",
-            "TEST3",
-            "TEST4",
-            "TEST5",
-            "TEST6",
-            "TEST7",
-            "TEST8",
+            "Background",
+            "Scale",
         };
 
         private readonly List<string> _behaviorPages = new List<string>()
@@ -49,6 +51,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
 
         private void CancelClicked(object sender, RoutedEventArgs e)
         {
+            //TODO: Revert unsaved changes
             ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>()!.GoBack();
         }
 
