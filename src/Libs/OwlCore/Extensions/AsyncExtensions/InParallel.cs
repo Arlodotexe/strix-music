@@ -86,7 +86,7 @@ namespace OwlCore.Extensions
                         resultCollection[i] = (func(enumerable[i])());
                 });
 
-                return resultCollection.ToArray();
+                return resultCollection;
             }, cancellationToken.Token);
         }
     }
