@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
   <PropertyGroup>
-	<!--<TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.17763</TargetFrameworks>-->
-	<TargetFrameworks>netstandard2.0;MonoAndroid90;monoandroid10.0;uap10.0.17763</TargetFrameworks>
+	<!--<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.17763</TargetFrameworks>-->
+	<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.17763</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Nullable>enable</Nullable>
@@ -22,7 +22,7 @@
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview4" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.0.2-uno.79" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.79" />
-    <PackageReference Include="Uno.UI" Version="3.3.0-dev.36" />
+    <PackageReference Include="Uno.UI" Version="3.5.0-dev.7" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -105,10 +105,5 @@
   </ItemGroup>
   <ItemGroup>
     <SourceGeneratorInput Remove="AbstractUI\ViewModels\AbstractMutableDataListItemViewModel.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <HintPath>C:\Users\arlog\.nuget\packages\uno.microsoft.toolkit.uwp.ui.controls\6.1.0-build.191.gc988bdd4ff\lib\monoandroid90\Microsoft.Toolkit.Uwp.UI.Controls.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>
