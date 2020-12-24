@@ -6,12 +6,12 @@ namespace LaunchPad.AbstractUI.Themes
     /// <summary>
     /// Default template for the <see cref="AbstractButtonTemplate"/>
     /// </summary>
-    public sealed partial class AbstractButtonTemplate : ResourceDictionary
+    public sealed partial class AbstractBooleanUIElementTemplate : ResourceDictionary
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractButtonTemplate"/> class.
         /// </summary>
-        public AbstractButtonTemplate()
+        public AbstractBooleanUIElementTemplate()
         {
             this.InitializeComponent();
         }

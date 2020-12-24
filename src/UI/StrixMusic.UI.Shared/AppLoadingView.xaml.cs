@@ -61,9 +61,9 @@ namespace StrixMusic.Shared
 
         private void UpdateStatus(string text, bool translate = false)
         {
-            if (translate)
+            if (translate && _localizationService != null)
             {
-                text = localizationService[
+                text = _localizationService[
                     Constants.Localization.StartupResource,
                     text];
             }
@@ -110,6 +110,7 @@ namespace StrixMusic.Shared
             services.AddSingleton<CacheServiceBase>(cacheFileSystemService);
             services.AddSingleton<ISharedFactory, SharedFactory>();
             services.AddSingleton<IFileSystemService>(fileSystemService);
+            services.AddSingleton<IShellService, ShellService>();
 
             _playbackHandlerService = new PlaybackHandlerService();
             services.AddSingleton(_playbackHandlerService);

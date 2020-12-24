@@ -26,7 +26,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         }
 
         /// <summary>
-        /// Text to show when the button.
+        /// Text to show on the button.
         /// </summary>
         public string Text
         {

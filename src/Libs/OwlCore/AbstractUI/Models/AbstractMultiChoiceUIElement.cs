@@ -14,14 +14,13 @@ namespace OwlCore.AbstractUI.Models
         /// </summary>
         /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
         /// <param name="defaultSelectedItem"><inheritdoc cref="SelectedItem"/></param>
-        /// <param name="preferredDisplayMode"><inheritdoc cref="PreferredDisplayMode"/></param>
         /// <param name="items"><inheritdoc cref="Items"/></param>
-        public AbstractMultiChoiceUIElement(string id, AbstractUIMetadata defaultSelectedItem, AbstractMultiChoicePreferredDisplayMode preferredDisplayMode, IEnumerable<AbstractUIMetadata> items)
+
+        public AbstractMultiChoiceUIElement(string id, AbstractUIMetadata defaultSelectedItem, IEnumerable<AbstractUIMetadata> items)
             : base(id)
         {
-            Items = items;
-            PreferredDisplayMode = preferredDisplayMode;
             SelectedItem = defaultSelectedItem;
+            Items = items;
         }
 
         /// <summary>
@@ -30,13 +29,13 @@ namespace OwlCore.AbstractUI.Models
         public IEnumerable<AbstractUIMetadata> Items { get; }
 
         /// <inheritdoc cref="AbstractMultiChoicePreferredDisplayMode"/>
-        public AbstractMultiChoicePreferredDisplayMode PreferredDisplayMode { get; }
+        public AbstractMultiChoicePreferredDisplayMode PreferredDisplayMode { get; set; }
 
         /// <summary>
         /// The current selected item.
         /// </summary>
         /// <remarks>Must be specified on object creation, even if the item is just a prompt to choose something.</remarks>
-        public AbstractUIMetadata SelectedItem { get; private set; }
+        public AbstractUIMetadata SelectedItem { get; set; }
 
         /// <summary>
         /// Called to change the <see cref="SelectedItem"/>.

@@ -12,7 +12,7 @@ namespace OwlCore.AbstractUI.Models
         /// </summary>
         /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
         /// <param name="label"><inheritdoc cref="Label"/></param>
-        public AbstractBooleanUIElement(string id, string? label)
+        public AbstractBooleanUIElement(string id, string label)
             : base(id)
         {
             Label = label;
@@ -21,7 +21,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// The label to display next to this UI element.
         /// </summary>
-        public string? Label { get; private set; }
+        public string Label { get; private set; }
 
         /// <summary>
         /// Fires when the <see cref="Label"/> changes.
@@ -41,7 +41,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// The current state of this UI element.
         /// </summary>
-        public bool State { get; private set; }
+        public bool State { get; set; }
 
         /// <summary>
         /// Fires when the <see cref="State"/> changes.

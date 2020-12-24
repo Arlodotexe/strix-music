@@ -9,7 +9,7 @@ namespace OwlCore.Extensions
     public static partial class EnumerableExtensions
     {
         /// <summary>
-        /// Syntax sugar for pruning null values returned from a LINQ select.
+        /// Syntax sugar for pruning null values from an enumerable.
         /// </summary>
         /// <typeparam name="T">The input type.</typeparam>
         /// <param name="source">The source to enumerate.</param>

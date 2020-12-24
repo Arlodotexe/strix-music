@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
   <PropertyGroup>
-	<!--<TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.17763</TargetFrameworks>-->
-	<TargetFrameworks>netstandard2.0;MonoAndroid90;monoandroid10.0;uap10.0.17763</TargetFrameworks>
+	<!--<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.17763</TargetFrameworks>-->
+	<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.17763</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Nullable>enable</Nullable>
@@ -22,7 +22,7 @@
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview4" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.0.2-uno.79" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.79" />
-    <PackageReference Include="Uno.UI" Version="3.3.0-dev.36" />
+    <PackageReference Include="Uno.UI" Version="3.5.0-dev.7" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -37,9 +37,12 @@
     <None Remove="AbstractUI\AbstractUIGroupListPresenter.xaml" />
     <None Remove="AbstractUI\AbstractUIGroupPresenterTemplateSelector.xaml" />
     <None Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractBooleanUIElementTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractButtonTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractDataListTemplate.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractMutableDataListTemplate.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractRichTextBlockTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
     <None Remove="Controls\ContentOverlay.xaml" />
     <None Remove="Themes\Generic.xaml" />
@@ -47,9 +50,12 @@
   <ItemGroup>
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenterTemplateSelector.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractBooleanUIElementTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListTemplate.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMutableDataListTemplate.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
     <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml" />
     <UpToDateCheckInput Remove="Themes\Generic.xaml" />
@@ -61,8 +67,17 @@
     <Compile Update="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml.cs">
       <DependentUpon>AbstractUIGroupListPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Update="AbstractUI\Themes\AbstractBooleanUIElementTemplate.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="AbstractUI\Themes\AbstractButtonTemplate.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="AbstractUI\Themes\AbstractMultiChoiceUIElementTemplate.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="AbstractUI\Themes\AbstractRichTextBlockTemplate.xaml.cs">
+      <DependentUpon>AbstractRichTextBlockTemplate.xaml</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractMutableDataListTemplate.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
@@ -78,6 +93,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.17763'">
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
+      <Version>7.0.0-preview4</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>7.0.0-preview4</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>

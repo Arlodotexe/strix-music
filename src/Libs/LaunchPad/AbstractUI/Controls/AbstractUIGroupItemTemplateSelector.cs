@@ -37,10 +37,22 @@ namespace LaunchPad.AbstractUI.Controls
                 ButtonTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(buttonTemplate));
             }
 
+            if (!new Themes.AbstractMultiChoiceUIElementTemplate().TryGetValue("DefaultAbstractMultipleChoiceTemplate", out var multiChoiceTemplate))
+            {
+                MultiChoiceTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(multiChoiceTemplate));
+            }
+
+            if (!new Themes.AbstractBooleanUIElementTemplate().TryGetValue("DefaultAbstractBooleanUIElementTemplate", out var booleanTemplate))
+            {
+                BooleanTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(booleanTemplate));
+            }
+            
             TextBoxTemplate = (DataTemplate)textBoxTemplate;
             DataListTemplate = (DataTemplate)dataListTemplate;
             ButtonTemplate = (DataTemplate)buttonTemplate;
             MutableDataListTemplate = (DataTemplate)mutableDataListTemplate;
+            MultiChoiceTemplate = (DataTemplate)multiChoiceTemplate;
+            BooleanTemplate = (DataTemplate)booleanTemplate;
         }
 
         /// <summary>
@@ -63,6 +75,16 @@ namespace LaunchPad.AbstractUI.Controls
         /// </summary>
         public DataTemplate ButtonTemplate { get; set; }
 
+        /// <summary>
+        /// The data template used to display an <see cref="AbstractBooleanUIElement"/>.
+        /// </summary>
+        public DataTemplate BooleanTemplate { get; set; }
+
+        /// <summary>
+        /// The data template used to display an <see cref="AbstractMultiChoiceUIElement"/>.
+        /// </summary>
+        public DataTemplate MultiChoiceTemplate { get; set; }
+
         /// <inheritdoc />
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
             => item switch
@@ -71,6 +93,8 @@ namespace LaunchPad.AbstractUI.Controls
                 AbstractDataListViewModel _ => DataListTemplate,
                 AbstractButtonViewModel _ => ButtonTemplate,
                 AbstractMutableDataListViewModel _ => MutableDataListTemplate,
+                AbstractMultiChoiceUIElementViewModel _ => MultiChoiceTemplate,
+                AbstractBooleanViewModel _ => BooleanTemplate,
                 _ => base.SelectTemplateCore(item, container)
             };
     }

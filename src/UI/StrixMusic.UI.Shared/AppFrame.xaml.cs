@@ -67,6 +67,7 @@ namespace StrixMusic.Shared
         {
             if (e == AppNavigationTarget.Settings && sender is ICore core)
             {
+                // Send the user to the shell settings if a shell is loaded.
                 if (MainPage.ActiveShell != null)
                 {
                     // TODO post shell service refactor (need one common, injected ioc where we have access to the navigation service.
