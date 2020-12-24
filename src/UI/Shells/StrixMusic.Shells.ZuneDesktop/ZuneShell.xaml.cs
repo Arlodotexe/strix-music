@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Services.Localization;
+using StrixMusic.Sdk.Uno.Services.Localization;
 
 namespace StrixMusic.Shells.ZuneDesktop
 {
@@ -159,7 +159,7 @@ namespace StrixMusic.Shells.ZuneDesktop
 
         private void SetupIoc()
         {
-            Ioc.Default.GetService<ILocalizationService>()!.RegisterProvider("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
+            Ioc.Default.GetService<LocalizationLoaderService>()!.RegisterProvider("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
             ZuneDesktopShellIoc.Initialize();
             _navigationService = ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>();
 

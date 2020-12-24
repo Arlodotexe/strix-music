@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Localization;
+using StrixMusic.Sdk.Uno.Services.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,9 +13,9 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
     /// </summary>
     public class ZuneDesktopSettingsViewModel : SettingsViewModelBase
     {
-        private ILocalizationService? _localizationService = null;
+        private LocalizationLoaderService? _localizationService = null;
 
-        private ILocalizationService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<ILocalizationService>())!;
+        private LocalizationLoaderService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<LocalizationLoaderService>())!;
 
         private readonly Dictionary<string, string> _displayNameMap = new Dictionary<string, string>();
 

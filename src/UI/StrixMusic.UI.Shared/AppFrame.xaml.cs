@@ -5,6 +5,7 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Uno.Services.Localization;
 using System;
 using System.Threading;
 using Windows.UI.Xaml;
@@ -19,11 +20,12 @@ namespace StrixMusic.Shared
         /// </summary>
         public INavigationService<Control> NavigationService { get; }
 
-        private ILocalizationService? _localizationService = null;
+        private LocalizationLoaderService? _localizationService = null;
+
         /// <summary>
         /// A reference to the <see cref="ILocalizationService"/> used through out the app (except Cores).
         /// </summary>
-        public ILocalizationService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<ILocalizationService>())!;
+        public LocalizationLoaderService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<LocalizationLoaderService>())!;
 
         /// <summary>
         /// The <see cref="MainViewModel"/> for the app.

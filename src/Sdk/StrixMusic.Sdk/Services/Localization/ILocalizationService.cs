@@ -12,11 +12,5 @@
         /// <param name="key">The key to identify the resource.</param>
         /// <returns>The localized <see cref="string"/> for a resource key</returns>
         string this[string provider, string key] { get; }
-
-        /// <summary>
-        /// Registers a new provider.
-        /// </summary>
-        /// <param name="path">The path of the provider.</param>
-        void RegisterProvider(string path);
     }
 }

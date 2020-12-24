@@ -33,6 +33,7 @@ namespace LaunchPad.Attached
             var val = (CharacterCasing)e.NewValue;
             DependencyProperty prop;
 
+            // TODO: Remove ButtonBase and PivotItem, just use TextBlocks
             switch(d)
             {
                 case TextBlock txt:

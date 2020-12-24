@@ -7,7 +7,8 @@ namespace StrixMusic.Sdk.Uno.Services.Localization
     /// <summary>
     /// A Service for getting localized strings from <see cref="ResourceLoader"/> providers.
     /// </summary>
-    public class LocalizationService : ILocalizationService
+    public class LocalizationLoaderService
+        : ILocalizationService
     {
         private Dictionary<string, ResourceLoader> _providers = new Dictionary<string, ResourceLoader>();
 
@@ -25,7 +26,10 @@ namespace StrixMusic.Sdk.Uno.Services.Localization
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Registers a new provider.
+        /// </summary>
+        /// <param name="path">The path of the provider.</param>
         public void RegisterProvider(string path)
         {
             if (_providers.ContainsKey(path))

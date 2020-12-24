@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Services.Localization;
+using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Shells.ZuneDesktop.Settings;
 using System.Collections.Generic;
@@ -15,8 +15,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
     /// </summary>
     public sealed partial class SettingsView : UserControl
     {
-        private ILocalizationService? _localizationService = null;
-        private ILocalizationService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<ILocalizationService>())!;
+        private LocalizationLoaderService? _localizationService = null;
+        private LocalizationLoaderService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<LocalizationLoaderService>())!;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsView"/> class.

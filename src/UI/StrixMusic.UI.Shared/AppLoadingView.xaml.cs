@@ -15,7 +15,6 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services;
-using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
@@ -37,7 +36,7 @@ namespace StrixMusic.Shared
     public sealed partial class AppLoadingView : UserControl
     {
         private DefaultSettingsService? _settingsService;
-        private ILocalizationService? _localizationService;
+        private LocalizationLoaderService? _localizationService;
         private IPlaybackHandlerService? _playbackHandlerService;
 
         /// <summary>
@@ -60,8 +59,15 @@ namespace StrixMusic.Shared
 #endif
         }
 
-        private void UpdateStatus(string text)
+        private void UpdateStatus(string text, bool translate = false)
         {
+            if (translate)
+            {
+                text = localizationService[
+                    Constants.Localization.StartupResource,
+                    text];
+            }
+
             PART_Status.Text = text;
         }
 
@@ -77,7 +83,7 @@ namespace StrixMusic.Shared
             //UpdateStatus("Initializing services");
 
             IServiceCollection services = new ServiceCollection();
-            _localizationService = new LocalizationService();
+            _localizationService = new LocalizationLoaderService();
             _localizationService.RegisterProvider(Constants.Localization.StartupResource);
 
             // UpdateStatus("Initializing services");
