@@ -1,35 +1,45 @@
-﻿using System.Collections.ObjectModel;
-using LaunchPad.AbstractUI.Controls;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractUI.Models;
+using StrixMusic.Helpers;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Uno.Services;
+using StrixMusic.Sdk.Uno.Models;
+using Uno.Extensions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Uno.Services;
 
 namespace StrixMusic.Shared
 {
-    /// <summary>
-    /// The SuperShell is an in-app overlay that sits on top of all other shells. This provides a way for the user to change settings even if the current shell has a catastrophic failure.
-    /// </summary>
     public sealed partial class SuperShell : UserControl
     {
+        private readonly ISettingsService _settingsService;
+        private readonly IShellService _shellService;
+        private bool _loadingShells = true;
+
         /// <summary>
-        /// The groups of items shown in the UI.
+        /// The labels for the skins that the user can choose from.
         /// </summary>
-        public ObservableCollection<UIElement> Items { get; set; }
+        public ObservableCollection<ShellModel> Skins { get; set; }
+
+        /// <summary>
+        /// TEMPORARY. Allows binding to a group of <see cref="AbstractUIElementGroup"/>s.
+        /// </summary>
+        public ObservableCollection<AbstractUIElementGroup> AbstractUIGroups { get; set; } = new ObservableCollection<AbstractUIElementGroup>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperShell"/> class.
         /// </summary>
         public SuperShell()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            Items = new ObservableCollection<UIElement>()
-            {
-            };
+            Skins = new ObservableCollection<ShellModel>();
+            _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+            _shellService = Ioc.Default.GetRequiredService<IShellService>();
 
             Loaded += SuperShell_Loaded;
         }
@@ -40,12 +50,60 @@ namespace StrixMusic.Shared
         public SuperShell(ICore core)
             : this()
         {
-
+            SetupAbstractUI(core);
         }
 
         private async void SuperShell_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= SuperShell_Loaded;
+            await InitSkins();
+        }
+
+        // This is temporary, to test abstract UI.
+        private void SetupAbstractUI(ICore core)
+        {
+            AbstractUIGroups.Clear();
+            AbstractUIGroups.AddRange(core.CoreConfig.AbstractUIElements);
+        }
+
+        private async Task InitSkins()
+        {
+            // Gets the preferred shell's assembly name
+            var preferredShell = await _settingsService.GetValue<string>(nameof(SettingsKeys.PreferredShell));
+
+            // Gets the list of loaded shells.
+            foreach (var shell in _shellService.LoadedShells.Values)
+            {
+                Skins.Add(shell);
+
+                // Mark the current shell selected or Default Shell as the backup.
+                if (shell.DisplayName == _shellService.DefaultShellDisplayName || shell.AssemblyName == preferredShell)
+                {
+                    ShellSelector.SelectedItem = shell;
+                }
+            }
+
+            // Declares loading finished.
+            _loadingShells = false;
+        }
+
+        private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Returns if the shell list is still initializing.
+            if (_loadingShells)
+            {
+                return;
+            }
+
+            // Gets the selected preferred skin.
+            ShellModel? newPreferredSkin = ShellSelector.SelectedItem as ShellModel;
+            if (newPreferredSkin == null)
+            {
+                return;
+            }
+
+            // Saves the assembly name.
+            await _settingsService.SetValue<string>(nameof(SettingsKeys.PreferredShell), newPreferredSkin.AssemblyName);
         }
     }
 }

@@ -10,7 +10,29 @@
     MinHeight="250"
     MinWidth="400"
     Margin="20,5">
-    
-    <!--wip-->
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <!-- TODO: Destroy and replace with the default settings control -->
+
+        <TextBlock x:Uid="/SuperShell/AppSkinTB" Text="App Skin" FontSize="16" Margin="0,0,0,7" />
+
+        <ComboBox x:Name="ShellSelector" Grid.Row="1" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
+                  SelectionChanged="ComboBox_SelectionChanged">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="models:ShellModel">
+                    <TextBlock Text="{x:Bind DisplayName}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <ScrollViewer VerticalScrollMode="Auto" Grid.Row="2">
+            <controls:AbstractUIGroupListPresenter DataContext="{x:Bind AbstractUIGroups}" />
+        </ScrollViewer>
+
+    </Grid>
 </UserControl>
- 
