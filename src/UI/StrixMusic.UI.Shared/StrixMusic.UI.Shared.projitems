@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppFrame.xaml.cs">
       <DependentUpon>AppFrame.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\CurrentWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ShellService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml.cs">
@@ -58,7 +59,16 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Common.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Startup.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\SuperShell.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Music.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Common.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Resources.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Startup.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\SuperShell.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Music.resw" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Assets\Strix\logo.svg" />

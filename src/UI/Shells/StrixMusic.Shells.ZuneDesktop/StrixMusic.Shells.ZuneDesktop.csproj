@@ -42,7 +42,7 @@
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="Assets\Backgrounds\Aurora Borealis.png" />
+		<None Remove="Assets\Backgrounds\AuroraBorealis.png" />
 		<None Remove="Assets\Backgrounds\Bloom.png" />
 		<None Remove="Assets\Backgrounds\Bubbles.png" />
 		<None Remove="Assets\Backgrounds\Cells.png" />
@@ -60,7 +60,6 @@
 		<None Remove="Controls\ZuneShell.xaml" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Resources.xaml" />
-		<None Remove="Resources\Brushes - Copy.xaml" />
 		<None Remove="Resources\Brushes.xaml" />
 		<None Remove="Resources\ButtonStyles.xaml" />
 		<None Remove="Styles\AlbumCollectionStyle.xaml" />
@@ -86,7 +85,6 @@
 		<UpToDateCheckInput Remove="Controls\ZuneShell.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
 		<UpToDateCheckInput Remove="Resources.xaml" />
-		<UpToDateCheckInput Remove="Resources\Brushes - Copy.xaml" />
 		<UpToDateCheckInput Remove="Resources\Brushes.xaml" />
 		<UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
 		<UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
@@ -100,7 +98,7 @@
 		<UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Include="Assets\Backgrounds\Aurora Borealis.png" />
+	  <Content Include="Assets\Backgrounds\AuroraBorealis.png" />
 	  <Content Include="Assets\Backgrounds\Bubbles.png" />
 	  <Content Include="Assets\Backgrounds\Cells.png" />
 	  <Content Include="Assets\Backgrounds\Hero.png" />
@@ -126,6 +124,12 @@
 		<ProjectReference Include="..\..\..\Libs\OwlCore\OwlCore.csproj" />
 		<ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
 		<ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PRIResource Include="Strings\en\ZuneSettings.resw" />
+		<PRIResource Include="Strings\en\ZuneUI.resw" />
+		<PRIResource Include="Strings\he\ZuneSettings.resw" />
+		<PRIResource Include="Strings\he\ZuneUI.resw" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Styles\AlbumCollectionStyle.xaml.cs">

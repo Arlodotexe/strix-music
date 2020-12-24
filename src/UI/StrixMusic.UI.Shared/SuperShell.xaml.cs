@@ -31,11 +31,6 @@ namespace StrixMusic.Shared
             {
             };
 
-            PART_Pivot.Items.Add(new AbstractUIGroupListPresenter()
-            {
-                DataContext = new DefaultAbstractUISettings().AllElementGroups,
-            });
-
             Loaded += SuperShell_Loaded;
         }
 
@@ -45,10 +40,7 @@ namespace StrixMusic.Shared
         public SuperShell(ICore core)
             : this()
         {
-            PART_Pivot.Items.Add(new AbstractUIGroupListPresenter()
-            {
-                DataContext = core.CoreConfig.AbstractUIElements,
-            });
+
         }
 
         private async void SuperShell_Loaded(object sender, RoutedEventArgs e)

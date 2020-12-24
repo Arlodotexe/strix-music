@@ -150,7 +150,6 @@ namespace StrixMusic.Sdk.Uno.Controls
 
             AttachEvents();
 
-            SetPivotTitle(PivotTitle);
             ToggleAnyEmptyPivotItems();
             SetNoContentTemplate(AllEmptyContent);
         }

@@ -7,6 +7,7 @@
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:controls="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:a="using:LaunchPad.Attached"
     mc:Ignorable="d">
 
     <Grid Padding="32,-16,32,16">
@@ -78,11 +79,16 @@
 
         <!--Page Selector-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Margin="0,8,0,24">
-            <RadioButton Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsChecked="True" Click="ArtistsPageSelected"/>
-            <RadioButton Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"/>
-            <RadioButton Content="ALBUMS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="AlbumsPageSelected"/>
-            <RadioButton Content="SONGS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="SongsPageSelected"/>
-            <RadioButton Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"/>
+            <RadioButton x:Uid="/Music/ArtistsBTN" Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsChecked="True" Click="ArtistsPageSelected"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/GenresBTN" Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/AlbumsBTN" Content="ALBUMS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="AlbumsPageSelected"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/SongsBTN" Content="SONGS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="SongsPageSelected"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/PlaylistsBTN" Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"
+                         a:TextHelpers.CharacterCasing="Upper"/>
         </StackPanel>
 
         <!--Collection Grid-->

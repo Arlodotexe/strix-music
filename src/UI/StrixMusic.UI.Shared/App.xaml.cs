@@ -66,6 +66,17 @@ namespace StrixMusic
                 // Place the frame in the current Window
                 Window.Current.Content = AppFrame = new AppFrame();
             }
+
+            // Bi-directional language support
+            var flowDirectionSetting = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
+            if (flowDirectionSetting == "LTR")
+            {
+                AppFrame.FlowDirection = FlowDirection.LeftToRight;
+            }
+            else
+            {
+                AppFrame.FlowDirection = FlowDirection.RightToLeft;
+            }
         }
 
         /// <summary>
