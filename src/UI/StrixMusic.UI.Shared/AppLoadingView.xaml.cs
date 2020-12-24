@@ -89,6 +89,7 @@ namespace StrixMusic.Shared
             services.AddSingleton<CacheServiceBase>(cacheFileSystemService);
             services.AddSingleton<ISharedFactory, SharedFactory>();
             services.AddSingleton<IFileSystemService>(fileSystemService);
+            services.AddSingleton<IShellService, ShellService>();
 
             _playbackHandlerService = new PlaybackHandlerService();
             services.AddSingleton(_playbackHandlerService);
