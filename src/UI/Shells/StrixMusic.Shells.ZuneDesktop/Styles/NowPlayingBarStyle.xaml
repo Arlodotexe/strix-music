@@ -61,7 +61,8 @@
                                     <Rectangle x:Name="AlbumCover" Width="64" Height="64" Fill="#FF00FF" Grid.RowSpan="3" VerticalAlignment="Center"/>
                                     <TextBlock Text="Diplomat's Son" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5"/>
                                     <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5"/>
-                                    <defaultcontrols:ProgressSlider Maximum="280000"  Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"/>
+                                    <defaultcontrols:ProgressSlider Maximum="280000"  Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
+                                                                    FlowDirection="LeftToRight"/>
                                 </Grid>
 
                                 <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom">
@@ -82,21 +83,26 @@
                                         <ToggleButton x:Name="ShuffleButton" Style="{StaticResource ZuneSmallToggleButton}" Margin="-8,0,8,0" VerticalAlignment="Center" FontSize="20">
                                             <FontIcon Glyph="&#xE8B1;"/>
                                         </ToggleButton>
-                                        <Button x:Name="PreviousButton" Style="{StaticResource ZuneButton}" Width="32">
-                                            <PathIcon Data="M 0 4.2357127 6.3582224 8.4666673 V 0.0047581 Z M 6.3417776 4.2309543 12.7 8.4619093 V 0 Z" Margin="-2,0,0,0"/>
-                                            <!--<FontIcon Glyph="&#xE100;" FontSize="12"/>-->
-                                        </Button>
-                                        <launchpad:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42">
-                                            <launchpad:ToggleContentButton.CheckedContent>
-                                                <FontIcon Glyph="&#xE103;" FontSize="20"/>
-                                            </launchpad:ToggleContentButton.CheckedContent>
-                                            <PathIcon Data="M 11.1125 6.4158049 2.3841858e-7 12.83161 l 0 -12.831609975863432 z"/>
-                                            <!--<FontIcon Glyph="&#xE102;" FontSize="20"/>-->
-                                        </launchpad:ToggleContentButton>
-                                        <Button x:Name="SkipButton" Style="{StaticResource ZuneButton}" Width="32">
-                                            <PathIcon Data="M 12.7 4.2357127 6.3417776 8.4666673 V 0.0047581 Z M 6.3582224 4.2309543 0 8.4619093 V 0 Z" Margin="2,0,0,0"/>
-                                            <!--<FontIcon Glyph="&#xE101;" FontSize="12"/>-->
-                                        </Button>
+
+                                        <!--Skip and Prev buttons shouldn't flip with Bi-directional languages-->
+                                        <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
+                                            <Button x:Name="PreviousButton" Style="{StaticResource ZuneButton}" Width="32">
+                                                <PathIcon Data="M 0 4.2357127 6.3582224 8.4666673 V 0.0047581 Z M 6.3417776 4.2309543 12.7 8.4619093 V 0 Z" Margin="-2,0,0,0"/>
+                                                <!--<FontIcon Glyph="&#xE100;" FontSize="12"/>-->
+                                            </Button>
+                                            <launchpad:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42">
+                                                <launchpad:ToggleContentButton.CheckedContent>
+                                                    <FontIcon Glyph="&#xE103;" FontSize="20"/>
+                                                </launchpad:ToggleContentButton.CheckedContent>
+                                                <PathIcon Data="M 11.1125 6.4158049 2.3841858e-7 12.83161 l 0 -12.831609975863432 z"/>
+                                                <!--<FontIcon Glyph="&#xE102;" FontSize="20"/>-->
+                                            </launchpad:ToggleContentButton>
+                                            <Button x:Name="SkipButton" Style="{StaticResource ZuneButton}" Width="32">
+                                                <PathIcon Data="M 12.7 4.2357127 6.3417776 8.4666673 V 0.0047581 Z M 6.3582224 4.2309543 0 8.4619093 V 0 Z" Margin="2,0,0,0"/>
+                                                <!--<FontIcon Glyph="&#xE101;" FontSize="12"/>-->
+                                            </Button>
+                                        </StackPanel>
+                                        
                                         <Button Style="{StaticResource ZuneSmallButton}" VerticalAlignment="Center" Margin="12,0" Click="NavigateToNowPlaying">
                                             <FontIcon Glyph="&#xF61F;" FontSize="20" FontWeight="Bold" Foreground="#DB0D94"/>
                                         </Button>

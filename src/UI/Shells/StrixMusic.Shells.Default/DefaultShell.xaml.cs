@@ -15,7 +15,7 @@ namespace StrixMusic.Shells.Default
     /// </summary>
     public sealed partial class DefaultShell : ShellBase
     {
-        private readonly IReadOnlyDictionary<string, Type> _pagesMapping;
+        private readonly IReadOnlyDictionary<NavigationViewItemBase, Type> _pagesMapping;
         private INavigationService<Control>? _navigationService;
         private Stack<Control> _history = new Stack<Control>();
 
@@ -30,11 +30,10 @@ namespace StrixMusic.Shells.Default
             _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
             _navigationService!.BackRequested += Shell_BackRequested;
 
-            _pagesMapping = new Dictionary<string, Type>
+            _pagesMapping = new Dictionary<NavigationViewItemBase, Type>
             {
-                { "Home", typeof(HomeView) },
-                { "SettingsView", typeof(SettingsView) },
-                { "Now Playing", typeof(NowPlayingView) },
+                { HomeItem, typeof(HomeView) },
+                { NowPlayingItem, typeof(NowPlayingView) },
             };
         }
 
@@ -109,17 +108,17 @@ namespace StrixMusic.Shells.Default
         {
             if (args.IsSettingsInvoked)
             {
-                _navigationService!.NavigateTo(_pagesMapping[nameof(SettingsView)]);
+                _navigationService!.NavigateTo(typeof(SettingsView));
                 return;
             }
 
-            string invokedItemString = (args.InvokedItem as string) !;
-            if (invokedItemString == null || !_pagesMapping.ContainsKey(invokedItemString))
+            NavigationViewItemBase invokedItem = (args.InvokedItemContainer as NavigationViewItemBase) !;
+            if (invokedItem == null || !_pagesMapping.ContainsKey(invokedItem))
             {
                 return;
             }
 
-            _navigationService!.NavigateTo(_pagesMapping[invokedItemString], invokedItemString == "Now Playing");
+            _navigationService!.NavigateTo(_pagesMapping[invokedItem], invokedItem == NowPlayingItem);
         }
     }
 }

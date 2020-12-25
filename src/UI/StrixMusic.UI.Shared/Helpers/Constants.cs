@@ -19,78 +19,30 @@ namespace StrixMusic.Helpers
         public const string ResourcesPrefix = "ms-appx:///";
 
         /// <summary>
-        /// An accessing class for constant information about Shells.
+        /// Localization resources constants.
         /// </summary>
-        public static class Shells
+        public static class Localization
         {
-            private static Dictionary<string, ShellModel>? _loadedShells = null;
 
             /// <summary>
-            /// The <see cref="Regex"/> to determine if an assembly is a shell by the fullname.
+            /// The PRI path of the Startup resource.
             /// </summary>
-            public const string ShellAssemblyRegex = @"^(?:StrixMusic\.Shells\.)(\w{3,})[^.]";
+            public const string StartupResource = "Startup";
 
             /// <summary>
-            /// The <see cref="Regex"/> to determine if an assembly is a shell by the fullname.
+            /// The PRI path of the SuperShell resource.
             /// </summary>
-            public const string ShellResourceDictionaryRegex = @"^(?:ms-appx:\/\/\/StrixMusic\.Shells\.)(\w{3,})(?:\/Resources\.xaml)$";
+            public const string SuperShellResource = "SuperShell";
 
             /// <summary>
-            /// The name of the DefaultShell.
+            /// The PRI path of the Common resource.
             /// </summary>
-            public const string DefaultShellAssemblyName = "Default";
+            public const string CommonResource = "Common";
 
             /// <summary>
-            /// The name of the DefaultShell.
+            /// The PRI path of the Music resource.
             /// </summary>
-            public const string DefaultShellDisplayName = "Default Shell";
-
-            /// <summary>
-            /// The namespace before a shell.
-            /// </summary>
-            public const string ShellNamespacePrefix = "StrixMusic.Shells";
-
-            /// <summary>
-            /// The name of the resources fill for a shell.
-            /// </summary>
-            public const string ShellResourcesSuffix = "Resources.xaml";
-
-            /// <summary>
-            /// The <see cref="ShellModel"/> of the DefaultShell.
-            /// </summary>
-            public static ShellModel DefaultShellModel => LoadedShells[DefaultShellAssemblyName];
-
-            /// <summary>
-            /// Gets the loaded shells in the <see cref="Assembly"/> AssemblyName and DisplayName.
-            /// </summary>
-            public static Dictionary<string, ShellModel> LoadedShells
-            {
-                get
-                {
-                    if (_loadedShells == null)
-                    {
-                        _loadedShells = new Dictionary<string, ShellModel>();
-                        List<ShellModel> loadedShells = new List<ShellModel>();
-                        Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-                        foreach (Assembly assembly in assemblies)
-                        {
-                            // Check if the assembly name is shell.
-                            Match match = Regex.Match(assembly.FullName, ShellAssemblyRegex);
-                            if (match.Success)
-                            {
-                                // Gets the AssemblyName of the shell from the Regex.
-                                string assemblyName = match.Groups[1].Value;
-
-                                // Find the ShellName attribute
-                                ShellAttribute shellAttribute = assembly.GetCustomAttribute<ShellAttribute>();
-                                _loadedShells.Add(assemblyName, new ShellModel(match.Groups[1].Value, shellAttribute));
-                            }
-                        }
-                    }
-
-                    return _loadedShells!;
-                }
-            }
+            public const string MusicResource = "Music";
         }
     }
 }

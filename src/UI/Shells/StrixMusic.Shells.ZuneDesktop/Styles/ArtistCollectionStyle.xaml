@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:a="using:LaunchPad.Attached"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.ArtistCollectionStyle">
 
     <DataTemplate x:Key="ZuneDesktopArtistCollectionDataTemplate" x:DataType="viewModels:IArtistCollectionViewModel">
@@ -13,10 +14,12 @@
             </Grid.RowDefinitions>
 
             <StackPanel Margin="24,0,0,12">
-                <TextBlock FontSize="12" FontWeight="Bold">
-                        <Run Text="{x:Bind TotalArtistItemsCount}"/>
-                        <Run Text=" ARTISTS"/>
-                </TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Bind TotalArtistItemsCount, Mode=OneWay}" FontSize="12" FontWeight="Bold"/>
+                    <TextBlock x:Uid="/Music/ArtistsTB" Text="ARTISTS" FontSize="12" FontWeight="Bold" Margin="4,0,0,0"
+                               a:TextHelpers.CharacterCasing="Upper"/>
+                </StackPanel>
+
                 <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreArtistsCommand.IsRunning, Mode=OneWay}"/>
             </StackPanel>
 

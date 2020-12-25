@@ -30,7 +30,7 @@
       <Version>1.0.4</Version>
     </PackageReference>
     <PackageReference Include="Uno.UI">
-      <Version>3.3.0-dev.36</Version>
+      <Version>3.5.0-dev.7</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup>
@@ -241,6 +241,10 @@
     <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.Default\StrixMusic.Shells.Default.csproj">
       <Project>{d3792563-05ef-412a-8a84-0b11297e2104}</Project>
       <Name>StrixMusic.Shells.Default</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj">
+      <Project>{063715b5-1765-4269-8fb0-699fadc840e1}</Project>
+      <Name>StrixMusic.Shells.ZuneDesktop</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

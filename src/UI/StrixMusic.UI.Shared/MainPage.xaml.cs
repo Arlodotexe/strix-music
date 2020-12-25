@@ -6,20 +6,25 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.Helpers;
-using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.Uno.Models;
+using StrixMusic.Sdk.Uno.Services;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace StrixMusic.Shared
 {
+    /// <summary>
+    /// Displays the main content of the app (the user's preferred shell).
+    /// </summary>
     public sealed partial class MainPage : UserControl
     {
         private readonly List<MediaPlayerElement> _mediaPlayerElements = new List<MediaPlayerElement>();
+        private IShellService? _shellService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -44,6 +49,9 @@ namespace StrixMusic.Shared
         {
             Loaded -= MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
+
+            // Services might not be configured when MainPage is created, but they are once MainPage is added to the visual tree.
+            _shellService = Ioc.Default.GetRequiredService<IShellService>();
 
             LoadRegisteredMediaPlayerElements();
             await SetupInitialShell();
@@ -97,12 +105,15 @@ namespace StrixMusic.Shared
 
         private async Task SetupInitialShell()
         {
+            Guard.IsNotNull(_shellService, nameof(_shellService));
+
             // Gets the preferred shell from settings.
-            string preferredShell = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
-            ShellModel shellModel = Constants.Shells.DefaultShellModel!;
-            if (Constants.Shells.LoadedShells.ContainsKey(preferredShell))
+            var preferredShell = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
+            var shellModel = _shellService.DefaultShellModel;
+
+            if (_shellService.LoadedShells.ContainsKey(preferredShell))
             {
-                shellModel = Constants.Shells.LoadedShells[preferredShell];
+                shellModel = _shellService.LoadedShells[preferredShell];
                 PreferredShell = shellModel;
             }
 
@@ -111,6 +122,8 @@ namespace StrixMusic.Shared
 
         private Task SetupShell(ShellModel shell)
         {
+            Guard.IsNotNull(_shellService, nameof(_shellService));
+
             using (Threading.UIThread)
             {
                 // Removes the current shell.
@@ -119,11 +132,12 @@ namespace StrixMusic.Shared
                 // Removes old resource(s).
                 foreach (var dict in Application.Current.Resources.MergedDictionaries)
                 {
-                    Match shellMatch = Regex.Match(dict.Source.AbsoluteUri, Constants.Shells.ShellResourceDictionaryRegex);
+                    Match shellMatch = Regex.Match(dict.Source.AbsoluteUri, _shellService.ShellResourceDictionaryRegex);
+
                     if (shellMatch.Success)
                     {
                         // Skips removing the default ResourceDictionary.
-                        if (shellMatch.Groups[1].Value == Constants.Shells.DefaultShellAssemblyName)
+                        if (shellMatch.Groups[1].Value == _shellService.DefaultShellAssemblyName)
                             continue;
 
                         Application.Current.Resources.MergedDictionaries.Remove(dict);
@@ -131,10 +145,10 @@ namespace StrixMusic.Shared
                     }
                 }
 
-                if (shell.AssemblyName != Constants.Shells.DefaultShellAssemblyName)
+                if (shell.AssemblyName != _shellService.DefaultShellAssemblyName)
                 {
                     // Loads the preferred shell
-                    var resourcePath = $"{Constants.ResourcesPrefix}{Constants.Shells.ShellNamespacePrefix}.{shell.AssemblyName}/{Constants.Shells.ShellResourcesSuffix}";
+                    var resourcePath = $"{_shellService.ResourcesPrefix}{_shellService.ShellNamespacePrefix}.{shell.AssemblyName}/{_shellService.ShellResourcesSuffix}";
                     var resourceDictionary = new ResourceDictionary() { Source = new Uri(resourcePath) };
                     Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
                 }
@@ -172,6 +186,9 @@ namespace StrixMusic.Shared
 
         private async void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            if (_shellService is null)
+                return;
+
             if (ActiveShell == null || PreferredShell == null)
             {
                 // Ignore this during initialization
@@ -180,14 +197,14 @@ namespace StrixMusic.Shared
 
             if (ActiveShell != PreferredShell)
             {
-                if (CheckShellModelSupport(PreferredShell!))
+                if (CheckShellModelSupport(PreferredShell))
                 {
                     await SetupShell(PreferredShell);
                 }
             }
-            else if (!CheckShellModelSupport(ActiveShell!))
+            else if (!CheckShellModelSupport(ActiveShell))
             {
-                await SetupShell(Constants.Shells.DefaultShellModel);
+                await SetupShell(_shellService.DefaultShellModel);
             }
         }
 

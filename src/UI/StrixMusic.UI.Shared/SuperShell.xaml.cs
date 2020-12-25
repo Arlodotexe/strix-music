@@ -10,12 +10,14 @@ using StrixMusic.Sdk.Uno.Models;
 using Uno.Extensions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Uno.Services;
 
 namespace StrixMusic.Shared
 {
     public sealed partial class SuperShell : UserControl
     {
         private readonly ISettingsService _settingsService;
+        private readonly IShellService _shellService;
         private bool _loadingShells = true;
 
         /// <summary>
@@ -37,6 +39,7 @@ namespace StrixMusic.Shared
 
             Skins = new ObservableCollection<ShellModel>();
             _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+            _shellService = Ioc.Default.GetRequiredService<IShellService>();
 
             Loaded += SuperShell_Loaded;
         }
@@ -69,12 +72,12 @@ namespace StrixMusic.Shared
             var preferredShell = await _settingsService.GetValue<string>(nameof(SettingsKeys.PreferredShell));
 
             // Gets the list of loaded shells.
-            foreach (ShellModel shell in Constants.Shells.LoadedShells.Values)
+            foreach (var shell in _shellService.LoadedShells.Values)
             {
                 Skins.Add(shell);
 
                 // Mark the current shell selected or Default Shell as the backup.
-                if (shell.DisplayName == Constants.Shells.DefaultShellDisplayName || shell.AssemblyName == preferredShell)
+                if (shell.DisplayName == _shellService.DefaultShellDisplayName || shell.AssemblyName == preferredShell)
                 {
                     ShellSelector.SelectedItem = shell;
                 }
