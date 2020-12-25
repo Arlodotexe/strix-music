@@ -13,7 +13,7 @@ namespace StrixMusic.Core.FileCore.Models
     public abstract class LocalFileCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MusicBrainzCollectionGroupBase"/> class.
+        /// Initializes a new instance of the <see cref="LocalFileCorePlayableCollectionGroupBase"/> class.
         /// </summary>
         /// <param name="sourceCore">The instance of the core this object was created in.</param>
         protected LocalFileCorePlayableCollectionGroupBase(ICore sourceCore)
