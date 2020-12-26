@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         /// <summary>
         /// The <see cref="IAlbumCollectionViewModel"/> for the control.
         /// </summary>
-        public IAlbumCollectionViewModel ViewModel => (DataContext as IAlbumCollectionViewModel)!;
+        public IAlbumCollectionViewModel ViewModel => (IAlbumCollectionViewModel)DataContext;
 
         /// <inheritdoc />
         protected override void OnApplyTemplate()
@@ -43,6 +43,9 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             if (!ViewModel.PopulateMoreAlbumsCommand.IsRunning)
                 await ViewModel.PopulateMoreAlbumsCommand.ExecuteAsync(25);
+
+            if (!ViewModel.PopulateMoreImagesCommand.IsRunning)
+                await ViewModel.PopulateMoreImagesCommand.ExecuteAsync(25);
         }
 
         private void AttachHandlers()
