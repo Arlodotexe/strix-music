@@ -71,13 +71,8 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
-                        <Rectangle x:Name="AlbumImage" Grid.RowSpan="2" Margin="38,0,22,0"
-                                   Height="300" Width="300" HorizontalAlignment="Center"
-                                   Visibility="{x:Bind converters:CollectionAnyToVisibilityConverter.Convert(Images)}">
-                            <Rectangle.Fill>
-                                <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
-                            </Rectangle.Fill>
-                        </Rectangle>
+                        <defaultcontrols:SafeImage x:Name="AlbumImage" Grid.RowSpan="2" Margin="38,0,22,0"
+                                                   Height="300" Width="300" HorizontalAlignment="Center"/>
 
                         <StackPanel x:Name="DetailsStack" Grid.Column="1" Margin="16,32,0,0" MaxWidth="600" HorizontalAlignment="Left" Padding="0,0,64,0">
                             <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold"/>

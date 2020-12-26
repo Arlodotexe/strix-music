@@ -43,9 +43,6 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             if (!ViewModel.PopulateMoreAlbumsCommand.IsRunning)
                 await ViewModel.PopulateMoreAlbumsCommand.ExecuteAsync(25);
-
-            if (!ViewModel.PopulateMoreImagesCommand.IsRunning)
-                await ViewModel.PopulateMoreImagesCommand.ExecuteAsync(25);
         }
 
         private void AttachHandlers()

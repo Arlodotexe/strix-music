@@ -8,7 +8,7 @@
     x:Class="StrixMusic.Sdk.Uno.Styles.SafeImageStyle">
 
     <DataTemplate x:Key="DefaultSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
-        <Grid>
+        <Grid FlowDirection="LeftToRight">
             <!--Fallback SVG-->
             <Image x:Name="PART_Fallback" Opacity=".3">
                 <Image.Source>
@@ -39,7 +39,7 @@
     </Style>
 
     <DataTemplate x:Key="DefaultRoundSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
-        <Grid>
+        <Grid FlowDirection="LeftToRight">
             <!--Fallback SVG-->
             <Image x:Name="PART_Fallback" Opacity=".3">
                 <Image.Source>
