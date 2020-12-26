@@ -15,6 +15,9 @@
     <PackageReference Include="Microsoft.Toolkit.Mvvm">
       <Version>7.0.0-preview4</Version>
     </PackageReference>
+    <PackageReference Include="Refit">
+      <Version>5.2.4</Version>
+    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.1.118</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
