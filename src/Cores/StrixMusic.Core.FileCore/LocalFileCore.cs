@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 namespace StrixMusic.Core.FileCore
 {
     /// <inheritdoc />
-    public class FileCore : ICore
+    public class LocalFileCore : ICore
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileCore"/> class.
+        /// Initializes a new instance of the <see cref="LocalFileCore"/> class.
         /// </summary>
         /// <param name="instanceId"></param>
-        public FileCore(string instanceId)
+        public LocalFileCore(string instanceId)
         {
             //TODO: The constructor warnings will be fixed once models are added to initialize the interfaces.
         }
