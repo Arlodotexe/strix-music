@@ -74,16 +74,18 @@ namespace OwlCore.Extensions
             return Task.Run(() =>
             {
                 object localLockObject = new object();
-                var enumerable = items as T[] ?? items.ToArray();
+                var enumerable = items as ICollection<T> ?? items.ToArray();
 
-                var resultCollection = new T2[enumerable.Length];
+                var resultCollection = new T2[enumerable.Count];
 
-                Parallel.For(0, enumerable.Length, (i, x) =>
+                Parallel.For(0, enumerable.Count, (i, x) =>
                 {
                     cancellationToken.Token.Register(x.Stop);
 
+                    var results = func(enumerable.ElementAt(i))();
+
                     lock (localLockObject)
-                        resultCollection[i] = (func(enumerable[i])());
+                        resultCollection[i] = results;
                 });
 
                 return resultCollection;
