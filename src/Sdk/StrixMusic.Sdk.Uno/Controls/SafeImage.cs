@@ -102,8 +102,14 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void Setup()
         {
-            PART_Fallback!.Visibility = Visibility.Collapsed;
-            PART_ImageRectangle!.Visibility = Visibility.Visible;
+            if (PART_Fallback != null)
+                PART_Fallback.Visibility = Visibility.Collapsed;
+
+            if (PART_ImageRectangle != null)
+                PART_ImageRectangle.Visibility = Visibility.Visible;
+
+            if (ViewModel?.PopulateMoreImagesCommand.IsRunning == false)
+                ViewModel.PopulateMoreImagesCommand.ExecuteAsync(5);
 
             if (ViewModel?.Images == null || ViewModel.Images.Count == 0)
             {
@@ -113,8 +119,11 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void GoToFallback()
         {
-            PART_Fallback!.Visibility = Visibility.Visible;
-            PART_ImageRectangle!.Visibility = Visibility.Collapsed;
+            if (PART_Fallback != null)
+                PART_Fallback.Visibility = Visibility.Visible;
+
+            if (PART_ImageRectangle != null)
+                PART_ImageRectangle.Visibility = Visibility.Collapsed;
         }
     }
 }
