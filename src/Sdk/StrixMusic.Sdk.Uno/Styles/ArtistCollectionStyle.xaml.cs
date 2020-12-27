@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno.Controls;
-using Microsoft.Toolkit.Diagnostics;
 
 namespace StrixMusic.Sdk.Uno.Styles
 {
+    /// <summary>
+    /// A <see cref="ResourceDictionary"/> containing the default style for the <see cref="ArtistCollection"/>.
+    /// </summary>
     public sealed partial class ArtistCollectionStyle : ResourceDictionary
     {
         /// <summary>

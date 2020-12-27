@@ -36,7 +36,7 @@
     <None Remove="Styles\ArtistCollectionStyle.xaml" />
     <None Remove="Styles\ArtistItemStyle.xaml" />
     <None Remove="Styles\ArtistViewStyle.xaml" />
-    <None Remove="Styles\HomeStyle.xaml" />
+    <None Remove="Styles\HomeViewStyle.xaml" />
     <None Remove="Styles\NowPlayingBarStyle.xaml" />
     <None Remove="Styles\NowPlayingViewStyle.xaml" />
     <None Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
@@ -53,7 +53,7 @@
     <UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\HomeViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
@@ -80,8 +80,8 @@
     <Compile Update="Styles\ArtistViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\HomeStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="Styles\HomeViewStyle.xaml.cs">
+      <DependentUpon>HomeViewStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Styles\NowPlayingViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>

@@ -4,7 +4,7 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
-    x:Class="StrixMusic.Sdk.Uno.Styles.HomeStyle">
+    x:Class="StrixMusic.Sdk.Uno.Styles.HomeViewStyle">
 
     <DataTemplate x:Key="DefaultHomeViewTemplate" x:DataType="sdk:MainViewModel">
         <UserControl>
