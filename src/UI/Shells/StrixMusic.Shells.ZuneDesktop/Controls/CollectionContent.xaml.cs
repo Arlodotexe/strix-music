@@ -33,6 +33,15 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         {
             e.SelectedItem.PopulateMoreAlbumsCommand.Execute(20);
             AlbumCollection.DataContext = e.SelectedItem;
+
+            e.SelectedItem.PopulateMoreTracksCommand.Execute(20);
+            TrackCollection.DataContext = e.SelectedItem;
+        }
+
+        private void AlbumSelected(object sender, SelectionChangedEventArgs<AlbumViewModel> e)
+        {
+            e.SelectedItem.PopulateMoreTracksCommand.Execute(20);
+            TrackCollection.DataContext = e.SelectedItem;
         }
 
         private void AlbumsPageSelected(object sender, RoutedEventArgs e)
