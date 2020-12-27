@@ -6,6 +6,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
+    /// <summary>
+    /// The base type for the root element in all Shells.
+    /// </summary>
     public abstract partial class ShellBase : UserControl
     {
         /// <summary>

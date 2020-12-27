@@ -1,7 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml.Controls;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {

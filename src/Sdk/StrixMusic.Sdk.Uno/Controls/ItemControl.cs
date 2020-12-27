@@ -1,13 +1,11 @@
-﻿using StrixMusic.Sdk.Uno.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
+    /// <summary>
+    /// Represents a container item in the <see cref="CollectionControl{TData, TItem}"/>.
+    /// </summary>
     public partial class ItemControl : Control
     {
         /// <summary>
@@ -17,11 +15,11 @@ namespace StrixMusic.Sdk.Uno.Controls
             DependencyProperty.Register(
                 nameof(Selected),
                 typeof(bool),
-                typeof(ArtistItem),
+                typeof(ItemControl),
                 new PropertyMetadata(false));
 
         /// <summary>
-        /// Gets whether or not the Artist item is selected.
+        /// Gets whether or not the Item is selected.
         /// </summary>
         public bool Selected
         {

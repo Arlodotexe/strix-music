@@ -1,7 +1,7 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using StrixMusic.Sdk.ViewModels;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.ViewModels;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -47,7 +47,8 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             if (!ViewModel.PopulateMoreTracksCommand.IsRunning &&
                 ViewModel.TotalTracksCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+                
+            SetEmptyVisibility(Visibility.Visible);
         }
 
         private void AttachHandlers()

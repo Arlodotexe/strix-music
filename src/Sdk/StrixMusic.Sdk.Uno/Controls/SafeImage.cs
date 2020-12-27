@@ -97,6 +97,7 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void SafeImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
+            // Go to fallback if the image failed to load.
             OverrideToFallback();
         }
 
@@ -106,6 +107,9 @@ namespace StrixMusic.Sdk.Uno.Controls
                 ViewModel.PopulateMoreImagesCommand.ExecuteAsync(1);
         }
 
+        /// <summary>
+        /// Set to Fallback regardless of if there's an image present.
+        /// </summary>
         private void OverrideToFallback()
         {
             Guard.IsNotNull(PART_Fallback, nameof(PART_Fallback));
