@@ -30,6 +30,7 @@ namespace StrixMusic.Shells.Default
             _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
             _navigationService!.BackRequested += Shell_BackRequested;
 
+            // Initialize map between NavigationItems and page types
             _pagesMapping = new Dictionary<NavigationViewItemBase, Type>
             {
                 { HomeItem, typeof(HomeView) },
@@ -65,11 +66,16 @@ namespace StrixMusic.Shells.Default
             {
                 OverlayContent.Content = e.Page;
                 OverlayContent.Visibility = Visibility.Visible;
+                
+                // No sense checking the NavigationItems if the type is an overlay
+                return;
             }
 
-            // This isn't great, but there should only be 4 items
+            // Set the selected NavigationItem to the new page, if it's on the list
             Type controlType = e.Page.GetType();
             bool containsValue = controlType == typeof(SettingsView);
+
+            // This isn't great, but there should only be 4 items
             foreach (var value in _pagesMapping.Values)
             {
                 containsValue = containsValue || (value == controlType);
@@ -81,6 +87,7 @@ namespace StrixMusic.Shells.Default
             }
             else
             {
+                // If it's a top level item, clear history
                 _history.Clear();
             }
         }
