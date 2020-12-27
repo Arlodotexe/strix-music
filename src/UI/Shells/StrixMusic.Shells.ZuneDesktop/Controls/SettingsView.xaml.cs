@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Uno.Services.Localization;
+﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Shells.ZuneDesktop.Settings;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +10,12 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Shells.ZuneDesktop.Controls
 {
     /// <summary>
-    /// A thing. TODO: Comment better
+    /// The Settings page in the ZuneDesktop shell.
     /// </summary>
     public sealed partial class SettingsView : UserControl
     {
         private LocalizationLoaderService? _localizationService = null;
+
         private LocalizationLoaderService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<LocalizationLoaderService>())!;
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         /// <remarks>
         /// Translated in constructor.
         /// </remarks>
-        private readonly List<string> _displayPages = new List<string>
+        private readonly IEnumerable<string> _displayPages = new string[]
         {
             "Background",
             "Scale",
