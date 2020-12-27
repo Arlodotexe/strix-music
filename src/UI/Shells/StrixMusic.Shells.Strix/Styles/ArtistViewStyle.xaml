@@ -75,6 +75,7 @@
                         <defaultcontrols:AlbumCollection/>
                     </PivotItem>
                     <PivotItem Header="Songs">
+                        <defaultcontrols:TrackCollection/>
                     </PivotItem>
                     <PivotItem Header="Similar Artists">
                     </PivotItem>

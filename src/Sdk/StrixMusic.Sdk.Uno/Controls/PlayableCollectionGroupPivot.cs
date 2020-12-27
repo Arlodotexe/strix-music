@@ -86,7 +86,7 @@ namespace StrixMusic.Sdk.Uno.Controls
                 nameof(HideEmptyPivots),
                 typeof(bool),
                 typeof(PlayableCollectionGroupPivot),
-                new PropertyMetadata(true));
+                new PropertyMetadata(false));
 
         /// <summary>
         /// Gets or sets whether or not to hide pivots with no content.

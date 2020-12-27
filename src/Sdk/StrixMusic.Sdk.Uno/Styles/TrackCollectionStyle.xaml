@@ -10,7 +10,10 @@
                   Margin="32" HorizontalAlignment="Stretch"
                    SelectionMode="None" IsItemClickEnabled="True">
             <ListView.Header>
-                <ProgressRing IsActive="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
+                <Grid>
+                    <ProgressRing IsActive="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
+                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+                </Grid>
             </ListView.Header>
             <ListView.ItemTemplate>
                 <DataTemplate>

@@ -45,6 +45,14 @@ namespace StrixMusic.Sdk.Uno.Controls
                 await ViewModel.PopulateMoreAlbumsCommand.ExecuteAsync(25);
         }
 
+        /// <inheritdoc/>
+        protected override void CheckAndToggleEmpty()
+        {
+            if (!ViewModel.PopulateMoreAlbumsCommand.IsRunning &&
+                ViewModel.TotalAlbumItemsCount == 0)
+                SetEmptyVisibility(Visibility.Visible);
+        }
+
         private void AttachHandlers()
         {
             Unloaded += AlbumCollection_Unloaded;
