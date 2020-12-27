@@ -8,7 +8,14 @@
     <DataTemplate x:Key="StrixAlbumCollectionContentTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
         <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource StrixAlbumCollectionItemStyle}"
                   Padding="16" HorizontalAlignment="Stretch"  SelectionMode="None" IsItemClickEnabled="True"
-                  ItemClick="OpenAlbum"/>
+                  ItemClick="OpenAlbum">
+            <GridView.Header>
+                <Grid>
+                    <ProgressRing IsActive="{x:Bind PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}"/>
+                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+                </Grid>
+            </GridView.Header>
+        </GridView>
     </DataTemplate>
 
     <DataTemplate x:Key="StrixAlbumCollectionItemStyle">

@@ -50,12 +50,9 @@
                             </Grid.RowDefinitions>
 
                             <!--Consider removing Artist image-->
-                            <Rectangle Width="48" Height="48" RadiusX="32" RadiusY="32"
-                                                       Visibility="{x:Bind converters:CollectionAnyToVisibilityConverter.Convert(Images)}">
-                                <Rectangle.Fill>
-                                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
-                                </Rectangle.Fill>
-                            </Rectangle>
+                            <defaultcontrols:SafeImage Width="48" Height="48"
+                                                       Style="{StaticResource DefaultRoundSafeImageStyle}"/>
+                            
                             <TextBlock Grid.Column="1" Text="{x:Bind Name}" FontSize="30" VerticalAlignment="Center" Margin="16,0"/>
 
                             <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
@@ -78,6 +75,7 @@
                         <defaultcontrols:AlbumCollection/>
                     </PivotItem>
                     <PivotItem Header="Songs">
+                        <defaultcontrols:TrackCollection/>
                     </PivotItem>
                     <PivotItem Header="Similar Artists">
                     </PivotItem>

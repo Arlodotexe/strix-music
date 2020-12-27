@@ -8,18 +8,19 @@
     x:Class="StrixMusic.Sdk.Uno.Styles.SafeImageStyle">
 
     <DataTemplate x:Key="DefaultSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
-        <Grid>
+        <Grid FlowDirection="LeftToRight">
             <!--Fallback SVG-->
-            <Image x:Name="PART_Fallback" Opacity=".3">
+            <Image x:Name="PART_Fallback" Opacity=".3" Visibility="{x:Bind converters:CollectionNotAnyToVisibilityConverter.Convert(Images), Mode=OneWay}">
                 <Image.Source>
                     <SvgImageSource UriSource="{x:Bind converters:SourceCoreLogoFromIndexConverter.Convert(SourceCores, 0)}"
                                     RasterizePixelHeight="150" RasterizePixelWidth="150"/>
                 </Image.Source>
             </Image>
 
-            <Rectangle x:Name="PART_ImageRectangle">
+            <Rectangle x:Name="PART_ImageRectangle" Visibility="{x:Bind converters:CollectionAnyToVisibilityConverter.Convert(Images), Mode=OneWay}">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images, 0)}"/>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images, 0), Mode=OneWay}"
+                                Stretch="UniformToFill"/>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
@@ -39,7 +40,7 @@
     </Style>
 
     <DataTemplate x:Key="DefaultRoundSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
-        <Grid>
+        <Grid FlowDirection="LeftToRight">
             <!--Fallback SVG-->
             <Image x:Name="PART_Fallback" Opacity=".3">
                 <Image.Source>
@@ -50,7 +51,8 @@
 
             <Rectangle x:Name="PART_ImageRectangle" RadiusX="10000" RadiusY="10000">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images, 0)}"/>
+                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images, 0), Mode=OneWay}"
+                                Stretch="UniformToFill"/>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
