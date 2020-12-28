@@ -7,6 +7,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Styles
 {
+    /// <summary>
+    /// A <see cref="ResourceDictionary"/> containing the default style for the <see cref="AlbumView"/>.
+    /// </summary>
     public sealed partial class AlbumViewStyle : ResourceDictionary
     {
         /// <summary>

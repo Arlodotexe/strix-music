@@ -147,6 +147,15 @@
   <data name="NoBTN.Content" xml:space="preserve">
     <value>לא</value>
   </data>
+  <data name="NothingToShow" xml:space="preserve">
+    <value>שום דבר פה</value>
+  </data>
+  <data name="NothingToShowCOLC.EmptyContent" xml:space="preserve">
+    <value>שום דבר פה</value>
+  </data>
+  <data name="NothingToShowTB.Text" xml:space="preserve">
+    <value>שום דבר פה</value>
+  </data>
   <data name="Okay" xml:space="preserve">
     <value>אישור</value>
   </data>

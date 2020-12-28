@@ -4,13 +4,13 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
-    x:Class="StrixMusic.Sdk.Uno.Styles.HomeStyle">
+    x:Class="StrixMusic.Sdk.Uno.Styles.HomeViewStyle">
 
     <DataTemplate x:Key="DefaultHomeViewTemplate" x:DataType="sdk:MainViewModel">
         <UserControl>
             <defaultcontrols:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True">
                 <defaultcontrols:PlayableCollectionGroupPivot.AllEmptyContent>
-                    <TextBlock Text="Nothing to show!" />
+                    <TextBlock x:Uid="/Common/NothingToShowTB" Text="Nothing to show!" />
                 </defaultcontrols:PlayableCollectionGroupPivot.AllEmptyContent>
             </defaultcontrols:PlayableCollectionGroupPivot>
         </UserControl>

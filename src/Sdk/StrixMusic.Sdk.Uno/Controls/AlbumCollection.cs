@@ -43,9 +43,14 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             if (!ViewModel.PopulateMoreAlbumsCommand.IsRunning)
                 await ViewModel.PopulateMoreAlbumsCommand.ExecuteAsync(25);
+        }
 
-            if (!ViewModel.PopulateMoreImagesCommand.IsRunning)
-                await ViewModel.PopulateMoreImagesCommand.ExecuteAsync(25);
+        /// <inheritdoc/>
+        protected override void CheckAndToggleEmpty()
+        {
+            if (!ViewModel.PopulateMoreAlbumsCommand.IsRunning &&
+                ViewModel.TotalAlbumItemsCount == 0)
+                SetEmptyVisibility(Visibility.Visible);
         }
 
         private void AttachHandlers()

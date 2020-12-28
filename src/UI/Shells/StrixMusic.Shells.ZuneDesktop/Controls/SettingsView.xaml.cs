@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Shells.ZuneDesktop.Controls
 {
     /// <summary>
-    /// A thing. TODO: Comment better
+    /// The Settings page in the ZuneDesktop shell.
     /// </summary>
     public sealed partial class SettingsView : UserControl
     {
@@ -35,7 +35,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         /// <remarks>
         /// Translated in constructor.
         /// </remarks>
-        private readonly List<string> _displayPages = new List<string>
+        private readonly IEnumerable<string> _displayPages = new string[]
         {
             "Background",
             "Scale",

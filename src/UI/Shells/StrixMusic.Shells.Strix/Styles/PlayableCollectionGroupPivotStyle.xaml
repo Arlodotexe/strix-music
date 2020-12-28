@@ -20,13 +20,13 @@
                                     <PivotItem x:Uid="/Common/OverviewPVI" x:Name="PART_OverviewPivotItem" Header="Overview">
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs">
-                                        <defaultcontrols:TrackCollection />
+                                        <defaultcontrols:TrackCollection x:Uid="NothingToShowCOLC"/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums">
-                                        <defaultcontrols:AlbumCollection />
+                                        <defaultcontrols:AlbumCollection x:Uid="NothingToShowCOLC"/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists">
-                                        <defaultcontrols:ArtistCollection />
+                                        <defaultcontrols:ArtistCollection x:Uid="NothingToShowCOLC"/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/PlaylistsPVI" x:Name="PART_PlaylistsPivotItem" Header="Playlists">
                                     </PivotItem>

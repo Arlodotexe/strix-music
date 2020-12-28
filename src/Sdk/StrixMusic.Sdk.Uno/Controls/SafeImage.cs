@@ -52,7 +52,7 @@ namespace StrixMusic.Sdk.Uno.Controls
             DataContextChanged += SafeImage_DataContextChanged;
 
             Guard.IsNotNull(PART_ImageBrush, nameof(PART_ImageBrush));
-            PART_ImageBrush!.ImageFailed += SafeImage_ImageFailed;
+            PART_ImageBrush.ImageFailed += SafeImage_ImageFailed;
         }
 
         private void DetachHandlers()
@@ -80,7 +80,7 @@ namespace StrixMusic.Sdk.Uno.Controls
                 ThrowHelper.ThrowInvalidDataException(string.Format("{0}'s fill must an ImageBrush.", nameof(PART_ImageRectangle)));
             }
 
-            Setup();
+            RequestImages();
 
             AttachHandlers();
         }
@@ -92,38 +92,28 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void SafeImage_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
         {
-            Setup();
+            RequestImages();
         }
 
         private void SafeImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            GoToFallback();
+            // Go to fallback if the image failed to load.
+            OverrideToFallback();
         }
 
-        private void Setup()
+        private void RequestImages()
         {
-            if (PART_Fallback != null)
-                PART_Fallback.Visibility = Visibility.Collapsed;
-
-            if (PART_ImageRectangle != null)
-                PART_ImageRectangle.Visibility = Visibility.Visible;
-
             if (ViewModel?.PopulateMoreImagesCommand.IsRunning == false)
-                ViewModel.PopulateMoreImagesCommand.ExecuteAsync(5);
-
-            if (ViewModel?.Images == null || ViewModel.Images.Count == 0)
-            {
-                GoToFallback();
-            }
+                ViewModel.PopulateMoreImagesCommand.ExecuteAsync(1);
         }
 
-        private void GoToFallback()
+        /// <summary>
+        /// Set to Fallback regardless of if there's an image present.
+        /// </summary>
+        private void OverrideToFallback()
         {
-            if (PART_Fallback != null)
-                PART_Fallback.Visibility = Visibility.Visible;
-
-            if (PART_ImageRectangle != null)
-                PART_ImageRectangle.Visibility = Visibility.Collapsed;
+            Guard.IsNotNull(PART_Fallback, nameof(PART_Fallback));
+            PART_Fallback.Visibility = Visibility.Visible;
         }
     }
 }
