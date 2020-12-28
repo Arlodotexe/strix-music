@@ -13,7 +13,7 @@
         <styles:ArtistCollectionStyle/>
         <styles:ArtistItemStyle/>
         <styles:ArtistViewStyle/>
-        <styles:HomeStyle/>
+        <styles:HomeViewStyle/>
         <styles:NowPlayingViewStyle/>
         <styles:PlayableCollectionGroupPivotStyle />
         <styles:SafeImageStyle/>
