@@ -5,6 +5,10 @@
     xmlns:launchpad="using:LaunchPad.Controls"
     x:Class="StrixMusic.Sdk.Uno.Styles.NowPlayingBarStyle">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.Uno/Styles/MediaSlider.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <Style x:Key="DefaultNowPlayingBarStyle" TargetType="defaultcontrols:NowPlayingBar">
         <Style.Setters>
             <Setter Property="Template">
