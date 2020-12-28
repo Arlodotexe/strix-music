@@ -32,6 +32,7 @@
     <None Remove="Resources\Brushes.xaml" />
     <None Remove="Resources\ButtonStyles.xaml" />
     <None Remove="Style\HomeStyle.xaml" />
+    <None Remove="Style\MediaSlider.xaml" />
     <None Remove="Style\NowPlayingBarStyle.xaml" />
     <None Remove="Style\PlayableCollectionGroupPivotStyle.xaml" />
   </ItemGroup>
@@ -41,6 +42,7 @@
     <UpToDateCheckInput Remove="Resources\Brushes.xaml" />
     <UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
     <UpToDateCheckInput Remove="Style\HomeStyle.xaml" />
+    <UpToDateCheckInput Remove="Style\MediaSlider.xaml" />
     <UpToDateCheckInput Remove="Style\NowPlayingBarStyle.xaml" />
     <UpToDateCheckInput Remove="Style\PlayableCollectionGroupPivotStyle.xaml" />
   </ItemGroup>

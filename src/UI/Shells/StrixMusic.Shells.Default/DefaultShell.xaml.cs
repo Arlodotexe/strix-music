@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno;
@@ -7,17 +8,19 @@ using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace StrixMusic.Shells.Default
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class DefaultShell : ShellBase
+    public sealed partial class DefaultShell : Shell
     {
         private readonly IReadOnlyDictionary<NavigationViewItemBase, Type> _pagesMapping;
+        private readonly Stack<Control> _history = new Stack<Control>();
         private INavigationService<Control>? _navigationService;
-        private Stack<Control> _history = new Stack<Control>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultShell"/> class.
@@ -25,10 +28,6 @@ namespace StrixMusic.Shells.Default
         public DefaultShell()
         {
             InitializeComponent();
-            SetupIoc();
-
-            _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
-            _navigationService!.BackRequested += Shell_BackRequested;
 
             _pagesMapping = new Dictionary<NavigationViewItemBase, Type>
             {
@@ -37,21 +36,41 @@ namespace StrixMusic.Shells.Default
             };
         }
 
+        /// <inheritdoc />
+        public override Task InitServices(IServiceCollection services)
+        {
+            foreach (var service in services)
+            {
+                if (service is null)
+                    continue;
+
+                if (service.ImplementationInstance is INavigationService<Control> navigationService)
+                    _navigationService = SetupNavigationService(navigationService);
+            }
+
+            return base.InitServices(services);
+        }
+
+        private INavigationService<Control> SetupNavigationService(INavigationService<Control> navigationService)
+        {
+            navigationService.NavigationRequested += NavigationService_NavigationRequested;
+            navigationService.BackRequested += Shell_BackRequested;
+
+            navigationService.RegisterCommonPage(typeof(HomeView));
+            navigationService.RegisterCommonPage(typeof(NowPlayingView));
+
+            return navigationService;
+        }
+
         /// <inheritdoc/>
         protected override void SetupTitleBar()
         {
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
             base.SetupTitleBar();
+
             SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
             currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-            currentView.BackRequested += (s, e) => _navigationService!.GoBack();
-        }
-
-        private void SetupIoc()
-        {
-            DefaultShellIoc.Initialize();
-            _navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>();
-            _navigationService!.RegisterCommonPage(typeof(HomeView));
-            _navigationService!.RegisterCommonPage(typeof(NowPlayingView));
+            currentView.BackRequested += (s, e) => _navigationService.GoBack();
         }
 
         private void NavigationService_NavigationRequested(object sender, NavigateEventArgs<Control> e)
@@ -70,6 +89,7 @@ namespace StrixMusic.Shells.Default
             // This isn't great, but there should only be 4 items
             Type controlType = e.Page.GetType();
             bool containsValue = controlType == typeof(SettingsView);
+
             foreach (var value in _pagesMapping.Values)
             {
                 containsValue = containsValue || (value == controlType);
@@ -101,24 +121,28 @@ namespace StrixMusic.Shells.Default
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            _navigationService!.NavigateTo(typeof(SearchView), false, args.QueryText);
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
+
+            _navigationService.NavigateTo(typeof(SearchView), false, args.QueryText);
         }
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
+
             if (args.IsSettingsInvoked)
             {
-                _navigationService!.NavigateTo(typeof(SettingsView));
+                _navigationService.NavigateTo(typeof(SettingsView));
                 return;
             }
 
-            NavigationViewItemBase invokedItem = (args.InvokedItemContainer as NavigationViewItemBase) !;
+            NavigationViewItemBase invokedItem = (args.InvokedItemContainer as NavigationViewItemBase)!;
             if (invokedItem == null || !_pagesMapping.ContainsKey(invokedItem))
             {
                 return;
             }
 
-            _navigationService!.NavigateTo(_pagesMapping[invokedItem], invokedItem == NowPlayingItem);
+            _navigationService.NavigateTo(_pagesMapping[invokedItem], invokedItem == NowPlayingItem);
         }
     }
 }

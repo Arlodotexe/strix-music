@@ -4,7 +4,17 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:LaunchPad.Attached"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.AlbumCollectionStyle">
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.AlbumCollectionStyle"
+    xmlns:styles="using:StrixMusic.Shells.ZuneDesktop.Styles">
+
+    <ResourceDictionary.MergedDictionaries>
+        <styles:AlbumItemStyle/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle">
+        <defaultcontrols:AlbumItem />
+    </DataTemplate>
 
     <DataTemplate x:Key="ZuneDesktopAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
         <Grid>
@@ -29,11 +39,6 @@
             </GridView>
         </Grid>
     </DataTemplate>
-
-    <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle">
-        <defaultcontrols:AlbumItem />
-    </DataTemplate>
-
     <Style x:Key="ZuneDesktopAlbumCollectionStyle" TargetType="defaultcontrols:AlbumCollection">
         <Style.Setters>
             <Setter Property="Template">

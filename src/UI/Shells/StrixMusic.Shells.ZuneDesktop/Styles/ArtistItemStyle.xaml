@@ -4,7 +4,8 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.ArtistItemStyle">
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.ArtistItemStyle"
+    xmlns:styles="using:StrixMusic.Sdk.Uno.Styles">
 
     <DataTemplate x:Key="ZuneDesktopArtistItemDataTemplate" x:DataType="viewModels:ArtistViewModel">
         <TextBlock Text="{x:Bind Name}" FontSize="12" FontWeight="SemiBold" Opacity=".8"/>

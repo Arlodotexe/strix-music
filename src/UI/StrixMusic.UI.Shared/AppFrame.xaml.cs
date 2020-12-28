@@ -20,12 +20,12 @@ namespace StrixMusic.Shared
         /// </summary>
         public INavigationService<Control> NavigationService { get; }
 
-        private LocalizationLoaderService? _localizationService = null;
+        private LocalizationResourceLoader? _localizationService = null;
 
         /// <summary>
         /// A reference to the <see cref="ILocalizationService"/> used through out the app (except Cores).
         /// </summary>
-        public LocalizationLoaderService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<LocalizationLoaderService>())!;
+        public LocalizationResourceLoader LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<LocalizationResourceLoader>())!;
 
         /// <summary>
         /// The <see cref="MainViewModel"/> for the app.
@@ -68,7 +68,7 @@ namespace StrixMusic.Shared
             if (e == AppNavigationTarget.Settings && sender is ICore core)
             {
                 // Send the user to the shell settings if a shell is loaded.
-                if (MainPage.ActiveShell != null)
+                if (MainPage.ActiveShellModel != null)
                 {
                     // TODO post shell service refactor (need one common, injected ioc where we have access to the navigation service.
                     throw new NotImplementedException();

@@ -21,7 +21,7 @@ namespace StrixMusic.Shells.Strix.Styles
 
         private void OpenArtist(object sender, ItemClickEventArgs e)
         {
-            var navigationService = StrixShellIoc.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
+            var navigationService = Shell.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
 
             navigationService.NavigateTo(typeof(ArtistView), false, e.ClickedItem);
         }

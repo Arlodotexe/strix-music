@@ -36,7 +36,7 @@ namespace StrixMusic.Shared
     public sealed partial class AppLoadingView : UserControl
     {
         private DefaultSettingsService? _settingsService;
-        private LocalizationLoaderService? _localizationService;
+        private LocalizationResourceLoader? _localizationService;
         private IPlaybackHandlerService? _playbackHandlerService;
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace StrixMusic.Shared
             //UpdateStatus("Initializing services");
 
             IServiceCollection services = new ServiceCollection();
-            _localizationService = new LocalizationLoaderService();
+            _localizationService = new LocalizationResourceLoader();
             _localizationService.RegisterProvider(Constants.Localization.StartupResource);
 
             // UpdateStatus("Initializing services");

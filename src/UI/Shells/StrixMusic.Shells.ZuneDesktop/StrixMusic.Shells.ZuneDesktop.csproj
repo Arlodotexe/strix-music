@@ -68,9 +68,17 @@
 		<None Remove="Styles\ArtistItemStyle.xaml" />
 		<None Remove="Styles\NowPlayingBarStyle.xaml" />
 		<None Remove="Styles\NowPlayingViewStyle.xaml" />
+		<None Remove="Styles\PrimaryPivotItemStyle.xaml" />
 		<None Remove="Styles\SettingsViewStyle.xaml" />
+		<None Remove="Styles\SmallPivotItemStyle.xaml" />
+		<None Remove="Styles\ThinGridSplitterStyle.xaml" />
 		<None Remove="Styles\TrackCollectionStyle.xaml" />
 		<None Remove="Styles\TrackItemStyle.xaml" />
+		<None Remove="Styles\ZuneDesktopAlbumGridViewItemStyle.xaml" />
+		<None Remove="Styles\ZuneDesktopSearchTextBoxStyle.xaml" />
+		<None Remove="Styles\ZuneRadioButtonListViewItem.xaml" />
+		<None Remove="Styles\ZuneSettingsListViewItem.xaml" />
+		<None Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Remove="Assets\svg\Next.xaml" />
@@ -93,9 +101,17 @@
 		<UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\PrimaryPivotItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\SmallPivotItemStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ThinGridSplitterStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\TrackCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ZuneDesktopAlbumGridViewItemStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ZuneDesktopSearchTextBoxStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ZuneRadioButtonListViewItem.xaml" />
+		<UpToDateCheckInput Remove="Styles\ZuneSettingsListViewItem.xaml" />
+		<UpToDateCheckInput Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Include="Assets\Backgrounds\AuroraBorealis.png" />

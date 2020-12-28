@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Uno.Styles
         {
             if ((sender as Control)?.DataContext is AlbumViewModel viewModel)
             {
-                INavigationService<Control> navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
+                INavigationService<Control> navigationService = Shell.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
                 navigationService.NavigateTo(typeof(ArtistView), false, viewModel.Artist);
             }
         }

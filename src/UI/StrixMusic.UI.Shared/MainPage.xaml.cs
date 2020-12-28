@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.Helpers;
 using StrixMusic.Sdk;
+using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
+using StrixMusic.Sdk.Uno.Services.Localization;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Toolkit.Diagnostics;
 
 namespace StrixMusic.Shared
 {
@@ -38,12 +40,32 @@ namespace StrixMusic.Shared
         /// <summary>
         /// The currently loaded shell, if any.
         /// </summary>
-        internal ShellModel? ActiveShell { get; private set; }
+        internal ShellModel? ActiveShellModel { get; private set; }
 
         /// <summary>
         /// The user's preferred shell.
         /// </summary>
         internal ShellModel? PreferredShell { get; private set; }
+
+        private static Shell CreateShellControl(Type shellType)
+        {
+            if (shellType.BaseType != typeof(Shell))
+                throw new ArgumentException($@"Expected type {nameof(Shell)}", nameof(shellType));
+
+            var shellControl = (Shell)Activator.CreateInstance(shellType);
+
+            return shellControl;
+        }
+
+        private static void InjectServices(Shell shell)
+        {
+            var services = new ServiceCollection();
+
+            services.AddSingleton(new NavigationService<Control>());
+            services.AddSingleton(new LocalizationResourceLoader());
+
+            shell.InitServices(services);
+        }
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
@@ -120,7 +142,7 @@ namespace StrixMusic.Shared
             await SetupShell(shellModel);
         }
 
-        private Task SetupShell(ShellModel shell)
+        private Task SetupShell(ShellModel shellModel)
         {
             Guard.IsNotNull(_shellService, nameof(_shellService));
 
@@ -129,59 +151,28 @@ namespace StrixMusic.Shared
                 // Removes the current shell.
                 ShellDisplay.Content = null;
 
-                // Removes old resource(s).
-                foreach (var dict in Application.Current.Resources.MergedDictionaries)
-                {
-                    Match shellMatch = Regex.Match(dict.Source.AbsoluteUri, _shellService.ShellResourceDictionaryRegex);
+                ActiveShellModel = shellModel;
 
-                    if (shellMatch.Success)
-                    {
-                        // Skips removing the default ResourceDictionary.
-                        if (shellMatch.Groups[1].Value == _shellService.DefaultShellAssemblyName)
-                            continue;
+                var shell = CreateShellControl(shellModel.ShellAttribute.ShellSubType);
+                InjectServices(shell);
 
-                        Application.Current.Resources.MergedDictionaries.Remove(dict);
-                        break;
-                    }
-                }
+                shell.DataContext = MainViewModel.Singleton;
 
-                if (shell.AssemblyName != _shellService.DefaultShellAssemblyName)
-                {
-                    // Loads the preferred shell
-                    var resourcePath = $"{_shellService.ResourcesPrefix}{_shellService.ShellNamespacePrefix}.{shell.AssemblyName}/{_shellService.ShellResourcesSuffix}";
-                    var resourceDictionary = new ResourceDictionary() { Source = new Uri(resourcePath) };
-                    Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
-                }
-
-                ActiveShell = shell;
-                ShellDisplay.Content = CreateShellControl(shell.ShellAttribute.ShellBaseSubType);
+                ShellDisplay.Content = shell;
             }
 
             return Task.CompletedTask;
         }
 
-        private Control CreateShellControl(Type shellType)
-        {
-            if (shellType.BaseType != typeof(ShellBase))
-                throw new ArgumentException($@"Expected type {nameof(ShellBase)}", nameof(shellType));
-
-            Control shellControl = (Control)Activator.CreateInstance(shellType);
-            shellControl.DataContext = MainViewModel.Singleton;
-
-            return shellControl;
-        }
-
         private bool CheckShellModelSupport(ShellModel shell)
         {
-            return
+            bool heightIsInRange = ActualHeight < shell.ShellAttribute.MaxWindowSize.Height &&
+                                   ActualHeight > shell.ShellAttribute.MinWindowSize.Height;
 
-                // Check height is within range
-                ActualHeight < shell.ShellAttribute.MaxWindowSize.Height &&
-                ActualHeight > shell.ShellAttribute.MinWindowSize.Height &&
+            bool widthIsInRange = ActualWidth > shell.ShellAttribute.MinWindowSize.Width &&
+                                  ActualWidth > shell.ShellAttribute.MinWindowSize.Width;
 
-                // Check width is within range
-                ActualWidth > shell.ShellAttribute.MinWindowSize.Width &&
-                ActualWidth > shell.ShellAttribute.MinWindowSize.Width;
+            return widthIsInRange && heightIsInRange;
         }
 
         private async void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -189,20 +180,20 @@ namespace StrixMusic.Shared
             if (_shellService is null)
                 return;
 
-            if (ActiveShell == null || PreferredShell == null)
+            if (ActiveShellModel == null || PreferredShell == null)
             {
                 // Ignore this during initialization
                 return;
             }
 
-            if (ActiveShell != PreferredShell)
+            if (ActiveShellModel != PreferredShell)
             {
                 if (CheckShellModelSupport(PreferredShell))
                 {
                     await SetupShell(PreferredShell);
                 }
             }
-            else if (!CheckShellModelSupport(ActiveShell))
+            else if (!CheckShellModelSupport(ActiveShellModel))
             {
                 await SetupShell(_shellService.DefaultShellModel);
             }
