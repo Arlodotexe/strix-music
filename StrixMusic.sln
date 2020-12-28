@@ -46,7 +46,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "StrixMusic.UI.Shared", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shells.Groove", "src\UI\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj", "{38B5B005-64C0-4BCE-A4B8-DF7B8358182F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Core.FileCore", "src\Cores\StrixMusic.Core.FileCore\StrixMusic.Core.FileCore.csproj", "{617F1778-92F9-454A-B041-D71B4B63A221}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Core.LocalFileCore", "src\Cores\StrixMusic.Core.LocalFileCore\StrixMusic.Core.LocalFileCore.csproj", "{617F1778-92F9-454A-B041-D71B4B63A221}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
