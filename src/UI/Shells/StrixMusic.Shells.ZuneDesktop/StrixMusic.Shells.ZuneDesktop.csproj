@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;xamarinios10;xamarinmac20;MonoAndroid90;monoandroid10.0;uap10.0.17763</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;;monoandroid10.0;uap10.0.17763</TargetFrameworks>
 		<!--<TargetFrameworks>uap10.0.16299</TargetFrameworks>-->
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -30,7 +30,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="6.1.0-build.191.gc988bdd4ff" />
-		<PackageReference Include="Uno.UI" Version="3.3.0-dev.36" />
+		<PackageReference Include="Uno.UI" Version="3.5.0-dev.7" />
 	</ItemGroup>
 	<ItemGroup>
 		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -42,7 +42,7 @@
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Remove="Assets\Backgrounds\Aurora Borealis.png" />
+		<None Remove="Assets\Backgrounds\AuroraBorealis.png" />
 		<None Remove="Assets\Backgrounds\Bloom.png" />
 		<None Remove="Assets\Backgrounds\Bubbles.png" />
 		<None Remove="Assets\Backgrounds\Cells.png" />
@@ -60,7 +60,6 @@
 		<None Remove="Controls\ZuneShell.xaml" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Resources.xaml" />
-		<None Remove="Resources\Brushes - Copy.xaml" />
 		<None Remove="Resources\Brushes.xaml" />
 		<None Remove="Resources\ButtonStyles.xaml" />
 		<None Remove="Styles\AlbumCollectionStyle.xaml" />
@@ -69,9 +68,17 @@
 		<None Remove="Styles\ArtistItemStyle.xaml" />
 		<None Remove="Styles\NowPlayingBarStyle.xaml" />
 		<None Remove="Styles\NowPlayingViewStyle.xaml" />
+		<None Remove="Styles\PrimaryPivotItemStyle.xaml" />
 		<None Remove="Styles\SettingsViewStyle.xaml" />
+		<None Remove="Styles\SmallPivotItemStyle.xaml" />
+		<None Remove="Styles\ThinGridSplitterStyle.xaml" />
 		<None Remove="Styles\TrackCollectionStyle.xaml" />
 		<None Remove="Styles\TrackItemStyle.xaml" />
+		<None Remove="Styles\ZuneDesktopAlbumGridViewItemStyle.xaml" />
+		<None Remove="Styles\ZuneDesktopSearchTextBoxStyle.xaml" />
+		<None Remove="Styles\ZuneRadioButtonListViewItem.xaml" />
+		<None Remove="Styles\ZuneSettingsListViewItem.xaml" />
+		<None Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Remove="Assets\svg\Next.xaml" />
@@ -86,7 +93,6 @@
 		<UpToDateCheckInput Remove="Controls\ZuneShell.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
 		<UpToDateCheckInput Remove="Resources.xaml" />
-		<UpToDateCheckInput Remove="Resources\Brushes - Copy.xaml" />
 		<UpToDateCheckInput Remove="Resources\Brushes.xaml" />
 		<UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
 		<UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
@@ -95,12 +101,20 @@
 		<UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\PrimaryPivotItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\SmallPivotItemStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ThinGridSplitterStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\TrackCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ZuneDesktopAlbumGridViewItemStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ZuneDesktopSearchTextBoxStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ZuneRadioButtonListViewItem.xaml" />
+		<UpToDateCheckInput Remove="Styles\ZuneSettingsListViewItem.xaml" />
+		<UpToDateCheckInput Remove="Styles\ZuneTrackListViewItemStyle.xaml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Include="Assets\Backgrounds\Aurora Borealis.png" />
+	  <Content Include="Assets\Backgrounds\AuroraBorealis.png" />
 	  <Content Include="Assets\Backgrounds\Bubbles.png" />
 	  <Content Include="Assets\Backgrounds\Cells.png" />
 	  <Content Include="Assets\Backgrounds\Hero.png" />
@@ -126,6 +140,12 @@
 		<ProjectReference Include="..\..\..\Libs\OwlCore\OwlCore.csproj" />
 		<ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
 		<ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PRIResource Include="Strings\en\ZuneSettings.resw" />
+		<PRIResource Include="Strings\en\ZuneUI.resw" />
+		<PRIResource Include="Strings\he\ZuneSettings.resw" />
+		<PRIResource Include="Strings\he\ZuneUI.resw" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Styles\AlbumCollectionStyle.xaml.cs">

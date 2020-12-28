@@ -32,7 +32,9 @@ namespace StrixMusic.Sdk.ViewModels
             SourceCores = userProfile.GetSourceCores<ICoreUserProfile>().Select(MainViewModel.GetLoadedCore).ToList();
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
-            Urls = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<Uri>(userProfile.Urls));
+            if (userProfile.Urls != null)
+                Urls = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<Uri>(userProfile.Urls));
+
             Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
         }
 

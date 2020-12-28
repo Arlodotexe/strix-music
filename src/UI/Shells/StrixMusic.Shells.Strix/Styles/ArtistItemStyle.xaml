@@ -4,7 +4,12 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:styles="using:StrixMusic.Sdk.Uno.Styles"
     x:Class="StrixMusic.Shells.Strix.Styles.ArtistItemStyle">
+
+    <ResourceDictionary.MergedDictionaries>
+        <styles:SafeImageStyle />
+    </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="StrixArtistItemDataTemplate" x:DataType="viewModels:ArtistViewModel">
         <UserControl>

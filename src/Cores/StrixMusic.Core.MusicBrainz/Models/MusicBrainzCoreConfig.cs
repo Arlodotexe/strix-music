@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,7 +53,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             var richTextblock = new AbstractRichTextBlock(Guid.NewGuid().ToString(), "The initial value")
             {
-                Title="RichTextBlock Example",
+                Title = "RichTextBlock Example",
                 IconCode = "\uE2B1",
             };
 
@@ -96,14 +97,14 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 Title = "DataList grid test",
             };
 
-            var mutableDataListGrid = new AbstractMutableDataList(id: "mutableDataListGrid", dataListItems)
+            var mutableDataListGrid = new AbstractMutableDataList(id: "mutableDataListGrid", dataListItems.ToList())
             {
                 Title = "MutableDataList grid test",
                 Subtitle = "Add or remove something",
                 PreferredDisplayMode = AbstractDataListPreferredDisplayMode.Grid,
             };
 
-            var mutableDataList = new AbstractMutableDataList(id: "mutableDataList", dataListItems)
+            var mutableDataList = new AbstractMutableDataList(id: "mutableDataList", dataListItems.ToList())
             {
                 Title = "MutableDataList test",
                 Subtitle = "Add or remove something",
@@ -111,8 +112,33 @@ namespace StrixMusic.Core.MusicBrainz.Models
             };
 
             mutableDataListGrid.AddRequested += MutableDataListGrid_AddRequested;
+            mutableDataList.AddRequested += MutableDataListGrid_AddRequested;
 
-            AbstractUIElements = new List<AbstractUIElementGroup>()
+            var multiChoiceItems = dataListItems.ToList();
+
+            var comboBox = new AbstractMultiChoiceUIElement(id: "comboBoxTest", multiChoiceItems[0], multiChoiceItems)
+            {
+                Title = "ComboBox test",
+            };
+
+            var radioButtons = new AbstractMultiChoiceUIElement(id: "radioButtonsTest", multiChoiceItems[0], multiChoiceItems)
+            {
+                Title = "RadioButtons test",
+                PreferredDisplayMode = AbstractMultiChoicePreferredDisplayMode.RadioButtons,
+            };
+
+            comboBox.ItemSelected += ComboBox_ItemSelected;
+            radioButtons.ItemSelected += ComboBox_ItemSelected;
+
+            var boolUi = new AbstractBooleanUIElement("booleanTest", "On")
+            {
+                State = true,
+                Title = "AbstractBoolean test",
+            };
+
+            boolUi.StateChanged += BoolUi_StateChanged;
+
+            AbstractUIElements = new List<AbstractUIElementGroup>
             {
                 new AbstractUIElementGroup("about", PreferredOrientation.Horizontal)
                 {
@@ -121,16 +147,34 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     Items =  new List<AbstractUIElement>()
                     {
                         textBlock,
+                        boolUi,
+                        comboBox,
+                        radioButtons,
                         dataList,
                         dataListGrid,
                         mutableDataListGrid,
                         button,
                         mutableDataList,
                         allDoneButton,
-                        richTextblock,
                     },
                 },
             };
+        }
+
+        private void BoolUi_StateChanged(object sender, bool e)
+        {
+            if (sender is AbstractBooleanUIElement boolUi)
+            {
+                boolUi.ChangeLabel(e ? "On" : "Off");
+            }
+        }
+
+        private void ComboBox_ItemSelected(object sender, AbstractUIMetadata e)
+        {
+            if (e.Title == "Item 3")
+            {
+                ((MusicBrainzCore)SourceCore).ChangeCoreState(Sdk.Data.CoreState.Configured);
+            }
         }
 
         private async void MutableDataListGrid_AddRequested(object sender, EventArgs e)

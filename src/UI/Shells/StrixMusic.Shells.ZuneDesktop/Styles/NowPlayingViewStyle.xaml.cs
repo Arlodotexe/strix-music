@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk.Services.Navigation;
+﻿using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -21,7 +21,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles
         private void GoBack(object sender, RoutedEventArgs e)
         {
             // TODO: Save settings changes
-            ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>()!.GoBack();
+            Shell.Ioc.GetService<INavigationService<Control>>()!.GoBack();
         }
     }
 }

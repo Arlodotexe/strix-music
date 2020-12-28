@@ -1,4 +1,4 @@
-﻿<defaultcontrols:ShellBase
+﻿<defaultcontrols:Shell
     x:Class="StrixMusic.Shells.Groove.GrooveShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,23 +13,23 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <NavigationView x:Name="NavView" ItemInvoked="NavView_ItemInvoked" >
+        <NavigationView x:Name="NavView" ItemInvoked="NavView_ItemInvoked">
             <NavigationView.AutoSuggestBox>
                 <AutoSuggestBox x:Name="AutoSuggest" QuerySubmitted="AutoSuggestBox_QuerySubmitted"/>
             </NavigationView.AutoSuggestBox>
             <NavigationView.MenuItems>
-                <NavigationViewItem x:Name="HomeItem" Content="My Music">
+                <NavigationViewItem x:Uid="/Music/MyMusicNVI" x:Name="HomeItem" Content="My Music">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xEC4F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Recently Played" Tag="RecentlyPlayedItem">
+                <NavigationViewItem x:Uid="/Music/RecentPlayedNVI" Content="Recently Played" Tag="RecentlyPlayedItem">
                     <NavigationViewItem.Icon>
                         <!--<SymbolIcon Symbol="Clock"/>-->
                         <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="NowPlaying" Content="Now Playing">
+                <NavigationViewItem x:Uid="/Music/NowPlayingNVI" x:Name="NowPlayingItem" Content="Now Playing">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
@@ -46,4 +46,4 @@
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                         Visibility="Collapsed" Grid.RowSpan="2"/>
     </Grid>
-</defaultcontrols:ShellBase>
+</defaultcontrols:Shell>

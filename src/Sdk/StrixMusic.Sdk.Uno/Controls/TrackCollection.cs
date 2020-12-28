@@ -1,7 +1,7 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using StrixMusic.Sdk.ViewModels;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.ViewModels;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -42,6 +42,15 @@ namespace StrixMusic.Sdk.Uno.Controls
                 await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(25);
         }
 
+        /// <inheritdoc/>
+        protected override void CheckAndToggleEmpty()
+        {
+            if (!ViewModel.PopulateMoreTracksCommand.IsRunning &&
+                ViewModel.TotalTracksCount == 0)
+                
+            SetEmptyVisibility(Visibility.Visible);
+        }
+
         private void AttachHandlers()
         {
             Unloaded += TrackCollection_Unloaded;
@@ -49,6 +58,7 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void DetachHandlers()
         {
+            Unloaded -= TrackCollection_Unloaded;
         }
 
         private void TrackCollection_Unloaded(object sender, RoutedEventArgs e)

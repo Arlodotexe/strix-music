@@ -191,7 +191,8 @@ namespace StrixMusic.Core.MusicBrainz
             if (!(CoreConfig is MusicBrainzCoreConfig coreConfig))
                 return;
 
-            if (!_configured)
+            // This was for testing purposes, and is now disabled.
+            if (!_configured && false)
             {
                 await coreConfig.SetupConfigurationServices(services);
                 _configured = true;

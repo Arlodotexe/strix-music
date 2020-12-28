@@ -7,7 +7,31 @@
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:controls="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:a="using:LaunchPad.Attached"
+    xmlns:styles="using:StrixMusic.Shells.ZuneDesktop.Styles"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneDesktopSearchTextBoxStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ThinGridSplitterStyle.xaml"/>
+
+                <styles:ArtistCollectionStyle/>
+                <styles:ArtistItemStyle/>
+                <styles:AlbumCollectionStyle/>
+                <styles:AlbumItemStyle/>
+                <styles:ArtistItemStyle/>
+                <styles:NowPlayingBarStyle/>
+                <styles:NowPlayingViewStyle/>
+                <styles:SettingsViewStyle/>
+                <styles:TrackCollectionStyle/>
+                <styles:TrackItemStyle/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <Grid Padding="32,-16,32,16">
         <VisualStateManager.VisualStateGroups>
@@ -17,7 +41,7 @@
                         <Setter Target="PrimaryColumn.MinWidth" Value="200"/>
                         <Setter Target="SecondaryColumn.MinWidth" Value="200"/>
                         <Setter Target="TertiaryColumn.MaxWidth" Value="200"/>
-                        
+
                         <Setter Target="PrimaryColumn.MaxWidth" Value="1000000"/>
                         <Setter Target="SecondaryColumn.MaxWidth" Value="1000000"/>
                         <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
@@ -32,7 +56,7 @@
                         <Setter Target="PrimaryColumn.MinWidth" Value="0"/>
                         <Setter Target="SecondaryColumn.MinWidth" Value="200"/>
                         <Setter Target="TertiaryColumn.MaxWidth" Value="200"/>
-                        
+
                         <Setter Target="PrimaryColumn.MaxWidth" Value="0"/>
                         <Setter Target="SecondaryColumn.MaxWidth" Value="1000000"/>
                         <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
@@ -47,7 +71,7 @@
                         <Setter Target="PrimaryColumn.MinWidth" Value="0"/>
                         <Setter Target="SecondaryColumn.MinWidth" Value="0"/>
                         <Setter Target="TertiaryColumn.MaxWidth" Value="200"/>
-                        
+
                         <Setter Target="PrimaryColumn.MaxWidth" Value="0"/>
                         <Setter Target="SecondaryColumn.MaxWidth" Value="0"/>
                         <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
@@ -64,7 +88,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
+
         <!--Core Filters-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
             <ToggleButton Content="MOCK" Style="{StaticResource SmallZuneMockPivotItemToggleButtonStyle}"/>
@@ -78,11 +102,16 @@
 
         <!--Page Selector-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Margin="0,8,0,24">
-            <RadioButton Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsChecked="True" Click="ArtistsPageSelected"/>
-            <RadioButton Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"/>
-            <RadioButton Content="ALBUMS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="AlbumsPageSelected"/>
-            <RadioButton Content="SONGS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="SongsPageSelected"/>
-            <RadioButton Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"/>
+            <RadioButton x:Uid="/Music/ArtistsBTN" Content="ARTISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsChecked="True" Click="ArtistsPageSelected"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/GenresBTN" Content="GENRES" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/AlbumsBTN" Content="ALBUMS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="AlbumsPageSelected"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/SongsBTN" Content="SONGS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="SongsPageSelected"
+                         a:TextHelpers.CharacterCasing="Upper"/>
+            <RadioButton x:Uid="/Music/PlaylistsBTN" Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"
+                         a:TextHelpers.CharacterCasing="Upper"/>
         </StackPanel>
 
         <!--Collection Grid-->
@@ -96,7 +125,8 @@
             <controls:ArtistCollection x:Name="ArtistCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="0"
                                        SelectionChanged="ArtistSelected"/>
 
-            <controls:AlbumCollection x:Name="AlbumCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="1"/>
+            <controls:AlbumCollection x:Name="AlbumCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="1"
+                                      SelectionChanged="AlbumSelected"/>
 
             <controls:TrackCollection x:Name="TrackCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="2"/>
 

@@ -1,7 +1,11 @@
-﻿using Windows.UI.Xaml;
+﻿using StrixMusic.Sdk.Uno.Controls;
+using Windows.UI.Xaml;
 
 namespace StrixMusic.Sdk.Uno.Styles
 {
+    /// <summary>
+    /// A <see cref="ResourceDictionary"/> containing the default style for the <see cref="SettingsView"/>.
+    /// </summary>
     public sealed partial class SettingsViewStyle : ResourceDictionary
     {
         /// <summary>

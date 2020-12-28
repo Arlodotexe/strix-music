@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
 using Windows.ApplicationModel.Core;
@@ -15,7 +17,7 @@ namespace StrixMusic.Shells.Strix
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class StrixShell : ShellBase
+    public sealed partial class StrixShell : Shell
     {
         private readonly IReadOnlyDictionary<Button, Type> _pagesMapping;
         private readonly IReadOnlyDictionary<Type, string> _overlayTypeMapping;
@@ -29,9 +31,7 @@ namespace StrixMusic.Shells.Strix
         public StrixShell()
         {
             this.InitializeComponent();
-            SetupIoc();
-            _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
-            _navigationService!.BackRequested += Shell_BackRequested;
+
             _isOverlayOpen = false;
             _pagesMapping = new Dictionary<Button, Type>
             {
@@ -46,10 +46,36 @@ namespace StrixMusic.Shells.Strix
             };
         }
 
+        /// <inheritdoc />
+        public override Task InitServices(IServiceCollection services)
+        {
+            foreach (var service in services)
+            {
+                if (service is null)
+                    continue;
+
+                if (service.ImplementationInstance is INavigationService<Control> navigationService)
+                    _navigationService = SetupNavigationService(navigationService);
+            }
+
+            return base.InitServices(services);
+        }
+
+        private INavigationService<Control> SetupNavigationService(INavigationService<Control> navigationService)
+        {
+            navigationService.NavigationRequested += NavigationService_NavigationRequested;
+            navigationService.BackRequested += Shell_BackRequested;
+
+            navigationService.RegisterCommonPage(typeof(HomeView));
+
+            return navigationService;
+        }
+
         /// <inheritdoc/>
         protected override void SetupTitleBar()
         {
             base.SetupTitleBar();
+
 #if NETFX_CORE
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             Window.Current.SetTitleBar(CustomTitleBar);
@@ -57,13 +83,6 @@ namespace StrixMusic.Shells.Strix
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 #endif
-        }
-
-        private void SetupIoc()
-        {
-            StrixShellIoc.Initialize();
-            _navigationService = StrixShellIoc.Ioc.GetService<INavigationService<Control>>();
-            _navigationService!.RegisterCommonPage(typeof(HomeView));
         }
 
         private void NavigationService_NavigationRequested(object sender, NavigateEventArgs<Control> e)
@@ -100,30 +119,34 @@ namespace StrixMusic.Shells.Strix
 
         private void NavButtonClicked(object sender, RoutedEventArgs e)
         {
-            _navigationService!.NavigateTo(_pagesMapping[(sender as Button) !]);
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
+            _navigationService.NavigateTo(_pagesMapping[(sender as Button) !]);
         }
 
         private void SettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            _navigationService!.NavigateTo(_pagesMapping[(sender as Button) !], true);
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
+            _navigationService.NavigateTo(_pagesMapping[(sender as Button) !], true);
         }
 
         private void SearchButtonClicked(object sender, RoutedEventArgs e)
         {
-            _navigationService!.NavigateTo(typeof(SearchView), false, SearchTextBox.Text);
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
+            _navigationService.NavigateTo(typeof(SearchView), false, SearchTextBox.Text);
         }
 
         private void EnterOverlayView(Control page)
         {
             OverlayContent.Content = page;
 
-            // TODO: Different overlay VisualStates dependant on overlay types
+            // TODO: Different overlay VisualStates dependent on overlay types
             VisualStateManager.GoToState(this, _overlayTypeMapping[page.GetType()], true);
         }
 
         private void BackButtonClicked(object sender, RoutedEventArgs e)
         {
-            _navigationService!.GoBack();
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
+            _navigationService.GoBack();
         }
     }
 }

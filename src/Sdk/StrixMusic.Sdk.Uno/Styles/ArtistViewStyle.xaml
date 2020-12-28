@@ -96,13 +96,9 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <Rectangle x:Name="ArtistImage" Grid.RowSpan="2" Margin="38,32,22,32"
-                               Height="224" Width="224" HorizontalAlignment="Center" RadiusX="300" RadiusY="300"
-                               Visibility="{x:Bind converters:CollectionAnyToVisibilityConverter.Convert(Images)}">
-                        <Rectangle.Fill>
-                            <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images)}"/>
-                        </Rectangle.Fill>
-                    </Rectangle>
+                    <defaultcontrols:SafeImage x:Name="ArtistImage" Grid.RowSpan="2" Margin="38,32,22,32"
+                                               Height="224" Width="224" HorizontalAlignment="Center"
+                                               Style="{StaticResource DefaultRoundSafeImageStyle}"/>
 
                     <Grid x:Name="DetailsGrid" Grid.Column="1" Margin="16,32,0,0" MaxWidth="600" HorizontalAlignment="Left" Padding="0,0,64,0">
                         <Grid.RowDefinitions>

@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         /// <summary>
         /// The <see cref="IArtistCollectionViewModel"/> for the control.
         /// </summary>
-        public IArtistCollectionViewModel? ViewModel => DataContext as IArtistCollectionViewModel;
+        public IArtistCollectionViewModel ViewModel => (IArtistCollectionViewModel)DataContext;
 
         /// <inheritdoc />
         protected override void OnApplyTemplate()
@@ -41,8 +41,17 @@ namespace StrixMusic.Sdk.Uno.Controls
         /// <inheritdoc/>
         protected override async Task LoadMore()
         {
-            if (!ViewModel!.PopulateMoreArtistsCommand!.IsRunning)
-                await ViewModel!.PopulateMoreArtistsCommand!.ExecuteAsync(25);
+            if (!ViewModel.PopulateMoreArtistsCommand.IsRunning)
+                await ViewModel.PopulateMoreArtistsCommand.ExecuteAsync(25);
+        }
+
+        /// <inheritdoc/>
+        protected override void CheckAndToggleEmpty()
+        {
+            if (!ViewModel.PopulateMoreArtistsCommand.IsRunning &&
+                ViewModel.TotalArtistItemsCount == 0)
+            
+            SetEmptyVisibility(Visibility.Visible);
         }
 
         private void AttachHandlers()

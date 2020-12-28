@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="LaunchPad.AbstractUI.Themes.AbstractRichTextBlockTemplate"
     xmlns:abstractUI="using:LaunchPad.AbstractUI.ViewModels"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls.Markdown"
-    xmlns:launchPad="using:LaunchPad">
+    xmlns:launchPad="using:LaunchPad"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls">
 
     <DataTemplate x:Key="DefaultAbstractRichTextBlockTemplate" x:DataType="abstractUI:AbstractRichTextBlockViewModel">
         <StackPanel>
@@ -14,8 +14,8 @@
             <TextBlock Text="{x:Bind Subtitle}" FontSize="16" FontWeight="SemiLight" Opacity="0.75"
                        Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
 
-            <controls:MarkdownTextBlock
-                Text="{x:Bind RichText}"/>
+            <!-- Disabled until we can resolve the namespace conflicts caused by the Windows Community Toolkit v7 prerelease4 -->
+            <!--<controls:MarkdownTextBlock Text="{x:Bind RichText}"/>-->
         </StackPanel>
     </DataTemplate>
 

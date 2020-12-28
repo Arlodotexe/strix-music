@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Diagnostics;
+﻿using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Services.Settings;
@@ -86,7 +85,7 @@ namespace StrixMusic.Sdk.Uno.Controls
                 nameof(HideEmptyPivots),
                 typeof(bool),
                 typeof(PlayableCollectionGroupPivot),
-                new PropertyMetadata(true));
+                new PropertyMetadata(false));
 
         /// <summary>
         /// Gets or sets whether or not to hide pivots with no content.
@@ -150,7 +149,6 @@ namespace StrixMusic.Sdk.Uno.Controls
 
             AttachEvents();
 
-            SetPivotTitle(PivotTitle);
             ToggleAnyEmptyPivotItems();
             SetNoContentTemplate(AllEmptyContent);
         }

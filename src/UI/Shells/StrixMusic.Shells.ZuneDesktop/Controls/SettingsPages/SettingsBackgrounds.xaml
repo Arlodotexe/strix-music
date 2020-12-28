@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <StackPanel>
-        <TextBlock Text="Background" FontSize="20" FontWeight="SemiBold"/>
+        <TextBlock x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneSettings/BackgroundTB" Text="Background" FontSize="20" FontWeight="SemiBold"/>
         <ListView ItemContainerStyle="{StaticResource ZuneRadioButtonListViewItem}"
                   ItemsSource="{x:Bind ViewModel.ImageNames, Mode=OneWay}"
                   SelectedItem="{x:Bind ViewModel.SelectedBackgroundImage, Mode=TwoWay}"/>

@@ -44,8 +44,11 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             Loaded -= OnLoaded;
 
+            // Pause the Timer while manipulating
             SliderManipulationStarted += (s, e) => PauseTimer();
             SliderManipulationCompleted += (s, e) => ResumeTimer();
+
+            // Update the timer position when released
             ValueChanged += (s, e) => _startTime = DateTime.Now - TimeSpan.FromMilliseconds(Value);
             _updateIntervalTimer.Tick += (s, e) => UpdateSliderValue();
             UpdateTimer();

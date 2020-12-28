@@ -8,7 +8,14 @@
     <DataTemplate x:Key="DefaultArtistCollectionDataTemplate" x:DataType="viewModels:IArtistCollectionViewModel">
         <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Artists}" ItemTemplate="{StaticResource DefaultArtistCollectionItemStyle}"
                   Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
-                  ItemClick="OpenArtist"/>
+                  ItemClick="OpenArtist">
+            <GridView.Header>
+                <Grid>
+                    <ProgressRing IsActive="{x:Bind PopulateMoreArtistsCommand.IsRunning, Mode=OneWay}"/>
+                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+                </Grid>
+            </GridView.Header>
+        </GridView>
     </DataTemplate>
 
     <DataTemplate x:Key="DefaultArtistCollectionItemStyle">

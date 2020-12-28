@@ -18,13 +18,13 @@ namespace StrixMusic.Sdk.Uno.Controls
         /// </summary>
         public AlbumCollection()
         {
-            this.DefaultStyleKey = typeof(ArtistCollection);
+            this.DefaultStyleKey = typeof(AlbumCollection);
         }
 
         /// <summary>
         /// The <see cref="IAlbumCollectionViewModel"/> for the control.
         /// </summary>
-        public IAlbumCollectionViewModel ViewModel => (DataContext as IAlbumCollectionViewModel)!;
+        public IAlbumCollectionViewModel ViewModel => (IAlbumCollectionViewModel)DataContext;
 
         /// <inheritdoc />
         protected override void OnApplyTemplate()
@@ -43,6 +43,14 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             if (!ViewModel.PopulateMoreAlbumsCommand.IsRunning)
                 await ViewModel.PopulateMoreAlbumsCommand.ExecuteAsync(25);
+        }
+
+        /// <inheritdoc/>
+        protected override void CheckAndToggleEmpty()
+        {
+            if (!ViewModel.PopulateMoreAlbumsCommand.IsRunning &&
+                ViewModel.TotalAlbumItemsCount == 0)
+                SetEmptyVisibility(Visibility.Visible);
         }
 
         private void AttachHandlers()

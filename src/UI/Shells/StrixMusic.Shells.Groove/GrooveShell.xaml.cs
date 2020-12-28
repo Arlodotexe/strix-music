@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno;
 using StrixMusic.Sdk.Uno.Controls;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
@@ -10,35 +11,29 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace StrixMusic.Shells.Groove
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class GrooveShell : ShellBase
+    public sealed partial class GrooveShell : Shell
     {
-        private readonly IReadOnlyDictionary<string, Type> _pagesMapping;
+        private readonly IReadOnlyDictionary<NavigationViewItemBase, Type> _pagesMapping;
+        private readonly Stack<Control> _history = new Stack<Control>();
         private INavigationService<Control>? _navigationService;
-        private Stack<Control> _history = new Stack<Control>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultShell"/> class.
+        /// Initializes a new instance of the <see cref="GrooveShell"/> class.
         /// </summary>
         public GrooveShell()
         {
             InitializeComponent();
-            SetupIoc();
 
-            _navigationService!.NavigationRequested += NavigationService_NavigationRequested;
-            _navigationService!.BackRequested += Shell_BackRequested;
-
-            _pagesMapping = new Dictionary<string, Type>
+            _pagesMapping = new Dictionary<NavigationViewItemBase, Type>
             {
-                { "My Music", typeof(HomeView) },
-                { "SettingsView", typeof(SettingsView) },
-                { "Now Playing", typeof(NowPlayingView) },
+                { HomeItem, typeof(HomeView) },
+                { NowPlayingItem, typeof(NowPlayingView) },
             };
         }
 
@@ -57,12 +52,30 @@ namespace StrixMusic.Shells.Groove
             currentView.BackRequested += (s, e) => _navigationService!.GoBack();
         }
 
-        private void SetupIoc()
+        /// <inheritdoc />
+        public override Task InitServices(IServiceCollection services)
         {
-            DefaultShellIoc.Initialize();
-            _navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>();
-            _navigationService!.RegisterCommonPage(typeof(HomeView));
-            _navigationService!.RegisterCommonPage(typeof(NowPlayingView));
+            foreach (var service in services)
+            {
+                if (service is null)
+                    continue;
+
+                if (service.ImplementationInstance is INavigationService<Control> navigationService)
+                    _navigationService = SetupNavigationService(navigationService);
+            }
+
+            return base.InitServices(services);
+        }
+
+        private INavigationService<Control> SetupNavigationService(INavigationService<Control> navigationService)
+        {
+            navigationService.NavigationRequested += NavigationService_NavigationRequested;
+            navigationService.BackRequested += Shell_BackRequested;
+
+            navigationService.RegisterCommonPage(typeof(HomeView));
+            navigationService.RegisterCommonPage(typeof(NowPlayingView));
+
+            return navigationService;
         }
 
         private void NavigationService_NavigationRequested(object sender, NavigateEventArgs<Control> e)
@@ -112,24 +125,25 @@ namespace StrixMusic.Shells.Groove
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            _navigationService!.NavigateTo(typeof(SearchView), false, args.QueryText);
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
+            _navigationService.NavigateTo(typeof(SearchView), false, args.QueryText);
         }
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
+
             if (args.IsSettingsInvoked)
             {
-                _navigationService!.NavigateTo(_pagesMapping[nameof(SettingsView)]);
+                _navigationService.NavigateTo(typeof(SettingsView));
                 return;
             }
 
-            string invokedItemString = (args.InvokedItem as string) !;
-            if (invokedItemString == null || !_pagesMapping.ContainsKey(invokedItemString))
-            {
+            var invokedItem = args.InvokedItemContainer;
+            if (invokedItem == null || !_pagesMapping.ContainsKey(invokedItem))
                 return;
-            }
 
-            _navigationService!.NavigateTo(_pagesMapping[invokedItemString], invokedItemString == "Now Playing");
+            _navigationService.NavigateTo(_pagesMapping[invokedItem], invokedItem == NowPlayingItem);
         }
     }
 }

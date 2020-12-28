@@ -5,6 +5,10 @@
     xmlns:launchpad="using:LaunchPad.Controls"
     x:Class="StrixMusic.Sdk.Uno.Styles.NowPlayingBarStyle">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.Uno/Styles/MediaSlider.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <Style x:Key="DefaultNowPlayingBarStyle" TargetType="defaultcontrols:NowPlayingBar">
         <Style.Setters>
             <Setter Property="Template">
@@ -62,21 +66,25 @@
                                     <Rectangle Fill="#FF00FF" Width="96" Height="96"/>
                                 </Grid>
 
-                                <defaultcontrols:ProgressSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"/>
+                                <defaultcontrols:ProgressSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"
+                                                                FlowDirection="LeftToRight"/>
 
                                 <StackPanel Orientation="Horizontal" Grid.Column="2">
-                                    <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                    </Button>
-                                    <launchpad:ToggleContentButton Style="{StaticResource MediaToggleContentButton}">
-                                        <launchpad:ToggleContentButton.CheckedContent>
-                                            <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                        </launchpad:ToggleContentButton.CheckedContent>
-                                        <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                    </launchpad:ToggleContentButton>
-                                    <Button Style="{StaticResource MediaButton}">
-                                        <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                    </Button>
+                                    <!--Skip and Prev buttons shouldn't flip with Bi-directional languages-->
+                                    <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
+                                        <Button Style="{StaticResource MediaButton}">
+                                            <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                        </Button>
+                                        <launchpad:ToggleContentButton Style="{StaticResource MediaToggleContentButton}">
+                                            <launchpad:ToggleContentButton.CheckedContent>
+                                                <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                            </launchpad:ToggleContentButton.CheckedContent>
+                                            <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                        </launchpad:ToggleContentButton>
+                                        <Button Style="{StaticResource MediaButton}">
+                                            <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                        </Button>
+                                    </StackPanel>
                                     <launchpad:ToggleContentButton IsThreeState="True" Style="{StaticResource MediaToggleContentButton}">
                                         <launchpad:ToggleContentButton.IndeterminateContent>
                                             <FontIcon Glyph="&#xE1CC;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>

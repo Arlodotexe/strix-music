@@ -1,9 +1,13 @@
-﻿using System;
-using System.Threading;
+﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Helpers;
+using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Uno.Services.Localization;
+using System;
+using System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -15,6 +19,13 @@ namespace StrixMusic.Shared
         /// The navigation service used exclusively by the <see cref="AppFrame"/> to display various top-level app content.
         /// </summary>
         public INavigationService<Control> NavigationService { get; }
+
+        private LocalizationResourceLoader? _localizationService = null;
+
+        /// <summary>
+        /// A reference to the <see cref="ILocalizationService"/> used through out the app (except Cores).
+        /// </summary>
+        public LocalizationResourceLoader LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<LocalizationResourceLoader>())!;
 
         /// <summary>
         /// The <see cref="MainViewModel"/> for the app.
@@ -56,7 +67,8 @@ namespace StrixMusic.Shared
         {
             if (e == AppNavigationTarget.Settings && sender is ICore core)
             {
-                if (MainPage.ActiveShell != null)
+                // Send the user to the shell settings if a shell is loaded.
+                if (MainPage.ActiveShellModel != null)
                 {
                     // TODO post shell service refactor (need one common, injected ioc where we have access to the navigation service.
                     throw new NotImplementedException();
@@ -88,9 +100,17 @@ namespace StrixMusic.Shared
             {
                 case SuperShell superShell:
                     if (e.IsOverlay)
-                        OverlayPresenter.Show(superShell, "Settings");
+                    {
+                        OverlayPresenter.Show(
+                            superShell,
+                            LocalizationService[
+                                Constants.Localization.CommonResource,
+                                "Settings"]);
+                    }
                     else
+                    {
                         PART_ContentPresenter.Content = superShell;
+                    }
 
                     break;
                 case MainPage mainPage:

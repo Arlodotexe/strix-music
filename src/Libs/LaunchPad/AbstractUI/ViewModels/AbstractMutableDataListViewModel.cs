@@ -36,7 +36,6 @@ namespace LaunchPad.AbstractUI.ViewModels
 
                 var requestAddMetadataItem = new AbstractUIMetadata("requestAddItem")
                 {
-                    IconCode = "\uE710",
                     Title = "Add new",
                 };
 
@@ -53,6 +52,8 @@ namespace LaunchPad.AbstractUI.ViewModels
             foreach (var item in Items)
             {
                 item.ItemRemoved += Items_ItemRemoved;
+                item.ItemAddRequested += Items_ItemAddRequested;
+
             }
         }
 
@@ -63,6 +64,7 @@ namespace LaunchPad.AbstractUI.ViewModels
             foreach (var item in Items)
             {
                 item.ItemRemoved -= Items_ItemRemoved;
+                item.ItemAddRequested -= Items_ItemAddRequested;
             }
         }
 
@@ -74,13 +76,22 @@ namespace LaunchPad.AbstractUI.ViewModels
             RemoveItem(viewModel);
         }
 
+        private void Items_ItemAddRequested(object sender, EventArgs e) => RequestNewItem();
+
         private void Model_ItemsChanged(object sender, System.Collections.Generic.IReadOnlyList<CollectionChangedEventItem<AbstractUIMetadata>> addedItems, System.Collections.Generic.IReadOnlyList<CollectionChangedEventItem<AbstractUIMetadata>> removedItems)
         {
             using (Threading.UIThread)
             {
                 foreach (var item in addedItems)
                 {
-                    Items.Insert(item.Index, new AbstractMutableDataListItemViewModel(item.Data));
+                    var newViewModel = new AbstractMutableDataListItemViewModel(item.Data);
+                    newViewModel.ItemRemoved += Items_ItemRemoved;
+                    newViewModel.ItemAddRequested += Items_ItemAddRequested;
+
+                    if (item.Index == Items.Count)
+                        Items.Add(newViewModel);
+                    else
+                        Items.Insert(item.Index, newViewModel);
                 }
 
                 foreach (var item in removedItems)
@@ -164,7 +175,11 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public void RemoveItem(AbstractMutableDataListItemViewModel item)
         {
-            var index = Items.IndexOf(item);
+            var index = _model.Items.IndexOf((AbstractUIMetadata)item.Model);
+
+            if (index == -1)
+                return;
+
             RemoveItemAt(index);
         }
 

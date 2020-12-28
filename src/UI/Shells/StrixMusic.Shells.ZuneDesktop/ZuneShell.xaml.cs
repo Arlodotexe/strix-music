@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Controls;
+using StrixMusic.Sdk.Uno.Services;
+using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Shells.ZuneDesktop.Settings;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
@@ -12,14 +17,13 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
-using Microsoft.Toolkit.Diagnostics;
 
 namespace StrixMusic.Shells.ZuneDesktop
 {
     /// <summary>
-    /// The <see cref="ShellBase"/> implementation for ZuneDesktop.
+    /// The <see cref="Shell"/> implementation for ZuneDesktop.
     /// </summary>
-    public sealed partial class ZuneShell : ShellBase
+    public sealed partial class ZuneShell : Shell
     {
         private INavigationService<Control>? _navigationService;
 
@@ -29,10 +33,45 @@ namespace StrixMusic.Shells.ZuneDesktop
         public ZuneShell()
         {
             this.InitializeComponent();
-            SetupIoc();
-            _navigationService!.NavigationRequested += ZuneShell_NavigationRequested;
-            _navigationService!.BackRequested += ZuneShell_BackRequested;
+
             Loaded += ZuneShell_Loaded;
+        }
+
+        /// <inheritdoc />
+        public override Task InitServices(IServiceCollection services)
+        {
+            var textStorageService = new TextStorageService();
+            var settingsService = new ZuneDesktopSettingsService(textStorageService);
+            settingsService.SettingChanged += SettingsService_SettingChanged;
+
+            services.AddSingleton<ISettingsService>(settingsService);
+
+            foreach (var service in services)
+            {
+                if (service is null)
+                    continue;
+
+                if (service.ImplementationInstance is INavigationService<Control> navigationService)
+                    _navigationService = SetupNavigationService(navigationService);
+
+                if (service.ImplementationInstance is LocalizationResourceLoader localizationLoaderService)
+                    SetupLocalizationService(localizationLoaderService);
+            }
+
+            return base.InitServices(services);
+        }
+
+        private INavigationService<Control> SetupNavigationService(INavigationService<Control> navigationService)
+        {
+            navigationService.NavigationRequested += ZuneShell_NavigationRequested;
+            navigationService.BackRequested += ZuneShell_BackRequested;
+
+            return navigationService;
+        }
+
+        private void SetupLocalizationService(LocalizationResourceLoader localizationLoaderService)
+        {
+            localizationLoaderService.RegisterProvider("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
         }
 
         private void ZuneShell_Loaded(object sender, RoutedEventArgs e)
@@ -44,9 +83,9 @@ namespace StrixMusic.Shells.ZuneDesktop
 
         private async void SetupBackgroundImage()
         {
-            ZuneDesktopSettingsService settingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>() ?? ThrowHelper.ThrowInvalidOperationException<ZuneDesktopSettingsService>();
+            var settingsService = Ioc.GetRequiredService<ISettingsService>();
 
-            ZuneDesktopBackgroundImage backgroundImage = await settingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
+            var backgroundImage = await settingsService.GetValue<ZuneDesktopBackgroundImage>(nameof(ZuneDesktopSettingsKeys.BackgroundImage));
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -113,7 +152,7 @@ namespace StrixMusic.Shells.ZuneDesktop
 
         private void ZuneShell_BackRequested(object sender, EventArgs e)
         {
-            // TODO: Dyanmic back navigation
+            // TODO: Dynamic back navigation
             // Instead of just closing settings
             SettingsOverlay.Visibility = Visibility.Collapsed;
             NowPlayingOverlay.Visibility = Visibility.Collapsed;
@@ -155,16 +194,7 @@ namespace StrixMusic.Shells.ZuneDesktop
             }
         }
 
-        private void SetupIoc()
-        {
-            ZuneDesktopShellIoc.Initialize();
-            _navigationService = ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>();
-
-            ZuneDesktopSettingsService settingsService = ZuneDesktopShellIoc.Ioc.GetService<ZuneDesktopSettingsService>() ?? ThrowHelper.ThrowInvalidOperationException<ZuneDesktopSettingsService>();
-            settingsService.SettingChanged += SettingsService_SettingChanged;
-        }
-
-        private void SettingsService_SettingChanged(object sender, Sdk.Services.Settings.SettingChangedEventArgs e)
+        private void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)
         {
             if (e.Key == nameof(ZuneDesktopSettingsKeys.BackgroundImage))
             {
@@ -174,7 +204,9 @@ namespace StrixMusic.Shells.ZuneDesktop
 
         private void SettingsLinkClicked(object sender, RoutedEventArgs e)
         {
-            _navigationService!.NavigateTo(typeof(SettingsView));
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
+
+            _navigationService.NavigateTo(typeof(SettingsView));
         }
 
         private void RequestBack(object sender, RoutedEventArgs e)
