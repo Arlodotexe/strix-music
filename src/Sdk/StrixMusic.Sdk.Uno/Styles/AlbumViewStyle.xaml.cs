@@ -7,6 +7,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Styles
 {
+    /// <summary>
+    /// A <see cref="ResourceDictionary"/> containing the default style for the <see cref="AlbumView"/>.
+    /// </summary>
     public sealed partial class AlbumViewStyle : ResourceDictionary
     {
         /// <summary>
@@ -21,7 +24,7 @@ namespace StrixMusic.Sdk.Uno.Styles
         {
             if ((sender as Control)?.DataContext is AlbumViewModel viewModel)
             {
-                INavigationService<Control> navigationService = DefaultShellIoc.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
+                INavigationService<Control> navigationService = Shell.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
                 navigationService.NavigateTo(typeof(ArtistView), false, viewModel.Artist);
             }
         }

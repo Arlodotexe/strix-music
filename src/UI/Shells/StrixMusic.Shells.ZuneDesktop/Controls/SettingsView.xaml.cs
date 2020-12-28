@@ -1,22 +1,20 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Uno.Services.Localization;
-using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Shells.ZuneDesktop.Settings;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Uno.Controls;
+using StrixMusic.Sdk.Uno.Services.Localization;
+using StrixMusic.Shells.ZuneDesktop.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls
 {
     /// <summary>
-    /// A thing. TODO: Comment better
+    /// The Settings page in the ZuneDesktop shell.
     /// </summary>
     public sealed partial class SettingsView : UserControl
     {
-        private LocalizationLoaderService? _localizationService = null;
-        private LocalizationLoaderService LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<LocalizationLoaderService>())!;
+        private readonly INavigationService<Control> _navigationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsView"/> class.
@@ -24,7 +22,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         public SettingsView()
         {
             this.InitializeComponent();
-            _displayPages = _displayPages.Select(x => LocalizationService["StrixMusic.Shells.ZuneDesktop/ZuneSettings", x].ToUpper()).ToList();
+
+            _navigationService = Shell.Ioc.GetRequiredService<INavigationService<Control>>();
+
+            var localizationService = Shell.Ioc.GetRequiredService<LocalizationResourceLoader>();
+
+            _displayPages = _displayPages.Select(x => localizationService["StrixMusic.Shells.ZuneDesktop/ZuneSettings", x].ToUpper()).ToList();
         }
 
         private ZuneDesktopSettingsViewModel? ViewModel => DataContext as ZuneDesktopSettingsViewModel;
@@ -32,7 +35,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         /// <remarks>
         /// Translated in constructor.
         /// </remarks>
-        private readonly List<string> _displayPages = new List<string>
+        private readonly IEnumerable<string> _displayPages = new string[]
         {
             "Background",
             "Scale",
@@ -46,13 +49,13 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         private void SaveClicked(object sender, RoutedEventArgs e)
         {
             // TODO: Save settings changes
-            ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>()!.GoBack();
+            _navigationService.GoBack();
         }
 
         private void CancelClicked(object sender, RoutedEventArgs e)
         {
             //TODO: Revert unsaved changes
-            ZuneDesktopShellIoc.Ioc.GetService<INavigationService<Control>>()!.GoBack();
+            _navigationService.GoBack();
         }
 
         private void NavigateToDisplay(object sender, RoutedEventArgs e)
@@ -63,10 +66,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         private void NavigateToBehavior(object sender, RoutedEventArgs e)
         {
             PagesList.ItemsSource = _behaviorPages;
-        }
-
-        private void NavigateToCores(object sender, RoutedEventArgs e)
-        {
         }
     }
 }

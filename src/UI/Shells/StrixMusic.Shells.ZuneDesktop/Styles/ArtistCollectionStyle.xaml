@@ -6,6 +6,10 @@
     xmlns:a="using:LaunchPad.Attached"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.ArtistCollectionStyle">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneTrackListViewItemStyle.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
     <DataTemplate x:Key="ZuneDesktopArtistCollectionDataTemplate" x:DataType="viewModels:IArtistCollectionViewModel">
         <Grid>
             <Grid.RowDefinitions>

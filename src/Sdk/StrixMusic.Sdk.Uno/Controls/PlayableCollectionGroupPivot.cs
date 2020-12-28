@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Diagnostics;
+﻿using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Services.Settings;

@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         /// </summary>
         public AlbumCollection()
         {
-            this.DefaultStyleKey = typeof(ArtistCollection);
+            this.DefaultStyleKey = typeof(AlbumCollection);
         }
 
         /// <summary>

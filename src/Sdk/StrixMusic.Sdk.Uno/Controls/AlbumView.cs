@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using StrixMusic.Sdk.ViewModels;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -29,9 +29,6 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             if (!ViewModel.PopulateMoreTracksCommand.IsRunning)
                 await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(25);
-
-            if (!ViewModel.PopulateMoreImagesCommand.IsRunning)
-                await ViewModel.PopulateMoreImagesCommand.ExecuteAsync(25);
         }
     }
 }

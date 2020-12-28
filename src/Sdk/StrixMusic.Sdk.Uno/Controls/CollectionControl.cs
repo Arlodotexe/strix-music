@@ -10,6 +10,11 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
+    /// <summary>
+    /// A Templated Control base for showing items with progressive loading.
+    /// </summary>
+    /// <typeparam name="TData">The data type.</typeparam>
+    /// <typeparam name="TItem">The container type.</typeparam>
     [TemplatePart(Name = nameof(PART_Selector), Type = typeof(Selector))]
     public abstract partial class CollectionControl<TData, TItem> : Control
         where TData : class

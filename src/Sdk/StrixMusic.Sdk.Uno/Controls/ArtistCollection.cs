@@ -50,7 +50,8 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             if (!ViewModel.PopulateMoreArtistsCommand.IsRunning &&
                 ViewModel.TotalArtistItemsCount == 0)
-                SetEmptyVisibility(Visibility.Visible);
+            
+            SetEmptyVisibility(Visibility.Visible);
         }
 
         private void AttachHandlers()

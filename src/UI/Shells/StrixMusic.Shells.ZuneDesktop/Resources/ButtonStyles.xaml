@@ -4,6 +4,10 @@
     xmlns:launchpad="using:LaunchPad.Controls"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
     <Style x:Key="ZuneButton" TargetType="Button">
         <Setter Property="Width" Value="48"/>
         <Setter Property="Padding" Value="0"/>

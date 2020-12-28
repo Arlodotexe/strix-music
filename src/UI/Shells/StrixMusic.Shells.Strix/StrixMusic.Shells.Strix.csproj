@@ -51,6 +51,7 @@
     <None Remove="Styles\ArtistItemStyle.xaml" />
     <None Remove="Styles\ArtistViewStyle.xaml" />
     <None Remove="Styles\HomeStyle.xaml" />
+    <None Remove="Styles\MediaSlider.xaml" />
     <None Remove="Styles\NowPlayingBarStyle.xaml" />
     <None Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
     <None Remove="Styles\SettingsViewStyle.xaml" />
@@ -69,6 +70,7 @@
     <UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\MediaSlider.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />

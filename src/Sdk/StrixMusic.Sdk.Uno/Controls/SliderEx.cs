@@ -64,12 +64,15 @@ namespace StrixMusic.Sdk.Uno.Controls
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+
+            // Find thumb PART
             var thumb = GetTemplateChild("HorizontalThumb") as Thumb;
             if (thumb == null)
             {
                 thumb = GetTemplateChild("VerticalThumb") as Thumb;
             }
 
+            // Setup events on Thumb
             if (thumb != null)
             {
                 thumb.DragStarted += Thumb_DragStarted;
@@ -77,6 +80,7 @@ namespace StrixMusic.Sdk.Uno.Controls
                 thumb.DragDelta += Thumb_DragDelta;
             }
 
+            // Find SliderContainer
             var sliderContainer = GetTemplateChild("SliderContainer") as Grid;
             if (sliderContainer != null)
             {

@@ -4,7 +4,12 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    x:Class="StrixMusic.Sdk.Uno.Styles.ArtistItemStyle">
+    x:Class="StrixMusic.Sdk.Uno.Styles.ArtistItemStyle"
+    xmlns:styles="using:StrixMusic.Sdk.Uno.Styles">
+
+    <ResourceDictionary.MergedDictionaries>
+        <styles:SafeImageStyle />
+    </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="DefaultArtistItemDataTemplate" x:DataType="viewModels:ArtistViewModel">
         <Grid Padding="12,8" Background="Transparent">
@@ -14,6 +19,7 @@
             </Grid.RowDefinitions>
             <defaultcontrols:SafeImage Height="128" Width="128"
                                        Style="{StaticResource DefaultRoundSafeImageStyle}"/>
+
             <TextBlock  Grid.Row="1" Text="{x:Bind Name}" FontWeight="SemiBold" Margin="0,20,0,0"
                         HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
         </Grid>
