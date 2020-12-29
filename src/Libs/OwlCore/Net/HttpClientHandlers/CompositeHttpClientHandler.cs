@@ -28,6 +28,14 @@ namespace OwlCore.Net.HttpClientHandlers
         /// <summary>
         /// Creates a new instance of <see cref="CompositeHttpClientHandler"/>.
         /// </summary>
+        public CompositeHttpClientHandler()
+        {
+            _actions = new List<CompositeHttpClientHandlerAction>();
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="CompositeHttpClientHandler"/>.
+        /// </summary>
         /// <param name="actions">The actions to perform when executing <see cref="SendAsync(HttpRequestMessage, CancellationToken)"/>.</param>
         public CompositeHttpClientHandler(IEnumerable<CompositeHttpClientHandlerActionBase> actions)
         {
@@ -42,6 +50,39 @@ namespace OwlCore.Net.HttpClientHandlers
         {
             await semaphore.WaitAsync();
             _actions.Insert(0, action);
+            semaphore.Release();
+        }
+
+        /// <summary>
+        /// Adds a new action to be run when <see cref="SendAsync(HttpRequestMessage, CancellationToken)"/> is called.
+        /// </summary>
+        /// <returns></returns>
+        public async Task RemoveAction(CompositeHttpClientHandlerAction action)
+        {
+            await semaphore.WaitAsync();
+            _actions.Remove(action);
+            semaphore.Release();
+        }
+
+        /// <summary>
+        /// Adds a new action to be run when <see cref="SendAsync(HttpRequestMessage, CancellationToken)"/> is called.
+        /// </summary>
+        /// <returns></returns>
+        public async Task AddAction(CompositeHttpClientHandlerActionBase action)
+        {
+            await semaphore.WaitAsync();
+            _actions.Insert(0, action.SendAsync);
+            semaphore.Release();
+        }
+
+        /// <summary>
+        /// Adds a new action to be run when <see cref="SendAsync(HttpRequestMessage, CancellationToken)"/> is called.
+        /// </summary>
+        /// <returns></returns>
+        public async Task RemoveAction(CompositeHttpClientHandlerActionBase action)
+        {
+            await semaphore.WaitAsync();
+            _actions.Remove(action.SendAsync);
             semaphore.Release();
         }
 
