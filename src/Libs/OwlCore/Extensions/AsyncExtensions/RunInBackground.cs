@@ -32,6 +32,16 @@ namespace OwlCore.Extensions
         /// Wraps a given task in <see cref="Task.Run(Func{Task})"/>
         /// </summary>
         /// <param name="task">The task to execute.</param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        public static Task<T> RunInBackground<T>(this Task<T> task)
+        {
+            return Task.Run(async () => await task);
+        }
+
+        /// <summary>
+        /// Wraps a given task in <see cref="Task.Run(Func{Task})"/>
+        /// </summary>
+        /// <param name="task">The task to execute.</param>
         /// <param name="cancellationToken">A cancellation token for this the returned task.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
         public static Task<T> RunInBackground<T>(this Task<T> task, CancellationToken cancellationToken)
