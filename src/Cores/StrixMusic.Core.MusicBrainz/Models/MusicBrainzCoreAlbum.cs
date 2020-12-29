@@ -319,13 +319,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public Task AddImageAsync(ICoreImage image, int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }
