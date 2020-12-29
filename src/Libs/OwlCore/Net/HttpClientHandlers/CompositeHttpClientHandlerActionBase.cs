@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,6 +17,6 @@ namespace OwlCore.Net.HttpClientHandlers
         /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
         /// <param name="baseSendAsync">The equivalent of <see cref="HttpClientHandler.SendAsync(HttpRequestMessage, CancellationToken)"/>.</param>
         /// <returns></returns>
-        public abstract Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken, Task<HttpResponseMessage> baseSendAsync);
+        public abstract Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> baseSendAsync);
     }
 }

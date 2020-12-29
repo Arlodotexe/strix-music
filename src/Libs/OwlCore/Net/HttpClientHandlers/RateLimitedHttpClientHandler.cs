@@ -20,11 +20,10 @@ namespace OwlCore.Net.HttpClientHandlers
             _rateLimiterAction = new RateLimitedHttpClientHandlerAction(limitCooldown, maxNumberOfRequests);
         }
 
-
         /// <inheritdoc />
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            return _rateLimiterAction.SendAsync(request, cancellationToken, base.SendAsync(request, cancellationToken));
+            return _rateLimiterAction.SendAsync(request, cancellationToken, () => base.SendAsync(request, cancellationToken));
         }
     }
 }

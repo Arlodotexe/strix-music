@@ -29,7 +29,7 @@ namespace OwlCore.Net.HttpClientHandlers
         }
 
         /// <inheritdoc />
-        public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken, Task<HttpResponseMessage> baseSendAsync)
+        public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> baseSendAsync)
         {
             using (await _mutex.LockAsync())
             {
@@ -51,7 +51,7 @@ namespace OwlCore.Net.HttpClientHandlers
                     await Task.Delay(_cooldownWindowTimeSpan - timeSinceOldestRequestWasMade, cancellationToken);
                 }
 
-                return await baseSendAsync;
+                return await baseSendAsync();
             }
         }
     }

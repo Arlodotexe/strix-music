@@ -14,7 +14,7 @@ namespace OwlCore.Net.HttpClientHandlers
     public class CompositeHttpClientHandler : HttpClientHandler
     {
         private readonly List<CompositeHttpClientHandlerAction> _actions;
-        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(0, 1);
+        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 
         /// <summary>
         /// Creates a new instance of <see cref="CompositeHttpClientHandler"/>.
@@ -93,7 +93,6 @@ namespace OwlCore.Net.HttpClientHandlers
 
             // Prevents adding a new action while the chain is building.
             await semaphore.WaitAsync(cancellationToken);
-            cancellationToken.Register(() => semaphore.Release());
 
             // Build the chain.
             // The last added item will naturally execute first, so we'll invert the chain so the first added item executes first.
@@ -104,7 +103,7 @@ namespace OwlCore.Net.HttpClientHandlers
                 var chainLink = sendActionChain;
                 var currentAction = _actions[i];
 
-                sendActionChain = () => currentAction(request, cancellationToken, chainLink());
+                sendActionChain = () => currentAction(request, cancellationToken, chainLink);
             }
 
             semaphore.Release();
@@ -124,5 +123,5 @@ namespace OwlCore.Net.HttpClientHandlers
     /// <param name="cancellationToken">A cancellation token to cancel the request.</param>
     /// <param name="baseSendAsync">The send async action </param>
     /// <returns>The <see cref="Task"/> representing the asynchronous operation.</returns>
-    public delegate Task<HttpResponseMessage> CompositeHttpClientHandlerAction(HttpRequestMessage request, CancellationToken cancellationToken, Task<HttpResponseMessage> baseSendAsync);
+    public delegate Task<HttpResponseMessage> CompositeHttpClientHandlerAction(HttpRequestMessage request, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> baseSendAsync);
 }

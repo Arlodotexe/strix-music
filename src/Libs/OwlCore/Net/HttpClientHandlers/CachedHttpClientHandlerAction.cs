@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
@@ -46,7 +47,7 @@ namespace OwlCore.Net.HttpClientHandlers
         }
 
         /// <inheritdoc cref="HttpClientHandler.SendAsync(HttpRequestMessage, CancellationToken)"/>
-        public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken, Task<HttpResponseMessage> baseSendAsync)
+        public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> baseSendAsync)
         {
             if (_cacheRequestFilter?.Invoke(request.RequestUri) ?? false)
             {
@@ -57,11 +58,10 @@ namespace OwlCore.Net.HttpClientHandlers
 
                 // check if item is cached
                 var cachedEntry = ReadCachedFile(path, request.RequestUri.AbsoluteUri);
-
                 if (cachedEntry != null)
                 {
                     // if cache found and not expired
-                    if (cachedEntry.TimeStamp + _cacheTime < DateTime.UtcNow && cachedEntry.ContentBytes != null)
+                    if (cachedEntry.TimeStamp + _cacheTime > DateTime.UtcNow && cachedEntry.ContentBytes != null)
                     {
                         var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
 
@@ -85,14 +85,14 @@ namespace OwlCore.Net.HttpClientHandlers
                 }
 
                 // if not found, get data and cache it
-                var result = await baseSendAsync;
+                var result = await baseSendAsync();
 
                 await WriteCachedFile(path, request.RequestUri.AbsoluteUri, result);
 
                 return result;
             }
 
-            return await baseSendAsync;
+            return await baseSendAsync();
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace OwlCore.Net.HttpClientHandlers
                 Debug.WriteLine($"Reading byte data from disk at {cachedFilePath}");
                 var fileBytes = File.ReadAllText(cachedFilePath);
 
-                Debug.WriteLine($"{fileBytes} bytes read. Deserializing...");
+                Debug.WriteLine($"{fileBytes.Length} bytes read. Deserializing...");
                 cacheEntry = JsonSerializer.Deserialize<CacheEntry>(fileBytes);
 
                 Debug.WriteLine($"Deserialized cacheEntry");
@@ -206,20 +206,17 @@ namespace OwlCore.Net.HttpClientHandlers
         /// <returns>MD5 hash.</returns>
         private static string GetHash(string seed)
         {
-            var md5 = MD5.Create();
-
-            var bytes = Encoding.Unicode.GetBytes(seed);
-
-            bytes = md5.ComputeHash(bytes, 0, seed.Length);
-
-            var buffer = new StringBuilder();
-
-            for (var i = 0; i < bytes.Length; i += 2)
+            unchecked
             {
-                buffer.Append(bytes[i].ToString("x2").ToLower());
-            }
+                int hash = 23;
 
-            return buffer.ToString();
+                foreach (char c in seed)
+                {
+                    hash = hash * 31 + c;
+                }
+
+                return Convert.ToString(hash, 16);
+            }
         }
 
         /// <summary>
