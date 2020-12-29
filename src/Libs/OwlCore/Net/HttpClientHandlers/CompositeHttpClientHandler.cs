@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,6 @@ using OwlCore.Extensions;
 
 namespace OwlCore.Net.HttpClientHandlers
 {
-
     /// <summary>
     /// An <see cref="HttpClientHandler"/> that can perform multiple arbitrary actions on a single request.
     /// </summary>
