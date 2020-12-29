@@ -27,4 +27,9 @@
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Metadata\" />
+    <Folder Include="Models\Core\" />
+  </ItemGroup>
+
 </Project>
