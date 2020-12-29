@@ -61,7 +61,7 @@ namespace StrixMusic.Shared
         {
             var services = new ServiceCollection();
 
-            services.AddSingleton(new NavigationService<Control>());
+            services.AddSingleton<INavigationService<Control>>(new NavigationService<Control>());
             services.AddSingleton(new LocalizationResourceLoader());
 
             shell.InitServices(services);
