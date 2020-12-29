@@ -150,7 +150,6 @@ namespace OwlCore.Net.HttpClientHandlers
             return cacheEntry;
         }
 
-
         /// <summary>
         /// Generates a file for the cache.
         /// </summary>
