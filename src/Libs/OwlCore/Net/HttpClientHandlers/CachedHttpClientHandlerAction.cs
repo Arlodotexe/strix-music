@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,8 +60,7 @@ namespace OwlCore.Net.HttpClientHandlers
                     // if cache found and not expired
                     if (cachedEntry.TimeStamp + _cacheTime > DateTime.UtcNow && cachedEntry.ContentBytes != null)
                     {
-                        var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
-
+                        var response = new HttpResponseMessage(HttpStatusCode.OK);
                         response.Content = new ByteArrayContent(cachedEntry.ContentBytes);
 
                         return response;
@@ -105,12 +101,7 @@ namespace OwlCore.Net.HttpClientHandlers
         public static async Task WriteCachedFile(string path, string request, HttpResponseMessage response)
         {
             var cachedFilePath = GetCachedFilePath(path, request);
-
-            Debug.WriteLine($"Writing to {cachedFilePath}");
-
             var contentBytes = await response.Content.ReadAsByteArrayAsync();
-
-            Debug.WriteLine($"with {contentBytes.Length} bytes");
 
             var cacheEntry = new CacheEntry
             {
@@ -119,17 +110,9 @@ namespace OwlCore.Net.HttpClientHandlers
                 TimeStamp = DateTime.UtcNow,
             };
 
-            Debug.WriteLine($"Constructed cacheEntry");
-
             var serializedData = JsonSerializer.Serialize(cacheEntry);
 
-            Debug.WriteLine($"cacheEntry is serialized with {serializedData.Length} bytes.");
-
-            Debug.WriteLine("Writing to disk");
-
             File.WriteAllText(cachedFilePath, serializedData);
-
-            Debug.WriteLine($"Finished writing to {serializedData.Length} bytes to file at {cachedFilePath}");
         }
 
         /// <summary>
@@ -140,49 +123,29 @@ namespace OwlCore.Net.HttpClientHandlers
         /// <returns>Information related to cache in a <see cref="CacheEntry"/></returns>
         private static CacheEntry? ReadCachedFile(string path, string request)
         {
-            Debug.WriteLine($"Start ReadCacheFile for Uri {request}");
-
             var cachedFilePath = GetCachedFilePath(path, request);
 
             if (!File.Exists(cachedFilePath))
-            {
-                Debug.WriteLine($"Cache file not found, returning null.");
                 return null;
-            }
 
             CacheEntry? cacheEntry = null;
 
             try
             {
-                Debug.WriteLine($"Reading byte data from disk at {cachedFilePath}");
                 var fileBytes = File.ReadAllText(cachedFilePath);
-
-                Debug.WriteLine($"{fileBytes.Length} bytes read. Deserializing...");
                 cacheEntry = JsonSerializer.Deserialize<CacheEntry>(fileBytes);
-
-                Debug.WriteLine($"Deserialized cacheEntry");
             }
             catch
             {
                 // ignored
             }
 
-
             if (cacheEntry?.RequestUri is null)
-            {
-                Debug.WriteLine($"cacheEntry is missing requestUri. Returning null.");
                 return null;
-            }
 
             // Check if the cached request matches the given (could be a hash collision).
             if (!request.Contains(cacheEntry.RequestUri))
-            {
-                Debug.WriteLine($"cacheEntry's RequestUri doesn't match the request uri found by the hash. Returning null.");
                 return null;
-            }
-
-
-            Debug.WriteLine($"returning valid and deserialized cache entry");
 
             return cacheEntry;
         }
