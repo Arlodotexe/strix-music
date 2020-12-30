@@ -52,6 +52,7 @@
 		<None Remove="Assets\Backgrounds\Shards.png" />
 		<None Remove="Assets\Backgrounds\Smooth.png" />
 		<None Remove="Assets\Backgrounds\Wired.png" />
+		<None Remove="Assets\Hover.png" />
 		<None Remove="Assets\Quickplay-Background.png" />
 		<None Remove="Controls\AlbumWall.xaml" />
 		<None Remove="Controls\QuickplayContent.xaml" />
@@ -132,6 +133,7 @@
 	  <Content Include="Assets\Backgrounds\Shards.png" />
 	  <Content Include="Assets\Backgrounds\Smooth.png" />
 	  <Content Include="Assets\Backgrounds\Wired.png" />
+	  <Content Include="Assets\Hover.png" />
 	  <Content Include="Assets\Quickplay-Background.png" />
 	</ItemGroup>
 	<ItemGroup>
