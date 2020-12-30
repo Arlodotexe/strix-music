@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -232,29 +231,32 @@ namespace StrixMusic.Shared
             Guard.IsNotNull(_coreRegistry, nameof(_coreRegistry));
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
-            var existingCoreRanking = await _settingsService.GetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRanking)).RunInBackground();
+            var existingCoreRanking = await _settingsService.GetValue<List<string>>(nameof(SettingsKeys.CoreRanking)).RunInBackground();
 
-            var coreRanking = new List<CoreAssemblyInfo>();
+            var coreRanking = new List<string>();
 
-            foreach (var assemblyInfo in existingCoreRanking)
+            foreach (var instanceId in existingCoreRanking)
             {
-                // If this core isn't registered anymore, remove it from ranking
-                if (_coreRegistry.Any(x => x.AttributeData.CoreTypeAssemblyQualifiedName == assemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName))
+                var coreAssemblyInfo = _configuredCoreRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
+                if (coreAssemblyInfo is null)
+                    continue;
+
+                // If this core isn't configured anymore, don't add it to the ranking.
+                if (_coreRegistry.Any(x => x.AttributeData.CoreTypeAssemblyQualifiedName == coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName))
                 {
-                    coreRanking.Add(assemblyInfo);
+                    coreRanking.Add(instanceId);
                 }
             }
 
             // If no cores exist in ranking, initialize with all loaded cores.
             if (coreRanking.Count == 0)
             {
+                // TODO: Show abstractUI and let the user rank the cores manually.
                 foreach (var configuredCoreData in _configuredCoreRegistry)
-                {
-                    coreRanking.Add(configuredCoreData.Value);
-                }
+                    coreRanking.Add(configuredCoreData.Key);
             }
 
-            await _settingsService.SetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRanking), coreRanking);
+            await _settingsService.SetValue<List<string>>(nameof(SettingsKeys.CoreRanking), coreRanking);
         }
 
         private async Task InitializeServices()
@@ -353,16 +355,7 @@ namespace StrixMusic.Shared
         private async Task<IServiceCollection> CreateInitialCoreServices(ICore core)
         {
             var services = new ServiceCollection();
-            StorageFolder rootStorageFolder;
-
-            try
-            {
-                rootStorageFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync(core.InstanceId);
-            }
-            catch (FileNotFoundException)
-            {
-                rootStorageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(core.InstanceId);
-            }
+            StorageFolder rootStorageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(core.InstanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
 
             services.AddSingleton<IFileSystemService>(new FileSystemService(rootStorageFolder));
 

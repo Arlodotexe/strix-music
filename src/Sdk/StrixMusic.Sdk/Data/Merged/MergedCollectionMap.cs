@@ -37,7 +37,8 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private readonly List<MergedMappedData> _mergedMappedData = new List<MergedMappedData>();
 
-        private IReadOnlyList<CoreAssemblyInfo>? _coreRanking;
+        private List<string>? _coreRanking;
+        private Dictionary<string, CoreAssemblyInfo>? _configuredCoreRegistry;
         private MergedCollectionSorting? _sortingMethod;
         private bool _isInit;
 
@@ -63,6 +64,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 return;
 
             _coreRanking = await GetCoreRankings();
+            _configuredCoreRegistry = await GetConfiguredCoreRegistry();
             _sortingMethod = await GetSortingMethod();
             _settingsService.SettingChanged += SettingsServiceOnSettingChanged;
 
@@ -639,8 +641,12 @@ namespace StrixMusic.Sdk.Data.Merged
 
             // Rank the sources by core
             var rankedSources = new List<TCoreCollection>();
-            foreach (var coreAssemblyInfo in _coreRanking)
+            foreach (var instanceId in _coreRanking)
             {
+                var coreAssemblyInfo = _configuredCoreRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
+                if (coreAssemblyInfo is null)
+                    continue;
+
                 var coreType = Type.GetType(coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName);
 
                 var source = Sources.FirstOrDefault(x => x.SourceCore.GetType() == coreType);
@@ -668,9 +674,14 @@ namespace StrixMusic.Sdk.Data.Merged
             return itemsMap;
         }
 
-        private async Task<IReadOnlyList<CoreAssemblyInfo>> GetCoreRankings()
+        private async Task<List<string>> GetCoreRankings()
         {
-            return await _settingsService.GetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRanking));
+            return await _settingsService.GetValue< List<string>>(nameof(SettingsKeys.CoreRanking));
+        }
+
+        private async Task<Dictionary<string, CoreAssemblyInfo>> GetConfiguredCoreRegistry()
+        {
+            return await _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores));
         }
 
         private async Task<MergedCollectionSorting> GetSortingMethod()
@@ -683,7 +694,7 @@ namespace StrixMusic.Sdk.Data.Merged
             switch (e.Key)
             {
                 case nameof(SettingsKeys.CoreRanking):
-                    _coreRanking = e.Value as IReadOnlyList<CoreAssemblyInfo>;
+                    _coreRanking = e.Value as List<string>;
                     break;
                 case nameof(SettingsKeys.MergedCollectionSorting) when e.Value != null:
                     _sortingMethod = (MergedCollectionSorting)e.Value;

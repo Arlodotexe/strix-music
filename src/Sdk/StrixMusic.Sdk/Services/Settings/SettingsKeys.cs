@@ -28,9 +28,9 @@ namespace StrixMusic.Sdk.Services.Settings
         public static readonly Dictionary<string, CoreAssemblyInfo> ConfiguredCores = new Dictionary<string, CoreAssemblyInfo>();
 
         /// <summary>
-        /// The user's preferred ranking for each core. Highest ranking first.
+        /// The user's preferred ranking for each core, stored as the core's instance ID. Highest ranking first.
         /// </summary>
-        public static readonly IReadOnlyList<CoreAssemblyInfo> CoreRanking = new List<CoreAssemblyInfo>();
+        public static readonly IReadOnlyList<string> CoreRanking = new List<string>();
 
         /// <summary>
         /// The user's preference for how items in a collection from multiple sources are sorted. 
