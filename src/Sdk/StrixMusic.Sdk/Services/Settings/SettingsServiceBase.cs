@@ -4,6 +4,7 @@
 // Legere: https://www.microsoft.com/store/apps/9PHJRVCSKVJZ
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -121,7 +122,18 @@ namespace StrixMusic.Sdk.Services.Settings
             // Try to get the default setting value
             if (obj == null)
             {
-                return (T)SettingsKeysType.GetField(key).GetValue(null);
+                foreach (var type in SettingsKeysTypes)
+                {
+                    try
+                    {
+                        return (T)type.GetField(key).GetValue(null);
+                    }
+                    catch (Exception)
+                    {
+                        // iteration continues and tries again, or eventually returns null below.
+                        // ignored
+                    }
+                }
             }
 
             return obj!;
@@ -135,7 +147,7 @@ namespace StrixMusic.Sdk.Services.Settings
         /// <summary>
         /// The Type used to hold settings keys and default value for this implementation of the Settings Service.
         /// </summary>
-        public abstract Type SettingsKeysType { get; }
+        public abstract IEnumerable<Type> SettingsKeysTypes { get; }
 
         /// <inheritdoc cref="ISettingsService.SettingChanged"/>
         public event EventHandler<SettingChangedEventArgs>? SettingChanged;

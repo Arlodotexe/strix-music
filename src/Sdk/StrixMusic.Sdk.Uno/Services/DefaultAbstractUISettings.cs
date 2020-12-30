@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Extensions;
 using OwlCore.Provisos;
+using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
 
 namespace StrixMusic.Sdk.Services.Settings
@@ -11,17 +14,16 @@ namespace StrixMusic.Sdk.Services.Settings
     /// <summary>
     /// Provides templatable AbstractUI elements for the default app settings.
     /// </summary>
-    public class DefaultAbstractUISettings
+    public class DefaultAbstractUISettings : IAsyncInit
     {
-        private readonly IShellService _shellService;
         private readonly ISettingsService _settingsService;
+        private IReadOnlyList<ShellAssemblyInfo>? _shellRegistry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultAbstractUISettings"/> class.
         /// </summary>
         public DefaultAbstractUISettings()
         {
-            _shellService = Ioc.Default.GetRequiredService<IShellService>();
             _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
 
             ThemeSettings = CreateThemeSettingItems();
@@ -44,13 +46,15 @@ namespace StrixMusic.Sdk.Services.Settings
 
         private AbstractUIElementGroup CreateThemeSettingItems()
         {
+            Guard.IsNotNull(_shellRegistry, nameof(_shellRegistry));
+
             var shellSelectorItems = new List<AbstractUIMetadata>();
 
-            foreach (var shell in _shellService.LoadedShells)
+            foreach (var shell in _shellRegistry)
             {
-                shellSelectorItems.Add(new AbstractUIMetadata(shell.Key)
+                shellSelectorItems.Add(new AbstractUIMetadata(shell.AssemblyName)
                 {
-                    Title = shell.Value.DisplayName,
+                    Title = shell.DisplayName,
                 });
             }
 
@@ -62,7 +66,7 @@ namespace StrixMusic.Sdk.Services.Settings
             {
                 Title = "Theme",
                 IconCode = "\uE2B1",
-                Items = new List<AbstractUIElement>()
+                Items = new List<AbstractUIElement>
                 {
                     shellSelector,
                 },
@@ -72,6 +76,12 @@ namespace StrixMusic.Sdk.Services.Settings
         private async void ShellSelector_ItemSelected(object sender, AbstractUIMetadata e)
         {
             await _settingsService.SetValue<string>(nameof(SettingsKeys.PreferredShell), e.Id);
+        }
+
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            _shellRegistry = await _settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry)).RunInBackground();
         }
     }
 }

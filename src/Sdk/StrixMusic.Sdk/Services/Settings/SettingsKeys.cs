@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 
 namespace StrixMusic.Sdk.Services.Settings
@@ -8,29 +8,29 @@ namespace StrixMusic.Sdk.Services.Settings
     /// A <see langword="class"/> containing keys for all settings throughout the main app.
     /// </summary>
     /// <remarks>
-    /// This <see lang="class"/> is used with reflection to generate settings files.
+    /// The StrixMusic.Sdk contains the keys that don't return anything UI-dependent, while StrixMusic.Sdk.Uno contains a partial that has the UI-dependent keys.
     /// </remarks>
-    public static class SettingsKeys
+    public static partial class SettingsKeys
     {
         /// <summary>
-        /// Gets the default value for <see cref="PreferredShell"/> in settings.
+        /// Stores the display name of the user's preferred shell.
         /// </summary>
         public static readonly string PreferredShell = "Default";
 
         /// <summary>
-        /// Stored information about the cores that have been configured.
+        /// Stored assembly information about all available cores.
         /// </summary>
-        public static readonly Dictionary<string, Type> CoreRegistry = new Dictionary<string, Type>();
+        public static readonly IReadOnlyList<CoreAssemblyInfo> CoreRegistry = new List<CoreAssemblyInfo>();
 
         /// <summary>
-        /// Contains keyed information for the last selected Pivot item in various pivots throughout the app. Key is a unique ID for the pivot, value is the index of the selected pivot.
+        /// Stored assembly information about all cores that the user has configured.
         /// </summary>
-        public static readonly Dictionary<string, int> PivotSelectionMemo = new Dictionary<string, int>();
+        public static readonly Dictionary<string, CoreAssemblyInfo> ConfiguredCores = new Dictionary<string, CoreAssemblyInfo>();
 
         /// <summary>
         /// The user's preferred ranking for each core. Highest ranking first.
         /// </summary>
-        public static readonly IReadOnlyList<Type> CoreRanking = new List<Type>();
+        public static readonly IReadOnlyList<CoreAssemblyInfo> CoreRanking = new List<CoreAssemblyInfo>();
 
         /// <summary>
         /// The user's preference for how items in a collection from multiple sources are sorted. 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 
@@ -23,6 +25,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Settings
         public override string Id => "ZuneDesktop";
 
         /// <inheritdoc/>
-        public override Type SettingsKeysType => typeof(ZuneDesktopSettingsKeys);
+        public override IEnumerable<Type> SettingsKeysTypes => typeof(ZuneDesktopSettingsKeys).IntoList();
     }
 }

@@ -37,7 +37,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private readonly List<MergedMappedData> _mergedMappedData = new List<MergedMappedData>();
 
-        private IReadOnlyList<Type>? _coreRanking;
+        private IReadOnlyList<CoreAssemblyInfo>? _coreRanking;
         private MergedCollectionSorting? _sortingMethod;
         private bool _isInit;
 
@@ -639,9 +639,16 @@ namespace StrixMusic.Sdk.Data.Merged
 
             // Rank the sources by core
             var rankedSources = new List<TCoreCollection>();
-            foreach (var coreType in _coreRanking)
+            foreach (var coreAssemblyInfo in _coreRanking)
             {
-                var source = Sources.First(x => x.SourceCore.GetType() == coreType);
+                var coreType = Type.GetType(coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName);
+
+                var source = Sources.FirstOrDefault(x => x.SourceCore.GetType() == coreType);
+
+                // A core that is in the core ranking might not be part of the sources for this object
+                if (source is null)
+                    continue;
+
                 rankedSources.Add(source);
             }
 
@@ -661,9 +668,9 @@ namespace StrixMusic.Sdk.Data.Merged
             return itemsMap;
         }
 
-        private async Task<IReadOnlyList<Type>> GetCoreRankings()
+        private async Task<IReadOnlyList<CoreAssemblyInfo>> GetCoreRankings()
         {
-            return await _settingsService.GetValue<IReadOnlyList<Type>>(nameof(SettingsKeys.CoreRanking));
+            return await _settingsService.GetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRanking));
         }
 
         private async Task<MergedCollectionSorting> GetSortingMethod()
@@ -676,7 +683,7 @@ namespace StrixMusic.Sdk.Data.Merged
             switch (e.Key)
             {
                 case nameof(SettingsKeys.CoreRanking):
-                    _coreRanking = e.Value as IReadOnlyList<Type>;
+                    _coreRanking = e.Value as IReadOnlyList<CoreAssemblyInfo>;
                     break;
                 case nameof(SettingsKeys.MergedCollectionSorting) when e.Value != null:
                     _sortingMethod = (MergedCollectionSorting)e.Value;

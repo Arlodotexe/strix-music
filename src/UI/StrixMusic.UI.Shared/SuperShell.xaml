@@ -24,7 +24,7 @@
         <ComboBox x:Name="ShellSelector" Grid.Row="1" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
                   SelectionChanged="ComboBox_SelectionChanged">
             <ComboBox.ItemTemplate>
-                <DataTemplate x:DataType="models:ShellModel">
+                <DataTemplate x:DataType="models:ShellAssemblyInfo">
                     <TextBlock Text="{x:Bind DisplayName}"/>
                 </DataTemplate>
             </ComboBox.ItemTemplate>

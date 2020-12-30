@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Uno.Services;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -207,11 +208,11 @@ namespace StrixMusic.Sdk.Uno.Controls
             if (PART_Pivot == null)
                 return;
 
-            var pivotSelectionMemo = await _settingsService.GetValue<Dictionary<string, int>>(nameof(SettingsKeys.PivotSelectionMemo), respectCurrentShell: true);
+            var pivotSelectionMemo = await _settingsService.GetValue<Dictionary<string, int>>(nameof(SettingsKeysUI.PivotSelectionMemo), respectCurrentShell: true);
 
             pivotSelectionMemo[ViewModel.Id] = PART_Pivot.SelectedIndex;
 
-            await _settingsService.SetValue(nameof(SettingsKeys.PivotSelectionMemo), pivotSelectionMemo, respectCurrentShell: true);
+            await _settingsService.SetValue(nameof(SettingsKeysUI.PivotSelectionMemo), pivotSelectionMemo, respectCurrentShell: true);
         }
 
         /// <summary>
@@ -243,7 +244,7 @@ namespace StrixMusic.Sdk.Uno.Controls
             if (!RestoreSelectedPivot || PART_Pivot == null)
                 return;
 
-            var pivotSelectionMemo = await _settingsService.GetValue<Dictionary<string, int>>(nameof(SettingsKeys.PivotSelectionMemo), respectCurrentShell: true);
+            var pivotSelectionMemo = await _settingsService.GetValue<Dictionary<string, int>>(nameof(SettingsKeysUI.PivotSelectionMemo), respectCurrentShell: true);
 
             if (pivotSelectionMemo != null && pivotSelectionMemo.TryGetValue(ViewModel.Id, out int value))
             {

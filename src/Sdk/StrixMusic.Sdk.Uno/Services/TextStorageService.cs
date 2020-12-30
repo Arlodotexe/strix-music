@@ -97,7 +97,7 @@ namespace StrixMusic.Sdk.Uno.Services
             }
             catch (Exception ex)
             {
-                fileHandle = await pathHandle.CreateFileAsync(filename);
+                fileHandle = await pathHandle.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             }
 
             using (await _keyedMutex.GetOrAdd(filename + path, new AsyncLock()).LockAsync())
