@@ -17,6 +17,7 @@ using StrixMusic.Sdk.Uno.Services.Localization;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using OwlCore.Extensions;
 
 namespace StrixMusic.Shared
 {
@@ -26,7 +27,8 @@ namespace StrixMusic.Shared
     public sealed partial class MainPage : UserControl
     {
         private readonly List<MediaPlayerElement> _mediaPlayerElements = new List<MediaPlayerElement>();
-        private IShellService? _shellService;
+        private INavigationService<Control>? _navigationService;
+        private IReadOnlyList<ShellAssemblyInfo>? _shellRegistry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -40,12 +42,12 @@ namespace StrixMusic.Shared
         /// <summary>
         /// The currently loaded shell, if any.
         /// </summary>
-        internal ShellModel? ActiveShellModel { get; private set; }
+        internal ShellAssemblyInfo? ActiveShellModel { get; private set; }
 
         /// <summary>
         /// The user's preferred shell.
         /// </summary>
-        internal ShellModel? PreferredShell { get; private set; }
+        internal ShellAssemblyInfo? PreferredShell { get; private set; }
 
         private static Shell CreateShellControl(Type shellType)
         {
@@ -72,11 +74,12 @@ namespace StrixMusic.Shared
             Loaded -= MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
 
-            // Services might not be configured when MainPage is created, but they are once MainPage is added to the visual tree.
-            _shellService = Ioc.Default.GetRequiredService<IShellService>();
+            var settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+            _navigationService = CurrentWindow.NavigationService;
+            _shellRegistry = await settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry)).RunInBackground();
 
             LoadRegisteredMediaPlayerElements();
-            await SetupInitialShell();
+            await SetupPreferredShell();
 
             AttachEvents();
 
@@ -113,7 +116,7 @@ namespace StrixMusic.Shared
         {
             if (e.Key == nameof(SettingsKeys.PreferredShell))
             {
-                await SetupInitialShell();
+                await SetupPreferredShell();
             }
         }
 
@@ -125,35 +128,36 @@ namespace StrixMusic.Shared
             }
         }
 
-        private async Task SetupInitialShell()
+        private async Task SetupPreferredShell()
         {
-            Guard.IsNotNull(_shellService, nameof(_shellService));
+            Guard.IsNotNull(_shellRegistry, nameof(_shellRegistry));
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
 
             // Gets the preferred shell from settings.
-            var preferredShell = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
-            var shellModel = _shellService.DefaultShellModel;
+            var preferredShellDisplayName = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
 
-            if (_shellService.LoadedShells.ContainsKey(preferredShell))
+            PreferredShell = _shellRegistry.FirstOrDefault(x => x.AssemblyName == preferredShellDisplayName);
+
+            if (PreferredShell == default)
             {
-                shellModel = _shellService.LoadedShells[preferredShell];
-                PreferredShell = shellModel;
+                _navigationService.NavigateTo(typeof(SuperShell), true);
+                return;
             }
 
-            await SetupShell(shellModel);
+            await SetupShell(PreferredShell);
         }
 
-        private Task SetupShell(ShellModel shellModel)
+        private Task SetupShell(ShellAssemblyInfo shellAssemblyInfo)
         {
-            Guard.IsNotNull(_shellService, nameof(_shellService));
-
             using (Threading.UIThread)
             {
                 // Removes the current shell.
                 ShellDisplay.Content = null;
 
-                ActiveShellModel = shellModel;
+                ActiveShellModel = shellAssemblyInfo;
 
-                var shell = CreateShellControl(shellModel.ShellAttribute.ShellSubType);
+                var shellDataType = Type.GetType(shellAssemblyInfo.AttributeData.ShellTypeAssemblyQualifiedName);
+                var shell = CreateShellControl(shellDataType);
                 InjectServices(shell);
 
                 shell.DataContext = MainViewModel.Singleton;
@@ -164,20 +168,20 @@ namespace StrixMusic.Shared
             return Task.CompletedTask;
         }
 
-        private bool CheckShellModelSupport(ShellModel shell)
+        private bool CheckShellModelSupport(ShellAssemblyInfo shell)
         {
-            bool heightIsInRange = ActualHeight < shell.ShellAttribute.MaxWindowSize.Height &&
-                                   ActualHeight > shell.ShellAttribute.MinWindowSize.Height;
+            bool heightIsInRange = ActualHeight < shell.AttributeData.MaxWindowSize.Height &&
+                                   ActualHeight > shell.AttributeData.MinWindowSize.Height;
 
-            bool widthIsInRange = ActualWidth > shell.ShellAttribute.MinWindowSize.Width &&
-                                  ActualWidth > shell.ShellAttribute.MinWindowSize.Width;
+            bool widthIsInRange = ActualWidth > shell.AttributeData.MinWindowSize.Width &&
+                                  ActualWidth > shell.AttributeData.MinWindowSize.Width;
 
             return widthIsInRange && heightIsInRange;
         }
 
         private async void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (_shellService is null)
+            if (_shellRegistry is null)
                 return;
 
             if (ActiveShellModel == null || PreferredShell == null)
@@ -195,7 +199,8 @@ namespace StrixMusic.Shared
             }
             else if (!CheckShellModelSupport(ActiveShellModel))
             {
-                await SetupShell(_shellService.DefaultShellModel);
+                // TODO fall back to the user's secondary shell.
+                await SetupShell(_shellRegistry.First());
             }
         }
 

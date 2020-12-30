@@ -2,11 +2,13 @@
 // Sergio's GitHub: https://github.com/Sergio0694
 // Legere: https://www.microsoft.com/store/apps/9PHJRVCSKVJZ
 
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.Messaging.Messages;
+using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 
-namespace StrixMusic.Sdk.Services.Settings
+namespace StrixMusic.Sdk.Uno.Services
 {
     /// <summary>
     /// The instance of <see cref="ISettingsService"/> used by default
@@ -67,6 +69,10 @@ namespace StrixMusic.Sdk.Services.Settings
         public override string Id => "Default";
 
         /// <inheritdoc/>
-        public override System.Type SettingsKeysType =>  typeof(SettingsKeys);
+        public override IEnumerable<Type> SettingsKeysTypes => new[]
+        {
+            typeof(SettingsKeys),
+            typeof(SettingsKeysUI),
+        };
     }
 }

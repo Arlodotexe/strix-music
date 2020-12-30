@@ -1,18 +1,17 @@
 ﻿using StrixMusic.Sdk.Uno.Assembly.Enums;
-using System;
 using Windows.Foundation;
 
-namespace StrixMusic.Sdk.Uno.Assembly
+namespace StrixMusic.Sdk.Uno.Models
 {
     /// <summary>
-    /// An attribute used to dynamically import a shell and associated metadata.
+    /// The data given to the attribute in the AssemblyInfo.cs file.
     /// </summary>
-    public class ShellAttribute : Attribute
+    public class ShellAttributeData
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ShellAttribute"/> class.
+        /// Initializes a new instance of the <see cref="ShellAttributeData"/> class.
         /// </summary>
-        /// <param name="shellClass">The Shell child Type of the shell in the assembly.</param>
+        /// <param name="shellClassAssemblyQualifiedName">The full name of the Shell child Type.</param>
         /// <param name="displayName">The display name for the shell.</param>
         /// <param name="deviceFamily">The supported device families for the shell.</param>
         /// <param name="inputMethod">The supported input methods.</param>
@@ -20,8 +19,8 @@ namespace StrixMusic.Sdk.Uno.Assembly
         /// <param name="maxHeight">The maximum height of the window for the shell.</param>
         /// <param name="minWidth">The minimum width of the window for the shell.</param>
         /// <param name="minHeight">The minimum height of the window for the shell.</param>
-        public ShellAttribute(
-            Type shellClass,
+        public ShellAttributeData(
+            string shellClassAssemblyQualifiedName,
             string displayName,
             DeviceFamily deviceFamily = (DeviceFamily)int.MaxValue,
             InputMethod inputMethod = (InputMethod)int.MaxValue,
@@ -30,7 +29,7 @@ namespace StrixMusic.Sdk.Uno.Assembly
             double minWidth = 0,
             double minHeight = 0)
         {
-            ShellSubType = shellClass;
+            ShellTypeAssemblyQualifiedName = shellClassAssemblyQualifiedName;
             DisplayName = displayName;
             DeviceFamily = deviceFamily;
             InputMethod = inputMethod;
@@ -39,33 +38,33 @@ namespace StrixMusic.Sdk.Uno.Assembly
         }
 
         /// <summary>
-        /// The ShellBase child Type of the shell in the assembly.
+        /// The full name of the ShellBase child Type.
         /// </summary>
-        public Type ShellSubType { get; }
+        public string ShellTypeAssemblyQualifiedName { get; set; }
 
         /// <summary>
         /// The DisplayName of the shell in the assembly.
         /// </summary>
-        public string DisplayName { get; }
+        public string DisplayName { get; set; }
 
         /// <summary>
         /// The DisplayName of the shell in the assembly.
         /// </summary>
-        public DeviceFamily DeviceFamily { get; }
+        public DeviceFamily DeviceFamily { get; set; }
 
         /// <summary>
         /// The DisplayName of the shell in the assembly.
         /// </summary>
-        public InputMethod InputMethod { get; }
+        public InputMethod InputMethod { get; set; }
 
         /// <summary>
         /// The maximum window size for the shell
         /// </summary>
-        public Size MaxWindowSize { get; }
+        public Size MaxWindowSize { get; set; }
 
         /// <summary>
         /// The minimum window size for the shell
         /// </summary>
-        public Size MinWindowSize { get; }
+        public Size MinWindowSize { get; set; }
     }
 }
