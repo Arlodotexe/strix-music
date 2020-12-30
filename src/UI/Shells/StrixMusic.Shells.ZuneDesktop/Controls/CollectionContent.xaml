@@ -98,7 +98,8 @@
         </StackPanel>
 
         <!--Search box-->
-        <TextBox PlaceholderText="SEARCH" HorizontalAlignment="Right" Width="240" Margin="0,-8,0,0" Style="{StaticResource ZuneDesktopSearchTextBoxStyle}"/>
+        <TextBox x:Uid="/Common/SearchTBox" PlaceholderText="SEARCH" HorizontalAlignment="Right" Width="240" Margin="0,-8,0,0" Style="{StaticResource ZuneDesktopSearchTextBoxStyle}"
+                 a:TextHelpers.CharacterCasing="Upper"/>
 
         <!--Page Selector-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" Margin="0,8,0,24">

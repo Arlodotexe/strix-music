@@ -39,6 +39,9 @@ namespace LaunchPad.Attached
                 case TextBlock txt:
                     prop = TextBlock.TextProperty;
                     break;
+                case TextBox tbox:
+                    prop = TextBox.PlaceholderTextProperty;
+                    break;
                 case ButtonBase hBtn:
                     prop = ButtonBase.ContentProperty;
                     break;

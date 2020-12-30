@@ -34,6 +34,7 @@
                 <styles:ArtistItemStyle/>
                 <styles:NowPlayingBarStyle/>
                 <styles:NowPlayingViewStyle/>
+                <styles:SafeImageStyle/>
                 <styles:SettingsViewStyle/>
                 <styles:TrackCollectionStyle/>
                 <styles:TrackItemStyle/>

@@ -153,9 +153,11 @@ namespace StrixMusic.Sdk.Uno.Controls
                 }
             });
 
+            Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+
             // Get selected item
             // Invoke event
-            Events.SelectionChangedEventArgs<TData> selectionChangedEventArgs = new Events.SelectionChangedEventArgs<TData>((PART_Selector!.SelectedItem as TData)!);
+            Events.SelectionChangedEventArgs<TData> selectionChangedEventArgs = new Events.SelectionChangedEventArgs<TData>((TData)PART_Selector.SelectedItem);
             SelectionChanged?.Invoke(this, selectionChangedEventArgs);
         }
 
