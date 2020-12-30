@@ -6,18 +6,15 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.AlbumItemStyle">
 
-    <DataTemplate x:Key="DefaultAlbumItemDataTemplate" x:DataType="viewModels:AlbumViewModel">
-        <Grid Width="86">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <defaultcontrols:SafeImage Width="86" Height="86"/>
-            <StackPanel Grid.Row="1" Margin="0,2,0,0">
-                <TextBlock Text="{x:Bind Name}" FontSize="12" TextTrimming="Clip"/>
-                <TextBlock Text="{x:Bind Artist.Name}" FontSize="12" FontWeight="SemiLight" Opacity=".5"/>
-            </StackPanel>
-        </Grid>
+    <DataTemplate x:Key="DefaultAlbumItemImageDataTemplate" x:DataType="viewModels:AlbumViewModel">
+        <defaultcontrols:SafeImage Width="86" Height="86"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DefaultAlbumItemTextDataTemplate" x:DataType="viewModels:AlbumViewModel">
+        <StackPanel>
+            <TextBlock Text="{x:Bind Name}" FontSize="12" TextTrimming="Clip"/>
+            <TextBlock Text="{x:Bind Artist.Name}" FontSize="12" FontWeight="SemiLight" Opacity=".5"/>
+        </StackPanel>
     </DataTemplate>
 
     <Style x:Key="DefaultAlbumItemStyle" TargetType="defaultcontrols:AlbumItem">
@@ -25,8 +22,41 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="defaultcontrols:AlbumItem">
-                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemDataTemplate}"
+                        <Grid Width="86">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="Selection">
+                                    <VisualState x:Name="Unselected">
+                                        <VisualState.Setters>
+                                            <Setter Target="ImageOutline.(Rectangle.Opacity)" Value="0"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Target="ImageOutline.(Rectangle.Opacity)" Value="1"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                                
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <!--Image-->
+                            <Grid Padding="4">
+                                <!--Backup backgroup-->
+                                <Rectangle Fill="#F4F4F4"/>
+                                <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemImageDataTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
+
+                                <Rectangle x:Name="ImageOutline" Stroke="Black" StrokeThickness="1.5" Opacity="0" Margin="-6"/>
+                            </Grid>
+
+                            <!--Text-->
+                            <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemTextDataTemplate}"
+                                        HorizontalContentAlignment="Stretch" Grid.Row="1" Margin="0,0,0,0"/>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
