@@ -10,6 +10,14 @@
     xmlns:a="using:LaunchPad.Attached"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/SmallPivotItemStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneSettingsListViewItem.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,6 +25,7 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+        
         <!--Header-->
         <TextBlock x:Uid="/Common/SettingsTB" Text="settings" FontSize="24" FontWeight="Light" Margin="44,36,44,0"
                    a:TextHelpers.CharacterCasing="Lower"/>

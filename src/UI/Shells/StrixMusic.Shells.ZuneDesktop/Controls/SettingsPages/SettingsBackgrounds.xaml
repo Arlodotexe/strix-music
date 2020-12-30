@@ -7,6 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneRadioButtonListViewItem.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <StackPanel>
         <TextBlock x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneSettings/BackgroundTB" Text="Background" FontSize="20" FontWeight="SemiBold"/>
         <ListView ItemContainerStyle="{StaticResource ZuneRadioButtonListViewItem}"
