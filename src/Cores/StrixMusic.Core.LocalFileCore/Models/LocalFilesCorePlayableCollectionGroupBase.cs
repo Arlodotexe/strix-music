@@ -7,16 +7,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.FileCore.Models
+namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <inheritdoc/>
-    public abstract class LocalFileCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup
+    public abstract class LocalFilesCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFileCorePlayableCollectionGroupBase"/> class.
+        /// Initializes a new instance of the <see cref="LocalFilesCorePlayableCollectionGroupBase"/> class.
         /// </summary>
         /// <param name="sourceCore">The instance of the core this object was created in.</param>
-        protected LocalFileCorePlayableCollectionGroupBase(ICore sourceCore)
+        protected LocalFilesCorePlayableCollectionGroupBase(ICore sourceCore)
         {
             SourceCore = sourceCore;
         }

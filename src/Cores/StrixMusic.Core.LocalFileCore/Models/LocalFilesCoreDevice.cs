@@ -7,18 +7,18 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.FileCore.Models
+namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <inheritdoc />
-    public class LocalFileCoreDevice : ICoreDevice
+    public class LocalFilesCoreDevice : ICoreDevice
     {
         /// <summary>
-        /// Creates a <see cref="LocalFileCoreDevice"/> with the core instance.
+        /// Creates a <see cref="LocalFilesCoreDevice"/> with the core instance.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
         /// <param name="name">Name of the device</param>
         /// <param name="isActive">State of the device.</param>
-        public LocalFileCoreDevice(ICore sourceCore, string name, bool isActive)
+        public LocalFilesCoreDevice(ICore sourceCore, string name, bool isActive)
         {
             SourceCore = sourceCore;
             Name = name;

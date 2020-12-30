@@ -3,16 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace StrixMusic.Core.LocalFileCore.Models
+namespace StrixMusic.Core.LocalFiles.Models
 {
     ///<inheritdoc/>
-    public class LocalFileCoreImage : ICoreImage
+    public class LocalFilesCoreImage : ICoreImage
     {
         /// <summary>
-        /// Creates a new instance of <see cref="LocalFileCoreImage"/>.
+        /// Creates a new instance of <see cref="LocalFilesCoreImage"/>.
         /// </summary>
         /// <param name="sourceCore"><inheritdoc cref="ICoreMember.SourceCore"/></param>
-        public LocalFileCoreImage(ICore sourceCore)
+        public LocalFilesCoreImage(ICore sourceCore)
         {
             SourceCore = sourceCore;
         }

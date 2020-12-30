@@ -1,30 +1,32 @@
-﻿using StrixMusic.Sdk.Data.Core;
+﻿using StrixMusic.Core.LocalFiles.Models;
+using StrixMusic.Sdk.Data.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace StrixMusic.Core.FileCore.Models
+namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <summary>
-    /// Discoverable music for the <see cref="LocalFileCore"/>.
+    /// The recently played items for the <see cref="LocalFileCore"/>.
     /// </summary>
-    public class LocalFileCoreDiscoverables : LocalFileCorePlayableCollectionGroupBase, ICoreDiscoverables
+    /// <remarks>LocalFileCore has no playback mechanism, so collections should never return anything.</remarks>
+    public class LocalFilesCoreRecentlyPlayed : LocalFilesCorePlayableCollectionGroupBase, ICoreRecentlyPlayed
     {
         /// <inheritdoc />
-        public LocalFileCoreDiscoverables(ICore sourceCore)
+        public LocalFilesCoreRecentlyPlayed(ICore sourceCore)
             : base(sourceCore)
         {
         }
 
         /// <inheritdoc />
-        public override string Id { get; protected set; } = "discoverables";
+        public override string Id { get; protected set; } = "recentlyPlayed";
 
         /// <inheritdoc />
         public override Uri? Url { get; protected set; } = null;
 
         /// <inheritdoc />
-        public override string Name { get; protected set; } = "Discoverables";
+        public override string Name { get; protected set; } = "Recently Played";
 
         /// <inheritdoc />
         public override string? Description { get; protected set; } = null;

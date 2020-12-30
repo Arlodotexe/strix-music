@@ -1,24 +1,22 @@
 ﻿using OwlCore.Collections;
 using OwlCore.Events;
+using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.LocalFileCore.Models
+namespace StrixMusic.Core.LocalFiles.Models
 {
-    /// <summary>
-    /// A LocalFileCore implementation of <see cref="ICoreAlbum"/>.
-    /// </summary>
-    public class LocalFileCoreAlbum: ICoreAlbum
+    /// <inheritdoc/>
+    public class LocalFilesCoreArtist : ICoreArtist
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFileCoreAlbum"/> class.
+        /// Initializes a new instance of the <see cref="LocalFilesCoreArtist"/> class.
         /// </summary>
-        /// <param name="sourceCore">The core that created this object.</param>
-        public LocalFileCoreAlbum(ICore sourceCore)
+        /// <param name="sourceCore">The source core.</param>
+        public LocalFilesCoreArtist(ICore sourceCore)
         {
             SourceCore = sourceCore;
         }
@@ -36,25 +34,34 @@ namespace StrixMusic.Core.LocalFileCore.Models
         public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<DateTime?>? DatePublishedChanged;
-
-        /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<int>? TrackItemsCountChanged;
-
-        /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
+        public event EventHandler<int>? AlbumItemsCountChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? TrackItemsCountChanged;
+
+        /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
 
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+
         /// <inheritdoc/>
-        public ICoreArtist Artist => throw new NotImplementedException();
+        public string Id => throw new NotImplementedException();
+
+        /// <inheritdoc/>
+        public int TotalAlbumItemsCount => throw new NotImplementedException();
+
+        /// <inheritdoc />
+        public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc/>
         public int TotalTracksCount { get; }
@@ -63,31 +70,25 @@ namespace StrixMusic.Core.LocalFileCore.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public string Id => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public Uri? Url => throw new NotImplementedException();
+        public Uri Url => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public string Name => throw new NotImplementedException();
 
         /// <inheritdoc/>
-        public DateTime? DatePublished => throw new NotImplementedException();
-
-        /// <inheritdoc/>
-        public string? Description => throw new NotImplementedException();
+        public string Description => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => PlaybackState.None;
 
         /// <inheritdoc/>
-        public TimeSpan Duration { get; } = TimeSpan.Zero;
+        public TimeSpan Duration => TimeSpan.Zero;
 
         /// <inheritdoc/>
-        public ICorePlayableCollectionGroup? RelatedItems { get; }
+        public ICorePlayableCollectionGroup? RelatedItems => null;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
+        public SynchronizedObservableCollection<string>? Genres { get; }
 
         /// <inheritdoc/>
         public bool IsPlayAsyncSupported => false;
@@ -99,16 +100,13 @@ namespace StrixMusic.Core.LocalFileCore.Models
         public bool IsChangeNameAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDatePublishedAsyncSupported => false;
-
-        /// <inheritdoc/>
         public bool IsChangeDescriptionAsyncSupported => false;
 
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncSupported => false;
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreSupported(int index)
+        public Task<bool> IsAddImageSupported(int index)
         {
             return Task.FromResult(false);
         }
@@ -120,24 +118,36 @@ namespace StrixMusic.Core.LocalFileCore.Models
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageSupported(int index)
+        public Task<bool> IsAddAlbumItemSupported(int index)
         {
             return Task.FromResult(false);
         }
 
-        /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index)
+        /// <inheritdoc/>
+        public Task<bool> IsAddGenreSupported(int index)
         {
             return Task.FromResult(false);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public Task<bool> IsRemoveImageSupported(int index)
         {
             return Task.FromResult(false);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
+        public Task<bool> IsRemoveTrackSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsRemoveAlbumItemSupported(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
         public Task<bool> IsRemoveGenreSupported(int index)
         {
             return Task.FromResult(false);
@@ -151,12 +161,6 @@ namespace StrixMusic.Core.LocalFileCore.Models
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeDatePublishedAsync(DateTime datePublished)
         {
             throw new NotSupportedException();
         }
@@ -180,6 +184,12 @@ namespace StrixMusic.Core.LocalFileCore.Models
         }
 
         /// <inheritdoc/>
+        public  IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
         public  IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
             throw new NotImplementedException();
@@ -192,28 +202,37 @@ namespace StrixMusic.Core.LocalFileCore.Models
         }
 
         /// <inheritdoc />
+        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
         public Task RemoveTrackAsync(int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public int TotalImageCount { get; } = 3;
-
-        /// <inheritdoc />
-        public  IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public Task RemoveAlbumItemAsync(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task AddImageAsync(ICoreImage image, int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public  IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
             throw new NotImplementedException();
         }

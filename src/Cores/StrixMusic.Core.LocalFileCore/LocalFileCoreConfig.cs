@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
@@ -8,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.FileCore.Models
+namespace StrixMusic.Core.LocalFiles
 {
     ///  <inheritdoc/>
     public class LocalFileCoreConfig : ICoreConfig
@@ -30,7 +31,7 @@ namespace StrixMusic.Core.FileCore.Models
         public IServiceProvider? Services { get; private set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; }
+        public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; private set; }
 
         /// <inheritdoc/>
         public Uri LogoSvgUrl => throw new NotImplementedException();
@@ -44,7 +45,7 @@ namespace StrixMusic.Core.FileCore.Models
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task ConfigureServices(IServiceCollection services)
         {
-            throw new NotImplementedException();
+
         }
 
         /// <summary>
@@ -53,7 +54,27 @@ namespace StrixMusic.Core.FileCore.Models
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task SetupConfigurationServices(IServiceCollection services)
         {
-            throw new NotImplementedException();
+            var provider = services.BuildServiceProvider();
+            _fileSystemService = provider.GetRequiredService<IFileSystemService>();
+            return _fileSystemService.InitAsync();
+        }
+
+        /// <summary>
+        /// This method picks the folder for file core.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task SetupFileCoreFolder()
+        {
+            if (_fileSystemService != null)
+            {
+                var folders = await _fileSystemService.GetPickedFolders();
+
+                if (folders.Count == 0)
+                {
+                    var folderData = await _fileSystemService.PickFolder();
+                    var files = await folderData.GetFilesAsync();
+                }
+            }
         }
     }
 }

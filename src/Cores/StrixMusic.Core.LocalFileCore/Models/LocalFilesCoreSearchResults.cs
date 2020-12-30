@@ -1,22 +1,22 @@
-﻿using StrixMusic.Core.FileCore.Models;
+﻿using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Sdk.Data.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace StrixMusic.Core.LocalFileCore.Models
+namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <summary>
     /// A LocalFileCore implementation of <see cref="ICoreSearchResults"/>.
     /// </summary>
-    public class LocalFileCoreSearchResults : LocalFileCorePlayableCollectionGroupBase, ICoreSearchResults
+    public class LocalFilesCoreSearchResults : LocalFilesCorePlayableCollectionGroupBase, ICoreSearchResults
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFileCoreSearchResults"/> class.
+        /// Initializes a new instance of the <see cref="LocalFilesCoreSearchResults"/> class.
         /// </summary>
         /// <param name="sourceCore">The core that created this object.</param>
-        public LocalFileCoreSearchResults(ICore sourceCore, string query)
+        public LocalFilesCoreSearchResults(ICore sourceCore, string query)
             : base(sourceCore)
         {
         }

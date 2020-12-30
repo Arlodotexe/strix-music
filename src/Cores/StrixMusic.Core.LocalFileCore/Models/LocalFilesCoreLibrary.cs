@@ -1,20 +1,20 @@
-﻿using StrixMusic.Core.FileCore.Models;
+﻿using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Sdk.Data.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace StrixMusic.Core.LocalFileCore.Models
+namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <inheritdoc/>
-    public class LocalFileCoreLibrary : LocalFileCorePlayableCollectionGroupBase, ICoreLibrary
+    public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFileCoreLibrary"/> class.
+        /// Initializes a new instance of the <see cref="LocalFilesCoreLibrary"/> class.
         /// </summary>
         /// <param name="sourceCore"></param>
-        public LocalFileCoreLibrary(ICore sourceCore)
+        public LocalFilesCoreLibrary(ICore sourceCore)
             : base(sourceCore)
         {
         }

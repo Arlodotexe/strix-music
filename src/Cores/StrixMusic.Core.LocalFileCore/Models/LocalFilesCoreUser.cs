@@ -7,16 +7,16 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.LocalFileCore.Models
+namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <inheritdoc />
-    public class LocalFileCoreUser : ICoreUser
+    public class LocalFilesCoreUser : ICoreUser
     {
         /// <summary>
-        /// Creates a new instance of a <see cref="LocalFileCoreUser"/>.
+        /// Creates a new instance of a <see cref="LocalFilesCoreUser"/>.
         /// </summary>
         /// <param name="sourceCore">The core instance that created this.</param>
-        public LocalFileCoreUser(ICore sourceCore)
+        public LocalFilesCoreUser(ICore sourceCore)
         {
             SourceCore = sourceCore;
         }
