@@ -64,9 +64,17 @@ namespace StrixMusic.Sdk.Data.Merged
                 return;
 
             _coreRanking = await GetCoreRankings();
+
             _configuredCoreRegistry = await GetConfiguredCoreRegistry();
+
             _sortingMethod = await GetSortingMethod();
             _settingsService.SettingChanged += SettingsServiceOnSettingChanged;
+
+            Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
+            Guard.HasSizeGreaterThan(_coreRanking, 0, nameof(_coreRanking));
+
+            Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
+            Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
 
             _isInit = true;
         }
@@ -545,6 +553,8 @@ namespace StrixMusic.Sdk.Data.Merged
         private async Task<IReadOnlyList<TCollectionItem>> GetItemsByRank(int limit, int offset)
         {
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
+            Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
+            Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
 
             // Rebuild the sorted map so we're sure it's sorted correctly.
             _sortedMap.AddRange(BuildSortedMapRanked());
@@ -638,6 +648,8 @@ namespace StrixMusic.Sdk.Data.Merged
         private List<MappedData> BuildSortedMapRanked()
         {
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
+            Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
+            Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
 
             // Rank the sources by core
             var rankedSources = new List<TCoreCollection>();
@@ -674,19 +686,19 @@ namespace StrixMusic.Sdk.Data.Merged
             return itemsMap;
         }
 
-        private async Task<List<string>> GetCoreRankings()
+        private Task<List<string>> GetCoreRankings()
         {
-            return await _settingsService.GetValue< List<string>>(nameof(SettingsKeys.CoreRanking));
+            return _settingsService.GetValue< List<string>>(nameof(SettingsKeys.CoreRanking));
         }
 
-        private async Task<Dictionary<string, CoreAssemblyInfo>> GetConfiguredCoreRegistry()
+        private Task<Dictionary<string, CoreAssemblyInfo>> GetConfiguredCoreRegistry()
         {
-            return await _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores));
+            return _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores));
         }
 
-        private async Task<MergedCollectionSorting> GetSortingMethod()
+        private Task<MergedCollectionSorting> GetSortingMethod()
         {
-            return await _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
+            return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
         }
 
         private void SettingsServiceOnSettingChanged(object sender, SettingChangedEventArgs e)

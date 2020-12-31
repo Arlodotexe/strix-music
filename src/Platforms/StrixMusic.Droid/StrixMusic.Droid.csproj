@@ -64,6 +64,9 @@
     <BundleAssemblies>false</BundleAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Hqub.MusicBrainz.API">
+      <HintPath>..\..\Cores\StrixMusic.Core.MusicBrainz\Dependencies\Hqub.MusicBrainz.API.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="Mono.Android.Export" />
     <Reference Include="mscorlib" />

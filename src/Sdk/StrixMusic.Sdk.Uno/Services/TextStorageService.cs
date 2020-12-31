@@ -80,25 +80,9 @@ namespace StrixMusic.Sdk.Uno.Services
         /// <inheritdoc />
         public async Task<string?> GetValueAsync(string filename, string path)
         {
-            StorageFolder pathHandle;
-            try
-            {
-                pathHandle = await _localFolder.GetFolderAsync(path);
-            }
-            catch (Exception)
-            {
-                pathHandle = await _localFolder.CreateFolderAsync(path);
-            }
+            StorageFolder pathHandle = await _localFolder.CreateFolderAsync(path, CreationCollisionOption.OpenIfExists);
 
-            StorageFile fileHandle;
-            try
-            {
-                fileHandle = await pathHandle.GetFileAsync(filename);
-            }
-            catch (Exception ex)
-            {
-                fileHandle = await pathHandle.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
-            }
+            StorageFile fileHandle = await pathHandle.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
 
             using (await _keyedMutex.GetOrAdd(filename + path, new AsyncLock()).LockAsync())
                 return await FileIO.ReadTextAsync(fileHandle);
