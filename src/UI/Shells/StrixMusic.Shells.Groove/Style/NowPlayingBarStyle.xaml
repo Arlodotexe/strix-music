@@ -5,6 +5,11 @@
     xmlns:launchpad="using:LaunchPad.Controls"
     x:Class="StrixMusic.Shells.Groove.Styles.NowPlayingBarStyle">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="MediaSlider.xaml" />
+        <ResourceDictionary Source="../Resources/ButtonStyles.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <Style x:Key="GrooveNowPlayingBarStyle" TargetType="defaultcontrols:NowPlayingBar">
         <Style.Setters>
             <Setter Property="Template">
