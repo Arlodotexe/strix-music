@@ -595,7 +595,9 @@ namespace StrixMusic.Sdk.Data.Merged
                 }
             }
 
-            var merged = MergeMappedData(_sortedMap).Select(x => (TCollectionItem)x).ToList();
+            var relevantMergedMappedData = MergeMappedData(_sortedMap).Skip(offset).Take(limit);
+
+            var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
 
             return merged;
         }
