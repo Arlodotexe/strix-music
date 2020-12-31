@@ -24,7 +24,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="defaultcontrols:AlbumItem">
-                        <Grid Width="86" Background="Transparent">
+                        <Grid Width="94" Background="Transparent">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="PointerEntered">
                                     <core:GoToStateAction StateName="PointerOver"/>
@@ -80,13 +80,12 @@
                             </Grid.RowDefinitions>
                             
                             <!--Image-->
-                            <Grid Padding="4">
+                            <Grid Height="86" Width="86">
                                 <!--Backup backgroup-->
                                 <Rectangle Fill="#F4F4F4"/>
                                 <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemImageDataTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
-
-                                <Rectangle x:Name="ImageOutline" Stroke="Black" StrokeThickness="1.5" Opacity="0" Margin="-6"/>
+                                <Rectangle x:Name="ImageOutline" Stroke="Black" StrokeThickness="2" Opacity="0" Margin="-5"/>
                                 <Rectangle x:Name="ImageHover" Opacity="0" StrokeThickness=".5" Stroke="Black">
                                     <Rectangle.Fill>
                                         <ImageBrush ImageSource="ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/Hover.png"/>
@@ -96,7 +95,8 @@
 
                             <!--Text-->
                             <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemTextDataTemplate}"
-                                        HorizontalContentAlignment="Stretch" Grid.Row="1" Margin="0,0,0,0"/>
+                                        HorizontalContentAlignment="Stretch" Grid.Row="1" Margin="0,4,0,0"
+                                            Width="86"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
