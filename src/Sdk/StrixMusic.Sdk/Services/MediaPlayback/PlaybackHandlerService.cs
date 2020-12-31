@@ -46,6 +46,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService.PlaybackSpeedChanged += PlaybackSpeedChanged;
             _currentPlayerService.PlaybackStateChanged += PlaybackStateChanged;
             _currentPlayerService.VolumeChanged += VolumeChanged;
+            _currentPlayerService.QuantumProcessed += QuantumProcessed;
         }
 
         private void DetachEvents()
@@ -59,6 +60,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService.PlaybackSpeedChanged -= PlaybackSpeedChanged;
             _currentPlayerService.PlaybackStateChanged -= PlaybackStateChanged;
             _currentPlayerService.VolumeChanged -= VolumeChanged;
+            _currentPlayerService.QuantumProcessed -= QuantumProcessed;
         }
 
         private async void PlayerService_PositionChanged(object sender, TimeSpan e)
@@ -116,6 +118,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
         /// <inheritdoc />
         public event EventHandler<double>? PlaybackSpeedChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<float[]>? QuantumProcessed;
 
         /// <inheritdoc />
         public IReadOnlyList<IMediaSourceConfig> NextItems => _nextItems;

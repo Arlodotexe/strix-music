@@ -10,13 +10,14 @@ using Windows.UI.Xaml.Controls;
 
 // ReSharper disable once CheckNamespace
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-namespace StrixMusic.Shared.Services
+namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 {
     /// <inheritdoc />
     public class AudioPlayerService : IAudioPlayerService
     {
         private readonly MediaPlayerElement _player;
         private readonly Dictionary<string, IMediaSourceConfig> _preloadedSources;
+        private readonly AudioGraphLeech _leech;
 
         /// <summary>
         /// Creates a new instance of <see cref="AudioPlayerService"/>.
@@ -29,6 +30,7 @@ namespace StrixMusic.Shared.Services
 
             _player = player;
             _preloadedSources = new Dictionary<string, IMediaSourceConfig>();
+            _leech = new AudioGraphLeech();
 
             AttachEvents();
         }
@@ -92,6 +94,9 @@ namespace StrixMusic.Shared.Services
         public event EventHandler<double>? VolumeChanged;
 
         /// <inheritdoc />
+        public event EventHandler<float[]>? QuantumProcessed;
+
+        /// <inheritdoc />
         public IMediaSourceConfig? CurrentSource { get; set; }
 
         /// <inheritdoc />
@@ -116,8 +121,10 @@ namespace StrixMusic.Shared.Services
         }
 
         /// <inheritdoc />
-        public Task Play(IMediaSourceConfig sourceConfig)
+        public async Task Play(IMediaSourceConfig sourceConfig)
         {
+            await _leech.InitAsync();
+
             if (sourceConfig.MediaSourceUri != null)
             {
                 var source = MediaSource.CreateFromUri(sourceConfig.MediaSourceUri);
@@ -130,8 +137,7 @@ namespace StrixMusic.Shared.Services
             }
 
             _player.MediaPlayer.Play();
-
-            return Task.CompletedTask;
+            _leech.Begin();
         }
 
         /// <inheritdoc />
@@ -148,6 +154,7 @@ namespace StrixMusic.Shared.Services
         {
             _player.MediaPlayer.Pause();
 
+            _leech.Stop();
             return Task.CompletedTask;
         }
 
@@ -155,6 +162,7 @@ namespace StrixMusic.Shared.Services
         public Task ResumeAsync()
         {
             _player.MediaPlayer.Play();
+            _leech.Begin();
 
             return Task.CompletedTask;
         }
