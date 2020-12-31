@@ -574,9 +574,10 @@ namespace StrixMusic.Sdk.Data.Merged
                 var itemsCountForSource = currentSource.SourceCollection.GetItemsCount<TCollection>();
                 var itemLimitForSource = limit;
 
-                // If the currentSource and the previous source are the same, skip this iteration
-                // because we get the max items from each source once per collection.
-                if (mappedIndex > 0 && currentSource.SourceCollection.SourceCore == _sortedMap[mappedIndex - 1].SourceCollection.SourceCore)
+                // Get the max items from each source once per collection.
+                // If the currentSource and the previous source are the same, skip this iteration.
+                // Checking if mappedIndex > offset ensures that the request is made at the first mapped item for this source.
+                if (mappedIndex > offset && currentSource.SourceCollection.SourceCore == _sortedMap[mappedIndex - 1].SourceCollection.SourceCore)
                     continue;
 
                 // do we end up outside the range if we try getting all items from this source?

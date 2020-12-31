@@ -62,7 +62,7 @@ namespace OwlCore.Helpers
 
             list.AddRange(page);
 
-            if (list.Count - startingOffset >= total)
+            if (list.Count >= total)
                 return list;
 
             // Get the remaining items
@@ -75,7 +75,7 @@ namespace OwlCore.Helpers
 
                 list.AddRange(page);
 
-                if (list.Count - startingOffset >= total)
+                if (list.Count >= total)
                     break;
             }
 
