@@ -562,16 +562,21 @@ namespace StrixMusic.Sdk.Data.Merged
             if (limit > _sortedMap.Count)
                 limit = _sortedMap.Count;
 
+            // offset = 25
+            // limit = 20
+
             // Get all requested items using the sorted map
-            for (var i = offset; i < limit + offset; i++)
+            for (var i = 0; i < limit; i++)
             {
-                var currentSource = _sortedMap[i];
+                var mappedIndex = offset + i;
+
+                var currentSource = _sortedMap[mappedIndex];
                 var itemsCountForSource = currentSource.SourceCollection.GetItemsCount<TCollection>();
                 var itemLimitForSource = limit;
 
                 // If the currentSource and the previous source are the same, skip this iteration
                 // because we get the max items from each source once per collection.
-                if (i > 0 && i < (limit + offset - 1) && currentSource.SourceCollection.SourceCore == _sortedMap[i - 1].SourceCollection.SourceCore)
+                if (mappedIndex > 0 && currentSource.SourceCollection.SourceCore == _sortedMap[mappedIndex - 1].SourceCollection.SourceCore)
                     continue;
 
                 // do we end up outside the range if we try getting all items from this source?
@@ -591,7 +596,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 {
                     var item = remainingItemsForSource[o];
 
-                    _sortedMap[i + o].CollectionItem = item;
+                    _sortedMap[mappedIndex + o].CollectionItem = item;
                 }
             }
 
