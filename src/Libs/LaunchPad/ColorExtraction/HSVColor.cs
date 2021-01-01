@@ -41,7 +41,7 @@ namespace LaunchPad.ColorExtraction
         /// <returns>The <see cref="HSVColor"/> equivelant for the <see cref="Color"/>.</returns>
         public static HSVColor FromColor(Color color)
         {
-            int h = color.GetHexHue();
+            int h = color.GetHue();
             float s = color.GetSaturation();
             float v = color.GetValue();
             return new HSVColor(color.A, h, s, v);

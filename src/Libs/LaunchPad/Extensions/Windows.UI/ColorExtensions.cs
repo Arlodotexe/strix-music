@@ -16,7 +16,7 @@ namespace Windows.UI
         /// Gets the Hue of a <see cref="Color"/> in hex format.
         /// </summary>
         /// <returns>The hex Hue.</returns>
-        public static int GetHexHue(this Color color)
+        public static int GetHue(this Color color)
         {
             double delta = GetDelta(color);
 
