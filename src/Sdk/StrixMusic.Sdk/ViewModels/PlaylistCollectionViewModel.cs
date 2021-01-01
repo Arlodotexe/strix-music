@@ -118,28 +118,28 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<PlaybackState> PlaybackStateChanged
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => _collection.PlaybackStateChanged += value;
             remove => _collection.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<string> NameChanged
+        public event EventHandler<string>? NameChanged
         {
             add => _collection.NameChanged += value;
             remove => _collection.NameChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<string?> DescriptionChanged
+        public event EventHandler<string?>? DescriptionChanged
         {
             add => _collection.DescriptionChanged += value;
             remove => _collection.DescriptionChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<Uri?> UrlChanged
+        public event EventHandler<Uri?>? UrlChanged
         {
             add => _collection.UrlChanged += value;
             remove => _collection.UrlChanged -= value;
@@ -153,28 +153,28 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> PlaylistItemsCountChanged
+        public event EventHandler<int>? PlaylistItemsCountChanged
         {
             add => _collection.PlaylistItemsCountChanged += value;
             remove => _collection.PlaylistItemsCountChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> ImagesCountChanged
+        public event EventHandler<int>? ImagesCountChanged
         {
             add => _collection.ImagesCountChanged += value;
             remove => _collection.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => _collection.ImagesChanged += value;
             remove => _collection.ImagesChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IPlaylistCollectionItem> PlaylistItemsChanged
+        public event CollectionChangedEventHandler<IPlaylistCollectionItem>? PlaylistItemsChanged
         {
             add => _collection.PlaylistItemsChanged += value;
             remove => _collection.PlaylistItemsChanged -= value;

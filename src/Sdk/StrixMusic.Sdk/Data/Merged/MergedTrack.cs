@@ -297,7 +297,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsRemoveGenreSupported(int index) => _preferredSource.IsRemoveGenreSupported(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveArtistSupported(int index) => _artistMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveArtistItemSupported(int index) => _artistMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc/>
         public Task PauseAsync() => _preferredSource.PauseAsync();
@@ -353,7 +353,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task ChangeDurationAsync(TimeSpan duration) => _preferredSource.ChangeDurationAsync(duration);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddArtistSupported(int index) => _preferredSource.IsAddArtistSupported(index);
+        public Task<bool> IsAddArtistItemSupported(int index) => _preferredSource.IsAddArtistItemSupported(index);
 
         /// <inheritdoc/>
         public Task<bool> IsAddImageSupported(int index) => _preferredSource.IsAddImageSupported(index);
@@ -368,7 +368,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _artistMap.InsertItem(artist, index);
 
         /// <inheritdoc/>
-        public Task RemoveArtistAsync(int index) => _preferredSource.RemoveArtistAsync(index);
+        public Task RemoveArtistItemAsync(int index) => _preferredSource.RemoveArtistItemAsync(index);
 
         /// <inheritdoc/>
         public override bool Equals(object? obj) => Equals(obj as ICoreTrack);

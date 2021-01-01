@@ -123,16 +123,16 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// Fires when <see cref="PlaybackContext"/> changes.
         /// </summary>
-        event EventHandler<IPlayable> PlaybackContextChanged;
+        event EventHandler<IPlayable>? PlaybackContextChanged;
 
         /// <summary>
         /// Fires when <see cref="ShuffleState"/> changes.
         /// </summary>
-        event EventHandler<bool> ShuffleStateChanged;
+        event EventHandler<bool>? ShuffleStateChanged;
 
         /// <summary>
         /// Fires when <see cref="RepeatState"/> changes.
         /// </summary>
-        event EventHandler<RepeatState> RepeatStateChanged;
+        event EventHandler<RepeatState>? RepeatStateChanged;
     }
 }

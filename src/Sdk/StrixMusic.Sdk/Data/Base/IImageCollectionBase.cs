@@ -35,6 +35,6 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// Fires when the merged number of images in the collection changes.
         /// </summary>
-        event EventHandler<int> ImagesCountChanged;
+        event EventHandler<int>? ImagesCountChanged;
     }
 }

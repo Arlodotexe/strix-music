@@ -207,15 +207,15 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistSupported(int index)
+        public Task<bool> IsAddArtistItemSupported(int index)
         {
-            return _preferredSource.IsAddArtistSupported(index);
+            return _preferredSource.IsAddArtistItemSupported(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistSupported(int index)
+        public Task<bool> IsRemoveArtistItemSupported(int index)
         {
-            return _preferredSource.IsRemoveArtistSupported(index);
+            return _preferredSource.IsRemoveArtistItemSupported(index);
         }
 
         /// <inheritdoc />
@@ -231,9 +231,9 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public Task RemoveArtistAsync(int index)
+        public Task RemoveArtistItemAsync(int index)
         {
-            return _preferredSource.RemoveArtistAsync(index);
+            return _preferredSource.RemoveArtistItemAsync(index);
         }
 
         /// <inheritdoc />

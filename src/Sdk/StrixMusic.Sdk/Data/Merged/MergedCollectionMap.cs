@@ -368,7 +368,7 @@ namespace StrixMusic.Sdk.Data.Merged
                                 await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)source, mappedData.OriginalIndex);
                             break;
                         case ICoreArtistCollection artistCollection:
-                            if (await artistCollection.IsAddArtistSupported(index))
+                            if (await artistCollection.IsAddArtistItemSupported(index))
                                 await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)source, mappedData.OriginalIndex);
                             break;
                         case ICorePlaylistCollection playlistCollection:
@@ -423,7 +423,7 @@ namespace StrixMusic.Sdk.Data.Merged
                             await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)source, mappedData.OriginalIndex);
                         break;
                     case ICoreArtistCollection artistCollection:
-                        if (await artistCollection.IsAddArtistSupported(index))
+                        if (await artistCollection.IsAddArtistItemSupported(index))
                             await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)source, mappedData.OriginalIndex);
                         break;
                     case ICorePlaylistCollection playlistCollection:

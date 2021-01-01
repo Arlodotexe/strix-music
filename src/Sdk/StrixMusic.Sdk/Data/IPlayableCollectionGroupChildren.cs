@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
@@ -30,6 +29,6 @@ namespace StrixMusic.Sdk.Data
         /// <summary>
         /// Fires when the items in the backend are changed by something external.
         /// </summary>
-        event CollectionChangedEventHandler<IPlayableCollectionGroup> ChildItemsChanged;
+        event CollectionChangedEventHandler<IPlayableCollectionGroup>? ChildItemsChanged;
     }
 }

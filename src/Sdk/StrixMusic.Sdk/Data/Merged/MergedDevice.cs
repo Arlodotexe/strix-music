@@ -67,49 +67,49 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public event EventHandler<IPlayable> PlaybackContextChanged
+        public event EventHandler<IPlayable>? PlaybackContextChanged
         {
             add => _source.PlaybackContextChanged += value;
             remove => _source.PlaybackContextChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<bool> ShuffleStateChanged
+        public event EventHandler<bool>? ShuffleStateChanged
         {
             add => _source.ShuffleStateChanged += value;
             remove => _source.ShuffleStateChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<RepeatState> RepeatStateChanged
+        public event EventHandler<RepeatState>? RepeatStateChanged
         {
             add => _source.RepeatStateChanged += value;
             remove => _source.RepeatStateChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<TimeSpan> PositionChanged
+        public event EventHandler<TimeSpan>? PositionChanged
         {
             add => _source.PositionChanged += value;
             remove => _source.PositionChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<PlaybackState> PlaybackStateChanged
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => _source.PlaybackStateChanged += value;
             remove => _source.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<double> VolumeChanged
+        public event EventHandler<double>? VolumeChanged
         {
             add => _source.VolumeChanged += value;
             remove => _source.VolumeChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<double> PlaybackSpeedChanged
+        public event EventHandler<double>? PlaybackSpeedChanged
         {
             add => _source.PlaybackSpeedChanged += value;
             remove => _source.PlaybackSpeedChanged -= value;

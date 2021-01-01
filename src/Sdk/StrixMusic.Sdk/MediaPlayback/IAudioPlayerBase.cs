@@ -63,21 +63,21 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <summary>
         /// Fires when <see cref="Position"/> changes.
         /// </summary>
-        event EventHandler<TimeSpan> PositionChanged;
+        event EventHandler<TimeSpan>? PositionChanged;
 
         /// <summary>
         /// Fires when <see cref="PlaybackState"/> changes.
         /// </summary>
-        event EventHandler<PlaybackState> PlaybackStateChanged;
+        event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <summary>
         /// Fires when <see cref="Volume"/> changes.
         /// </summary>
-        event EventHandler<double> VolumeChanged;
+        event EventHandler<double>? VolumeChanged;
 
         /// <summary>
         /// Fires when <see cref="PlaybackSpeed"/> changes.
         /// </summary>
-        event EventHandler<double> PlaybackSpeedChanged;
+        event EventHandler<double>? PlaybackSpeedChanged;
     }
 }

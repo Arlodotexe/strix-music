@@ -10,7 +10,6 @@ using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
@@ -22,11 +21,10 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains bindable information about an <see cref="IAlbum"/>.
     /// </summary>
-    public class AlbumViewModel : ObservableObject, IAlbum, ITrackCollectionViewModel, IImageCollectionViewModel
+    public class AlbumViewModel : ObservableObject, IAlbum, IArtistCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IAlbum _album;
         private readonly IPlaybackHandlerService _playbackHandler;
-        private ArtistViewModel _artist; // TODO: Expose this field from readonly property
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumViewModel"/> class.
@@ -42,11 +40,10 @@ namespace StrixMusic.Sdk.ViewModels
 
             Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
             Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
+            Artists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IArtistCollectionItem>());
 
             if (_album.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(_album.RelatedItems);
-
-            _artist = new ArtistViewModel(_album.Artist);
 
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -55,6 +52,7 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
+            PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
             AttachEvents();
         }
@@ -102,7 +100,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<string?> DescriptionChanged
+        public event EventHandler<string?>? DescriptionChanged
         {
             add => _album.DescriptionChanged += value;
 
@@ -110,7 +108,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<Uri?> UrlChanged
+        public event EventHandler<Uri?>? UrlChanged
         {
             add => _album.UrlChanged += value;
 
@@ -126,7 +124,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<DateTime?> DatePublishedChanged
+        public event EventHandler<DateTime?>? DatePublishedChanged
         {
             add => _album.DatePublishedChanged += value;
 
@@ -134,7 +132,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> TrackItemsCountChanged
+        public event EventHandler<int>? TrackItemsCountChanged
         {
             add => _album.TrackItemsCountChanged += value;
 
@@ -142,7 +140,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ITrack> TrackItemsChanged
+        public event CollectionChangedEventHandler<ITrack>? TrackItemsChanged
         {
             add => _album.TrackItemsChanged += value;
 
@@ -150,7 +148,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => _album.ImagesChanged += value;
 
@@ -158,12 +156,29 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> ImagesCountChanged
+        public event EventHandler<int>? ImagesCountChanged
         {
             add => _album.ImagesCountChanged += value;
 
             remove => _album.ImagesCountChanged -= value;
         }
+
+        /// <inheritdoc />
+        public event EventHandler<int>? ArtistItemsCountChanged
+        {
+            add => _album.ArtistItemsCountChanged += value;
+            remove => _album.ArtistItemsCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged
+        {
+            add => _album.ArtistItemsChanged += value;
+            remove => _album.ArtistItemsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
 
         private void AlbumUrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
 
@@ -230,6 +245,12 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreTrackCollection> ISdkMember<ICoreTrackCollection>.Sources => Sources;
 
         /// <inheritdoc />
+        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
+
+        /// <inheritdoc />
         IReadOnlyList<ICoreAlbumCollectionItem> ISdkMember<ICoreAlbumCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
@@ -242,7 +263,7 @@ namespace StrixMusic.Sdk.ViewModels
         public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<string>? Genres => ((IGenreCollectionBase) _album).Genres;
+        public SynchronizedObservableCollection<string>? Genres => _album.Genres;
 
         /// <summary>
         /// The tracks for this album.
@@ -256,17 +277,10 @@ namespace StrixMusic.Sdk.ViewModels
         public int TotalTracksCount => _album.TotalTracksCount;
 
         /// <inheritdoc />
-        public int TotalImageCount => _album.TotalImageCount;
-
-        /// <inheritdoc cref="IAlbum.Artist" />
-        public ArtistViewModel Artist
-        {
-            get => _artist;
-            internal set => SetProperty(ref _artist, new ArtistViewModel(value));
-        }
+        public int TotalArtistItemsCount => _album.TotalArtistItemsCount;
 
         /// <inheritdoc />
-        IArtist IAlbum.Artist => Artist;
+        public int TotalImageCount => _album.TotalImageCount;
 
         /// <inheritdoc />
         public Uri? Url => _album.Url;
@@ -383,6 +397,24 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeDatePublishedAsync(DateTime datePublished) => _album.ChangeDatePublishedAsync(datePublished);
 
         /// <inheritdoc />
+        public Task AddTrackAsync(ITrack track, int index) => _album.AddTrackAsync(track, index);
+
+        /// <inheritdoc />
+        public Task RemoveTrackAsync(int index) => _album.RemoveTrackAsync(index);
+
+        /// <inheritdoc />
+        public Task AddImageAsync(IImage image, int index) => _album.AddImageAsync(image, index);
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index) => _album.RemoveImageAsync(index);
+
+        /// <inheritdoc />
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _album.AddArtistItemAsync(artist, index);
+
+        /// <inheritdoc />
+        public Task RemoveArtistItemAsync(int index) => _album.RemoveArtistItemAsync(index);
+
+        /// <inheritdoc />
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _album.GetTracksAsync(limit, offset);
 
         /// <inheritdoc />
@@ -395,33 +427,15 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ITrack track, int index)
-        {
-            return _album.AddTrackAsync(track, index);
-        }
-
-        /// <inheritdoc />
-        public Task RemoveTrackAsync(int index)
-        {
-            return _album.RemoveTrackAsync(index);
-        }
-
-        /// <inheritdoc />
-        public Task AddImageAsync(IImage image, int index)
-        {
-            return _album.AddImageAsync(image, index);
-        }
-
-        /// <inheritdoc />
-        public Task RemoveImageAsync(int index)
-        {
-            return _album.RemoveImageAsync(index);
-        }
-
-        /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
         {
             return _album.GetImagesAsync(limit, offset);
+        }
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset)
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -463,5 +477,26 @@ namespace StrixMusic.Sdk.ViewModels
         /// Attempts to change the duration of the album, if supported.
         /// </summary>
         public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }
+
+        /// <inheritdoc />
+        public Task<bool> IsAddArtistItemSupported(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveArtistItemSupported(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task PopulateMoreArtistsAsync(int limit)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

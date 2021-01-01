@@ -105,7 +105,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<string?> DescriptionChanged
+        public event EventHandler<string?>? DescriptionChanged
         {
             add => _artist.DescriptionChanged += value;
 
@@ -113,7 +113,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<Uri?> UrlChanged
+        public event EventHandler<Uri?>? UrlChanged
         {
             add => _artist.UrlChanged += value;
 
@@ -121,42 +121,42 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> TrackItemsCountChanged
+        public event EventHandler<int>? TrackItemsCountChanged
         {
             add => _artist.TrackItemsCountChanged += value;
             remove => _artist.TrackItemsCountChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> AlbumItemsCountChanged
+        public event EventHandler<int>? AlbumItemsCountChanged
         {
             add => _artist.AlbumItemsCountChanged += value;
             remove => _artist.AlbumItemsCountChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> ImagesCountChanged
+        public event EventHandler<int>? ImagesCountChanged
         {
             add => _artist.ImagesCountChanged += value;
             remove => _artist.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => _artist.ImagesChanged += value;
             remove => _artist.ImagesChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IAlbumCollectionItem> AlbumItemsChanged
+        public event CollectionChangedEventHandler<IAlbumCollectionItem>? AlbumItemsChanged
         {
             add => _artist.AlbumItemsChanged += value;
             remove => _artist.AlbumItemsChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ITrack> TrackItemsChanged
+        public event CollectionChangedEventHandler<ITrack>? TrackItemsChanged
         {
             add => _artist.TrackItemsChanged += value;
             remove => _artist.TrackItemsChanged -= value;
