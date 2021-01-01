@@ -1,0 +1,105 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StrixMusic.Shells.Groove.Controls"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    x:Class="StrixMusic.Shells.Groove.Styles.AlbumViewStyle">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Resources/ButtonStyles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate x:Key="GrooveAlbumViewTemplate" x:DataType="viewModels:AlbumViewModel">
+        <ScrollViewer>
+            <UserControl>
+                <Grid>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="Sizes">
+                            <VisualState x:Name="Small">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="0"/>
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Target="QuickActionsBar.Margin" Value="16,0,0,32"/>
+                                    <Setter Target="AlbumCoverColumn.Width" Value="224"/>
+                                    <Setter Target="AlbumCoverRow.Height" Value="224"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Mid">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="600"/>
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Target="QuickActionsBar.Margin" Value="16,0,0,32"/>
+                                    <Setter Target="AlbumCoverColumn.Width" Value="300"/>
+                                    <Setter Target="AlbumCoverRow.Height" Value="300"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition x:Name="AlbumCoverRow" Height="300"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Loaded="Grid_Loaded">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="AlbumCoverColumn" Width="300"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <defaultcontrols:SafeImage Grid.RowSpan="2" Margin="32"/>
+
+                        <StackPanel Grid.Column="1" Margin="0,32,0,0">
+                            <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
+                                   LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
+                            <HyperlinkButton Content="{x:Bind Artist.Name}" Margin="0,4,0,0"
+                                         Style="{StaticResource PlainTextSubtleHyperlinkStyle}"
+                                         Click="GoToArtist" />
+                            <TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>
+                        </StackPanel>
+
+                        <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
+                                    Margin="16,0,0,32" VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                                    Grid.Column="1" Grid.Row="1"
+                                    Background="Transparent">
+                            <AppBarButton Label="Play all" Style="{StaticResource QuickActionButton}">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shells/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton Icon="Save" Label="Save" Style="{StaticResource QuickActionButton}"/>
+                            <AppBarButton Icon="Add" Label="Add to" Style="{StaticResource QuickActionButton}"/>
+                            <AppBarButton Icon="Share" Label="Share" Style="{StaticResource QuickActionButton}"/>
+                        </CommandBar>
+                    </Grid>
+
+                    <defaultcontrols:TrackCollection Grid.Row="1"/>
+                </Grid>
+            </UserControl>
+        </ScrollViewer>
+    </DataTemplate>
+
+    <Style x:Key="GrooveAlbumViewControlStyle" TargetType="defaultcontrols:AlbumView">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="defaultcontrols:AlbumView">
+                        <ContentControl ContentTemplate="{StaticResource GrooveAlbumViewTemplate}"
+                                        HorizontalContentAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource GrooveAlbumViewControlStyle}" TargetType="defaultcontrols:AlbumView"/>
+
+</ResourceDictionary>

@@ -78,10 +78,10 @@ namespace LaunchPad.ColorExtraction
             byte[] pixels,
             int quality = 4,
             bool ignoreGrays = true,
-            float grayTolerance = .20f,
             bool ignoreWhite = true,
-            float whiteTolerance = .05f,
             bool ignoreBlack = true,
+            float grayTolerance = .20f,
+            float whiteTolerance = .05f,
             float blackTolerance = .10f)
         {
             List<Color> colors = new List<Color>();

@@ -11,7 +11,7 @@
         
         <dstyles:AlbumCollectionStyle/>
         <dstyles:AlbumItemStyle/>
-        <dstyles:AlbumViewStyle/>
+        <styles:AlbumViewStyle/>
         <dstyles:ArtistCollectionStyle/>
         <dstyles:ArtistItemStyle/>
         <dstyles:ArtistViewStyle/>
