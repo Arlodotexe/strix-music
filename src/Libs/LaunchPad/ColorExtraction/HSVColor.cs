@@ -88,35 +88,78 @@ namespace LaunchPad.ColorExtraction
         /// <summary>
         /// Gets the <see cref="HSVColor"/> as a <see cref="Color"/>.
         /// </summary>
+        /// <remarks>
+        /// http://www.splinter.com.au/converting-hsv-to-rgb-colour-using-c/
+        /// </remarks>
         /// <returns>A <see cref="Color"/>.</returns>
         public Color AsArgb()
         {
-            double c = V * S;
-            double x = c * (1 - Math.Abs(((H / 60) % 2) - 1));
-            double m = V - c;
+            double hf = H / 60.0;
+            int i = (int)Math.Floor(hf);
+            double f = hf - i;
+            double pv = V * (1 - S);
+            double qv = V * (1 - S * f);
+            double tv = V * (1 - S * (1 - f));
 
-            double r = 0;
-            double g = 0;
-            double b = 0;
+            double r, g, b;
+            r = g = b = 0;
 
-            if (H < 60)
-            { r = c; g = x; }
-            else if (H < 120)
-            { r = x; g = c; }
-            else if (H < 180)
-            { g = c; b = x; }
-            else if (H < 240)
-            { g = x; b = c; }
-            else if (H < 300)
-            { r = x; b = c; }
-            else if (H < 360)
-            { r = c; b = x; }
+            switch (i)
+            {
+                case 0: // Red is the dominant color
+                    r = V;
+                    g = tv;
+                    b = pv;
+                    break;
+                case 1: // Green is the dominant color
+                    r = qv;
+                    g = V;
+                    b = pv;
+                    break;
+                case 2: // Green is the dominant color
+                    r = pv;
+                    g = V;
+                    b = tv;
+                    break;
+                case 3: // Blue is the dominant color
+                    r = pv;
+                    g = qv;
+                    b = V;
+                    break;
+                case 4: // Blue is the dominant color
+                    r = tv;
+                    g = pv;
+                    b = V;
+                    break;
+                case 5: // Red is the dominant color
+                    r = V;
+                    g = pv;
+                    b = qv;
+                    break;
+                // Extras
+                case 6:
+                    r = V;
+                    g = tv;
+                    b = pv;
+                    break;
+                case -1:
+                    r = V;
+                    g = pv;
+                    b = qv;
+                    break;
+            }
 
-            r = (r + m) * 255;
-            g = (g + m) * 255;
-            b = (b + m) * 255;
+            return Color.FromArgb(A,
+                (byte)Clamp((int)(r * 255.0)),
+                (byte)Clamp((int)(g * 255.0)),
+                (byte)Clamp((int)(b * 255.0)));
+        }
 
-            return Color.FromArgb(A, (byte)r, (byte)g, (byte)b);
+        private int Clamp(int i)
+        {
+            if (i < 0) return 0;
+            if (i > 255) return 255;
+            return i;
         }
 
         /// <summary>
@@ -132,7 +175,7 @@ namespace LaunchPad.ColorExtraction
 
             // Calculate hue difference to wrap.
             double angle1 = Math.Abs(start.H - end.H);
-            double angle2 = Math.Abs(start.H - end.H);
+            double angle2 = Math.Abs(end.H - start.H);
             double hDiff = Math.Min(angle1, angle2);
 
             double weigthedHueDiff = hDiff * hDiff * 1.5;
