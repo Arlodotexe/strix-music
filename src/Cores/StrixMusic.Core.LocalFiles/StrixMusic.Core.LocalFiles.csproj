@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Services\**" />
     <Compile Remove="Utils\**" />
-    <EmbeddedResource Remove="Services\**" />
     <EmbeddedResource Remove="Utils\**" />
-    <None Remove="Services\**" />
     <None Remove="Utils\**" />
   </ItemGroup>
 
@@ -25,6 +22,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

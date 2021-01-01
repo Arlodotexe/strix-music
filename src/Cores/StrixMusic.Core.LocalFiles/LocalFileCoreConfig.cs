@@ -83,6 +83,10 @@ namespace StrixMusic.Core.LocalFiles
                 if (folderData != null)
                 {
                     var files = await folderData.GetFilesAsync();
+                    foreach (var item in files)
+                    {
+                        var details = await item.Properties.GetMusicPropertiesAsync();
+                    }
                 }
             }
         }
