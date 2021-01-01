@@ -86,6 +86,40 @@ namespace LaunchPad.ColorExtraction
         public float V { get; }
 
         /// <summary>
+        /// Gets the <see cref="HSVColor"/> as a <see cref="Color"/>.
+        /// </summary>
+        /// <returns>A <see cref="Color"/>.</returns>
+        public Color AsArgb()
+        {
+            double c = V * S;
+            double x = c * (1 - Math.Abs(((H / 60) % 2) - 1));
+            double m = V - c;
+
+            double r = 0;
+            double g = 0;
+            double b = 0;
+
+            if (H < 60)
+            { r = c; g = x; }
+            else if (H < 120)
+            { r = x; g = c; }
+            else if (H < 180)
+            { g = c; b = x; }
+            else if (H < 240)
+            { g = x; b = c; }
+            else if (H < 300)
+            { r = x; b = c; }
+            else if (H < 360)
+            { r = c; b = x; }
+
+            r = (r + m) * 255;
+            g = (g + m) * 255;
+            b = (b + m) * 255;
+
+            return Color.FromArgb(A, (byte)r, (byte)g, (byte)b);
+        }
+
+        /// <summary>
         /// Finds the different between 2 <see cref="HSVColor"/>s.
         /// </summary>
         /// <param name="start">The first <see cref="HSVColor"/>.</param>
