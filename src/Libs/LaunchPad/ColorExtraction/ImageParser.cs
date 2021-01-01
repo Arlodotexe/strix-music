@@ -24,13 +24,25 @@ namespace LaunchPad.ColorExtraction
         /// <param name="image">The <see cref="BitmapImage"/>.</param>
         /// <param name="width">The width of the image.</param>
         /// <param name="height">The height of the image.</param>
+        /// <returns>A pixel array.</returns>
+        public static async Task<byte[]?> GetPixels(BitmapImage image, uint width, uint height)
+        {
+            return await GetPixels(image.UriSource.AbsoluteUri, width, height);
+        }
+
+        /// <summary>
+        /// Gets a pixel array from a <see cref="Uri"/> string.
+        /// </summary>
+        /// <param name="uri">The <see cref="Uri"/> string..</param>
+        /// <param name="width">The width of the image.</param>
+        /// <param name="height">The height of the image.</param>
         /// <remarks>
         /// https://social.msdn.microsoft.com/Forums/windowsapps/en-US/02927d7a-077f-4263-8b60-b5567baed94b/uwp-convert-the-bitmapimage-into-writeablebitmap
         /// </remarks>
         /// <returns>A pixel array.</returns>
-        public static async Task<byte[]?> GetPixels(BitmapImage image, uint width, uint height)
+        public static async Task<byte[]?> GetPixels(string uri, uint width, uint height)
         {
-            Uri? localUri = await GetLocalImageAsync(image.UriSource.AbsoluteUri);
+            Uri? localUri = await GetLocalImageAsync(uri);
 
             if (localUri is null)
             {
