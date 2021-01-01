@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+﻿using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
@@ -13,6 +8,11 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -321,8 +321,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Uri? Url => Model.Url;
 
+        /// <inheritdoc cref="ITrack.Album" />
+        public AlbumViewModel? Album { get; private set; }
+
         /// <inheritdoc />
-        public IAlbum? Album { get; private set; }
+        IAlbum? ITrack.Album => Model.Album;
 
         /// <inheritdoc />
         public int? TrackNumber => Model.TrackNumber;

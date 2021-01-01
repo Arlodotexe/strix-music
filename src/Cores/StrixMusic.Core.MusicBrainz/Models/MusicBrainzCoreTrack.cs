@@ -195,7 +195,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddArtistSupported(int index)
+        public Task<bool> IsAddArtistItemSupported(int index)
         {
             return Task.FromResult(false);
         }
@@ -207,7 +207,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistSupported(int index)
+        public Task<bool> IsRemoveArtistItemSupported(int index)
         {
             return Task.FromResult(false);
         }
@@ -285,7 +285,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task RemoveArtistAsync(int index)
+        public Task RemoveArtistItemAsync(int index)
         {
             throw new NotSupportedException();
         }

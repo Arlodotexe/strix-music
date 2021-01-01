@@ -382,6 +382,9 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsAddTrackSupported(int index) => _album.IsAddTrackSupported(index);
 
         /// <inheritdoc />
+        public Task<bool> IsAddArtistItemSupported(int index) => _album.IsAddArtistItemSupported(index);
+
+        /// <inheritdoc />
         public Task<bool> IsAddGenreSupported(int index) => _album.IsAddGenreSupported(index);
 
         /// <inheritdoc />
@@ -392,6 +395,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task<bool> IsRemoveTrackSupported(int index) => _album.IsRemoveTrackSupported(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveArtistItemSupported(int index) => _album.IsRemoveArtistItemSupported(index);
 
         /// <inheritdoc />
         public Task ChangeDatePublishedAsync(DateTime datePublished) => _album.ChangeDatePublishedAsync(datePublished);
@@ -435,7 +441,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            return _album.GetArtistItemsAsync(limit, offset);
         }
 
         /// <inheritdoc />
@@ -444,6 +450,18 @@ namespace StrixMusic.Sdk.ViewModels
             foreach (var item in await _album.GetImagesAsync(limit, Images.Count))
             {
                 Images.Add(item);
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task PopulateMoreArtistsAsync(int limit)
+        {
+            foreach (var item in await _album.GetArtistItemsAsync(limit, Artists.Count))
+            {
+                if (item is IArtist artist)
+                {
+                    Artists.Add(new ArtistViewModel(artist));
+                }
             }
         }
 
@@ -480,23 +498,5 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }
-
-        /// <inheritdoc />
-        public Task<bool> IsAddArtistItemSupported(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemSupported(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public Task PopulateMoreArtistsAsync(int limit)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

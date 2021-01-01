@@ -78,12 +78,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var release in releases.Items)
             {
-                var artistForRelease = release.Credits[0].Artist;
-                var totalTracksCount = await _artistHelpersService.GetTotalTracksCount(artistForRelease);
-
-                var artist = new MusicBrainzCoreArtist(SourceCore, artistForRelease, totalTracksCount);
-
-                yield return new MusicBrainzCoreAlbum(SourceCore, release, artist);
+                yield return new MusicBrainzCoreAlbum(SourceCore, release);
             }
         }
 
@@ -108,15 +103,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
             {
                 foreach (var release in recording.Releases)
                 {
-                    var artistData = release.Credits[0].Artist;
-                    var totalTracksForArtist = await _artistHelpersService.GetTotalTracksCount(artistData);
-                    var artist = new MusicBrainzCoreArtist(SourceCore, artistData, totalTracksForArtist);
-
                     foreach (var medium in release.Media)
                     {
                         foreach (var track in medium.Tracks)
                         {
-                            var album = new MusicBrainzCoreAlbum(SourceCore, release, artist);
+                            var album = new MusicBrainzCoreAlbum(SourceCore, release);
                             yield return new MusicBrainzCoreTrack(SourceCore, track, album, medium.Position);
                         }
                     }

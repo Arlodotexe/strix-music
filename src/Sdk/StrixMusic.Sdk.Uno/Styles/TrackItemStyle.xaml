@@ -4,6 +4,7 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:launchpad="using:LaunchPad"
     x:Class="StrixMusic.Sdk.Uno.Styles.TrackItemStyle">
 
     <DataTemplate x:Key="DefaultTrackTemplate" x:DataType="viewModels:TrackViewModel">
@@ -19,7 +20,8 @@
 
             <TextBlock Text="{x:Bind TrackNumber}" Margin="16,0"/> <!--Track Number-->
             <TextBlock Text="{x:Bind Name}" Margin="16,0" Grid.Column="1"/>
-            <TextBlock Text="{x:Bind Album.Artist.Name}" Margin="16,0" Grid.Column="2"/>
+
+            <TextBlock Text="{x:Bind Album.Artists[0].Name}" Margin="16,0" Grid.Column="2"/>
             <TextBlock Text="{x:Bind Album.Name}" Margin="16,0" Grid.Column="3"/>
             <TextBlock Text="{x:Bind converters:DateTimeToYearTextConverter.Convert(Album.DatePublished)}" Margin="16,0" Grid.Column="4"/> <!--Year-->
             <TextBlock Text="{x:Bind converters:LongToTimeSpanTextConverter.Convert(Duration)}" Margin="16,0" Grid.Column="5"/> <!--Duration-->

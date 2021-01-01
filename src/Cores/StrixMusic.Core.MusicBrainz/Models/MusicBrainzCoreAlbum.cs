@@ -23,22 +23,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
     {
         //private readonly MusicBrainzArtistHelpersService _artistHelpersService;
         private readonly MusicBrainzClient _musicBrainzClient;
-        private readonly MusicBrainzCoreArtist _coreArtist;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCoreAlbum"/> class.
         /// </summary>
         /// <param name="sourceCore">The core that created this object.</param>
         /// <param name="release">The release to wrap around.</param>
-        /// <param name="coreArtist">A fully constructed <see cref="MusicBrainzCoreArtist"/>.</param>
-        /// <remarks>
-        /// Normally we don't pass in a fully constructed implementation of one of our classes,
-        /// instead opting for passing API-level information around,
-        /// but the TotalTracksCount property needs to be filled in before object creation, and to get that info we must make asynchronous API calls.
-        /// To follow convention of Strix Music's Sdk interfaces, we're asynchronously filling that info in before creating the album,
-        /// so it's available as soon as soon as the album is.
-        /// </remarks>
-        public MusicBrainzCoreAlbum(ICore sourceCore, Release release, MusicBrainzCoreArtist coreArtist)
+        public MusicBrainzCoreAlbum(ICore sourceCore, Release release)
         {
             _musicBrainzClient = sourceCore.GetService<MusicBrainzClient>();
 
@@ -50,7 +41,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
             Release = release;
 
             SourceCore = sourceCore;
-            _coreArtist = coreArtist;
         }
 
         /// <inheritdoc/>
@@ -83,16 +73,25 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
 
+        /// <inheritdoc />
+        public event EventHandler<int>? ArtistItemsCountChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
+
         /// <summary>
         /// The <see cref="Release"/> for this album.
         /// </summary>
         public Release Release { get; }
 
         /// <inheritdoc/>
-        public ICoreArtist Artist => _coreArtist;
-
-        /// <inheritdoc/>
         public int TotalTracksCount { get; }
+
+        /// <inheritdoc />
+        public int TotalImageCount { get; } = 3;
+
+        /// <inheritdoc />
+        public int TotalArtistItemsCount { get; }
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
@@ -221,7 +220,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             Artist? releaseArtist = Release.Credits?[0].Artist;
 
-            if (releaseArtist != null && releaseArtist.Id != _coreArtist.Id)
+            if (releaseArtist != null)
             {
                 var sourceArtist = Release.Credits.FirstOrDefault().Artist;
 
@@ -243,7 +242,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var recording in enumerable.ToList().GetRange(offset, limit))
             {
-                var album = new MusicBrainzCoreAlbum(SourceCore, Release, _coreArtist);
+                var album = new MusicBrainzCoreAlbum(SourceCore, Release);
                 var track = new MusicBrainzCoreTrack(SourceCore, recording, album, recording.Position);
 
                 yield return track;
@@ -262,6 +261,29 @@ namespace StrixMusic.Core.MusicBrainz.Models
                         yield return track;
                     }
                 }*/
+            }
+        }
+
+        /// <inheritdoc />
+        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        {
+            foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
+            {
+                yield return new MusicBrainzCoreImage(SourceCore, Release.Id, item);
+            }
+
+            await Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
+        {
+            foreach (var artistCredit in Release.Credits)
+            {
+                var artistHelperService = SourceCore.GetService<MusicBrainzArtistHelpersService>();
+                var totalTrackCountForArtist = await artistHelperService.GetTotalTracksCount(artistCredit.Artist);
+
+                yield return new MusicBrainzCoreArtist(SourceCore, artistCredit.Artist, totalTrackCountForArtist);
             }
         }
 
@@ -298,22 +320,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     _ => date
                 };
             }
-            
+
             return date;
-        }
-
-        /// <inheritdoc />
-        public int TotalImageCount { get; } = 3;
-
-        /// <inheritdoc />
-        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
-        {
-            foreach (var item in (MusicBrainzImageSize[])Enum.GetValues(typeof(MusicBrainzImageSize)))
-            {
-                yield return new MusicBrainzCoreImage(SourceCore, Release.Id, item);
-            }
-
-            await Task.CompletedTask;
         }
 
         /// <inheritdoc />
@@ -324,6 +332,30 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsAddArtistItemSupported(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveArtistItemSupported(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveArtistItemAsync(int index)
         {
             throw new NotSupportedException();
         }

@@ -11,7 +11,6 @@ using OwlCore.AbstractUI.Models;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Utils;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Core.MusicBrainz.Models
@@ -51,11 +50,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 IconCode = "\uE73E",
             };
 
-            var richTextblock = new AbstractRichTextBlock(Guid.NewGuid().ToString(), "The initial value")
+            /*var richTextblock = new AbstractRichTextBlock(Guid.NewGuid().ToString(), "The initial value")
             {
                 Title = "RichTextBlock Example",
                 IconCode = "\uE2B1",
-            };
+            };*/
 
             allDoneButton.Clicked += AllDoneButton_Clicked;
 

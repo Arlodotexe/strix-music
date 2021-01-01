@@ -1,5 +1,7 @@
-﻿using StrixMusic.Sdk.ViewModels;
+﻿using System.Threading.Tasks;
+using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml.Controls;
+using OwlCore.Extensions;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -14,6 +16,19 @@ namespace StrixMusic.Sdk.Uno.Controls
         public AlbumItem()
         {
             this.DefaultStyleKey = typeof(AlbumItem);
+
+            InitAsync().FireAndForget();
         }
+
+        private async Task InitAsync()
+        {
+            if (!ViewModel.PopulateMoreArtistsCommand.IsRunning)
+                await ViewModel.PopulateMoreArtistsCommand.ExecuteAsync(5);
+        } 
+
+        /// <summary>
+        /// The <see cref="ArtistViewModel"/> for the control.
+        /// </summary>
+        public AlbumViewModel ViewModel => (AlbumViewModel)DataContext;
     }
 }
