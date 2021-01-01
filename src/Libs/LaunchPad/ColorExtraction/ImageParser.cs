@@ -77,6 +77,8 @@ namespace LaunchPad.ColorExtraction
         public static List<Color> GetImageColors(
             byte[] pixels,
             int quality = 4,
+            bool ignoreGrays = true,
+            float grayTolerance = .20f,
             bool ignoreWhite = true,
             float whiteTolerance = .05f,
             bool ignoreBlack = true,
@@ -98,6 +100,9 @@ namespace LaunchPad.ColorExtraction
                     continue;
 
                 if (ignoreWhite && color.GetCMin() > 1 - whiteTolerance)
+                    continue;
+
+                if (ignoreGrays && color.GetSaturation() < grayTolerance)
                     continue;
 
                 colors.Add(color);
