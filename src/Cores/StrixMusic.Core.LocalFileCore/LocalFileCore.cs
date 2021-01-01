@@ -106,7 +106,7 @@ namespace StrixMusic.Core.LocalFiles
                 await coreConfig.SetupFileCoreFolder();
                 _configured = true;
 
-                ChangeCoreState(CoreState.ConfigRequested);
+                ChangeCoreState(CoreState.Loaded);
                 return;
             }
         }
