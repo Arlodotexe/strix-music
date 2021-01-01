@@ -6,6 +6,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -69,10 +70,23 @@ namespace StrixMusic.Core.LocalFiles
             {
                 var folders = await _fileSystemService.GetPickedFolders();
 
+                IFolderData folderData = null;
                 if (folders.Count == 0)
                 {
-                    var folderData = await _fileSystemService.PickFolder();
+                    folderData = await _fileSystemService.PickFolder();
+                }
+                else
+                {
+                    folderData = folders.ToOrAsList().FirstOrDefault();
+                }
+
+                if (folderData != null)
+                {
                     var files = await folderData.GetFilesAsync();
+                    foreach (var item in files)
+                    {
+                        var details = await item.Properties.GetMusicPropertiesAsync();
+                    }
                 }
             }
         }

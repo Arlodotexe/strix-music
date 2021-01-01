@@ -23,6 +23,7 @@ using StrixMusic.Sdk.Uno.Assembly;
 using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
+using StrixMusic.Sdk.Uno.Services.MediaPlayback;
 using StrixMusic.Shared.Services;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace StrixMusic.Core.LocalFileCore.Models.Metadata
+namespace StrixMusic.Core.LocalFileCore.Backing.Models
 {
     /// <summary>
     /// Represents the metadata associated with a track.
