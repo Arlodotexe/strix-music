@@ -1,5 +1,7 @@
 ﻿using LaunchPad.ColorExtraction;
 using Microsoft.Toolkit.Diagnostics;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.ViewModels;
@@ -8,6 +10,7 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Color = Windows.UI.Color;
 
 namespace StrixMusic.Shells.Groove.Styles
 {
@@ -44,12 +47,13 @@ namespace StrixMusic.Shells.Groove.Styles
             if (!(grid.DataContext is AlbumViewModel albumViewModel))
                 return;
 
-            byte[]? pixels = await ImageParser.GetPixels(albumViewModel.Images[0].Uri.AbsoluteUri, 0, 0);
 
-            if (pixels is null)
+            Image<Argb32>? image = await ImageParser.GetImage(albumViewModel.Images[0].Uri.AbsoluteUri, 0, 0);
+
+            if (image is null)
                 return;
 
-            var rgbColors = ImageParser.GetImageColors(pixels, 128);
+            var rgbColors = ImageParser.GetImageColors(image, 128);
             var hsvColors = rgbColors.Select(x => HSVColor.FromColor(x));
             var palette = ColorExtracter.Palettize(hsvColors.ToList(), 3);
             Color finalColor = palette[0].AsArgb();
