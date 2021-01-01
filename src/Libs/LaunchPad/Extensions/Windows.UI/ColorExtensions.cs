@@ -18,7 +18,7 @@ namespace Windows.UI
         /// <returns>The hex Hue.</returns>
         public static byte GetHexHue(this Color color)
         {
-            int delta = GetDelta(color);
+            double delta = GetDelta(color);
 
             if (delta == 0)
                 return 0;
@@ -26,11 +26,11 @@ namespace Windows.UI
             switch (GetCMaxChannel(color))
             {
                 case RGBChannel.R:
-                    return (byte)(60 * ((color.G - color.B) / delta) % 6);
+                    return (byte)(60 * (((color.G - color.B) / delta) % 6));
                 case RGBChannel.G:
-                    return (byte)(60 * ((color.B - color.R) / delta) + 2);
+                    return (byte)(60 * (((color.B - color.R) / delta) + 2));
                 case RGBChannel.B:
-                    return (byte)(60 * ((color.R - color.G) / delta) + 4);
+                    return (byte)(60 * (((color.R - color.G) / delta) + 4));
             }
 
             return 0; // Not possible
