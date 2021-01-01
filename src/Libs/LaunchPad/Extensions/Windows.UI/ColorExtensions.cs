@@ -43,7 +43,14 @@ namespace Windows.UI
         public static byte GetSaturation(this Color color)
         {
             int value = color.GetValue();
-            return (byte)(GetDelta(color) / value);
+
+            if (value == 0)
+            {
+                return 0;
+            }
+
+            int delta = GetDelta(color) * 255;
+            return (byte)(delta / value);
         }
 
         /// <summary>
