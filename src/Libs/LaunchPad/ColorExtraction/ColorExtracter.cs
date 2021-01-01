@@ -1,8 +1,7 @@
 ﻿/// http://www.codeding.com/articles/k-means-algorithm
 
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace LaunchPad.ColorExtraction
 {
@@ -11,6 +10,19 @@ namespace LaunchPad.ColorExtraction
     /// </summary>
     public static class ColorExtracter
     {
+        /// <summary>
+        /// Gets a list of palette colors from a list of seen colors.
+        /// </summary>
+        /// <param name="ogColors">The original color list.</param>
+        /// <param name="paletteSize">The amount of colors to extract.</param>
+        /// <param name="raw">Whether or not to add extra clusters for more precise colors.</param>
+        /// <returns>A color palette.</returns>
+        public static List<HSVColor> Palettize(List<HSVColor> ogColors, int paletteSize, bool raw = false)
+        {
+            List<PaletteItem> results = KMeans(ogColors, raw ? paletteSize : paletteSize + 2);
+            return results.Take(paletteSize).Select(x => x.GetColorNearestToCenter()).ToList();
+        }
+
         /// <summary>
         /// Runs a KMeans cluster on a list of <see cref="HSVColor"/>s to determine a color palette.
         /// </summary>
