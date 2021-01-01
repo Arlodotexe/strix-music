@@ -15,11 +15,11 @@ namespace LaunchPad.ColorExtraction
         /// </summary>
         /// <param name="ogColors">The original color list.</param>
         /// <param name="paletteSize">The amount of colors to extract.</param>
-        /// <param name="raw">Whether or not to add extra clusters for more precise colors.</param>
+        /// <param name="bufferPalettes">How many extra clusters to add for more precise colors.</param>
         /// <returns>A color palette.</returns>
-        public static List<HSVColor> Palettize(List<HSVColor> ogColors, int paletteSize, bool raw = false)
+        public static List<HSVColor> Palettize(List<HSVColor> ogColors, int paletteSize, int bufferPalettes = 3)
         {
-            List<PaletteItem> results = KMeans(ogColors, raw ? paletteSize : paletteSize + 2);
+            List<PaletteItem> results = KMeans(ogColors, paletteSize + bufferPalettes);
             return results
                 .OrderByDescending(x => x.Count)
                 .Take(paletteSize)
