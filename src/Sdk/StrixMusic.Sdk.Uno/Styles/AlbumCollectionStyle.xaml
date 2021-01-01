@@ -5,7 +5,7 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Sdk.Uno.Styles.AlbumCollectionStyle">
 
-    <DataTemplate x:Key="DefaultAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
+    <DataTemplate x:Key="DefaultAlbumCollectionDataTemplate" x:DataType="viewModels:AlbumCollectionViewModel">
         <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource DefaultAlbumCollectionItemStyle}"
                   Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
                   ItemClick="OpenAlbum">

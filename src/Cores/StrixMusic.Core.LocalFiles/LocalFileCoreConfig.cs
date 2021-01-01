@@ -72,7 +72,10 @@ namespace StrixMusic.Core.LocalFiles
                 if (folders.Count == 0)
                 {
                     var folderData = await _fileSystemService.PickFolder();
-                    var files = await folderData.GetFilesAsync();
+                    if (folderData != null)
+                    {
+                        var files = await folderData.GetFilesAsync();
+                    }
                 }
             }
         }
