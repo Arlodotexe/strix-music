@@ -4,18 +4,32 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:launchpad="using:LaunchPad"
     x:Class="StrixMusic.Sdk.Uno.Styles.AlbumItemStyle">
 
     <DataTemplate x:Key="DefaultAlbumItemDataTemplate" x:DataType="viewModels:AlbumViewModel">
-        <Grid>
+        <Grid MaxWidth="128">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <defaultcontrols:SafeImage Height="128" Width="128"/>
+
             <StackPanel Grid.Row="1" Margin="0,8,0,0">
                 <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                <TextBlock Text="{x:Bind Artist.Name}" Opacity=".5"/>
+
+                <ItemsControl ItemsSource="{x:Bind Artists}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:ArtistViewModel">
+                            <TextBlock Text="{x:Bind Name}" Opacity=".5"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </StackPanel>
         </Grid>
     </DataTemplate>

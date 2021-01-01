@@ -1,7 +1,7 @@
-﻿using StrixMusic.Sdk.Data.Base;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data
@@ -36,12 +36,12 @@ namespace StrixMusic.Sdk.Data
         /// <summary>
         /// Fires when the <see cref="Album"/> metadata changes.
         /// </summary>
-        event EventHandler<IAlbum?> AlbumChanged;
+        event EventHandler<IAlbum?>? AlbumChanged;
 
         /// <summary>
         /// Fires when the <see cref="Lyrics"/> metadata changes.
         /// </summary>
-        event EventHandler<ILyrics?> LyricsChanged;
+        event EventHandler<ILyrics?>? LyricsChanged;
 
         /// <summary>
         /// Changes the album for this track.

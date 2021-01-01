@@ -115,28 +115,28 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<PlaybackState> PlaybackStateChanged
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => _collection.PlaybackStateChanged += value;
             remove => _collection.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<string> NameChanged
+        public event EventHandler<string>? NameChanged
         {
             add => _collection.NameChanged += value;
             remove => _collection.NameChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<string?> DescriptionChanged
+        public event EventHandler<string?>? DescriptionChanged
         {
             add => _collection.DescriptionChanged += value;
             remove => _collection.DescriptionChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<Uri?> UrlChanged
+        public event EventHandler<Uri?>? UrlChanged
         {
             add => _collection.UrlChanged += value;
             remove => _collection.UrlChanged -= value;
@@ -150,28 +150,28 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> ArtistItemsCountChanged
+        public event EventHandler<int>? ArtistItemsCountChanged
         {
             add => _collection.ArtistItemsCountChanged += value;
             remove => _collection.ArtistItemsCountChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IArtistCollectionItem> ArtistItemsChanged
+        public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged
         {
             add => _collection.ArtistItemsChanged += value;
             remove => _collection.ArtistItemsChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => _collection.ImagesChanged += value;
             remove => _collection.ImagesChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> ImagesCountChanged
+        public event EventHandler<int>? ImagesCountChanged
         {
             add => _collection.ImagesCountChanged += value;
             remove => _collection.ImagesCountChanged -= value;
@@ -261,13 +261,13 @@ namespace StrixMusic.Sdk.ViewModels
         public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistSupported(int index) => _collection.IsAddArtistSupported(index);
+        public Task<bool> IsAddArtistItemSupported(int index) => _collection.IsAddArtistItemSupported(index);
 
         /// <inheritdoc />
         public Task<bool> IsAddImageSupported(int index) => _collection.IsAddImageSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistSupported(int index) => _collection.IsRemoveArtistSupported(index);
+        public Task<bool> IsRemoveArtistItemSupported(int index) => _collection.IsRemoveArtistItemSupported(index);
 
         /// <inheritdoc />
         public Task<bool> IsRemoveImageSupported(int index) => _collection.IsRemoveImageSupported(index);
@@ -305,7 +305,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _collection.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
-        public Task RemoveArtistAsync(int index) => _collection.RemoveArtistAsync(index);
+        public Task RemoveArtistItemAsync(int index) => _collection.RemoveArtistItemAsync(index);
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index) => _collection.RemoveImageAsync(index);

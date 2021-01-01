@@ -15,7 +15,7 @@
     <DataTemplate x:Key="DefaultAlbumItemTextDataTemplate" x:DataType="viewModels:AlbumViewModel">
         <StackPanel>
             <TextBlock Text="{x:Bind Name}" FontSize="12" TextTrimming="Clip"/>
-            <TextBlock Text="{x:Bind Artist.Name}" FontSize="12" FontWeight="SemiLight" Opacity=".5"/>
+            <TextBlock Text="{x:Bind Artists[0].Name}" FontSize="12" FontWeight="SemiLight" Opacity=".5"/>
         </StackPanel>
     </DataTemplate>
 

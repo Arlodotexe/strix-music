@@ -89,14 +89,14 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> ImagesCountChanged
+        public event EventHandler<int>? ImagesCountChanged
         {
             add => _userProfile.ImagesCountChanged += value;
             remove => _userProfile.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => _userProfile.ImagesChanged += value;
             remove => _userProfile.ImagesChanged -= value;

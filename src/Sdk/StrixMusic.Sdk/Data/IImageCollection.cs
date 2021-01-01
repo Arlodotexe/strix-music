@@ -29,6 +29,6 @@ namespace StrixMusic.Sdk.Data
         /// <summary>
         /// Fires when the items in the backend are changed by something external.
         /// </summary>
-        event CollectionChangedEventHandler<IImage> ImagesChanged;
+        event CollectionChangedEventHandler<IImage>? ImagesChanged;
     }
 }

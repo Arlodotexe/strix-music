@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using OwlCore.Events;
@@ -32,6 +31,6 @@ namespace StrixMusic.Sdk.Data
         /// <summary>
         /// Fires when the items in the backend are changed by something external.
         /// </summary>
-        event CollectionChangedEventHandler<IArtistCollectionItem> ArtistItemsChanged;
+        event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged;
     }
 }

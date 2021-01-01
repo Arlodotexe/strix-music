@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// Interface representing an album.
     /// </summary>
-    public interface IAlbumBase : IPlayable, IAlbumCollectionItemBase, ITrackCollectionBase, IImageCollectionBase, IGenreCollectionBase
+    public interface IAlbumBase : IPlayable, IAlbumCollectionItemBase, IArtistCollectionBase, ITrackCollectionBase, IImageCollectionBase, IGenreCollectionBase
     {
         /// <summary>
         /// The date the album was released.
@@ -28,6 +28,6 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// Fires when the <see cref="DatePublished"/> metadata changes.
         /// </summary>
-        event EventHandler<DateTime?> DatePublishedChanged;
+        event EventHandler<DateTime?>? DatePublishedChanged;
     }
 }

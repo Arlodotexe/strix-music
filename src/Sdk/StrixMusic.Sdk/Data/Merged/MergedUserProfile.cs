@@ -72,7 +72,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> ImagesCountChanged
+        public event EventHandler<int>? ImagesCountChanged
         {
             add => _userProfile.ImagesCountChanged += value;
             remove => _userProfile.ImagesCountChanged -= value;

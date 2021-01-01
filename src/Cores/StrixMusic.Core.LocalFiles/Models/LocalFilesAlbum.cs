@@ -4,7 +4,6 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Core.LocalFiles.Models
@@ -53,8 +52,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
 
-        /// <inheritdoc/>
-        public ICoreArtist Artist => throw new NotImplementedException();
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc/>
         public int TotalTracksCount { get; }
@@ -82,6 +81,12 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc/>
         public TimeSpan Duration { get; } = TimeSpan.Zero;
+
+        /// <inheritdoc />
+        public int TotalImageCount { get; } = 3;
+
+        /// <inheritdoc />
+        public int TotalArtistItemsCount { get; }
 
         /// <inheritdoc/>
         public ICorePlayableCollectionGroup? RelatedItems { get; }
@@ -198,9 +203,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public int TotalImageCount { get; } = 3;
-
-        /// <inheritdoc />
         public  IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
             throw new NotImplementedException();
@@ -214,6 +216,39 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveArtistItemAsync(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsAddArtistItemSupported(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveArtistItemSupported(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int>? ArtistItemsCountChanged;
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
             throw new NotImplementedException();
         }

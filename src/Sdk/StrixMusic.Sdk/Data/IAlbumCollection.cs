@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using OwlCore.Events;
@@ -11,7 +10,6 @@ namespace StrixMusic.Sdk.Data
     /// <inheritdoc cref="IAlbumCollectionBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
     [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
-
     public interface IAlbumCollection : IAlbumCollectionBase, IAlbumCollectionItem, IImageCollection, ISdkMember<ICoreAlbumCollection>
     {
         /// <summary>
@@ -33,6 +31,6 @@ namespace StrixMusic.Sdk.Data
         /// <summary>
         /// Fires when the items in the backend are changed by something external.
         /// </summary>
-        event CollectionChangedEventHandler<IAlbumCollectionItem> AlbumItemsChanged;
+        event CollectionChangedEventHandler<IAlbumCollectionItem>? AlbumItemsChanged;
     }
 }

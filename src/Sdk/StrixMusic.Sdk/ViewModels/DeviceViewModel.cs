@@ -188,7 +188,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<IPlayable> PlaybackContextChanged
+        public event EventHandler<IPlayable>? PlaybackContextChanged
         {
             add => Model.PlaybackContextChanged += value;
 
@@ -196,7 +196,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<ITrack> NowPlayingChanged
+        public event EventHandler<ITrack>? NowPlayingChanged
         {
             add => Model.NowPlayingChanged += value;
 
@@ -204,7 +204,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<TimeSpan> PositionChanged
+        public event EventHandler<TimeSpan>? PositionChanged
         {
             add => Model.PositionChanged += value;
 
@@ -212,7 +212,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<PlaybackState> PlaybackStateChanged
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => Model.PlaybackStateChanged += value;
 
@@ -220,7 +220,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<bool> ShuffleStateChanged
+        public event EventHandler<bool>? ShuffleStateChanged
         {
             add => Model.ShuffleStateChanged += value;
 
@@ -228,7 +228,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<RepeatState> RepeatStateChanged
+        public event EventHandler<RepeatState>? RepeatStateChanged
         {
             add => Model.RepeatStateChanged += value;
 
@@ -236,7 +236,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<double> VolumeChanged
+        public event EventHandler<double>? VolumeChanged
         {
             add => Model.VolumeChanged += value;
 
@@ -244,7 +244,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<double> PlaybackSpeedChanged
+        public event EventHandler<double>? PlaybackSpeedChanged
         {
             add => Model.PlaybackSpeedChanged += value;
 

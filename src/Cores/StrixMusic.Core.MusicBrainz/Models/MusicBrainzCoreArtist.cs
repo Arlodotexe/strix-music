@@ -6,7 +6,6 @@ using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
 using OwlCore.Collections;
 using OwlCore.Events;
-using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -21,7 +20,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
     {
         private readonly Artist _artist;
         private readonly MusicBrainzClient _musicBrainzClient;
-        private readonly MusicBrainzArtistHelpersService _artistHelperService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCoreArtist"/> class.
@@ -37,7 +35,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
             _artist = artist;
 
             _musicBrainzClient = SourceCore.GetService<MusicBrainzClient>();
-            _artistHelperService = SourceCore.GetService<MusicBrainzArtistHelpersService>();
         }
 
         /// <inheritdoc/>
@@ -211,7 +208,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var release in releases)
             {
-                yield return new MusicBrainzCoreAlbum(SourceCore, release, this);
+                yield return new MusicBrainzCoreAlbum(SourceCore, release);
             }
         }
 
@@ -232,11 +229,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
             {
                 foreach (var release in releaseDataForArtist)
                 {
-                    var totalTracksForArtist =
-                    await _artistHelperService.GetTotalTracksCount(release.Credits[0].Artist);
-
-                    var artist = new MusicBrainzCoreArtist(SourceCore, release.Credits[0].Artist, totalTracksForArtist);
-                    var album = new MusicBrainzCoreAlbum(SourceCore, release, artist);
+                    var album = new MusicBrainzCoreAlbum(SourceCore, release);
 
                     // Iterate through each physical medium for this release.
                     foreach (var medium in release.Media)

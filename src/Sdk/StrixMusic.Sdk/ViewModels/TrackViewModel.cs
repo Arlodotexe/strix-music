@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+﻿using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
@@ -13,6 +8,11 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -94,7 +94,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<IAlbum?> AlbumChanged
+        public event EventHandler<IAlbum?>? AlbumChanged
         {
             add => Model.AlbumChanged += value;
 
@@ -102,7 +102,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int?> TrackNumberChanged
+        public event EventHandler<int?>? TrackNumberChanged
         {
             add => Model.TrackNumberChanged += value;
 
@@ -110,7 +110,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<CultureInfo?> LanguageChanged
+        public event EventHandler<CultureInfo?>? LanguageChanged
         {
             add => Model.LanguageChanged += value;
 
@@ -118,7 +118,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<ILyrics?> LyricsChanged
+        public event EventHandler<ILyrics?>? LyricsChanged
         {
             add => Model.LyricsChanged += value;
 
@@ -126,7 +126,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<bool> IsExplicitChanged
+        public event EventHandler<bool>? IsExplicitChanged
         {
             add => Model.IsExplicitChanged += value;
 
@@ -134,7 +134,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<string> NameChanged
+        public event EventHandler<string>? NameChanged
         {
             add => Model.NameChanged += value;
 
@@ -142,7 +142,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<string?> DescriptionChanged
+        public event EventHandler<string?>? DescriptionChanged
         {
             add => Model.DescriptionChanged += value;
 
@@ -150,7 +150,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<Uri?> UrlChanged
+        public event EventHandler<Uri?>? UrlChanged
         {
             add => Model.UrlChanged += value;
 
@@ -166,28 +166,28 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> ArtistItemsCountChanged
+        public event EventHandler<int>? ArtistItemsCountChanged
         {
             add => Model.ArtistItemsCountChanged += value;
             remove => Model.ArtistItemsCountChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> ImagesCountChanged
+        public event EventHandler<int>? ImagesCountChanged
         {
             add => Model.ImagesCountChanged += value;
             remove => Model.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => Model.ImagesChanged += value;
             remove => Model.ImagesChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IArtistCollectionItem> ArtistItemsChanged
+        public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged
         {
             add => Model.ArtistItemsChanged += value;
             remove => Model.ArtistItemsChanged -= value;
@@ -321,8 +321,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Uri? Url => Model.Url;
 
+        /// <inheritdoc cref="ITrack.Album" />
+        public AlbumViewModel? Album { get; private set; }
+
         /// <inheritdoc />
-        public IAlbum? Album { get; private set; }
+        IAlbum? ITrack.Album => Model.Album;
 
         /// <inheritdoc />
         public int? TrackNumber => Model.TrackNumber;
@@ -376,7 +379,7 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeIsExplicitAsyncSupported => Model.IsChangeIsExplicitAsyncSupported;
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistSupported(int index) => Model.IsAddArtistSupported(index);
+        public Task<bool> IsAddArtistItemSupported(int index) => Model.IsAddArtistItemSupported(index);
 
         /// <inheritdoc />
         public Task<bool> IsAddGenreSupported(int index) => Model.IsAddGenreSupported(index);
@@ -391,7 +394,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveGenreSupported(int index) => Model.IsRemoveGenreSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistSupported(int index) => Model.IsRemoveArtistSupported(index);
+        public Task<bool> IsRemoveArtistItemSupported(int index) => Model.IsRemoveArtistItemSupported(index);
 
         /// <inheritdoc />
         public Task ChangeAlbumAsync(IAlbum? album) => Model.ChangeAlbumAsync(album);
@@ -439,7 +442,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => Model.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
-        public Task RemoveArtistAsync(int index) => Model.RemoveArtistAsync(index);
+        public Task RemoveArtistItemAsync(int index) => Model.RemoveArtistItemAsync(index);
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
