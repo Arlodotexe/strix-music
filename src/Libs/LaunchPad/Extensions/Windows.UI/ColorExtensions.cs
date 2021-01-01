@@ -16,21 +16,25 @@ namespace Windows.UI
         /// Gets the Hue of a <see cref="Color"/> in hex format.
         /// </summary>
         /// <returns>The hex Hue.</returns>
-        public static byte GetHexHue(this Color color)
+        public static int GetHexHue(this Color color)
         {
             double delta = GetDelta(color);
 
             if (delta == 0)
                 return 0;
 
+            double r = (double)color.R / 255;
+            double g = (double)color.G / 255;
+            double b = (double)color.B / 255;
+
             switch (GetCMaxChannel(color))
             {
                 case RGBChannel.R:
-                    return (byte)(60 * (((color.G - color.B) / delta) % 6));
+                    return (int)(60 * (((g - b) / delta) % 6));
                 case RGBChannel.G:
-                    return (byte)(60 * (((color.B - color.R) / delta) + 2));
+                    return (int)(60 * (((b - r) / delta) + 2));
                 case RGBChannel.B:
-                    return (byte)(60 * (((color.R - color.G) / delta) + 4));
+                    return (int)(60 * (((r - g) / delta) + 4));
             }
 
             return 0; // Not possible
@@ -40,40 +44,39 @@ namespace Windows.UI
         /// Gets the Saturation of a <see cref="Color"/> in hex format.
         /// </summary>
         /// <returns>The hex Saturation.</returns>
-        public static byte GetSaturation(this Color color)
+        public static float GetSaturation(this Color color)
         {
-            int value = color.GetValue();
+            float value = color.GetValue();
 
             if (value == 0)
             {
                 return 0;
             }
 
-            int delta = GetDelta(color) * 255;
-            return (byte)(delta / value);
+            float delta = GetDelta(color);
+            return delta / value;
         }
 
         /// <summary>
         /// Gets the Value of a <see cref="Color"/> in hex format.
         /// </summary>
         /// <returns>The hex Value.</returns>
-        public static byte GetValue(this Color color)
+        public static float GetValue(this Color color)
         {
-            int max = Math.Max(color.R, color.G);
-            return (byte)Math.Max(max, color.B);
+            return (float)GetRawCMax(color) / 255;
         }
 
         /// <summary>
         /// Adjusts the Value of the <see cref="Color"/>.
         /// </summary>
         /// <returns>A <see cref="Color"/> with the same Hue and Saturation of this, but a value of <paramref name="value"/>.</returns>
-        public static Color AdjustValue(this Color color, byte value)
+        public static Color AdjustValue(this Color color, float value)
         {
-            byte oldValue = GetValue(color);
+            float oldValue = GetValue(color);
             if (oldValue == 0)
-                return Color.FromArgb(color.A, value, value, value);
+                return Color.FromArgb(color.A, (byte)value, (byte)value, (byte)value);
 
-            float adjustmentFactor = (float)value / oldValue;
+            float adjustmentFactor = value / oldValue;
             byte r = (byte)(color.R * adjustmentFactor);
             byte g = (byte)(color.G * adjustmentFactor);
             byte b = (byte)(color.B * adjustmentFactor);
@@ -81,28 +84,35 @@ namespace Windows.UI
         }
 
         /// <summary>
-        /// Adjusts the Value of the <see cref="Color"/>.
+        /// Gets the value of the smallest RGB channel.
         /// </summary>
-        /// <returns>A <see cref="Color"/> with the same Hue and Saturation of this, but a value of <paramref name="value"/>.</returns>
-        public static Color AdjustValue(this Color color, double value)
+        /// <param name="color">The color.</param>
+        /// <returns>The value of the smallest channel.</returns>
+        internal static float GetCMin(this Color color)
         {
-            return AdjustValue(color, (byte)(255 * value));
+            return (float)GetRawCMin(color) / 255;
         }
 
-        private static byte GetCMin(this Color color)
+        private static float GetDelta(this Color color)
+        {
+            return GetValue(color) - GetCMin(color);
+        }
+
+        private static int GetRawCMax(this Color color)
+        {
+            int max = Math.Max(color.R, color.G);
+            return Math.Max(max, color.B);
+        }
+
+        private static int GetRawCMin(this Color color)
         {
             int min = Math.Min(color.R, color.G);
-            return (byte)(Math.Min(min, color.B));
-        }
-
-        private static byte GetDelta(this Color color)
-        {
-            return (byte)(GetValue(color) - GetCMin(color));
+            return Math.Min(min, color.B);
         }
 
         private static RGBChannel GetCMaxChannel(this Color color)
         {
-            int maxValue = GetValue(color);
+            int maxValue = GetRawCMax(color);
             if (maxValue == color.R)
                 return RGBChannel.R;
             if (maxValue == color.G)

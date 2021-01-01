@@ -16,7 +16,7 @@ namespace LaunchPad.ColorExtraction
         /// <param name="s">The Saturation channel.</param>
         /// <param name="v">The Value channel.</param>
         /// <returns>The <see cref="HSVColor"/> for the parameters.</returns>
-        public static HSVColor FromAhsv(byte a, byte h, byte s, byte v)
+        public static HSVColor FromAhsv(byte a, int h, float s, float v)
         {
             return new HSVColor(a, h, s, v);
         }
@@ -41,9 +41,9 @@ namespace LaunchPad.ColorExtraction
         /// <returns>The <see cref="HSVColor"/> equivelant for the <see cref="Color"/>.</returns>
         public static HSVColor FromColor(Color color)
         {
-            byte h = color.GetHexHue();
-            byte s = color.GetSaturation();
-            byte v = color.GetValue();
+            int h = color.GetHexHue();
+            float s = color.GetSaturation();
+            float v = color.GetValue();
             return new HSVColor(color.A, h, s, v);
         }
 
@@ -57,7 +57,7 @@ namespace LaunchPad.ColorExtraction
             return FromAhsv(c.A, c.H, c.S, c.V);
         }
 
-        private HSVColor(byte a, byte h, byte s, byte v)
+        private HSVColor(byte a, int h, float s, float v)
         {
             A = a;
             H = h;
@@ -73,17 +73,17 @@ namespace LaunchPad.ColorExtraction
         /// <summary>
         /// The value of the Hue channel.
         /// </summary>
-        public byte H { get; }
+        public int H { get; }
 
         /// <summary>
         /// The value of the Saturation channel.
         /// </summary>
-        public byte S { get; }
+        public float S { get; }
 
         /// <summary>
         /// The value of the Value channel.
         /// </summary>
-        public byte V { get; }
+        public float V { get; }
 
         /// <summary>
         /// Finds the different between 2 <see cref="HSVColor"/>s.
