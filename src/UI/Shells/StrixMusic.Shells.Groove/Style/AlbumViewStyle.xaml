@@ -59,10 +59,23 @@
 
                         <StackPanel Grid.Column="1" Margin="0,32,0,0">
                             <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
-                                   LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
-                            <HyperlinkButton Content="{x:Bind Artist.Name}" Margin="0,4,0,0"
-                                         Style="{StaticResource PlainTextSubtleHyperlinkStyle}"
-                                         Click="GoToArtist" />
+                                       LineStackingStrategy="BlockLineHeight" LineHeight="34"/>
+
+                            <ItemsControl ItemsSource="{x:Bind Artists}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="viewModels:ArtistViewModel">
+                                        <HyperlinkButton Content="{x:Bind Name}" Margin="0,4,0,0"
+                                                         Style="{StaticResource PlainTextSubtleHyperlinkStyle}"
+                                                         Click="GoToArtist" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            
                             <TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>
                         </StackPanel>
 
