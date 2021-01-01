@@ -20,7 +20,10 @@ namespace LaunchPad.ColorExtraction
         public static List<HSVColor> Palettize(List<HSVColor> ogColors, int paletteSize, bool raw = false)
         {
             List<PaletteItem> results = KMeans(ogColors, raw ? paletteSize : paletteSize + 2);
-            return results.Take(paletteSize).Select(x => x.GetColorNearestToCenter()).ToList();
+            return results
+                .OrderByDescending(x => x.Count)
+                .Take(paletteSize)
+                .Select(x => x.GetColorNearestToCenter()).ToList();
         }
 
         /// <summary>
