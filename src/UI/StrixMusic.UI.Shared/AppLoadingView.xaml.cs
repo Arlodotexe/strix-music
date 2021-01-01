@@ -223,6 +223,8 @@ namespace StrixMusic.Shared
                     _configuredCoreRegistry.Add(Guid.NewGuid().ToString(), coreData);
                 }
             }
+
+            await _settingsService.SetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores), _configuredCoreRegistry).RunInBackground();
         }
 
         private async Task InitializeCoreRanking()

@@ -64,9 +64,17 @@ namespace StrixMusic.Sdk.Data.Merged
                 return;
 
             _coreRanking = await GetCoreRankings();
+
             _configuredCoreRegistry = await GetConfiguredCoreRegistry();
+
             _sortingMethod = await GetSortingMethod();
             _settingsService.SettingChanged += SettingsServiceOnSettingChanged;
+
+            Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
+            Guard.HasSizeGreaterThan(_coreRanking, 0, nameof(_coreRanking));
+
+            Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
+            Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
 
             _isInit = true;
         }
@@ -545,6 +553,8 @@ namespace StrixMusic.Sdk.Data.Merged
         private async Task<IReadOnlyList<TCollectionItem>> GetItemsByRank(int limit, int offset)
         {
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
+            Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
+            Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
 
             // Rebuild the sorted map so we're sure it's sorted correctly.
             _sortedMap.AddRange(BuildSortedMapRanked());
@@ -552,16 +562,22 @@ namespace StrixMusic.Sdk.Data.Merged
             if (limit > _sortedMap.Count)
                 limit = _sortedMap.Count;
 
+            // offset = 25
+            // limit = 20
+
             // Get all requested items using the sorted map
-            for (var i = offset; i < limit; i++)
+            for (var i = 0; i < limit; i++)
             {
-                var currentSource = _sortedMap[i];
+                var mappedIndex = offset + i;
+
+                var currentSource = _sortedMap[mappedIndex];
                 var itemsCountForSource = currentSource.SourceCollection.GetItemsCount<TCollection>();
                 var itemLimitForSource = limit;
 
-                // If the currentSource and the previous source are the same, skip this iteration
-                // because we get the max items from each source once per collection.
-                if (i > 0 && currentSource.SourceCollection.SourceCore == _sortedMap[i - 1].SourceCollection.SourceCore)
+                // Get the max items from each source once per collection.
+                // If the currentSource and the previous source are the same, skip this iteration.
+                // Checking if mappedIndex > offset ensures that the request is made at the first mapped item for this source.
+                if (mappedIndex > offset && currentSource.SourceCollection.SourceCore == _sortedMap[mappedIndex - 1].SourceCollection.SourceCore)
                     continue;
 
                 // do we end up outside the range if we try getting all items from this source?
@@ -581,11 +597,13 @@ namespace StrixMusic.Sdk.Data.Merged
                 {
                     var item = remainingItemsForSource[o];
 
-                    _sortedMap[i + o].CollectionItem = item;
+                    _sortedMap[mappedIndex + o].CollectionItem = item;
                 }
             }
 
-            var merged = MergeMappedData(_sortedMap).Select(x => (TCollectionItem)x).ToList();
+            var relevantMergedMappedData = MergeMappedData(_sortedMap).Skip(offset).Take(limit);
+
+            var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
 
             return merged;
         }
@@ -638,6 +656,8 @@ namespace StrixMusic.Sdk.Data.Merged
         private List<MappedData> BuildSortedMapRanked()
         {
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
+            Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
+            Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
 
             // Rank the sources by core
             var rankedSources = new List<TCoreCollection>();
@@ -674,19 +694,19 @@ namespace StrixMusic.Sdk.Data.Merged
             return itemsMap;
         }
 
-        private async Task<List<string>> GetCoreRankings()
+        private Task<List<string>> GetCoreRankings()
         {
-            return await _settingsService.GetValue< List<string>>(nameof(SettingsKeys.CoreRanking));
+            return _settingsService.GetValue< List<string>>(nameof(SettingsKeys.CoreRanking));
         }
 
-        private async Task<Dictionary<string, CoreAssemblyInfo>> GetConfiguredCoreRegistry()
+        private Task<Dictionary<string, CoreAssemblyInfo>> GetConfiguredCoreRegistry()
         {
-            return await _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores));
+            return _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores));
         }
 
-        private async Task<MergedCollectionSorting> GetSortingMethod()
+        private Task<MergedCollectionSorting> GetSortingMethod()
         {
-            return await _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
+            return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
         }
 
         private void SettingsServiceOnSettingChanged(object sender, SettingChangedEventArgs e)

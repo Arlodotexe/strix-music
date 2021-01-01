@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
@@ -34,5 +35,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// The currently playing media source.
         /// </summary>
         public IMediaSourceConfig? CurrentSource { get; set; }
+
+        /// <summary>
+        /// Raised when a quantum of data is processed. 
+        /// </summary>
+        public event EventHandler<float[]>? QuantumProcessed;
     }
 }

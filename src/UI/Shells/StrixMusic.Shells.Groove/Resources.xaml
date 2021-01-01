@@ -5,6 +5,10 @@
     xmlns:styles="using:StrixMusic.Shells.Groove.Styles"
     xmlns:dstyles="using:StrixMusic.Sdk.Uno.Styles">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
+        <ResourceDictionary Source="Style/MediaSlider.xaml"/>
+        
         <dstyles:AlbumCollectionStyle/>
         <dstyles:AlbumItemStyle/>
         <dstyles:AlbumViewStyle/>
@@ -17,10 +21,6 @@
         <dstyles:SettingsViewStyle/>
         <dstyles:TrackCollectionStyle/>
         <dstyles:TrackItemStyle/>
-
-        <ResourceDictionary Source="Resources/Brushes.xaml"/>
-        <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
-        <ResourceDictionary Source="Style/MediaSlider.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
 </ResourceDictionary>

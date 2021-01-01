@@ -55,6 +55,7 @@
 		<None Remove="Assets\Hover.png" />
 		<None Remove="Assets\Quickplay-Background.png" />
 		<None Remove="Controls\AlbumWall.xaml" />
+		<None Remove="Controls\NowPlayingButtonContent.xaml" />
 		<None Remove="Controls\QuickplayContent.xaml" />
 		<None Remove="Controls\SettingsPages\SettingsBackgrounds.xaml" />
 		<None Remove="Controls\SettingsView.xaml" />
@@ -89,6 +90,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<UpToDateCheckInput Remove="Controls\AlbumWall.xaml" />
+		<UpToDateCheckInput Remove="Controls\NowPlayingButtonContent.xaml" />
 		<UpToDateCheckInput Remove="Controls\QuickplayContent.xaml" />
 		<UpToDateCheckInput Remove="Controls\SettingsPages\SettingsBackgrounds.xaml" />
 		<UpToDateCheckInput Remove="Controls\SettingsView.xaml" />
@@ -152,6 +154,9 @@
 		<PRIResource Include="Strings\he\ZuneUI.resw" />
 	</ItemGroup>
 	<ItemGroup>
+		<Compile Update="Controls\NowPlayingButtonContent.xaml.cs">
+		  <DependentUpon>NowPlayingButtonContent.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Styles\AlbumCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>

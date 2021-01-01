@@ -5,6 +5,7 @@
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:zunecontrols="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:launchpad="using:LaunchPad.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters">
 
@@ -255,7 +256,8 @@
                                         </StackPanel>
                                         
                                         <Button Style="{StaticResource ZuneSmallButton}" VerticalAlignment="Center" Margin="12,0" Click="NavigateToNowPlaying">
-                                            <FontIcon Glyph="&#xF61F;" FontSize="20" FontWeight="Bold" Foreground="#DB0D94"/>
+                                            <!--<FontIcon Glyph="&#xF61F;" FontSize="20" FontWeight="Bold" Foreground="#DB0D94"/>-->
+                                            <zunecontrols:NowPlayingButtonContent Foreground="#DB0D94" Height="12" Width="20"/>
                                         </Button>
                                     </StackPanel>
                                     <TextBlock Text="VOLUME 50" Grid.Row="1" FontSize="10" FontWeight="Bold" Opacity=".5" HorizontalAlignment="Center" Margin="36,4,0,-8"/>

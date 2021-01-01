@@ -7,6 +7,11 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:launchpad="using:LaunchPad.Controls">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
     <Style x:Key="ZuneNowPlayingViewStyle" TargetType="defaultcontrols:NowPlayingView">
         <Style.Setters>
             <Setter Property="Template">

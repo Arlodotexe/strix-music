@@ -7,6 +7,10 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.Strix.Styles.ArtistViewStyle">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Resources/ButtonStyles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
     <DataTemplate x:Key="StrixArtistViewTemplate" x:DataType="viewModels:ArtistViewModel">
         <UserControl>
             <Grid>
