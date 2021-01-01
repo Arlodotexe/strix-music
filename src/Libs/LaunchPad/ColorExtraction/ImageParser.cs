@@ -62,7 +62,13 @@ namespace LaunchPad.ColorExtraction
         /// <param name="ignoreWhite">Whether or not to skip white pixels.</param>
         /// <param name="whiteTolerance">How close a pixel must be to white to be considered white.</param>
         /// <returns>A list of colors in the image.</returns>
-        public static List<Color> GetImageColors(byte[] pixels, int quality = 4, bool ignoreWhite = true, int whiteTolerance = 5)
+        public static List<Color> GetImageColors(
+            byte[] pixels,
+            int quality = 4,
+            bool ignoreWhite = true,
+            float whiteTolerance = .05f,
+            bool ignoreBlack = true,
+            float blackTolerance = .10f)
         {
             List<Color> colors = new List<Color>();
 
@@ -75,11 +81,12 @@ namespace LaunchPad.ColorExtraction
                 byte a = pixels[offset + 3];
 
                 Color color = Color.FromArgb(a, r, g, b);
-                
-                if (ignoreWhite && color.GetValue() > 255 - whiteTolerance)
-                {
+
+                if (ignoreBlack && color.GetValue() < blackTolerance)
                     continue;
-                }
+
+                if (ignoreWhite && color.GetCMin() > 1 - whiteTolerance)
+                    continue;
 
                 colors.Add(color);
             }
