@@ -67,7 +67,6 @@ namespace LaunchPad.ColorExtraction
                 filter = (ColorFilterConfig)config;
 
             List<Color> colors = new List<Color>();
-            Random rand = new Random(0);
 
             for (int rows = 0; rows < image.Height; rows++)
             {
@@ -86,7 +85,7 @@ namespace LaunchPad.ColorExtraction
                 }
             }
 
-            if (colors.Count < 16)
+            if (colors.Count < 8)
             {
                 return GetImageColors(image, quality, filter.Ease());
             }
