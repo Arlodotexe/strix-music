@@ -53,21 +53,19 @@ namespace LaunchPad.ColorExtraction
         /// </summary>
         /// <param name="image">The image to read from.</param>
         /// <param name="quality">The amount of pixels to skip (lower is more accurate).</param>
-        /// <param name="ignoreWhites">Whether or not to skip white pixels.</param>
-        /// <param name="whiteTolerance">How close a pixel must be to white to be considered white.</param>
+        /// <param name="config">A filter of what colors to ignore.</param>
         /// <returns>A list of colors in the image.</returns>
         public static List<Color> GetImageColors(
             Image<Argb32> image,
             int quality = 4,
-            bool ignoreGrays = true,
-            bool ignoreWhites = true,
-            bool ignoreBlacks = true,
-            bool yellowFilter = true,
-            bool preferLowValue = true,
-            float grayTolerance = .15f,
-            float whiteTolerance = .20f,
-            float blackTolerance = .10f)
+            ColorFilterConfig? config = null)
         {
+            ColorFilterConfig filter;
+            if (config == null)
+                filter = ColorFilterConfig.Default;
+            else
+                filter = (ColorFilterConfig)config;
+
             List<Color> colors = new List<Color>();
             Random rand = new Random(0);
 
@@ -83,55 +81,14 @@ namespace LaunchPad.ColorExtraction
 
                     Color color = Color.FromArgb(a, r, g, b);
 
-                    // Apply initial yellow filter
-                    // Increase white tolerance if within yellow range
-                    float realWhiteTolerance = whiteTolerance;
-                    if (yellowFilter)
-                    {
-                        int yellowMax, yellowMin, colorHue;
-                        yellowMax = 60 + 20;
-                        yellowMin = 60 - 20;
-                        colorHue = color.GetHue();
-                        if (colorHue > yellowMin && colorHue < yellowMax)
-                        {
-                            realWhiteTolerance *= 2f;
-                        }
-                    }
-
-                    if (ignoreBlacks && color.GetValue() < blackTolerance)
-                        continue;
-
-                    if (ignoreWhites && color.GetCMin() > 1 - realWhiteTolerance)
-                        continue;
-
-                    if (ignoreGrays && color.GetSaturation() < grayTolerance)
-                        continue;
-
-                    if (preferLowValue && ((rand.NextDouble() * 1.1) + .2) < color.GetValue())
-                        continue;
-
-
-                    colors.Add(color);
+                    if (filter.TakeColor(color))
+                        colors.Add(color);
                 }
             }
 
-            if (colors.Count < 32)
+            if (colors.Count < 16)
             {
-                bool graysChanged = false;
-                graysChanged = ignoreGrays != false;
-                ignoreGrays = false;
-
-                if (!graysChanged)
-                {
-                    ignoreBlacks = ignoreWhites = false;
-                }
-
-                return GetImageColors(
-                    image,
-                    quality,
-                    ignoreGrays: ignoreGrays,
-                    ignoreWhites: ignoreWhites,
-                    ignoreBlacks: ignoreBlacks);
+                return GetImageColors(image, quality, filter.Ease());
             }
 
             return colors;
