@@ -85,7 +85,7 @@ namespace StrixMusic.Shared
         {
             await InitializeServices();
             await InitializeAssemblies();
-            await ManuallyRegisterCore<LocalFileCore>();
+            await ManuallyRegisterCore<MusicBrainzCore>();
             await InitializeCoreRanking();
             await InitializeOutOfBoxSetupIfNeeded();
             await InitializeConfiguredCores();
