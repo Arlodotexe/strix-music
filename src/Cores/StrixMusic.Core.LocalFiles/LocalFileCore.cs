@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Collections;
+using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
@@ -90,6 +92,7 @@ namespace StrixMusic.Core.LocalFiles
         }
 
         private bool _configured = false;
+        private TrackService _trackService;
 
         /// <inheritdoc/>
         public async Task InitAsync(IServiceCollection services)
@@ -104,7 +107,13 @@ namespace StrixMusic.Core.LocalFiles
             {
                 await coreConfig.SetupConfigurationServices(services);
                 await coreConfig.SetupFileCoreFolder();
+                await coreConfig.ConfigureServices(services);
+
                 _configured = true;
+
+                _trackService = this.GetService<TrackService>();
+                await _trackService.InitAsync();
+                var testData = await _trackService.GetTrackMetaData(0,100);
 
                 ChangeCoreState(CoreState.Loaded);
                 return;
