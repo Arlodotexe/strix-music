@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk.Data.Core;
+﻿using MessagePack;
+using StrixMusic.Sdk.Data.Core;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

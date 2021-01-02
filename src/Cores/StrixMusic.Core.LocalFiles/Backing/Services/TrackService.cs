@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Diagnostics;
+﻿using MessagePack;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using StrixMusic.Core.LocalFileCore.Backing.Models;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace StrixMusic.Core.LocalFiles.Backing.Services
 {
-    // Note: This is not ready for review yet.
+    // Note: This is in progress. This is not ready for review yet.
 
     /// <summary>
     /// The service that helps in interacting with the saved file core track information.
@@ -67,6 +68,9 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
 
                 lst.Add(trackMetaData);
             }
+
+            var messagePackBytes = MessagePackSerializer.Serialize(lst,
+                    MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
             return lst;
         }
