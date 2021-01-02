@@ -45,7 +45,14 @@ namespace LaunchPad.ColorExtraction
         /// <returns>A pixel array.</returns>
         public static async Task<Image<Argb32>?> GetImage(string uri, uint width, uint height)
         {
-            return (await Image.LoadAsync(await GetImageStreamAsync(uri))).CloneAs<Argb32>();
+            try
+            {
+                return (await Image.LoadAsync(await GetImageStreamAsync(uri))).CloneAs<Argb32>();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
