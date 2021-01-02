@@ -6,12 +6,14 @@ using SixLabors.ImageSharp.PixelFormats;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.ViewModels;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Color = Windows.UI.Color;
 
 namespace StrixMusic.Shells.Groove.Styles
@@ -52,7 +54,10 @@ namespace StrixMusic.Shells.Groove.Styles
             Color? color = await Task.Run(async () => await UpdateBackgroundColor(albumViewModel.Images[0].Uri.AbsoluteUri));
 
             if (color.HasValue)
-                grid.Background = new SolidColorBrush(color.Value);
+                AnimateBackgroundChange(color.Value, grid);
+            else
+                AnimateBackgroundChange(Color.FromArgb(255, 51, 51, 51), grid);
+                //grid.Background = new SolidColorBrush(color.Value);
         }
 
         private async Task<Color?> UpdateBackgroundColor(string url)
@@ -71,7 +76,16 @@ namespace StrixMusic.Shells.Groove.Styles
 
         private void AnimateBackgroundChange(Color color, Grid background)
         {
-
+            ColorAnimation colorAnimation = new ColorAnimation();
+            colorAnimation.EasingFunction = new QuadraticEase();
+            colorAnimation.EasingFunction.EasingMode = EasingMode.EaseInOut;
+            colorAnimation.To = color;
+            Storyboard.SetTarget(colorAnimation, background.Background);
+            Storyboard.SetTargetProperty(colorAnimation, "(SolidColorBrush.Color)");
+            Storyboard storyboard = new Storyboard();
+            storyboard.Duration = TimeSpan.FromSeconds(.666);
+            storyboard.Children.Add(colorAnimation);
+            storyboard.Begin();
         }
     }
 }
