@@ -18,23 +18,23 @@ namespace StrixMusic.Sdk.Data.Base
         /// </summary>
         /// <param name="index">The index of the artist to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task RemoveArtistAsync(int index);
+        Task RemoveArtistItemAsync(int index);
 
         /// <summary>
         /// Checks if the backend supports adding an <see cref="IArtistCollectionItemBase"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IArtistCollectionItemBase"/> can be added.</returns>
-        Task<bool> IsAddArtistSupported(int index);
+        Task<bool> IsAddArtistItemSupported(int index);
 
         /// <summary>
         /// Checks if the backend supports removing an <see cref="IArtist"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IArtistCollectionItemBase"/> can be removed.</returns>
-        Task<bool> IsRemoveArtistSupported(int index);
+        Task<bool> IsRemoveArtistItemSupported(int index);
 
         /// <summary>
         /// Fires when the merged <see cref="TotalArtistItemsCount"/> changes.
         /// </summary>
-        event EventHandler<int> ArtistItemsCountChanged;
+        event EventHandler<int>? ArtistItemsCountChanged;
     }
 }

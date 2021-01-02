@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Extensions
             {
                 IPlayableCollectionGroupBase _ => ((ICorePlayableCollectionGroup)source).IsRemoveChildSupported(index),
                 IAlbumCollectionBase _ => ((ICoreAlbumCollection)source).IsRemoveAlbumItemSupported(index),
-                IArtistCollectionBase _ => ((ICoreArtistCollection)source).IsRemoveArtistSupported(index),
+                IArtistCollectionBase _ => ((ICoreArtistCollection)source).IsRemoveArtistItemSupported(index),
                 IPlaylistCollectionBase _ => ((ICorePlaylistCollection)source).IsRemovePlaylistItemSupported(index),
                 ITrackCollectionBase _ => ((ICoreTrackCollection)source).IsRemoveTrackSupported(index),
                 IImageCollectionBase _ => ((ICoreImageCollection)source).IsRemoveImageSupported(index),

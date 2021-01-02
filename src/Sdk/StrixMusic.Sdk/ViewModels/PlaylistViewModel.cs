@@ -84,7 +84,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<PlaybackState> PlaybackStateChanged
+        public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => _playlist.PlaybackStateChanged += value;
 
@@ -92,7 +92,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<string> NameChanged
+        public event EventHandler<string>? NameChanged
         {
             add => _playlist.NameChanged += value;
 
@@ -100,7 +100,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<string?> DescriptionChanged
+        public event EventHandler<string?>? DescriptionChanged
         {
             add => _playlist.DescriptionChanged += value;
 
@@ -108,7 +108,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<Uri?> UrlChanged
+        public event EventHandler<Uri?>? UrlChanged
         {
             add => _playlist.UrlChanged += value;
 
@@ -123,28 +123,28 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> TrackItemsCountChanged
+        public event EventHandler<int>? TrackItemsCountChanged
         {
             add => _playlist.TrackItemsCountChanged += value;
             remove => _playlist.TrackItemsCountChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<int> ImagesCountChanged
+        public event EventHandler<int>? ImagesCountChanged
         {
             add => _playlist.ImagesCountChanged += value;
             remove => _playlist.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IImage> ImagesChanged
+        public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => _playlist.ImagesChanged += value;
             remove => _playlist.ImagesChanged -= value;
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ITrack> TrackItemsChanged
+        public event CollectionChangedEventHandler<ITrack>? TrackItemsChanged
         {
             add => _playlist.TrackItemsChanged += value;
             remove => _playlist.TrackItemsChanged -= value;

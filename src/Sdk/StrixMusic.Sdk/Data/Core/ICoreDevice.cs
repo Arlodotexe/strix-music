@@ -22,6 +22,6 @@ namespace StrixMusic.Sdk.Data.Core
         /// <summary>
         /// Fires when <see cref="NowPlaying"/> changes.
         /// </summary>
-        event EventHandler<ICoreTrack> NowPlayingChanged;
+        event EventHandler<ICoreTrack>? NowPlayingChanged;
     }
 }

@@ -36,7 +36,7 @@ namespace StrixMusic.Core.MusicBrainz
 
             // The library created here won't be used by the UI.
             // The UI isn't loaded until InitAsync is called, where we set up the actual library.
-            Library = new MusicBrainzLibrary(this);
+            Library = new MusicBrainzCoreLibrary(this);
             Devices = new SynchronizedObservableCollection<ICoreDevice>();
             RecentlyPlayed = new MusicBrainzCoreRecentlyPlayed(this);
             Discoverables = new MusicBrainzCoreDiscoverables(this);
@@ -119,11 +119,7 @@ namespace StrixMusic.Core.MusicBrainz
                 var release = await _musicBrainzClient.Releases.GetAsync(id, RelationshipQueries.Releases);
                 if (release != null)
                 {
-                    var releaseArtistData = release.Credits[0].Artist;
-                    var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(releaseArtistData);
-                    var releaseArtist = new MusicBrainzCoreArtist(this, releaseArtistData, totalTracksForArtist);
-
-                    yield return new MusicBrainzCoreAlbum(this, release, releaseArtist);
+                    yield return new MusicBrainzCoreAlbum(this, release);
                 }
 
                 // Check if the ID is a recording.
@@ -142,11 +138,7 @@ namespace StrixMusic.Core.MusicBrainz
                         {
                             if (track.Recording.Id == id)
                             {
-                                var artistData = releaseData.Credits[0].Artist;
-                                var totalTracksForArtist = await _artistHelperService.GetTotalTracksCount(artistData);
-                                var artistForTrackAlbum = new MusicBrainzCoreArtist(this, artistData, totalTracksForArtist);
-
-                                var albumForTrack = new MusicBrainzCoreAlbum(this, releaseData, artistForTrackAlbum);
+                                var albumForTrack = new MusicBrainzCoreAlbum(this, releaseData);
 
                                 yield return new MusicBrainzCoreTrack(this, track, albumForTrack, medium.Position);
                             }
@@ -181,7 +173,7 @@ namespace StrixMusic.Core.MusicBrainz
             }
         }
 
-        private bool _configured = false;
+        private bool _configured = true;
 
         /// <inheritdoc/>
         public async Task InitAsync(IServiceCollection services)
@@ -192,10 +184,10 @@ namespace StrixMusic.Core.MusicBrainz
                 return;
 
             // This was for testing purposes, and is now disabled.
-            if (!_configured && false)
+            if (!_configured)
             {
                 await coreConfig.SetupConfigurationServices(services);
-                _configured = true;
+                // _configured = true;
 
                 ChangeCoreState(CoreState.ConfigRequested);
                 return;
@@ -210,7 +202,7 @@ namespace StrixMusic.Core.MusicBrainz
             //var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1);
             //var artists = await _musicBrainzClient.Artists.SearchAsync("*", 1);
 
-            Library = new MusicBrainzLibrary(this)
+            Library = new MusicBrainzCoreLibrary(this)
             {
                 // Temporarily limited to reduce memory usage in merged collection map.
                 TotalTracksCount = 1000,

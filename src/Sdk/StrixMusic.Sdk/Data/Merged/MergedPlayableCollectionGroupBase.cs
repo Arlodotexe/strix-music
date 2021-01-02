@@ -345,7 +345,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsAddAlbumItemSupported(int index) => _albumCollectionMap.IsAddItemSupported(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistSupported(int index) => _artistCollectionMap.IsAddItemSupported(index);
+        public Task<bool> IsAddArtistItemSupported(int index) => _artistCollectionMap.IsAddItemSupported(index);
 
         /// <inheritdoc />
         public Task<bool> IsAddPlaylistItemSupported(int index) => _playlistCollectionMap.IsAddItemSupported(index);
@@ -363,7 +363,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsRemoveTrackSupported(int index) => _trackCollectionMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveArtistSupported(int index) => _artistCollectionMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveArtistItemSupported(int index) => _artistCollectionMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc/>
         public Task<bool> IsRemoveAlbumItemSupported(int index) => _albumCollectionMap.IsRemoveItemSupport(index);
@@ -477,7 +477,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        public Task RemoveArtistAsync(int index)
+        public Task RemoveArtistItemAsync(int index)
         {
             return _artistCollectionMap.RemoveAt(index);
         }

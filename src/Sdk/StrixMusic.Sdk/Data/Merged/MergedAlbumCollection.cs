@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;

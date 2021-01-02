@@ -28,6 +28,6 @@ namespace StrixMusic.Sdk.Data.Core
         /// <summary>
         /// Fires when the items in the backend are changed by something external.
         /// </summary>
-        event CollectionChangedEventHandler<ICoreArtistCollectionItem> ArtistItemsChanged;
+        event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
     }
 }

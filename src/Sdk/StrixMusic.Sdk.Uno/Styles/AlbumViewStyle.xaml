@@ -76,7 +76,20 @@
 
                         <StackPanel x:Name="DetailsStack" Grid.Column="1" Margin="16,32,0,0" MaxWidth="600" HorizontalAlignment="Left" Padding="0,0,64,0">
                             <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold"/>
-                            <HyperlinkButton Content="{x:Bind Artist.Name}" Click="GoToArtist" Margin="0,4,0,0"/>
+
+                            <ItemsControl ItemsSource="{x:Bind Artists}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="viewModels:ArtistViewModel">
+                                        <HyperlinkButton Content="{x:Bind Name}" Click="GoToArtist" Margin="0,4,0,0"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
                             <TextBlock Text="{x:Bind DatePublished.Value.Year}" Opacity=".5"/>
                         </StackPanel>
 

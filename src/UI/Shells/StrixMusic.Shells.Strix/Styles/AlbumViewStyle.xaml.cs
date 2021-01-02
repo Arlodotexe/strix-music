@@ -23,10 +23,11 @@ namespace StrixMusic.Shells.Strix.Styles
         private void GoToArtist(object sender, RoutedEventArgs e)
         {
             // TODO: Navigate to ArtistView
-            if ((sender as Control)?.DataContext is AlbumViewModel viewModel)
+            if ((sender as Control)?.DataContext is ArtistViewModel viewModel)
             {
-                INavigationService<Control> navigationService = Shell.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
-                navigationService.NavigateTo(typeof(ArtistView), false, viewModel.Artist);
+                var navigationService = Shell.Ioc.GetRequiredService<INavigationService<Control>>();
+
+                navigationService.NavigateTo(typeof(ArtistView), false, viewModel);
             }
         }
     }

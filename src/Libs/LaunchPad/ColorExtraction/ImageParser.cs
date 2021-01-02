@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -10,6 +12,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
+using Color = Windows.UI.Color;
 
 namespace LaunchPad.ColorExtraction
 {
@@ -24,33 +27,31 @@ namespace LaunchPad.ColorExtraction
         /// <param name="image">The <see cref="BitmapImage"/>.</param>
         /// <param name="width">The width of the image.</param>
         /// <param name="height">The height of the image.</param>
+        /// <returns>A pixel array.</returns>
+        public static async Task<Image<Argb32>?> GetImage(BitmapImage image, uint width, uint height)
+        {
+            return await GetImage(image.UriSource.AbsoluteUri, width, height);
+        }
+
+        /// <summary>
+        /// Gets a pixel array from a <see cref="Uri"/> string.
+        /// </summary>
+        /// <param name="uri">The <see cref="Uri"/> string..</param>
+        /// <param name="width">The width of the image.</param>
+        /// <param name="height">The height of the image.</param>
         /// <remarks>
         /// https://social.msdn.microsoft.com/Forums/windowsapps/en-US/02927d7a-077f-4263-8b60-b5567baed94b/uwp-convert-the-bitmapimage-into-writeablebitmap
         /// </remarks>
         /// <returns>A pixel array.</returns>
-        public static async Task<byte[]?> GetPixels(BitmapImage image, uint width, uint height)
+        public static async Task<Image<Argb32>?> GetImage(string uri, uint width, uint height)
         {
-            Uri? localUri = await GetLocalImageAsync(image.UriSource.AbsoluteUri);
-
-            if (localUri is null)
+            try
+            {
+                return (await Image.LoadAsync(await GetImageStreamAsync(uri))).CloneAs<Argb32>();
+            }
+            catch
             {
                 return null;
-            }
-
-            RandomAccessStreamReference random = RandomAccessStreamReference.CreateFromUri(localUri);
-            using (IRandomAccessStream stream = await random.OpenReadAsync())
-            {
-                //Create a decoder for the image
-                var decoder = await BitmapDecoder.CreateAsync(stream);
-
-                //Initialize bitmap transformations to be applied to the image.
-                var transform = new BitmapTransform() { ScaledWidth = width, ScaledHeight = height, InterpolationMode = BitmapInterpolationMode.Cubic };
-
-                //Get image pixels.
-                var pixelData = await decoder.GetPixelDataAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied, transform, ExifOrientationMode.RespectExifOrientation, ColorManagementMode.ColorManageToSRgb);
-                var pixels = pixelData.DetachPixelData();
-
-                return pixels;
             }
         }
 
@@ -59,64 +60,55 @@ namespace LaunchPad.ColorExtraction
         /// </summary>
         /// <param name="image">The image to read from.</param>
         /// <param name="quality">The amount of pixels to skip (lower is more accurate).</param>
-        /// <param name="ignoreWhite">Whether or not to skip white pixels.</param>
-        /// <param name="whiteTolerance">How close a pixel must be to white to be considered white.</param>
+        /// <param name="config">A filter of what colors to ignore.</param>
         /// <returns>A list of colors in the image.</returns>
         public static List<Color> GetImageColors(
-            byte[] pixels,
+            Image<Argb32> image,
             int quality = 4,
-            bool ignoreWhite = true,
-            float whiteTolerance = .05f,
-            bool ignoreBlack = true,
-            float blackTolerance = .10f)
+            ColorFilterConfig? config = null)
         {
+            ColorFilterConfig filter;
+            if (config == null)
+                filter = ColorFilterConfig.Default;
+            else
+                filter = (ColorFilterConfig)config;
+
             List<Color> colors = new List<Color>();
 
-            for (int i = 0; i < pixels.Length / 4; i += quality)
+            for (int rows = 0; rows < image.Height; rows++)
             {
-                var offset = i * 4;
-                byte b = pixels[offset];
-                byte g = pixels[offset + 1];
-                byte r = pixels[offset + 2];
-                byte a = pixels[offset + 3];
+                Span<Argb32> rowPixels = image.GetPixelRowSpan(rows);
+                for (int i = 0; i < rowPixels.Length; i += quality)
+                {
+                    byte b = rowPixels[i].B;
+                    byte g = rowPixels[i].G;
+                    byte r = rowPixels[i].R;
+                    byte a = rowPixels[i].A;
 
-                Color color = Color.FromArgb(a, r, g, b);
+                    Color color = Color.FromArgb(a, r, g, b);
 
-                if (ignoreBlack && color.GetValue() < blackTolerance)
-                    continue;
+                    if (filter.TakeColor(color))
+                        colors.Add(color);
+                }
+            }
 
-                if (ignoreWhite && color.GetCMin() > 1 - whiteTolerance)
-                    continue;
-
-                colors.Add(color);
+            if (colors.Count < 8)
+            {
+                return GetImageColors(image, quality, filter.Ease());
             }
 
             return colors;
         }
 
-        private static async Task<Uri?> GetLocalImageAsync(string uri)
+        private static async Task<Stream?> GetImageStreamAsync(string uri)
         {
-            string name = "parseBuffer";
-
             if (string.IsNullOrEmpty(uri))
             {
                 return null;
             }
 
-            using (var response = await HttpWebRequest.CreateHttp(uri).GetResponseAsync())
-            {
-                using (var stream = response.GetResponseStream())
-                {
-                    var desiredName = string.Format("{0}.jpg", name);
-                    var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(desiredName, CreationCollisionOption.ReplaceExisting);
-
-                    using (var filestream = await file.OpenStreamForWriteAsync())
-                    {
-                        await stream.CopyToAsync(filestream);
-                        return new Uri(string.Format("ms-appdata:///local/{0}.jpg", name), UriKind.Absolute);
-                    }
-                }
-            }
+            var response = await HttpWebRequest.CreateHttp(uri).GetResponseAsync();
+            return response.GetResponseStream();
         }
     }
 }

@@ -35,6 +35,6 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// Fires when the merged <see cref="ITrackCollectionBase.TotalTracksCount"/> changes.
         /// </summary>
-        event EventHandler<int> TrackItemsCountChanged;
+        event EventHandler<int>? TrackItemsCountChanged;
     }
 }

@@ -14,16 +14,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
     /// <summary>
     /// A MusicBrainz implementation of <see cref="ICoreLibrary"/>.
     /// </summary>
-    public class MusicBrainzLibrary : MusicBrainzCollectionGroupBase, ICoreLibrary
+    public class MusicBrainzCoreLibrary : MusicBrainzCollectionGroupBase, ICoreLibrary
     {
         private readonly MusicBrainzClient? _musicBrainzClient;
         private readonly MusicBrainzArtistHelpersService? _artistHelpersService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MusicBrainzLibrary"/> class.
+        /// Initializes a new instance of the <see cref="MusicBrainzCoreLibrary"/> class.
         /// </summary>
         /// <param name="sourceCore"></param>
-        public MusicBrainzLibrary(ICore sourceCore)
+        public MusicBrainzCoreLibrary(ICore sourceCore)
             : base(sourceCore)
         {
             _musicBrainzClient = SourceCore.GetServiceSafe<MusicBrainzClient>();
@@ -83,11 +83,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             foreach (var release in albums)
             {
-                var releaseArtist = release.Credits[0].Artist;
-                var totalTracksForArtist = await _artistHelpersService.GetTotalTracksCount(releaseArtist);
-                var artist = new MusicBrainzCoreArtist(SourceCore, releaseArtist, totalTracksForArtist);
-
-                yield return new MusicBrainzCoreAlbum(SourceCore, release, artist);
+                yield return new MusicBrainzCoreAlbum(SourceCore, release);
             }
         }
 
@@ -111,7 +107,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public override async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
             Guard.IsNotNull(_musicBrainzClient, nameof(_musicBrainzClient));
-            Guard.IsNotNull(_artistHelpersService, nameof(_artistHelpersService));
 
             var recordings = await _musicBrainzClient.Recordings.SearchAsync("*", limit, offset);
 
@@ -123,18 +118,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     var releaseData =
                         await _musicBrainzClient.Releases.GetAsync(release.Id, RelationshipQueries.Releases);
 
-                    var totalTracksForArtist =
-                        await _artistHelpersService.GetTotalTracksCount(recording.Credits[0].Artist);
-
-                    var artist = new MusicBrainzCoreArtist(SourceCore, recording.Credits[0].Artist, totalTracksForArtist);
-
                     foreach (var medium in releaseData.Media)
                     {
                         foreach (var track in medium.Tracks)
                         {
                             if (track.Recording.Id == recording.Id)
                             {
-                                var albumForTrack = new MusicBrainzCoreAlbum(SourceCore, release, artist);
+                                var albumForTrack = new MusicBrainzCoreAlbum(SourceCore, release);
                                 yield return new MusicBrainzCoreTrack(SourceCore, track, albumForTrack, medium.Position);
                             }
                         }

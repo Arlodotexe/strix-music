@@ -99,22 +99,22 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// Fires when <see cref="PlaybackState"/> changes.
         /// </summary>
-        event EventHandler<PlaybackState> PlaybackStateChanged;
+        event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <summary>
         /// Fires when <see cref="Name"/> changes.
         /// </summary>
-        event EventHandler<string> NameChanged;
+        event EventHandler<string>? NameChanged;
 
         /// <summary>
         /// Fires when <see cref="Description"/> changes.
         /// </summary>
-        event EventHandler<string?> DescriptionChanged;
+        event EventHandler<string?>? DescriptionChanged;
 
         /// <summary>
         /// Fires when <see cref="Url"/> changes.
         /// </summary>
-        event EventHandler<Uri?> UrlChanged;
+        event EventHandler<Uri?>? UrlChanged;
 
         /// <summary>
         /// Fires when <see cref="Duration"/> changes;

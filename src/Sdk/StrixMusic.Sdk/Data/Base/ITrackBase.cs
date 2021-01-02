@@ -85,16 +85,16 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// Fires when the <see cref="TrackNumber"/> metadata changes.
         /// </summary>
-        event EventHandler<int?> TrackNumberChanged;
+        event EventHandler<int?>? TrackNumberChanged;
 
         /// <summary>
         /// Fires when the <see cref="Language"/> metadata changes.
         /// </summary>
-        event EventHandler<CultureInfo?> LanguageChanged;
+        event EventHandler<CultureInfo?>? LanguageChanged;
 
         /// <summary>
         /// Fires when the <see cref="IsExplicit"/> metadata changes.
         /// </summary>
-        event EventHandler<bool> IsExplicitChanged;
+        event EventHandler<bool>? IsExplicitChanged;
     }
 }
