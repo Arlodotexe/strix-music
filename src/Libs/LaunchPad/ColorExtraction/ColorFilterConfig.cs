@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Windows.UI;
+﻿using Windows.UI;
 
 namespace LaunchPad.ColorExtraction
 {
@@ -15,46 +12,74 @@ namespace LaunchPad.ColorExtraction
                 IgnoreBlacks = true,
                 IgnoreSaturations = true,
                 IgnoreValues = true,
+                YellowFilter = true,
                 GrayTolerance = .15f,
-                WhiteTolerance = .40f,
+                WhiteTolerance = .20f,
                 BlackTolerance = .10f,
-                SaturationTolerance = .3f,
-                MinValue = .3f
+                SaturationValueSatTolerance = .3f,
+                SaturationValueValTolerance = .3f,
+                MinValue = .3f,
+                YellowFilterTolerance = .40f
             };
 
         public ColorFilterConfig(
             bool ignoreGrays = true,
             bool ignoreWhites = true,
             bool ignoreBlacks = true,
-            bool ignoreSaturations = true,
+            bool ignoreSaturationVals = true,
             bool ignoreValues = true,
+            bool yellowFilter = true,
             float grayTolerance = .15f,
             float whiteTolerance = .40f,
             float blackTolerance = .10f,
-            float saturationTolerance = .3f,
-            float minValue = .3f)
+            float saturationValueSatTolerance = .3f,
+            float saturationValueValTolerance = .3f,
+            float minValue = .3f,
+            float yellowFilterTolerance = .8f)
         {
             IgnoreGrays = ignoreGrays;
             IgnoreWhites = ignoreWhites;
             IgnoreBlacks = ignoreBlacks;
-            IgnoreSaturations = ignoreSaturations;
+            IgnoreSaturations = ignoreSaturationVals;
             IgnoreValues = ignoreValues;
+            YellowFilter = yellowFilter;
             GrayTolerance = grayTolerance;
             WhiteTolerance = whiteTolerance;
             BlackTolerance = blackTolerance;
-            SaturationTolerance = saturationTolerance;
+            SaturationValueSatTolerance = saturationValueSatTolerance;
+            SaturationValueValTolerance = saturationValueValTolerance;
             MinValue = minValue;
+            YellowFilterTolerance = yellowFilterTolerance;
+        }
+
+        private ColorFilterConfig(ColorFilterConfig clone)
+        {
+            IgnoreGrays = clone.IgnoreGrays;
+            IgnoreBlacks = clone.IgnoreBlacks;
+            IgnoreSaturations = clone.IgnoreSaturations;
+            IgnoreWhites = clone.IgnoreWhites;
+            IgnoreValues = clone.IgnoreValues;
+            YellowFilter = clone.YellowFilter;
+            GrayTolerance = clone.GrayTolerance;
+            BlackTolerance = clone.BlackTolerance;
+            WhiteTolerance = clone.WhiteTolerance;
+            SaturationValueSatTolerance = clone.SaturationValueSatTolerance;
+            SaturationValueValTolerance = clone.SaturationValueValTolerance;
+            MinValue = clone.MinValue;
+            YellowFilterTolerance = clone.YellowFilterTolerance;
         }
 
         public bool IgnoreGrays { get; set; }
 
         public bool IgnoreWhites { get; set; }
 
-        public bool IgnoreBlacks{ get; set; }
+        public bool IgnoreBlacks { get; set; }
 
-        public bool IgnoreSaturations{ get; set; }
+        public bool IgnoreSaturations { get; set; }
 
-        public bool IgnoreValues{ get; set; }
+        public bool IgnoreValues { get; set; }
+
+        public bool YellowFilter { get; set; }
 
         public float GrayTolerance { get; set; }
 
@@ -62,9 +87,13 @@ namespace LaunchPad.ColorExtraction
 
         public float BlackTolerance { get; set; }
 
-        public float SaturationTolerance { get; set; }
+        public float SaturationValueSatTolerance { get; set; }
+
+        public float SaturationValueValTolerance { get; set; }
 
         public float MinValue { get; set; }
+
+        public float YellowFilterTolerance { get; set; }
 
         /// <summary>
         /// Runs a color through the filter to decide if it should be used.
@@ -86,8 +115,24 @@ namespace LaunchPad.ColorExtraction
             if (IgnoreGrays && sat < GrayTolerance)
                 return false;
 
-            if (IgnoreSaturations && sat > 1 - SaturationTolerance)
+            if (IgnoreSaturations &&
+                sat > 1 - SaturationValueSatTolerance &&
+                color.GetValue() > SaturationValueValTolerance)
                 return false;
+
+            if (YellowFilter)
+            {
+                int hue = color.GetHue();
+                int hueMax = 60 + 20;
+                int hueMin = 60 - 20;
+                if (hue < hueMax && hue > hueMin)
+                {
+                    if (color.GetValue() > YellowFilterTolerance)
+                    {
+                        return false;
+                    }
+                }
+            }
 
             return true;
         }
@@ -97,16 +142,23 @@ namespace LaunchPad.ColorExtraction
         /// </summary>
         public ColorFilterConfig Ease()
         {
-            if (IgnoreGrays)
+            ColorFilterConfig newConfig = new ColorFilterConfig(this);
+            if (newConfig.IgnoreGrays)
             {
-                IgnoreGrays = false;
-                return this;
+                newConfig.IgnoreGrays = false;
+                return newConfig;
+            }
+            if (newConfig.YellowFilter)
+            {
+                newConfig.YellowFilter = false;
+                return newConfig;
             }
 
-            WhiteTolerance /= 2;
-            BlackTolerance /= 2;
+            newConfig.WhiteTolerance /= 2;
+            newConfig.BlackTolerance /= 2;
+            newConfig.SaturationValueSatTolerance /= 2;
 
-            return this;
+            return newConfig;
         }
     }
 }

@@ -45,7 +45,14 @@ namespace LaunchPad.ColorExtraction
         /// <returns>A pixel array.</returns>
         public static async Task<Image<Argb32>?> GetImage(string uri, uint width, uint height)
         {
-            return (await Image.LoadAsync(await GetImageStreamAsync(uri))).CloneAs<Argb32>();
+            try
+            {
+                return (await Image.LoadAsync(await GetImageStreamAsync(uri))).CloneAs<Argb32>();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -67,7 +74,6 @@ namespace LaunchPad.ColorExtraction
                 filter = (ColorFilterConfig)config;
 
             List<Color> colors = new List<Color>();
-            Random rand = new Random(0);
 
             for (int rows = 0; rows < image.Height; rows++)
             {
@@ -86,7 +92,7 @@ namespace LaunchPad.ColorExtraction
                 }
             }
 
-            if (colors.Count < 16)
+            if (colors.Count < 8)
             {
                 return GetImageColors(image, quality, filter.Ease());
             }

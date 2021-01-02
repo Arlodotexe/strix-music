@@ -10,6 +10,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using OwlCore.Services;
+using StrixMusic.Core.LocalFiles;
 using StrixMusic.Core.MusicBrainz;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;

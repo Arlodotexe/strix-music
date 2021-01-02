@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
+using StrixMusic.Core.LocalFileCore.Backing.Models;
+using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
@@ -16,6 +19,7 @@ namespace StrixMusic.Core.LocalFiles
     public class LocalFileCoreConfig : ICoreConfig
     {
         private IFileSystemService? _fileSystemService;
+        private TrackService _trackService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFileCoreConfig"/> class.
@@ -46,7 +50,12 @@ namespace StrixMusic.Core.LocalFiles
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task ConfigureServices(IServiceCollection services)
         {
+            Services = null;
 
+            Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
+            _trackService = new TrackService(_fileSystemService);
+            services.Add(new ServiceDescriptor(typeof(TrackService), _trackService));
+            Services = services.BuildServiceProvider();
         }
 
         /// <summary>
@@ -57,6 +66,7 @@ namespace StrixMusic.Core.LocalFiles
         {
             var provider = services.BuildServiceProvider();
             _fileSystemService = provider.GetRequiredService<IFileSystemService>();
+
             return _fileSystemService.InitAsync();
         }
 
@@ -78,15 +88,6 @@ namespace StrixMusic.Core.LocalFiles
                 else
                 {
                     folderData = folders.ToOrAsList().FirstOrDefault();
-                }
-
-                if (folderData != null)
-                {
-                    var files = await folderData.GetFilesAsync();
-                    foreach (var item in files)
-                    {
-                        var details = await item.Properties.GetMusicPropertiesAsync();
-                    }
                 }
             }
         }
