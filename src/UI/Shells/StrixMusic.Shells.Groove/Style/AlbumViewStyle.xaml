@@ -8,6 +8,7 @@
     x:Class="StrixMusic.Shells.Groove.Styles.AlbumViewStyle">
 
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Resources/Brushes.xaml"/>
         <ResourceDictionary Source="../Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
@@ -45,7 +46,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Grid Loaded="Grid_Loaded">
+                    <Grid Background="{ThemeResource LowBackgroundBrush}" Loaded="Grid_Loaded">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition x:Name="AlbumCoverColumn" Width="300"/>
                             <ColumnDefinition/>

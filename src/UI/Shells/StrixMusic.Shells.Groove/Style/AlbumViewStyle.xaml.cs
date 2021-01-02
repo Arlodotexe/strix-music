@@ -68,5 +68,10 @@ namespace StrixMusic.Shells.Groove.Styles
             Color finalColor = palette[0].AsArgb();
             return finalColor;
         }
+
+        private void AnimateBackgroundChange(Color color, Grid background)
+        {
+
+        }
     }
 }
