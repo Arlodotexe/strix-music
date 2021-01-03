@@ -7,13 +7,11 @@
     x:Class="StrixMusic.Shells.Groove.Styles.HomeStyle">
 
     <DataTemplate x:Key="GrooveHomeViewTemplate" x:DataType="sdk:MainViewModel">
-        <UserControl>
-            <defaultcontrols:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True">
-                <defaultcontrols:PlayableCollectionGroupPivot.AllEmptyContent>
-                    <TextBlock Text="Nothing to show!" />
-                </defaultcontrols:PlayableCollectionGroupPivot.AllEmptyContent>
-            </defaultcontrols:PlayableCollectionGroupPivot>
-        </UserControl>
+        <defaultcontrols:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True">
+            <defaultcontrols:PlayableCollectionGroupPivot.AllEmptyContent>
+                <TextBlock Text="Nothing to show!" />
+            </defaultcontrols:PlayableCollectionGroupPivot.AllEmptyContent>
+        </defaultcontrols:PlayableCollectionGroupPivot>
     </DataTemplate>
 
     <Style x:Key="GrooveHomeViewStyle" TargetType="defaultcontrols:HomeView">

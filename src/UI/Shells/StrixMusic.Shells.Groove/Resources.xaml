@@ -7,8 +7,9 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Resources/Brushes.xaml"/>
         <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
-        <ResourceDictionary Source="Style/MediaSlider.xaml"/>
-        
+        <ResourceDictionary Source="Styles/MediaSlider.xaml"/>
+        <ResourceDictionary Source="Styles/NavigationViewStyle.xaml" />
+
         <dstyles:AlbumCollectionStyle/>
         <dstyles:AlbumItemStyle/>
         <styles:AlbumViewStyle/>

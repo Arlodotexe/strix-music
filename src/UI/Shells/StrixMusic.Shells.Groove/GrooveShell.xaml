@@ -16,12 +16,8 @@
     </defaultcontrols:Shell.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-
-        <NavigationView x:Name="NavView" ItemInvoked="NavView_ItemInvoked">
+        <NavigationView x:Name="NavView" ItemInvoked="NavView_ItemInvoked"
+                        Style="{StaticResource GrooveNavigationViewStyle}">
             <NavigationView.AutoSuggestBox>
                 <AutoSuggestBox x:Name="AutoSuggest" QuerySubmitted="AutoSuggestBox_QuerySubmitted"/>
             </NavigationView.AutoSuggestBox>
@@ -44,11 +40,12 @@
                 </NavigationViewItem>
                 <NavigationViewItemSeparator/>
             </NavigationView.MenuItems>
+
             <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"
-                            HorizontalContentAlignment="Stretch"/>
+                        HorizontalContentAlignment="Stretch"/>
         </NavigationView>
 
-        <defaultcontrols:NowPlayingBar Grid.Row="1"/>
+        <defaultcontrols:NowPlayingBar Height="96" VerticalAlignment="Bottom"/>
 
         <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"

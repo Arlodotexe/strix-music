@@ -10,13 +10,17 @@
         <ResourceDictionary Source="../Resources/ButtonStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <AcrylicBrush x:Key="NowPlayingBackgroundBrush" TintColor="{ThemeResource SystemAccentColorDark3}"
+                  TintOpacity=".7" 
+                  BackgroundSource="Backdrop"/>
+
     <Style x:Key="GrooveNowPlayingBarStyle" TargetType="defaultcontrols:NowPlayingBar">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="defaultcontrols:NowPlayingBar">
-                        <UserControl>
-                            <Grid VerticalAlignment="Center" Background="{ThemeResource SystemAccentColorDark3}">
+                        <UserControl Background="Transparent">
+                            <Grid VerticalAlignment="Center" Background="{ThemeResource NowPlayingBackgroundBrush}">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="Sizes">
                                         <VisualState x:Name="Small">

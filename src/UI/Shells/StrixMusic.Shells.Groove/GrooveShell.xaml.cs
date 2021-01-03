@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LaunchPad.Extensions.Windows.UI.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Services.Navigation;
@@ -91,9 +92,9 @@ namespace StrixMusic.Shells.Groove
                 OverlayContent.Visibility = Visibility.Visible;
             }
 
-            // This isn't great, but there should only be 4 items
             Type controlType = e.Page.GetType();
             bool containsValue = controlType == typeof(SettingsView);
+            // This isn't great, but there should only be 4 items
             foreach (var value in _pagesMapping.Values)
             {
                 containsValue = containsValue || (value == controlType);
