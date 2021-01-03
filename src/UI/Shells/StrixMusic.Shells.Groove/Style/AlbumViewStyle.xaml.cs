@@ -62,14 +62,14 @@ namespace StrixMusic.Shells.Groove.Styles
 
         private async Task<Color?> UpdateBackgroundColor(string url)
         {
-            Image<Argb32>? image = await ImageParser.GetImage(url, 0, 0);
+            Image<Argb32>? image = await ImageParser.GetImage(url);
 
             if (image is null)
                 return null;
 
             var rgbColors = ImageParser.GetImageColors(image, 128);
             var hsvColors = rgbColors.Select(x => HSVColor.FromColor(x));
-            var palette = ColorExtracter.Palettize(hsvColors.ToList(), 3);
+            var palette = LaunchPad.ColorExtraction.ColorExtractor.Palettize(hsvColors.ToList(), 3);
             Color finalColor = palette[0].AsArgb();
             return finalColor;
         }

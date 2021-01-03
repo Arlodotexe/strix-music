@@ -28,9 +28,9 @@ namespace LaunchPad.ColorExtraction
         /// <param name="width">The width of the image.</param>
         /// <param name="height">The height of the image.</param>
         /// <returns>A pixel array.</returns>
-        public static async Task<Image<Argb32>?> GetImage(BitmapImage image, uint width, uint height)
+        public static async Task<Image<Argb32>?> GetImage(BitmapImage image)
         {
-            return await GetImage(image.UriSource.AbsoluteUri, width, height);
+            return await GetImage(image.UriSource.AbsoluteUri);
         }
 
         /// <summary>
@@ -43,16 +43,9 @@ namespace LaunchPad.ColorExtraction
         /// https://social.msdn.microsoft.com/Forums/windowsapps/en-US/02927d7a-077f-4263-8b60-b5567baed94b/uwp-convert-the-bitmapimage-into-writeablebitmap
         /// </remarks>
         /// <returns>A pixel array.</returns>
-        public static async Task<Image<Argb32>?> GetImage(string uri, uint width, uint height)
+        public static async Task<Image<Argb32>?> GetImage(string uri)
         {
-            try
-            {
-                return (await Image.LoadAsync(await GetImageStreamAsync(uri))).CloneAs<Argb32>();
-            }
-            catch
-            {
-                return null;
-            }
+            return (await Image.LoadAsync(await GetImageStreamAsync(uri))).CloneAs<Argb32>();
         }
 
         /// <summary>
@@ -64,15 +57,8 @@ namespace LaunchPad.ColorExtraction
         /// <returns>A list of colors in the image.</returns>
         public static List<Color> GetImageColors(
             Image<Argb32> image,
-            int quality = 4,
-            ColorFilterConfig? config = null)
+            int quality = 4)
         {
-            ColorFilterConfig filter;
-            if (config == null)
-                filter = ColorFilterConfig.Default;
-            else
-                filter = (ColorFilterConfig)config;
-
             List<Color> colors = new List<Color>();
 
             for (int rows = 0; rows < image.Height; rows++)
@@ -87,14 +73,8 @@ namespace LaunchPad.ColorExtraction
 
                     Color color = Color.FromArgb(a, r, g, b);
 
-                    if (filter.TakeColor(color))
-                        colors.Add(color);
+                    colors.Add(color);
                 }
-            }
-
-            if (colors.Count < 8)
-            {
-                return GetImageColors(image, quality, filter.Ease());
             }
 
             return colors;
