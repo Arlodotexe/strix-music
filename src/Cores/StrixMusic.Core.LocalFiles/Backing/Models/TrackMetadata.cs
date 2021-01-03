@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Sdk.Data.Core;
 using System;
 using System.Collections.Generic;
@@ -54,7 +55,7 @@ namespace StrixMusic.Core.LocalFileCore.Backing.Models
         /// <summary>
         /// The lyrics for this track.
         /// </summary>
-        public ICoreLyrics? Lyrics { get; set; }
+        public FileCoreLyrics? Lyrics { get; set; }
 
         /// <summary>
         /// The external link associated with this track.

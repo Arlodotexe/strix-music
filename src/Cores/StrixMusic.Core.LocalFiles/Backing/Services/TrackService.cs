@@ -17,6 +17,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     /// </summary>
     public class TrackService
     {
+        private readonly string _TrackMetaCacheFileName = "TrackMeta.lfc"; //lfc represents LocalFileCore format.
         private IFolderData? _folderData;
         private IFileSystemService _fileSystemService;
 
@@ -49,6 +50,18 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<IReadOnlyList<TrackMetadata>> GetTrackMetaData(int offset, int limit)
         {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Gets the <see cref="TrackMetadata"/> list that can be stored in the files.
+        /// </summary>
+        /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
+        public async Task CreateOrUpdateTrackMetdata()
+        {
+            // if (!await _fileSystemService.FileExistsAsync(_TrackMetaCacheFileName))
+            //   await _fileSystemService.Create(_TrackMetaCacheFileName);
+
             var lst = new List<TrackMetadata>();
 
             var files = await _folderData.GetFilesAsync();
@@ -69,10 +82,9 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
                 lst.Add(trackMetaData);
             }
 
-            var messagePackBytes = MessagePackSerializer.Serialize(lst,
-                    MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            //  var bytes = _fileSystemService.Create
 
-            return lst;
+            await Task.CompletedTask;
         }
     }
 }
