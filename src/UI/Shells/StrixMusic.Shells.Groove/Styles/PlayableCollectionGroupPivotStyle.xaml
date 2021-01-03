@@ -24,10 +24,10 @@
                                         <defaultcontrols:TrackCollection/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums">
-                                        <defaultcontrols:AlbumCollection Padding="16,16,16,112"/>
+                                        <defaultcontrols:AlbumCollection/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists">
-                                        <defaultcontrols:ArtistCollection Padding="0,0,0,96"/>
+                                        <defaultcontrols:ArtistCollection/>
                                     </PivotItem>
                                 </Pivot>
 

@@ -10,7 +10,7 @@
         <ResourceDictionary Source="Styles/MediaSlider.xaml"/>
         <ResourceDictionary Source="Styles/NavigationViewStyle.xaml" />
 
-        <dstyles:AlbumCollectionStyle/>
+        <styles:AlbumCollectionStyle/>
         <dstyles:AlbumItemStyle/>
         <styles:AlbumViewStyle/>
         <dstyles:ArtistCollectionStyle/>
