@@ -76,20 +76,12 @@ namespace StrixMusic.Core.LocalFiles
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task SetupFileCoreFolder()
         {
-            if (_fileSystemService != null)
-            {
-                var folders = await _fileSystemService.GetPickedFolders();
+            if (_fileSystemService == null)
+                return;
 
-                IFolderData folderData = null;
-                if (folders.Count == 0)
-                {
-                    folderData = await _fileSystemService.PickFolder();
-                }
-                else
-                {
-                    folderData = folders.ToOrAsList().FirstOrDefault();
-                }
-            }
+            var folders = await _fileSystemService.GetPickedFolders();
+            if (folders.Count == 0)
+                await _fileSystemService.PickFolder();
         }
     }
 }

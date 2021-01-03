@@ -4,6 +4,7 @@ using OwlCore.AbstractStorage;
 using StrixMusic.Core.LocalFileCore.Backing.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,8 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     /// </summary>
     public class TrackService
     {
+        private readonly string _trackMetaCacheFileName = "TrackMeta.lfc"; //lfc represents LocalFileCore format.
+        private readonly string _pathToMetafile;
         private IFolderData? _folderData;
         private IFileSystemService _fileSystemService;
 
@@ -27,6 +30,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         public TrackService(IFileSystemService fileSystemService)
         {
             _fileSystemService = fileSystemService;
+            _pathToMetafile = $"{_fileSystemService.RootFolder.Path}\\{_trackMetaCacheFileName}";
         }
 
         /// <summary>
@@ -47,15 +51,39 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// <param name="offset"></param>
         /// <param name="limit"></param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task<IReadOnlyList<TrackMetadata>> GetTrackMetaData(int offset, int limit)
+        public Task<IReadOnlyList<TrackMetadata>> GetTrackMetaData(int offset, int limit)
         {
-            var lst = new List<TrackMetadata>();
+            if (!File.Exists(_pathToMetafile))
+                throw new FileNotFoundException(_pathToMetafile);
+
+            var bytes = File.ReadAllBytes(_pathToMetafile);
+            var trackMetaDataLst = MessagePackSerializer.Deserialize<IReadOnlyList<TrackMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+
+            return Task.FromResult((IReadOnlyList<TrackMetadata>)trackMetaDataLst.Skip(offset).Take(limit).ToList());
+        }
+
+        /// <summary>
+        /// Create or Update <see cref="TrackMetadata"/> infromation in files.
+        /// </summary>
+        /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
+        public async Task CreateOrUpdateTrackMetdata()
+        {
+            if (_folderData == null)
+                return;
+
+            if (!await _fileSystemService.FileExistsAsync(_pathToMetafile))
+                File.Create(_pathToMetafile).Close(); // creates the file and closes the filestream.
+
+            var trackMetaDataLst = new List<TrackMetadata>();
 
             var files = await _folderData.GetFilesAsync();
 
             foreach (var item in files)
             {
                 var details = await item.Properties.GetMusicPropertiesAsync();
+
+                if (details == null)
+                    continue;
 
                 var trackMetaData = new TrackMetadata()
                 {
@@ -66,13 +94,11 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
                     Genres = details.Genre.ToList(),
                 };
 
-                lst.Add(trackMetaData);
+                trackMetaDataLst.Add(trackMetaData);
             }
 
-            var messagePackBytes = MessagePackSerializer.Serialize(lst,
-                    MessagePack.Resolvers.ContractlessStandardResolver.Options);
-
-            return lst;
+            var bytes = MessagePackSerializer.Serialize(trackMetaDataLst, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            File.WriteAllBytes(_pathToMetafile, bytes);
         }
     }
 }

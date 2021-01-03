@@ -113,7 +113,8 @@ namespace StrixMusic.Core.LocalFiles
 
                 _trackService = this.GetService<TrackService>();
                 await _trackService.InitAsync();
-                var testData = await _trackService.GetTrackMetaData(0,100);
+                await _trackService.CreateOrUpdateTrackMetdata();
+                var metaData = await _trackService.GetTrackMetaData(0, 3);
 
                 ChangeCoreState(CoreState.Loaded);
                 return;
