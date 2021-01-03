@@ -68,22 +68,22 @@ namespace LaunchPad.ColorExtraction
         /// <summary>
         /// The value of the Alpha channel.
         /// </summary>
-        public byte A { get; }
+        public byte A { get; set; }
 
         /// <summary>
         /// The value of the Hue channel.
         /// </summary>
-        public int H { get; }
+        public int H { get; set; }
 
         /// <summary>
         /// The value of the Saturation channel.
         /// </summary>
-        public float S { get; }
+        public float S { get; set; }
 
         /// <summary>
         /// The value of the Value channel.
         /// </summary>
-        public float V { get; }
+        public float V { get; set; }
 
         /// <summary>
         /// Gets the <see cref="HSVColor"/> as a <see cref="Color"/>.
@@ -178,9 +178,9 @@ namespace LaunchPad.ColorExtraction
             double angle2 = Math.Abs(end.H - start.H);
             double hDiff = Math.Min(angle1, angle2);
 
-            double weigthedHueDiff = hDiff * hDiff * 1.5;
+            double weigthedHueDiff = hDiff * hDiff;
             double weigthedSatDiff = sDiff * sDiff;
-            double weigthedValueDiff = vDiff * vDiff / 10;
+            double weigthedValueDiff = vDiff * vDiff;
 
             return weigthedHueDiff + weigthedSatDiff + weigthedValueDiff;
         }

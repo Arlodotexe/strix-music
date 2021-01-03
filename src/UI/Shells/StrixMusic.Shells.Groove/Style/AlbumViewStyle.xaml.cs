@@ -1,4 +1,5 @@
-﻿using LaunchPad.ColorExtraction;
+﻿using ColorExtractor.ColorExtractor.Filters;
+using LaunchPad.ColorExtraction;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
 using SixLabors.ImageSharp;
@@ -7,6 +8,7 @@ using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI;
@@ -62,14 +64,23 @@ namespace StrixMusic.Shells.Groove.Styles
 
         private async Task<Color?> UpdateBackgroundColor(string url)
         {
-            Image<Argb32>? image = await ImageParser.GetImage(url, 0, 0);
+            Image<Argb32>? image = await ImageParser.GetImage(url);
 
             if (image is null)
                 return null;
 
+
+            List<IFilter> filters = new List<IFilter>();
+            filters.Add(new WhiteFilter(.4f));
+            filters.Add(new BlackFilter(.15f));
+            filters.Add(new GrayFilter(.3f));
+
+            List<IFilter> clamps = new List<IFilter>();
+            clamps.Add(new SaturationFilter(.6f));
+
             var rgbColors = ImageParser.GetImageColors(image, 128);
             var hsvColors = rgbColors.Select(x => HSVColor.FromColor(x));
-            var palette = ColorExtracter.Palettize(hsvColors.ToList(), 3);
+            var palette = LaunchPad.ColorExtraction.ColorExtractor.Palettize(hsvColors.ToList(), 3, filters, clamps);
             Color finalColor = palette[0].AsArgb();
             return finalColor;
         }

@@ -10,7 +10,6 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using OwlCore.Services;
-using StrixMusic.Core.LocalFiles;
 using StrixMusic.Core.MusicBrainz;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
@@ -85,7 +84,7 @@ namespace StrixMusic.Shared
         {
             await InitializeServices();
             await InitializeAssemblies();
-            await ManuallyRegisterCore<MusicBrainzCore>();
+            await ManuallyRegisterCore<MusicBrainzCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0495");
             await InitializeCoreRanking();
             await InitializeOutOfBoxSetupIfNeeded();
             await InitializeConfiguredCores();
@@ -206,7 +205,7 @@ namespace StrixMusic.Shared
             await _settingsService.SetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRegistry), coreRegistryData);
         }
 
-        private async Task ManuallyRegisterCore<T>()
+        private async Task ManuallyRegisterCore<T>(string id)
             where T : ICore
         {
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
@@ -222,7 +221,7 @@ namespace StrixMusic.Shared
 
                 if (coreDataType == typeof(T))
                 {
-                    _configuredCoreRegistry.Add(Guid.NewGuid().ToString(), coreData);
+                    _configuredCoreRegistry.Add($"{coreDataType}{id}", coreData);
                 }
             }
 

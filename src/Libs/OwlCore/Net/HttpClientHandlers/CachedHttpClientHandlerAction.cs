@@ -14,81 +14,78 @@ namespace OwlCore.Net.HttpClientHandlers
     public class CachedHttpClientHandlerAction : CompositeHttpClientHandlerActionBase
     {
         private readonly string _cacheFolderPath;
-        private readonly TimeSpan _cacheTime;
+        private readonly TimeSpan _defaultCacheTime;
         private readonly CacheRequestFilter? _cacheRequestFilter;
 
         /// <summary>
         /// Decides if the given URL should return data from cache.
         /// </summary>
         /// <param name="uri">The URL to decide against.</param>
+        /// <param name="cacheEntry">The cache entry for this request, if found.</param>
         /// <returns><see langword="true"/> if values should be cached and returned, otherwise false.</returns>
-        public delegate bool CacheRequestFilter(Uri uri);
+        public delegate bool CacheRequestFilter(Uri uri, CacheEntry? cacheEntry = null);
 
         /// <summary>
         /// Creates an instance of the <see cref="RateLimitedHttpClientHandlerAction"/>.
         /// </summary>
-        public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan cacheTime)
+        public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan defaultCacheTime)
         {
             _cacheFolderPath = cacheFolderPath;
-            _cacheTime = cacheTime;
+            _defaultCacheTime = defaultCacheTime;
         }
 
         /// <summary>
         /// Creates an instance of the <see cref="RateLimitedHttpClientHandlerAction"/>.
         /// </summary>
-        public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan cacheTime, CacheRequestFilter cacheRequestFilter)
+        public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter cacheRequestFilter)
         {
             _cacheFolderPath = cacheFolderPath;
-            _cacheTime = cacheTime;
+            _defaultCacheTime = defaultCacheTime;
             _cacheRequestFilter = cacheRequestFilter;
         }
 
         /// <inheritdoc cref="HttpClientHandler.SendAsync(HttpRequestMessage, CancellationToken)"/>
         public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> baseSendAsync)
         {
-            if (_cacheRequestFilter?.Invoke(request.RequestUri) ?? false)
+            var path = Path.GetFullPath(_cacheFolderPath);
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            // check if item is cached
+            var cachedEntry = ReadCachedFile(path, request.RequestUri.AbsoluteUri);
+
+            var shouldUseCache = _cacheRequestFilter?.Invoke(request.RequestUri, cachedEntry) ?? false;
+
+            if (cachedEntry != null && shouldUseCache)
             {
-                var path = Path.GetFullPath(_cacheFolderPath);
-
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-
-                // check if item is cached
-                var cachedEntry = ReadCachedFile(path, request.RequestUri.AbsoluteUri);
-                if (cachedEntry != null)
+                // if cache found and not expired
+                if (cachedEntry.TimeStamp + _defaultCacheTime > DateTime.UtcNow && cachedEntry.ContentBytes != null)
                 {
-                    // if cache found and not expired
-                    if (cachedEntry.TimeStamp + _cacheTime > DateTime.UtcNow && cachedEntry.ContentBytes != null)
-                    {
-                        var response = new HttpResponseMessage(HttpStatusCode.OK);
-                        response.Content = new ByteArrayContent(cachedEntry.ContentBytes);
+                    var response = new HttpResponseMessage(HttpStatusCode.OK);
+                    response.Content = new ByteArrayContent(cachedEntry.ContentBytes);
 
-                        return response;
-                    }
-
-                    // If expired, remove entry.
-                    var cachedFilePath = GetCachedFilePath(path, request.RequestUri.AbsoluteUri);
-
-                    try
-                    {
-                        File.Delete(cachedFilePath);
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-
+                    return response;
                 }
 
-                // if not found, get data and cache it
-                var result = await baseSendAsync();
+                // If expired, remove entry.
+                var cachedFilePath = GetCachedFilePath(path, request.RequestUri.AbsoluteUri);
 
-                await WriteCachedFile(path, request.RequestUri.AbsoluteUri, result);
-
-                return result;
+                try
+                {
+                    File.Delete(cachedFilePath);
+                }
+                catch
+                {
+                    // ignored
+                }
             }
 
-            return await baseSendAsync();
+            var result = await baseSendAsync();
+
+            await WriteCachedFile(path, request.RequestUri.AbsoluteUri, result);
+
+            return result;
         }
 
         /// <summary>
