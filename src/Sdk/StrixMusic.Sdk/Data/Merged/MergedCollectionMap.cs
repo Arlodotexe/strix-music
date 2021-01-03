@@ -557,13 +557,16 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
 
             // Rebuild the sorted map so we're sure it's sorted correctly.
+            _sortedMap.Clear();
             _sortedMap.AddRange(BuildSortedMapRanked());
 
-            if (limit > _sortedMap.Count)
-                limit = _sortedMap.Count;
+            // If the offset exceed the number of items we have, return nothing.
+            if (offset >= _sortedMap.Count)
+                return new List<TCollectionItem>();
 
-            // offset = 25
-            // limit = 20
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > _sortedMap.Count)
+                limit = _sortedMap.Count - offset;
 
             // Get all requested items using the sorted map
             for (var i = 0; i < limit; i++)
@@ -572,6 +575,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
                 var currentSource = _sortedMap[mappedIndex];
                 var itemsCountForSource = currentSource.SourceCollection.GetItemsCount<TCollection>();
+
                 var itemLimitForSource = limit;
 
                 // Get the max items from each source once per collection.
@@ -591,6 +595,8 @@ namespace StrixMusic.Sdk.Data.Merged
                     itemLimitForSource, // Try to get as many items as possible for each page.
                     currentSource.OriginalIndex,
                     async currentOffset => await currentSource.SourceCollection.GetItems<TCoreCollection, TCoreCollectionItem>(itemLimitForSource, currentOffset).ToListAsync().AsTask());
+
+                Guard.IsLessThan(mappedIndex + remainingItemsForSource.Count - 1, remainingItemsForSource.Count, "indexInSortedMap");
 
                 // For each item that we just retrieved, find the index in the sorted maps and assign the item.
                 for (var o = 0; o < remainingItemsForSource.Count; o++)
@@ -696,7 +702,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private Task<List<string>> GetCoreRankings()
         {
-            return _settingsService.GetValue< List<string>>(nameof(SettingsKeys.CoreRanking));
+            return _settingsService.GetValue<List<string>>(nameof(SettingsKeys.CoreRanking));
         }
 
         private Task<Dictionary<string, CoreAssemblyInfo>> GetConfiguredCoreRegistry()

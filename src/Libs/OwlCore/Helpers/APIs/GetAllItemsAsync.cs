@@ -58,25 +58,16 @@ namespace OwlCore.Helpers
         {
             // Get the items from the first page
             var list = new List<TResult>();
-            var page = await endpoint(startingOffset);
-
-            list.AddRange(page);
-
-            if (list.Count >= total)
-                return list;
 
             // Get the remaining items
-            while (true)
+            while (list.Count < total)
             {
-                page = await endpoint(list.Count + startingOffset);
+                var page = await endpoint(list.Count + startingOffset);
 
                 if (page is null)
                     return list;
 
                 list.AddRange(page);
-
-                if (list.Count >= total)
-                    break;
             }
 
             return list;
