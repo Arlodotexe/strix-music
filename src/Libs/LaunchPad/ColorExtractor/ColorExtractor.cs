@@ -1,5 +1,7 @@
 ﻿/// http://www.codeding.com/articles/k-means-algorithm
 
+using ColorExtractor;
+using ColorExtractor.ColorExtractor.Filters;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,9 +10,9 @@ namespace LaunchPad.ColorExtraction
     /// <summary>
     /// A <see langword="static"/> class containing a method to palette colors out of a set.
     /// </summary>
-    public static class ColorExtracter
+    public static class ColorExtractor
     {
-        private const int MAX_ITERS = 256;
+        private const int MAX_MOVES = 65_536;
 
         /// <summary>
         /// Gets a list of palette colors from a list of seen colors.
@@ -19,13 +21,48 @@ namespace LaunchPad.ColorExtraction
         /// <param name="paletteSize">The amount of colors to extract.</param>
         /// <param name="bufferPalettes">How many extra clusters to add for more precise colors.</param>
         /// <returns>A color palette.</returns>
-        public static List<HSVColor> Palettize(List<HSVColor> ogColors, int paletteSize, int bufferPalettes = 5)
+        public static List<HSVColor> Palettize(IEnumerable<HSVColor> ogColors,
+            int paletteSize,
+            IList<IFilter>? filters = null,
+            IList<IFilter>? clamps = null,
+            int bufferPalettes = 5)
         {
-            List<PaletteItem> results = KMeans(ogColors, paletteSize + bufferPalettes);
-            return results
+            int totalClusters = paletteSize + bufferPalettes;
+
+            if (filters != null)
+            {
+                foreach(var filter in filters)
+                {
+                    var filerted = ogColors.Where(x => filter.TakeColor(x));
+                    if (filerted.Count() >= totalClusters)
+                    {
+                        ogColors = filerted;
+                    } else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            int n = ogColors.Count() / 5_000;
+            n = n == 0 ? 1 : n;
+            ogColors = ogColors.Where((x, i) => i % n == 0);
+
+            List<PaletteItem> paletteResults = KMeans(ogColors.ToList(), totalClusters);
+            IEnumerable<HSVColor> results = paletteResults
                 .OrderByDescending(x => x.Count)
                 .Take(paletteSize)
-                .Select(x => x.GetColorNearestToCenter()).ToList();
+                .Select(x => x.GetColorNearestToCenter());
+
+            if (clamps != null)
+            {
+                foreach (var clamp in clamps)
+                {
+                    results = results.Select(x => clamp.Clamp(x));
+                }
+            }
+
+            return results.ToList();
         }
 
         /// <summary>
@@ -48,15 +85,12 @@ namespace LaunchPad.ColorExtraction
                 clusters.Add(item);
             }
 
-            int iters = 0;
+            int totalMoves = 0;
 
             int movements = 1;
             while (movements > 0)
             {
                 movements = 0;
-
-                if (iters > MAX_ITERS)
-                    break;
 
                 foreach (PaletteItem item in clusters) 
                 {
@@ -72,13 +106,17 @@ namespace LaunchPad.ColorExtraction
                                 HSVColor removedPoint = item.RemovePoint(point);
                                 clusters[nearestCluster].AddPoint(removedPoint);
                                 movements += 1;
+                                totalMoves += 1;
+
+                                if (totalMoves > MAX_MOVES)
+                                    goto end;
                             }
                         }
                     }
                 }
-
-                iters++;
             }
+
+            end: // Escape kMeans
 
             return clusters;
         }
