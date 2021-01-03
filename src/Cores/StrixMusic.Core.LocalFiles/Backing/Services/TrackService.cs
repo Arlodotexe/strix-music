@@ -63,7 +63,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         }
 
         /// <summary>
-        /// Gets the <see cref="TrackMetadata"/> list that can be stored in the files.
+        /// Create or Update <see cref="TrackMetadata"/> infromation in files.
         /// </summary>
         /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
         public async Task CreateOrUpdateTrackMetdata()
@@ -81,6 +81,9 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             foreach (var item in files)
             {
                 var details = await item.Properties.GetMusicPropertiesAsync();
+
+                if (details == null)
+                    continue;
 
                 var trackMetaData = new TrackMetadata()
                 {
