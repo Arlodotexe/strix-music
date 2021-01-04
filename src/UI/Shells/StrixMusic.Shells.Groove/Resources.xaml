@@ -20,7 +20,7 @@
         <styles:HomeStyle/>
         <styles:PlayableCollectionGroupPivotStyle/>
         <dstyles:SettingsViewStyle/>
-        <dstyles:TrackCollectionStyle/>
+        <styles:TrackCollectionStyle/>
         <dstyles:TrackItemStyle/>
     </ResourceDictionary.MergedDictionaries>
     
