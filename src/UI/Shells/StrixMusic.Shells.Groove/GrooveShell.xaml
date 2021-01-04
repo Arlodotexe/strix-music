@@ -40,7 +40,8 @@
                     <ScrollViewer>
                         <StackPanel>
                             <!--Main Nav Buttons-->
-                            <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}">
+                            <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}"
+                                          Click="NavigationButtonClicked">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="48"/>
@@ -52,7 +53,8 @@
                                     <TextBlock x:Uid="/Music/MyMusicTB" Text="Recently Played" Grid.Column="1"/>
                                 </Grid>
                             </ToggleButton>
-                            <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}">
+                            <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}"
+                                          Click="NavigationButtonClicked">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="48"/>
@@ -65,7 +67,8 @@
                                     <TextBlock x:Uid="/Music/RecentPlayedTB" Text="Recently Played" Grid.Column="1"/>
                                 </Grid>
                             </ToggleButton>
-                            <ToggleButton x:Name="NowPlayingButton" Style="{StaticResource GrooveNavigationButton}">
+                            <ToggleButton x:Name="NowPlayingButton" Style="{StaticResource GrooveNavigationButton}"
+                                          Click="NavigationButtonClicked">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="48"/>
@@ -87,7 +90,8 @@
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <ToggleButton Style="{StaticResource GrooveNavigationButton}">
+                                <ToggleButton Style="{StaticResource GrooveNavigationButton}"
+                                              Click="NavigationButtonClicked">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="48"/>

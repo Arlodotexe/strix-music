@@ -12,6 +12,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace StrixMusic.Shells.Groove
 {
@@ -20,9 +21,10 @@ namespace StrixMusic.Shells.Groove
     /// </summary>
     public sealed partial class GrooveShell : Shell
     {
-        private readonly IReadOnlyDictionary<NavigationViewItemBase, Type> _pagesMapping;
+        private readonly IReadOnlyDictionary<ToggleButton, Type> _pagesMapping;
         private readonly Stack<Control> _history = new Stack<Control>();
         private INavigationService<Control>? _navigationService;
+        private ToggleButton _selectedPage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveShell"/> class.
@@ -31,11 +33,14 @@ namespace StrixMusic.Shells.Groove
         {
             InitializeComponent();
 
-            _pagesMapping = new Dictionary<NavigationViewItemBase, Type>
+            _pagesMapping = new Dictionary<ToggleButton, Type>
             {
-                //{ HomeItem, typeof(HomeView) },
-                //{ NowPlayingItem, typeof(NowPlayingView) },
+                { MyMusicButton, typeof(HomeView) },
+                { NowPlayingButton, typeof(NowPlayingView) },
             };
+
+            _selectedPage = MyMusicButton;
+            NavigationButtonClicked(MyMusicButton, new RoutedEventArgs());
         }
 
         /// <inheritdoc/>
@@ -84,6 +89,22 @@ namespace StrixMusic.Shells.Groove
             MainSplitView.IsPaneOpen = !MainSplitView.IsPaneOpen;
         }
 
+        private void NavigationButtonClicked(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is ToggleButton button))
+                return;
+
+            if (button != NowPlayingButton)
+                _history.Clear();
+
+            _selectedPage.IsChecked = false;
+            button.IsChecked = true;
+            _selectedPage = button;
+
+            if (_navigationService != null && _pagesMapping.ContainsKey(button))
+                _navigationService.NavigateTo(_pagesMapping[button]);
+        }
+
         private void Shell_BackRequested(object sender, EventArgs e)
         {
             if (OverlayContent.Visibility == Visibility.Visible)
@@ -115,23 +136,6 @@ namespace StrixMusic.Shells.Groove
             {
                 OverlayContent.Content = e.Page;
                 OverlayContent.Visibility = Visibility.Visible;
-            }
-
-            Type controlType = e.Page.GetType();
-            bool containsValue = controlType == typeof(SettingsView);
-            // This isn't great, but there should only be 4 items
-            foreach (var value in _pagesMapping.Values)
-            {
-                containsValue = containsValue || (value == controlType);
-            }
-
-            if (!containsValue)
-            {
-
-            }
-            else
-            {
-                _history.Clear();
             }
         }
     }
