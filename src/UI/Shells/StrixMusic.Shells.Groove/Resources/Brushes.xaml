@@ -33,4 +33,5 @@
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
+    <RevealBackgroundBrush x:Key="TransparentBackgroundRevealBrush" Color="Transparent"/>
 </ResourceDictionary>
