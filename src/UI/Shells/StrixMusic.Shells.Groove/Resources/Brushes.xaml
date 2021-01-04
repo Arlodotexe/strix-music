@@ -5,15 +5,31 @@
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Name="Dark">
             <SolidColorBrush x:Key="LowBackgroundBrush" Color="#FF333333"/>
+            <AcrylicBrush x:Key="PaneBackgroundBrush"
+                          TintColor="#FF1C1C1C" TintOpacity=".6"
+                          BackgroundSource="HostBackdrop"
+                          FallbackColor="#FF2B2B2B"/>
         </ResourceDictionary>
         <ResourceDictionary x:Name="Light">
             <SolidColorBrush x:Key="LowBackgroundBrush" Color="#FFCCCCCC"/>
+            <AcrylicBrush x:Key="PaneBackgroundBrush"
+                          TintColor="White" TintOpacity=".6"
+                          BackgroundSource="HostBackdrop"
+                          FallbackColor="#FFF2F2F2"/>
         </ResourceDictionary>
         <ResourceDictionary x:Name="Default">
             <SolidColorBrush x:Key="LowBackgroundBrush" Color="#FF333333"/>
+            <AcrylicBrush x:Key="PaneBackgroundBrush"
+                          TintColor="#FF1C1C1C" TintOpacity=".6"
+                          BackgroundSource="HostBackdrop"
+                          FallbackColor="#FF2B2B2B"/>
         </ResourceDictionary>
         <ResourceDictionary x:Name="HighContrast">
             <SolidColorBrush x:Key="LowBackgroundBrush" Color="#FF333333"/>
+            <AcrylicBrush x:Key="PaneBackgroundBrush"
+                          TintColor="#FF1C1C1C" TintOpacity=".6"
+                          BackgroundSource="HostBackdrop"
+                          FallbackColor="#FF2B2B2B"/>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 

@@ -5,6 +5,17 @@
     xmlns:default="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:local="using:StrixMusic.Shells.Groove.Controls">
 
+    <Style x:Key="GrooveNavigationButton" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
+        <Style.Setters>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style.Setters>
+    </Style>
+    
     <Style x:Key="MediaButton" TargetType="Button">
         <Setter Property="Margin" Value="4,0"/>
         <Setter Property="Padding" Value="8"/>

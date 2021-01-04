@@ -33,8 +33,8 @@ namespace StrixMusic.Shells.Groove
 
             _pagesMapping = new Dictionary<NavigationViewItemBase, Type>
             {
-                { HomeItem, typeof(HomeView) },
-                { NowPlayingItem, typeof(NowPlayingView) },
+                //{ HomeItem, typeof(HomeView) },
+                //{ NowPlayingItem, typeof(NowPlayingView) },
             };
         }
 
@@ -79,6 +79,31 @@ namespace StrixMusic.Shells.Groove
             return navigationService;
         }
 
+        private void HamburgerToggled(object sender, RoutedEventArgs e)
+        {
+            MainSplitView.IsPaneOpen = !MainSplitView.IsPaneOpen;
+        }
+
+        private void Shell_BackRequested(object sender, EventArgs e)
+        {
+            if (OverlayContent.Visibility == Visibility.Visible)
+            {
+                OverlayContent.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            if (_history.Count > 0)
+            {
+                MainContent.Content = _history.Pop();
+            }
+        }
+
+        private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            Guard.IsNotNull(_navigationService, nameof(_navigationService));
+            _navigationService.NavigateTo(typeof(SearchView), false, args.QueryText);
+        }
+
         private void NavigationService_NavigationRequested(object sender, NavigateEventArgs<Control> e)
         {
             if (!e.IsOverlay)
@@ -102,49 +127,12 @@ namespace StrixMusic.Shells.Groove
 
             if (!containsValue)
             {
-                NavView.SelectedItem = null;
+
             }
             else
             {
                 _history.Clear();
             }
-        }
-
-        private void Shell_BackRequested(object sender, EventArgs e)
-        {
-            if (OverlayContent.Visibility == Visibility.Visible)
-            {
-                OverlayContent.Visibility = Visibility.Collapsed;
-                return;
-            }
-
-            if (_history.Count > 0)
-            {
-                MainContent.Content = _history.Pop();
-            }
-        }
-
-        private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-        {
-            Guard.IsNotNull(_navigationService, nameof(_navigationService));
-            _navigationService.NavigateTo(typeof(SearchView), false, args.QueryText);
-        }
-
-        private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
-        {
-            Guard.IsNotNull(_navigationService, nameof(_navigationService));
-
-            if (args.IsSettingsInvoked)
-            {
-                _navigationService.NavigateTo(typeof(SettingsView));
-                return;
-            }
-
-            var invokedItem = args.InvokedItemContainer;
-            if (invokedItem == null || !_pagesMapping.ContainsKey(invokedItem))
-                return;
-
-            _navigationService.NavigateTo(_pagesMapping[invokedItem], invokedItem == NowPlayingItem);
         }
     }
 }
