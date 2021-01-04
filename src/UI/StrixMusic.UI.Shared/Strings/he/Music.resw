@@ -153,6 +153,12 @@
   <data name="BrowseTB.Text" xml:space="preserve">
     <value>לדפדף</value>
   </data>
+  <data name="CreatePlaylist" xml:space="preserve">
+    <value>צור פליילסט</value>
+  </data>
+  <data name="CreatePlaylistNVI.Content" xml:space="preserve">
+    <value>צור פליילסט</value>
+  </data>
   <data name="Genres" xml:space="preserve">
     <value>ז'אנרים</value>
   </data>
@@ -199,6 +205,9 @@
     <value>פלייליסטים</value>
   </data>
   <data name="PlaylistsBTN.Content" xml:space="preserve">
+    <value>פלייליסטים</value>
+  </data>
+  <data name="PlaylistsNVI.Content" xml:space="preserve">
     <value>פלייליסטים</value>
   </data>
   <data name="PlaylistsPVI.Header" xml:space="preserve">

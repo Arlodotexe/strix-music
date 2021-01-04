@@ -270,4 +270,13 @@
   <data name="SongsBTN.Content" xml:space="preserve">
     <value>Songs</value>
   </data>
+  <data name="PlaylistsNVI.Content" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="CreatePlaylist" xml:space="preserve">
+    <value>Create Playlist</value>
+  </data>
+  <data name="CreatePlaylistNVI.Content" xml:space="preserve">
+    <value>Create Playlist</value>
+  </data>
 </root>
