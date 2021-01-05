@@ -66,7 +66,7 @@ namespace StrixMusic.Shells.Groove
 #if NETFX_CORE
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonBackgroundColor = Resources["SystemAltHighColor"] as Color?;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
 #endif
 
             SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
