@@ -66,8 +66,8 @@
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                            <TextBlock Text="Diplomat's Son"/>
-                                            <TextBlock Text="Vampire Weekend" Opacity=".5"/>
+                                            <TextBlock Text="Diplomat's Son" FontSize="18" FontWeight="SemiLight"/>
+                                            <TextBlock Text="Vampire Weekend" FontSize="15" FontWeight="Bold"/>
                                         </StackPanel>
                                         <Rectangle x:Name="AlbumImage" Fill="#FF00FF" Width="96" Height="96"/>
                                     </Grid>
