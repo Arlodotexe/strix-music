@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Album" xml:space="preserve">
+    <value>אלבום</value>
+  </data>
+  <data name="AlbumBTN.Content" xml:space="preserve">
+    <value>אלבום</value>
+  </data>
   <data name="Albums" xml:space="preserve">
     <value>אלבומים</value>
   </data>
@@ -129,6 +135,15 @@
   <data name="AlbumsTB.Text" xml:space="preserve">
     <value>אלבומים</value>
   </data>
+  <data name="AlbumTB.Text" xml:space="preserve">
+    <value>אלבום</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>אמן</value>
+  </data>
+  <data name="ArtistBTN.Content" xml:space="preserve">
+    <value>אמן</value>
+  </data>
   <data name="Artists" xml:space="preserve">
     <value>אמנים</value>
   </data>
@@ -140,6 +155,9 @@
   </data>
   <data name="ArtistsTB.Text" xml:space="preserve">
     <value>אמנים</value>
+  </data>
+  <data name="ArtistTB.Text" xml:space="preserve">
+    <value>אמן</value>
   </data>
   <data name="Browse" xml:space="preserve">
     <value>לדפדף</value>

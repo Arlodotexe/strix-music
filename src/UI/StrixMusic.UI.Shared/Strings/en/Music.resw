@@ -291,4 +291,22 @@
   <data name="PlayTB.Text" xml:space="preserve">
     <value>Play</value>
   </data>
+  <data name="Album" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="AlbumBTN.Content" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="AlbumTB.Text" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="ArtistBTN.Content" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="ArtistTB.Text" xml:space="preserve">
+    <value>Artist</value>
+  </data>
 </root>
