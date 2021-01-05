@@ -63,8 +63,12 @@ namespace StrixMusic.Shared
         {
             var services = new ServiceCollection();
 
+            var localizationService = new LocalizationResourceLoader();
+            localizationService.RegisterProvider(Helpers.Constants.Localization.CommonResource);
+            localizationService.RegisterProvider(Helpers.Constants.Localization.MusicResource);
+
             services.AddSingleton<INavigationService<Control>>(new NavigationService<Control>());
-            services.AddSingleton(new LocalizationResourceLoader());
+            services.AddSingleton(localizationService);
 
             shell.InitServices(services);
         }

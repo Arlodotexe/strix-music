@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LaunchPad.Extensions.Windows.UI.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
 using Windows.ApplicationModel.Core;
@@ -22,8 +23,10 @@ namespace StrixMusic.Shells.Groove
     public sealed partial class GrooveShell : Shell
     {
         private readonly IReadOnlyDictionary<ToggleButton, Type> _pagesMapping;
+        private readonly IReadOnlyDictionary<Type, string> _pageHeaderMapping;
         private readonly Stack<Control> _history = new Stack<Control>();
         private INavigationService<Control>? _navigationService;
+        private ILocalizationService? _localizationService;
         private ToggleButton _selectedPage;
 
         /// <summary>
@@ -38,6 +41,14 @@ namespace StrixMusic.Shells.Groove
                 { MyMusicButton, typeof(HomeView) },
                 { NowPlayingButton, typeof(NowPlayingView) },
             };
+
+            _pageHeaderMapping = new Dictionary<Type, string>
+            {
+                { typeof(HomeView), "MyMusic" },
+                { typeof(AlbumView), "Album" },
+                { typeof(ArtistView), "Artist" },
+            };
+
 
             _selectedPage = MyMusicButton;
         }
@@ -73,6 +84,9 @@ namespace StrixMusic.Shells.Groove
 
                 if (service.ImplementationInstance is INavigationService<Control> navigationService)
                     _navigationService = SetupNavigationService(navigationService);
+
+                if (service.ImplementationInstance is ILocalizationService localizationService)
+                    _localizationService = localizationService;
             }
 
             return base.InitServices(services);
@@ -150,6 +164,13 @@ namespace StrixMusic.Shells.Groove
             {
                 _history.Push((Control)MainContent.Content);
                 MainContent.Content = e.Page;
+
+                Type pageType = e.Page.GetType();
+                if (_pageHeaderMapping.ContainsKey(pageType) && _localizationService != null)
+                {
+                    LargeHeaderText.Text = SmallHeaderText.Text =
+                        _localizationService["Music", _pageHeaderMapping[pageType]];
+                }
             }
             else
             {

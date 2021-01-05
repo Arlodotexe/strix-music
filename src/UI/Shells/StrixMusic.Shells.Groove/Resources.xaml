@@ -8,7 +8,7 @@
         <ResourceDictionary Source="Resources/Brushes.xaml"/>
         <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
         <ResourceDictionary Source="Styles/MediaSlider.xaml"/>
-        <ResourceDictionary Source="Styles/NavigationViewStyle.xaml" />
+        <ResourceDictionary Source="Styles/PivotStyle.xaml" />
 
         <styles:AlbumCollectionStyle/>
         <dstyles:AlbumItemStyle/>

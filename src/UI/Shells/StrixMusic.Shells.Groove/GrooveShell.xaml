@@ -16,11 +16,58 @@
     </defaultcontrols:Shell.Resources>
 
     <Grid>
-        <SplitView x:Name="MainSplitView" DisplayMode="CompactInline" OpenPaneLength="320"
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Sizes">
+                <VisualState x:Name="Small">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainSplitView.DisplayMode" Value="Overlay"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Medium">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainSplitView.DisplayMode" Value="CompactOverlay"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Large">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1200"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainSplitView.IsPaneOpen" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <SplitView x:Name="MainSplitView" DisplayMode="CompactInline" OpenPaneLength="320" IsPaneOpen="True"
                    PaneBackground="{ThemeResource PaneBackgroundBrush}">
             <SplitView.Content>
-                <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"
-                        HorizontalContentAlignment="Stretch"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid x:Name="SmallHeader" Visibility="Collapsed"
+                          Background="{ThemeResource PaneBackgroundBrush}" Height="84">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="36"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="SmallHeaderText" Text="Header" Grid.Row="1"/>
+                    </Grid>
+
+                    <TextBlock x:Name="LargeHeaderText" Text="Header" FontSize="34" FontWeight="Light" Margin="20,44,20,0"/>
+
+                    <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"
+                        HorizontalContentAlignment="Stretch" Grid.Row="1"/>
+                </Grid>
             </SplitView.Content>
             <SplitView.Pane>
                 <StackPanel Padding="0,36,0,104">

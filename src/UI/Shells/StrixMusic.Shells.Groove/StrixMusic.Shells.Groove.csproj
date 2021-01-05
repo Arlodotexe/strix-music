@@ -45,6 +45,7 @@
     <UpToDateCheckInput Remove="Resources\Brushes.xaml" />
     <UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\PivotStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\TrackCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Style\AlbumViewStyle.xaml" />
     <UpToDateCheckInput Remove="Style\HomeStyle.xaml" />
