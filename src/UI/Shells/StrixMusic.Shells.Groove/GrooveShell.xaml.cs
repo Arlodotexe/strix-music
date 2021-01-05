@@ -70,6 +70,7 @@ namespace StrixMusic.Shells.Groove
 #endif
 
             SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
+            currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             currentView.BackRequested += (s, e) => _navigationService!.GoBack();
         }
 
@@ -139,6 +140,12 @@ namespace StrixMusic.Shells.Groove
 
             if (_navigationService != null && _pagesMapping.ContainsKey(button))
                 _navigationService.NavigateTo(_pagesMapping[button], isOverlay);
+
+            if (MainSplitView.DisplayMode == SplitViewDisplayMode.CompactOverlay ||
+                MainSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
+            {
+                MainSplitView.IsPaneOpen = false;
+            }
         }
 
         private void Shell_BackRequested(object sender, EventArgs e)
@@ -146,8 +153,6 @@ namespace StrixMusic.Shells.Groove
             if (OverlayContent.Visibility == Visibility.Visible)
             {
                 OverlayContent.Visibility = Visibility.Collapsed;
-                SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
-                currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
                 return;
             }
 
@@ -177,15 +182,13 @@ namespace StrixMusic.Shells.Groove
                         _localizationService["Music", _pageHeaderMapping[pageType]];
                 }
 
-                LargeHeaderText.Visibility = _pageHeaderVisibilitySet.Contains(pageType) ?
+                LargeHeaderWrapper.Visibility = _pageHeaderVisibilitySet.Contains(pageType) ?
                     Visibility.Visible : Visibility.Collapsed;
             }
             else
             {
                 OverlayContent.Content = e.Page;
                 OverlayContent.Visibility = Visibility.Visible;
-                SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
-                currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             }
         }
     }

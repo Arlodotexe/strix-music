@@ -48,7 +48,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <SplitView x:Name="MainSplitView" DisplayMode="CompactInline" OpenPaneLength="320" IsPaneOpen="True"
+        <SplitView x:Name="MainSplitView" DisplayMode="CompactInline" OpenPaneLength="320"
                    PaneBackground="{ThemeResource PaneHostBackgroundBrush}">
             <SplitView.Content>
                 <Grid>
@@ -86,8 +86,10 @@
                         </Button>
                     </Grid>
 
-                    <!--Large Header text-->
-                    <TextBlock x:Name="LargeHeaderText" Text="Header" FontSize="34" FontWeight="Light" Margin="20,44,20,0"/>
+                    <!--Large Header-->
+                    <Grid x:Name="LargeHeaderWrapper">
+                        <TextBlock x:Name="LargeHeaderText" Text="Header" FontSize="34" FontWeight="Light" Margin="20,44,20,0"/>
+                    </Grid>
 
                     <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"
                         HorizontalContentAlignment="Stretch" Grid.Row="1"/>
