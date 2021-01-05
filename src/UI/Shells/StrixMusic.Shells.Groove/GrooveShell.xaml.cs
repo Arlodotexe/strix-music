@@ -40,7 +40,6 @@ namespace StrixMusic.Shells.Groove
             };
 
             _selectedPage = MyMusicButton;
-            NavigationButtonClicked(MyMusicButton, new RoutedEventArgs());
         }
 
         /// <inheritdoc/>
@@ -56,6 +55,12 @@ namespace StrixMusic.Shells.Groove
 
             SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
             currentView.BackRequested += (s, e) => _navigationService!.GoBack();
+        }
+
+        /// <inheritdoc/>
+        protected override void PostShellSetup()
+        {
+            NavigationButtonClicked(MyMusicButton, new RoutedEventArgs());
         }
 
         /// <inheritdoc />
@@ -94,15 +99,27 @@ namespace StrixMusic.Shells.Groove
             if (!(sender is ToggleButton button))
                 return;
 
-            if (button != NowPlayingButton)
-                _history.Clear();
+            bool isOverlay = false;
 
-            _selectedPage.IsChecked = false;
-            button.IsChecked = true;
-            _selectedPage = button;
+            if (button != NowPlayingButton)
+            {
+                // Clear history and change the selected page
+                _history.Clear();
+                _selectedPage.IsChecked = false;
+                button.IsChecked = true;
+                _selectedPage = button;
+            }
+            else
+            {
+                isOverlay = true;
+
+                // Override button checked.
+                //The SplitView isn't visible and the selection would need to be reveresed
+                button.IsChecked = false;
+            }
 
             if (_navigationService != null && _pagesMapping.ContainsKey(button))
-                _navigationService.NavigateTo(_pagesMapping[button]);
+                _navigationService.NavigateTo(_pagesMapping[button], isOverlay);
         }
 
         private void Shell_BackRequested(object sender, EventArgs e)
@@ -110,6 +127,8 @@ namespace StrixMusic.Shells.Groove
             if (OverlayContent.Visibility == Visibility.Visible)
             {
                 OverlayContent.Visibility = Visibility.Collapsed;
+                SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
+                currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
                 return;
             }
 
@@ -136,6 +155,8 @@ namespace StrixMusic.Shells.Groove
             {
                 OverlayContent.Content = e.Page;
                 OverlayContent.Visibility = Visibility.Visible;
+                SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
+                currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             }
         }
     }

@@ -39,6 +39,8 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             Ioc.ConfigureServices(serviceCollection.BuildServiceProvider());
 
+            PostShellSetup();
+
             return Task.CompletedTask;
         }
 
@@ -60,6 +62,13 @@ namespace StrixMusic.Sdk.Uno.Controls
             SystemNavigationManager currentView = SystemNavigationManager.GetForCurrentView();
             currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
 #endif
+        }
+
+        /// <summary>
+        /// Runs after all Shell services and window setup are finished.
+        /// </summary>
+        protected virtual void PostShellSetup()
+        {
         }
     }
 }
