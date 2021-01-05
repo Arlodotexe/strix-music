@@ -24,6 +24,7 @@ namespace StrixMusic.Shells.Groove
     {
         private readonly IReadOnlyDictionary<ToggleButton, Type> _pagesMapping;
         private readonly IReadOnlyDictionary<Type, string> _pageHeaderMapping;
+        private readonly HashSet<Type> _pageHeaderVisibilitySet;
         private readonly Stack<Control> _history = new Stack<Control>();
         private INavigationService<Control>? _navigationService;
         private ILocalizationService? _localizationService;
@@ -49,6 +50,10 @@ namespace StrixMusic.Shells.Groove
                 { typeof(ArtistView), "Artist" },
             };
 
+            _pageHeaderVisibilitySet = new HashSet<Type>
+            {
+                typeof(HomeView),
+            };
 
             _selectedPage = MyMusicButton;
         }
@@ -171,6 +176,9 @@ namespace StrixMusic.Shells.Groove
                     LargeHeaderText.Text = SmallHeaderText.Text =
                         _localizationService["Music", _pageHeaderMapping[pageType]];
                 }
+
+                LargeHeaderText.Visibility = _pageHeaderVisibilitySet.Contains(pageType) ?
+                    Visibility.Visible : Visibility.Collapsed;
             }
             else
             {

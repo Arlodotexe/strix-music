@@ -24,6 +24,8 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MainSplitView.DisplayMode" Value="Overlay"/>
+                        <Setter Target="LargeHeaderText.Visibility" Value="Collapsed"/>
+                        <Setter Target="SmallHeader.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Medium">
@@ -59,10 +61,30 @@
                             <RowDefinition Height="36"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="48"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!--Hamburger Button-->
+                        <Button Width="48" Style="{StaticResource GrooveButton}" Click="HamburgerToggled"
+                                Grid.Row="1">
+                            <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                        </Button>
 
-                        <TextBlock x:Name="SmallHeaderText" Text="Header" Grid.Row="1"/>
+                        <!--Small Header text-->
+                        <TextBlock x:Name="SmallHeaderText" Text="Header" FontSize="18" FontWeight="SemiBold"
+                                   Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"/>
+
+                        <!--Search button-->
+                        <Button Width="48" Style="{StaticResource GrooveButton}"
+                                Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right">
+                            <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                        </Button>
                     </Grid>
 
+                    <!--Large Header text-->
                     <TextBlock x:Name="LargeHeaderText" Text="Header" FontSize="34" FontWeight="Light" Margin="20,44,20,0"/>
 
                     <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"
@@ -77,7 +99,7 @@
                     </Button>
 
                     <!--Search Box-->
-                    <Button Width="48" Height="48" Background="Transparent" BorderThickness="0">
+                    <Button Width="48" Style="{StaticResource GrooveButton}" HorizontalAlignment="Left">
                         <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </Button>
                     <!--<AutoSuggestBox x:Name="AutoSuggest" x:Uid="/Common/SearchTBox"
