@@ -10,13 +10,17 @@
         <ResourceDictionary Source="../Resources/ButtonStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <AcrylicBrush x:Key="NowPlayingBackgroundBrush" TintColor="{ThemeResource SystemAccentColorDark3}"
+                  TintOpacity=".7" 
+                  BackgroundSource="Backdrop"/>
+
     <Style x:Key="GrooveNowPlayingBarStyle" TargetType="defaultcontrols:NowPlayingBar">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="defaultcontrols:NowPlayingBar">
-                        <UserControl>
-                            <Grid VerticalAlignment="Center" Background="{ThemeResource SystemAccentColorDark3}">
+                        <UserControl Background="Transparent">
+                            <Grid VerticalAlignment="Center" Height="96" Background="{ThemeResource NowPlayingBackgroundBrush}">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="Sizes">
                                         <VisualState x:Name="Small">
@@ -25,31 +29,27 @@
                                             </VisualState.StateTriggers>
                                             <VisualState.Setters>
                                                 <!--<Setter Target="sliderGrid.Visibility" Value="Collapsed"/>-->
-                                                <Setter Target="sliderRow.Height" Value="32"/>
-                                                <Setter Target="slider.(Grid.Row)" Value="2"/>
+                                                <Setter Target="sliderRow.Height" Value="26"/>
                                                 <Setter Target="slider.(Grid.Column)" Value="0"/>
                                                 <Setter Target="slider.(Grid.ColumnSpan)" Value="3"/>
+                                                <Setter Target="sliderColumn.Width" Value="0"/>
+                                                <Setter Target="AlbumImage.Visibility" Value="Collapsed"/>
+                                                <Setter Target="NowPlayingButton.(Grid.RowSpan)" Value="1"/>
+                                                <Setter Target="ButtonStack.(Grid.Column)" Value="2"/>
+                                                <Setter Target="ButtonStack.HorizontalAlignment" Value="Right"/>
                                             </VisualState.Setters>
                                         </VisualState>
                                         <VisualState x:Name="Large">
                                             <VisualState.StateTriggers>
                                                 <AdaptiveTrigger MinWindowWidth="600"/>
                                             </VisualState.StateTriggers>
-                                            <VisualState.Setters>
-                                                <!--<Setter Target="sliderGrid.Visibility" Value="Visible"/>-->
-                                                <Setter Target="sliderRow.Height" Value="0"/>
-                                                <Setter Target="slider.(Grid.Row)" Value="1"/>
-                                                <Setter Target="slider.(Grid.Column)" Value="1"/>
-                                                <Setter Target="slider.(Grid.ColumnSpan)" Value="1"/>
-                                            </VisualState.Setters>
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
 
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition x:Name="sliderRow" Height="0"/>
+                                    <RowDefinition/>
+                                    <RowDefinition x:Name="sliderRow" Height="36"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -58,7 +58,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!--Album Image / Track Data-->
-                                <Button Height="96" MaxWidth="300" HorizontalAlignment="Left" VerticalAlignment="Stretch" Grid.RowSpan="2"
+                                <Button x:Name="NowPlayingButton" MaxWidth="300" HorizontalAlignment="Left" VerticalAlignment="Stretch" Grid.RowSpan="2"
                                         BorderThickness="0" Background="Transparent" Padding="0,0,16,0">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -66,15 +66,15 @@
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                            <TextBlock Text="Diplomat's Son"/>
-                                            <TextBlock Text="Vampire Weekend" Opacity=".5"/>
+                                            <TextBlock Text="Diplomat's Son" FontSize="18" FontWeight="SemiLight"/>
+                                            <TextBlock Text="Vampire Weekend" FontSize="15" FontWeight="Bold"/>
                                         </StackPanel>
-                                        <Rectangle Fill="#FF00FF" Width="96" Height="96"/>
+                                        <Rectangle x:Name="AlbumImage" Fill="#FF00FF" Width="96" Height="96"/>
                                     </Grid>
                                 </Button>
 
                                 <!--Buttons-->
-                                <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
+                                <StackPanel x:Name="ButtonStack" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
                                     <ToggleButton Style="{StaticResource MediaToggleButton}">
                                         <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </ToggleButton>
@@ -104,8 +104,8 @@
                                 </StackPanel>
                                 
                                 <!--Slider-->
-                                <defaultcontrols:ProgressSlider x:Name="slider" Grid.Row="1" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"
-                                                                FlowDirection="LeftToRight"/>
+                                <defaultcontrols:ProgressSlider x:Name="slider" Grid.Row="1" Grid.Column="1"  Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"
+                                                                FlowDirection="LeftToRight" VerticalAlignment="Center"/>
                             </Grid>
                         </UserControl>
                     </ControlTemplate>

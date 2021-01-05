@@ -5,6 +5,10 @@
     xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
     x:Class="StrixMusic.Shells.Groove.Styles.PlayableCollectionGroupPivotStyle">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="PivotStyle.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
     <Style x:Key="GroovePlayableCollectionGroupPivotStyle" TargetType="defaultcontrols:PlayableCollectionGroupPivot">
         <Style.Setters>
             <Setter Property="Template">
@@ -14,22 +18,21 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Background="{TemplateBinding Background}">
                             <Grid>
-                                <Pivot x:Uid="/Music/MyMusicPIV" x:Name="PART_Pivot" Title="My Music">
-                                    <Pivot.TitleTemplate>
-                                        <DataTemplate x:DataType="x:String">
-                                            <TextBlock Text="{x:Bind}" FontSize="34" FontWeight="Light"/>
+                                <Pivot x:Name="PART_Pivot" Style="{StaticResource GroovePivot}">
+                                    <Pivot.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" FontSize="20" Margin="0,0,0,-8"/>
                                         </DataTemplate>
-                                    </Pivot.TitleTemplate>
-                                    <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs">
-                                        <defaultcontrols:TrackCollection />
+                                    </Pivot.HeaderTemplate>
+                                    
+                                    <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs" Margin="8,0,0,0">
+                                        <defaultcontrols:TrackCollection/>
                                     </PivotItem>
-                                    <PivotItem x:Uid="/Music/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums">
-                                        <defaultcontrols:AlbumCollection />
+                                    <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists" Margin="8,0,0,0">
+                                        <defaultcontrols:ArtistCollection/>
                                     </PivotItem>
-                                    <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists">
-                                        <defaultcontrols:ArtistCollection />
-                                    </PivotItem>
-                                    <PivotItem x:Uid="/Music/PlaylistsPVI" x:Name="PART_PlaylistsPivotItem" Header="Playlists">
+                                    <PivotItem x:Uid="/Music/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums" Margin="8,0,0,0">
+                                        <defaultcontrols:AlbumCollection/>
                                     </PivotItem>
                                 </Pivot>
 

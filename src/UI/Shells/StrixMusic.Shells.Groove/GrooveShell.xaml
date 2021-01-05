@@ -16,39 +16,178 @@
     </defaultcontrols:Shell.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="Sizes">
+                <VisualState x:Name="Small">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger x:Name="SmallTrigger" MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainSplitView.DisplayMode" Value="Overlay"/>
+                        <Setter Target="MainSplitView.PaneBackground" Value="{ThemeResource PaneBackgroundBrush}"/>
+                        <Setter Target="LargeHeaderText.Visibility" Value="Collapsed"/>
+                        <Setter Target="SmallHeader.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Medium">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainSplitView.DisplayMode" Value="CompactOverlay"/>
+                        <Setter Target="MainSplitView.PaneBackground" Value="{ThemeResource PaneBackgroundBrush}"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Large">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1200"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MainSplitView.IsPaneOpen" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <SplitView x:Name="MainSplitView" DisplayMode="CompactInline" OpenPaneLength="320"
+                   PaneBackground="{ThemeResource PaneHostBackgroundBrush}">
+            <SplitView.Content>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
 
-        <NavigationView x:Name="NavView" ItemInvoked="NavView_ItemInvoked">
-            <NavigationView.AutoSuggestBox>
-                <AutoSuggestBox x:Name="AutoSuggest" QuerySubmitted="AutoSuggestBox_QuerySubmitted"/>
-            </NavigationView.AutoSuggestBox>
-            <NavigationView.MenuItems>
-                <NavigationViewItem x:Uid="/Music/MyMusicNVI" x:Name="HomeItem" Content="My Music">
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xEC4F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem x:Uid="/Music/RecentPlayedNVI" Content="Recently Played" Tag="RecentlyPlayedItem">
-                    <NavigationViewItem.Icon>
-                        <!--<SymbolIcon Symbol="Clock"/>-->
-                        <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem x:Uid="/Music/NowPlayingNVI" x:Name="NowPlayingItem" Content="Now Playing">
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItemSeparator/>
-            </NavigationView.MenuItems>
-            <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"
-                            HorizontalContentAlignment="Stretch"/>
-        </NavigationView>
+                    <Grid x:Name="SmallHeader" Visibility="Collapsed"
+                          Background="{ThemeResource PaneHostBackgroundBrush}" Height="84">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="36"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="48"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!--Hamburger Button-->
+                        <Button Width="48" Style="{StaticResource GrooveButton}" Click="HamburgerToggled"
+                                Grid.Row="1">
+                            <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                        </Button>
 
-        <defaultcontrols:NowPlayingBar Grid.Row="1"/>
+                        <!--Small Header text-->
+                        <TextBlock x:Name="SmallHeaderText" Text="Header" FontSize="18" FontWeight="SemiBold"
+                                   Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0"/>
+
+                        <!--Search button-->
+                        <Button Width="48" Style="{StaticResource GrooveButton}"
+                                Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right">
+                            <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                        </Button>
+                    </Grid>
+
+                    <!--Large Header-->
+                    <Grid x:Name="LargeHeaderWrapper">
+                        <TextBlock x:Name="LargeHeaderText" Text="Header" FontSize="34" FontWeight="Light" Margin="20,44,20,0"/>
+                    </Grid>
+
+                    <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"
+                        HorizontalContentAlignment="Stretch" Grid.Row="1"/>
+                </Grid>
+            </SplitView.Content>
+            <SplitView.Pane>
+                <StackPanel Padding="0,36,0,104">
+                    <!--Hamburger Button-->
+                    <Button Width="48" Height="48" Background="Transparent" BorderThickness="0" Click="HamburgerToggled">
+                        <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                    </Button>
+
+                    <!--Search Box-->
+                    <Button Width="48" Style="{StaticResource GrooveButton}" HorizontalAlignment="Left">
+                        <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                    </Button>
+                    <!--<AutoSuggestBox x:Name="AutoSuggest" x:Uid="/Common/SearchTBox"
+                                    QuerySubmitted="AutoSuggestBox_QuerySubmitted" Margin="8,12"
+                                    Padding="4" BorderThickness="0"/>-->
+                    
+                    <ScrollViewer>
+                        <StackPanel>
+                            <!--Main Nav Buttons-->
+                            <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}"
+                                          Click="NavigationButtonClicked">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="48"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <FontIcon Glyph="&#xEC4F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+
+                                    <TextBlock x:Uid="/Music/MyMusicTB" Text="Recently Played" Grid.Column="1"/>
+                                </Grid>
+                            </ToggleButton>
+                            <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}"
+                                          Click="NavigationButtonClicked">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="48"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--<SymbolIcon Symbol="Clock"/>-->
+                                    <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+
+                                    <TextBlock x:Uid="/Music/RecentPlayedTB" Text="Recently Played" Grid.Column="1"/>
+                                </Grid>
+                            </ToggleButton>
+                            <ToggleButton x:Name="NowPlayingButton" Style="{StaticResource GrooveNavigationButton}"
+                                          Click="NavigationButtonClicked">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="48"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+
+                                    <TextBlock x:Uid="/Music/NowPlayingTB" Text="Now Playing" Grid.Column="1"/>
+                                </Grid>
+                            </ToggleButton>
+
+                            <!--Seperator-->
+                            <Rectangle Fill="{ThemeResource SystemBaseHighColor}" Opacity=".5" Height="1" Margin="12,0"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <ToggleButton Style="{StaticResource GrooveNavigationButton}"
+                                              Click="NavigationButtonClicked">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="48"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <FontIcon Glyph="&#xE142;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+
+                                        <TextBlock x:Uid="/Music/PlaylistsTB" Text="Playlists" Grid.Column="1"/>
+                                    </Grid>
+                                </ToggleButton>
+
+                                <Button Grid.Column="1" Style="{StaticResource GrooveButton}" Width="48">
+                                    <SymbolIcon Symbol="Add"/>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </StackPanel>
+            </SplitView.Pane>
+        </SplitView>
+
+        <defaultcontrols:NowPlayingBar Height="96" VerticalAlignment="Bottom"/>
 
         <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"

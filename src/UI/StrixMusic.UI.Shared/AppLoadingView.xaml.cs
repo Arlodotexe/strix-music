@@ -221,7 +221,7 @@ namespace StrixMusic.Shared
 
                 if (coreDataType == typeof(T))
                 {
-                    _configuredCoreRegistry.Add($"{coreDataType}{id}", coreData);
+                    _configuredCoreRegistry.Add($"{coreDataType}.{id}", coreData);
                 }
             }
 

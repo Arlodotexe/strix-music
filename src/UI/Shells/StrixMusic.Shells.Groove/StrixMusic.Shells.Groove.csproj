@@ -31,6 +31,8 @@
     <None Remove="Resources.xaml" />
     <None Remove="Resources\Brushes.xaml" />
     <None Remove="Resources\ButtonStyles.xaml" />
+    <None Remove="Styles\AlbumCollectionStyle.xaml" />
+    <None Remove="Styles\TrackCollectionStyle.xaml" />
     <None Remove="Style\AlbumViewStyle.xaml" />
     <None Remove="Style\HomeStyle.xaml" />
     <None Remove="Style\MediaSlider.xaml" />
@@ -42,6 +44,9 @@
     <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Resources\Brushes.xaml" />
     <UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
+    <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\PivotStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\TrackCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Style\AlbumViewStyle.xaml" />
     <UpToDateCheckInput Remove="Style\HomeStyle.xaml" />
     <UpToDateCheckInput Remove="Style\MediaSlider.xaml" />
@@ -56,6 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Update="GrooveShell.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\AlbumCollectionStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\TrackCollectionStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Style\AlbumViewStyle.xaml.cs">

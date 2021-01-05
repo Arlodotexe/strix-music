@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Album" xml:space="preserve">
+    <value>אלבום</value>
+  </data>
+  <data name="AlbumBTN.Content" xml:space="preserve">
+    <value>אלבום</value>
+  </data>
   <data name="Albums" xml:space="preserve">
     <value>אלבומים</value>
   </data>
@@ -128,6 +134,15 @@
   </data>
   <data name="AlbumsTB.Text" xml:space="preserve">
     <value>אלבומים</value>
+  </data>
+  <data name="AlbumTB.Text" xml:space="preserve">
+    <value>אלבום</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>אמן</value>
+  </data>
+  <data name="ArtistBTN.Content" xml:space="preserve">
+    <value>אמן</value>
   </data>
   <data name="Artists" xml:space="preserve">
     <value>אמנים</value>
@@ -141,6 +156,9 @@
   <data name="ArtistsTB.Text" xml:space="preserve">
     <value>אמנים</value>
   </data>
+  <data name="ArtistTB.Text" xml:space="preserve">
+    <value>אמן</value>
+  </data>
   <data name="Browse" xml:space="preserve">
     <value>לדפדף</value>
   </data>
@@ -152,6 +170,12 @@
   </data>
   <data name="BrowseTB.Text" xml:space="preserve">
     <value>לדפדף</value>
+  </data>
+  <data name="CreatePlaylist" xml:space="preserve">
+    <value>צור פליילסט</value>
+  </data>
+  <data name="CreatePlaylistNVI.Content" xml:space="preserve">
+    <value>צור פליילסט</value>
   </data>
   <data name="Genres" xml:space="preserve">
     <value>ז'אנרים</value>
@@ -195,10 +219,22 @@
   <data name="NowPlayingTB.Text" xml:space="preserve">
     <value>מנגן כעת</value>
   </data>
+  <data name="Play" xml:space="preserve">
+    <value>נגן</value>
+  </data>
+  <data name="PlayABB.Label" xml:space="preserve">
+    <value>נגן</value>
+  </data>
+  <data name="PlayBTN.Content" xml:space="preserve">
+    <value>נגן</value>
+  </data>
   <data name="Playlists" xml:space="preserve">
     <value>פלייליסטים</value>
   </data>
   <data name="PlaylistsBTN.Content" xml:space="preserve">
+    <value>פלייליסטים</value>
+  </data>
+  <data name="PlaylistsNVI.Content" xml:space="preserve">
     <value>פלייליסטים</value>
   </data>
   <data name="PlaylistsPVI.Header" xml:space="preserve">
@@ -206,6 +242,9 @@
   </data>
   <data name="PlaylistsTB.Text" xml:space="preserve">
     <value>פלייליסטים</value>
+  </data>
+  <data name="PlayTB.Text" xml:space="preserve">
+    <value>נגן</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>לאחרונה</value>

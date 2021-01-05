@@ -21,7 +21,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Slider">
-                    <Grid Margin="{TemplateBinding Padding}">
+                    <Grid Margin="{TemplateBinding Margin}">
                         <Grid.Resources>
                             <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
 

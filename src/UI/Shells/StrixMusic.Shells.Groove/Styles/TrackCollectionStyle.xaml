@@ -4,12 +4,12 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    x:Class="StrixMusic.Sdk.Uno.Styles.TrackCollectionStyle">
+    x:Class="StrixMusic.Shells.Groove.Styles.TrackCollectionStyle">
 
-    <DataTemplate x:Key="DefaultTrackListTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
+    <DataTemplate x:Key="GrooveTrackListTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
         <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
                   extensions:ListViewExtensions.AlternateColor="#1AFFFFFF"
-                  Padding="16" HorizontalAlignment="Stretch"
+                  Padding="16,16,16,112" HorizontalAlignment="Stretch"
                   SelectionMode="None" IsItemClickEnabled="True">
             <ListView.Header>
                 <Grid>
@@ -25,12 +25,12 @@
         </ListView>
     </DataTemplate>
 
-    <Style x:Key="DefaultTrackListControlStyle" TargetType="defaultcontrols:TrackCollection">
+    <Style x:Key="GrooveTrackListControlStyle" TargetType="defaultcontrols:TrackCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="defaultcontrols:TrackCollection">
-                        <ContentControl ContentTemplate="{StaticResource DefaultTrackListTemplate}"
+                        <ContentControl ContentTemplate="{StaticResource GrooveTrackListTemplate}"
                                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                     </ControlTemplate>
                 </Setter.Value>
@@ -38,6 +38,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultTrackListControlStyle}" TargetType="defaultcontrols:TrackCollection"/>
+    <Style BasedOn="{StaticResource GrooveTrackListControlStyle}" TargetType="defaultcontrols:TrackCollection"/>
 
 </ResourceDictionary>

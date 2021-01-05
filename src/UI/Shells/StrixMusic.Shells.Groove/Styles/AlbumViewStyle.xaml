@@ -84,14 +84,14 @@
                                     Margin="16,0,0,32" VerticalAlignment="Bottom" HorizontalAlignment="Left"
                                     Grid.Column="1" Grid.Row="1"
                                     Background="Transparent">
-                            <AppBarButton Label="Play all" Style="{StaticResource QuickActionButton}">
+                            <AppBarButton x:Uid="/Music/PlayABB" Label="Play" Style="{StaticResource QuickActionButton}">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shells/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                 </AppBarButton.Icon>
                             </AppBarButton>
-                            <AppBarButton Icon="Save" Label="Save" Style="{StaticResource QuickActionButton}"/>
-                            <AppBarButton Icon="Add" Label="Add to" Style="{StaticResource QuickActionButton}"/>
-                            <AppBarButton Icon="Share" Label="Share" Style="{StaticResource QuickActionButton}"/>
+                            <AppBarButton x:Uid="/Common/SaveABB" Icon="Save" Label="Save" Style="{StaticResource QuickActionButton}"/>
+                            <AppBarButton x:Uid="/Common/AddToABB" Icon="Add" Label="Add to" Style="{StaticResource QuickActionButton}"/>
+                            <AppBarButton x:Uid="/Common/ShareABB" Icon="Share" Label="Share" Style="{StaticResource QuickActionButton}"/>
                         </CommandBar>
                     </Grid>
 
