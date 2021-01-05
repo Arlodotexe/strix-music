@@ -264,10 +264,6 @@
       <Project>{063715b5-1765-4269-8fb0-699fadc840e1}</Project>
       <Name>StrixMusic.Shells.ZuneDesktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Shells\‏‏StrixMusic.Shells.ZuneHD\StrixMusic.Shells.ZuneHD.csproj">
-      <Project>{8491f49b-663f-4c4b-9614-7af0c0a15e49}</Project>
-      <Name>StrixMusic.Shells.ZuneHD</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Hqub.MusicBrainz.API, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
