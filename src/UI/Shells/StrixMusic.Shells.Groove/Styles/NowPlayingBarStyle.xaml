@@ -32,7 +32,6 @@
                                                 <Setter Target="sliderRow.Height" Value="26"/>
                                                 <Setter Target="slider.(Grid.Column)" Value="0"/>
                                                 <Setter Target="slider.(Grid.ColumnSpan)" Value="3"/>
-                                                <Setter Target="slider.VerticalAlignment" Value="Center"/>
                                                 <Setter Target="sliderColumn.Width" Value="0"/>
                                                 <Setter Target="AlbumImage.Visibility" Value="Collapsed"/>
                                                 <Setter Target="NowPlayingButton.(Grid.RowSpan)" Value="1"/>
@@ -50,7 +49,7 @@
 
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
-                                    <RowDefinition x:Name="sliderRow" Height="auto"/>
+                                    <RowDefinition x:Name="sliderRow" Height="36"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -106,7 +105,7 @@
                                 
                                 <!--Slider-->
                                 <defaultcontrols:ProgressSlider x:Name="slider" Grid.Row="1" Grid.Column="1"  Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"
-                                                                FlowDirection="LeftToRight"/>
+                                                                FlowDirection="LeftToRight" VerticalAlignment="Center"/>
                             </Grid>
                         </UserControl>
                     </ControlTemplate>
