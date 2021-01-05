@@ -279,4 +279,16 @@
   <data name="CreatePlaylistNVI.Content" xml:space="preserve">
     <value>Create Playlist</value>
   </data>
+  <data name="Play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="PlayABB.Label" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="PlayBTN.Content" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="PlayTB.Text" xml:space="preserve">
+    <value>Play</value>
+  </data>
 </root>

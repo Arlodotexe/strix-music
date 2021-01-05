@@ -201,6 +201,15 @@
   <data name="NowPlayingTB.Text" xml:space="preserve">
     <value>מנגן כעת</value>
   </data>
+  <data name="Play" xml:space="preserve">
+    <value>נגן</value>
+  </data>
+  <data name="PlayABB.Label" xml:space="preserve">
+    <value>נגן</value>
+  </data>
+  <data name="PlayBTN.Content" xml:space="preserve">
+    <value>נגן</value>
+  </data>
   <data name="Playlists" xml:space="preserve">
     <value>פלייליסטים</value>
   </data>
@@ -215,6 +224,9 @@
   </data>
   <data name="PlaylistsTB.Text" xml:space="preserve">
     <value>פלייליסטים</value>
+  </data>
+  <data name="PlayTB.Text" xml:space="preserve">
+    <value>נגן</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>לאחרונה</value>
