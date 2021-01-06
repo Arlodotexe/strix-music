@@ -72,6 +72,7 @@
 		<None Remove="Styles\NowPlayingViewStyle.xaml" />
 		<None Remove="Styles\PrimaryPivotItemStyle.xaml" />
 		<None Remove="Styles\SafeImageStyle.xaml" />
+		<None Remove="Styles\Sdk\QuickplayAlbumCollectionStyle.xaml" />
 		<None Remove="Styles\SettingsViewStyle.xaml" />
 		<None Remove="Styles\SmallPivotItemStyle.xaml" />
 		<None Remove="Styles\ThinGridSplitterStyle.xaml" />
@@ -107,6 +108,7 @@
 		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\PrimaryPivotItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SafeImageStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\Sdk\QuickplayAlbumCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SmallPivotItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\ThinGridSplitterStyle.xaml" />
@@ -156,6 +158,9 @@
 	<ItemGroup>
 		<Compile Update="Controls\NowPlayingButtonContent.xaml.cs">
 		  <DependentUpon>NowPlayingButtonContent.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\Sdk\QuickplayAlbumCollectionStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 		<Compile Update="Styles\Sdk\AlbumCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
