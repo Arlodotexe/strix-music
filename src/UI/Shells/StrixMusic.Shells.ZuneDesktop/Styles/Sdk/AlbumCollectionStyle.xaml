@@ -4,7 +4,7 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:LaunchPad.Attached"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.AlbumCollectionStyle"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.AlbumCollectionStyle"
     xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk">
 
     <ResourceDictionary.MergedDictionaries>

@@ -4,7 +4,7 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:LaunchPad.Attached"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.TrackCollectionStyle">
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.TrackCollectionStyle">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneTrackListViewItemStyle.xaml"/>

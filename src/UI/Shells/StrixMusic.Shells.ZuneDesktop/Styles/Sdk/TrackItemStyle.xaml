@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.TrackItemStyle">
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.TrackItemStyle">
 
     <DataTemplate x:Key="ZuneDesktopTrackTemplate" x:DataType="viewModels:TrackViewModel">
         <TextBlock Text="{x:Bind Name}" FontSize="12" FontWeight="SemiBold" Opacity=".8"/>

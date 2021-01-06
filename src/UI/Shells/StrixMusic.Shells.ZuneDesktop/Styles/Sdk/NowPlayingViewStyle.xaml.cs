@@ -3,7 +3,7 @@ using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shells.ZuneDesktop.Styles
+namespace StrixMusic.Shells.ZuneDesktop.Styles.Sdk
 {
     /// <summary>
     /// A <see cref="ResourceDictionary"/> containing the style and template for the <see cref="Sdk.Uno.Controls.NowPlayingView"/> in the ZuneDesktop Shell.
