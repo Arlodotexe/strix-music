@@ -51,7 +51,7 @@ namespace OwlCore.AbstractUI.Models
         public string Value { get; set; } = string.Empty;
 
         /// <summary>
-        /// Called to tell the core about the new value.
+        /// Called to notify listeners about the new value.
         /// </summary>
         /// <param name="newValue">The new value.</param>
         public void SaveValue(string newValue)
