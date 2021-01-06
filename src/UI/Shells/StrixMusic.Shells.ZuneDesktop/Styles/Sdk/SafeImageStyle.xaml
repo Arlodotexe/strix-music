@@ -5,7 +5,7 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.SafeImageStyle">
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.SafeImageStyle">
 
     <DataTemplate x:Key="ZuneDesktopSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
         <Grid FlowDirection="LeftToRight">

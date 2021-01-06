@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    xmlns:styles="using:StrixMusic.Shells.ZuneDesktop.Styles"
+    xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:dstyles="using:StrixMusic.Sdk.Uno.Styles">
 
@@ -12,13 +12,13 @@
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="ZuneTrackListViewItemStyle" TargetType="ListViewItem" >
-        <Setter Property="Background" Value="{ThemeResource ZuneListViewItemBackground}"/>
+    <Style x:Key="ZuneSettingsListViewItem" TargetType="ListViewItem">
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="TabNavigation" Value="Local"/>
         <Setter Property="IsHoldingEnabled" Value="True"/>
-        <Setter Property="Padding" Value="24,4"/>
+        <Setter Property="Padding" Value="22,8,24,8"/>
         <Setter Property="MinHeight" Value="0"/>
-        <Setter Property="Margin" Value="0,0,0,1"/>
+        <Setter Property="Margin" Value="0"/>
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -30,50 +30,61 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
-                    <Grid x:Name="ContentBorder" Background="Transparent">
+                    <Grid x:Name="ContentBorder">
                         <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+                                    <Storyboard>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unfocused">
+                                    <Storyboard>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal"/>
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource ZuneListViewItemBackgroundHover}"/>
+                                        <Setter Target="ContentPresentor.Opacity" Value=".5"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
-                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource ZuneListViewItemBackgroundPressed}"/>
+                                        <Setter Target="ContentPresentor.Opacity" Value=".5"/>
                                     </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Selected">
                                     <VisualState.Setters>
-                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource ZuneListViewItemBackgroundSelected}"/>
+                                        <Setter Target="SelectedIcon.Visibility" Value="Visible"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="PointerOverSelected">
                                     <VisualState.Setters>
-                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource ZuneListViewItemBackgroundSelected}"/>
+                                        <Setter Target="ContentPresentor.Opacity" Value=".5"/>
+                                        <Setter Target="SelectedIcon.Visibility" Value="Visible"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="PressedSelected">
                                     <VisualState.Setters>
-                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource ZuneListViewItemBackgroundSelected}"/>
+                                        <Setter Target="ContentPresentor.Opacity" Value=".5"/>
+                                        <Setter Target="SelectedIcon.Visibility" Value="Visible"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled"/>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <ContentPresenter x:Name="ContentPresenter"
-                                                AutomationProperties.AccessibilityView="Raw"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                ContentTransitions="{TemplateBinding ContentTransitions}"
-                                                Content="{TemplateBinding Content}"
-                                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                Padding="{TemplateBinding Padding}"
-                                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Viewbox x:Name="SelectedIcon" Height="8" Visibility="Collapsed">
+                            <PathIcon Data="M25 26L1 50V26V2L25 26Z"/>
+                        </Viewbox>
+                        <TextBlock x:Name="ContentPresentor" Text="{TemplateBinding Content}" FontWeight="ExtraBold" CharacterSpacing="128" FontSize="8" Grid.Column="1" VerticalAlignment="Center"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
