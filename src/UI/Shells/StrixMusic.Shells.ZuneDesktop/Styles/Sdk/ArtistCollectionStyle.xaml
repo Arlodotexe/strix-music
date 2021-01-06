@@ -7,7 +7,7 @@
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.ArtistCollectionStyle">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneTrackListViewItemStyle.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneTrackListViewItemStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="ZuneDesktopArtistCollectionDataTemplate" x:DataType="viewModels:IArtistCollectionViewModel">

@@ -157,31 +157,31 @@
 		<Compile Update="Controls\NowPlayingButtonContent.xaml.cs">
 		  <DependentUpon>NowPlayingButtonContent.xaml</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\AlbumCollectionStyle.xaml.cs">
+		<Compile Update="Styles\Sdk\AlbumCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\AlbumItemStyle.xaml.cs">
+		<Compile Update="Styles\Sdk\AlbumItemStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\ArtistCollectionStyle.xaml.cs">
+		<Compile Update="Styles\Sdk\ArtistCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\ArtistItemStyle.xaml.cs">
+		<Compile Update="Styles\Sdk\ArtistItemStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\NowPlayingViewStyle.xaml.cs">
+		<Compile Update="Styles\Sdk\NowPlayingViewStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\NowPlayingBarStyle.xaml.cs">
+		<Compile Update="Styles\Sdk\NowPlayingBarStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\SettingsViewStyle.xaml.cs">
+		<Compile Update="Styles\Sdk\SettingsViewStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\TrackCollectionStyle.xaml.cs">
+		<Compile Update="Styles\Sdk\TrackCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\TrackItemStyle.xaml.cs">
+		<Compile Update="Styles\Sdk\TrackItemStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 	</ItemGroup>
