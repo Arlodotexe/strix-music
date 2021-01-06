@@ -35,6 +35,17 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItemSeparator/>
+                <NavigationViewItem x:Uid="/Music/PlaylistsNVI" Content="Playlists">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE142;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Uid="/Music/CreatePlaylistNVI" Content="Create Playlist">
+                    <NavigationViewItem.Icon>
+                        <!--<SymbolIcon Symbol="Add"/>-->
+                        <FontIcon Glyph="&#xE710;" FontSize="16" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
             <ContentControl x:Name="MainContent" DataContext="{x:Bind DataContext}"
                             HorizontalContentAlignment="Stretch"/>

@@ -1,0 +1,275 @@
+﻿<ResourceDictionary
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.NowPlayingBarStyle"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:zunecontrols="using:StrixMusic.Shells.ZuneDesktop.Controls"
+    xmlns:launchpad="using:LaunchPad.Controls"
+    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="ZuneSlider" TargetType="Slider">
+        <Setter Property="Foreground" Value="{ThemeResource SliderTrackValueFill}" />
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+        <Setter Property="ManipulationMode" Value="None" />
+        <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
+        <Setter Property="FocusVisualMargin" Value="-7,0,-7,0" />
+        <Setter Property="IsFocusEngagementEnabled" Value="True" />
+        <Setter Property="IsThumbToolTipEnabled" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="defaultcontrols:SliderEx">
+                    <Grid Margin="{TemplateBinding Padding}">
+                        <Grid.Resources>
+                            <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
+
+                            <Style x:Key="SliderThumbStyle" TargetType="Thumb">
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border Background="{ThemeResource SliderPlayedBackground}" Width="3"/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalThumb" Storyboard.TargetProperty="Height">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="12" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter x:Name="HeaderContentPresenter"
+                                              ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                              Content="{TemplateBinding Header}"
+                                              FontWeight="{ThemeResource SliderHeaderThemeFontWeight}"
+                                              Foreground="{ThemeResource SliderHeaderForeground}"
+                                              Margin="{ThemeResource SliderHeaderThemeMargin}" TextWrapping="Wrap"
+                                              Visibility="Collapsed" x:DeferLoadStrategy="Lazy" CornerRadius="100"
+                                          Grid.ColumnSpan="3"/>
+
+                        <!--Value-->
+                        <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LongToTimeSpanTextConverter}, Path=Value, UpdateSourceTrigger=PropertyChanged}"
+                                   Foreground="{ThemeResource SliderHeaderForeground}"
+                                   Grid.Column="0"
+                                   Grid.Row="2"/>
+
+                        <!--Remaing-->
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Column="2"
+                                    Grid.Row="2"
+                                    Opacity=".7">
+
+                            <TextBlock Text="-" Foreground="{ThemeResource SliderHeaderForeground}" Opacity=".7"/>
+                            <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LongToTimeSpanTextConverter}, Path=Remaining, UpdateSourceTrigger=PropertyChanged}"
+                                       Foreground="{ThemeResource SliderHeaderForeground}" Opacity=".7"/>
+                        </StackPanel>
+
+                        <Grid x:Name="SliderContainer" Background="{ThemeResource SliderContainerBackground}"
+                                  Control.IsTemplateFocusTarget="True" Grid.Row="1" Grid.ColumnSpan="3">
+                            <Grid x:Name="HorizontalTemplate">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="2"
+                                        Grid.Row="1" Margin="1,0,0,0">
+                                    <Rectangle x:Name="HorizontalTrackRect" Grid.ColumnSpan="3" 
+                                               Fill="{ThemeResource SliderRemainingBackground}"
+                                               Height="5" Grid.Row="1" />
+                                </Border>
+
+                                <Border Grid.Row="1">
+                                    <Rectangle x:Name="HorizontalDecreaseRect"
+                                               Fill="{ThemeResource SliderPlayedBackground}" Grid.Row="1" />
+                                </Border>
+
+                                <Thumb x:Name="HorizontalThumb" AutomationProperties.AccessibilityView="Raw"
+                                       Grid.Column="1" DataContext="{TemplateBinding Value}"
+                                        Height="5" Grid.RowSpan="3" Grid.Row="0"
+                                       Style="{StaticResource SliderThumbStyle}"/>
+                            </Grid>
+                            <Grid x:Name="VerticalTemplate" MinWidth="44" Visibility="Collapsed">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="18" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="18" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Rectangle x:Name="VerticalTrackRect" Grid.Column="1"
+                                               Fill="{TemplateBinding Background}" Grid.RowSpan="3"
+                                               Width="{ThemeResource SliderTrackThemeHeight}" />
+                                <Rectangle x:Name="VerticalDecreaseRect" Grid.Column="1"
+                                               Fill="{TemplateBinding Foreground}" Grid.Row="2" />
+                                <TickBar x:Name="LeftTickBar" Fill="{ThemeResource SliderTickBarFill}"
+                                             HorizontalAlignment="Right" Margin="0,0,4,0" Grid.RowSpan="3"
+                                             Visibility="Collapsed"
+                                             Width="{ThemeResource SliderOutsideTickBarThemeHeight}" />
+                                <TickBar x:Name="VerticalInlineTickBar" Grid.Column="1"
+                                             Fill="{ThemeResource SliderInlineTickBarFill}" Grid.RowSpan="3"
+                                             Visibility="Collapsed" Width="{ThemeResource SliderTrackThemeHeight}" />
+                                <TickBar x:Name="RightTickBar" Grid.Column="2"
+                                             Fill="{ThemeResource SliderTickBarFill}" HorizontalAlignment="Left"
+                                             Margin="4,0,0,0" Grid.RowSpan="3" Visibility="Collapsed"
+                                             Width="{ThemeResource SliderOutsideTickBarThemeHeight}" />
+                                <Thumb x:Name="VerticalThumb" AutomationProperties.AccessibilityView="Raw"
+                                           Grid.ColumnSpan="3" Grid.Column="0" DataContext="{TemplateBinding Value}"
+                                           FocusVisualMargin="-6,-14,-6,-14" Height="8" Grid.Row="1"
+                                           Style="{StaticResource SliderThumbStyle}" Width="24" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ZuneNowPlayingBarStyle" TargetType="defaultcontrols:NowPlayingBar">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="defaultcontrols:NowPlayingBar">
+                        <UserControl>
+                            <Grid Margin="28,0,28,28" VerticalAlignment="Bottom">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup>
+                                        <VisualState x:Name="Small">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="700"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="QuickLinksColumn.Width" Value="auto"/>
+                                                <Setter Target="NowPlaying.HorizontalAlignment" Value="Stretch"/>
+                                                <Setter Target="NowPlaying.Width" Value="auto"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="Large">
+                                            <VisualState.StateTriggers>
+                                                <AdaptiveTrigger MinWindowWidth="1000"/>
+                                            </VisualState.StateTriggers>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition x:Name="QuickLinksColumn" Width="244"/>
+                                    <ColumnDefinition x:Name="NowPlayingColumn"/>
+                                    <ColumnDefinition x:Name="PlaybackControlsColumn" Width="244"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,-24">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8EA;" Margin="8,0" FontSize="46" Opacity=".5"/>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF000;" Margin="8,0" FontSize="46" Opacity=".5"/>
+                                </StackPanel>
+
+                                <Grid x:Name="NowPlaying" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Width="400" Height="64" VerticalAlignment="Bottom" Margin="0,0,0,-8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="64"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <!--<controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">
+                                    </controls:DropShadowPanel>-->
+                                    
+                                    <Rectangle x:Name="AlbumCover" Width="64" Height="64" Fill="#FF00FF" Grid.RowSpan="3" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Diplomat's Son" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5"/>
+                                    <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5"/>
+                                    <defaultcontrols:ProgressSlider Maximum="280000"  Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
+                                                                    FlowDirection="LeftToRight"/>
+                                </Grid>
+
+                                <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal">
+                                        <launchpad:ToggleContentButton x:Name="RepeatButton" Style="{StaticResource ZuneSmallToggleContentButton}" VerticalAlignment="Center" IsThreeState="True" FontSize="20">
+                                            <FontIcon Glyph="&#xE1CD;"/>
+                                            <launchpad:ToggleContentButton.CheckedContent>
+                                                <FontIcon Glyph="&#xE1CD;"/>
+                                            </launchpad:ToggleContentButton.CheckedContent>
+                                            <launchpad:ToggleContentButton.IndeterminateContent>
+                                                <FontIcon Glyph="&#xE1CC;"/>
+                                            </launchpad:ToggleContentButton.IndeterminateContent>
+                                        </launchpad:ToggleContentButton>
+                                        <ToggleButton x:Name="ShuffleButton" Style="{StaticResource ZuneSmallToggleButton}" Margin="-8,0,8,0" VerticalAlignment="Center" FontSize="20">
+                                            <FontIcon Glyph="&#xE8B1;"/>
+                                        </ToggleButton>
+
+                                        <!--Skip and Prev buttons shouldn't flip with Bi-directional languages-->
+                                        <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
+                                            <Button x:Name="PreviousButton" Style="{StaticResource ZuneButton}" Width="32">
+                                                <PathIcon Data="M 0 4.2357127 6.3582224 8.4666673 V 0.0047581 Z M 6.3417776 4.2309543 12.7 8.4619093 V 0 Z" Margin="-2,0,0,0"/>
+                                                <!--<FontIcon Glyph="&#xE100;" FontSize="12"/>-->
+                                            </Button>
+                                            <launchpad:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42">
+                                                <launchpad:ToggleContentButton.CheckedContent>
+                                                    <FontIcon Glyph="&#xE103;" FontSize="20"/>
+                                                </launchpad:ToggleContentButton.CheckedContent>
+                                                <PathIcon Data="M 11.1125 6.4158049 2.3841858e-7 12.83161 l 0 -12.831609975863432 z"/>
+                                                <!--<FontIcon Glyph="&#xE102;" FontSize="20"/>-->
+                                            </launchpad:ToggleContentButton>
+                                            <Button x:Name="SkipButton" Style="{StaticResource ZuneButton}" Width="32">
+                                                <PathIcon Data="M 12.7 4.2357127 6.3417776 8.4666673 V 0.0047581 Z M 6.3582224 4.2309543 0 8.4619093 V 0 Z" Margin="2,0,0,0"/>
+                                                <!--<FontIcon Glyph="&#xE101;" FontSize="12"/>-->
+                                            </Button>
+                                        </StackPanel>
+                                        
+                                        <Button Style="{StaticResource ZuneSmallButton}" VerticalAlignment="Center" Margin="12,0" Click="NavigateToNowPlaying">
+                                            <!--<FontIcon Glyph="&#xF61F;" FontSize="20" FontWeight="Bold" Foreground="#DB0D94"/>-->
+                                            <zunecontrols:NowPlayingButtonContent Foreground="#DB0D94" Height="12" Width="20"/>
+                                        </Button>
+                                    </StackPanel>
+                                    <TextBlock Text="VOLUME 50" Grid.Row="1" FontSize="10" FontWeight="Bold" Opacity=".5" HorizontalAlignment="Center" Margin="36,4,0,-8"/>
+                                </Grid>
+                            </Grid>
+                        </UserControl>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource ZuneNowPlayingBarStyle}" TargetType="defaultcontrols:NowPlayingBar"/>
+
+</ResourceDictionary>

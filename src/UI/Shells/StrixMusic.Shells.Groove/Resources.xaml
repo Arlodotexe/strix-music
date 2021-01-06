@@ -7,9 +7,10 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Resources/Brushes.xaml"/>
         <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
-        <ResourceDictionary Source="Style/MediaSlider.xaml"/>
-        
-        <dstyles:AlbumCollectionStyle/>
+        <ResourceDictionary Source="Styles/MediaSlider.xaml"/>
+        <ResourceDictionary Source="Styles/PivotStyle.xaml" />
+
+        <styles:AlbumCollectionStyle/>
         <dstyles:AlbumItemStyle/>
         <styles:AlbumViewStyle/>
         <dstyles:ArtistCollectionStyle/>
@@ -19,7 +20,7 @@
         <styles:HomeStyle/>
         <styles:PlayableCollectionGroupPivotStyle/>
         <dstyles:SettingsViewStyle/>
-        <dstyles:TrackCollectionStyle/>
+        <styles:TrackCollectionStyle/>
         <dstyles:TrackItemStyle/>
     </ResourceDictionary.MergedDictionaries>
     

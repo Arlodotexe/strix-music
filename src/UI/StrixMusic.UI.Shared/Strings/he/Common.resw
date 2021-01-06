@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddTo" xml:space="preserve">
+    <value>הוסף אל</value>
+  </data>
+  <data name="AddToABB.Label" xml:space="preserve">
+    <value>הוסף אל</value>
+  </data>
+  <data name="AddToBTN.Content" xml:space="preserve">
+    <value>הוסף אל</value>
+  </data>
+  <data name="AddToTB.Text" xml:space="preserve">
+    <value>הוסף אל</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>בטל</value>
   </data>
@@ -168,6 +180,18 @@
   <data name="OverviewPVI.Header" xml:space="preserve">
     <value>סקירה כללית</value>
   </data>
+  <data name="Save" xml:space="preserve">
+    <value>שומר</value>
+  </data>
+  <data name="SaveABB.Label" xml:space="preserve">
+    <value>שומר</value>
+  </data>
+  <data name="SaveBTN.Content" xml:space="preserve">
+    <value>שומר</value>
+  </data>
+  <data name="SaveTB.Text" xml:space="preserve">
+    <value>שומר</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>חיפוש</value>
   </data>
@@ -185,6 +209,18 @@
   </data>
   <data name="SettingsTB.Text" xml:space="preserve">
     <value>הוגדות</value>
+  </data>
+  <data name="Share" xml:space="preserve">
+    <value>שיתוף</value>
+  </data>
+  <data name="ShareABB.Label" xml:space="preserve">
+    <value>שיתוף</value>
+  </data>
+  <data name="ShareBTN.Content" xml:space="preserve">
+    <value>שיתוף</value>
+  </data>
+  <data name="ShareTB.Text" xml:space="preserve">
+    <value>שיתוף</value>
   </data>
   <data name="SignIn" xml:space="preserve">
     <value>היכנס</value>

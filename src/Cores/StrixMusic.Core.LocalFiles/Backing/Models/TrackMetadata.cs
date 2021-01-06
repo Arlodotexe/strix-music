@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace StrixMusic.Core.LocalFileCore.Backing.Models
+namespace StrixMusic.Core.LocalFiles.Backing.Models
 {
     /// <summary>
-    /// Represents the metadata associated with a track.
+    /// The metadata associated with a track.
     /// </summary>
     public class TrackMetadata
     {
@@ -28,9 +28,9 @@ namespace StrixMusic.Core.LocalFileCore.Backing.Models
         public List<string> ArtistIds { get; set; }
 
         /// <summary>
-        /// The display name of this track.
+        /// The title of this track.
         /// </summary>
-        public string? Name { get; set; }
+        public string? Title { get; set; }
 
         /// <summary>
         /// The duration of this track.

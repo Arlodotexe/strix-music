@@ -3,7 +3,7 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
-using StrixMusic.Core.LocalFileCore.Backing.Models;
+using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;

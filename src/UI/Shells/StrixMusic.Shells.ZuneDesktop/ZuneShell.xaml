@@ -8,7 +8,7 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:a="using:LaunchPad.Attached"
-    xmlns:styles="using:StrixMusic.Shells.ZuneDesktop.Styles"
+    xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
     x:Name="RootControl" RequestedTheme="Dark">
 
     <defaultcontrols:Shell.Resources>
@@ -18,26 +18,26 @@
 
                 <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
                 <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/SmallPivotItemStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/PrimaryPivotItemStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneSettingsListViewItem.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneRadioButtonListViewItem.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ThinGridSplitterStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneTrackListViewItemStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneDesktopSearchTextBoxStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/SmallPivotItemStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/PrimaryPivotItemStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneSettingsListViewItem.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneRadioButtonListViewItem.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ThinGridSplitterStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneTrackListViewItemStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneDesktopSearchTextBoxStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
 
-                <styles:ArtistCollectionStyle/>
-                <styles:ArtistItemStyle/>
-                <styles:AlbumCollectionStyle/>
-                <styles:AlbumItemStyle/>
-                <styles:ArtistItemStyle/>
-                <styles:NowPlayingBarStyle/>
-                <styles:NowPlayingViewStyle/>
-                <styles:SafeImageStyle/>
-                <styles:SettingsViewStyle/>
-                <styles:TrackCollectionStyle/>
-                <styles:TrackItemStyle/>
+                <sdkstyles:ArtistCollectionStyle/>
+                <sdkstyles:ArtistItemStyle/>
+                <sdkstyles:AlbumCollectionStyle/>
+                <sdkstyles:AlbumItemStyle/>
+                <sdkstyles:ArtistItemStyle/>
+                <sdkstyles:NowPlayingBarStyle/>
+                <sdkstyles:NowPlayingViewStyle/>
+                <sdkstyles:SafeImageStyle/>
+                <sdkstyles:SettingsViewStyle/>
+                <sdkstyles:TrackCollectionStyle/>
+                <sdkstyles:TrackItemStyle/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </defaultcontrols:Shell.Resources>
