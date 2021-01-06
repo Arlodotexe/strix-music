@@ -2,7 +2,7 @@
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Provisos;
-using StrixMusic.Core.LocalFileCore.Backing.Models;
+using StrixMusic.Core.LocalFiles.Backing.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -91,7 +91,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
                     Id = Guid.NewGuid().ToString(),
                     TrackNumber = Convert.ToInt32(details.TrackNumber),
                     Description = details.Title,
-                    Name = details.Title,
+                    Title = details.Title,
                     Genres = details.Genre.ToList(),
                 };
 
