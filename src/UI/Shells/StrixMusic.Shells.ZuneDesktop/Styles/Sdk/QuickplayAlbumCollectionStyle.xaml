@@ -23,7 +23,7 @@
         </GridView>
     </DataTemplate>
 
-    <Style x:Key="ZuneDesktopAlbumCollectionStyle" TargetType="defaultcontrols:AlbumCollection">
+    <Style x:Key="QuickplayAlbumCollectionStyle" TargetType="defaultcontrols:AlbumCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
