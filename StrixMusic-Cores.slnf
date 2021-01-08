@@ -1,0 +1,11 @@
+{
+  "solution": {
+    "path": "StrixMusic.sln",
+    "projects": [
+      "src\\Cores\\StrixMusic.Core.LocalFiles\\StrixMusic.Core.LocalFiles.csproj",
+      "src\\Cores\\StrixMusic.Core.MusicBrainz\\StrixMusic.Core.MusicBrainz.csproj",
+      "src\\Libs\\OwlCore\\OwlCore.csproj",
+      "src\\Sdk\\StrixMusic.Sdk\\StrixMusic.Sdk.csproj"
+    ]
+  }
+}

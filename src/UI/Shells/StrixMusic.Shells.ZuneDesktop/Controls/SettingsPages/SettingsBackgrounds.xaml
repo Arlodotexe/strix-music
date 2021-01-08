@@ -10,7 +10,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneRadioButtonListViewItem.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneRadioButtonListViewItem.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

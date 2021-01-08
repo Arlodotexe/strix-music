@@ -89,7 +89,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
                 var trackMetadata = new TrackMetadata()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    TrackNumber = Convert.ToInt32(details.TrackNumber),
+                    TrackNumber = details.TrackNumber,
                     Description = details.Title,
                     Title = details.Title,
                     Genres = details.Genre.ToList(),

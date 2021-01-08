@@ -13,8 +13,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/SmallPivotItemStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/ZuneSettingsListViewItem.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/SmallPivotItemStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneSettingsListViewItem.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
