@@ -93,6 +93,8 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
                     Description = details.Title,
                     Title = details.Title,
                     Genres = details.Genre.ToList(),
+                    Duration = details.Duration,
+                    DiscNumber = 1,
                 };
 
                 trackMetadataLst.Add(trackMetadata);
