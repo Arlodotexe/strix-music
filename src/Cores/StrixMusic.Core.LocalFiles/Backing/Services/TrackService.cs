@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Provisos;
 using StrixMusic.Core.LocalFiles.Backing.Models;
+using StrixMusic.Core.LocalFiles.MetadataScanner;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,6 +22,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     {
         private readonly string _trackMetaCacheFileName = "TrackMeta.lfc"; //lfc represents LocalFileCore format.
         private readonly string _pathToMetafile;
+        private readonly TrackMetadataScanner _trackMetadataScanner;
         private IFolderData? _folderData;
         private IFileSystemService _fileSystemService;
 
@@ -32,6 +34,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         {
             _fileSystemService = fileSystemService;
             _pathToMetafile = $"{_fileSystemService.RootFolder.Path}\\{_trackMetaCacheFileName}";
+            _trackMetadataScanner = new TrackMetadataScanner();
         }
 
         /// <summary>
@@ -81,23 +84,11 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
 
             foreach (var item in files)
             {
-                var details = await item.Properties.GetMusicPropertiesAsync();
-
-                if (details is null)
+                var metadata = await _trackMetadataScanner.ScanTrackMetadata(item);
+                if (metadata is null)
                     continue;
 
-                var trackMetadata = new TrackMetadata()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    TrackNumber = details.TrackNumber,
-                    Description = details.Title,
-                    Title = details.Title,
-                    Genres = details.Genre.ToList(),
-                    Duration = details.Duration,
-                    DiscNumber = 1,
-                };
-
-                trackMetadataLst.Add(trackMetadata);
+                trackMetadataLst.Add(metadata);
             }
 
             var bytes = MessagePackSerializer.Serialize(trackMetadataLst, MessagePack.Resolvers.ContractlessStandardResolver.Options);
