@@ -3,11 +3,10 @@ using OwlCore.Extensions;
 using StrixMusic.Core.LocalFiles.Backing.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TagLib;
+using File = TagLib.File;
 
 namespace StrixMusic.Core.LocalFiles.MetadataScanner
 {
@@ -23,9 +22,11 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// <returns>Fully scanned <see cref="TrackMetadata"/>.</returns>
         public async Task<TrackMetadata?> ScanTrackMetadata(IFileData fileData)
         {
-            var id3Metadata = GetID3Metadata(fileData);
-            var propertyMetadata = await GetMusicFilesProperties(fileData);
-            var foundMetadata = new TrackMetadata?[] { id3Metadata, propertyMetadata };
+            var id3Metadata = await GetID3Metadata(fileData);
+
+            // disabled for now, scanning non-songs returns valid data
+            // var propertyMetadata = await GetMusicFilesProperties(fileData);
+            var foundMetadata = new[] { id3Metadata };
 
             var validMetadatas = foundMetadata.PruneNull().ToArray();
 
@@ -94,14 +95,16 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             };
         }
 
-        private TrackMetadata? GetID3Metadata(IFileData fileData)
+        private async Task<TrackMetadata?> GetID3Metadata(IFileData fileData)
         {
             try
             {
-                using var tagFile = File.Create(fileData.Path);
+                var stream = await fileData.GetStreamAsync();
+
+                using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
                 // Read the raw tags
-                var tags = tagFile.Tag;
+                var tags = tagFile.GetTag(TagTypes.Id3v2);
 
                 return new TrackMetadata()
                 {

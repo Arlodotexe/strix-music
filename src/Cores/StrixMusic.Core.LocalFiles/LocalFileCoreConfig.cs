@@ -1,17 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Extensions;
-using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Core.LocalFiles.Backing.Services;
+using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Core.LocalFiles
 {
@@ -19,7 +18,9 @@ namespace StrixMusic.Core.LocalFiles
     public class LocalFileCoreConfig : ICoreConfig
     {
         private IFileSystemService? _fileSystemService;
-        private TrackService _trackService;
+        private TrackService? _trackService;
+        private ISettingsService? _settingsService;
+        private bool _baseServicesSetup;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFileCoreConfig"/> class.
@@ -27,6 +28,7 @@ namespace StrixMusic.Core.LocalFiles
         public LocalFileCoreConfig(ICore sourceCore)
         {
             SourceCore = sourceCore;
+            AbstractUIElements = new List<AbstractUIElementGroup>();
         }
 
         /// <inheritdoc />
@@ -39,7 +41,7 @@ namespace StrixMusic.Core.LocalFiles
         public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; private set; }
 
         /// <inheritdoc/>
-        public Uri LogoSvgUrl => throw new NotImplementedException();
+        public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/Strix/logo.svg");
 
         /// <inheritdoc />
         public MediaPlayerType PreferredPlayerType => MediaPlayerType.None;
@@ -50,38 +52,59 @@ namespace StrixMusic.Core.LocalFiles
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task ConfigureServices(IServiceCollection services)
         {
+            await SetupConfigurationServices(services);
+            Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
+
             Services = null;
 
-            Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
             _trackService = new TrackService(_fileSystemService);
             services.Add(new ServiceDescriptor(typeof(TrackService), _trackService));
+
             Services = services.BuildServiceProvider();
         }
 
         /// <summary>
-        /// Configures the minimum required services for core configuration in a safe manner and is guaranteed not to throw.
+        /// Configures the minimum required services for core configuration in a safe manner.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task SetupConfigurationServices(IServiceCollection services)
         {
-            var provider = services.BuildServiceProvider();
-            _fileSystemService = provider.GetRequiredService<IFileSystemService>();
+            if (_baseServicesSetup)
+                return Task.CompletedTask;
+
+            _baseServicesSetup = true;
+
+            var fileSystemService = services.First(x => x.ServiceType == typeof(IFileSystemService)).ImplementationInstance as IFileSystemService;
+
+            Guard.IsNotNull(fileSystemService, nameof(fileSystemService));
+
+            _fileSystemService = fileSystemService;
+            _settingsService = new LocalFilesCoreSettingsService();
+
+            services.AddSingleton(_settingsService);
+
+            Services = services.BuildServiceProvider();
 
             return _fileSystemService.InitAsync();
         }
 
         /// <summary>
-        /// This method picks the folder for file core.
+        /// This folder picked for this instance of the <see cref="LocalFileCore"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SetupFileCoreFolder()
+        public async Task<IFolderData?> GetConfiguredFolder()
         {
-            if (_fileSystemService == null)
-                return;
+            Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
+            Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
-            var folders = await _fileSystemService.GetPickedFolders();
-            if (folders.Count == 0)
-                await _fileSystemService.PickFolder();
+            var configuredPath = await _settingsService.GetValue<string>(nameof(LocalFilesCoreSettingsKeys.FolderPath));
+
+            if (string.IsNullOrWhiteSpace(configuredPath))
+                return null;
+
+            var folderData = await _fileSystemService.GetFolderFromPathAsync(configuredPath);
+
+            return folderData;
         }
     }
 }

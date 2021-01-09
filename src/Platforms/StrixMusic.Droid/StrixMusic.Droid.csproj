@@ -123,6 +123,10 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Core.LocalFiles.csproj">
+      <Project>{617F1778-92F9-454A-B041-D71B4B63A221}</Project>
+      <Name>StrixMusic.Core.LocalFiles</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj">
       <Project>{d0618335-d56c-419d-b9fa-98e475338efc}</Project>
       <Name>StrixMusic.Core.MusicBrainz</Name>

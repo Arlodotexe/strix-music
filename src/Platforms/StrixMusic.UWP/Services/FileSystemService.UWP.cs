@@ -6,6 +6,7 @@ using StrixMusic.Sdk.Uno.Models;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using OwlCore.Helpers;
 
 // ReSharper disable once CheckNamespace
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
@@ -112,6 +113,17 @@ namespace OwlCore.AbstractStorage
             {
                 return false;
             }
+        }
+
+        /// <inheritdoc/>
+        public async Task<IFolderData?> GetFolderFromPathAsync(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                throw new ArgumentException();
+
+            var folderData = await StorageFolder.GetFolderFromPathAsync(path);
+
+            return new FolderData(folderData);
         }
 
         /// <inheritdoc/>

@@ -123,6 +123,12 @@ namespace StrixMusic.Sdk
                 {
                     await InitCore(data);
                 }
+                else if (updatedState.Value.Result == CoreState.Unloaded)
+                {
+                    // User cancelled core loading.
+                    cancellationToken.Dispose();
+                    return;
+                }
 
                 cancellationToken.Dispose();
                 return;

@@ -1,30 +1,26 @@
-﻿using MessagePack;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Provisos;
 using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Core.LocalFiles.MetadataScanner;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StrixMusic.Core.LocalFiles.Backing.Services
 {
-    // Note: This is in progress. This is not ready for review yet.
-
     /// <summary>
     /// The service that helps in interacting with the saved file core track information.
     /// </summary>
     public class TrackService : IAsyncInit
     {
-        private readonly string _trackMetaCacheFileName = "TrackMeta.lfc"; //lfc represents LocalFileCore format.
-        private readonly string _pathToMetafile;
+        private readonly string _trackMetadataCacheFileName = "TrackMeta.lfc"; //lfc represents LocalFileCore format.
+        private readonly string _pathToMetadatafile;
         private readonly TrackMetadataScanner _trackMetadataScanner;
+        private readonly IFileSystemService _fileSystemService;
         private IFolderData? _folderData;
-        private IFileSystemService _fileSystemService;
 
         /// <summary>
         /// Creates a new instance for <see cref="TrackService"/>.
@@ -33,7 +29,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         public TrackService(IFileSystemService fileSystemService)
         {
             _fileSystemService = fileSystemService;
-            _pathToMetafile = $"{_fileSystemService.RootFolder.Path}\\{_trackMetaCacheFileName}";
+            _pathToMetadatafile = $"{_fileSystemService.RootFolder.Path}\\{_trackMetadataCacheFileName}";
             _trackMetadataScanner = new TrackMetadataScanner();
         }
 
@@ -57,26 +53,26 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<IReadOnlyList<TrackMetadata>> GetTrackMetadata(int offset, int limit)
         {
-            if (!File.Exists(_pathToMetafile))
-                throw new FileNotFoundException(_pathToMetafile);
+            if (!File.Exists(_pathToMetadatafile))
+                throw new FileNotFoundException(_pathToMetadatafile);
 
-            var bytes = File.ReadAllBytes(_pathToMetafile);
+            var bytes = File.ReadAllBytes(_pathToMetadatafile);
             var trackMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<TrackMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
             return Task.FromResult<IReadOnlyList<TrackMetadata>>(trackMetadataLst.Skip(offset).Take(limit).ToList());
         }
 
         /// <summary>
-        /// Create or Update <see cref="TrackMetadata"/> infromation in files.
+        /// Create or Update <see cref="TrackMetadata"/> information in files.
         /// </summary>
-        /// <returns>The <see cref="TrackMetadata"/> collection.</returns>m
+        /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
         public async Task CreateOrUpdateTrackMetadata()
         {
             if (_folderData is null)
                 return;
 
-            if (!await _fileSystemService.FileExistsAsync(_pathToMetafile))
-                File.Create(_pathToMetafile).Close(); // creates the file and closes the filestream.
+            if (!await _fileSystemService.FileExistsAsync(_pathToMetadatafile))
+                File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
             var trackMetadataLst = new List<TrackMetadata>();
 
@@ -92,7 +88,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             }
 
             var bytes = MessagePackSerializer.Serialize(trackMetadataLst, MessagePack.Resolvers.ContractlessStandardResolver.Options);
-            File.WriteAllBytes(_pathToMetafile, bytes);
+            File.WriteAllBytes(_pathToMetadatafile, bytes);
         }
     }
 }
