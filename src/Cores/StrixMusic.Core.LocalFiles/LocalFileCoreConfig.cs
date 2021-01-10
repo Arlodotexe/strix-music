@@ -19,6 +19,7 @@ namespace StrixMusic.Core.LocalFiles
     {
         private IFileSystemService? _fileSystemService;
         private TrackService? _trackService;
+        private AlbumService _albumService;
         private ISettingsService? _settingsService;
         private bool _baseServicesSetup;
 
@@ -58,6 +59,8 @@ namespace StrixMusic.Core.LocalFiles
             Services = null;
 
             _trackService = new TrackService(_fileSystemService);
+            _albumService = new AlbumService(_fileSystemService);
+            services.Add(new ServiceDescriptor(typeof(AlbumService), _albumService));
             services.Add(new ServiceDescriptor(typeof(TrackService), _trackService));
 
             Services = services.BuildServiceProvider();
