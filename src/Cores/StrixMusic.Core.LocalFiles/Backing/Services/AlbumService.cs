@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.LocalFiles.Services
+namespace StrixMusic.Core.LocalFiles.Backing.Services
 {
     /// <summary>
     /// Album service for creating or getting the album metadata.
