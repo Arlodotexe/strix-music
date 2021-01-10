@@ -116,7 +116,9 @@ namespace StrixMusic.Core.LocalFiles
 
             // todo: move library scanning somewhere else
             _trackService = this.GetService<TrackService>();
+            _albumService = this.GetService<AlbumService>();
             await _trackService.InitAsync();
+            await _albumService.InitAsync();
             await _trackService.CreateOrUpdateTrackMetadata();
             await _albumService.CreateOrUpdateAlbumMetadata();
             var trackMetadata = _trackService.GetTrackMetadata(0, 3);
