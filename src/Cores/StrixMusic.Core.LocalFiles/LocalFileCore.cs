@@ -90,6 +90,7 @@ namespace StrixMusic.Core.LocalFiles
         }
 
         private TrackService _trackService;
+        private AlbumService _albumService;
 
         /// <inheritdoc/>
         public async Task InitAsync(IServiceCollection services)
@@ -115,9 +116,13 @@ namespace StrixMusic.Core.LocalFiles
 
             // todo: move library scanning somewhere else
             _trackService = this.GetService<TrackService>();
+            _albumService = this.GetService<AlbumService>();
             await _trackService.InitAsync();
+            await _albumService.InitAsync();
             await _trackService.CreateOrUpdateTrackMetadata();
-            var metaData = await _trackService.GetTrackMetadata(0, 3);
+            await _albumService.CreateOrUpdateAlbumMetadata();
+            var trackMetadata = _trackService.GetTrackMetadata(0, 3);
+            var albumMetadata = _albumService.GetAlbumMetadata(0, 3);
 
             ChangeCoreState(CoreState.Loaded);
         }

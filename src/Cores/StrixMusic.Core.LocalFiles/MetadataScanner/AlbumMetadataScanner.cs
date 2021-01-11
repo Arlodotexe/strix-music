@@ -4,23 +4,23 @@ using StrixMusic.Core.LocalFiles.Backing.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using TagLib;
-using File = TagLib.File;
 
 namespace StrixMusic.Core.LocalFiles.MetadataScanner
 {
     /// <summary>
-    /// Handles scanning tracks for all supported metadata.
+    /// Handles scanning albums for all supported metadata.
     /// </summary>
-    public class TrackMetadataScanner
+    public class AlbumMetadataScanner
     {
         /// <summary>
         /// Scans media file for metadata.
         /// </summary>
         /// <param name="fileData">The path to the file.</param>
-        /// <returns>Fully scanned <see cref="TrackMetadata"/>.</returns>
-        public async Task<TrackMetadata?> ScanTrackMetadata(IFileData fileData)
+        /// <returns>Fully scanned <see cref="AlbumMetadata"/>.</returns>
+        public async Task<AlbumMetadata?> ScanAlbumMetadata(IFileData fileData)
         {
             var id3Metadata = await GetID3Metadata(fileData);
 
@@ -39,7 +39,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             return mergedTrackMetada;
         }
 
-        private TrackMetadata MergeTrackMetadata(TrackMetadata[] metadatas)
+        private AlbumMetadata MergeTrackMetadata(AlbumMetadata[] metadatas)
         {
             if (metadatas.Length == 1)
                 return metadatas[0];
@@ -49,56 +49,47 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             {
                 var item = metadatas[i];
 
-                if (mergedMetaData.TrackNumber is null)
-                    mergedMetaData.TrackNumber = item.TrackNumber;
+                if (mergedMetaData.DatePublished is null)
+                    mergedMetaData.DatePublished = item.DatePublished;
 
                 if (mergedMetaData.Genres is null)
                     mergedMetaData.Genres = item.Genres;
 
-                if (mergedMetaData.DiscNumber is null)
-                    mergedMetaData.DiscNumber = item.DiscNumber;
+                if (mergedMetaData.TotalArtistsCount is null)
+                    mergedMetaData.TotalArtistsCount = item.TotalArtistsCount;
 
                 if (mergedMetaData.Duration is null)
                     mergedMetaData.Duration = item.Duration;
 
-                if (mergedMetaData.Lyrics is null)
-                    mergedMetaData.Lyrics = item.Lyrics;
-
-                if (mergedMetaData.Language is null)
-                    mergedMetaData.Language = item.Language;
+                if (mergedMetaData.TotalArtistsCount is null)
+                    mergedMetaData.TotalArtistsCount = item.TotalArtistsCount;
 
                 if (mergedMetaData.Description is null)
                     mergedMetaData.Description = item.Description;
 
                 if (mergedMetaData.Title is null)
                     mergedMetaData.Title = item.Title;
-
-                if (mergedMetaData.Url is null)
-                    mergedMetaData.Url = item.Url;
             }
 
             return mergedMetaData;
         }
 
-        private async Task<TrackMetadata?> GetMusicFilesProperties(IFileData fileData)
+        private async Task<AlbumMetadata?> GetMusicFilesProperties(IFileData fileData)
         {
             var details = await fileData.Properties.GetMusicPropertiesAsync();
 
             if (details is null)
                 return null;
 
-            return new TrackMetadata()
+            return new AlbumMetadata()
             {
-                Id = Guid.NewGuid().ToString(),
-                TrackNumber = details.TrackNumber,
-                Title = details.Title,
-                Genres = details.Genre?.ToList(),
+                Title = details.Album,
                 Duration = details.Duration,
-                Url = new Uri(fileData.Path),
+                Genres = new List<string>(details.Genre),
             };
         }
 
-        private async Task<TrackMetadata?> GetID3Metadata(IFileData fileData)
+        private async Task<AlbumMetadata?> GetID3Metadata(IFileData fileData)
         {
             try
             {
@@ -109,14 +100,15 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 // Read the raw tags
                 var tags = tagFile.GetTag(TagTypes.Id3v2);
 
-                return new TrackMetadata()
+                return new AlbumMetadata()
                 {
                     Description = tags.Description,
-                    Title = tags.Title,
-                    DiscNumber = tags.Disc,
+                    Title = tags.Album,
                     Duration = tagFile.Properties.Duration,
                     Genres = new List<string>(tags.Genres),
-                    TrackNumber = tags.Track,
+                    DatePublished = tags.DateTagged,
+                    TotalTracksCount = Convert.ToInt32(tags.TrackCount),
+                    TotalArtistsCount = tags.AlbumArtists.Length,
                 };
             }
             catch (UnsupportedFormatException)

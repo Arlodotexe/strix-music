@@ -42,12 +42,12 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// <summary>
         /// The total number of tracks in this album.
         /// </summary>
-        public int TotalTracksCount { get; set; }
+        public int? TotalTracksCount { get; set; }
 
         /// <summary>
         /// The total number of artists of this album.
         /// </summary>
-        public int TotalArtistsCount { get; set; }
+        public int? TotalArtistsCount { get; set; }
 
         /// <summary>
         /// The release date of this album.
