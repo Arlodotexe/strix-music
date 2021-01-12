@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StrixMusic.Sdk;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -17,7 +18,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         public QuickplayContent()
         {
             this.InitializeComponent();
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(20);
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsCommand.ExecuteAsync(20);
+            _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.ExecuteAsync(20);
         }
+
+        private MainViewModel? ViewModel => DataContext as MainViewModel;
 
         /// <summary>
         /// Runs any animations for when the <see cref="QuickplayContent"/> enters view.

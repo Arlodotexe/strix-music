@@ -1,20 +1,15 @@
-﻿using LaunchPad.ColorExtraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LaunchPad.ColorExtractor.ColorSpaces;
 using Windows.UI;
 
-namespace ColorExtractor.ColorExtractor.Filters
+namespace LaunchPad.ColorExtractor.Filters
 {
     public interface IFilter
     {
-        Color Clamp(Color color);
+        RGBColor Clamp(RGBColor color);
 
         HSVColor Clamp(HSVColor color);
 
-        bool TakeColor(Color color);
+        bool TakeColor(RGBColor color);
 
         bool TakeColor(HSVColor color);
     }
