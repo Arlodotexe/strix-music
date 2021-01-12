@@ -27,12 +27,12 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// <summary>
         /// The unique identifier(s) for this albums's track(s).
         /// </summary>
-        public List<string> TrackIds { get; set; }
+        public List<string>? TrackIds { get; set; }
 
         /// <summary>
         /// The unique identifier(s) for this album's artist(s).
         /// </summary>
-        public List<string> ArtistIds { get; set; }
+        public List<string>? ArtistIds { get; set; }
 
         /// <summary>
         /// The total duration of this album.
@@ -42,12 +42,12 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// <summary>
         /// The total number of tracks in this album.
         /// </summary>
-        public int TotalTracksCount { get; set; }
+        public int? TotalTracksCount { get; set; }
 
         /// <summary>
         /// The total number of artists of this album.
         /// </summary>
-        public int TotalArtistsCount { get; set; }
+        public int? TotalArtistsCount { get; set; }
 
         /// <summary>
         /// The release date of this album.

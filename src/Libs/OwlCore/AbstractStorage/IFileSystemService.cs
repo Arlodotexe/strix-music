@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using OwlCore.Provisos;
 
@@ -53,5 +55,15 @@ namespace OwlCore.AbstractStorage
         /// <param name="folderName">The directory to create.</param>
         /// <returns>An instance of <see cref="IFolderData"/> for the created directory.</returns>
         Task<IFolderData> CreateDirectoryAsync(string folderName);
+
+        /// <summary>
+        /// Gets the folder that has the specified absolute path in the file system.
+        /// </summary>
+        /// <param name="path">The absolute path in the file system (not the Uri) of the folder to get.</param>
+        /// <returns>When this method completes successfully, it returns a <see cref="IFolderData"/> that represents the specified folder.</returns>
+        /// <exception cref="FileNotFoundException">The specified folder does not exist. Check the value of path.</exception>
+        /// <exception cref="UnauthorizedAccessException">You don't have permission to access the specified folder.</exception>
+        /// <exception cref="ArgumentException">The path cannot be a relative path or a Uri. Check the value of path.</exception>
+        Task<IFolderData?> GetFolderFromPathAsync(string path);
     }
 }

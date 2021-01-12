@@ -39,6 +39,10 @@ namespace StrixMusic.Sdk.Services.StorageService
         public Task<IFolderData> CreateDirectoryAsync(string folderName) => _cacheStorageService?.CreateDirectoryAsync(folderName) ??
                                                                             ThrowHelper.ThrowInvalidOperationException<Task<IFolderData>>($"Tried to use {nameof(_cacheStorageService)} before it was initialized.");
 
+        /// <inheritdoc/>
+        public Task<IFolderData?> GetFolderFromPathAsync(string path) => _cacheStorageService?.GetFolderFromPathAsync(path) ??
+                                                                         ThrowHelper.ThrowInvalidOperationException<Task<IFolderData?>>($"Tried to use {nameof(_cacheStorageService)} before it was initialized.");
+
         /// <summary>
         /// A unique identifier for this instance of the cache that sections off the data.
         /// </summary>

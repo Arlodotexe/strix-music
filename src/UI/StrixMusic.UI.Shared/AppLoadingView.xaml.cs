@@ -10,7 +10,6 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using OwlCore.Services;
-using StrixMusic.Core.MusicBrainz;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
@@ -84,7 +83,8 @@ namespace StrixMusic.Shared
         {
             await InitializeServices();
             await InitializeAssemblies();
-            await ManuallyRegisterCore<MusicBrainzCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0495");
+            await ManuallyRegisterCore<Core.MusicBrainz.MusicBrainzCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0495");
+            await ManuallyRegisterCore<Core.LocalFiles.LocalFileCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0496");
             await InitializeCoreRanking();
             await InitializeOutOfBoxSetupIfNeeded();
             await InitializeConfiguredCores();

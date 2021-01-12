@@ -40,12 +40,12 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// <summary>
         /// The track number of this track in the album.
         /// </summary>
-        public int? TrackNumber { get; set; }
+        public uint? TrackNumber { get; set; }
 
         /// <summary>
         /// The disk this track is present on.
         /// </summary>
-        public int? DiscNumber { get; set; }
+        public uint? DiscNumber { get; set; }
 
         /// <summary>
         /// The language of this track.

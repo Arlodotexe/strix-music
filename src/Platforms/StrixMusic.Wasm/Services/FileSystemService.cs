@@ -82,6 +82,12 @@ namespace OwlCore.AbstractStorage
         }
 
         /// <inheritdoc/>
+        public Task<IFolderData?> GetFolderFromPathAsync(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
         public async Task<IFolderData> CreateDirectoryAsync(string folderName)
         {
             var folderData = await RootFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);

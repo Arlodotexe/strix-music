@@ -10,12 +10,18 @@ using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OwlCore.AbstractStorage;
+using OwlCore.Extensions;
+using StrixMusic.Core.LocalFiles.Services;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Core.LocalFiles
 {
     /// <inheritdoc />
     public class LocalFileCore : ICore
     {
+        private static int CoreCount = 0;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFileCore"/> class.
         /// </summary>
@@ -31,6 +37,7 @@ namespace StrixMusic.Core.LocalFiles
             Discoverables = new LocalFilesCoreDiscoverables(this);
             User = new LocalFilesCoreUser(this);
             CoreConfig = new LocalFileCoreConfig(this);
+            LocalFileCoreManager.Instances?.Add(this);
         }
 
         /// <inheritdoc/>
@@ -82,17 +89,9 @@ namespace StrixMusic.Core.LocalFiles
         /// <inheritdoc/>
         public ValueTask DisposeAsync()
         {
+            LocalFileCoreManager.Instances?.Remove(this);
             return default;
         }
-
-        /// <inheritdoc/>
-        private Task<ICoreSearchResults> GetSearchResultsAsync(string query)
-        {
-            throw new NotImplementedException();
-        }
-
-        private bool _configured = false;
-        private TrackService _trackService;
 
         /// <inheritdoc/>
         public async Task InitAsync(IServiceCollection services)
@@ -102,23 +101,42 @@ namespace StrixMusic.Core.LocalFiles
             if (!(CoreConfig is LocalFileCoreConfig coreConfig))
                 return;
 
-            // This was for testing purposes, and is now disabled.
-            if (!_configured)
+            await coreConfig.SetupConfigurationServices(services);
+            var configuredFolder = await coreConfig.GetConfiguredFolder();
+
+            if (configuredFolder is null)
             {
-                await coreConfig.SetupConfigurationServices(services);
-                await coreConfig.SetupFileCoreFolder();
-                await coreConfig.ConfigureServices(services);
+                PickAndSetupFolder().FireAndForget();
 
-                _configured = true;
+                ChangeCoreState(CoreState.ConfigRequested);
 
-                _trackService = this.GetService<TrackService>();
-                await _trackService.InitAsync();
-                await _trackService.CreateOrUpdateTrackMetadata();
-                var metaData = await _trackService.GetTrackMetadata(0, 3);
-
-                ChangeCoreState(CoreState.Loaded);
                 return;
             }
+
+            await coreConfig.ConfigureServices(services);
+
+            ChangeCoreState(CoreState.Loaded);
+            CoreCount++;
+            if (CoreCount == LocalFileCoreManager.Instances?.Count)
+                await LocalFileCoreManager.InitializeDataForAllCores();
+        }
+
+        private async Task PickAndSetupFolder()
+        {
+            var fileSystem = this.GetService<IFileSystemService>();
+            var pickedFolder = await fileSystem.PickFolder();
+
+            // If they don't pick a folder, unload the core.
+            if (pickedFolder is null)
+            {
+                // todo: show notification with "A folder must be picked"
+                ChangeCoreState(CoreState.Unloaded);
+                return;
+            }
+
+            await this.GetService<ISettingsService>().SetValue<string?>(nameof(LocalFilesCoreSettingsKeys.FolderPath), pickedFolder.Path);
+
+            ChangeCoreState(CoreState.Configured);
         }
 
         /// <inheritdoc/>
@@ -131,19 +149,6 @@ namespace StrixMusic.Core.LocalFiles
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
         {
             throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Configures the minimum required services for core configuration in a safe manner and is guaranteed not to throw.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task SetupConfigurationServices(IServiceCollection services)
-        {
-            // var provider = services.BuildServiceProvider();
-
-            // _fileSystemService = provider.GetRequiredService<IFileSystemService>();
-            // return _fileSystemService.InitAsync();
-            return Task.CompletedTask;
         }
     }
 }
