@@ -5,7 +5,7 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:LaunchPad.Attached"
     xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
-    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Control"
+    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.QuickplayAlbumCollectionStyle">
 
     <ResourceDictionary.MergedDictionaries>
