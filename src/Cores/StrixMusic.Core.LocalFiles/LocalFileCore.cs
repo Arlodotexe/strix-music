@@ -20,6 +20,8 @@ namespace StrixMusic.Core.LocalFiles
     /// <inheritdoc />
     public class LocalFileCore : ICore
     {
+        private static int CoreCount = 0;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFileCore"/> class.
         /// </summary>
@@ -35,6 +37,7 @@ namespace StrixMusic.Core.LocalFiles
             Discoverables = new LocalFilesCoreDiscoverables(this);
             User = new LocalFilesCoreUser(this);
             CoreConfig = new LocalFileCoreConfig(this);
+            LocalFileCoreManager.Instances?.Add(this);
         }
 
         /// <inheritdoc/>
@@ -86,10 +89,9 @@ namespace StrixMusic.Core.LocalFiles
         /// <inheritdoc/>
         public ValueTask DisposeAsync()
         {
+            LocalFileCoreManager.Instances?.Remove(this);
             return default;
         }
-
-        private TrackService _trackService;
 
         /// <inheritdoc/>
         public async Task InitAsync(IServiceCollection services)
@@ -113,13 +115,10 @@ namespace StrixMusic.Core.LocalFiles
 
             await coreConfig.ConfigureServices(services);
 
-            // todo: move library scanning somewhere else
-            _trackService = this.GetService<TrackService>();
-            await _trackService.InitAsync();
-            await _trackService.CreateOrUpdateTrackMetadata();
-            var metaData = await _trackService.GetTrackMetadata(0, 3);
-
             ChangeCoreState(CoreState.Loaded);
+            CoreCount++;
+            if (CoreCount == LocalFileCoreManager.Instances?.Count)
+                await LocalFileCoreManager.InitializeDataForAllCores();
         }
 
         private async Task PickAndSetupFolder()

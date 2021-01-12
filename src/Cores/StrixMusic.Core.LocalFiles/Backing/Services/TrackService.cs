@@ -46,7 +46,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         }
 
         /// <summary>
-        /// Get all <see cref="TrackMetadata"/>> over the file system.
+        /// Gets all <see cref="TrackMetadata"/>> over the file system.
         /// </summary>
         /// <param name="offset"></param>
         /// <param name="limit"></param>
