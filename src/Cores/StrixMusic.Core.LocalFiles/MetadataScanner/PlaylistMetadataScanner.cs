@@ -45,6 +45,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 case ".asx":
                     playlistMetadata = await GetAsxMetadata(fileData);
                     break;
+
+                case ".mpcpl":
+                    playlistMetadata = await GetMpcplMetadata(fileData);
+                    break;
             }
 
             // disabled for now, scanning non-songs returns valid data
@@ -89,6 +93,43 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             }
 
             return mergedMetaData;
+        }
+
+        /// <summary>
+        /// Resolves a potentially relative file path to an absolute path.
+        /// </summary>
+        /// <param name="path">The path to resolve.</param>
+        /// <param name="currentPath">The path to append to <paramref name="path"/>
+        /// if it's relative.</param>
+        /// <remarks>This method is safe to use on absolute paths as well.</remarks>
+        /// <returns>An absolute path.</returns>
+        public string ResolveFilePath(string path, string currentPath)
+        {
+            // Check if the path is absolute
+            if (Regex.IsMatch(path, @"^(?:[a-zA-Z]\:)\\+"))
+            {
+                // Path is absolute
+                return path;
+            }
+            else
+            {
+                // Path is relative
+                string fullPath = Path.GetFullPath(Path.Combine(
+                    Path.GetDirectoryName(currentPath), path));
+                return fullPath;
+            }
+        }
+
+        /// <summary>
+        /// Resolves a potentially relative file path to an absolute path.
+        /// </summary>
+        /// <param name="path">The path to resolve.</param>
+        /// <param name="fileData">The file to resolve paths relative to.</param>
+        /// <remarks>This method is safe to use on absolute paths as well.</remarks>
+        /// <returns>An absolute path.</returns>
+        public string ResolveFilePath(string path, IFileData fileData)
+        {
+            return ResolveFilePath(path, Path.GetDirectoryName(fileData.Path));
         }
 
         /// <summary>
@@ -203,23 +244,9 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     else
                     {
                         // Assume the line is a path to a music file
-
-                        // Check if the path is absolute
-                        if (Regex.IsMatch(line, @"^(?:[a-zA-Z]\:)\\+"))
-                        {
-                            // Path is absolute
-                            trackMetadataTemp.Url = new Uri(line);
-                            tracks.Add(trackMetadataTemp);
-                        }
-                        else
-                        {
-                            // Path is relative
-                            string fullPath = Path.GetFullPath(Path.Combine(
-                                Path.GetDirectoryName(fileData.Path), line
-                            ));
-                            trackMetadataTemp.Url = new Uri(fullPath);
-                            tracks.Add(trackMetadataTemp);
-                        }
+                        string fullPath = ResolveFilePath(line, fileData);
+                        trackMetadataTemp.Url = new Uri(fullPath);
+                        tracks.Add(trackMetadataTemp);
 
                         trackMetadataTemp = new TrackMetadata();
                     }
@@ -331,6 +358,62 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 // TODO: ASX files can reference other ASX files using ENTRYREF.
                 // It works kind of like UWP XAML's ItemsPresenter:
                 // https://docs.microsoft.com/en-us/windows/win32/wmp/entryref-element
+
+                return metadata;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the MPC-PL metadata from the given file.
+        /// </summary>
+        private async Task<PlaylistMetadata?> GetMpcplMetadata(IFileData fileData)
+        {
+            try
+            {
+                using var stream = await fileData.GetStreamAsync();
+                StreamReader content = new StreamReader(stream);
+
+                var metadata = new PlaylistMetadata();
+                var tracks = new List<TrackMetadata>();
+
+                // Make sure the file is either a "pointer" to a folder
+                // or an M3U playlist
+                string firstLine = await content.ReadLineAsync();
+                if (firstLine != "MPCPLAYLIST")
+                    return null;
+
+                while (!content.EndOfStream)
+                {
+                    var trackMetadata = new TrackMetadata();
+
+                    var line = await content.ReadLineAsync();
+                    var components = Regex.Match(line, @"^(?<idx>[0-9]+),(?<attr>[A-z]+),(?<val>.+)$").Groups;
+
+                    switch (components["attr"].Value)
+                    {
+                        case "filename":
+                            string fullPath = ResolveFilePath(components["val"].Value, fileData.Path);
+                            trackMetadata.Url = new Uri(fullPath);
+
+                            int idx = int.Parse(components["idx"].Value);
+                            if (idx >= tracks.Count)
+                                tracks.Add(trackMetadata);
+                            else
+                                tracks.Insert(idx, trackMetadata);
+                            break;
+
+                        case "type":
+                            // TODO: No idea what this is supposed to mean.
+                            // It's not documented anywhere. Probably supposed to be an enum.
+                        default:
+                            // Unsupported attribute
+                            break;
+                    }
+                }
 
                 return metadata;
             }
