@@ -3,8 +3,10 @@ using OwlCore.Extensions;
 using StrixMusic.Core.LocalFiles.Backing.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -25,9 +27,15 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             PlaylistMetadata? playlistMetadata = null;
             switch (fileData.FileExtension)
             {
-                case "zpl":
-                case "wpl":
+                case ".zpl":
+                case ".wpl":
                     playlistMetadata = await GetSmilMetadata(fileData);
+                    break;
+
+                case ".m3u":
+                case ".m3u8":
+                case ".vlc":
+                    playlistMetadata = await GetM3UMetadata(fileData);
                     break;
             }
 
@@ -125,7 +133,95 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// </summary>
         private async Task<PlaylistMetadata?> GetM3UMetadata(IFileData fileData)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var stream = await fileData.GetStreamAsync();
+                StreamReader content;
+                if (fileData.FileExtension == ".m3u8")
+                    content = new StreamReader(stream, Encoding.UTF8);
+                else
+                    content = new StreamReader(stream);
+
+                var metadata = new PlaylistMetadata();
+                var trackMetadataTemp = new TrackMetadata();
+                var tracks = new List<TrackMetadata>();
+
+                // Make sure the file is either a "pointer" to a folder
+                // or an M3U playlist
+                string firstLine = await content.ReadLineAsync();
+                if (firstLine != "#EXTM3U")
+                {
+                    if (Directory.Exists(firstLine))
+                    {
+                        // TODO: Path exists, create a playlist with the tracks in that folder
+                        metadata.Title = Path.GetDirectoryName(firstLine);
+                        metadata.Url = new Uri(firstLine);
+                        return metadata;
+                    }
+                    else
+                    {
+                        // Not a valid M3U playlist
+                        return null;
+                    }
+                }
+
+                while (!content.EndOfStream)
+                {
+                    var line = await content.ReadLineAsync();
+
+                    // Handle M3U directives
+                    if (line[0] == '#')
+                    {
+                        // --++ Extended M3U ++--
+                        // Playlist display title
+                        if (line.StartsWith("#PLAYLIST:"))
+                        {
+                            metadata.Title = line.Split(':')[1];
+                        }
+                        else if (line.StartsWith("#EXTINF:"))
+                        {
+                            var parameters = line.Split(':')[1].Split(',');
+                            var metaArtistAndTitle = parameters[1].Split('-');
+
+                            trackMetadataTemp.Duration = new TimeSpan(0, 0, int.Parse(parameters[0]));
+                            trackMetadataTemp.Title = metaArtistAndTitle[1].Trim();
+                        }
+                        else
+                        {
+                            // Directive not recognized, might be a comment
+                        }
+                    }
+                    else
+                    {
+                        // Assume the line is a path to a music file
+
+                        // Check if the path is absolute
+                        if (Regex.IsMatch(line, @"^(?:[a-zA-Z]\:)\\+"))
+                        {
+                            // Path is absolute
+                            trackMetadataTemp.Url = new Uri(line);
+                            tracks.Add(trackMetadataTemp);
+                        }
+                        else
+                        {
+                            // Path is relative
+                            string fullPath = Path.GetFullPath(Path.Combine(
+                                Path.GetDirectoryName(fileData.Path), line
+                            ));
+                            trackMetadataTemp.Url = new Uri(fullPath);
+                            tracks.Add(trackMetadataTemp);
+                        }
+
+                        trackMetadataTemp = new TrackMetadata();
+                    }
+                }
+
+                return metadata;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
