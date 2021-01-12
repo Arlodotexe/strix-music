@@ -34,8 +34,12 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                 case ".m3u":
                 case ".m3u8":
-                case ".vlc":
+                case ".vlc":    // TODO: Make sure this actually works with VLC files
                     playlistMetadata = await GetM3UMetadata(fileData);
+                    break;
+
+                case ".xspf":
+                    playlistMetadata = await GetXspfMetadata(fileData);
                     break;
             }
 
@@ -131,6 +135,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// <summary>
         /// Gets the M3U metadata from the given file.
         /// </summary>
+        /// <remarks>Recognizes both M3U (default encoding) and M3U8 (UTF-8 encoding).</remarks>
         private async Task<PlaylistMetadata?> GetM3UMetadata(IFileData fileData)
         {
             try
@@ -214,6 +219,61 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                         trackMetadataTemp = new TrackMetadata();
                     }
+                }
+
+                return metadata;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the XSPF metadata from the given file.
+        /// </summary>
+        /// <remarks>Does not support any application extensions.</remarks>
+        private async Task<PlaylistMetadata?> GetXspfMetadata(IFileData fileData)
+        {
+            try
+            {
+                using var stream = await fileData.GetStreamAsync();
+
+                var doc = XDocument.Load(stream);
+                var playlist = doc.Root;
+                string xmlns = playlist.GetDefaultNamespace().NamespaceName;
+                var tracklist = playlist.Element(XName.Get("trackList", xmlns));
+                var trackListElements = tracklist.Elements(XName.Get("track", xmlns));
+
+                var metadata = new PlaylistMetadata()
+                {
+                    Title = playlist.Element(XName.Get("title", xmlns))?.Value,
+                    TotalTracksCount = trackListElements.Count(),
+                    Description = playlist.Element(XName.Get("annotation", xmlns))?.Value,
+                };
+                string? url = playlist.Element(XName.Get("info", xmlns))?.Value;
+                if (url != null)
+                    metadata.Url = new Uri(url);
+
+                // This is only temporary until we work out how to get track IDs
+                var trackMetadata = new List<TrackMetadata>(metadata.TotalTracksCount);
+                foreach (var media in trackListElements)
+                {
+                    int dur = int.Parse(media.Element(XName.Get("duration", xmlns))?.Value);
+
+                    // TODO: Where does the track ID come from?
+                    var track = new TrackMetadata
+                    {
+                        Title = media.Element(XName.Get("title", xmlns))?.Value,
+                        Url = new Uri(media.Element(XName.Get("location", xmlns))?.Value),
+                        Duration = new TimeSpan(0, 0, 0, 0, dur),
+                        Description = media.Element(XName.Get("annotation", xmlns))?.Value,
+                    };
+                    string? trackNum = media.Element(XName.Get("trackNum", xmlns))?.Value;
+                    if (trackNum != null)
+                        track.TrackNumber = uint.Parse(trackNum);
+
+                    trackMetadata.Add(track);
                 }
 
                 return metadata;
