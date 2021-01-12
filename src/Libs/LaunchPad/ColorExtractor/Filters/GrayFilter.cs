@@ -1,13 +1,7 @@
-﻿using LaunchPad.ColorExtraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
+﻿using LaunchPad.ColorExtractor.ColorSpaces;
 using Windows.UI;
 
-namespace ColorExtractor.ColorExtractor.Filters
+namespace LaunchPad.ColorExtractor.Filters
 {
     public class GrayFilter : IFilter
     {
@@ -18,11 +12,11 @@ namespace ColorExtractor.ColorExtractor.Filters
 
         public float Tolerance { get; set; } = .3f;
 
-        public Color Clamp(Color color)
+        public RGBColor Clamp(RGBColor color)
         {
             if (color.GetSaturation() < Tolerance)
             {
-                return Clamp(HSVColor.FromColor(color)).AsArgb();
+                return Clamp(color.ToHsv()).ToRgb();
             }
             return color;
         }
@@ -36,7 +30,7 @@ namespace ColorExtractor.ColorExtractor.Filters
             return color;
         }
 
-        public bool TakeColor(Color color)
+        public bool TakeColor(RGBColor color)
         {
             return color.GetSaturation() > Tolerance;
         }
