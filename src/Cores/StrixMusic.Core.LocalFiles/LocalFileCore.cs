@@ -89,7 +89,6 @@ namespace StrixMusic.Core.LocalFiles
         /// <inheritdoc/>
         public ValueTask DisposeAsync()
         {
-            LocalFileCoreManager.Instances?.Remove(this);
             return default;
         }
 
