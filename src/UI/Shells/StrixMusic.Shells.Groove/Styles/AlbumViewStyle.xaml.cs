@@ -75,20 +75,22 @@ namespace StrixMusic.Shells.Groove.Styles
                 return null;
 
 
-            List<IFilter> filters = new List<IFilter>();
+            FilterCollection filters = new FilterCollection();
             filters.Add(new WhiteFilter(.4f));
             filters.Add(new BlackFilter(.15f));
             filters.Add(new GrayFilter(.3f));
 
-            List<IFilter> clamps = new List<IFilter>();
+            FilterCollection clamps = new FilterCollection();
             clamps.Add(new SaturationFilter(.6f));
 
             var colors = ImageParser.GetImageColors(image, 1920);
 
-            var palette = KMeansMethod.KMeans<RGBColor, RGBShape>(colors, 3);
-            //GaussianKernel kernel = new GaussianKernel(.15);
-            //var palette = MeanShiftMethod.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, 480);
-            RGBColor primary = palette[0].Item1;
+            colors = filters.Filter(colors, 160);
+
+            //var palette = KMeansMethod.KMeans<RGBColor, RGBShape>(colors, 3);
+            GaussianKernel kernel = new GaussianKernel(.15);
+            var palette = MeanShiftMethod.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Math.Min(colors.Length, 480));
+            RGBColor primary = clamps.Clamp(palette[0].Item1);
             Color finalColor = Color.FromArgb(
                 255,
                 (byte)(primary.R * 255),
