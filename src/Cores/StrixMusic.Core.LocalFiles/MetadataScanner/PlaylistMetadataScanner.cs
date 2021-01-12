@@ -29,6 +29,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             {
                 case ".zpl":
                 case ".wpl":
+                case ".smil":
                     playlistMetadata = await GetSmilMetadata(fileData);
                     break;
 
@@ -48,6 +49,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                 case ".mpcpl":
                     playlistMetadata = await GetMpcplMetadata(fileData);
+                    break;
+
+                case ".fpl":
+                    playlistMetadata = await GetFplMetadata(fileData);
                     break;
             }
 
@@ -409,6 +414,65 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                         case "type":
                             // TODO: No idea what this is supposed to mean.
                             // It's not documented anywhere. Probably supposed to be an enum.
+                        default:
+                            // Unsupported attribute
+                            break;
+                    }
+                }
+
+                return metadata;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the FPL metadata from the given file.
+        /// </summary>
+        private async Task<PlaylistMetadata?> GetFplMetadata(IFileData fileData)
+        {
+            try
+            {
+                throw new NotImplementedException();
+
+                // TODO
+                using var stream = await fileData.GetStreamAsync();
+                StreamReader content = new StreamReader(stream);
+
+                var metadata = new PlaylistMetadata();
+                var tracks = new List<TrackMetadata>();
+
+                // Make sure the file is either a "pointer" to a folder
+                // or an M3U playlist
+                string firstLine = await content.ReadLineAsync();
+                if (firstLine != "MPCPLAYLIST")
+                    return null;
+
+                while (!content.EndOfStream)
+                {
+                    var trackMetadata = new TrackMetadata();
+
+                    var line = await content.ReadLineAsync();
+                    var components = Regex.Match(line, @"^(?<idx>[0-9]+),(?<attr>[A-z]+),(?<val>.+)$").Groups;
+
+                    switch (components["attr"].Value)
+                    {
+                        case "filename":
+                            string fullPath = ResolveFilePath(components["val"].Value, fileData.Path);
+                            trackMetadata.Url = new Uri(fullPath);
+
+                            int idx = int.Parse(components["idx"].Value);
+                            if (idx >= tracks.Count)
+                                tracks.Add(trackMetadata);
+                            else
+                                tracks.Insert(idx, trackMetadata);
+                            break;
+
+                        case "type":
+                        // TODO: No idea what this is supposed to mean.
+                        // It's not documented anywhere. Probably supposed to be an enum.
                         default:
                             // Unsupported attribute
                             break;
