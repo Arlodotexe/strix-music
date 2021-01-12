@@ -41,6 +41,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 case ".xspf":
                     playlistMetadata = await GetXspfMetadata(fileData);
                     break;
+
+                case ".asx":
+                    playlistMetadata = await GetAsxMetadata(fileData);
+                    break;
             }
 
             // disabled for now, scanning non-songs returns valid data
@@ -275,6 +279,58 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                     trackMetadata.Add(track);
                 }
+
+                return metadata;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the ASX metadata from the given file.
+        /// </summary>
+        /// <remarks>Does not support ENTRYREF.</remarks>
+        private async Task<PlaylistMetadata?> GetAsxMetadata(IFileData fileData)
+        {
+            try
+            {
+                using var stream = await fileData.GetStreamAsync();
+
+                var doc = XDocument.Load(stream);
+                var asx = doc.Root;
+                var entries = asx.Elements("entry");
+                string baseUrl = asx.Element("base")?.Value ?? string.Empty;
+
+                var metadata = new PlaylistMetadata()
+                {
+                    Title = asx.Element("title").Value,
+                    TotalTracksCount = entries.Count(),
+                };
+
+                // This is only temporary until we work out how to get track IDs
+                var trackMetadata = new List<TrackMetadata>(metadata.TotalTracksCount);
+                foreach (var entry in entries)
+                {
+                    string entryBaseUrl = entry.Element("base")?.Value ?? string.Empty;
+
+                    // TODO: Where does the track ID come from?
+                    var track = new TrackMetadata
+                    {
+                        Title = entry.Element("title")?.Value,
+                        Url = new Uri(baseUrl + entryBaseUrl + entry.Element("ref").Attribute("href").Value),
+                    };
+                    string? durString = entry.Element("duration")?.Value;
+                    if (durString != null)
+                        track.Duration = TimeSpan.Parse(durString);
+
+                    trackMetadata.Add(track);
+                }
+
+                // TODO: ASX files can reference other ASX files using ENTRYREF.
+                // It works kind of like UWP XAML's ItemsPresenter:
+                // https://docs.microsoft.com/en-us/windows/win32/wmp/entryref-element
 
                 return metadata;
             }
