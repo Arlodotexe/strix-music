@@ -48,12 +48,12 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         }
 
         /// <summary>
-        /// Get all <see cref="TrackMetadata"/>> over the file system.
+        /// Get all <see cref="PlaylistMetadata"/>> over the file system.
         /// </summary>
         /// <param name="offset"></param>
         /// <param name="limit"></param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task<IReadOnlyList<PlaylistMetadata>> GetTrackMetadata(int offset, int limit)
+        public Task<IReadOnlyList<PlaylistMetadata>> GetPlaylistMetadata(int offset, int limit)
         {
             if (!File.Exists(_pathToMetadatafile))
                 throw new FileNotFoundException(_pathToMetadatafile);
@@ -65,10 +65,10 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         }
 
         /// <summary>
-        /// Create or Update <see cref="TrackMetadata"/> information in files.
+        /// Create or Update <see cref="PlaylistMetadata"/> information in files.
         /// </summary>
-        /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
-        public async Task CreateOrUpdateTrackMetadata()
+        /// <returns>The <see cref="PlaylistMetadata"/> collection.</returns>
+        public async Task CreateOrUpdatePlaylistMetadata()
         {
             if (_folderData is null)
                 return;
