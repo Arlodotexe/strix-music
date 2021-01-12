@@ -22,11 +22,18 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// <returns>Fully scanned <see cref="PlaylistMetadata"/>.</returns>
         public async Task<PlaylistMetadata?> ScanPlaylistMetadata(IFileData fileData)
         {
-            var smilMetadata = await GetSmilMetadata(fileData);
+            PlaylistMetadata? playlistMetadata = null;
+            switch (fileData.FileExtension)
+            {
+                case "zpl":
+                case "wpl":
+                    playlistMetadata = await GetSmilMetadata(fileData);
+                    break;
+            }
 
             // disabled for now, scanning non-songs returns valid data
             // var propertyMetadata = await GetMusicFilesProperties(fileData);
-            var foundMetadata = new[] { smilMetadata };
+            var foundMetadata = new[] { playlistMetadata };
 
             var validMetadatas = foundMetadata.PruneNull().ToArray();
 
@@ -80,20 +87,45 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                 var doc = XDocument.Load(stream);
                 var smil = doc.Root;
-                var seq = smil.Element("seq");
+                var seq = smil.Element("body").Element("seq");
                 var head = smil.Element("head");
 
-                return new PlaylistMetadata()
+                var metadata = new PlaylistMetadata()
                 {
                     Title = head.Element("title").Value,
                     TotalTracksCount = int.Parse(head.Elements()
                         .First(e => e.Name == "meta" && e.Attribute("name").Value == "itemCount").Attribute("content").Value),
                 };
+
+                // This is only temporary until we work out how to get track IDs
+                var trackMetadata = new List<TrackMetadata>(seq.Elements().Count());
+                foreach (var media in seq.Elements("media"))
+                {
+                    // TODO: Where does the track ID come from?
+                    var track = new TrackMetadata
+                    {
+                        Title = media.Attribute("trackTitle")?.Value,
+                        Url = new Uri(media.Attribute("src")?.Value),
+                        Duration = new TimeSpan(0, 0, 0, 0, int.Parse(media.Attribute("duration")?.Value)),
+                    };
+
+                    trackMetadata.Add(track);
+                }
+
+                return metadata;
             }
             catch
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Gets the M3U metadata from the given file.
+        /// </summary>
+        private async Task<PlaylistMetadata?> GetM3UMetadata(IFileData fileData)
+        {
+            throw new NotImplementedException();
         }
     }
 }
