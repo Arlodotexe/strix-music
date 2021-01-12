@@ -4,8 +4,9 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:LaunchPad.Attached"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.QuickplayAlbumCollectionStyle"
-    xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk">
+    xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
+    xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Control"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.QuickplayAlbumCollectionStyle">
 
     <ResourceDictionary.MergedDictionaries>
         <sdkstyles:AlbumItemStyle/>
@@ -17,10 +18,19 @@
     </DataTemplate>
 
     <DataTemplate x:Key="QuickplayAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
-        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource QuickplayAlbumCollectionItemStyle}"
-                  ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}" Grid.Row="1"
-                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
-        </GridView>
+
+        <ListView x:Name="PART_Selector"
+                  ItemTemplate="{StaticResource QuickplayAlbumCollectionItemStyle}"
+                  ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}"
+                  SelectionMode="Extended" IsItemClickEnabled="True"
+                  ItemsSource="{x:Bind Albums}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <tkcontrols:WrapPanel VerticalSpacing="5"
+                                          HorizontalSpacing="5" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ListView>
     </DataTemplate>
 
     <Style x:Key="QuickplayAlbumCollectionStyle" TargetType="defaultcontrols:AlbumCollection">
