@@ -27,10 +27,13 @@ namespace StrixMusic.Core.LocalFiles
         {
             await Instances.InParallel(x => x.GetService<TrackService>().InitAsync());
             await Instances.InParallel(x => x.GetService<AlbumService>().InitAsync());
+            await Instances.InParallel(x => x.GetService<PlaylistService>().InitAsync());
 
-            // This will currently throw an exception(file is being used by another process) because all cores instance are using the same folder. 
+            // FIXME: This will currently throw an exception
+            // (file is being used by another process) because all cores instances are using the same folder. 
             await Instances.InParallel(x => x.GetService<AlbumService>().CreateOrUpdateAlbumMetadata());
             await Instances.InParallel(x => x.GetService<TrackService>().CreateOrUpdateTrackMetadata());
+            await Instances.InParallel(x => x.GetService<PlaylistService>().CreateOrUpdatePlaylistMetadata());
         }
     }
 }

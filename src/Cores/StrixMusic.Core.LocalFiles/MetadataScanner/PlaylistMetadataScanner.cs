@@ -54,6 +54,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 case ".fpl":
                     playlistMetadata = await GetFplMetadata(fileData);
                     break;
+
+                default:
+                    // Format not supported
+                    return null;
             }
 
             // disabled for now, scanning non-songs returns valid data
@@ -428,55 +432,183 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             }
         }
 
+        private static readonly byte[] FplMagic = new byte[] { 0xE1, 0xA0, 0x9C, 0x91, 0xF8, 0x3C, 0x77, 0x42, 0x85, 0x2C, 0x3B, 0xCC, 0x14, 0x01, 0xD3, 0xF2 };
+
         /// <summary>
         /// Gets the FPL metadata from the given file.
         /// </summary>
+        /// <remarks>
+        /// Supports playlists created by foobar2000 v0.9.1 and newer.
+        /// Based on the specification here: https://github.com/rr-/fpl_reader/blob/master/fpl-format.md
+        /// </remarks>
         private async Task<PlaylistMetadata?> GetFplMetadata(IFileData fileData)
         {
             try
             {
-                throw new NotImplementedException();
-
-                // TODO
                 using var stream = await fileData.GetStreamAsync();
-                StreamReader content = new StreamReader(stream);
+                using var content = new BinaryReader(stream);
 
                 var metadata = new PlaylistMetadata();
                 var tracks = new List<TrackMetadata>();
 
-                // Make sure the file is either a "pointer" to a folder
-                // or an M3U playlist
-                string firstLine = await content.ReadLineAsync();
-                if (firstLine != "MPCPLAYLIST")
+                // Make sure the file is an FPL
+                byte[] fileMagic = content.ReadBytes(FplMagic.Length);
+                if (!fileMagic.SequenceEqual(FplMagic))
                     return null;
 
-                while (!content.EndOfStream)
+                // foobar2000 playlists don't have titles, so set it
+                // to the file name
+                metadata.Title = fileData.DisplayName;
+
+                // Get size of meta
+                uint metaSize = content.ReadUInt32();
+
+                // Read meta strings (null-terminated)
+                byte[] metaBytes = new byte[metaSize];
+                long metaPos = stream.Position;
+                await stream.ReadAsync(metaBytes, 0, metaBytes.Length);
+                var metas = new List<string>();
+                string metaTemp = string.Empty;
+                for (int i = 0; i < metaBytes.Length; i++)
+                {
+                    byte b = metaBytes[i];
+                    if (b == 0x00)
+                    {
+                        // End of string
+                        metas.Add(metaTemp);
+                        metaTemp = string.Empty;
+                    }
+                    else
+                    {
+                        // TODO: Is there a better way to do this
+                        metaTemp += Encoding.UTF8.GetChars(new[] { b })[0];
+                    }
+                }
+
+                // Get track count
+                uint trackCount = content.ReadUInt32();
+
+                // Read track metadata
+                var trackMetadatas = new List<TrackMetadata>();
+                for (int i = 0; i < trackCount; i++)
                 {
                     var trackMetadata = new TrackMetadata();
 
-                    var line = await content.ReadLineAsync();
-                    var components = Regex.Match(line, @"^(?<idx>[0-9]+),(?<attr>[A-z]+),(?<val>.+)$").Groups;
+                    // Get flags
+                    int flags = content.ReadInt32();
 
-                    switch (components["attr"].Value)
+                    // Get file name offset
+                    uint fileNameOffset = content.ReadUInt32();
+
+                    // Retrieve file name
+                    long curPos = stream.Position;
+                    stream.Seek(metaPos + fileNameOffset, SeekOrigin.Begin);
+                    trackMetadata.Url = new Uri(stream.ReadNullTerminatedString(Encoding.UTF8));
+                    stream.Seek(curPos, SeekOrigin.Begin);
+
+                    // Get sub-song index (for files containing multiple tracks, like chapters)
+                    uint subSongIndex = content.ReadUInt32();
+
+                    // Check if the track has metadata
+                    if ((flags & 1) == 0)
                     {
-                        case "filename":
-                            string fullPath = ResolveFilePath(components["val"].Value, fileData.Path);
-                            trackMetadata.Url = new Uri(fullPath);
-
-                            int idx = int.Parse(components["idx"].Value);
-                            if (idx >= tracks.Count)
-                                tracks.Add(trackMetadata);
-                            else
-                                tracks.Insert(idx, trackMetadata);
-                            break;
-
-                        case "type":
-                        // TODO: No idea what this is supposed to mean.
-                        // It's not documented anywhere. Probably supposed to be an enum.
-                        default:
-                            // Unsupported attribute
-                            break;
+                        trackMetadatas.Add(trackMetadata);
+                        continue;
                     }
+
+                    // Get track file size
+                    ulong fileSize = content.ReadUInt64();
+
+                    // Get track file time (last modified)
+                    ulong fileTime = content.ReadUInt64();
+
+                    // Get track duration
+                    double durationSeconds = content.ReadDouble();
+                    trackMetadata.Duration = new TimeSpan(0, 0, (int)durationSeconds);
+
+                    // Get rpg_album, rpg_track, rpk_album, rpk_track
+                    // We don't need it but might as well read it
+                    float rpgAlbum = content.ReadSingle();
+                    float rpgTrack = content.ReadSingle();
+                    float rpkAlbum = content.ReadSingle();
+                    float rpkTrack = content.ReadSingle();
+
+                    // Get entry count
+                    int entryCount = (int)content.ReadUInt32();
+                    int primaryKeyCount = (int)content.ReadUInt32();
+                    int secondaryKeyCount = (int)content.ReadUInt32();
+                    int secondaryKeysOffset = (int)content.ReadUInt32();
+
+                    var primaryPairs = new Dictionary<string, string>(primaryKeyCount);
+
+                    // Get primary keys
+                    var primaryKeys = new Dictionary<uint, string>(primaryKeyCount);
+                    for (int x = 0; x < primaryKeyCount; x++)
+                    {
+                        uint id = content.ReadUInt32();
+                        uint nameOffset = content.ReadUInt32();
+                        curPos = stream.Position;
+                        stream.Seek(metaPos + nameOffset, SeekOrigin.Begin);
+                        primaryKeys[id] = stream.ReadNullTerminatedString(Encoding.UTF8);
+                        stream.Seek(curPos, SeekOrigin.Begin);
+                    }
+
+                    // Read 'unk0', no idea what it does
+                    uint unk0 = content.ReadUInt32();
+
+                    // Get primary pair values
+                    string previousPrimaryKey = primaryKeys.First().Value;
+                    for (uint x = 0; x < primaryKeyCount; x++)
+                    {
+                        uint valueOffset = content.ReadUInt32();
+                        curPos = stream.Position;
+                        stream.Seek(metaPos + valueOffset, SeekOrigin.Begin);
+                        string value = stream.ReadNullTerminatedString(Encoding.UTF8);
+                        stream.Seek(curPos, SeekOrigin.Begin);
+
+                        if (primaryKeys.ContainsKey(x))
+                            previousPrimaryKey = primaryKeys[x];
+
+                        primaryPairs.Add(previousPrimaryKey, value);
+                    }
+
+                    // Get secondary pairs
+                    var secondaryPairs = new Dictionary<string, string>(secondaryKeyCount);
+                    for (int x = 0; x < secondaryKeyCount; x++)
+                    {
+                        // Read key
+                        uint keyOffset = content.ReadUInt32();
+                        curPos = stream.Position;
+                        stream.Seek(metaPos + keyOffset, SeekOrigin.Begin);
+                        string key = stream.ReadNullTerminatedString(Encoding.UTF8);
+                        stream.Seek(curPos, SeekOrigin.Begin);
+
+                        // Read value
+                        uint valueOffset = content.ReadUInt32();
+                        curPos = stream.Position;
+                        stream.Seek(metaPos + valueOffset, SeekOrigin.Begin);
+                        string value = stream.ReadNullTerminatedString(Encoding.UTF8);
+                        stream.Seek(curPos, SeekOrigin.Begin);
+
+                        secondaryPairs.Add(key, value);
+                    }
+
+                    // Check flag for 64 bits of padding
+                    if ((flags & 0x04) == 1)
+                        stream.Seek(64, SeekOrigin.Current);
+
+                    // Populate TrackMetadata
+                    if (primaryPairs.TryGetValue("title", out string title))
+                        trackMetadata.Title = title;
+                    if (primaryPairs.TryGetValue("discnumber", out string discNumStr))
+                        trackMetadata.DiscNumber = uint.Parse(discNumStr);
+                    if (primaryPairs.TryGetValue("tracknumber", out string trackNumStr))
+                        trackMetadata.TrackNumber = uint.Parse(trackNumStr);
+                    if (primaryPairs.TryGetValue("genre", out string genre))
+                        trackMetadata.Genres = genre.IntoList();
+
+                    // Add the current track to the list
+                    trackMetadatas.Add(trackMetadata);
                 }
 
                 return metadata;
