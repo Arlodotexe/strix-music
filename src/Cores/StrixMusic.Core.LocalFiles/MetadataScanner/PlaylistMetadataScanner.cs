@@ -149,7 +149,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                using var stream = await fileData.GetStreamAsync();
+                using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
 
                 var doc = XDocument.Load(stream);
                 var smil = doc.Root;
@@ -194,7 +194,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                using var stream = await fileData.GetStreamAsync();
+                using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
                 StreamReader content;
                 if (fileData.FileExtension == ".m3u8")
                     content = new StreamReader(stream, Encoding.UTF8);
@@ -277,7 +277,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                using var stream = await fileData.GetStreamAsync();
+                using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
 
                 var doc = XDocument.Load(stream);
                 var playlist = doc.Root;
@@ -332,7 +332,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                using var stream = await fileData.GetStreamAsync();
+                using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
 
                 var doc = XDocument.Load(stream);
                 var asx = doc.Root;
@@ -383,7 +383,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                using var stream = await fileData.GetStreamForReadAsync();
+                using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
                 StreamReader content = new StreamReader(stream);
 
                 var metadata = new PlaylistMetadata();
@@ -445,7 +445,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                using var stream = await fileData.GetStreamAsync();
+                using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
                 using var content = new BinaryReader(stream);
 
                 var metadata = new PlaylistMetadata();
