@@ -41,7 +41,7 @@ namespace OwlCore.AbstractStorage
         /// Opens and returns a stream to the file.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is a stream to the file.</returns>
-        public Task<Stream> GetStreamAsync();
+        public Task<Stream> GetStreamAsync(FileAccessMode accessMode);
 
         /// <summary>
         /// Deletes the file.

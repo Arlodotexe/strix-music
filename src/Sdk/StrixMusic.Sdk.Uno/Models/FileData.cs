@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using OwlCore.AbstractStorage;
+using FileAccessMode = OwlCore.AbstractStorage.FileAccessMode;
 
 namespace StrixMusic.Sdk.Uno.Models
 {
@@ -54,11 +55,12 @@ namespace StrixMusic.Sdk.Uno.Models
         }
 
         /// <inheritdoc />
-        public async Task<Stream> GetStreamAsync()
+        public async Task<Stream> GetStreamAsync(FileAccessMode accessMode)
         {
-            var stream = await StorageFile.OpenAsync(FileAccessMode.ReadWrite);
+            var stream = await StorageFile.OpenAsync((Windows.Storage.FileAccessMode)accessMode);
 
             return stream.AsStream();
         }
     }
+
 }
