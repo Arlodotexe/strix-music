@@ -189,7 +189,7 @@ namespace StrixMusic.Core.MusicBrainz
                 await coreConfig.SetupConfigurationServices(services);
                 // _configured = true;
 
-                ChangeCoreState(CoreState.ConfigRequested);
+                ChangeCoreState(CoreState.Configuring);
                 return;
             }
 

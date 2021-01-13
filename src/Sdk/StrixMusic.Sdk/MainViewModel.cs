@@ -156,7 +156,7 @@ namespace StrixMusic.Sdk
             if (!(sender is ICore core))
                 return;
 
-            if (e == CoreState.ConfigRequested)
+            if (e == CoreState.Configuring)
             {
                 var cancellationToken = _coreInitData.First(x => x.core == core).cancellationToken;
 

@@ -105,7 +105,7 @@ namespace StrixMusic.Core.LocalFiles
             {
                 PickAndSetupFolder().FireAndForget();
 
-                ChangeCoreState(CoreState.ConfigRequested);
+                ChangeCoreState(CoreState.Configuring);
 
                 return;
             }
