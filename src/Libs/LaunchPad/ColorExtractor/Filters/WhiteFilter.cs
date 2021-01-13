@@ -1,12 +1,6 @@
-﻿using LaunchPad.ColorExtraction;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
+﻿using LaunchPad.ColorExtractor.ColorSpaces;
 
-namespace ColorExtractor.ColorExtractor.Filters
+namespace LaunchPad.ColorExtractor.Filters
 {
     public class WhiteFilter : IFilter
     {
@@ -17,7 +11,7 @@ namespace ColorExtractor.ColorExtractor.Filters
 
         float Tolerance { get; set; } = .4f;
 
-        public Color Clamp(Color color)
+        public RGBColor Clamp(RGBColor color)
         {
             // Unclampable
             return color;
@@ -29,14 +23,14 @@ namespace ColorExtractor.ColorExtractor.Filters
             return color;
         }
 
-        public bool TakeColor(Color color)
+        public bool TakeColor(RGBColor color)
         {
             return color.GetCMin() < Tolerance;
         }
 
         public bool TakeColor(HSVColor color)
         {
-            return TakeColor(color.AsArgb());
+            return TakeColor(color.ToRgb());
         }
     }
 }

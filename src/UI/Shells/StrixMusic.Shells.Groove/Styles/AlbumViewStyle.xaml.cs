@@ -1,5 +1,9 @@
-﻿using ColorExtractor.ColorExtractor.Filters;
-using LaunchPad.ColorExtraction;
+﻿using ClusterNet;
+using ClusterNet.Kernels;
+using LaunchPad.ColorExtractor.Filters;
+using LaunchPad.ColorExtractor;
+using LaunchPad.ColorExtractor.ColorSpaces;
+using LaunchPad.ColorExtractor.Shapes;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
 using SixLabors.ImageSharp;
@@ -17,6 +21,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Color = Windows.UI.Color;
+using ClusterNet.KMeans;
 
 namespace StrixMusic.Shells.Groove.Styles
 {
@@ -70,18 +75,27 @@ namespace StrixMusic.Shells.Groove.Styles
                 return null;
 
 
-            List<IFilter> filters = new List<IFilter>();
+            FilterCollection filters = new FilterCollection();
             filters.Add(new WhiteFilter(.4f));
             filters.Add(new BlackFilter(.15f));
             filters.Add(new GrayFilter(.3f));
 
-            List<IFilter> clamps = new List<IFilter>();
+            FilterCollection clamps = new FilterCollection();
             clamps.Add(new SaturationFilter(.6f));
 
-            var rgbColors = ImageParser.GetImageColors(image, 128);
-            var hsvColors = rgbColors.Select(x => HSVColor.FromColor(x));
-            var palette = LaunchPad.ColorExtraction.ColorExtractor.Palettize(hsvColors.ToList(), 3, filters, clamps);
-            Color finalColor = palette[0].AsArgb();
+            var colors = ImageParser.GetImageColors(image, 1920);
+
+            colors = filters.Filter(colors, 160);
+
+            //var palette = KMeansMethod.KMeans<RGBColor, RGBShape>(colors, 3);
+            GaussianKernel kernel = new GaussianKernel(.15);
+            var palette = MeanShiftMethod.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Math.Min(colors.Length, 480));
+            RGBColor primary = clamps.Clamp(palette[0].Item1);
+            Color finalColor = Color.FromArgb(
+                255,
+                (byte)(primary.R * 255),
+                (byte)(primary.G * 255),
+                (byte)(primary.B * 255));
             return finalColor;
         }
 
