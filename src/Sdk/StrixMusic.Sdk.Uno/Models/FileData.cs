@@ -55,17 +55,9 @@ namespace StrixMusic.Sdk.Uno.Models
         }
 
         /// <inheritdoc />
-        public async Task<Stream> GetStreamAsync(FileAccessMode accessMode)
+        public async Task<Stream> GetStreamAsync(FileAccessMode accessMode = FileAccessMode.Read)
         {
             var stream = await StorageFile.OpenAsync((Windows.Storage.FileAccessMode)accessMode);
-
-            return stream.AsStream();
-        }
-
-        /// <inheritdoc />
-        public async Task<Stream> GetStreamForReadAsync()
-        {
-            var stream = await StorageFile.OpenAsync(FileAccessMode.Read);
 
             return stream.AsStream();
         }
