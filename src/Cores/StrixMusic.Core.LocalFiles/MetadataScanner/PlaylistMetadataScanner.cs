@@ -383,7 +383,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                using var stream = await fileData.GetStreamAsync();
+                using var stream = await fileData.GetStreamForReadAsync();
                 StreamReader content = new StreamReader(stream);
 
                 var metadata = new PlaylistMetadata();

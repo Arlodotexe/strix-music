@@ -93,12 +93,16 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                var stream = await fileData.GetStreamAsync();
+                var stream = await fileData.GetStreamForReadAsync();
 
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
                 // Read the raw tags
                 var tags = tagFile.GetTag(TagTypes.Id3v2);
+
+                // If there's no metadata to read, return null
+                if (tags == null)
+                    return null;
 
                 return new AlbumMetadata()
                 {
