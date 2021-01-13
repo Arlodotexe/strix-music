@@ -135,6 +135,12 @@
   <data name="CancelBTN.Content" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Follow" xml:space="preserve">
+    <value>Follow</value>
+  </data>
+  <data name="Following" xml:space="preserve">
+    <value>Following</value>
+  </data>
   <data name="Help" xml:space="preserve">
     <value>Help</value>
   </data>
@@ -233,5 +239,14 @@
   </data>
   <data name="YesBTN.Content" xml:space="preserve">
     <value>Yes</value>
+  </data>
+  <data name="More" xml:space="preserve">
+    <value>More</value>
+  </data>
+  <data name="FollowingABB.Label" xml:space="preserve">
+    <value>Following</value>
+  </data>
+  <data name="FollowABB.Label" xml:space="preserve">
+    <value>Follow</value>
   </data>
 </root>

@@ -135,6 +135,12 @@
   <data name="CancelBTN.Content" xml:space="preserve">
     <value>בטל</value>
   </data>
+  <data name="Follow" xml:space="preserve">
+    <value>מעקב</value>
+  </data>
+  <data name="Following" xml:space="preserve">
+    <value>במעקב</value>
+  </data>
   <data name="Help" xml:space="preserve">
     <value>עזרה</value>
   </data>
@@ -233,5 +239,14 @@
   </data>
   <data name="YesBTN.Content" xml:space="preserve">
     <value>כן</value>
+  </data>
+  <data name="More" xml:space="preserve">
+    <value>עוד</value>
+  </data>
+  <data name="FollowingABB.Label" xml:space="preserve">
+    <value>במעקב</value>
+  </data>
+  <data name="FollowABB.Label" xml:space="preserve">
+    <value>מעקב</value>
   </data>
 </root>

@@ -2,6 +2,7 @@
 using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Sdk.Extensions;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace StrixMusic.Core.LocalFiles
         /// <summary>
         /// Holds the instances of all constructed file cores.
         /// </summary>
-        public static IList<LocalFileCore>? Instances { get; set; } = new List<LocalFileCore>();
+        public static ConcurrentBag<LocalFileCore> Instances { get; set; } = new ConcurrentBag<LocalFileCore>();
 
         /// <summary>
         /// Loads data for all cores.
@@ -24,14 +25,15 @@ namespace StrixMusic.Core.LocalFiles
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task InitializeDataForAllCores()
         {
-            await Instances?.InParallel(x => x.GetService<TrackService>().InitAsync());
-            await Instances?.InParallel(x => x.GetService<AlbumService>().InitAsync());
-            await Instances?.InParallel(x => x.GetService<PlaylistService>().InitAsync());
+            await Instances.InParallel(x => x.GetService<TrackService>().InitAsync());
+            await Instances.InParallel(x => x.GetService<AlbumService>().InitAsync());
+            await Instances.InParallel(x => x.GetService<PlaylistService>().InitAsync());
 
-            // This will currently throw an exception(file is being used by another process) because all cores instance are using the same folder. 
-            //await Instances?.InParallel(x => x.GetService<AlbumService>().CreateOrUpdateAlbumMetadata());
-            //await Instances?.InParallel(x => x.GetService<TrackService>().CreateOrUpdateTrackMetadata());
-            await Instances?.InParallel(x => x.GetService<PlaylistService>().CreateOrUpdatePlaylistMetadata());
+            // FIXME: This will currently throw an exception
+            // (file is being used by another process) because all cores instances are using the same folder. 
+            await Instances.InParallel(x => x.GetService<AlbumService>().CreateOrUpdateAlbumMetadata());
+            await Instances.InParallel(x => x.GetService<TrackService>().CreateOrUpdateTrackMetadata());
+            await Instances.InParallel(x => x.GetService<PlaylistService>().CreateOrUpdatePlaylistMetadata());
         }
     }
 }
