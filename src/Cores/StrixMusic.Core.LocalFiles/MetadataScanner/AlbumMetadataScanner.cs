@@ -93,7 +93,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                var stream = await fileData.GetStreamForReadAsync();
+                var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
 
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
