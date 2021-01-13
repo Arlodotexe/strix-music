@@ -111,6 +111,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     TotalArtistsCount = tags.AlbumArtists.Length,
                 };
             }
+            catch (CorruptFileException)
+            {
+                return null;
+            }
             catch (UnsupportedFormatException)
             {
                 return null;
