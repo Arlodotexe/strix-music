@@ -7,19 +7,19 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Sdk.Uno.Styles
 {
     /// <summary>
-    /// A <see cref="ResourceDictionary"/> containing the default style for the <see cref="AlbumCollection"/>.
+    /// A <see cref="ResourceDictionary"/> containing the default style for the <see cref="PlaylistCollection"/>.
     /// </summary>
-    public sealed partial class AlbumCollectionStyle : ResourceDictionary
+    public sealed partial class PlaylistCollectionStyle : ResourceDictionary
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlbumCollectionStyle"/> class.
+        /// Initializes a new instance of the <see cref="PlaylistCollectionStyle"/> class.
         /// </summary>
-        public AlbumCollectionStyle()
+        public PlaylistCollectionStyle()
         {
             this.InitializeComponent();
         }
 
-        private void OpenAlbum(object sender, ItemClickEventArgs e)
+        private void OpenPlaylist(object sender, ItemClickEventArgs e)
         {
             INavigationService<Control> navigationService = Shell.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
             navigationService.NavigateTo(typeof(AlbumView), false, e.ClickedItem);

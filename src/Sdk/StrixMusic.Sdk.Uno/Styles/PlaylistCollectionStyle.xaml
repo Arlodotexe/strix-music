@@ -1,0 +1,40 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    x:Class="StrixMusic.Sdk.Uno.Styles.PlaylistCollectionStyle">
+
+    <DataTemplate x:Key="DefaultPlaylistCollectionDataTemplate" x:DataType="viewModels:IPlaylistCollectionViewModel">
+        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Playlists}" ItemTemplate="{StaticResource DefaultPlaylistCollectionItemStyle}"
+                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
+                  ItemClick="OpenPlaylist">
+            <GridView.Header>
+                <Grid>
+                    <ProgressRing IsActive="{x:Bind PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
+                    <ContentPresenter x:Name="PART_EmptyContentPresenter"/>
+                </Grid>
+            </GridView.Header>
+        </GridView>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DefaultPlaylistCollectionItemStyle">
+        <defaultcontrols:PlaylistItem />
+    </DataTemplate>
+
+    <Style x:Key="DefaultPlaylistCollectionStyle" TargetType="defaultcontrols:PlaylistCollection">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="defaultcontrols:PlaylistCollection">
+                        <ContentControl ContentTemplate="{StaticResource DefaultPlaylistCollectionDataTemplate}"
+                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultPlaylistCollectionStyle}" TargetType="defaultcontrols:PlaylistCollection"/>
+
+</ResourceDictionary>
