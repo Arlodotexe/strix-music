@@ -120,25 +120,25 @@
                     <CommandBar x:Name="QuickActionsBar" DefaultLabelPosition="Right"
                                     Grid.Column="1" Grid.Row="1"
                                     Background="Transparent">
-                        <AppBarButton Label="Play">
+                        <AppBarButton x:Uid="/Music/PlayABB" Label="Play">
                             <AppBarButton.Icon>
                                 <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Shells/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                             </AppBarButton.Icon>
                         </AppBarButton>
-                        <AppBarButton Icon="Add" Label="Add to"/>
-                        <AppBarButton Icon="AddFriend" Label="Follow"/>
-                        <AppBarButton Icon="Share" Label="Share"/>
+                        <AppBarButton x:Uid="/Common/AddToABB" Icon="Add" Label="Add to"/>
+                        <AppBarButton x:Uid="/Common/FollowABB" Icon="AddFriend" Label="Follow"/>
+                        <AppBarButton x:Uid="/Common/ShareABB" Icon="Share" Label="Share"/>
                     </CommandBar>
                 </Grid>
 
                 <Pivot Grid.Row="1">
-                    <PivotItem Header="Songs">
+                    <PivotItem x:Uid="/Music/SongsPVI" Header="Songs">
                         <!--<defaultcontrols:TrackCollection/>-->
                     </PivotItem>
-                    <PivotItem Header="Albums">
+                    <PivotItem x:Uid="/Music/AlbumsPVI" Header="Albums">
                         <defaultcontrols:AlbumCollection/>
                     </PivotItem>
-                    <PivotItem Header="Similar Artists">
+                    <PivotItem x:Uid="/Music/SimilarArtistsPVI" Header="Similar Artists">
                         <!--<defaultcontrols:AlbumCollection/>-->
                     </PivotItem>
                 </Pivot>
