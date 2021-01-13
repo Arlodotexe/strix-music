@@ -75,6 +75,9 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                 if (mergedMetaData.Url is null)
                     mergedMetaData.Url = item.Url;
+
+                if (mergedMetaData.Year is null)
+                    mergedMetaData.Year = item.Year;
             }
 
             return mergedMetaData;
@@ -94,7 +97,8 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 Title = details.Title,
                 Genres = details.Genre?.ToList(),
                 Duration = details.Duration,
-                Url = new Uri(fileData.Path),
+                Source = new Uri(fileData.Path),
+                Year = details.Year,
             };
         }
 
@@ -102,22 +106,32 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                var stream = await fileData.GetStreamAsync();
+                var stream = await fileData.GetStreamForReadAsync();
 
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
                 // Read the raw tags
                 var tags = tagFile.GetTag(TagTypes.Id3v2);
 
+                // If there's no metadata to read, return null
+                if (tags == null)
+                    return null;
+
                 return new TrackMetadata()
                 {
+                    Source = new Uri(fileData.Path),
                     Description = tags.Description,
                     Title = tags.Title,
                     DiscNumber = tags.Disc,
                     Duration = tagFile.Properties.Duration,
                     Genres = new List<string>(tags.Genres),
                     TrackNumber = tags.Track,
+                    Year = tags.Year,
                 };
+            }
+            catch (CorruptFileException)
+            {
+                return null;
             }
             catch (UnsupportedFormatException)
             {
