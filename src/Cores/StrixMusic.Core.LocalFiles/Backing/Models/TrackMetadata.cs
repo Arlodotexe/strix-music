@@ -18,6 +18,11 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         public string Id { get; set; }
 
         /// <summary>
+        /// The location of the file.
+        /// </summary>
+        public Uri Source { get; set; }
+
+        /// <summary>
         /// The unique identifier for this track's album.
         /// </summary>
         public string? AlbumId { get; set; }
@@ -71,5 +76,10 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// The genres of this track.
         /// </summary>
         public List<string>? Genres { get; set; }
+
+        /// <summary>
+        /// The year this track was released.
+        /// </summary>
+        public uint? Year { get; set; }
     }
 }

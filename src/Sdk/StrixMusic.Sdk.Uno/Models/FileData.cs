@@ -61,6 +61,14 @@ namespace StrixMusic.Sdk.Uno.Models
 
             return stream.AsStream();
         }
+
+        /// <inheritdoc />
+        public async Task<Stream> GetStreamForReadAsync()
+        {
+            var stream = await StorageFile.OpenAsync(FileAccessMode.Read);
+
+            return stream.AsStream();
+        }
     }
 
 }
