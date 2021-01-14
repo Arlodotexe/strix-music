@@ -80,7 +80,10 @@ namespace StrixMusic.Sdk
             Users.Clear();
             PlaybackQueue.Clear();
 
-            await initData.InParallel(InitCore);
+            foreach(var coreInitData in initData)
+            {
+                await InitCore(coreInitData);
+            }
 
             Library = new LibraryViewModel(new MergedLibrary(_sources.Select(x => x.Library)));
 
@@ -153,7 +156,7 @@ namespace StrixMusic.Sdk
             if (!(sender is ICore core))
                 return;
 
-            if (e == CoreState.ConfigRequested)
+            if (e == CoreState.Configuring)
             {
                 var cancellationToken = _coreInitData.First(x => x.core == core).cancellationToken;
 

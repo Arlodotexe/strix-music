@@ -85,7 +85,7 @@ namespace StrixMusic.Core.LocalFiles
             Guard.IsNotNull(fileSystemService, nameof(fileSystemService));
 
             _fileSystemService = fileSystemService;
-            _settingsService = new LocalFilesCoreSettingsService();
+            _settingsService = new LocalFilesCoreSettingsService(SourceCore.InstanceId);
 
             services.AddSingleton(_settingsService);
 

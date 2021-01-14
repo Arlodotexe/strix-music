@@ -93,12 +93,16 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                var stream = await fileData.GetStreamAsync();
+                var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
 
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
                 // Read the raw tags
                 var tags = tagFile.GetTag(TagTypes.Id3v2);
+
+                // If there's no metadata to read, return null
+                if (tags == null)
+                    return null;
 
                 return new AlbumMetadata()
                 {
@@ -110,6 +114,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     TotalTracksCount = Convert.ToInt32(tags.TrackCount),
                     TotalArtistsCount = tags.AlbumArtists.Length,
                 };
+            }
+            catch (CorruptFileException)
+            {
+                return null;
             }
             catch (UnsupportedFormatException)
             {

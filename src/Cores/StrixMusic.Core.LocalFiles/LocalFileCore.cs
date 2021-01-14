@@ -1,18 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using OwlCore.AbstractStorage;
 using OwlCore.Collections;
-using StrixMusic.Core.LocalFiles.Backing.Services;
+using OwlCore.Extensions;
 using StrixMusic.Core.LocalFiles.Models;
-using StrixMusic.Core.LocalFiles.Models;
+using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using OwlCore.AbstractStorage;
-using OwlCore.Extensions;
-using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Core.LocalFiles
@@ -107,7 +105,7 @@ namespace StrixMusic.Core.LocalFiles
             {
                 PickAndSetupFolder().FireAndForget();
 
-                ChangeCoreState(CoreState.ConfigRequested);
+                ChangeCoreState(CoreState.Configuring);
 
                 return;
             }

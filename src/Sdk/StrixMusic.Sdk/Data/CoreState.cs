@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Data
         /// <summary>
         /// The core need configuration data and has requested that the setup process be started.
         /// </summary>
-        ConfigRequested,
+        Configuring,
 
         /// <summary>
         /// The setup process has finished and the core can be initialized.
