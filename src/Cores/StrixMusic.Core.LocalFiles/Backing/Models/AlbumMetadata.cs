@@ -27,7 +27,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// <summary>
         /// The unique identifier(s) for this albums's track(s).
         /// </summary>
-        public List<string>? TrackIds { get; set; }
+        public List<string?> TrackIds { get; set; }
 
         /// <summary>
         /// The unique identifier(s) for this album's artist(s).

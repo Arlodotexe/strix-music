@@ -74,7 +74,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             if (!await _fileSystemService.FileExistsAsync(_pathToMetadatafile))
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
-            var trackMetadataLst = new List<TrackMetadata>();
+            var trackMetadataLst = new List<RelatedMetadata>();
 
             var files = await _folderData.GetFilesAsync();
 

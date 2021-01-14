@@ -16,11 +16,11 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
     public class TrackMetadataScanner
     {
         /// <summary>
-        /// Scans media file for metadata.
+        /// Scans mediafile for metadata.
         /// </summary>
         /// <param name="fileData">The path to the file.</param>
         /// <returns>Fully scanned <see cref="TrackMetadata"/>.</returns>
-        public async Task<TrackMetadata?> ScanTrackMetadata(IFileData fileData)
+        public async Task<RelatedMetadata?> ScanTrackMetadata(IFileData fileData)
         {
             var id3Metadata = await GetID3Metadata(fileData);
 
@@ -39,7 +39,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             return mergedTrackMetada;
         }
 
-        private TrackMetadata MergeTrackMetadata(TrackMetadata[] metadatas)
+        private RelatedMetadata MergeTrackMetadata(RelatedMetadata[] metadatas)
         {
             if (metadatas.Length == 1)
                 return metadatas[0];
@@ -49,50 +49,87 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             {
                 var item = metadatas[i];
 
-                if (mergedMetaData.TrackNumber is null)
-                    mergedMetaData.TrackNumber = item.TrackNumber;
+                if (mergedMetaData.TrackMetadata != null && item.TrackMetadata != null)
+                {
+                    if (mergedMetaData.TrackMetadata.TrackNumber is null)
+                        mergedMetaData.TrackMetadata.TrackNumber = item.TrackMetadata.TrackNumber;
 
-                if (mergedMetaData.Genres is null)
-                    mergedMetaData.Genres = item.Genres;
+                    if (mergedMetaData.TrackMetadata.Genres is null)
+                        mergedMetaData.TrackMetadata.Genres = item.TrackMetadata.Genres;
 
-                if (mergedMetaData.DiscNumber is null)
-                    mergedMetaData.DiscNumber = item.DiscNumber;
+                    if (mergedMetaData.TrackMetadata.DiscNumber is null)
+                        mergedMetaData.TrackMetadata.DiscNumber = item.TrackMetadata.DiscNumber;
 
-                if (mergedMetaData.Duration is null)
-                    mergedMetaData.Duration = item.Duration;
+                    if (mergedMetaData.TrackMetadata.Duration is null)
+                        mergedMetaData.TrackMetadata.Duration = item.TrackMetadata.Duration;
 
-                if (mergedMetaData.Lyrics is null)
-                    mergedMetaData.Lyrics = item.Lyrics;
+                    if (mergedMetaData.TrackMetadata.Lyrics is null)
+                        mergedMetaData.TrackMetadata.Lyrics = item.TrackMetadata.Lyrics;
 
-                if (mergedMetaData.Language is null)
-                    mergedMetaData.Language = item.Language;
+                    if (mergedMetaData.TrackMetadata.Language is null)
+                        mergedMetaData.TrackMetadata.Language = item.TrackMetadata.Language;
 
-                if (mergedMetaData.Description is null)
-                    mergedMetaData.Description = item.Description;
+                    if (mergedMetaData.TrackMetadata.Description is null)
+                        mergedMetaData.TrackMetadata.Description = item.TrackMetadata.Description;
 
-                if (mergedMetaData.Title is null)
-                    mergedMetaData.Title = item.Title;
+                    if (mergedMetaData.TrackMetadata.Title is null)
+                        mergedMetaData.TrackMetadata.Title = item.TrackMetadata.Title;
 
-                if (mergedMetaData.Url is null)
-                    mergedMetaData.Url = item.Url;
+                    if (mergedMetaData.TrackMetadata.Url is null)
+                        mergedMetaData.TrackMetadata.Url = item.TrackMetadata.Url;
 
-                if (mergedMetaData.Year is null)
-                    mergedMetaData.Year = item.Year;
+                    if (mergedMetaData.TrackMetadata.Year is null)
+                        mergedMetaData.TrackMetadata.Year = item.TrackMetadata.Year;
+                }
+
+                if (mergedMetaData.AlbumMetadata != null && item.AlbumMetadata != null)
+                {
+                    if (mergedMetaData.AlbumMetadata.DatePublished is null)
+                        mergedMetaData.AlbumMetadata.DatePublished = item.AlbumMetadata.DatePublished;
+
+                    if (mergedMetaData.AlbumMetadata.Genres is null)
+                        mergedMetaData.AlbumMetadata.Genres = item.AlbumMetadata.Genres;
+
+                    if (mergedMetaData.AlbumMetadata.Duration is null)
+                        mergedMetaData.AlbumMetadata.Duration = item.AlbumMetadata.Duration;
+
+                    if (mergedMetaData.AlbumMetadata.Description is null)
+                        mergedMetaData.AlbumMetadata.Description = item.AlbumMetadata.Description;
+
+                    if (mergedMetaData.AlbumMetadata.Title is null)
+                        mergedMetaData.AlbumMetadata.Title = item.AlbumMetadata.Title;
+                }
+
+                if (mergedMetaData.ArtistMetadata != null && item.ArtistMetadata != null)
+                {
+                    if (mergedMetaData.ArtistMetadata.Name is null)
+                        mergedMetaData.ArtistMetadata.Name = item.ArtistMetadata.Name;
+
+                    if (mergedMetaData.ArtistMetadata.Url is null)
+                        mergedMetaData.ArtistMetadata.Url = item.ArtistMetadata.Url;
+                }
             }
 
             return mergedMetaData;
         }
 
-        private async Task<TrackMetadata?> GetMusicFilesProperties(IFileData fileData)
+        private async Task<RelatedMetadata?> GetMusicFilesProperties(IFileData fileData)
         {
             var details = await fileData.Properties.GetMusicPropertiesAsync();
 
             if (details is null)
                 return null;
 
-            return new TrackMetadata()
+            var relatedMetadata = new RelatedMetadata();
+            relatedMetadata.AlbumMetadata = new AlbumMetadata()
             {
-                Id = Guid.NewGuid().ToString(),
+                Title = details.Album,
+                Duration = details.Duration,
+                Genres = new List<string>(details.Genre),
+            };
+
+            relatedMetadata.TrackMetadata = new TrackMetadata()
+            {
                 TrackNumber = details.TrackNumber,
                 Title = details.Title,
                 Genres = details.Genre?.ToList(),
@@ -100,9 +137,17 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 Source = new Uri(fileData.Path),
                 Year = details.Year,
             };
+
+            relatedMetadata.ArtistMetadata = new ArtistMetadata()
+            {
+                Name = details.Artist,
+            };
+
+            return relatedMetadata;
         }
 
-        private async Task<TrackMetadata?> GetID3Metadata(IFileData fileData)
+        [Obsolete]
+        private async Task<RelatedMetadata?> GetID3Metadata(IFileData fileData)
         {
             try
             {
@@ -117,16 +162,34 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 if (tags == null)
                     return null;
 
-                return new TrackMetadata()
+                return new RelatedMetadata
                 {
-                    Source = new Uri(fileData.Path),
-                    Description = tags.Description,
-                    Title = tags.Title,
-                    DiscNumber = tags.Disc,
-                    Duration = tagFile.Properties.Duration,
-                    Genres = new List<string>(tags.Genres),
-                    TrackNumber = tags.Track,
-                    Year = tags.Year,
+                    AlbumMetadata = new AlbumMetadata()
+                    {
+                        Description = tags.Description,
+                        Title = tags.Album,
+                        Duration = tagFile.Properties.Duration,
+                        Genres = new List<string>(tags.Genres),
+                        DatePublished = tags.DateTagged,
+                        TotalTracksCount = Convert.ToInt32(tags.TrackCount),
+                        TotalArtistsCount = tags.AlbumArtists.Length,
+                    },
+
+                    TrackMetadata = new TrackMetadata()
+                    {
+                        Source = new Uri(fileData.Path),
+                        Description = tags.Description,
+                        Title = tags.Title,
+                        DiscNumber = tags.Disc,
+                        Duration = tagFile.Properties.Duration,
+                        Genres = new List<string>(tags.Genres),
+                        TrackNumber = tags.Track,
+                        Year = tags.Year,
+                    },
+                    ArtistMetadata = new ArtistMetadata()
+                    {
+                        Name = tags.FirstArtist,
+                    },
                 };
             }
             catch (CorruptFileException)
