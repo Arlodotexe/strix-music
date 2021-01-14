@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using OwlCore.AbstractStorage;
 using CreationCollisionOption = OwlCore.AbstractStorage.CreationCollisionOption;
+using Windows.Storage.Search;
 
 namespace StrixMusic.Sdk.Uno.Models
 {
@@ -117,6 +118,25 @@ namespace StrixMusic.Sdk.Uno.Models
             {
                 StorageFolder = await StorageFolder.CreateFolderAsync(StorageFolder.Name);
             }
+        }
+
+        ///<inheritdoc />
+        public async Task<IList<IFileData>> RecursiveDepthFileSearchAsync(IFolderData folderData, IList<IFileData> fileDatas)
+        {
+            var folders = await folderData.GetFoldersAsync();
+            foreach (var folder in folders)
+            {
+                var files = await folder.GetFilesAsync();
+
+                foreach (var file in files)
+                {
+                    fileDatas.Add(file);
+                }
+
+                return await RecursiveDepthFileSearchAsync(folder, fileDatas);
+            }
+
+            return fileDatas;
         }
     }
 }
