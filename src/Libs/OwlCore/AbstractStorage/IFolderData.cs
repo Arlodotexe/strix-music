@@ -69,12 +69,6 @@ namespace OwlCore.AbstractStorage
         Task<IFileData?> GetFileAsync(string name);
 
         /// <summary>
-        /// Searches all files in a folder and including sub folders if any.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the folders in this directory.</returns>
-        Task<IList<IFileData>> RecursiveDepthFileSearchAsync(IFolderData folderData, IList<IFileData> fileDatas);
-
-        /// <summary>
         /// Gets the folders in this directory.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the folders in this directory.</returns>
