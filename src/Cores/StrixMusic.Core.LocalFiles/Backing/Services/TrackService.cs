@@ -18,7 +18,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     {
         private readonly string _trackMetadataCacheFileName = "TrackMeta.lfc"; //lfc represents LocalFileCore format.
         private readonly string _pathToMetadatafile;
-        private readonly TrackMetadataScanner _trackMetadataScanner;
+        private readonly FileMetadataScanner _trackMetadataScanner;
         private readonly IFileSystemService _fileSystemService;
         private IFolderData? _folderData;
 
@@ -30,7 +30,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         {
             _fileSystemService = fileSystemService;
             _pathToMetadatafile = $"{_fileSystemService.RootFolder.Path}\\{_trackMetadataCacheFileName}";
-            _trackMetadataScanner = new TrackMetadataScanner();
+            _trackMetadataScanner = new FileMetadataScanner();
         }
 
         /// <summary>
@@ -74,13 +74,14 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             if (!await _fileSystemService.FileExistsAsync(_pathToMetadatafile))
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
+            // This code below needs an update.
             var trackMetadataLst = new List<RelatedMetadata>();
 
             var files = await _folderData.GetFilesAsync();
 
             foreach (var item in files)
             {
-                var metadata = await _trackMetadataScanner.ScanTrackMetadata(item);
+                var metadata = await _trackMetadataScanner.ScanFileMetadata(item);
                 if (metadata is null)
                     continue;
 

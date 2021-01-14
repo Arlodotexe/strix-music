@@ -15,19 +15,18 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         public string? Id { get; set; }
 
         /// <summary>
-        /// Holds an a <see cref="TrackMetadata"/>.
+        /// Holds an instance of related <see cref="TrackMetadata"/>.
         /// </summary>
         public TrackMetadata? TrackMetadata { get; set; }
 
         /// <summary>
-        /// Holds an a <see cref="AlbumMetadata"/>.
+        /// Holds an instance of related <see cref="AlbumMetadata"/>.
         /// </summary>
         public AlbumMetadata? AlbumMetadata { get; set; }
 
         /// <summary>
-        /// Holds an a <see cref="ArtistMetadata"/>.
+        /// Holds an instance of related <see cref="ArtistMetadata"/>.
         /// </summary>
         public ArtistMetadata? ArtistMetadata { get; set; }
-
     }
 }

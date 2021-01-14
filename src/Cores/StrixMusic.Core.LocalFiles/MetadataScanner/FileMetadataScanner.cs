@@ -13,14 +13,14 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
     /// <summary>
     /// Handles scanning tracks for all supported metadata.
     /// </summary>
-    public class TrackMetadataScanner
+    public class FileMetadataScanner
     {
         /// <summary>
         /// Scans mediafile for metadata.
         /// </summary>
         /// <param name="fileData">The path to the file.</param>
         /// <returns>Fully scanned <see cref="TrackMetadata"/>.</returns>
-        public async Task<RelatedMetadata?> ScanTrackMetadata(IFileData fileData)
+        public async Task<RelatedMetadata?> ScanFileMetadata(IFileData fileData)
         {
             var id3Metadata = await GetID3Metadata(fileData);
 
