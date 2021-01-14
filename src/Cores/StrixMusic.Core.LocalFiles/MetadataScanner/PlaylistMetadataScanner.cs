@@ -55,6 +55,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     playlistMetadata = await GetFplMetadata(fileData);
                     break;
 
+                case ".pls":
+                    playlistMetadata = await GetPlsMetadata(fileData);
+                    break;
+
                 default:
                     // Format not supported
                     return null;
@@ -110,12 +114,15 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// <param name="path">The path to resolve.</param>
         /// <param name="currentPath">The path to append to <paramref name="path"/>
         /// if it's relative.</param>
-        /// <remarks>This method is safe to use on absolute paths as well.</remarks>
+        /// <remarks>
+        /// This method is safe to use on absolute paths as well.
+        /// Does not work for Unix paths.
+        /// </remarks>
         /// <returns>An absolute path.</returns>
         public string ResolveFilePath(string path, string currentPath)
         {
             // Check if the path is absolute
-            if (Regex.IsMatch(path, @"^(?:[a-zA-Z]\:)\\+"))
+            if (IsFullPath(path))
             {
                 // Path is absolute
                 return path;
@@ -123,8 +130,19 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             else
             {
                 // Path is relative
-                string fullPath = Path.GetFullPath(Path.Combine(
-                    Path.GetDirectoryName(currentPath), path));
+                string fullPath;
+                if (path.StartsWith("~"))
+                {
+                    // Unix relative file path
+                    fullPath = Path.GetFullPath(Path.GetDirectoryName(currentPath) + path.Substring(1));
+
+                }
+                else
+                {
+                    fullPath = Path.GetFullPath(Path.Combine(
+                        Path.GetDirectoryName(currentPath), path));
+                }
+
                 return fullPath;
             }
         }
@@ -139,6 +157,25 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         public string ResolveFilePath(string path, IFileData fileData)
         {
             return ResolveFilePath(path, Path.GetDirectoryName(fileData.Path));
+        }
+
+        /// <summary>
+        /// Determines whether a given path is full or relative.
+        /// </summary>
+        public bool IsFullPath(string path)
+        {
+            // FIXME: http:// paths are not recognized as absolute paths
+            if (string.IsNullOrWhiteSpace(path) || path.IndexOfAny(Path.GetInvalidPathChars()) != -1 || !Path.IsPathRooted(path))
+                return false;
+
+            string pathRoot = Path.GetPathRoot(path);
+            if (pathRoot.Length <= 2 && pathRoot != "/") // Accepts X:\ and \\UNC\PATH, rejects empty string, \ and X:, but accepts / to support Linux
+                return false;
+
+            if (pathRoot[0] != '\\' || pathRoot[1] != '\\')
+                return true; // Rooted and not a UNC path
+
+            return pathRoot.Trim('\\').IndexOf('\\') != -1; // A UNC server name without a share name (e.g "\\NAME" or "\\NAME\") is invalid
         }
 
         /// <summary>
@@ -390,7 +427,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 var tracks = new List<TrackMetadata>();
 
                 // Make sure the file is either a "pointer" to a folder
-                // or an M3U playlist
+                // or an MPC playlist
                 string firstLine = await content.ReadLineAsync();
                 if (firstLine != "MPCPLAYLIST")
                     return null;
@@ -612,6 +649,92 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 }
 
                 return metadata;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the PLS metadata from the given file.
+        /// </summary>
+        private async Task<PlaylistMetadata?> GetPlsMetadata(IFileData fileData)
+        {
+            try
+            {
+                using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
+                StreamReader content = new StreamReader(stream);
+
+                var metadata = new PlaylistMetadata();
+
+                // Make sure the file is either a "pointer" to a folder
+                // or an M3U playlist
+                string firstLine = await content.ReadLineAsync();
+                if (firstLine != "[playlist]")
+                    // Not a valid PLS playlist
+                    return null;
+
+                var matches = new List<Match>();
+                while (!content.EndOfStream)
+                {
+                    var line = await content.ReadLineAsync();
+                    var match = Regex.Match(line, @"^(?<key>[A-Za-z]+)(?<idx>[0-9]*)=(?<val>.+)$", RegexOptions.Compiled);
+                    if (match.Success)
+                        matches.Add(match);
+                }
+
+                Match trackCountMatch = matches.First(m => m.Groups["key"].Value == "NumberOfEntries");
+                uint trackCount = uint.Parse(trackCountMatch.Groups["val"].Value);
+                matches.Remove(trackCountMatch);
+                var tracksTable = new Dictionary<int, TrackMetadata>((int)trackCount);
+
+                foreach (var match in matches)
+                {
+                    string value = match.Groups["val"].Value;
+                    string? indexStr = match.Groups["idx"]?.Value;
+                    if (int.TryParse(indexStr, out int index))
+                    {
+                        if (!tracksTable.ContainsKey(index))
+                            tracksTable[index] = new TrackMetadata();
+                    }
+
+                    switch (match.Groups["key"].Value)
+                    {
+                        case "File":
+                            tracksTable[index].Source = new Uri(ResolveFilePath(value, fileData));
+                            break;
+
+                        case "Length":
+                            tracksTable[index].Duration = new TimeSpan(0, 0, int.Parse(value));
+                            break;
+
+                        case "Title":
+                            tracksTable[index].Title = value;
+                            break;
+                    }
+                }
+
+                // Collapse the tracks table to a plain list
+                List<TrackMetadata> tracks = tracksTable.Select(t => t.Value).PruneNull().ToList();
+
+                return metadata;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the AIMPPL metadata from the given file.
+        /// </summary>
+        /// <remarks>Only tested with AIMPPL4 files.</remarks>
+        private async Task<PlaylistMetadata?> GetAimpplMetadata(IFileData fileData)
+        {
+            try
+            {
+                throw new NotImplementedException();
             }
             catch
             {
