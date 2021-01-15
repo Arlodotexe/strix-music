@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface that represents a playlist.
     /// </summary>
-    public interface IPlaylistBase : IPlayable, ITrackCollectionBase, IGenreCollectionBase, IPlaylistCollectionItemBase
+    public interface IPlaylistBase : IPlayableCollectionItem, ITrackCollectionBase, IGenreCollectionBase, IPlaylistCollectionItemBase
     {
     }
 }

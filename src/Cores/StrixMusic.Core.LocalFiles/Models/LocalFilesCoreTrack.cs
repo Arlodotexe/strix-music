@@ -54,6 +54,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged;
+
+        /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
@@ -116,6 +119,12 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc/>
         public TimeSpan Duration => throw new NotImplementedException();
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed { get; }
+
+        /// <inheritdoc />
+        public DateTime? AddedAt { get; }
 
         /// <inheritdoc/>
         public ICorePlayableCollectionGroup? RelatedItems => null;

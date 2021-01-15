@@ -46,6 +46,8 @@ namespace StrixMusic.Sdk.Data.Merged
             Description = _preferredSource.Description;
             PlaybackState = _preferredSource.PlaybackState;
             Duration = _preferredSource.Duration;
+            LastPlayed = _preferredSource.LastPlayed;
+            AddedAt = _preferredSource.AddedAt;
 
             AttachEvents(_preferredSource);
         }
@@ -77,6 +79,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.DescriptionChanged += DescriptionChanged;
             source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
+            source.LastPlayedChanged += LastPlayedChanged;
         }
 
         private void DetachPlayableEvents(IPlayable source)
@@ -86,6 +89,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.DescriptionChanged -= DescriptionChanged;
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
+            source.LastPlayedChanged -= LastPlayedChanged;
         }
 
         private void ImageCollectionMap_ItemsCountChanged(object sender, int e)
@@ -126,6 +130,9 @@ namespace StrixMusic.Sdk.Data.Merged
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged;
+
+        /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
@@ -154,6 +161,12 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public TimeSpan Duration { get; internal set; }
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed { get; internal set; }
+
+        /// <inheritdoc />
+        public DateTime? AddedAt { get; internal set; }
 
         /// <inheritdoc />
         public int TotalPlaylistItemsCount { get; internal set; }

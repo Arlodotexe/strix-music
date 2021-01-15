@@ -38,6 +38,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged;
+
+        /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />?
@@ -93,6 +96,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public TimeSpan Duration => TimeSpan.Zero;
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed { get; }
+
+        /// <inheritdoc />
+        public DateTime? AddedAt { get; }
 
         /// <inheritdoc />
         public abstract int TotalAlbumItemsCount { get; internal set; }

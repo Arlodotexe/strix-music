@@ -47,6 +47,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += OnNameChanged;
             DescriptionChanged += OnDescriptionChanged;
             UrlChanged += OnUrlChanged;
+            LastPlayedChanged += OnLastPlayedChanged;
 
             TrackItemsCountChanged += OnTrackItemsCountChanged;
             TrackItemsChanged += TrackCollectionViewModel_TrackItemsChanged;
@@ -60,6 +61,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= OnNameChanged;
             DescriptionChanged -= OnDescriptionChanged;
             UrlChanged -= OnUrlChanged;
+            LastPlayedChanged -= OnLastPlayedChanged;
 
             TrackItemsCountChanged -= OnTrackItemsCountChanged;
             TrackItemsChanged -= TrackCollectionViewModel_TrackItemsChanged;
@@ -73,7 +75,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnDescriptionChanged(object sender, string? e) => OnPropertyChanged(nameof(Description));
 
-        private void OnPlaybackStateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState)); 
+        private void OnPlaybackStateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState));
+
+        private void OnLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
 
         private void OnTrackItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalTracksCount));
 
@@ -143,6 +147,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged
+        {
+            add => _collection.LastPlayedChanged += value;
+            remove => _collection.LastPlayedChanged -= value;
+        }
+
+        /// <inheritdoc />
         public event EventHandler<int>? TrackItemsCountChanged
         {
             add => _collection.TrackItemsCountChanged += value;
@@ -208,6 +219,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public TimeSpan Duration => _collection.Duration;
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed => _collection.LastPlayed;
+
+        /// <inheritdoc />
+        public DateTime? AddedAt => _collection.AddedAt;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }

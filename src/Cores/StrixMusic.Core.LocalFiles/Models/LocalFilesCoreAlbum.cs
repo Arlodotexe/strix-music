@@ -41,6 +41,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged;
+
+        /// <inheritdoc />
         public event EventHandler<int>? TrackItemsCountChanged;
 
         /// <inheritdoc />
@@ -81,6 +84,12 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc/>
         public TimeSpan Duration { get; } = TimeSpan.Zero;
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed { get; }
+
+        /// <inheritdoc />
+        public DateTime? AddedAt { get; }
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 3;

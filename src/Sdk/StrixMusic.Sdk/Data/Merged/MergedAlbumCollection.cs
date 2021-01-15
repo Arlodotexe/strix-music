@@ -43,6 +43,8 @@ namespace StrixMusic.Sdk.Data.Merged
             Description = _preferredSource.Description;
             Name = _preferredSource.Name;
             Url = _preferredSource.Url;
+            LastPlayed = _preferredSource.LastPlayed;
+            AddedAt = _preferredSource.AddedAt;
 
             _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
             _albumMap = new MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem>(this);
@@ -75,6 +77,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.DescriptionChanged += DescriptionChanged;
             source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
+            source.LastPlayedChanged += LastPlayedChanged;
         }
 
         private void DetachPlayableEvents(IPlayable source)
@@ -84,6 +87,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.DescriptionChanged -= DescriptionChanged;
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
+            source.LastPlayedChanged -= LastPlayedChanged;
         }
 
         /// <inheritdoc />
@@ -100,6 +104,9 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IImage>? ImagesChanged;
@@ -167,6 +174,12 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public TimeSpan Duration { get; internal set; }
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed { get; internal set; }
+
+        /// <inheritdoc />
+        public DateTime? AddedAt { get; internal set; }
 
         /// <inheritdoc />
         public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;

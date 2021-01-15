@@ -3,7 +3,7 @@
     /// <summary>
     /// An item that belongs in an <see cref="IPlaylistCollectionBase"/>.
     /// </summary>
-    public interface IPlaylistCollectionItemBase : ICollectionItemBase, IPlayable
+    public interface IPlaylistCollectionItemBase : IPlayableCollectionItem
     {
     }
 }

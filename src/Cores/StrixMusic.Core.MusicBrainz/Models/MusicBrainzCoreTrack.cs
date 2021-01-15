@@ -84,6 +84,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged;
+
+        /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
@@ -148,6 +151,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public TimeSpan Duration => _track.Length != null
                 ? TimeSpan.FromMilliseconds((double)_track.Length)
                 : TimeSpan.Zero;
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed { get; }
+
+        /// <inheritdoc />
+        public DateTime? AddedAt { get; }
 
         /// <inheritdoc/>
         public ICorePlayableCollectionGroup? RelatedItems => null;

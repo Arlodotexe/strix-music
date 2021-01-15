@@ -45,6 +45,8 @@ namespace StrixMusic.Sdk.Data.Merged
             Url = _preferredSource.Url;
             DatePublished = _preferredSource.DatePublished;
             PlaybackState = _preferredSource.PlaybackState;
+            LastPlayed = _preferredSource.LastPlayed;
+            AddedAt = _preferredSource.AddedAt;
 
             _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
             _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
@@ -88,6 +90,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.DescriptionChanged += DescriptionChanged;
             source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
+            source.LastPlayedChanged += LastPlayedChanged;
         }
 
         private void DetachPlayableEvents(IPlayable source)
@@ -97,6 +100,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.DescriptionChanged -= DescriptionChanged;
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
+            source.LastPlayedChanged -= LastPlayedChanged;
         }
 
         private void TrackCollectionMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
@@ -189,6 +193,12 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public string? Description { get; internal set; }
 
+        /// <inheritdoc />
+        public DateTime? LastPlayed { get; internal set; }
+
+        /// <inheritdoc />
+        public DateTime? AddedAt { get; internal set; }
+
         /// <inheritdoc/>
         public PlaybackState PlaybackState { get; internal set; }
 
@@ -230,6 +240,9 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? TrackItemsCountChanged;

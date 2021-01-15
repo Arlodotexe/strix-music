@@ -44,6 +44,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += OnNameChanged;
             DescriptionChanged += OnDescriptionChanged;
             UrlChanged += OnUrlChanged;
+            LastPlayedChanged += OnLastPlayedChanged;
 
             PlaylistItemsCountChanged += OnPlaylistItemsCountChanged;
             ImagesCountChanged += PlaylistCollectionViewModel_ImagesCountChanged;
@@ -58,6 +59,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= OnNameChanged;
             DescriptionChanged -= OnDescriptionChanged;
             UrlChanged -= OnUrlChanged;
+            LastPlayedChanged -= OnLastPlayedChanged;
 
             PlaylistItemsCountChanged -= OnPlaylistItemsCountChanged;
             ImagesCountChanged -= PlaylistCollectionViewModel_ImagesCountChanged;
@@ -77,6 +79,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void OnPlaylistItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalPlaylistItemsCount));
 
         private void PlaylistCollectionViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
+
+        private void OnLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
 
         private void PlaylistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
@@ -153,6 +157,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged
+        {
+            add => _collection.LastPlayedChanged += value;
+            remove => _collection.LastPlayedChanged -= value;
+        }
+
+        /// <inheritdoc />
         public event EventHandler<int>? PlaylistItemsCountChanged
         {
             add => _collection.PlaylistItemsCountChanged += value;
@@ -218,6 +229,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public TimeSpan Duration => _collection.Duration;
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed => _collection.LastPlayed;
+
+        /// <inheritdoc />
+        public DateTime? AddedAt => _collection.AddedAt;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IPlaylistCollectionItem> Playlists { get; }

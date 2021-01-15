@@ -63,6 +63,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged += CollectionGroupDescriptionChanged;
             NameChanged += CollectionGroupNameChanged;
             UrlChanged += CollectionGroupUrlChanged;
+            LastPlayedChanged += CollectionGroupLastPlayedChanged;
 
             AlbumItemsCountChanged += CollectionGroupOnAlbumItemsCountChanged;
             TrackItemsCountChanged += CollectionGroupOnTrackItemsCountChanged;
@@ -85,6 +86,7 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged -= CollectionGroupDescriptionChanged;
             NameChanged -= CollectionGroupNameChanged;
             UrlChanged -= CollectionGroupUrlChanged;
+            LastPlayedChanged -= CollectionGroupLastPlayedChanged;
 
             AlbumItemsCountChanged -= CollectionGroupOnAlbumItemsCountChanged;
             TrackItemsCountChanged -= CollectionGroupOnTrackItemsCountChanged;
@@ -136,6 +138,13 @@ namespace StrixMusic.Sdk.ViewModels
             add => _collectionGroup.DurationChanged += value;
 
             remove => _collectionGroup.DurationChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged
+        {
+            add => _collectionGroup.LastPlayedChanged += value;
+            remove => _collectionGroup.LastPlayedChanged -= value;
         }
 
         /// <inheritdoc />
@@ -241,6 +250,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void CollectionGroupOnAlbumItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalAlbumItemsCount));
 
         private void PlayableCollectionGroupViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
+
+        private void CollectionGroupLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
 
         private void PlayableCollectionGroupViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
@@ -402,6 +413,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public TimeSpan Duration => _collectionGroup.Duration;
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed => _collectionGroup.LastPlayed;
+
+        /// <inheritdoc />
+        public DateTime? AddedAt => _collectionGroup.AddedAt;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IImage> Images { get; }

@@ -52,6 +52,7 @@ namespace StrixMusic.Sdk.ViewModels
             ArtistItemsChanged += ArtistCollectionViewModel_ArtistItemsChanged;
             ImagesCountChanged += ArtistCollectionViewModel_ImagesCountChanged;
             ImagesChanged += ArtistCollectionViewModel_ImagesChanged;
+            LastPlayedChanged += OnLastPlayedChanged;
         }
 
         private void DetachEvents()
@@ -61,6 +62,10 @@ namespace StrixMusic.Sdk.ViewModels
             DescriptionChanged -= OnDescriptionChanged;
             UrlChanged -= OnUrlChanged;
             ArtistItemsCountChanged -= OnArtistItemsCountChanged;
+            ArtistItemsChanged -= ArtistCollectionViewModel_ArtistItemsChanged;
+            ImagesCountChanged -= ArtistCollectionViewModel_ImagesCountChanged;
+            ImagesChanged -= ArtistCollectionViewModel_ImagesChanged;
+            LastPlayedChanged -= OnLastPlayedChanged;
         }
 
         private void OnUrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
@@ -74,6 +79,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void ArtistCollectionViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
         private void OnArtistItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalArtistItemsCount));
+
+        private void OnLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
 
         private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
@@ -150,6 +157,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged
+        {
+            add => _collection.LastPlayedChanged += value;
+            remove => _collection.LastPlayedChanged -= value;
+        }
+
+        /// <inheritdoc />
         public event EventHandler<int>? ArtistItemsCountChanged
         {
             add => _collection.ArtistItemsCountChanged += value;
@@ -209,6 +223,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public TimeSpan Duration => _collection.Duration;
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed => _collection.LastPlayed;
+
+        /// <inheritdoc />
+        public DateTime? AddedAt => _collection.AddedAt;
 
         /// <inheritdoc />
         public int TotalArtistItemsCount => _collection.TotalArtistItemsCount;

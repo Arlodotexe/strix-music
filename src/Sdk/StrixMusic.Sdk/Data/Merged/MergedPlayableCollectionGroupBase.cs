@@ -66,6 +66,8 @@ namespace StrixMusic.Sdk.Data.Merged
             Url = PreferredSource.Url;
             Description = PreferredSource.Description;
             PlaybackState = PreferredSource.PlaybackState;
+            LastPlayed = PreferredSource.LastPlayed;
+            AddedAt = PreferredSource.AddedAt;
         }
 
         /// <summary>
@@ -85,6 +87,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.DescriptionChanged += DescriptionChanged;
             source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
+            source.LastPlayedChanged += LastPlayedChanged;
 
             source.AlbumItemsCountChanged += AlbumItemsCountChanged;
             source.ArtistItemsCountChanged += ArtistItemsCountChanged;
@@ -100,6 +103,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.DescriptionChanged -= DescriptionChanged;
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
+            source.LastPlayedChanged -= LastPlayedChanged;
 
             source.AlbumItemsCountChanged -= AlbumItemsCountChanged;
             source.ArtistItemsCountChanged -= ArtistItemsCountChanged;
@@ -154,6 +158,9 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc/>
         public event EventHandler<TimeSpan>? DurationChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? TrackItemsCountChanged;
@@ -304,6 +311,12 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc/>
         public TimeSpan Duration { get; internal set; } = new TimeSpan(0);
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed { get; internal set; }
+
+        /// <inheritdoc />
+        public DateTime? AddedAt { get; internal set; }
 
         /// <inheritdoc/>
         public int TotalChildrenCount { get; internal set; }

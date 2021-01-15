@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// A collection of <see cref="IPlaylistCollectionItemBase"/>s and the properties and methods for using and manipulating them.
     /// </summary>
-    public interface IPlaylistCollectionBase : IPlayableCollectionBase, IPlaylistCollectionItemBase
+    public interface IPlaylistCollectionBase : IPlayableCollectionItem, IPlaylistCollectionItemBase
     {
         /// <summary>
         /// The total number of available Playlists.

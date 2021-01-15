@@ -63,6 +63,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += CorePlaylistNameChanged;
             PlaybackStateChanged += CorePlaylistPlaybackStateChanged;
             UrlChanged += CorePlaylistUrlChanged;
+            LastPlayedChanged += CorePlaylistLastPlayedChanged;
 
             TrackItemsCountChanged += PlaylistOnTrackItemsCountChanged;
             TrackItemsChanged += PlaylistViewModel_TrackItemsChanged;
@@ -76,6 +77,7 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= CorePlaylistNameChanged;
             PlaybackStateChanged -= CorePlaylistPlaybackStateChanged;
             UrlChanged -= CorePlaylistUrlChanged;
+            LastPlayedChanged += CorePlaylistLastPlayedChanged;
 
             TrackItemsCountChanged -= PlaylistOnTrackItemsCountChanged;
             TrackItemsChanged -= PlaylistViewModel_TrackItemsChanged;
@@ -123,6 +125,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged
+        {
+            add => _playlist.LastPlayedChanged += value;
+            remove => _playlist.LastPlayedChanged -= value;
+        }
+
+        /// <inheritdoc />
         public event EventHandler<int>? TrackItemsCountChanged
         {
             add => _playlist.TrackItemsCountChanged += value;
@@ -161,6 +170,8 @@ namespace StrixMusic.Sdk.ViewModels
         private void PlaylistOnTrackItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalTracksCount));
 
         private void PlaylistViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
+
+        private void CorePlaylistLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
 
         private void PlaylistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
@@ -218,6 +229,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public TimeSpan Duration => _playlist.Duration;
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed { get; }
+
+        /// <inheritdoc />
+        public DateTime? AddedAt { get; }
 
         /// <inheritdoc />
         public IPlayableCollectionGroup? RelatedItems { get; }

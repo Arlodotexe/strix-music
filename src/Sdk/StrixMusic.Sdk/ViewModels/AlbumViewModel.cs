@@ -68,6 +68,7 @@ namespace StrixMusic.Sdk.ViewModels
             TrackItemsChanged += AlbumViewModel_TrackItemsChanged;
             ImagesCountChanged += AlbumViewModel_ImagesCountChanged;
             ImagesChanged += AlbumViewModel_ImagesChanged;
+            LastPlayedChanged += OnLastPlayedChanged;
         }
 
         private void DetachEvents()
@@ -81,6 +82,7 @@ namespace StrixMusic.Sdk.ViewModels
             TrackItemsChanged -= AlbumViewModel_TrackItemsChanged;
             ImagesCountChanged -= AlbumViewModel_ImagesCountChanged;
             ImagesChanged -= AlbumViewModel_ImagesChanged;
+            LastPlayedChanged -= OnLastPlayedChanged;
         }
 
         /// <inheritdoc />
@@ -121,6 +123,14 @@ namespace StrixMusic.Sdk.ViewModels
             add => _album.DurationChanged += value;
 
             remove => _album.DurationChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged
+        {
+            add => _album.LastPlayedChanged += value;
+
+            remove => _album.LastPlayedChanged -= value;
         }
 
         /// <inheritdoc />
@@ -194,6 +204,8 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void AlbumViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
+        private void OnLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
+
         private void AlbumViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
         {
             foreach (var item in addedItems)
@@ -255,6 +267,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public TimeSpan Duration => _album.Duration;
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed => _album.LastPlayed;
+
+        /// <inheritdoc />
+        public DateTime? AddedAt => _album.AddedAt;
 
         /// <inheritdoc />
         public IPlayableCollectionGroup? RelatedItems { get; }

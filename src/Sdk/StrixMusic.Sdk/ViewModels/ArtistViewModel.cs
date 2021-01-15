@@ -64,6 +64,7 @@ namespace StrixMusic.Sdk.ViewModels
             ImagesChanged += ArtistViewModel_ImagesChanged;
             AlbumItemsChanged += ArtistViewModel_AlbumItemsChanged;
             TrackItemsChanged += ArtistViewModel_TrackItemsChanged;
+            LastPlayedChanged += OnLastPlayedChanged;
         }
 
         private void DetachEvents()
@@ -78,6 +79,7 @@ namespace StrixMusic.Sdk.ViewModels
             ImagesChanged -= ArtistViewModel_ImagesChanged;
             AlbumItemsChanged -= ArtistViewModel_AlbumItemsChanged;
             TrackItemsChanged -= ArtistViewModel_TrackItemsChanged;
+            LastPlayedChanged -= OnLastPlayedChanged;
         }
 
         /// <inheritdoc />
@@ -86,6 +88,14 @@ namespace StrixMusic.Sdk.ViewModels
             add => _artist.DurationChanged += value;
 
             remove => _artist.DurationChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<DateTime?>? LastPlayedChanged
+        {
+            add => _artist.LastPlayedChanged += value;
+
+            remove => _artist.LastPlayedChanged -= value;
         }
 
         /// <inheritdoc />
@@ -176,6 +186,8 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void ArtistViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
+        private void OnLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
+
         private void ArtistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
             foreach (var item in addedItems)
@@ -263,6 +275,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="IPlayable.Duration" />
         public TimeSpan Duration => _artist.Duration;
+
+        /// <inheritdoc />
+        public DateTime? LastPlayed => _artist.LastPlayed;
+
+        /// <inheritdoc />
+        public DateTime? AddedAt => _artist.AddedAt;
 
         /// <inheritdoc />
         public IPlayableCollectionGroup? RelatedItems { get; }
