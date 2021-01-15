@@ -22,7 +22,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// <summary>
         /// Holds unique identifier(s) for the <see cref="AlbumMetadata"/>.
         /// </summary>
-        public string? AlbumIds { get; set; }
+        public List<string?> AlbumIds { get; set; }
 
         /// <summary>
         /// Holds the name of the artist.

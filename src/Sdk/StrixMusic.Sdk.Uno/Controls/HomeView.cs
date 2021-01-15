@@ -22,6 +22,9 @@ namespace StrixMusic.Sdk.Uno.Controls
 
             if (MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.IsRunning == false)
                 _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.ExecuteAsync(60);
+
+            if (MainViewModel.Singleton?.Library?.PopulateMorePlaylistsCommand.IsRunning == false)
+                _ = MainViewModel.Singleton?.Library?.PopulateMorePlaylistsCommand.ExecuteAsync(60);
         }
 
         /// <inheritdoc />

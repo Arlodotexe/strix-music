@@ -20,7 +20,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     {
         private readonly string _albumMetadataCacheFileName = "AlbumMeta.lfc"; //lfc represents LocalFileCore format.
         private readonly string _pathToMetadatafile;
-        private readonly AlbumMetadataScanner _albumMetadataScanner;
         private readonly IFileSystemService _fileSystemService;
         private IFolderData? _folderData;
 
@@ -32,7 +31,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         {
             _fileSystemService = fileSystemService;
             _pathToMetadatafile = $"{_fileSystemService.RootFolder.Path}\\{_albumMetadataCacheFileName}";
-            _albumMetadataScanner = new AlbumMetadataScanner();
         }
 
         /// <summary>
@@ -76,21 +74,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             if (!await _fileSystemService.FileExistsAsync(_pathToMetadatafile))
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
-            var albumMetadataLst = new List<AlbumMetadata>();
-
-            var files = await _folderData.GetFilesAsync();
-
-            foreach (var item in files)
-            {
-                var metadata = await _albumMetadataScanner.ScanAlbumMetadata(item);
-                if (metadata is null)
-                    continue;
-
-                albumMetadataLst.Add(metadata);
-            }
-
-            var bytes = MessagePackSerializer.Serialize(albumMetadataLst, MessagePack.Resolvers.ContractlessStandardResolver.Options);
-            File.WriteAllBytes(_pathToMetadatafile, bytes);
+            throw new NotImplementedException();
         }
     }
 }

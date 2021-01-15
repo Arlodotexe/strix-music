@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using OwlCore.AbstractStorage;
 using CreationCollisionOption = OwlCore.AbstractStorage.CreationCollisionOption;
+using Windows.Storage.Search;
 
 namespace StrixMusic.Sdk.Uno.Models
 {
