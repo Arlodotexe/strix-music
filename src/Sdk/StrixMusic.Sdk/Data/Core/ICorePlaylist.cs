@@ -4,7 +4,7 @@ namespace StrixMusic.Sdk.Data.Core
 {
     /// <inheritdoc cref="IPlaylistBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICorePlaylist : IPlaylistBase, ICoreTrackCollection, ICorePlaylistCollection, ICoreGenreCollection, ICorePlaylistCollectionItem, ICoreMember
+    public interface ICorePlaylist : IPlaylistBase, ICoreTrackCollection, ICoreGenreCollection, ICorePlaylistCollectionItem, ICoreMember
     {
         /// <summary>
         /// Owner of the playable item.

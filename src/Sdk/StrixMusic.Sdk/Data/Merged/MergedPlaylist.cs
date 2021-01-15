@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// Merged multiple <see cref="ICoreAlbum"/> into a single <see cref="IAlbum"/>
     /// </summary>
-    public class MergedPlaylist : IPlaylist, IMerged<ICorePlaylist>
+    public class MergedPlaylist : IPlaylist, IMerged<ICorePlaylist>, IMerged<ICorePlaylistCollectionItem>
     {
         private readonly List<ICorePlaylist> _sources;
         private readonly MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack> _trackCollectionMap;
@@ -176,6 +176,12 @@ namespace StrixMusic.Sdk.Data.Merged
             _imageCollectionMap.RemoveSource(itemToRemove);
         }
 
+        /// <inheritdoc />
+        public void AddSource(ICorePlaylistCollectionItem itemToMerge) => AddSource((ICorePlaylist)itemToMerge);
+
+        /// <inheritdoc />
+        public void RemoveSource(ICorePlaylistCollectionItem itemToRemove) => RemoveSource((ICorePlaylist)itemToRemove);
+
         /// <inheritdoc/>
         public Task AddTrackAsync(ITrack track, int index) => _trackCollectionMap.InsertItem(track, index);
 
@@ -287,6 +293,9 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public SynchronizedObservableCollection<string>? Genres => _preferredSource.Genres;
 
+        /// <inheritdoc />
+        IReadOnlyList<ICorePlaylistCollectionItem> IMerged<ICorePlaylistCollectionItem>.Sources => Sources;
+
         /// <inheritdoc/>
         IReadOnlyList<ICoreTrackCollection> ISdkMember<ICoreTrackCollection>.Sources => Sources;
 
@@ -299,7 +308,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         IReadOnlyList<ICorePlaylistCollectionItem> ISdkMember<ICorePlaylistCollectionItem>.Sources => Sources;
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         IReadOnlyList<ICorePlaylist> ISdkMember<ICorePlaylist>.Sources => Sources;
 
         /// <inheritdoc/>
@@ -312,9 +321,20 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
+        public bool Equals(ICorePlaylistCollectionItem other)
+        {
+            if (other is ICorePlaylist corePlaylist)
+            {
+                return Equals(corePlaylist);
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            return ReferenceEquals(this, obj) || (obj is ICorePlaylist other && Equals(other));
+            return ReferenceEquals(this, obj) || (obj is ICorePlaylistCollectionItem other && Equals(other));
         }
 
         /// <inheritdoc />
