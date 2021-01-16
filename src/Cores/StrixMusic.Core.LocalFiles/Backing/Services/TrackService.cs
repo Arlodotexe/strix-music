@@ -15,7 +15,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     /// <summary>
     /// The service that helps in interacting with the saved file core track information.
     /// </summary>
-    public class TrackService : IAsyncInit
+    public class TrackService
     {
         private readonly string _trackMetadataCacheFileName = "TrackMeta.lfc"; //lfc represents LocalFileCore format.
         private readonly string _pathToMetadatafile;
@@ -32,18 +32,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             _fileSystemService = fileSystemService;
             _pathToMetadatafile = $"{_fileSystemService.RootFolder.Path}\\{_trackMetadataCacheFileName}";
             _fileMetadataScanner = fileMetadataScanner;
-        }
-
-        /// <summary>
-        /// Initializes the service.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitAsync()
-        {
-            var folders = await _fileSystemService.GetPickedFolders();
-            Guard.IsNotNull(folders, nameof(folders));
-            _folderData = folders.ToList().FirstOrDefault();
-            Guard.IsNotNull(_folderData, nameof(_folderData));
         }
 
         /// <summary>
@@ -69,9 +57,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
         public async Task CreateOrUpdateTrackMetadata()
         {
-            if (_folderData is null)
-                return;
-
             if (!await _fileSystemService.FileExistsAsync(_pathToMetadatafile))
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 

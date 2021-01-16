@@ -17,7 +17,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     /// <summary>
     /// The service that helps in interacting with the saved file core track information.
     /// </summary>
-    public class PlaylistService : IAsyncInit
+    public class PlaylistService
     {
         private readonly string _playlistMetadataCacheFileName = "PlaylistMeta.lfc"; //lfc represents LocalFileCore format.
         private readonly string _pathToMetadatafile;
@@ -37,18 +37,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         }
 
         /// <summary>
-        /// Initializes the service.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitAsync()
-        {
-            var folders = await _fileSystemService.GetPickedFolders();
-            Guard.IsNotNull(folders, nameof(folders));
-            _folderData = folders.ToList().FirstOrDefault();
-            Guard.IsNotNull(_folderData, nameof(_folderData));
-        }
-
-        /// <summary>
         /// Get all <see cref="PlaylistMetadata"/>> over the file system.
         /// </summary>
         /// <param name="offset"></param>
@@ -64,6 +52,19 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
 
             return Task.FromResult<IReadOnlyList<PlaylistMetadata>>(playlistMetadataLst.Skip(offset).Take(limit).ToList());
         }
+
+        /// <summary>
+        /// Initializes the service.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task InitAsync()
+        {
+            var folders = await _fileSystemService.GetPickedFolders();
+            Guard.IsNotNull(folders, nameof(folders));
+            _folderData = folders.ToList().FirstOrDefault();
+            Guard.IsNotNull(_folderData, nameof(_folderData));
+        }
+
 
         /// <summary>
         /// Create or Update <see cref="PlaylistMetadata"/> information in files.

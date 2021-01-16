@@ -34,18 +34,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         }
 
         /// <summary>
-        /// Initializes the service.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitAsync()
-        {
-            var folders = await _fileSystemService.GetPickedFolders();
-            Guard.IsNotNull(folders, nameof(folders));
-            _folderData = folders.ToList().FirstOrDefault();
-            Guard.IsNotNull(_folderData, nameof(_folderData));
-        }
-
-        /// <summary>
         /// Gets all <see cref="ArtistMetadata"/>> over the file system.
         /// </summary>
         /// <param name="offset"></param>
@@ -68,9 +56,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// <returns>The <see cref="ArtistMetadata"/> collection.</returns>
         public async Task CreateOrUpdateArtistMetadata()
         {
-            if (_folderData is null)
-                return;
-
             if (!await _fileSystemService.FileExistsAsync(_pathToMetadatafile))
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 

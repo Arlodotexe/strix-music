@@ -21,9 +21,6 @@ namespace StrixMusic.Core.LocalFiles
     public class LocalFileCoreConfig : ICoreConfig
     {
         private IFileSystemService? _fileSystemService;
-        private TrackService? _trackService;
-        private AlbumService _albumService;
-        private PlaylistService _playlistService;
         private FileMetadataScanner _fileMetadataScanner;
         private ISettingsService? _settingsService;
         private bool _baseServicesSetup;
@@ -36,6 +33,26 @@ namespace StrixMusic.Core.LocalFiles
             SourceCore = sourceCore;
             AbstractUIElements = new List<AbstractUIElementGroup>();
         }
+
+        /// <summary>
+        /// Provides cache data related to <see cref="ArtistMetadata"/>/
+        /// </summary>
+        public ArtistService? ArtistService { get; set; }
+
+        /// <summary>
+        /// Provides cache data related to <see cref="TrackMetadata"/>/
+        /// </summary>
+        public TrackService? TrackService { get; set; }
+
+        /// <summary>
+        /// Provides cache data related to <see cref="AlbumMetadata"/>/
+        /// </summary>
+        public AlbumService? AlbumService { get; set; }
+
+        /// <summary>
+        /// Provides cache data related to <see cref="PlaylistMetadata"/>/
+        /// </summary>
+        public PlaylistService? PlaylistService { get; set; }
 
         /// <inheritdoc />
         public ICore SourceCore { get; }
@@ -64,12 +81,10 @@ namespace StrixMusic.Core.LocalFiles
             Services = null;
 
             _fileMetadataScanner = new FileMetadataScanner();
-            _trackService = new TrackService(_fileSystemService, _fileMetadataScanner);
-            _albumService = new AlbumService(_fileSystemService, _fileMetadataScanner);
-            _playlistService = new PlaylistService(_fileSystemService);
-            services.Add(new ServiceDescriptor(typeof(AlbumService), _albumService));
-            services.Add(new ServiceDescriptor(typeof(TrackService), _trackService));
-            services.Add(new ServiceDescriptor(typeof(PlaylistService), _playlistService));
+            TrackService = new TrackService(_fileSystemService, _fileMetadataScanner);
+            AlbumService = new AlbumService(_fileSystemService, _fileMetadataScanner);
+            ArtistService = new ArtistService(_fileSystemService, _fileMetadataScanner);
+            PlaylistService = new PlaylistService(_fileSystemService);
 
             Services = services.BuildServiceProvider();
         }

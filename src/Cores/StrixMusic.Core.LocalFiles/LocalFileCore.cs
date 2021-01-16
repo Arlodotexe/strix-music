@@ -6,6 +6,7 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
 using OwlCore.Extensions;
+using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data;
@@ -20,7 +21,12 @@ namespace StrixMusic.Core.LocalFiles
     public class LocalFileCore : ICore
     {
         private static int CoreCount = 0;
+        private ArtistService _artistService;
+        private AlbumService _albumService;
+        private TrackService _trackService;
+        private PlaylistService _playlistService;
         private LocalFilesCoreSettingsService _localFilesCoreSettingsService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFileCore"/> class.
         /// </summary>
@@ -38,6 +44,27 @@ namespace StrixMusic.Core.LocalFiles
             CoreConfig = new LocalFileCoreConfig(this);
             LocalFileCoreManager.Instances?.Add(this);
         }
+
+        /// <summary>
+        /// Provides cache data related to <see cref="TrackMetadata"/>/
+        /// </summary>
+        public TrackService TrackService => _trackService;
+
+        /// <summary>
+        /// Provides cache data related to <see cref="AlbumMetadata"/>/
+        /// </summary>
+        public AlbumService AlbumService => _albumService;
+
+        /// <summary>
+        /// Provides cache data related to <see cref="PlaylistMetadata"/>/
+        /// </summary>
+        public PlaylistService PlaylistService => _playlistService;
+
+
+        /// <summary>
+        /// Provides cache data related to <see cref="ArtistMetada"/>/
+        /// </summary>
+        public ArtistService ArtistService => _artistService;
 
         /// <inheritdoc/>
         public ICoreConfig CoreConfig { get; }
@@ -115,6 +142,11 @@ namespace StrixMusic.Core.LocalFiles
 
             await coreConfig.ConfigureServices(services);
             await coreConfig.ScanFileMetadata();
+
+            _albumService = coreConfig.AlbumService;
+            _artistService = coreConfig.ArtistService;
+            _trackService = coreConfig.TrackService;
+            _playlistService = coreConfig.PlaylistService;
 
             ChangeCoreState(CoreState.Loaded);
             CoreCount++;

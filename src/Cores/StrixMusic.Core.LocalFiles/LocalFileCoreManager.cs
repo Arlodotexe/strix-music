@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Core.LocalFiles
 {
     /// <summary>
-    /// Manages multiple instances of LocalFileCore.
+    /// Manages multiple instances of <see cref="LocalFileCore"/>.
     /// </summary>
     public static class LocalFileCoreManager
     {
@@ -25,15 +25,12 @@ namespace StrixMusic.Core.LocalFiles
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task InitializeDataForAllCores()
         {
-            await Instances.InParallel(x => x.GetService<ArtistService>().InitAsync());
-            await Instances.InParallel(x => x.GetService<TrackService>().InitAsync());
-            await Instances.InParallel(x => x.GetService<AlbumService>().InitAsync());
-            await Instances.InParallel(x => x.GetService<PlaylistService>().InitAsync());
+            await Instances.InParallel(x => x.PlaylistService.InitAsync());
 
-            await Instances.InParallel(x => x.GetService<TrackService>().CreateOrUpdateTrackMetadata());
-            await Instances.InParallel(x => x.GetService<ArtistService>().CreateOrUpdateArtistMetadata());
-            await Instances.InParallel(x => x.GetService<AlbumService>().CreateOrUpdateAlbumMetadata());
-            await Instances.InParallel(x => x.GetService<PlaylistService>().CreateOrUpdatePlaylistMetadata());
+            await Instances.InParallel(x => x.AlbumService.CreateOrUpdateAlbumMetadata());
+            await Instances.InParallel(x => x.ArtistService.CreateOrUpdateArtistMetadata());
+            await Instances.InParallel(x => x.TrackService.CreateOrUpdateTrackMetadata());
+            await Instances.InParallel(x => x.PlaylistService.CreateOrUpdatePlaylistMetadata());
         }
     }
 }
