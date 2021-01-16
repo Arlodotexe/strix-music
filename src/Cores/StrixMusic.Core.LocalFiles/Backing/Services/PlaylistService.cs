@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Provisos;
 using StrixMusic.Core.LocalFiles.Backing.Models;
+using StrixMusic.Core.LocalFiles.Extensions;
 using StrixMusic.Core.LocalFiles.MetadataScanner;
 using System;
 using System.Collections.Generic;
@@ -78,7 +79,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
 
             var playlistMetadataLst = new List<PlaylistMetadata>();
 
-            var files = await _folderData.GetFilesAsync();
+            var files = await _folderData.RecursiveDepthFileSearchAsync();
 
             foreach (var item in files)
             {
