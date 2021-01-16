@@ -34,7 +34,7 @@ namespace StrixMusic.Core.LocalFiles.Extensions
                     fileDatas.Add(file);
                 }
 
-                return await RecursiveDepthFileSearchAsync(folder, fileDatas);
+                await RecursiveDepthFileSearchAsync(folder, fileDatas);
             }
 
             return fileDatas;
