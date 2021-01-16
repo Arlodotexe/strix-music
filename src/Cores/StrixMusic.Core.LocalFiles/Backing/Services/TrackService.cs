@@ -7,6 +7,7 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Provisos;
 using StrixMusic.Core.LocalFiles.Backing.Models;
+using StrixMusic.Core.LocalFiles.Extensions;
 using StrixMusic.Core.LocalFiles.MetadataScanner;
 
 namespace StrixMusic.Core.LocalFiles.Backing.Services
@@ -18,7 +19,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     {
         private readonly string _trackMetadataCacheFileName = "TrackMeta.lfc"; //lfc represents LocalFileCore format.
         private readonly string _pathToMetadatafile;
-        private readonly FileMetadataScanner _trackMetadataScanner;
+        private readonly FileMetadataScanner _fileMetadataScanner;
         private readonly IFileSystemService _fileSystemService;
         private IFolderData? _folderData;
 
@@ -26,11 +27,11 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// Creates a new instance for <see cref="TrackService"/>.
         /// </summary>
         /// <param name="fileSystemService"></param>
-        public TrackService(IFileSystemService fileSystemService)
+        public TrackService(IFileSystemService fileSystemService, FileMetadataScanner fileMetadataScanner)
         {
             _fileSystemService = fileSystemService;
             _pathToMetadatafile = $"{_fileSystemService.RootFolder.Path}\\{_trackMetadataCacheFileName}";
-            _trackMetadataScanner = new FileMetadataScanner();
+            _fileMetadataScanner = fileMetadataScanner;
         }
 
         /// <summary>
@@ -74,21 +75,10 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             if (!await _fileSystemService.FileExistsAsync(_pathToMetadatafile))
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
-            // This code below needs an update.
-            var trackMetadataLst = new List<RelatedMetadata>();
+            // NOTE: Make sure you have already scanned the filemetadata. Otherwise it will throw an exception.
+            var metadata = _fileMetadataScanner.GetUniqueTrackMetadataToCache();
 
-            var files = await _folderData.GetFilesAsync();
-
-            foreach (var item in files)
-            {
-                var metadata = await _trackMetadataScanner.ScanFileMetadata(item);
-                if (metadata is null)
-                    continue;
-
-                trackMetadataLst.Add(metadata);
-            }
-
-            var bytes = MessagePackSerializer.Serialize(trackMetadataLst, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
             File.WriteAllBytes(_pathToMetadatafile, bytes);
         }
     }
