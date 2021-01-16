@@ -25,14 +25,14 @@ namespace StrixMusic.Core.LocalFiles
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task InitializeDataForAllCores()
         {
+            await Instances.InParallel(x => x.GetService<ArtistService>().InitAsync());
             await Instances.InParallel(x => x.GetService<TrackService>().InitAsync());
             await Instances.InParallel(x => x.GetService<AlbumService>().InitAsync());
             await Instances.InParallel(x => x.GetService<PlaylistService>().InitAsync());
 
-            // FIXME: This will currently throw an exception
-            // (file is being used by another process) because all cores instances are using the same folder. 
-            // await Instances.InParallel(x => x.GetService<AlbumService>().CreateOrUpdateAlbumMetadata());
             await Instances.InParallel(x => x.GetService<TrackService>().CreateOrUpdateTrackMetadata());
+            await Instances.InParallel(x => x.GetService<ArtistService>().CreateOrUpdateArtistMetadata());
+            await Instances.InParallel(x => x.GetService<AlbumService>().CreateOrUpdateAlbumMetadata());
             await Instances.InParallel(x => x.GetService<PlaylistService>().CreateOrUpdatePlaylistMetadata());
         }
     }

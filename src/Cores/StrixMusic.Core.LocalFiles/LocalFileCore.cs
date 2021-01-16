@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
 using OwlCore.Extensions;
@@ -19,7 +20,7 @@ namespace StrixMusic.Core.LocalFiles
     public class LocalFileCore : ICore
     {
         private static int CoreCount = 0;
-
+        private LocalFilesCoreSettingsService _localFilesCoreSettingsService;
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFileCore"/> class.
         /// </summary>
@@ -93,6 +94,8 @@ namespace StrixMusic.Core.LocalFiles
         /// <inheritdoc/>
         public async Task InitAsync(IServiceCollection services)
         {
+            Guard.IsNotNull(services, nameof(services));
+
             ChangeCoreState(CoreState.Loading);
 
             if (!(CoreConfig is LocalFileCoreConfig coreConfig))
@@ -111,6 +114,7 @@ namespace StrixMusic.Core.LocalFiles
             }
 
             await coreConfig.ConfigureServices(services);
+            await coreConfig.ScanFileMetadata();
 
             ChangeCoreState(CoreState.Loaded);
             CoreCount++;
