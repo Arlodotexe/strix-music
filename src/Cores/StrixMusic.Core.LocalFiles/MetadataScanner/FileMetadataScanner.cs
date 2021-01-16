@@ -1,6 +1,8 @@
-﻿using OwlCore.AbstractStorage;
+﻿using Microsoft.Toolkit.Diagnostics;
+using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Core.LocalFiles.Backing.Models;
+using StrixMusic.Core.LocalFiles.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +17,32 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
     /// </summary>
     public class FileMetadataScanner
     {
+        private IReadOnlyList<RelatedMetadata>? _relatedMetadata { get; set; }
+
         /// <summary>
-        /// Scans mediafile for metadata.
+        /// Scans mediafile list for metadata.
         /// </summary>
         /// <param name="fileData">The path to the file.</param>
-        /// <returns>Fully scanned <see cref="TrackMetadata"/>.</returns>
-        public async Task<RelatedMetadata?> ScanFileMetadata(IFileData fileData)
+        /// <returns>Fully scanned <see cref="IReadOnlyList{RelatedMetadata}"/>.</returns>
+        public async Task ScanFolderForMetadata(IFolderData folderData)
+        {
+            var files = await folderData.RecursiveDepthFileSearchAsync();
+            var relatedMetaDataList = new List<RelatedMetadata>();
+
+            foreach (var item in files)
+            {
+                var scannedRelatedMetadata = await ScanFileMetadata(item);
+
+                if (scannedRelatedMetadata == null)
+                    continue;
+
+                relatedMetaDataList.Add(scannedRelatedMetadata);
+            }
+
+            ApplyRelatedMetadataIds(relatedMetaDataList);
+        }
+
+        private async Task<RelatedMetadata?> ScanFileMetadata(IFileData fileData)
         {
             var id3Metadata = await GetID3Metadata(fileData);
 
@@ -146,7 +168,6 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             return relatedMetadata;
         }
 
-        [Obsolete]
         private async Task<RelatedMetadata?> GetID3Metadata(IFileData fileData)
         {
             try
@@ -188,7 +209,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     },
                     ArtistMetadata = new ArtistMetadata()
                     {
-                        Name = tags.FirstArtist,
+                        Name = tags.FirstAlbumArtist,
                     },
                 };
             }
@@ -200,6 +221,104 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Create groups and apply ids to the <see cref="List{RelatedMetadata}>"/>
+        /// </summary>
+        /// <param name="relatedMetadata"></param>
+        public void ApplyRelatedMetadataIds(List<RelatedMetadata> relatedMetadata)
+        {
+            var artistGroup = relatedMetadata.GroupBy(c => c.ArtistMetadata?.Name);
+            var albumGroup = relatedMetadata.GroupBy(c => c.AlbumMetadata?.Title);
+            var trackGroup = relatedMetadata.GroupBy(c => c.TrackMetadata?.Title);
+
+            foreach (var tracks in albumGroup)
+            {
+                var albumId = Guid.NewGuid().ToString();
+                foreach (var item in tracks)
+                {
+                    if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
+                    {
+                        item.AlbumMetadata.Id = albumId;
+                        item.TrackMetadata.AlbumId = albumId;
+                        item.ArtistMetadata.AlbumIds = new List<string> { albumId };
+                    }
+                }
+            }
+
+            foreach (var tracks in artistGroup)
+            {
+                var artistId = Guid.NewGuid().ToString();
+                foreach (var item in tracks)
+                {
+                    if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
+                    {
+                        item.ArtistMetadata.Id = artistId;
+                        item.TrackMetadata.ArtistIds = new List<string> { artistId };
+                        item.AlbumMetadata.ArtistIds = new List<string> { artistId };
+                    }
+                }
+            }
+
+            foreach (var tracks in trackGroup)
+            {
+                var trackId = Guid.NewGuid().ToString();
+                foreach (var item in tracks)
+                {
+                    if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
+                    {
+                        item.TrackMetadata.Id = trackId;
+                        item.AlbumMetadata.TrackIds = new List<string> { trackId };
+                        item.ArtistMetadata.TrackIds = new List<string> { trackId };
+                    }
+                }
+            }
+
+            _relatedMetadata = new List<RelatedMetadata>(relatedMetadata);
+        }
+
+        /// <summary>
+        /// Gets all unique albums to store in a cache. Make sure filemeta is already scanned.
+        /// </summary>
+        /// <returns>A list of unique <see cref="AlbumMetadata"/></returns>
+        public IReadOnlyList<AlbumMetadata?> GetUniqueAlbumMetadataToCache()
+        {
+
+            var albums = _relatedMetadata.Select(c => c.AlbumMetadata);
+
+            if (albums is null)
+                return new List<AlbumMetadata>();
+
+            return albums.DistinctBy(c => c?.Id).ToList();
+        }
+
+        /// <summary>
+        /// Gets all unique artist to store in a cache.
+        /// </summary>
+        /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
+        public IReadOnlyList<ArtistMetadata?> GetUniqueArtistMetadataToCache()
+        {
+            var artists = _relatedMetadata.Select(c => c.ArtistMetadata);
+
+            if (artists is null)
+                return new List<ArtistMetadata>();
+
+            return artists.DistinctBy(c => c?.Id).ToList();
+        }
+
+        /// <summary>
+        /// Gets all unique tracks to store in a cache. Make sure file meta is already scanned.
+        /// </summary>
+        /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
+        public IReadOnlyList<TrackMetadata?> GetUniqueTrackMetadataToCache()
+        {
+            var tracks = _relatedMetadata.Select(c => c.TrackMetadata);
+
+            if (tracks is null)
+                return new List<TrackMetadata>();
+
+            return tracks.DistinctBy(c => c?.Id).ToList();
         }
     }
 }
