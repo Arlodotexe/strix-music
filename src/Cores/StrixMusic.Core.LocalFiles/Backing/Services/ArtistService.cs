@@ -74,7 +74,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             if (!await _fileSystemService.FileExistsAsync(_pathToMetadatafile))
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
-            // NOTE: Make sure you have already scanned the filemetadata. Otherwise it will throw an exception.
+            // NOTE: Make sure you have already scanned the filemetadata.
             var metadata = _fileMetadataScanner.GetUniqueArtistMetadataToCache();
 
             var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
