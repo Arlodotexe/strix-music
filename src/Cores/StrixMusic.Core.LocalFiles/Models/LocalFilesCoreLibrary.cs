@@ -72,7 +72,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             var artistService = SourceCore.GetService<ArtistService>();
 
-
             var artists = await artistService.GetArtistMetadata(limit, offset);
 
             foreach (var artist in artists)

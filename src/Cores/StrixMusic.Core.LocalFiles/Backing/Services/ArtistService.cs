@@ -22,7 +22,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         private readonly FileMetadataScanner _fileMetadataScanner;
         private readonly IFileSystemService _fileSystemService;
         private IFolderData? _folderData;
-        private IReadOnlyList<ArtistMetadata>? _cachedArtists;
 
         /// <summary>
         /// Creates a new instance for <see cref="TrackService"/>.
@@ -36,16 +35,13 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         }
 
         /// <summary>
-        /// Gets all <see cref="ArtistMetadata"/>> over the file system.
+        /// Gets all <see cref="TrackMetadata"/> over the file system.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="limit"></param>
+        /// <param name="offset">Get items starting at this index.</param>
+        /// <param name="limit">Get items starting at this index.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<IReadOnlyList<ArtistMetadata>> GetArtistMetadata(int offset, int limit)
         {
-            if (_cachedArtists != null && _cachedArtists.Count != 0)
-                return Task.FromResult<IReadOnlyList<ArtistMetadata>>(_cachedArtists.Skip(offset).Take(limit).ToList());
-
             if (!File.Exists(_pathToMetadatafile))
                 throw new FileNotFoundException(_pathToMetadatafile);
 
@@ -65,7 +61,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
             // NOTE: Make sure you have already scanned the filemetadata.
-            var metadata = _fileMetadataScanner.GetUniqueArtistMetadataToCache();
+            var metadata = _fileMetadataScanner.GetUniqueArtistMetadata();
 
             var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
             File.WriteAllBytes(_pathToMetadatafile, bytes);

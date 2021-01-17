@@ -17,7 +17,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
     /// </summary>
     public class FileMetadataScanner
     {
-        private IReadOnlyList<RelatedMetadata>? _relatedMetadata { get; set; }
+        private IReadOnlyList<RelatedMetadata>? _relatedMetadata;
 
         /// <summary>
         /// Scans mediafile list for metadata.
@@ -279,12 +279,11 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         }
 
         /// <summary>
-        /// Gets all unique albums to store in a cache. Make sure filemeta is already scanned.
+        /// Gets all unique albums. Make sure filemeta is already scanned.
         /// </summary>
         /// <returns>A list of unique <see cref="AlbumMetadata"/></returns>
-        public IReadOnlyList<AlbumMetadata?> GetUniqueAlbumMetadataToCache()
+        public IReadOnlyList<AlbumMetadata?> GetUniqueAlbumMetadata()
         {
-
             var albums = _relatedMetadata.Select(c => c.AlbumMetadata);
 
             if (albums is null)
@@ -294,10 +293,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         }
 
         /// <summary>
-        /// Gets all unique artist to store in a cache.
+        /// Gets all unique artist.
         /// </summary>
         /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
-        public IReadOnlyList<ArtistMetadata?> GetUniqueArtistMetadataToCache()
+        public IReadOnlyList<ArtistMetadata?> GetUniqueArtistMetadata()
         {
             var artists = _relatedMetadata.Select(c => c.ArtistMetadata);
 
@@ -308,10 +307,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         }
 
         /// <summary>
-        /// Gets all unique tracks to store in a cache. Make sure file meta is already scanned.
+        /// Gets all unique tracks. Make sure file meta is already scanned.
         /// </summary>
         /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
-        public IReadOnlyList<TrackMetadata?> GetUniqueTrackMetadataToCache()
+        public IReadOnlyList<TrackMetadata?> GetUniqueTrackMetadata()
         {
             var tracks = _relatedMetadata.Select(c => c.TrackMetadata);
 

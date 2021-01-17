@@ -37,6 +37,7 @@ namespace StrixMusic.Core.LocalFiles
             Discoverables = new LocalFilesCoreDiscoverables(this);
             User = new LocalFilesCoreUser(this);
             CoreConfig = new LocalFileCoreConfig(this);
+            _coreLibrary = new LocalFilesCoreLibrary(this);
         }
 
         /// <inheritdoc/>
@@ -115,8 +116,6 @@ namespace StrixMusic.Core.LocalFiles
 
             await coreConfig.ConfigureServices(services);
             await coreConfig.ScanFileMetadata();
-
-            _coreLibrary = new LocalFilesCoreLibrary(this);
 
             ChangeCoreState(CoreState.Loaded);
             CoreCount++;

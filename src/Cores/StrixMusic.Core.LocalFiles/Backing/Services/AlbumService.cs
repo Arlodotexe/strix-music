@@ -22,7 +22,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         private readonly string _pathToMetadatafile;
         private readonly IFileSystemService _fileSystemService;
         private FileMetadataScanner _fileMetadataScanner;
-        private IReadOnlyList<AlbumMetadata>? _cachedAlbums;
 
         /// <summary>
         /// Creates a new instance of <see cref="AlbumService"/>.
@@ -36,23 +35,19 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         }
 
         /// <summary>
-        /// Gets all <see cref="AlbumMetadata"/>> over the file system.
+        /// Gets all <see cref="TrackMetadata"/> over the file system.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="limit"></param>
+        /// <param name="offset">Get items starting at this index.</param>
+        /// <param name="limit">Get items starting at this index.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<IReadOnlyList<AlbumMetadata>> GetAlbumMetadata(int offset, int limit)
         {
-            if (_cachedAlbums != null && _cachedAlbums.Count != 0)
-                return Task.FromResult<IReadOnlyList<AlbumMetadata>>(_cachedAlbums.Skip(offset).Take(limit).ToList());
-
             if (!File.Exists(_pathToMetadatafile))
                 throw new FileNotFoundException(_pathToMetadatafile);
 
             var bytes = File.ReadAllBytes(_pathToMetadatafile);
             var albumMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<AlbumMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
-            _cachedAlbums = albumMetadataLst;
             return Task.FromResult<IReadOnlyList<AlbumMetadata>>(albumMetadataLst.Skip(offset).Take(limit).ToList());
         }
 
@@ -66,7 +61,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
             // NOTE: Make sure you have already scanned the filemetadata. 
-            var metadata = _fileMetadataScanner.GetUniqueAlbumMetadataToCache();
+            var metadata = _fileMetadataScanner.GetUniqueAlbumMetadata();
 
             var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
             File.WriteAllBytes(_pathToMetadatafile, bytes);
