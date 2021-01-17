@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LaunchPad.Extensions;
 using StrixMusic.Sdk.Uno.Models;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
-using Windows.UI.Xaml;
 
 // ReSharper disable once CheckNamespace
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
@@ -49,6 +50,7 @@ namespace OwlCore.AbstractStorage
         /// <inheritdoc/>
         public async Task<IFolderData?> PickFolder()
         {
+            await CoreApplication.MainView.Dispatcher.SwitchToUi();
 
             var picker = new FolderPicker
             {
@@ -58,21 +60,15 @@ namespace OwlCore.AbstractStorage
 
             picker.FileTypeFilter.Add("*");
 
-            IFolderData? folderData = null;
+            var pickedFolder = await picker.PickSingleFolderAsync();
+            if (pickedFolder == null)
+                return null;
 
-            await Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-            {
-                var pickedFolder = await picker.PickSingleFolderAsync();
+            StorageApplicationPermissions.FutureAccessList.Add(pickedFolder, pickedFolder.Path);
 
-                if (pickedFolder == null)
-                    return;
+            var folderData = new FolderData(pickedFolder);
 
-                StorageApplicationPermissions.FutureAccessList.Add(pickedFolder, pickedFolder.Path);
-
-                folderData = new FolderData(pickedFolder);
-
-                _registeredFolders.Add(folderData);
-            });
+            _registeredFolders.Add(folderData);
 
             return folderData;
         }

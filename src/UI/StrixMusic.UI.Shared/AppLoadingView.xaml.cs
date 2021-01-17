@@ -108,11 +108,7 @@ namespace StrixMusic.Shared
             if (Equals(_coreRegistry, SettingsKeys.CoreRegistry))
             {
                 assemblies ??= AppDomain.CurrentDomain.GetAssemblies();
-
-                // Copy assemblies to local scope, they'll go out of scope before core registry init finishes.
-                var localAssemblies = assemblies;
-
-                Task.Run(() => InitializeCoreRegistry(localAssemblies)).FireAndForget();
+                await InitializeCoreRegistry(assemblies);
             }
 
             // Shell registry
@@ -121,7 +117,7 @@ namespace StrixMusic.Shared
             if (Equals(shellRegistryData, SettingsKeysUI.ShellRegistry))
             {
                 assemblies ??= AppDomain.CurrentDomain.GetAssemblies();
-                Task.Run(() => InitializeShellRegistry(assemblies)).FireAndForget();
+                await InitializeShellRegistry(assemblies);
             }
         }
 
@@ -249,7 +245,7 @@ namespace StrixMusic.Shared
                 if (coreAssemblyInfo is null)
                     continue;
 
-                // If this core isn't configured anymore, don't add it to the ranking.
+                // If this core is still configured, add it to the ranking.
                 if (_coreRegistry.Any(x => x.AttributeData.CoreTypeAssemblyQualifiedName == coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName))
                 {
                     coreRanking.Add(instanceId);
