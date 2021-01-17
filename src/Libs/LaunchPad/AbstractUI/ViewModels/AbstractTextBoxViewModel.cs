@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
-using OwlCore.Helpers;
 
 namespace LaunchPad.AbstractUI.ViewModels
 {
@@ -52,7 +52,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// </summary>
         public async Task SaveValue()
         {
-            if (await Threading.Debounce(_id, TimeSpan.FromSeconds(2)))
+            if (await OwlCore.Threading.Debounce(_id, TimeSpan.FromSeconds(2)))
             {
                 _model.SaveValue(Value);
             }

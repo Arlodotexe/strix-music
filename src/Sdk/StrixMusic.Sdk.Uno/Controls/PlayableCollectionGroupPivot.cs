@@ -1,14 +1,13 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore.Helpers;
-using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.ViewModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore;
+using StrixMusic.Sdk.Uno.Services;
+using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Uno.Services;
 
 namespace StrixMusic.Sdk.Uno.Controls
 {
@@ -174,7 +173,7 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void AllItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            Threading.InvokeOnUI(ToggleAnyEmptyPivotItems);
+            Threading.OnPrimaryThread(ToggleAnyEmptyPivotItems);
         }
 
         private void DetachEvents()

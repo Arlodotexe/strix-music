@@ -2,11 +2,11 @@
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Extensions;
 
 namespace LaunchPad.AbstractUI.ViewModels
 {
@@ -130,7 +130,7 @@ namespace LaunchPad.AbstractUI.ViewModels
             randomStream.Seek(0);
 
             var image = new BitmapImage();
-            image.SetSourceAsync(randomStream).AsTask().RunInBackground();
+            Task.Run(() => image.SetSourceAsync(randomStream).AsTask());
 
             return image;
         }

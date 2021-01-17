@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using OwlCore.Extensions;
 
 // ReSharper disable once CheckNamespace
-namespace OwlCore.Helpers
+namespace OwlCore
 {
     /// <summary>
     /// Helpers related to Threading.
@@ -29,9 +29,7 @@ namespace OwlCore.Helpers
 
             subscribe(EventHandler);
 
-            var result = await completionSource.Task
-                .RunInBackground(resultCancellationToken.Token)
-                .TryOrSkip();
+            var result = await Flow.TryOrSkip(() => Task.Run(() => completionSource.Task, resultCancellationToken.Token));
 
             unsubscribe(EventHandler);
 

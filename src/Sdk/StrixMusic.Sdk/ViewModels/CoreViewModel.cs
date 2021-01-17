@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Extensions;
-using OwlCore.Helpers;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
@@ -61,7 +61,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             CoreState = e;
 
-            Threading.InvokeOnUI(() => OnPropertyChanged(nameof(CoreState)));
+            Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(CoreState)));
         }
 
         /// <inheritdoc />

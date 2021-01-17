@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
-using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -32,10 +32,13 @@ namespace StrixMusic.Sdk.ViewModels
             SourceCores = userProfile.GetSourceCores<ICoreUserProfile>().Select(MainViewModel.GetLoadedCore).ToList();
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
-            if (userProfile.Urls != null)
-                Urls = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<Uri>(userProfile.Urls));
+            using (Threading.PrimaryContext)
+            {
+                if (userProfile.Urls != null)
+                    Urls = new SynchronizedObservableCollection<Uri>(userProfile.Urls);
 
-            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
+                Images = new SynchronizedObservableCollection<IImage>();
+            }
         }
 
         private void AttachEvents()

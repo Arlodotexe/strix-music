@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
-using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -30,8 +30,11 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _collection = collection;
 
-            Albums = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IAlbumCollectionItem>());
-            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
+            using (Threading.PrimaryContext)
+            {
+                Images = new SynchronizedObservableCollection<IImage>();
+                Albums = new SynchronizedObservableCollection<IAlbumCollectionItem>();
+            }
 
             SourceCores = _collection.GetSourceCores<ICoreAlbumCollection>().Select(MainViewModel.GetLoadedCore).ToList();
 
@@ -88,7 +91,7 @@ namespace StrixMusic.Sdk.ViewModels
                 Images.Insert(item.Index, item.Data);
             }
 
-            foreach(var item in removedItems)
+            foreach (var item in removedItems)
             {
                 Images.RemoveAt(item.Index);
             }

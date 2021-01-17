@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OwlCore.Helpers
+namespace OwlCore
 {
     public static partial class Threading
     {

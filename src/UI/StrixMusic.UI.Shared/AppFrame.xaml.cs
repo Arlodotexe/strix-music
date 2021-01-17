@@ -1,13 +1,13 @@
-﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore.Helpers;
+﻿using System;
+using System.Threading;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Services.Localization;
-using System;
-using System.Threading;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -20,12 +20,12 @@ namespace StrixMusic.Shared
         /// </summary>
         public INavigationService<Control> NavigationService { get; }
 
-        private LocalizationResourceLoader? _localizationService = null;
+        private LocalizationResourceLoader? _localizationService;
 
         /// <summary>
         /// A reference to the <see cref="ILocalizationService"/> used through out the app (except Cores).
         /// </summary>
-        public LocalizationResourceLoader LocalizationService => _localizationService ?? (_localizationService = Ioc.Default.GetService<LocalizationResourceLoader>())!;
+        public LocalizationResourceLoader LocalizationService => _localizationService ??= Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
 
         /// <summary>
         /// The <see cref="MainViewModel"/> for the app.
@@ -44,7 +44,8 @@ namespace StrixMusic.Shared
         {
             this.InitializeComponent();
 
-            Threading.SetUISynchronizationContext(SynchronizationContext.Current);
+            Threading.SetPrimarySynchronizationContext(SynchronizationContext.Current);
+            Threading.SetPrimaryThreadInvokeHandler(a => Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => a()).AsTask());
 
             NavigationService = new NavigationService<Control>();
 
