@@ -6,9 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Extensions;
-using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
@@ -80,7 +80,7 @@ namespace StrixMusic.Sdk
             Users.Clear();
             PlaybackQueue.Clear();
 
-            foreach(var coreInitData in initData)
+            foreach (var coreInitData in initData)
             {
                 await InitCore(coreInitData);
             }
@@ -107,7 +107,13 @@ namespace StrixMusic.Sdk
             // Then wait for the core state to change to Configured.
             core.CoreStateChanged += OnCoreStateChanged_HandleConfigRequest;
 
-            await core.InitAsync(services).RunInBackground(cancellationToken.Token).TryOrSkip<TaskCanceledException>();
+            try
+            {
+                await Task.Run(() => core.InitAsync(services), cancellationToken.Token);
+            }
+            catch (TaskCanceledException)
+            {
+            }
 
             // TODO: if one core a already requested config, have a queue in case another tries.
             if (cancellationToken.IsCancellationRequested)

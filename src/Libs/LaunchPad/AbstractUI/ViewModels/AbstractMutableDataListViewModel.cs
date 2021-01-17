@@ -7,7 +7,6 @@ using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
-using OwlCore.Helpers;
 
 namespace LaunchPad.AbstractUI.ViewModels
 {
@@ -27,7 +26,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         {
             _model = model;
 
-            using (Threading.UIThread)
+            using (OwlCore.Threading.PrimaryContext)
             {
                 RequestNewItemCommand = new RelayCommand<ItemClickEventArgs>(RequestNewItem);
 
@@ -80,7 +79,7 @@ namespace LaunchPad.AbstractUI.ViewModels
 
         private void Model_ItemsChanged(object sender, System.Collections.Generic.IReadOnlyList<CollectionChangedEventItem<AbstractUIMetadata>> addedItems, System.Collections.Generic.IReadOnlyList<CollectionChangedEventItem<AbstractUIMetadata>> removedItems)
         {
-            using (Threading.UIThread)
+            using (OwlCore.Threading.PrimaryContext)
             {
                 foreach (var item in addedItems)
                 {

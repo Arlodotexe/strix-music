@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
-using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -30,8 +30,11 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _collection = collection ?? throw new ArgumentNullException();
 
-            Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
-            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
+            using (Threading.PrimaryContext)
+            {
+                Images = new SynchronizedObservableCollection<IImage>();
+                Tracks = new SynchronizedObservableCollection<TrackViewModel>();
+            }
 
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);

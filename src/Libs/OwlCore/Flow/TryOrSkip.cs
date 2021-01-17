@@ -2,20 +2,23 @@
 using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
-namespace OwlCore.Extensions
+namespace OwlCore
 {
-    public static partial class AsyncExtensions
+    /// <summary>
+    /// Helper methods related to exceptions.
+    /// </summary>
+    public static partial class Flow
     {
         /// <summary>
         /// Syntactic sugar for catching any exception that may occur in a <see cref="Task"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public static async Task TryOrSkip<TException>(this Task task)
+        public static void TryOrSkip<TException>(Action action)
             where TException : Exception
         {
             try
             {
-                await task;
+                action();
             }
             catch (TException)
             {
@@ -27,13 +30,13 @@ namespace OwlCore.Extensions
         /// Syntactic sugar for catching a specific exception that may occur in a <see cref="Task"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Default (nullable) if the task fails.</returns>
-        public static async Task<TResult> TryOrSkip<TException, TResult>(this Task<TResult> task)
+        public static TResult TryOrSkip<TException, TResult>(Func<TResult> task)
             where TException : Exception
             where TResult : class
         {
             try
             {
-                return await task;
+                return task();
             }
             catch (TException)
             {
@@ -45,11 +48,11 @@ namespace OwlCore.Extensions
         /// Syntactic sugar for catching any exception that may occur in a <see cref="Task"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Default (nullable) if the task fails.</returns>
-        public static async Task<TResult> TryOrSkip<TResult>(this Task<TResult> task)
+        public static TResult TryOrSkip<TResult>(Func<TResult> task)
         {
             try
             {
-                return await task;
+                return task();
             }
             catch
             {

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage;
 using LaunchPad.Collections;
+using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
-using OwlCore.Helpers;
+using Windows.Storage;
 using StrixMusic.Sdk.Services;
 
 namespace StrixMusic.Shared.Services
@@ -17,19 +17,28 @@ namespace StrixMusic.Shared.Services
         /// <inheritdoc />
         public SynchronizedObservableCollection<T> GetIncrementalCollection<T>(int take, Func<int, Task<List<T>>> loadMoreItems, Action onBatchStart, Action<List<T>> onBatchComplete)
         {
-            return Threading.InvokeOnUI(() => new IncrementalLoadingCollection<T>(take, loadMoreItems, onBatchComplete, onBatchStart));
+            using (Threading.PrimaryContext)
+            {
+                return new IncrementalLoadingCollection<T>(take, loadMoreItems, onBatchComplete, onBatchStart);
+            }
         }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<T> GetIncrementalCollection<T>(int take, Func<int, Task<List<T>>> loadMoreItems, Action<List<T>> onBatchComplete)
         {
-            return Threading.InvokeOnUI(() => new IncrementalLoadingCollection<T>(take, loadMoreItems, onBatchComplete));
+            using (Threading.PrimaryContext)
+            {
+                return new IncrementalLoadingCollection<T>(take, loadMoreItems, onBatchComplete);
+            }
         }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<T> GetIncrementalCollection<T>(int take, Func<int, Task<List<T>>> loadMoreItems)
         {
-            return Threading.InvokeOnUI(() => new IncrementalLoadingCollection<T>(take, loadMoreItems));
+            using (Threading.PrimaryContext)
+            {
+                return new IncrementalLoadingCollection<T>(take, loadMoreItems);
+            }
         }
 
         /// <summary>
