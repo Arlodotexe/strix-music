@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace StrixMusic.Core.LocalFiles
 {
     /// <summary>
-    /// Manages multiple instances of <see cref="LocalFileCore"/>.
+    /// Manages multiple instances of <see cref="LocalFilesCore"/>.
     /// </summary>
     public static class LocalFileCoreManager
     {
         /// <summary>
         /// Holds the instances of all constructed file cores.
         /// </summary>
-        public static ConcurrentBag<LocalFileCore> Instances { get; set; } = new ConcurrentBag<LocalFileCore>();
+        public static ConcurrentBag<LocalFilesCore> Instances { get; set; } = new ConcurrentBag<LocalFilesCore>();
 
         /// <summary>
         /// Loads data for all cores.

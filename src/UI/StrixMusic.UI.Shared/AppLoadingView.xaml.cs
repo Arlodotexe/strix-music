@@ -83,8 +83,9 @@ namespace StrixMusic.Shared
         {
             await InitializeServices();
             await InitializeAssemblies();
-            //await ManuallyRegisterCore<Core.MusicBrainz.MusicBrainzCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0495");
-            await ManuallyRegisterCore<Core.Apollo.ApolloCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0496");
+            await ManuallyRegisterCore<Core.MusicBrainz.MusicBrainzCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0495");
+            await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("10ebf138-6a4f-4421-8fcb-c15f91fe0495");
+            // await ManuallyRegisterCore<Core.Apollo.ApolloCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0496");
             await InitializeCoreRanking();
             await InitializeOutOfBoxSetupIfNeeded();
             await InitializeConfiguredCores();
@@ -217,7 +218,7 @@ namespace StrixMusic.Shared
 
             Guard.HasSizeGreaterThan(_coreRegistry, 0, nameof(_coreRegistry));
 
-            _configuredCoreRegistry ??= new Dictionary<string, CoreAssemblyInfo>() 
+            _configuredCoreRegistry ??= new Dictionary<string, CoreAssemblyInfo>()
                                         ?? await Task.Run(() => _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores)));
 
             foreach (var coreData in _coreRegistry)

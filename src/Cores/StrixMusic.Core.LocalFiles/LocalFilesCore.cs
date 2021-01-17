@@ -18,16 +18,16 @@ using StrixMusic.Sdk.Services.Settings;
 namespace StrixMusic.Core.LocalFiles
 {
     /// <inheritdoc />
-    public class LocalFileCore : ICore
+    public class LocalFilesCore : ICore
     {
         private static int CoreCount = 0;
         private ICoreLibrary? _coreLibrary;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFileCore"/> class.
+        /// Initializes a new instance of the <see cref="LocalFilesCore"/> class.
         /// </summary>
         /// <param name="instanceId"></param>
-        public LocalFileCore(string instanceId)
+        public LocalFilesCore(string instanceId)
         {
             //TODO: The constructor warnings will be fixed once models are added to initialize the interfaces.
             InstanceId = instanceId;
