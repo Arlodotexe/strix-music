@@ -591,10 +591,18 @@ namespace StrixMusic.Sdk.Data.Merged
                     itemLimitForSource = itemsCountForSource - currentSource.OriginalIndex;
                 }
 
-                var remainingItemsForSource = await OwlCore.Helpers.APIs.GetAllItemsAsync<TCoreCollectionItem>(
+                var remainingItemsForSource = await OwlCore.APIs.GetAllItemsAsync<TCoreCollectionItem>(
                     itemLimitForSource, // Try to get as many items as possible for each page.
                     currentSource.OriginalIndex,
                     async currentOffset => await currentSource.SourceCollection.GetItems<TCoreCollection, TCoreCollectionItem>(itemLimitForSource, currentOffset).ToListAsync().AsTask());
+
+                Guard.IsNotNull(remainingItemsForSource, nameof(remainingItemsForSource));
+
+                // Blindly getting as many items as possible will probably cause it to get more than the limit
+                if (remainingItemsForSource.Count > itemLimitForSource)
+                {
+                    remainingItemsForSource = remainingItemsForSource.Take(itemLimitForSource).ToList();
+                }
 
                 Guard.IsLessThan(mappedIndex + remainingItemsForSource.Count - 1, remainingItemsForSource.Count, "indexInSortedMap");
 
