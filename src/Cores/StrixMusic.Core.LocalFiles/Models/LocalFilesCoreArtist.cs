@@ -1,10 +1,15 @@
-﻿using OwlCore.Collections;
+﻿using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Collections;
 using OwlCore.Events;
+using StrixMusic.Core.LocalFiles.Backing.Models;
+using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Core.LocalFiles.Models
@@ -12,13 +17,17 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc/>
     public class LocalFilesCoreArtist : ICoreArtist
     {
+        private ArtistMetadata _artistMetadata;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreArtist"/> class.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
-        public LocalFilesCoreArtist(ICore sourceCore)
+        public LocalFilesCoreArtist(ICore sourceCore, ArtistMetadata artistMetadata)
         {
             SourceCore = sourceCore;
+
+            _artistMetadata = artistMetadata;
         }
 
         /// <inheritdoc/>
@@ -58,7 +67,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc/>
-        public string Id => throw new NotImplementedException();
+        public string Id => _artistMetadata.Id;
 
         /// <inheritdoc/>
         public int TotalAlbumItemsCount => throw new NotImplementedException();
@@ -73,10 +82,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public Uri Url => throw new NotImplementedException();
+        public Uri? Url => _artistMetadata.Url;
 
         /// <inheritdoc/>
-        public string Name => throw new NotImplementedException();
+        public string? Name => _artistMetadata.Name;
 
         /// <inheritdoc/>
         public string Description => throw new NotImplementedException();
@@ -85,7 +94,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public PlaybackState PlaybackState => PlaybackState.None;
 
         /// <inheritdoc/>
-        public TimeSpan Duration => TimeSpan.Zero;
+        public TimeSpan Duration => throw new NotImplementedException();
 
         /// <inheritdoc />
         public DateTime? LastPlayed { get; }
@@ -100,10 +109,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public SynchronizedObservableCollection<string>? Genres { get; }
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => false;
+        public bool IsPlayAsyncSupported => true;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => false;
+        public bool IsPauseAsyncSupported => true;
 
         /// <inheritdoc/>
         public bool IsChangeNameAsyncSupported => false;
@@ -193,15 +202,29 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public  IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            var albumsService = SourceCore.GetService<AlbumService>();
+
+            var albums = await albumsService.GetAlbumsByArtistId(Id, offset, limit);
+
+            foreach (var album in albums)
+            {
+                yield return new LocalFilesCoreAlbum(SourceCore, album);
+            }
         }
 
         /// <inheritdoc/>
-        public  IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            var trackService = SourceCore.GetService<TrackService>();
+
+            var albums = await trackService.GetTracksByArtistId(Id, offset, limit);
+
+            foreach (var album in albums)
+            {
+                yield return new LocalFilesCoreTrack(SourceCore, album);
+            }
         }
 
         /// <inheritdoc />
@@ -241,7 +264,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public  IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
             throw new NotImplementedException();
         }

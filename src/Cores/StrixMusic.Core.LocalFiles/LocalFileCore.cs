@@ -21,11 +21,7 @@ namespace StrixMusic.Core.LocalFiles
     public class LocalFileCore : ICore
     {
         private static int CoreCount = 0;
-        private ArtistService _artistService;
-        private AlbumService _albumService;
-        private TrackService _trackService;
-        private PlaylistService _playlistService;
-        private LocalFilesCoreSettingsService _localFilesCoreSettingsService;
+        private ICoreLibrary? _coreLibrary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFileCore"/> class.
@@ -36,35 +32,12 @@ namespace StrixMusic.Core.LocalFiles
             //TODO: The constructor warnings will be fixed once models are added to initialize the interfaces.
             InstanceId = instanceId;
 
-            Library = new LocalFilesCoreLibrary(this);
             Devices = new SynchronizedObservableCollection<ICoreDevice>();
             RecentlyPlayed = new LocalFilesCoreRecentlyPlayed(this);
             Discoverables = new LocalFilesCoreDiscoverables(this);
             User = new LocalFilesCoreUser(this);
             CoreConfig = new LocalFileCoreConfig(this);
-            LocalFileCoreManager.Instances?.Add(this);
         }
-
-        /// <summary>
-        /// Provides cache data related to <see cref="TrackMetadata"/>/
-        /// </summary>
-        public TrackService TrackService => _trackService;
-
-        /// <summary>
-        /// Provides cache data related to <see cref="AlbumMetadata"/>/
-        /// </summary>
-        public AlbumService AlbumService => _albumService;
-
-        /// <summary>
-        /// Provides cache data related to <see cref="PlaylistMetadata"/>/
-        /// </summary>
-        public PlaylistService PlaylistService => _playlistService;
-
-
-        /// <summary>
-        /// Provides cache data related to <see cref="ArtistMetada"/>/
-        /// </summary>
-        public ArtistService ArtistService => _artistService;
 
         /// <inheritdoc/>
         public ICoreConfig CoreConfig { get; }
@@ -85,7 +58,7 @@ namespace StrixMusic.Core.LocalFiles
         public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
 
         /// <inheritdoc/>
-        public ICoreLibrary Library { get; private set; }
+        public ICoreLibrary? Library => _coreLibrary;
 
         /// <inheritdoc/>
         public ICoreRecentlyPlayed RecentlyPlayed { get; }
@@ -143,10 +116,7 @@ namespace StrixMusic.Core.LocalFiles
             await coreConfig.ConfigureServices(services);
             await coreConfig.ScanFileMetadata();
 
-            _albumService = coreConfig.AlbumService;
-            _artistService = coreConfig.ArtistService;
-            _trackService = coreConfig.TrackService;
-            _playlistService = coreConfig.PlaylistService;
+            _coreLibrary = new LocalFilesCoreLibrary(this);
 
             ChangeCoreState(CoreState.Loaded);
             CoreCount++;
