@@ -18,6 +18,7 @@
         <styles:PlayableCollectionGroupPivotStyle />
         <styles:PlaylistCollectionStyle/>
         <styles:PlaylistItemStyle/>
+        <styles:PlaylistViewStyle/>
         <styles:SafeImageStyle/>
         <styles:SearchViewStyle/>
         <styles:SettingsViewStyle/>
