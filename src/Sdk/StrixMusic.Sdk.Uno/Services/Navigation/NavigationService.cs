@@ -59,7 +59,7 @@ namespace StrixMusic.Sdk.Services.Navigation
 
         private async Task NavigateToInstanceAsync(T page, bool overlay = false)
         {
-            await Window.Current.Dispatcher.SwitchToUi();
+            await Window.Current.Dispatcher.SwitchToUI();
 
             var eventArgs = new NavigateEventArgs<T>(page, overlay);
             NavigationRequested?.Invoke(this, eventArgs);
@@ -67,7 +67,7 @@ namespace StrixMusic.Sdk.Services.Navigation
 
         private async Task NavigateToTypeAsync(Type type, bool overlay = false, params object[] args)
         {
-            await Window.Current.Dispatcher.SwitchToUi();
+            await Window.Current.Dispatcher.SwitchToUI();
 
             T page;
             if (_registeredPages.ContainsKey(type))

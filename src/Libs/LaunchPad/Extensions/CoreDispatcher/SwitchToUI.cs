@@ -14,23 +14,23 @@ namespace LaunchPad.Extensions
         /// </summary>
         /// <param name="dispatcher">The CoreDispatcher to use for dispatching.</param>
         /// <returns></returns>
-        public static SwitchToUiAwaitable SwitchToUi(this CoreDispatcher dispatcher)
+        public static SwitchToUIAwaitable SwitchToUI(this CoreDispatcher dispatcher)
         {
-            return new SwitchToUiAwaitable(dispatcher);
+            return new SwitchToUIAwaitable(dispatcher);
         }
 
         /// <summary>
         /// An extension to switch to the UI thread.
         /// </summary>
-        public readonly struct SwitchToUiAwaitable : INotifyCompletion
+        public readonly struct SwitchToUIAwaitable : INotifyCompletion
         {
             private readonly CoreDispatcher _dispatcher;
 
             /// <summary>
-            /// Creates a new instance of <see cref="SwitchToUiAwaitable"/>.
+            /// Creates a new instance of <see cref="SwitchToUIAwaitable"/>.
             /// </summary>
             /// <param name="dispatcher"></param>
-            public SwitchToUiAwaitable(CoreDispatcher dispatcher)
+            public SwitchToUIAwaitable(CoreDispatcher dispatcher)
             {
                 _dispatcher = dispatcher;
             }
@@ -38,7 +38,7 @@ namespace LaunchPad.Extensions
             /// <summary>
             /// Gets the current awaiter.
             /// </summary>
-            public SwitchToUiAwaitable GetAwaiter()
+            public SwitchToUIAwaitable GetAwaiter()
             {
                 return this;
             }
@@ -48,7 +48,7 @@ namespace LaunchPad.Extensions
             /// </summary>
             public void GetResult()
             {
-            }
+            } 
 
             /// <summary>
             /// Gets the current completion state.

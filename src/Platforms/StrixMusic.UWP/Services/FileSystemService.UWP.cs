@@ -50,7 +50,7 @@ namespace OwlCore.AbstractStorage
         /// <inheritdoc/>
         public async Task<IFolderData?> PickFolder()
         {
-            await CoreApplication.MainView.Dispatcher.SwitchToUi();
+            await CoreApplication.MainView.Dispatcher.SwitchToUI();
 
             var picker = new FolderPicker
             {
