@@ -40,7 +40,6 @@ namespace StrixMusic.Sdk.Data.Merged
         private List<string>? _coreRanking;
         private Dictionary<string, CoreAssemblyInfo>? _configuredCoreRegistry;
         private MergedCollectionSorting? _sortingMethod;
-        private bool _isInit;
 
         /// <inheritdoc />
         public IReadOnlyList<TCoreCollection> Sources => _collection.Sources;
@@ -60,7 +59,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public async Task InitAsync()
         {
-            if (_isInit)
+            if (IsInitialized)
                 return;
 
             _coreRanking = await GetCoreRankings();
@@ -76,8 +75,11 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
             Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
 
-            _isInit = true;
+            IsInitialized = true;
         }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; set; }
 
         private Task TryInitAsync() => InitAsync();
 

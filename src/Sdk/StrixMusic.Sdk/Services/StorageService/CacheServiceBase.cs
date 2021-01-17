@@ -55,6 +55,10 @@ namespace StrixMusic.Sdk.Services.StorageService
             _cacheStorageService = await sharedFactory.CreateFileSystemServiceForCache(Id);
 
             await _cacheStorageService.InitAsync();
+            IsInitialized = true;
         }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; set; }
     }
 }

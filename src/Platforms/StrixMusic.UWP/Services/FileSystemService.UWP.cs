@@ -36,6 +36,9 @@ namespace OwlCore.AbstractStorage
             RootFolder = new FolderData(rootFolder);
         }
 
+        /// <inheritdoc />
+        public bool IsInitialized { get; set; }
+
         /// <summary>
         /// Defines the root folder where new files and folders are created.
         /// </summary>
@@ -156,6 +159,8 @@ namespace OwlCore.AbstractStorage
 
                 _registeredFolders.Add(folderData);
             }
+
+            IsInitialized = true;
         }
     }
 }
