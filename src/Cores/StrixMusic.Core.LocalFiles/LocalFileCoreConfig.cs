@@ -114,7 +114,7 @@ namespace StrixMusic.Core.LocalFiles
         }
 
         /// <summary>
-        /// This folder picked for this instance of the <see cref="LocalFileCore"/>.
+        /// This folder picked for this instance of the <see cref="LocalFilesCore"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<IFolderData?> GetConfiguredFolder()

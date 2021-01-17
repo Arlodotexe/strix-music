@@ -7,7 +7,7 @@ using System.Text;
 namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <summary>
-    /// Discoverable music for the <see cref="LocalFileCore"/>.
+    /// Discoverable music for the <see cref="LocalFilesCore"/>.
     /// </summary>
     public class LocalFilesCoreDiscoverables : LocalFilesCorePlayableCollectionGroupBase, ICoreDiscoverables
     {
