@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
+using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Core.MusicBrainz.Statics;
@@ -229,9 +230,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
             // This API call will include releases for this artist, with all track and recording data.
             var firstPage = await _musicBrainzClient.Releases.BrowseAsync("artist", Id, 100, 0, RelationshipQueries.Releases);
 
-            var releaseDataForArtist = await OwlCore.Helpers.APIs.GetAllItemsAsync(firstPage.Count, firstPage.Items, async currentOffset =>
+            var releaseDataForArtist = await APIs.GetAllItemsAsync(firstPage.Count, firstPage.Items, async currentOffset =>
             {
-                return (await _musicBrainzClient.Releases.BrowseAsync("artist", Id, 100, 0, RelationshipQueries.Releases))?.Items;
+                return (await _musicBrainzClient.Releases.BrowseAsync("artist", Id, 100, 0, RelationshipQueries.Releases))?.Items ?? new List<Release>();
             });
 
             foreach (var recording in recordings.Items)
