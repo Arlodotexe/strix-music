@@ -6,19 +6,19 @@ using Windows.UI.Xaml.Controls;
 namespace StrixMusic.Sdk.Uno.Controls
 {
     /// <summary>
-    /// A templated <see cref="Control"/> for displaying an <see cref="IAlbumCollectionViewModel"/>.
+    /// A templated <see cref="Control"/> for displaying an <see cref="IPlaylistCollectionViewModel"/>.
     /// </summary>
     /// <remarks>
     /// This class temporarily only displays <see cref="PlaylistViewModel"/>s.
     /// </remarks>
-    public sealed partial class PlaylistCollection : CollectionControl<PlaylistViewModel, AlbumItem>
+    public sealed partial class PlaylistCollection : CollectionControl<PlaylistViewModel, PlaylistItem>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AlbumCollection"/> class.
+        /// Initializes a new instance of the <see cref="PlaylistCollection"/> class.
         /// </summary>
         public PlaylistCollection()
         {
-            this.DefaultStyleKey = typeof(AlbumCollection);
+            this.DefaultStyleKey = typeof(PlaylistCollection);
         }
 
         /// <summary>

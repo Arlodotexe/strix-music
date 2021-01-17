@@ -96,94 +96,98 @@
                 </Grid>
             </SplitView.Content>
             <SplitView.Pane>
-                <StackPanel Padding="0,36,0,104">
-                    <!--Hamburger Button-->
-                    <Button Width="48" Height="48" Background="Transparent" BorderThickness="0" Click="HamburgerToggled">
-                        <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                    </Button>
+                <Grid Padding="0,36,0,104">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <!--Hamburger Button-->
+                        <Button Width="48" Height="48" Background="Transparent" BorderThickness="0" Click="HamburgerToggled">
+                            <FontIcon Glyph="&#xE700;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                        </Button>
 
-                    <!--Search Box-->
-                    <Button Width="48" Style="{StaticResource GrooveButton}" HorizontalAlignment="Left">
-                        <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                    </Button>
-                    <!--<AutoSuggestBox x:Name="AutoSuggest" x:Uid="/Common/SearchTBox"
+                        <!--Search Box-->
+                        <Button Width="48" Style="{StaticResource GrooveButton}" HorizontalAlignment="Left">
+                            <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+                        </Button>
+                        <!--<AutoSuggestBox x:Name="AutoSuggest" x:Uid="/Common/SearchTBox"
                                     QuerySubmitted="AutoSuggestBox_QuerySubmitted" Margin="8,12"
                                     Padding="4" BorderThickness="0"/>-->
-                    
-                    <ScrollViewer>
-                        <StackPanel>
-                            <!--Main Nav Buttons-->
-                            <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}"
+
+                        <!--Main Nav Buttons-->
+                        <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}"
                                           Click="NavigationButtonClicked">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="48"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <FontIcon Glyph="&#xEC4F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-
-                                    <TextBlock x:Uid="/Music/MyMusicTB" Text="Recently Played" Grid.Column="1"/>
-                                </Grid>
-                            </ToggleButton>
-                            <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}"
-                                          Click="NavigationButtonClicked">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="48"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <!--<SymbolIcon Symbol="Clock"/>-->
-                                    <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-
-                                    <TextBlock x:Uid="/Music/RecentPlayedTB" Text="Recently Played" Grid.Column="1"/>
-                                </Grid>
-                            </ToggleButton>
-                            <ToggleButton x:Name="NowPlayingButton" Style="{StaticResource GrooveNavigationButton}"
-                                          Click="NavigationButtonClicked">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="48"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-
-                                    <TextBlock x:Uid="/Music/NowPlayingTB" Text="Now Playing" Grid.Column="1"/>
-                                </Grid>
-                            </ToggleButton>
-
-                            <!--Seperator-->
-                            <Rectangle Fill="{ThemeResource SystemBaseHighColor}" Opacity=".5" Height="1" Margin="12,0"/>
-
                             <Grid>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48"/>
                                     <ColumnDefinition/>
-                                    <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <ToggleButton Style="{StaticResource GrooveNavigationButton}"
-                                              Click="NavigationButtonClicked">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="48"/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
+                                <FontIcon Glyph="&#xEC4F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
 
-                                        <FontIcon Glyph="&#xE142;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-
-                                        <TextBlock x:Uid="/Music/PlaylistsTB" Text="Playlists" Grid.Column="1"/>
-                                    </Grid>
-                                </ToggleButton>
-
-                                <Button Grid.Column="1" Style="{StaticResource GrooveButton}" Width="48">
-                                    <SymbolIcon Symbol="Add"/>
-                                </Button>
+                                <TextBlock x:Uid="/Music/MyMusicTB" Text="Recently Played" Grid.Column="1"/>
                             </Grid>
-                        </StackPanel>
-                    </ScrollViewer>
-                </StackPanel>
+                        </ToggleButton>
+                        <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}"
+                                          Click="NavigationButtonClicked">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <!--<SymbolIcon Symbol="Clock"/>-->
+                                <FontIcon Glyph="&#xE2AD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+
+                                <TextBlock x:Uid="/Music/RecentPlayedTB" Text="Recently Played" Grid.Column="1"/>
+                            </Grid>
+                        </ToggleButton>
+                        <ToggleButton x:Name="NowPlayingButton" Style="{StaticResource GrooveNavigationButton}"
+                                          Click="NavigationButtonClicked">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="48"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <FontIcon Glyph="&#xF61F;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+
+                                <TextBlock x:Uid="/Music/NowPlayingTB" Text="Now Playing" Grid.Column="1"/>
+                            </Grid>
+                        </ToggleButton>
+
+                        <!--Seperator-->
+                        <Rectangle Fill="{ThemeResource SystemBaseHighColor}" Opacity=".5" Height="1" Margin="12,0"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ToggleButton Style="{StaticResource GrooveNavigationButton}"
+                                              Click="NavigationButtonClicked">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="48"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <FontIcon Glyph="&#xE142;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
+
+                                    <TextBlock x:Uid="/Music/PlaylistsTB" Text="Playlists" Grid.Column="1"/>
+                                </Grid>
+                            </ToggleButton>
+
+                            <Button Grid.Column="1" Style="{StaticResource GrooveButton}" Width="48">
+                                <SymbolIcon Symbol="Add"/>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+
+                    <defaultcontrols:PlaylistCollection DataContext="{x:Bind ViewModel.Library}" Grid.Row="1" Style="{StaticResource PanePlaylistCollectionStyle}"/>
+                </Grid>
             </SplitView.Pane>
         </SplitView>
 

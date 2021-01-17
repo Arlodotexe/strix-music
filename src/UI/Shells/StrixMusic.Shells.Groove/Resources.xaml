@@ -18,6 +18,7 @@
         <dstyles:ArtistViewStyle/>
         <styles:NowPlayingBarStyle/>
         <styles:HomeStyle/>
+        <styles:PanePlaylistCollectionStyle/>
         <styles:PlayableCollectionGroupPivotStyle/>
         <dstyles:SettingsViewStyle/>
         <styles:TrackCollectionStyle/>

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using LaunchPad.Extensions.Windows.UI.Xaml;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.Core;
@@ -57,6 +57,8 @@ namespace StrixMusic.Shells.Groove
 
             _selectedPage = MyMusicButton;
         }
+
+        private MainViewModel ViewModel => (MainViewModel)DataContext;
 
         /// <inheritdoc/>
         protected override void SetupTitleBar()
