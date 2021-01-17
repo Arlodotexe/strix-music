@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LaunchPad.Extensions;
 using StrixMusic.Sdk.Uno.Models;
+using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
-using OwlCore.Helpers;
 
 // ReSharper disable once CheckNamespace
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
@@ -35,6 +36,9 @@ namespace OwlCore.AbstractStorage
             RootFolder = new FolderData(rootFolder);
         }
 
+        /// <inheritdoc />
+        public bool IsInitialized { get; set; }
+
         /// <summary>
         /// Defines the root folder where new files and folders are created.
         /// </summary>
@@ -49,6 +53,8 @@ namespace OwlCore.AbstractStorage
         /// <inheritdoc/>
         public async Task<IFolderData?> PickFolder()
         {
+            await CoreApplication.MainView.Dispatcher.SwitchToUI();
+
             var picker = new FolderPicker
             {
                 SuggestedStartLocation = PickerLocationId.MusicLibrary,
@@ -58,11 +64,10 @@ namespace OwlCore.AbstractStorage
             picker.FileTypeFilter.Add("*");
 
             var pickedFolder = await picker.PickSingleFolderAsync();
-
             if (pickedFolder == null)
                 return null;
 
-            var storageToken = StorageApplicationPermissions.FutureAccessList.Add(pickedFolder, pickedFolder.Path);
+            StorageApplicationPermissions.FutureAccessList.Add(pickedFolder, pickedFolder.Path);
 
             var folderData = new FolderData(pickedFolder);
 
@@ -154,6 +159,8 @@ namespace OwlCore.AbstractStorage
 
                 _registeredFolders.Add(folderData);
             }
+
+            IsInitialized = true;
         }
     }
 }

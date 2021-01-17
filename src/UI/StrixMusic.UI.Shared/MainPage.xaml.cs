@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore;
 using OwlCore.AbstractStorage;
-using OwlCore.Extensions;
-using OwlCore.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Settings;
@@ -80,7 +79,7 @@ namespace StrixMusic.Shared
 
             var settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
             _navigationService = CurrentWindow.NavigationService;
-            _shellRegistry = await settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry)).RunInBackground();
+            _shellRegistry = await settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry));
 
             LoadRegisteredMediaPlayerElements();
             await SetupPreferredShell();
@@ -153,7 +152,7 @@ namespace StrixMusic.Shared
 
         private Task SetupShell(ShellAssemblyInfo shellAssemblyInfo)
         {
-            using (Threading.UIThread)
+            using (Threading.PrimaryContext)
             {
                 // Removes the current shell.
                 ShellDisplay.Content = null;

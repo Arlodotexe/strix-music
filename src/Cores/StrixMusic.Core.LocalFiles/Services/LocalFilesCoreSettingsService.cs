@@ -11,10 +11,10 @@ namespace StrixMusic.Core.LocalFiles.Services
         /// <summary>
         /// Creates a new instance of <see cref="LocalFilesCoreSettingsService"/>.
         /// </summary>
-        /// <param name="instanceId">The ID of the current <see cref="LocalFileCore"/> instance.</param>
+        /// <param name="instanceId">The ID of the current <see cref="LocalFilesCore"/> instance.</param>
         public LocalFilesCoreSettingsService(string instanceId)
         {
-            Id = $"{nameof(LocalFileCore)}.{instanceId}";
+            Id = $"{nameof(LocalFilesCore)}.{instanceId}";
         }
 
         /// <inheritdoc />

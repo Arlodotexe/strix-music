@@ -1,5 +1,6 @@
 ﻿using OwlCore.Collections;
 using OwlCore.Events;
+using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
@@ -18,7 +19,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// Initializes a new instance of the <see cref="LocalFilesCoreTrack"/> class.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
-        public LocalFilesCoreTrack(ICore sourceCore)
+        public LocalFilesCoreTrack(ICore sourceCore,TrackMetadata trackMetadata)
         {
             SourceCore = sourceCore;
         }

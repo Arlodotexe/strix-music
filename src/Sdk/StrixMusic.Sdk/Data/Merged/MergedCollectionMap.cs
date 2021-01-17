@@ -40,7 +40,6 @@ namespace StrixMusic.Sdk.Data.Merged
         private List<string>? _coreRanking;
         private Dictionary<string, CoreAssemblyInfo>? _configuredCoreRegistry;
         private MergedCollectionSorting? _sortingMethod;
-        private bool _isInit;
 
         /// <inheritdoc />
         public IReadOnlyList<TCoreCollection> Sources => _collection.Sources;
@@ -60,7 +59,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public async Task InitAsync()
         {
-            if (_isInit)
+            if (IsInitialized)
                 return;
 
             _coreRanking = await GetCoreRankings();
@@ -76,8 +75,11 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
             Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
 
-            _isInit = true;
+            IsInitialized = true;
         }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; set; }
 
         private Task TryInitAsync() => InitAsync();
 
@@ -591,10 +593,18 @@ namespace StrixMusic.Sdk.Data.Merged
                     itemLimitForSource = itemsCountForSource - currentSource.OriginalIndex;
                 }
 
-                var remainingItemsForSource = await OwlCore.Helpers.APIs.GetAllItemsAsync<TCoreCollectionItem>(
+                var remainingItemsForSource = await OwlCore.APIs.GetAllItemsAsync<TCoreCollectionItem>(
                     itemLimitForSource, // Try to get as many items as possible for each page.
                     currentSource.OriginalIndex,
                     async currentOffset => await currentSource.SourceCollection.GetItems<TCoreCollection, TCoreCollectionItem>(itemLimitForSource, currentOffset).ToListAsync().AsTask());
+
+                Guard.IsNotNull(remainingItemsForSource, nameof(remainingItemsForSource));
+
+                // Blindly getting as many items as possible will probably cause it to get more than the limit
+                if (remainingItemsForSource.Count > itemLimitForSource)
+                {
+                    remainingItemsForSource = remainingItemsForSource.Take(itemLimitForSource).ToList();
+                }
 
                 Guard.IsLessThan(mappedIndex + remainingItemsForSource.Count - 1, remainingItemsForSource.Count, "indexInSortedMap");
 

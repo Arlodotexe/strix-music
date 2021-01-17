@@ -84,7 +84,8 @@ namespace StrixMusic.Shared
             await InitializeServices();
             await InitializeAssemblies();
             await ManuallyRegisterCore<Core.MusicBrainz.MusicBrainzCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0495");
-            await ManuallyRegisterCore<Core.LocalFiles.LocalFileCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0496");
+            await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("10ebf138-6a4f-4421-8fcb-c15f91fe0495");
+            // await ManuallyRegisterCore<Core.Apollo.ApolloCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0496");
             await InitializeCoreRanking();
             await InitializeOutOfBoxSetupIfNeeded();
             await InitializeConfiguredCores();
@@ -103,21 +104,21 @@ namespace StrixMusic.Shared
             Assembly[]? assemblies = null;
 
             // Core registry
-            _coreRegistry = await _settingsService.GetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRegistry)).RunInBackground();
+            _coreRegistry = await Task.Run(() => _settingsService.GetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRegistry)));
 
             if (Equals(_coreRegistry, SettingsKeys.CoreRegistry))
             {
                 assemblies ??= AppDomain.CurrentDomain.GetAssemblies();
-                InitializeCoreRegistry(assemblies).RunInBackground().FireAndForget();
+                await InitializeCoreRegistry(assemblies);
             }
 
             // Shell registry
-            var shellRegistryData = await _settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry)).RunInBackground();
+            var shellRegistryData = await Task.Run(() => _settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry)));
 
             if (Equals(shellRegistryData, SettingsKeysUI.ShellRegistry))
             {
                 assemblies ??= AppDomain.CurrentDomain.GetAssemblies();
-                InitializeShellRegistry(assemblies).RunInBackground().FireAndForget();
+                await InitializeShellRegistry(assemblies);
             }
         }
 
@@ -213,7 +214,8 @@ namespace StrixMusic.Shared
 
             Guard.HasSizeGreaterThan(_coreRegistry, 0, nameof(_coreRegistry));
 
-            _configuredCoreRegistry ??= new Dictionary<string, CoreAssemblyInfo>() ?? await _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores)).RunInBackground();
+            _configuredCoreRegistry ??= new Dictionary<string, CoreAssemblyInfo>()
+                                        ?? await Task.Run(() => _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores)));
 
             foreach (var coreData in _coreRegistry)
             {
@@ -225,7 +227,7 @@ namespace StrixMusic.Shared
                 }
             }
 
-            await _settingsService.SetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores), _configuredCoreRegistry).RunInBackground();
+            await Task.Run(() => _settingsService.SetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores), _configuredCoreRegistry));
         }
 
         private async Task InitializeCoreRanking()
@@ -234,7 +236,7 @@ namespace StrixMusic.Shared
             Guard.IsNotNull(_coreRegistry, nameof(_coreRegistry));
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
-            var existingCoreRanking = await _settingsService.GetValue<List<string>>(nameof(SettingsKeys.CoreRanking)).RunInBackground();
+            var existingCoreRanking = await Task.Run(() => _settingsService.GetValue<List<string>>(nameof(SettingsKeys.CoreRanking)));
 
             var coreRanking = new List<string>();
 
@@ -244,7 +246,7 @@ namespace StrixMusic.Shared
                 if (coreAssemblyInfo is null)
                     continue;
 
-                // If this core isn't configured anymore, don't add it to the ranking.
+                // If this core is still configured, add it to the ranking.
                 if (_coreRegistry.Any(x => x.AttributeData.CoreTypeAssemblyQualifiedName == coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName))
                 {
                     coreRanking.Add(instanceId);
@@ -348,7 +350,7 @@ namespace StrixMusic.Shared
                 return (core, services);
             });
 
-            await CurrentWindow.MainViewModel.InitializeCoresAsync(initData).RunInBackground();
+            await Task.Run(() => CurrentWindow.MainViewModel.InitializeCoresAsync(initData));
 
             // UpdateStatus("Setting up media players");
             UpdateStatus("SetupMedia");

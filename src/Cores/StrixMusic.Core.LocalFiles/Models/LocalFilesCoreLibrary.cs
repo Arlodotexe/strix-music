@@ -1,5 +1,8 @@
-﻿using StrixMusic.Core.LocalFiles.Models;
+﻿using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Core.LocalFiles.Backing.Services;
+using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,9 +68,16 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
+        public async override IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            var artistService = SourceCore.GetService<ArtistService>();
+
+            var artists = await artistService.GetArtistMetadata(limit, offset);
+
+            foreach (var artist in artists)
+            {
+                yield return new LocalFilesCoreArtist(SourceCore, artist);
+            }
         }
 
         /// <inheritdoc/>

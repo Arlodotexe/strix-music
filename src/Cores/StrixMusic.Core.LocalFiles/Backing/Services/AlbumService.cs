@@ -16,12 +16,11 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     /// <summary>
     /// Album service for creating or getting the album metadata.
     /// </summary>
-    public class AlbumService 
+    public class AlbumService
     {
         private readonly string _albumMetadataCacheFileName = "AlbumMeta.lfc"; //lfc represents LocalFileCore format.
         private readonly string _pathToMetadatafile;
         private readonly IFileSystemService _fileSystemService;
-        private IFolderData? _folderData;
         private FileMetadataScanner _fileMetadataScanner;
 
         /// <summary>
@@ -36,10 +35,10 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         }
 
         /// <summary>
-        /// Gets all <see cref="AlbumMetadata"/>> over the file system.
+        /// Gets all <see cref="TrackMetadata"/> over the file system.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="limit"></param>
+        /// <param name="offset">Get items starting at this index.</param>
+        /// <param name="limit">Get items starting at this index.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<IReadOnlyList<AlbumMetadata>> GetAlbumMetadata(int offset, int limit)
         {
@@ -62,10 +61,32 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
             // NOTE: Make sure you have already scanned the filemetadata. 
-            var metadata = _fileMetadataScanner.GetUniqueAlbumMetadataToCache();
+            var metadata = _fileMetadataScanner.GetUniqueAlbumMetadata();
 
             var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
             File.WriteAllBytes(_pathToMetadatafile, bytes);
+        }
+
+        /// <summary>
+        /// Gets the filtered albums by artists ids.
+        /// </summary>
+        /// <param name="artistId">The artist Id.</param>
+        /// <returns>The filtered <see cref="IReadOnlyList{AlbumMetadata}"/>></returns>
+        public async Task<IReadOnlyList<AlbumMetadata>> GetAlbumsByArtistId(string artistId, int offset, int limit)
+        {
+            var filtredAlbums = new List<AlbumMetadata>();
+
+            var albums = await GetAlbumMetadata(offset, limit);
+
+            foreach (var item in albums)
+            {
+                if (item.ArtistIds != null && item.ArtistIds.Contains(artistId))
+                {
+                    filtredAlbums.Add(item);
+                }
+            }
+
+            return filtredAlbums;
         }
     }
 }

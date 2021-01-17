@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace OwlCore.Collections.Generic
 {
     /// <summary>
-    /// Represents a strongly typed <see cref="Deque{T}"/> of objects.
+    /// A strongly typed <see cref="Deque{T}"/> of objects.
     /// </summary>
     /// <typeparam name="T">The type of elements in the <see cref="Deque{T}"/>.</typeparam>
     public class Deque<T> : IEnumerable<T>
@@ -182,7 +182,7 @@ namespace OwlCore.Collections.Generic
         /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator)GetEnumerator();
+            return GetEnumerator();
         }
 
         /// <summary>

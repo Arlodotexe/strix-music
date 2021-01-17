@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Core.LocalFiles.Extensions
 {
     /// <summary>
-    /// <see cref="IFolderData"/> extentions methods for <see cref="LocalFileCore"/>.
+    /// <see cref="IFolderData"/> extentions methods for <see cref="LocalFilesCore"/>.
     /// </summary>
     public static class FolderDataExtensions
     {

@@ -1,5 +1,6 @@
 ﻿using OwlCore.Collections;
 using OwlCore.Events;
+using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
@@ -11,15 +12,18 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <summary>
     /// A LocalFileCore implementation of <see cref="ICoreAlbum"/>.
     /// </summary>
-    public class LocalFilesCoreAlbum: ICoreAlbum
+    public class LocalFilesCoreAlbum : ICoreAlbum
     {
+        private AlbumMetadata _albumMetadata;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreAlbum"/> class.
         /// </summary>
         /// <param name="sourceCore">The core that created this object.</param>
-        public LocalFilesCoreAlbum(ICore sourceCore)
+        public LocalFilesCoreAlbum(ICore sourceCore, AlbumMetadata albumMetadata)
         {
             SourceCore = sourceCore;
+            _albumMetadata = albumMetadata;
         }
 
         /// <inheritdoc/>
@@ -194,7 +198,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public  IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
             throw new NotImplementedException();
         }
@@ -212,7 +216,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public  IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
             throw new NotImplementedException();
         }

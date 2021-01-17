@@ -34,6 +34,9 @@ namespace StrixMusic.Sdk.Services.Settings
             };
         }
 
+        /// <inheritdoc />
+        public bool IsInitialized { get; set; }
+
         /// <summary>
         /// The Abstract UI elements for the default settings.
         /// </summary>
@@ -81,7 +84,8 @@ namespace StrixMusic.Sdk.Services.Settings
         /// <inheritdoc />
         public async Task InitAsync()
         {
-            _shellRegistry = await _settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry)).RunInBackground();
+            _shellRegistry = await Task.Run(() =>_settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry)));
+            IsInitialized = true;
         }
     }
 }

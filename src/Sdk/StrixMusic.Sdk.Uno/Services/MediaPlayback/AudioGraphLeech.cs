@@ -32,7 +32,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         private AudioFrameOutputNode? _outNode;
         private MediaSourceAudioInputNode? _inNode; // TODO: Attach multiple nodes per core, instead of creating multiple graphs
         private int _quantum = 0;
-        private bool _isInitialized;
 
         /// <summary>
         /// Raised when a quantum of data is processed. 
@@ -44,17 +43,21 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         /// </summary>
         public AudioGraphLeech()
         {
-        } 
+        }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; set; }
 
         /// <inheritdoc/>
         public async Task InitAsync()
         {
-            if (_isInitialized)
+            if (IsInitialized)
                 return;
 
             await CreateGraph();
             CreateFrameOutNode();
-            _isInitialized = true;
+
+            IsInitialized = true;
         }
 
         /// <summary>

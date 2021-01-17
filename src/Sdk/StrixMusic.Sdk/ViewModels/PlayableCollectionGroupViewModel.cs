@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
-using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -47,12 +47,15 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
-            Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
-            Playlists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IPlaylistCollectionItem>());
-            Albums = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IAlbumCollectionItem>());
-            Artists = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IArtistCollectionItem>());
-            Children = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<PlayableCollectionGroupViewModel>());
-            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
+            using (Threading.PrimaryContext)
+            {
+                Images = new SynchronizedObservableCollection<IImage>();
+                Tracks = new SynchronizedObservableCollection<TrackViewModel>();
+                Artists = new SynchronizedObservableCollection<IArtistCollectionItem>();
+                Children = new SynchronizedObservableCollection<PlayableCollectionGroupViewModel>();
+                Playlists = new SynchronizedObservableCollection<IPlaylistCollectionItem>();
+                Albums = new SynchronizedObservableCollection<IAlbumCollectionItem>();
+            }
 
             AttachPropertyEvents();
         }
@@ -271,7 +274,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in addedItems)
             {
-                    Children.Insert(item.Index, new PlayableCollectionGroupViewModel(item.Data));
+                Children.Insert(item.Index, new PlayableCollectionGroupViewModel(item.Data));
             }
 
             foreach (var item in removedItems)
@@ -595,7 +598,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMorePlaylistsAsync(int limit)
         {
-            foreach (var item in await _collectionGroup.GetPlaylistItemsAsync(limit, Playlists.Count).RunInBackground())
+            foreach (var item in await Task.Run(() => _collectionGroup.GetPlaylistItemsAsync(limit, Playlists.Count)))
             {
                 switch (item)
                 {
@@ -612,7 +615,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
-            foreach (var item in await _collectionGroup.GetTracksAsync(limit, Tracks.Count).RunInBackground())
+            foreach (var item in await Task.Run(() => _collectionGroup.GetTracksAsync(limit, Tracks.Count)))
             {
                 Tracks.Add(new TrackViewModel(item));
             }
@@ -621,7 +624,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreAlbumsAsync(int limit)
         {
-            foreach (var item in await _collectionGroup.GetAlbumItemsAsync(limit, Albums.Count).RunInBackground())
+            foreach (var item in await Task.Run(() => _collectionGroup.GetAlbumItemsAsync(limit, Albums.Count)))
             {
                 switch (item)
                 {
@@ -638,7 +641,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            foreach (var item in await _collectionGroup.GetArtistItemsAsync(limit, Artists.Count).RunInBackground())
+            foreach (var item in await Task.Run(() => _collectionGroup.GetArtistItemsAsync(limit, Artists.Count)))
             {
                 if (item is IArtist artist)
                 {
@@ -655,16 +658,16 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreChildrenAsync(int limit)
         {
-            foreach (var item in await _collectionGroup.GetChildrenAsync(limit, Albums.Count).RunInBackground())
+            foreach (var item in await Task.Run(() => _collectionGroup.GetChildrenAsync(limit, Albums.Count)))
             {
-                    Children.Add(new PlayableCollectionGroupViewModel(item));
+                Children.Add(new PlayableCollectionGroupViewModel(item));
             }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            foreach (var item in await _collectionGroup.GetImagesAsync(limit, Images.Count).RunInBackground())
+            foreach (var item in await Task.Run(() => _collectionGroup.GetImagesAsync(limit, Images.Count)))
             {
                 Images.Add(item);
             }

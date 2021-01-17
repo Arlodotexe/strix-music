@@ -21,7 +21,7 @@ namespace StrixMusic.Core.LocalFiles
     public class LocalFileCoreConfig : ICoreConfig
     {
         private IFileSystemService? _fileSystemService;
-        private FileMetadataScanner _fileMetadataScanner;
+        private FileMetadataScanner? _fileMetadataScanner;
         private ISettingsService? _settingsService;
         private bool _baseServicesSetup;
 
@@ -33,26 +33,6 @@ namespace StrixMusic.Core.LocalFiles
             SourceCore = sourceCore;
             AbstractUIElements = new List<AbstractUIElementGroup>();
         }
-
-        /// <summary>
-        /// Provides cache data related to <see cref="ArtistMetadata"/>/
-        /// </summary>
-        public ArtistService? ArtistService { get; set; }
-
-        /// <summary>
-        /// Provides cache data related to <see cref="TrackMetadata"/>/
-        /// </summary>
-        public TrackService? TrackService { get; set; }
-
-        /// <summary>
-        /// Provides cache data related to <see cref="AlbumMetadata"/>/
-        /// </summary>
-        public AlbumService? AlbumService { get; set; }
-
-        /// <summary>
-        /// Provides cache data related to <see cref="PlaylistMetadata"/>/
-        /// </summary>
-        public PlaylistService? PlaylistService { get; set; }
 
         /// <inheritdoc />
         public ICore SourceCore { get; }
@@ -79,13 +59,6 @@ namespace StrixMusic.Core.LocalFiles
             Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
 
             Services = null;
-
-            _fileMetadataScanner = new FileMetadataScanner();
-            TrackService = new TrackService(_fileSystemService, _fileMetadataScanner);
-            AlbumService = new AlbumService(_fileSystemService, _fileMetadataScanner);
-            ArtistService = new ArtistService(_fileSystemService, _fileMetadataScanner);
-            PlaylistService = new PlaylistService(_fileSystemService);
-
             Services = services.BuildServiceProvider();
         }
 
@@ -108,6 +81,14 @@ namespace StrixMusic.Core.LocalFiles
             _settingsService = new LocalFilesCoreSettingsService(SourceCore.InstanceId);
 
             services.AddSingleton(_settingsService);
+
+            _fileMetadataScanner = new FileMetadataScanner();
+
+            services.Add(new ServiceDescriptor(typeof(ArtistService), new ArtistService(_fileSystemService, _fileMetadataScanner)));
+            services.Add(new ServiceDescriptor(typeof(TrackService), new TrackService(_fileSystemService, _fileMetadataScanner)));
+            services.Add(new ServiceDescriptor(typeof(AlbumService), new AlbumService(_fileSystemService, _fileMetadataScanner)));
+            services.Add(new ServiceDescriptor(typeof(FileMetadataScanner), _fileMetadataScanner));
+            services.Add(new ServiceDescriptor(typeof(PlaylistMetadata), new PlaylistService(_fileSystemService)));
 
             Services = services.BuildServiceProvider();
 
@@ -133,7 +114,7 @@ namespace StrixMusic.Core.LocalFiles
         }
 
         /// <summary>
-        /// This folder picked for this instance of the <see cref="LocalFileCore"/>.
+        /// This folder picked for this instance of the <see cref="LocalFilesCore"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<IFolderData?> GetConfiguredFolder()

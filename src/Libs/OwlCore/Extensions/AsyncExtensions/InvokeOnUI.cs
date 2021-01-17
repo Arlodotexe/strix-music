@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using OwlCore.Helpers;
 
 // ReSharper disable once CheckNamespace
 namespace OwlCore.Extensions
@@ -16,10 +15,10 @@ namespace OwlCore.Extensions
         {
             var originalContext = SynchronizationContext.Current;
 
-            if (Helpers.Threading.UISyncContext is null)
-                throw new InvalidOperationException($"UI context not found. {nameof(Threading.SetUISynchronizationContext)} was not called.");
+            if (Threading.PrimarySyncContext is null)
+                throw new InvalidOperationException($"UI context not found. {nameof(Threading.SetPrimarySynchronizationContext)} was not called.");
 
-            SynchronizationContext.SetSynchronizationContext(Threading.UISyncContext);
+            SynchronizationContext.SetSynchronizationContext(Threading.PrimarySyncContext);
 
             await task;
 

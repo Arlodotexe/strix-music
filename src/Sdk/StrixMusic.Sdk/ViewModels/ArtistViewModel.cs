@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
-using OwlCore.Helpers;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -36,9 +36,12 @@ namespace StrixMusic.Sdk.ViewModels
             if (_artist.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(_artist.RelatedItems);
 
-            Tracks = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<TrackViewModel>());
-            Albums = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IAlbumCollectionItem>());
-            Images = Threading.InvokeOnUI(() => new SynchronizedObservableCollection<IImage>());
+            using (Threading.PrimaryContext)
+            {
+                Images = new SynchronizedObservableCollection<IImage>();
+                Tracks = new SynchronizedObservableCollection<TrackViewModel>();
+                Albums = new SynchronizedObservableCollection<IAlbumCollectionItem>();
+            }
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);

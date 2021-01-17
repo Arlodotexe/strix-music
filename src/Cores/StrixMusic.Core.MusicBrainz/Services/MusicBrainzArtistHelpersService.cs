@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
+using OwlCore;
 using StrixMusic.Core.MusicBrainz.Models;
 using StrixMusic.Core.MusicBrainz.Statics;
 
@@ -43,9 +44,9 @@ namespace StrixMusic.Core.MusicBrainz.Services
 
             if (firstPage.Items.Count < firstPage.Count)
             {
-                var remainingItems = await OwlCore.Helpers.APIs.GetAllItemsAsync(firstPage.Count, firstPage.Items, async currentOffset =>
+                var remainingItems = await APIs.GetAllItemsAsync(firstPage.Count, firstPage.Items, async currentOffset =>
                 {
-                    return (await _musicBrainzClient.Releases.BrowseAsync("artist", artist.Id, 100, currentOffset, RelationshipQueries.Releases))?.Items;
+                    return (await _musicBrainzClient.Releases.BrowseAsync("artist", artist.Id, 100, currentOffset, RelationshipQueries.Releases))?.Items ?? new System.Collections.Generic.List<Release>();
                 });
 
                 firstPage.Items.AddRange(remainingItems);

@@ -1,6 +1,7 @@
 ﻿using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
+using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Core.LocalFiles.MetadataScanner;
 using System;
 using System.Collections.Generic;
@@ -34,20 +35,20 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         }
 
         /// <summary>
-        /// Gets all <see cref="ArtistMetadata"/>> over the file system.
+        /// Gets all <see cref="TrackMetadata"/> over the file system.
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="limit"></param>
+        /// <param name="offset">Get items starting at this index.</param>
+        /// <param name="limit">Get items starting at this index.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task<IReadOnlyList<ArtistService>> GetArtistMetadata(int offset, int limit)
+        public Task<IReadOnlyList<ArtistMetadata>> GetArtistMetadata(int offset, int limit)
         {
             if (!File.Exists(_pathToMetadatafile))
                 throw new FileNotFoundException(_pathToMetadatafile);
 
             var bytes = File.ReadAllBytes(_pathToMetadatafile);
-            var ArtistMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<ArtistService>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            var artistMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<ArtistMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
-            return Task.FromResult<IReadOnlyList<ArtistService>>(ArtistMetadataLst.Skip(offset).Take(limit).ToList());
+            return Task.FromResult<IReadOnlyList<ArtistMetadata>>(artistMetadataLst.Skip(offset).Take(limit).ToList());
         }
 
         /// <summary>
@@ -60,10 +61,32 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
             // NOTE: Make sure you have already scanned the filemetadata.
-            var metadata = _fileMetadataScanner.GetUniqueArtistMetadataToCache();
+            var metadata = _fileMetadataScanner.GetUniqueArtistMetadata();
 
             var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
             File.WriteAllBytes(_pathToMetadatafile, bytes);
+        }
+
+        /// <summary>
+        /// Gets the filtered artist by album ids.
+        /// </summary>
+        /// <param name="artistId">The artist Id.</param>
+        /// <returns>The filtered <see cref="IReadOnlyList{ArtistMetadata}"/>></returns>
+        public async Task<IReadOnlyList<ArtistMetadata>> GetAlbumsByArtistId(string artistId, int offset, int limit)
+        {
+            var filtredAlbums = new List<ArtistMetadata>();
+
+            var artists = await GetArtistMetadata(offset, limit);
+
+            foreach (var item in artists)
+            {
+                if (item.AlbumIds != null && item.AlbumIds.Contains(artistId))
+                {
+                    filtredAlbums.Add(item);
+                }
+            }
+
+            return filtredAlbums;
         }
     }
 }
