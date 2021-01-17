@@ -1,6 +1,7 @@
 ﻿using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
+using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Core.LocalFiles.MetadataScanner;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         private readonly FileMetadataScanner _fileMetadataScanner;
         private readonly IFileSystemService _fileSystemService;
         private IFolderData? _folderData;
+        private IReadOnlyList<ArtistMetadata>? _cachedArtists;
 
         /// <summary>
         /// Creates a new instance for <see cref="TrackService"/>.
@@ -39,15 +41,18 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// <param name="offset"></param>
         /// <param name="limit"></param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task<IReadOnlyList<ArtistService>> GetArtistMetadata(int offset, int limit)
+        public Task<IReadOnlyList<ArtistMetadata>> GetArtistMetadata(int offset, int limit)
         {
+            if (_cachedArtists != null && _cachedArtists.Count != 0)
+                return Task.FromResult<IReadOnlyList<ArtistMetadata>>(_cachedArtists.Skip(offset).Take(limit).ToList());
+
             if (!File.Exists(_pathToMetadatafile))
                 throw new FileNotFoundException(_pathToMetadatafile);
 
             var bytes = File.ReadAllBytes(_pathToMetadatafile);
-            var ArtistMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<ArtistService>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            var artistMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<ArtistMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
-            return Task.FromResult<IReadOnlyList<ArtistService>>(ArtistMetadataLst.Skip(offset).Take(limit).ToList());
+            return Task.FromResult<IReadOnlyList<ArtistMetadata>>(artistMetadataLst.Skip(offset).Take(limit).ToList());
         }
 
         /// <summary>
@@ -64,6 +69,28 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
 
             var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
             File.WriteAllBytes(_pathToMetadatafile, bytes);
+        }
+
+        /// <summary>
+        /// Gets the filtered artist by album ids.
+        /// </summary>
+        /// <param name="artistId">The artist Id.</param>
+        /// <returns>The filtered <see cref="IReadOnlyList{ArtistMetadata}"/>></returns>
+        public async Task<IReadOnlyList<ArtistMetadata>> GetAlbumsByArtistId(string artistId, int offset, int limit)
+        {
+            var filtredAlbums = new List<ArtistMetadata>();
+
+            var artists = await GetArtistMetadata(offset, limit);
+
+            foreach (var item in artists)
+            {
+                if (item.AlbumIds != null && item.AlbumIds.Contains(artistId))
+                {
+                    filtredAlbums.Add(item);
+                }
+            }
+
+            return filtredAlbums;
         }
     }
 }
