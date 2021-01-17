@@ -16,33 +16,23 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     /// <summary>
     /// Album service for creating or getting the album metadata.
     /// </summary>
-    public class AlbumService : IAsyncInit
+    public class AlbumService 
     {
         private readonly string _albumMetadataCacheFileName = "AlbumMeta.lfc"; //lfc represents LocalFileCore format.
         private readonly string _pathToMetadatafile;
         private readonly IFileSystemService _fileSystemService;
         private IFolderData? _folderData;
+        private FileMetadataScanner _fileMetadataScanner;
 
         /// <summary>
         /// Creates a new instance of <see cref="AlbumService"/>.
         /// </summary>
         ///  /// <param name="fileSystemService">The service to access the file system.</param>
-        public AlbumService(IFileSystemService fileSystemService)
+        public AlbumService(IFileSystemService fileSystemService, FileMetadataScanner fileMetadataScanner)
         {
             _fileSystemService = fileSystemService;
             _pathToMetadatafile = $"{_fileSystemService.RootFolder.Path}\\{_albumMetadataCacheFileName}";
-        }
-
-        /// <summary>
-        /// Initializes the album service.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitAsync()
-        {
-            var folders = await _fileSystemService.GetPickedFolders();
-            Guard.IsNotNull(folders, nameof(folders));
-            _folderData = folders.ToList().FirstOrDefault();
-            Guard.IsNotNull(_folderData, nameof(_folderData));
+            _fileMetadataScanner = fileMetadataScanner;
         }
 
         /// <summary>
@@ -68,13 +58,14 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// <returns>The <see cref="AlbumMetadata"/> collection.</returns>
         public async Task CreateOrUpdateAlbumMetadata()
         {
-            if (_folderData is null)
-                return;
-
             if (!await _fileSystemService.FileExistsAsync(_pathToMetadatafile))
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
-            throw new NotImplementedException();
+            // NOTE: Make sure you have already scanned the filemetadata. 
+            var metadata = _fileMetadataScanner.GetUniqueAlbumMetadataToCache();
+
+            var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            File.WriteAllBytes(_pathToMetadatafile, bytes);
         }
     }
 }

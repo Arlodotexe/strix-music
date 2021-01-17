@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.Uno.Styles
         private void OpenPlaylist(object sender, ItemClickEventArgs e)
         {
             INavigationService<Control> navigationService = Shell.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
-            navigationService.NavigateTo(typeof(AlbumView), false, e.ClickedItem);
+            navigationService.NavigateTo(typeof(PlaylistView), false, e.ClickedItem);
         }
     }
 }

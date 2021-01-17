@@ -44,6 +44,7 @@
     <None Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
     <None Remove="Styles\PlaylistCollectionStyle.xaml" />
     <None Remove="Styles\PlaylistItemStyle.xaml" />
+    <None Remove="Styles\PlaylistViewStyle.xaml" />
     <None Remove="Styles\SearchViewStyle.xaml" />
     <None Remove="Styles\SettingsViewStyle.xaml" />
     <None Remove="Styles\TrackCollectionStyle.xaml" />
@@ -64,6 +65,7 @@
     <UpToDateCheckInput Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PlaylistCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PlaylistItemStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\PlaylistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SafeImageStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SearchViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
@@ -75,6 +77,9 @@
     <ProjectReference Include="..\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Styles\PlaylistViewStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="Styles\PlaylistItemStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>

@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Provisos;
 using StrixMusic.Core.LocalFiles.Backing.Models;
+using StrixMusic.Core.LocalFiles.Extensions;
 using StrixMusic.Core.LocalFiles.MetadataScanner;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     /// <summary>
     /// The service that helps in interacting with the saved file core track information.
     /// </summary>
-    public class PlaylistService : IAsyncInit
+    public class PlaylistService
     {
         private readonly string _playlistMetadataCacheFileName = "PlaylistMeta.lfc"; //lfc represents LocalFileCore format.
         private readonly string _pathToMetadatafile;
@@ -33,18 +34,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             _fileSystemService = fileSystemService;
             _pathToMetadatafile = $"{_fileSystemService.RootFolder.Path}\\{_playlistMetadataCacheFileName}";
             _playlistMetadataScanner = new PlaylistMetadataScanner();
-        }
-
-        /// <summary>
-        /// Initializes the service.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitAsync()
-        {
-            var folders = await _fileSystemService.GetPickedFolders();
-            Guard.IsNotNull(folders, nameof(folders));
-            _folderData = folders.ToList().FirstOrDefault();
-            Guard.IsNotNull(_folderData, nameof(_folderData));
         }
 
         /// <summary>
@@ -65,6 +54,19 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         }
 
         /// <summary>
+        /// Initializes the service.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task InitAsync()
+        {
+            var folders = await _fileSystemService.GetPickedFolders();
+            Guard.IsNotNull(folders, nameof(folders));
+            _folderData = folders.ToList().FirstOrDefault();
+            Guard.IsNotNull(_folderData, nameof(_folderData));
+        }
+
+
+        /// <summary>
         /// Create or Update <see cref="PlaylistMetadata"/> information in files.
         /// </summary>
         /// <returns>The <see cref="PlaylistMetadata"/> collection.</returns>
@@ -78,7 +80,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
 
             var playlistMetadataLst = new List<PlaylistMetadata>();
 
-            var files = await _folderData.GetFilesAsync();
+            var files = await _folderData.RecursiveDepthFileSearchAsync();
 
             foreach (var item in files)
             {

@@ -17,12 +17,12 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// <summary>
         /// The unique identifier(s) for <see cref="TrackMetadata"/>.
         /// </summary>
-        public string? TrackIds { get; set; }
+        public List<string>? TrackIds { get; set; }
 
         /// <summary>
         /// Holds unique identifier(s) for the <see cref="AlbumMetadata"/>.
         /// </summary>
-        public List<string?> AlbumIds { get; set; }
+        public List<string>? AlbumIds { get; set; }
 
         /// <summary>
         /// Holds the name of the artist.

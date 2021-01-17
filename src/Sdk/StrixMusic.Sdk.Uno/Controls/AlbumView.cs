@@ -31,6 +31,9 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             if (!ViewModel.PopulateMoreArtistsCommand.IsRunning)
                 await ViewModel.PopulateMoreArtistsCommand.ExecuteAsync(5);
+
+            if (!ViewModel.PopulateMoreTracksCommand.IsRunning)
+                await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(5);
         }
     }
 }
