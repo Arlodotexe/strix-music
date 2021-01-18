@@ -56,6 +56,94 @@ namespace StrixMusic.Sdk.Data.Merged
             AttachEvents();
         }
 
+        private static async Task InsertItemIntoCollection<T>(TCoreCollection sourceCollection, T itemToAdd, int originalIndex)
+            where T : class, ICollectionItemBase, ICoreMember // Using TCoreCollectionItem directly doesn't always work, but this does.
+        {
+            switch (sourceCollection)
+            {
+                case ICorePlayableCollectionGroup playableCollection:
+                    if (await playableCollection.IsAddChildSupported(originalIndex))
+                        await playableCollection.AddChildAsync((ICorePlayableCollectionGroup)itemToAdd, originalIndex);
+                    break;
+                case ICoreAlbumCollection albumCollection:
+                    if (await albumCollection.IsAddAlbumItemSupported(originalIndex))
+                        await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)itemToAdd, originalIndex);
+                    break;
+                case ICoreArtistCollection artistCollection:
+                    if (await artistCollection.IsAddArtistItemSupported(originalIndex))
+                        await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)itemToAdd, originalIndex);
+                    break;
+                case ICorePlaylistCollection playlistCollection:
+                    if (await playlistCollection.IsAddPlaylistItemSupported(originalIndex))
+                        await playlistCollection.AddPlaylistItemAsync((ICorePlaylistCollectionItem)itemToAdd, originalIndex);
+                    break;
+                case ICoreTrackCollection trackCollection:
+                    if (await trackCollection.IsAddTrackSupported(originalIndex))
+                        await trackCollection.AddTrackAsync((ICoreTrack)itemToAdd, originalIndex);
+                    break;
+                case ICoreImageCollection imageCollection:
+                    if (await imageCollection.IsAddImageSupported(originalIndex))
+                        await imageCollection.AddImageAsync((ICoreImage)itemToAdd, originalIndex);
+                    break;
+                default:
+                    ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>($"Couldn't add item to collection. Type {sourceCollection.GetType()} not supported.");
+                    break;
+            }
+        }
+
+        private static async Task InsertExistingItem(TCollectionItem itemToInsert, MappedData mappedData)
+        {
+            foreach (var source in itemToInsert.Sources)
+            {
+                var addedRecord = new Dictionary<TCoreCollection, bool>();
+
+                if (mappedData.CollectionItem is null)
+                    continue;
+
+                var sourceCollection = mappedData.SourceCollection;
+
+                // Make sure the source cores are the same.
+                if (sourceCollection.SourceCore != source.SourceCore)
+                    continue;
+
+                // Only add to this source collection once.
+                if (addedRecord.ContainsKey(sourceCollection))
+                    continue;
+
+                addedRecord.Add(sourceCollection, true);
+
+                var originalIndex = mappedData.OriginalIndex;
+
+                await InsertItemIntoCollection(sourceCollection, source, originalIndex);
+
+            }
+        }
+
+        private static async Task InsertNewItem(IEnumerable<TCoreCollection> sourceCollections, IReadOnlyList<ICore> sourceCores, IInitialData dataToInsert, int index)
+        {
+            // TODO create setting to let user decide default
+            foreach (var source in sourceCollections)
+            {
+                IEnumerable<ICore> targetSources = sourceCores;
+
+                if (dataToInsert.TargetSourceCores != null && dataToInsert.TargetSourceCores.Count > 0)
+                {
+                    targetSources = dataToInsert.TargetSourceCores;
+                }
+
+                // Try adding to all by default
+                foreach (var targetCore in targetSources)
+                {
+                    if (dataToInsert is InitialPlaylistData playlistData)
+                    {
+                        var coreData = new InitialCorePlaylistData(playlistData, targetCore);
+
+                        await InsertItemIntoCollection(source, coreData, index);
+                    }
+                }
+            }
+        }
+
         /// <inheritdoc />
         public async Task InitAsync()
         {
@@ -213,7 +301,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         private void MergedCollectionMap_ItemsChanged<T>(object sender, IReadOnlyList<CollectionChangedEventItem<T>> addedItems, IReadOnlyList<CollectionChangedEventItem<T>> removedItems)
-        where T : class, ICollectionItemBase, ICoreMember
+            where T : class, ICollectionItemBase, ICoreMember
         {
             var addedMergedItems = CheckAddedItems();
             var removedMergedItems = CheckRemovedItems();
@@ -331,66 +419,17 @@ namespace StrixMusic.Sdk.Data.Merged
         public async Task InsertItem(TCollectionItem item, int index)
         {
             await TryInitAsync();
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
 
-            // TODO
-            // This does not handle adding NEW items to a list, only existing items from elsewhere. 
-            // e.g. cannot create a new playlist or playableCollectionGroup.
-            // Plan on having a new type that implements ICoreSomething for the UI to create a merged item + fill out data.
-            foreach (var source in item.Sources)
+            Guard.IsNotNull(item, nameof(item));
+
+            if (item is IInitialData createdData)
             {
-                var addedRecord = new Dictionary<TCoreCollection, bool>();
-
-                foreach (var mappedData in _sortedMap)
-                {
-                    if (mappedData.CollectionItem is null)
-                        continue;
-
-                    var sourceCollection = mappedData.SourceCollection;
-
-                    // Make sure the source cores are the same.
-                    if (sourceCollection.SourceCore != source.SourceCore)
-                        continue;
-
-                    // Only add to this source collection once.
-                    if (addedRecord.ContainsKey(sourceCollection))
-                        continue;
-
-                    addedRecord.Add(sourceCollection, true);
-
-                    switch (sourceCollection)
-                    {
-                        case ICorePlayableCollectionGroup playableCollection:
-                            if (await playableCollection.IsAddChildSupported(index))
-                                await playableCollection.AddChildAsync((ICorePlayableCollectionGroup)source, mappedData.OriginalIndex);
-                            break;
-                        case ICoreAlbumCollection albumCollection:
-                            if (await albumCollection.IsAddAlbumItemSupported(index))
-                                await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)source, mappedData.OriginalIndex);
-                            break;
-                        case ICoreArtistCollection artistCollection:
-                            if (await artistCollection.IsAddArtistItemSupported(index))
-                                await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)source, mappedData.OriginalIndex);
-                            break;
-                        case ICorePlaylistCollection playlistCollection:
-                            if (await playlistCollection.IsAddPlaylistItemSupported(index))
-                                await playlistCollection.AddPlaylistItemAsync((ICorePlaylistCollectionItem)source, mappedData.OriginalIndex);
-                            break;
-                        case ICoreTrackCollection trackCollection:
-                            if (await trackCollection.IsAddTrackSupported(index))
-                                await trackCollection.AddTrackAsync((ICoreTrack)source, mappedData.OriginalIndex);
-                            break;
-                        case ICoreImageCollection imageCollection:
-                            if (await imageCollection.IsAddImageSupported(index))
-                                await imageCollection.AddImageAsync((ICoreImage)source, mappedData.OriginalIndex);
-                            break;
-                        default:
-                            ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
-                            break;
-                    }
-                }
+                await InsertNewItem(Sources, _collection.GetSourceCores(), createdData, index);
+                return;
             }
+
+            // Handle inserting an existing item
+            await InsertExistingItem(item, _sortedMap[index]);
         }
 
         /// <summary>
