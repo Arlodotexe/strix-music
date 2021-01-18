@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -126,15 +127,18 @@ namespace OwlCore.Net.HttpClientHandlers
                 return null;
 
             CacheEntry? cacheEntry = null;
-
+            bool fileExists = false;
             try
             {
+                fileExists = File.Exists(cachedFilePath);
+
                 var fileBytes = File.ReadAllText(cachedFilePath);
                 cacheEntry = JsonSerializer.Deserialize<CacheEntry>(fileBytes);
             }
-            catch
+            catch(Exception ex)
             {
-                // ignored
+                if (fileExists)
+                    Debug.WriteLine($"WARNING: Failed to read or deserialized the file at \"{cachedFilePath}\". The data will be discarded. ({ex})");
             }
 
             if (cacheEntry?.RequestUri is null)
