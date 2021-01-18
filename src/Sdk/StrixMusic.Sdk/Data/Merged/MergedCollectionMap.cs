@@ -57,7 +57,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         private static async Task InsertItemIntoCollection<T>(TCoreCollection sourceCollection, T itemToAdd, int originalIndex)
-            where T : class, ICollectionItemBase, ICoreMember // Using TCoreCollectionItem directly doesn't always work, but this does.
+            where T : class, ICollectionItemBase, ICoreMember // https://twitter.com/Arlodottxt/status/1351317100959326213?s=20
         {
             switch (sourceCollection)
             {
