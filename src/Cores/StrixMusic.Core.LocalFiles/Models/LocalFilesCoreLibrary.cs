@@ -1,4 +1,6 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Provisos;
+using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Sdk.Data.Core;
@@ -7,12 +9,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <inheritdoc/>
-    public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary
+    public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary, IAsyncInit
     {
+        private LocalFilesCoreTrack _localFileCoreTrack;
+        private IEnumerable<TrackMetadata> _trackMetadatas;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreLibrary"/> class.
         /// </summary>
@@ -20,6 +26,15 @@ namespace StrixMusic.Core.LocalFiles.Models
         public LocalFilesCoreLibrary(ICore sourceCore)
             : base(sourceCore)
         {
+        }
+
+        /// <inheritdoc/>
+        public async Task InitAsync()
+        {
+            var trackService = SourceCore.GetService<TrackService>();
+            _trackMetadatas = await trackService.GetTrackMetadata(0, int.MaxValue);
+
+            TotalTracksCount = _trackMetadatas.Count();
         }
 
         /// <inheritdoc />
@@ -38,16 +53,19 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override int TotalChildrenCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override int TotalArtistItemsCount { get; internal set; }
+        public override int TotalArtistItemsCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override int TotalAlbumItemsCount { get; internal set; }
+        public override int TotalAlbumItemsCount { get; internal set; } = 0;
 
         /// <inheritdoc />
         public override int TotalPlaylistItemsCount { get; internal set; } = 0;
 
         /// <inheritdoc />
         public override int TotalTracksCount { get; internal set; }
+
+        /// <inheritdoc />
+        public bool IsInitialized => false;
 
         /// <inheritdoc/>
         public override IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)
@@ -81,9 +99,15 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
+        public async override IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
-            throw new NotImplementedException();
+            var trackService = SourceCore.GetService<TrackService>();
+            var tracks = await trackService.GetTrackMetadata(offset, limit);
+
+            foreach (var track in tracks)
+            {
+                yield return new LocalFilesCoreTrack(SourceCore, track);
+            }
         }
     }
 }

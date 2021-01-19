@@ -15,13 +15,16 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc />
     public class LocalFilesCoreTrack : ICoreTrack
     {
+        private TrackMetadata _trackMetadata;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreTrack"/> class.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
-        public LocalFilesCoreTrack(ICore sourceCore,TrackMetadata trackMetadata)
+        public LocalFilesCoreTrack(ICore sourceCore, TrackMetadata trackMetadata)
         {
             SourceCore = sourceCore;
+            _trackMetadata = trackMetadata;
         }
 
         /// <inheritdoc/>
@@ -70,13 +73,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc/>
-        public string Id => throw new NotImplementedException();
+        public string Id => _trackMetadata.Id;
 
         /// <inheritdoc/>
-        public TrackType Type => throw new NotImplementedException();
+        public TrackType Type => TrackType.Song;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount => throw new NotImplementedException();
+        public int TotalArtistItemsCount => _trackMetadata.ArtistIds.Count;
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 0;
@@ -89,7 +92,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc/>
         /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>
-        public int? TrackNumber => throw new NotImplementedException();
+        public int? TrackNumber => Convert.ToInt32(_trackMetadata.TrackNumber);
 
         /// <inheritdoc />
         public int? DiscNumber { get; }
@@ -101,25 +104,28 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICoreLyrics? Lyrics => null;
 
         /// <inheritdoc/>
-        public bool IsExplicit => throw new NotImplementedException();
+        public bool IsExplicit => false;
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
+        public Uri? LocalTrackPath => _trackMetadata.Source;
+
+        /// <inheritdoc/>
         public Uri? Url => new Uri($"https://musicbrainz.org/track/{Id}");
 
         /// <inheritdoc/>
-        public string Name => throw new NotImplementedException();
+        public string Name => _trackMetadata.Title;
 
         /// <inheritdoc/>
-        public string? Description => null;
+        public string? Description => _trackMetadata.Description;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => PlaybackState.None;
 
         /// <inheritdoc/>
-        public TimeSpan Duration => throw new NotImplementedException();
+        public TimeSpan Duration => (TimeSpan)_trackMetadata.Duration;
 
         /// <inheritdoc />
         public DateTime? LastPlayed { get; }
@@ -146,7 +152,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public bool IsChangeIsExplicitAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => false;
+        public bool IsPlayAsyncSupported => true;
 
         /// <inheritdoc/>
         public bool IsPauseAsyncSupported => false;
@@ -281,15 +287,17 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public  IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            //temporary just to show tracks
+            yield return null;
         }
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            //temporary just to show tracks
+            yield return null;
         }
     }
 }

@@ -25,12 +25,12 @@ namespace StrixMusic.Core.LocalFiles
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task InitializeDataForAllCores()
         {
-            await Instances.InParallel(x => x.GetService<PlaylistService>().InitAsync());
+            // await Instances.InParallel(x => x.GetService<PlaylistService>().InitAsync());
 
             await Instances.InParallel(x => x.GetService<AlbumService>().CreateOrUpdateAlbumMetadata());
             await Instances.InParallel(x => x.GetService<ArtistService>().CreateOrUpdateArtistMetadata());
             await Instances.InParallel(x => x.GetService<TrackService>().CreateOrUpdateTrackMetadata());
-            await Instances.InParallel(x => x.GetService<PlaylistService>().CreateOrUpdatePlaylistMetadata());
+        //    await Instances.InParallel(x => x.GetService<PlaylistService>().CreateOrUpdatePlaylistMetadata());
         }
     }
 }

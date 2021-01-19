@@ -38,6 +38,8 @@ namespace StrixMusic.Core.LocalFiles
             User = new LocalFilesCoreUser(this);
             CoreConfig = new LocalFileCoreConfig(this);
             _coreLibrary = new LocalFilesCoreLibrary(this);
+
+            LocalFileCoreManager.Instances?.Add(this);
         }
 
         /// <inheritdoc/>
@@ -121,6 +123,11 @@ namespace StrixMusic.Core.LocalFiles
             CoreCount++;
             if (CoreCount == LocalFileCoreManager.Instances?.Count)
                 await LocalFileCoreManager.InitializeDataForAllCores();
+
+            _coreLibrary = new LocalFilesCoreLibrary(this);
+
+            if (_coreLibrary is LocalFilesCoreLibrary localFilesCore)
+                await localFilesCore.InitAsync();
         }
 
         private async Task PickAndSetupFolder()
@@ -148,9 +155,17 @@ namespace StrixMusic.Core.LocalFiles
         }
 
         /// <inheritdoc/>
-        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
+        public async Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
         {
-            throw new NotSupportedException();
+            if (track is LocalFilesCoreTrack t)
+            {
+                Guard.IsNotNull(t.LocalTrackPath, nameof(t.LocalTrackPath));
+                return await Task.FromResult(new MediaSourceConfig(track, track.Id, t.LocalTrackPath, DateTime.Now.AddYears(10)));
+            }
+            else
+            {
+                throw new InvalidOperationException("Invalid track.");
+            }
         }
     }
 }
