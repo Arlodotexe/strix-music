@@ -645,8 +645,6 @@ namespace StrixMusic.Sdk.Data.Merged
                     remainingItemsForSource = remainingItemsForSource.Take(itemLimitForSource).ToList();
                 }
 
-                Guard.IsLessThan(mappedIndex + remainingItemsForSource.Count - 1, remainingItemsForSource.Count, "indexInSortedMap");
-
                 // For each item that we just retrieved, find the index in the sorted maps and assign the item.
                 for (var o = 0; o < remainingItemsForSource.Count; o++)
                 {
