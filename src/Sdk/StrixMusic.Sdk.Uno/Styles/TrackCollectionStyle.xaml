@@ -4,7 +4,9 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    x:Class="StrixMusic.Sdk.Uno.Styles.TrackCollectionStyle">
+    x:Class="StrixMusic.Sdk.Uno.Styles.TrackCollectionStyle"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core">
 
     <DataTemplate x:Key="DefaultTrackListTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
         <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
