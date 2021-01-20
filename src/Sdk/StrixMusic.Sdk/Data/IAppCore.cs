@@ -1,12 +1,13 @@
 ﻿using OwlCore.Collections;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 
 namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="ICoreBase" />
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface IAppCore : ICoreBase, ISdkMember<ICore>
+    public interface IAppCore : ICoreBase, ISdkMember, IMerged<ICore>
     {
         /// <summary>
         /// The available devices.

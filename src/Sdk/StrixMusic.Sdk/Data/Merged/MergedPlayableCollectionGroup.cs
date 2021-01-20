@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 
@@ -8,7 +7,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A concrete class that merges multiple <see cref="IPlayableCollectionGroupBase"/>s.
     /// </summary>
-    public class MergedPlayableCollectionGroup : MergedPlayableCollectionGroupBase<ICorePlayableCollectionGroup>, IMerged<ICorePlayableCollectionGroup>
+    public class MergedPlayableCollectionGroup : MergedPlayableCollectionGroupBase<ICorePlayableCollectionGroup>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroup"/> class.
@@ -17,12 +16,6 @@ namespace StrixMusic.Sdk.Data.Merged
         public MergedPlayableCollectionGroup(IEnumerable<ICorePlayableCollectionGroup> source)
             : base(source)
         {
-        }
-
-        /// <inheritdoc />
-        public bool Equals(ICorePlayableCollectionGroup other)
-        {
-            return other != null && other.Name.Equals(Name, StringComparison.InvariantCulture);
         }
 
         /// <inheritdoc/>

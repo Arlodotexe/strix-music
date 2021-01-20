@@ -21,10 +21,10 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <typeparam name="TCoreCollection">The types of items that were merged to form <typeparamref name="TCollection"/>.</typeparam>
     /// <typeparam name="TCollectionItem">The type of the item returned from the merged collection.</typeparam>
     /// <typeparam name="TCoreCollectionItem">The type of the items returned from the original source collections.</typeparam>
-    public class MergedCollectionMap<TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem> : IMerged<TCoreCollection>, IAsyncInit
-        where TCollection : class, ICollectionBase, ISdkMember<TCoreCollection>
+    internal class MergedCollectionMap<TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem> : IMerged<TCoreCollection>, IMergedMutable<TCoreCollection>, IAsyncInit
+        where TCollection : class, ICollectionBase, IMerged<TCoreCollection>
         where TCoreCollection : class, ICoreCollection
-        where TCollectionItem : class, ICollectionItemBase, ISdkMember<TCoreCollectionItem>
+        where TCollectionItem : class, ICollectionItemBase, IMerged<TCoreCollectionItem>
         where TCoreCollectionItem : class, ICollectionItemBase, ICoreMember
     {
         private readonly TCollection _collection;
@@ -43,6 +43,9 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public IReadOnlyList<TCoreCollection> Sources => _collection.Sources;
+
+        /// <inheritdoc />
+        public IReadOnlyList<ICore> SourceCores => _collection.SourceCores;
 
         /// <summary>
         /// Initializes a new instance of <see cref="MergedCollectionMap{TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem}"/>.
@@ -86,7 +89,7 @@ namespace StrixMusic.Sdk.Data.Merged
                         await imageCollection.AddImageAsync((ICoreImage)itemToAdd, originalIndex);
                     break;
                 default:
-                    ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>($"Couldn't add item to collection. Type {sourceCollection.GetType()} not supported.");
+                    ThrowHelper.ThrowNotSupportedException<IMergedMutable<TCoreCollection>>($"Couldn't add item to collection. Type {sourceCollection.GetType()} not supported.");
                     break;
             }
         }
@@ -309,7 +312,7 @@ namespace StrixMusic.Sdk.Data.Merged
             List<CollectionChangedEventItem<TCollectionItem>> CheckAddedItems()
             {
                 var added = new List<CollectionChangedEventItem<TCollectionItem>>();
-                var newItems = new List<IMerged<TCoreCollectionItem>>();
+                var newItems = new List<IMergedMutable<TCoreCollectionItem>>();
 
                 foreach (var item in addedItems)
                 {
@@ -351,7 +354,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
                     foreach (var mergedData in _mergedMappedData)
                     {
-                        foreach (var mergedSource in mergedData.CollectionItem.Sources)
+                        foreach (var mergedSource in mergedData.CollectionItem.Cast<IMerged<TCoreCollectionItem>>().Sources)
                         {
                             if (mappedData.CollectionItem != mergedSource)
                                 continue;
@@ -362,7 +365,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
                             mergedData.MergedMapData.RemoveAll(x => x.OriginalIndex == item.Index && item.Data.SourceCore == x.SourceCollection.SourceCore);
 
-                            if (mergedData.CollectionItem.Sources.Count == 0)
+                            if (mergedData.CollectionItem.Cast<IMerged<TCoreCollectionItem>>().Sources.Count == 0)
                             {
                                 _mergedMappedData.Remove(mergedData);
 
@@ -512,7 +515,7 @@ namespace StrixMusic.Sdk.Data.Merged
             return sourceResults.Any();
         }
 
-        private static IMerged<TCoreCollectionItem> MergeOrAdd(List<IMerged<TCoreCollectionItem>> collection, TCoreCollectionItem itemToMerge)
+        private static IMergedMutable<TCoreCollectionItem> MergeOrAdd(List<IMergedMutable<TCoreCollectionItem>> collection, TCoreCollectionItem itemToMerge)
         {
             foreach (var item in collection)
             {
@@ -523,63 +526,63 @@ namespace StrixMusic.Sdk.Data.Merged
                 }
             }
 
-            IMerged<TCoreCollectionItem>? returnData;
+            IMergedMutable<TCoreCollectionItem>? returnData;
 
             // if the collection doesn't contain IMerged<TCollectionItem> at all, create a new Merged
             switch (itemToMerge)
             {
                 case ICoreArtist artist:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedArtist(artist.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedArtist(artist.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICoreAlbum album:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedAlbum(album.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedAlbum(album.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICorePlaylist playlist:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedPlaylist(playlist.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlaylist(playlist.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICoreTrack track:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedTrack(track.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedTrack(track.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICoreDiscoverables discoverables:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedDiscoverables(discoverables.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedDiscoverables(discoverables.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICoreLibrary library:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedLibrary(library.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedLibrary(library.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICoreRecentlyPlayed recentlyPlayed:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedRecentlyPlayed(recentlyPlayed.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedRecentlyPlayed(recentlyPlayed.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICoreImage coreImage:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedImage(coreImage.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedImage(coreImage.IntoList());
                     collection.Add(returnData);
                     break;
 
                 // TODO: Search results post search redo
                 case ICorePlayableCollectionGroup playableCollection:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedPlayableCollectionGroup(playableCollection.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlayableCollectionGroup(playableCollection.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICoreAlbumCollection albumCollection:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedAlbumCollection(albumCollection.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedAlbumCollection(albumCollection.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICoreArtistCollection artistCollection:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedArtistCollection(artistCollection.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedArtistCollection(artistCollection.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICorePlaylistCollection playlistCollection:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedPlaylistCollection(playlistCollection.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlaylistCollection(playlistCollection.IntoList());
                     collection.Add(returnData);
                     break;
                 case ICoreTrackCollection trackCollection:
-                    returnData = (IMerged<TCoreCollectionItem>)new MergedTrackCollection(trackCollection.IntoList());
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedTrackCollection(trackCollection.IntoList());
                     collection.Add(returnData);
                     break;
                 default:
@@ -661,13 +664,13 @@ namespace StrixMusic.Sdk.Data.Merged
             return merged;
         }
 
-        private List<IMerged<TCoreCollectionItem>> MergeMappedData(IList<MappedData> sortedData)
+        private List<IMergedMutable<TCoreCollectionItem>> MergeMappedData(IList<MappedData> sortedData)
         {
             _mergedMappedData.Clear();
 
-            var returnedData = new List<IMerged<TCoreCollectionItem>>();
+            var returnedData = new List<IMergedMutable<TCoreCollectionItem>>();
 
-            var mergedItemMaps = new Dictionary<IMerged<TCoreCollectionItem>, List<MappedData>>();
+            var mergedItemMaps = new Dictionary<IMergedMutable<TCoreCollectionItem>, List<MappedData>>();
 
             foreach (var item in sortedData)
             {
@@ -842,13 +845,13 @@ namespace StrixMusic.Sdk.Data.Merged
         /// Then re-emit ALL data
         /// </para>
         /// </remarks>
-        public void AddSource(TCoreCollection itemToMerge)
+        void IMergedMutable<TCoreCollection>.AddSource(TCoreCollection itemToMerge)
         {
             ResetDataRanked().FireAndForget();
         }
 
         /// <inheritdoc />
-        public void RemoveSource(TCoreCollection itemToRemove)
+        void IMergedMutable<TCoreCollection>.RemoveSource(TCoreCollection itemToRemove)
         {
             ResetDataRanked().FireAndForget();
         }
@@ -881,13 +884,13 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private class MergedMappedData
         {
-            public MergedMappedData(IMerged<TCoreCollectionItem> collectionItem, IEnumerable<MappedData> mergedMapData)
+            public MergedMappedData(IMergedMutable<TCoreCollectionItem> collectionItem, IEnumerable<MappedData> mergedMapData)
             {
                 CollectionItem = collectionItem;
                 MergedMapData = mergedMapData.ToList();
             }
 
-            public IMerged<TCoreCollectionItem> CollectionItem { get; }
+            public IMergedMutable<TCoreCollectionItem> CollectionItem { get; }
 
             public List<MappedData> MergedMapData { get; }
         }

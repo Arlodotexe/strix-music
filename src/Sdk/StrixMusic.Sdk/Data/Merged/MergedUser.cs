@@ -16,10 +16,11 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <remarks>
     /// Users are not actually merged.
     /// </remarks>
-    public class MergedUser : IUser, IMerged<ICoreUser>
+    public class MergedUser : IUser
     {
         private readonly ICoreUser _user;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageMap;
+        private readonly IReadOnlyList<ICoreImageCollection> _sources;
 
         /// <summary>
         /// Creates a new instance of <see cref="MergedUser"/>.
@@ -28,14 +29,24 @@ namespace StrixMusic.Sdk.Data.Merged
         public MergedUser(ICoreUser user)
         {
             _user = user ?? ThrowHelper.ThrowArgumentNullException<ICoreUser>(nameof(user));
-            Sources = _user.IntoList();
-            SourceCores = _user.SourceCore.IntoList();
+            
+            SourceCore = _user.SourceCore;
 
-            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
             Library = new MergedLibrary(_user.Library.IntoList());
+
+            // For image collection.
+            _sources = _user.IntoList();
+            SourceCores = _user.SourceCore.IntoList();
+            _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
 
             AttachEvents();
         }
+
+        /// <inheritdoc />
+        public ICore? SourceCore { get; set; }
+
+        /// <inheritdoc />
+        public ICoreUser? Source { get; set; }
 
         /// <inheritdoc />
         public event EventHandler<string>? DisplayNameChanged
@@ -197,21 +208,9 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreUserProfile> ISdkMember<ICoreUserProfile>.Sources => Sources;
-
-        /// <inheritdoc />
-        IReadOnlyList<ICoreUser> ISdkMember<ICoreUser>.Sources => Sources;
-
-        /// <inheritdoc />
-        IReadOnlyList<ICoreUser> IMerged<ICoreUser>.Sources => Sources;
-
-        /// <inheritdoc cref="ISdkMember{T}.Sources" />
-        public IReadOnlyList<ICoreUser> Sources { get; }
-
-        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
@@ -230,22 +229,10 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public bool Equals(ICoreUser other)
+        public bool Equals(ICoreImageCollection other)
         {
-            // We don't merge these.
+            // Users are never merged.
             return false;
-        }
-
-        /// <inheritdoc />
-        public void AddSource(ICoreUser itemToMerge)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public void RemoveSource(ICoreUser itemToRemove)
-        {
-            throw new NotSupportedException();
         }
     }
 }

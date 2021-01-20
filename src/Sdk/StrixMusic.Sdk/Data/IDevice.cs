@@ -6,8 +6,18 @@ namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="IDeviceBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface IDevice : IDeviceBase, ISdkMember<ICoreDevice>
+    public interface IDevice : IDeviceBase, ISdkMember
     {
+        /// <summary>
+        /// The core that created this device, if any.
+        /// </summary>
+        ICore? SourceCore { get; }
+
+        /// <summary>
+        /// The original <see cref="ICoreDevice"/> implementation, if any.
+        /// </summary>
+        ICoreDevice? Source { get; }
+
         /// <summary>
         /// Tracks that have been queued to play next after the current track. Once this queue is exhausted, the next track in the <see cref="IDeviceBase.PlaybackContext"/> will play.
         /// </summary>

@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// Merges multiple inputted <see cref="ICore"/>s into a single core.
     /// </summary>
-    public class MergedCore : IAppCore, IMerged<ICore>
+    public class MergedCore : IAppCore
     {
         private readonly List<ICore> _sources;
 
@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.Data.Merged
             SourceCores = _sources.Select(x => x.SourceCore).ToList();
             Pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull());
             RecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed));
-            Devices = new SynchronizedObservableCollection<IDevice>(_sources.SelectMany(x => x.Devices, (core, device) => new MergedDevice(device)));
+            Devices = new SynchronizedObservableCollection<IDevice>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceProxy(device)));
 
             AttachEvents();
         }
@@ -54,7 +54,7 @@ namespace StrixMusic.Sdk.Data.Merged
             {
                 if (item is ICoreDevice device)
                 {
-                    Devices.Add(new MergedDevice(device));
+                    Devices.Add(new DeviceProxy(device));
                 }
             }
 
@@ -62,7 +62,7 @@ namespace StrixMusic.Sdk.Data.Merged
             {
                 if (item is ICoreDevice device)
                 {
-                    var deviceToRemove = Devices.FirstOrDefault(x => x.Id == device.Id && x.Sources.Any(coreDevice => coreDevice.SourceCore == device.SourceCore));
+                    var deviceToRemove = Devices.FirstOrDefault(x => x.Id == device.Id && x.SourceCore?.InstanceId == device.SourceCore.InstanceId);
 
                     // Devices are not actually merged, so we don't need to check count / call .RemoveSource()
                     // If we found any matching devices, remove it entirely.
@@ -87,11 +87,8 @@ namespace StrixMusic.Sdk.Data.Merged
             ThrowHelper.ThrowNotSupportedException("Adding or removing sources are not supported. ViewModel must be reset.");
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICore> Sources => _sources;
-
-        /// <inheritdoc />
-        IReadOnlyList<ICore> ISdkMember<ICore>.Sources => Sources;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IDevice> Devices { get; }

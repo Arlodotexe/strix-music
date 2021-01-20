@@ -2,6 +2,7 @@
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -11,6 +12,8 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class LibraryViewModel : PlayableCollectionGroupViewModel, ILibrary
     {
+        private readonly ILibrary _library;
+
         /// <summary>
         /// Creates a new instance of the <see cref="LibraryViewModel"/> class.
         /// </summary>
@@ -18,9 +21,13 @@ namespace StrixMusic.Sdk.ViewModels
         public LibraryViewModel(ILibrary library)
             : base(library)
         {
+            _library = library;
         }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreLibrary> ISdkMember<ICoreLibrary>.Sources => this.GetSources<ICoreLibrary>();
+        IReadOnlyList<ICoreLibrary> IMerged<ICoreLibrary>.Sources => this.GetSources<ICoreLibrary>();
+
+        /// <inheritdoc />
+        public bool Equals(ICoreLibrary other) => _library.Equals(other);
     }
 }

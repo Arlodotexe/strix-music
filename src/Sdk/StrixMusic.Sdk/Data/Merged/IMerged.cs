@@ -12,20 +12,13 @@ namespace StrixMusic.Sdk.Data.Merged
         where T : ICoreMember
     {
         /// <summary>
-        /// Adds a new source to this merged item.
-        /// </summary>
-        /// <param name="itemToMerge">The source to remove.</param>
-        void AddSource(T itemToMerge);
-
-        /// <summary>
-        /// Removes a source from the merged collection.
-        /// </summary>
-        /// <param name="itemToRemove">The source to remove.</param>
-        void RemoveSource(T itemToRemove);
-
-        /// <summary>
         /// The sources that make up this merged item.
         /// </summary>
         IReadOnlyList<T> Sources { get; }
+
+        /// <summary>
+        /// The source cores which created the parent.
+        /// </summary>
+        IReadOnlyList<ICore> SourceCores { get; }
     }
 }

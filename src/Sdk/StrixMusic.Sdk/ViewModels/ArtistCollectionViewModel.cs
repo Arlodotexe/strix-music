@@ -10,6 +10,7 @@ using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -265,22 +266,22 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
 
-        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <summary>
         /// The sources that were merged to form this member.
         /// </summary>
-        public IReadOnlyList<ICoreArtistCollection> Sources => this.GetSources<ICoreArtistCollection>();
+        public IReadOnlyList<ICoreArtistCollection> Sources => _collection.GetSources<ICoreArtistCollection>();
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => Sources;
+        IReadOnlyList<ICoreArtistCollection> IMerged<ICoreArtistCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
+        IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<IImage> Images { get; }
@@ -352,5 +353,14 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand PauseAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollectionItem other) => _collection.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other) => _collection.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollection other) => _collection.Equals(other);
     }
 }

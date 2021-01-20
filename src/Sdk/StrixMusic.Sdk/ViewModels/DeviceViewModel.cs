@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -30,7 +27,8 @@ namespace StrixMusic.Sdk.ViewModels
             if (Model.NowPlaying != null)
                 _nowPlaying = new TrackViewModel(Model.NowPlaying);
 
-            SourceCores = device.GetSourceCores().Select(MainViewModel.GetLoadedCore).ToList();
+            if (device.SourceCore != null)
+                SourceCore = MainViewModel.GetLoadedCore(device.SourceCore);
 
             if (Model.PlaybackQueue != null)
                 PlaybackQueue = new TrackCollectionViewModel(Model.PlaybackQueue);
@@ -89,13 +87,13 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Device_PlaybackContextChanged(object sender, IPlayable e) => OnPropertyChanged(nameof(PlaybackContext));
 
+        private void Device_IsActiveChanged(object sender, bool e) => OnPropertyChanged(nameof(IsActive));
+
         private void Device_NowPlayingChanged(object sender, ITrack e)
         {
             OnPropertyChanged(nameof(NowPlaying));
             _nowPlaying = new TrackViewModel(e);
         }
-
-        private void Device_IsActiveChanged(object sender, bool e) => OnPropertyChanged(nameof(IsActive));
 
         /// <summary>
         /// The wrapped model for this <see cref="DeviceViewModel"/>.
@@ -103,15 +101,10 @@ namespace StrixMusic.Sdk.ViewModels
         internal IDevice Model { get; set; }
 
         /// <inheritdoc />
-        public IReadOnlyList<ICore> SourceCores { get; }
-
-        /// <summary>
-        /// The I sources that form this member.
-        /// </summary>
-        public IReadOnlyList<ICoreDevice> Sources => this.GetSources();
+        public ICore? SourceCore { get; set; }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreDevice> ISdkMember<ICoreDevice>.Sources => Sources;
+        public ICoreDevice? Source { get; set; }
 
         /// <inheritdoc />
         public string Id => Model.Id;

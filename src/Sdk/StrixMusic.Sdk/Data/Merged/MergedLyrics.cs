@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A concrete class that converts a <see cref="ICoreLyrics"/> to a <see cref="ILyrics"/>.
     /// </summary>
-    public class MergedLyrics : ILyrics, IMerged<ICoreLyrics>
+    public class MergedLyrics : ILyrics, IMergedMutable<ICoreLyrics>
     {
         private readonly ICoreLyrics _source;
 
@@ -35,22 +35,19 @@ namespace StrixMusic.Sdk.Data.Merged
         public IReadOnlyList<ICore> SourceCores => _source.SourceCore.IntoList();
 
         /// <inheritdoc />
-        public void AddSource(ICoreLyrics itemToMerge)
+        void IMergedMutable<ICoreLyrics>.AddSource(ICoreLyrics itemToMerge)
         {
             ThrowHelper.ThrowNotSupportedException($"Merging lyrics from multiple sources not yet supported.");
         }
 
         /// <inheritdoc />
-        public void RemoveSource(ICoreLyrics itemToRemove)
+        void IMergedMutable<ICoreLyrics>.RemoveSource(ICoreLyrics itemToRemove)
         {
             ThrowHelper.ThrowNotSupportedException($"Merging lyrics from multiple sources not yet supported.");
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICoreLyrics> Sources { get; }
-
-        /// <inheritdoc />
-        IReadOnlyList<ICoreLyrics> ISdkMember<ICoreLyrics>.Sources => Sources;
 
         /// <inheritdoc />
         public ITrack Track { get; }

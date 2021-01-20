@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 
 namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="IAlbumCollectionBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
     [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
-    public interface IAlbumCollection : IAlbumCollectionBase, IAlbumCollectionItem, IImageCollection, ISdkMember<ICoreAlbumCollection>
+    public interface IAlbumCollection : IAlbumCollectionBase, IAlbumCollectionItem, IImageCollection, ISdkMember, IMerged<ICoreAlbumCollection>
     {
         /// <summary>
         /// Gets a requested number of <see cref="IAlbumCollectionItemBase"/>s starting at the given offset in the backend.

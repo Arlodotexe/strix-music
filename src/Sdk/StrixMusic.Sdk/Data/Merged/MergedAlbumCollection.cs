@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
@@ -13,7 +14,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// Merged multiple <see cref="ICoreAlbumCollection"/> into a single <see cref="IAlbumCollection"/>
     /// </summary>
-    public class MergedAlbumCollection : IAlbumCollection, IMerged<ICoreAlbumCollection>
+    public class MergedAlbumCollection : IAlbumCollection, IMergedMutable<ICoreAlbumCollection>, IMergedMutable<ICoreAlbumCollectionItem>
     {
         private readonly List<ICoreAlbumCollection> _sources;
         private readonly List<ICore> _sourceCores;
@@ -142,20 +143,20 @@ namespace StrixMusic.Sdk.Data.Merged
             AlbumItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICoreAlbumCollection> Sources => _sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollectionItem> ISdkMember<ICoreAlbumCollectionItem>.Sources => Sources;
+        IReadOnlyList<ICoreAlbumCollectionItem> IMerged<ICoreAlbumCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollection> ISdkMember<ICoreAlbumCollection>.Sources => Sources;
+        IReadOnlyList<ICoreAlbumCollection> IMerged<ICoreAlbumCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
         public string Id => _preferredSource.Id;
@@ -254,31 +255,57 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public void AddSource(ICoreAlbumCollection itemToMerge)
+        void IMergedMutable<ICoreAlbumCollection>.AddSource(ICoreAlbumCollection itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
             _sources.Add(itemToMerge);
             _sourceCores.Remove(itemToMerge.SourceCore);
-            _imageMap.AddSource(itemToMerge);
-            _albumMap.AddSource(itemToMerge);
+            _imageMap.Cast<IMergedMutable<ICoreImageCollection>>().AddSource(itemToMerge);
+            _albumMap.Cast<IMergedMutable<ICoreAlbumCollection>>().AddSource(itemToMerge);
         }
 
         /// <inheritdoc />
-        public void RemoveSource(ICoreAlbumCollection itemToRemove)
+        void IMergedMutable<ICoreAlbumCollection>.RemoveSource(ICoreAlbumCollection itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             _sources.Remove(itemToRemove);
             _sourceCores.Remove(itemToRemove.SourceCore);
-            _imageMap.RemoveSource(itemToRemove);
-            _albumMap.RemoveSource(itemToRemove);
+            _imageMap.Cast<IMergedMutable<ICoreImageCollection>>().RemoveSource(itemToRemove);
+            _albumMap.Cast<IMergedMutable<ICoreAlbumCollection>>().RemoveSource(itemToRemove);
         }
 
         /// <inheritdoc />
-        public bool Equals(ICoreAlbumCollection other)
+        void IMergedMutable<ICoreAlbumCollectionItem>.AddSource(ICoreAlbumCollectionItem itemToMerge)
+        {
+            if (itemToMerge is ICoreAlbumCollection albumCol)
+                ((IMergedMutable<ICoreAlbumCollection>)this).AddSource(albumCol);
+        }
+
+        /// <inheritdoc />
+        void IMergedMutable<ICoreAlbumCollectionItem>.RemoveSource(ICoreAlbumCollectionItem itemToMerge)
+        {
+            if (itemToMerge is ICoreAlbumCollection albumCol)
+                ((IMergedMutable<ICoreAlbumCollection>)this).AddSource(albumCol);
+        }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollection? other)
         {
             return other?.Name.Equals(Name, StringComparison.InvariantCulture) ?? false;
+        }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollectionItem other)
+        {
+            return Equals(other as ICoreAlbumCollection);
+        }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other)
+        {
+            return Equals(other as ICoreAlbumCollection);
         }
     }
 }

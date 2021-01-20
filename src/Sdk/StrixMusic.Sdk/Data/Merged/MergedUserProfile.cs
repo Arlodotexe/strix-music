@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <remarks>
     /// User profiles are not actually merged (yet).
     /// </remarks>
-    public class MergedUserProfile : IUserProfile, IMerged<ICoreUserProfile>
+    public class MergedUserProfile : IUserProfile
     {
         private readonly ICoreUserProfile _userProfile;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageMap;
@@ -28,6 +28,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public MergedUserProfile(ICoreUserProfile userProfile)
         {
             _userProfile = userProfile ?? ThrowHelper.ThrowArgumentNullException<ICoreUserProfile>(nameof(userProfile));
+
             Sources = _userProfile.IntoList();
             SourceCores = _userProfile.SourceCore.IntoList();
 
@@ -196,18 +197,9 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+        public IReadOnlyList<ICoreImageCollection> Sources { get; }
 
-        /// <inheritdoc />
-        IReadOnlyList<ICoreUserProfile> ISdkMember<ICoreUserProfile>.Sources => Sources;
-
-        /// <inheritdoc />
-        IReadOnlyList<ICoreUserProfile> IMerged<ICoreUserProfile>.Sources => Sources;
-
-        /// <inheritdoc cref="ISdkMember{T}.Sources" />
-        public IReadOnlyList<ICoreUserProfile> Sources { get; }
-
-        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
@@ -223,22 +215,10 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public bool Equals(ICoreUserProfile other)
+        public bool Equals(ICoreImageCollection other)
         {
-            // We don't merge these.
+            // User profiles are never merged.
             return false;
-        }
-
-        /// <inheritdoc />
-        public void AddSource(ICoreUserProfile itemToMerge)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public void RemoveSource(ICoreUserProfile itemToRemove)
-        {
-            throw new NotSupportedException();
-        }
+        } 
     }
 }

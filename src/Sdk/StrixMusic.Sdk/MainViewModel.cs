@@ -91,7 +91,7 @@ namespace StrixMusic.Sdk
 
             Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_sources.Select(x => x.Discoverables)));
 
-            Devices = new SynchronizedObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new MergedDevice(device))));
+            Devices = new SynchronizedObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new DeviceProxy(device))));
 
             AttachEvents();
         }
@@ -151,7 +151,7 @@ namespace StrixMusic.Sdk
             Users.Add(new UserViewModel(new MergedUser(core.User)));
 
             foreach (var device in core.Devices)
-                _devices.Add(new MergedDevice(device));
+                _devices.Add(new DeviceProxy(device));
 
             core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
             cancellationToken.Dispose();
@@ -271,16 +271,19 @@ namespace StrixMusic.Sdk
         public ObservableCollection<TrackViewModel> PlaybackQueue { get; }
 
         /// <inheritdoc />
-        public IReadOnlyList<ICore> SourceCores => _sources;
-
-        /// <inheritdoc />
-        IReadOnlyList<ICore> ISdkMember<ICore>.Sources => _sources;
-
-        /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
             await Task.CompletedTask;
             DetachEvents();
         }
+
+        /// <inheritdoc />
+        public bool Equals(ICore other) => false;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICore> IMerged<ICore>.Sources => _sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICore> IMerged<ICore>.SourceCores => _sources;
     }
 }

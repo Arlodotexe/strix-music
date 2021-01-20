@@ -5,14 +5,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -21,6 +25,8 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class TrackViewModel : ObservableObject, ITrack, IArtistCollectionViewModel, IImageCollectionViewModel
     {
+        private readonly IPlaybackHandlerService _playbackHandler;
+
         /// <summary>
         /// Creates a bindable wrapper around an <see cref="ITrack"/>.
         /// </summary>
@@ -30,6 +36,8 @@ namespace StrixMusic.Sdk.ViewModels
             Model = track;
 
             SourceCores = Model.GetSourceCores<ICoreTrack>().Select(MainViewModel.GetLoadedCore).ToList();
+
+            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             if (Model.Album != null)
                 Album = new AlbumViewModel(Model.Album);
@@ -278,7 +286,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         internal ITrack Model { get; }
 
-        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <summary>
@@ -287,19 +295,19 @@ namespace StrixMusic.Sdk.ViewModels
         public IReadOnlyList<ICoreTrack> Sources => Model.GetSources<ICoreTrack>();
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreGenreCollection> ISdkMember<ICoreGenreCollection>.Sources => Sources;
+        IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => Sources;
+        IReadOnlyList<ICoreArtistCollection> IMerged<ICoreArtistCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
+        IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreTrack> ISdkMember<ICoreTrack>.Sources => Sources;
+        IReadOnlyList<ICoreTrack> IMerged<ICoreTrack>.Sources => Sources;
 
         /// <summary>
         /// The artists for this track.
@@ -436,7 +444,39 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PauseAsync() => Model.PauseAsync();
 
         /// <inheritdoc />
-        public Task PlayAsync() => Model.PlayAsync();
+        public async Task PlayAsync()
+        {
+            var activeDevice = MainViewModel.Singleton?.ActiveDevice;
+
+            if (activeDevice?.Type == DeviceType.Remote)
+            {
+                await Model.PlayAsync();
+                return;
+            }
+
+            if (_playbackHandler.PlaybackState == PlaybackState.Paused)
+            {
+                await _playbackHandler.ResumeAsync();
+            }
+            else
+            {
+                await _playbackHandler.PauseAsync();
+
+                // The actual playback
+                _playbackHandler.ClearNext();
+                _playbackHandler.ClearPrevious();
+
+                // TODO
+            }
+
+            if (MainViewModel.Singleton?.LocalDevice?.Model is StrixDevice device)
+            {
+                device.SetPlaybackData(Model, Model);
+            }
+
+            // Play the first thing in the queue.
+            await _playbackHandler.PlayFromNext(0);
+        }
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => Model.ChangeNameAsync(name);
@@ -521,5 +561,20 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollectionItem other) => Model.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other) => Model.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollection other) => Model.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreGenreCollection other) => Model.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreTrack other) => Model.Equals(other);
     }
 }

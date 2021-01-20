@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
@@ -13,7 +14,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A concrete class that merged multiple <see cref="ICoreArtistCollection"/>s.
     /// </summary>
-    public class MergedTrackCollection : ITrackCollection, IMerged<ICoreTrackCollection>
+    public class MergedTrackCollection : ITrackCollection, IMergedMutable<ICoreTrackCollection>
     {
         private readonly List<ICoreTrackCollection> _sources;
         private readonly ICoreTrackCollection _preferredSource;
@@ -247,14 +248,11 @@ namespace StrixMusic.Sdk.Data.Merged
             return _preferredSource.RemoveImageAsync(index);
         }
 
-        /// <inheritdoc cref="ISdkMember{T}.Sources" />
+        /// <inheritdoc cref="IMerged{T}.Sources" />
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => _sources;
-
-        /// <inheritdoc />
-        IReadOnlyList<ICoreTrackCollection> ISdkMember<ICoreTrackCollection>.Sources => _sources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => _sources;
@@ -284,33 +282,36 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public void AddSource(ICoreTrackCollection itemToMerge)
+        void IMergedMutable<ICoreTrackCollection>.AddSource(ICoreTrackCollection itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
             _sources.Add(itemToMerge);
             _sourceCores.Add(itemToMerge.SourceCore);
 
-            _trackMap.AddSource(itemToMerge);
-            _imageMap.AddSource(itemToMerge);
+            _trackMap.Cast<IMergedMutable<ICoreTrackCollection>>().AddSource(itemToMerge);
+            _imageMap.Cast<IMergedMutable<ICoreImageCollection>>().AddSource(itemToMerge);
         }
 
         /// <inheritdoc />
-        public void RemoveSource(ICoreTrackCollection itemToRemove)
+        void IMergedMutable<ICoreTrackCollection>.RemoveSource(ICoreTrackCollection itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             _sources.Remove(itemToRemove);
             _sourceCores.Remove(itemToRemove.SourceCore);
 
-            _trackMap.RemoveSource(itemToRemove);
-            _imageMap.RemoveSource(itemToRemove);
+            _trackMap.Cast<IMergedMutable<ICoreTrackCollection>>().RemoveSource(itemToRemove);
+            _imageMap.Cast<IMergedMutable<ICoreImageCollection>>().RemoveSource(itemToRemove);
         }
 
         /// <inheritdoc />
-        public bool Equals(ICoreTrackCollection other)
+        public bool Equals(ICoreTrackCollection? other)
         {
             return other?.Name == Name;
         }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other) => Equals(other as ICoreTrackCollection);
     }
 }

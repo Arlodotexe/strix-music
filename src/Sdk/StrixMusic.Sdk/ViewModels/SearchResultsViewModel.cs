@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -10,15 +11,21 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class SearchResultsViewModel : PlayableCollectionGroupViewModel, ISearchResults
     {
+        private readonly ISearchResults _searchResults;
+
         /// <summary>
         /// Bindable wrapper for <see cref="ISearchResults"/>.
         /// </summary>
         public SearchResultsViewModel(ISearchResults searchResults)
             : base(searchResults)
         {
+            _searchResults = searchResults;
         }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreSearchResults> ISdkMember<ICoreSearchResults>.Sources => this.GetSources<ICoreSearchResults>();
+        IReadOnlyList<ICoreSearchResults> IMerged<ICoreSearchResults>.Sources => this.GetSources<ICoreSearchResults>();
+
+        /// <inheritdoc />
+        public bool Equals(ICoreSearchResults other) => _searchResults.Equals(other);
     }
 }
