@@ -41,6 +41,9 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
+            PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
+            PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
+
             AttachEvents();
         }
 
@@ -342,5 +345,11 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PlayAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PauseAsyncCommand { get; }
     }
 }

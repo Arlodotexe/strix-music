@@ -44,7 +44,7 @@ namespace StrixMusic.Sdk.ViewModels
             }
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
-            PauseAsyncCommand = new AsyncRelayCommand(PlayAsync);
+            PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);

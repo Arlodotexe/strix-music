@@ -35,6 +35,9 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
+            PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
+            PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
+
             using (Threading.PrimaryContext)
             {
                 Images = new SynchronizedObservableCollection<IImage>();
@@ -343,5 +346,11 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PlayAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PauseAsyncCommand { get; }
     }
 }
