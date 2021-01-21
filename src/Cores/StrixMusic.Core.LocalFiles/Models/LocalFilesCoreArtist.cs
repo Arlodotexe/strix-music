@@ -26,7 +26,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         public LocalFilesCoreArtist(ICore sourceCore, ArtistMetadata artistMetadata)
         {
             SourceCore = sourceCore;
-
             _artistMetadata = artistMetadata;
         }
 
@@ -70,7 +69,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public string Id => _artistMetadata.Id;
 
         /// <inheritdoc/>
-        public int TotalAlbumItemsCount => throw new NotImplementedException();
+        public int TotalAlbumItemsCount => 0;
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 0;
@@ -82,19 +81,20 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public Uri? Url => _artistMetadata.Url;
+        public Uri? Url => _artistMetadata.Url ?? new Uri("http://google.com");
 
         /// <inheritdoc/>
         public string? Name => _artistMetadata.Name;
 
+        //This is incorrect value.
         /// <inheritdoc/>
-        public string Description => throw new NotImplementedException();
+        public string Description => _artistMetadata.Name ?? "No Description";
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => PlaybackState.None;
 
         /// <inheritdoc/>
-        public TimeSpan Duration => throw new NotImplementedException();
+        public TimeSpan Duration => new TimeSpan(0,0,0);
 
         /// <inheritdoc />
         public DateTime? LastPlayed { get; }

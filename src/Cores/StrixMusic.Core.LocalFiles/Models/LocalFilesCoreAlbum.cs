@@ -24,6 +24,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             SourceCore = sourceCore;
             _albumMetadata = albumMetadata;
+            TotalArtistItemsCount = _albumMetadata.TotalTracksCount ?? 0;
         }
 
         /// <inheritdoc/>
@@ -69,25 +70,25 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public string Id => throw new NotImplementedException();
+        public string Id => _albumMetadata.Id;
 
         /// <inheritdoc/>
-        public Uri? Url => throw new NotImplementedException();
+        public Uri? Url => new Uri("http://google.com");
 
         /// <inheritdoc/>
-        public string Name => throw new NotImplementedException();
+        public string Name => _albumMetadata.Title ?? "No Title";
 
         /// <inheritdoc/>
-        public DateTime? DatePublished => throw new NotImplementedException();
+        public DateTime? DatePublished => _albumMetadata.DatePublished;
 
         /// <inheritdoc/>
-        public string? Description => throw new NotImplementedException();
+        public string? Description => _albumMetadata.Description;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => PlaybackState.None;
 
         /// <inheritdoc/>
-        public TimeSpan Duration { get; } = TimeSpan.Zero;
+        public TimeSpan Duration => _albumMetadata.Duration ?? new TimeSpan(0, 0, 0);
 
         /// <inheritdoc />
         public DateTime? LastPlayed { get; }
@@ -108,10 +109,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => false;
+        public bool IsPlayAsyncSupported => true;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => false;
+        public bool IsPauseAsyncSupported => true;
 
         /// <inheritdoc/>
         public bool IsChangeNameAsyncSupported => false;

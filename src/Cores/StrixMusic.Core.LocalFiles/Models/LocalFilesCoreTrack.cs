@@ -113,10 +113,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public Uri? LocalTrackPath => _trackMetadata.Source;
 
         /// <inheritdoc/>
-        public Uri? Url => new Uri($"https://musicbrainz.org/track/{Id}");
+        public Uri? Url => _trackMetadata.Url ?? new Uri("http://google.com");
 
         /// <inheritdoc/>
-        public string Name => _trackMetadata.Title;
+        public string Name => _trackMetadata.Title ?? "No Title";
 
         /// <inheritdoc/>
         public string? Description => _trackMetadata.Description;
@@ -125,7 +125,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public PlaybackState PlaybackState => PlaybackState.None;
 
         /// <inheritdoc/>
-        public TimeSpan Duration => (TimeSpan)_trackMetadata.Duration;
+        public TimeSpan Duration => _trackMetadata.Duration ?? new TimeSpan(0, 0, 0);
 
         /// <inheritdoc />
         public DateTime? LastPlayed { get; }
@@ -155,7 +155,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public bool IsPlayAsyncSupported => true;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => false;
+        public bool IsPauseAsyncSupported => true;
 
         /// <inheritdoc/>
         public bool IsChangeNameAsyncSupported => false;
