@@ -8,7 +8,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A concrete class that merges multiple <see cref="ILibraryBase"/>.
     /// </summary>
-    public class MergedLibrary : MergedPlayableCollectionGroupBase<ICoreLibrary>, ILibrary, IMerged<ICoreLibrary>
+    public class MergedLibrary : MergedPlayableCollectionGroupBase<ICoreLibrary>, ILibrary
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedLibrary"/> class.
@@ -19,11 +19,11 @@ namespace StrixMusic.Sdk.Data.Merged
         {
         }
 
-        /// <inheritdoc />
-        IReadOnlyList<ICoreLibrary> ISdkMember<ICoreLibrary>.Sources => StoredSources;
+        /// <inheritdoc cref="IMerged{T}.Sources"/>
+        IReadOnlyList<ICoreLibrary> IMerged<ICoreLibrary>.Sources => StoredSources;
 
         /// <inheritdoc cref="Equals(object?)" />
-        public bool Equals(ICoreLibrary? other)
+        public override bool Equals(ICoreLibrary? other)
         {
             return other?.Name == Name;
         }

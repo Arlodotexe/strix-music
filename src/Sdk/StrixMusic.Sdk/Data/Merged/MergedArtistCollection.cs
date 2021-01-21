@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
@@ -13,7 +14,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A concrete class that merged multiple <see cref="ICoreArtistCollection"/>s.
     /// </summary>
-    public class MergedArtistCollection : IArtistCollection, IMerged<ICoreArtistCollection>
+    public class MergedArtistCollection : IArtistCollection, IMergedMutable<ICoreArtistCollection>
     {
         private readonly List<ICoreArtistCollection> _sources;
         private readonly List<ICore> _sourceCores;
@@ -255,17 +256,14 @@ namespace StrixMusic.Sdk.Data.Merged
             return _preferredSource.RemoveImageAsync(index);
         }
 
-        /// <inheritdoc cref="ISdkMember{T}.Sources" />
+        /// <inheritdoc cref="IMerged{T}.Sources" />
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => _sources;
+        IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => _sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => _sources;
-
-        /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => _sources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreArtistCollection> IMerged<ICoreArtistCollection>.Sources => _sources;
@@ -295,33 +293,45 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public void AddSource(ICoreArtistCollection itemToMerge)
+        void IMergedMutable<ICoreArtistCollection>.AddSource(ICoreArtistCollection itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
             _sources.Add(itemToMerge);
             _sourceCores.Add(itemToMerge.SourceCore);
 
-            _artistMap.AddSource(itemToMerge);
-            _imageMap.AddSource(itemToMerge);
+            _artistMap.Cast<IMergedMutable<ICoreArtistCollection>>().AddSource(itemToMerge);
+            _imageMap.Cast<IMergedMutable<ICoreImageCollection>>().AddSource(itemToMerge);
         }
 
         /// <inheritdoc />
-        public void RemoveSource(ICoreArtistCollection itemToRemove)
+        void IMergedMutable<ICoreArtistCollection>.RemoveSource(ICoreArtistCollection itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             _sources.Remove(itemToRemove);
             _sourceCores.Remove(itemToRemove.SourceCore);
 
-            _imageMap.RemoveSource(itemToRemove);
-            _artistMap.RemoveSource(itemToRemove);
+            _imageMap.Cast<IMergedMutable<ICoreImageCollection>>().RemoveSource(itemToRemove);
+            _artistMap.Cast<IMergedMutable<ICoreArtistCollection>>().RemoveSource(itemToRemove);
         }
 
         /// <inheritdoc />
-        public bool Equals(ICoreArtistCollection other)
+        public bool Equals(ICoreArtistCollection? other)
         {
             return other?.Name == Name;
+        }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollectionItem other)
+        {
+            return Equals(other as ICoreArtistCollection);
+        }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other)
+        {
+            return Equals(other as ICoreArtistCollection);
         }
     }
 }

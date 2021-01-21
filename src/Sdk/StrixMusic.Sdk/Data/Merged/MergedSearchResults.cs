@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A concrete class that merges multiple <see cref="ICoreSearchResults"/>.
     /// </summary>
-    public class MergedSearchResults : MergedPlayableCollectionGroupBase<ICoreSearchResults>, ISearchResults, IMerged<ICoreSearchResults>
+    public class MergedSearchResults : MergedPlayableCollectionGroupBase<ICoreSearchResults>, ISearchResults
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MergedSearchResults"/> class.
@@ -19,10 +19,10 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreSearchResults> ISdkMember<ICoreSearchResults>.Sources => StoredSources;
+        IReadOnlyList<ICoreSearchResults> IMerged<ICoreSearchResults>.Sources => StoredSources;
 
         /// <inheritdoc cref="Equals(object?)" />
-        public bool Equals(ICoreSearchResults? other)
+        public override bool Equals(ICoreSearchResults? other)
         {
             // TODO: Merge together based on query (post search refactor)
             // return other?.Name == Name;

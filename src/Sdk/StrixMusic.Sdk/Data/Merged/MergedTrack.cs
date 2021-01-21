@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A concrete class that merged multiple <see cref="ICoreTrack"/>s.
     /// </summary>
-    public class MergedTrack : ITrack, IMerged<ICoreTrack>
+    public class MergedTrack : ITrack, IMergedMutable<ICoreTrack>
     {
         private readonly ICoreTrack _preferredSource;
         private readonly List<ICoreTrack> _sources;
@@ -191,23 +191,23 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged;
 
-        /// <inheritdoc cref="ISdkMember{T}.SourceCores"/>
+        /// <inheritdoc cref="IMerged{T}.SourceCores"/>
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreTrack> ISdkMember<ICoreTrack>.Sources => Sources;
+        IReadOnlyList<ICoreTrack> IMerged<ICoreTrack>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreGenreCollection> ISdkMember<ICoreGenreCollection>.Sources => Sources;
+        IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => Sources;
+        IReadOnlyList<ICoreArtistCollection> IMerged<ICoreArtistCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
+        IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => Sources;
 
         /// <summary>
         /// The original sources for this merged item.
@@ -381,6 +381,18 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public Task RemoveArtistItemAsync(int index) => _preferredSource.RemoveArtistItemAsync(index);
 
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollectionItem other) => Equals(other as ICoreTrack);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other) => Equals(other as ICoreTrack);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollection other) => Equals(other as ICoreTrack);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreGenreCollection other) => Equals(other as ICoreTrack);
+
         /// <inheritdoc/>
         public override bool Equals(object? obj) => Equals(obj as ICoreTrack);
 
@@ -397,27 +409,27 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task RemoveImageAsync(int index) => _imageCollectionMap.RemoveAt(index);
 
         /// <inheritdoc />
-        public void AddSource(ICoreTrack itemToMerge)
+        void IMergedMutable<ICoreTrack>.AddSource(ICoreTrack itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
             _sources.Add(itemToMerge);
             _sourceCores.Add(itemToMerge.SourceCore);
 
-            _artistMap.AddSource(itemToMerge);
-            _imageCollectionMap.AddSource(itemToMerge);
+            _artistMap.Cast<IMergedMutable<ICoreArtistCollection>>().AddSource(itemToMerge);
+            _imageCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().AddSource(itemToMerge);
         }
 
         /// <inheritdoc />
-        public void RemoveSource(ICoreTrack itemToRemove)
+        void IMergedMutable<ICoreTrack>.RemoveSource(ICoreTrack itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
             
             _sources.Remove(itemToRemove);
             _sourceCores.Remove(itemToRemove.SourceCore);
 
-            _artistMap.RemoveSource(itemToRemove);
-            _imageCollectionMap.RemoveSource(itemToRemove);
+            _artistMap.Cast<IMergedMutable<ICoreArtistCollection>>().RemoveSource(itemToRemove);
+            _imageCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().RemoveSource(itemToRemove);
         }
 
         /// <inheritdoc />

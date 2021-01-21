@@ -11,6 +11,7 @@ using OwlCore.Events;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -244,7 +245,7 @@ namespace StrixMusic.Sdk.ViewModels
             }
         }
 
-        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <summary>
@@ -253,25 +254,25 @@ namespace StrixMusic.Sdk.ViewModels
         public IReadOnlyList<ICoreArtist> Sources => this.GetSources<ICoreArtist>();
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtist> ISdkMember<ICoreArtist>.Sources => Sources;
+        IReadOnlyList<ICoreArtist> IMerged<ICoreArtist>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreGenreCollection> ISdkMember<ICoreGenreCollection>.Sources => Sources;
+        IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreTrackCollection> ISdkMember<ICoreTrackCollection>.Sources => Sources;
+        IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollection> ISdkMember<ICoreAlbumCollection>.Sources => Sources;
+        IReadOnlyList<ICoreAlbumCollection> IMerged<ICoreAlbumCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollectionItem> ISdkMember<ICoreAlbumCollectionItem>.Sources => Sources;
+        IReadOnlyList<ICoreAlbumCollectionItem> IMerged<ICoreAlbumCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
+        IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
         public string Id => _artist.Id;
@@ -469,5 +470,26 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollectionItem other) => _artist.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollectionItem other) => _artist.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other) => _artist.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollection other) => _artist.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreTrackCollection other) => _artist.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreGenreCollection other) => _artist.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtist other) => _artist.Equals(other);
     }
 }

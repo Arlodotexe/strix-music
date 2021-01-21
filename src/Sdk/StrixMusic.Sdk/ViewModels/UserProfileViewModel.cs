@@ -10,7 +10,7 @@ using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.Data.Merged;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -20,6 +20,8 @@ namespace StrixMusic.Sdk.ViewModels
     public class UserProfileViewModel : ObservableObject, IUserProfile, IImageCollectionViewModel
     {
         private readonly IUserProfile _userProfile;
+        private readonly IReadOnlyList<ICoreImageCollection> _sources;
+        private readonly IReadOnlyList<ICore> _sourceCores;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserProfileViewModel"/> class.
@@ -29,7 +31,9 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
-            SourceCores = userProfile.GetSourceCores<ICoreUserProfile>().Select(MainViewModel.GetLoadedCore).ToList();
+            _sourceCores = userProfile.SourceCores.Select(MainViewModel.GetLoadedCore).ToList();
+            _sources = userProfile.Sources;
+
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
             using (Threading.PrimaryContext)
@@ -105,19 +109,11 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _userProfile.ImagesChanged -= value;
         }
 
-        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
-        public IReadOnlyList<ICore> SourceCores { get; }
-
-        /// <summary>
-        /// The merged sources for this model.
-        /// </summary>
-        public IReadOnlyList<ICoreUserProfile> Sources => _userProfile.GetSources<ICoreUserProfile>();
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
+        IReadOnlyList<ICore> IMerged<ICoreImageCollection>.SourceCores => _sourceCores;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreUserProfile> ISdkMember<ICoreUserProfile>.Sources => Sources;
-
-        /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;
 
         /// <inheritdoc />
         public string Id => _userProfile.Id;
@@ -189,22 +185,13 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeEmailAsync(string? email) => _userProfile.ChangeEmailAsync(email);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
-        {
-            return _userProfile.GetImagesAsync(limit, offset);
-        }
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _userProfile.GetImagesAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index)
-        {
-            return _userProfile.RemoveImageAsync(index);
-        }
+        public Task RemoveImageAsync(int index) => _userProfile.RemoveImageAsync(index);
 
         /// <inheritdoc />
-        public Task AddImageAsync(IImage image, int index)
-        {
-            return _userProfile.AddImageAsync(image, index);
-        }
+        public Task AddImageAsync(IImage image, int index) => _userProfile.AddImageAsync(image, index);
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
@@ -217,5 +204,11 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other)
+        {
+            return _userProfile.Equals(other);
+        }
     }
 }

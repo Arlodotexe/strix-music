@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// Merged multiple <see cref="ICoreImage"/> into a single <see cref="IImage"/>
     /// </summary>
-    public class MergedImage : IImage, IMerged<ICoreImage>
+    public class MergedImage : IImage, IMergedMutable<ICoreImage>
     {
         private readonly ICoreImage _preferredSource;
         private readonly List<ICoreImage> _sources;
@@ -39,14 +39,11 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICoreImage> Sources => _sources;
 
         /// <inheritdoc/>
-        IReadOnlyList<ICoreImage> ISdkMember<ICoreImage>.Sources => Sources;
-
-        /// <inheritdoc/>
-        public void AddSource(ICoreImage itemToMerge)
+        void IMergedMutable<ICoreImage>.AddSource(ICoreImage itemToMerge)
         {
             Guard.IsNotNull(itemToMerge, nameof(itemToMerge));
 
@@ -55,7 +52,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public void RemoveSource(ICoreImage itemToRemove)
+        void IMergedMutable<ICoreImage>.RemoveSource(ICoreImage itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 

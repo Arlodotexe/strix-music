@@ -10,6 +10,7 @@ using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -40,6 +41,9 @@ namespace StrixMusic.Sdk.ViewModels
 
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
+
+            PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
+            PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
 
             AttachEvents();
         }
@@ -284,20 +288,20 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task<bool> IsRemoveImageSupported(int index) => _collection.IsRemoveImageSupported(index);
 
-        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollection> ISdkMember<ICoreAlbumCollection>.Sources => _collection.GetSources<ICoreAlbumCollection>();
+        IReadOnlyList<ICoreAlbumCollection> IMerged<ICoreAlbumCollection>.Sources => _collection.GetSources<ICoreAlbumCollection>();
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollectionItem> ISdkMember<ICoreAlbumCollectionItem>.Sources => _collection.GetSources<ICoreAlbumCollectionItem>();
+        IReadOnlyList<ICoreAlbumCollectionItem> IMerged<ICoreAlbumCollectionItem>.Sources => _collection.GetSources<ICoreAlbumCollectionItem>();
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => _collection.GetSources<ICoreImageCollection>();
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _collection.GetSources<ICoreImageCollection>();
 
         /// <summary>
-        /// The sources for this I item.
+        /// The sources for this item.
         /// </summary>
         public IReadOnlyList<ICoreAlbumCollection> Sources => _collection.GetSources<ICoreAlbumCollection>();
 
@@ -342,5 +346,20 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PlayAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PauseAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollectionItem other) => _collection.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other) => _collection.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollection other) => _collection.Equals(other);
     }
 }

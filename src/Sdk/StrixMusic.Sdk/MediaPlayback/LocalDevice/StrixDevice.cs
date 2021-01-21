@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -104,12 +103,6 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public Task ChangeVolumeAsync(double volume) => _playbackHandler.ChangeVolumeAsync(volume);
 
         /// <inheritdoc />
-        public IReadOnlyList<ICore> SourceCores { get; } = new List<ICore>();
-
-        /// <inheritdoc />
-        IReadOnlyList<ICoreDevice> ISdkMember<ICoreDevice>.Sources { get; } = new List<ICoreDevice>();
-
-        /// <inheritdoc />
         public string Id => "609EBD5A-EBA1-4DDE-9828-C72B096D35DF";
 
         /// <inheritdoc />
@@ -117,6 +110,12 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
 
         /// <inheritdoc />
         public bool IsActive { get; private set; }
+
+        /// <inheritdoc />
+        public ICore? SourceCore { get; }
+
+        /// <inheritdoc />
+        public ICoreDevice? Source { get; }
 
         /// <inheritdoc />
         public ITrackCollection? PlaybackQueue { get; }

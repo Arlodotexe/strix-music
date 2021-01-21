@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 
 namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="IPlayableCollectionGroupChildrenBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
-    public interface IPlayableCollectionGroupChildren : IPlayableCollectionGroupChildrenBase, ISdkMember<ICorePlayableCollectionGroupChildren>
+    public interface IPlayableCollectionGroupChildren : IPlayableCollectionGroupChildrenBase, ISdkMember, IMerged<ICorePlayableCollectionGroupChildren>
     {
         /// <summary>
         /// Gets a requested number of <see cref="IPlayableCollectionGroupBase"/>s starting at the given offset in the backend.

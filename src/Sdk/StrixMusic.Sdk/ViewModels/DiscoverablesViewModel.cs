@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -10,6 +11,8 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class DiscoverablesViewModel : PlayableCollectionGroupViewModel, IDiscoverables
     {
+        private readonly IDiscoverables _discoverables;
+
         /// <summary>
         /// Creates a new instance of the <see cref="DiscoverablesViewModel"/> class.
         /// </summary>
@@ -17,9 +20,13 @@ namespace StrixMusic.Sdk.ViewModels
         public DiscoverablesViewModel(IDiscoverables discoverables)
             : base(discoverables)
         {
+            _discoverables = discoverables;
         }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreDiscoverables> ISdkMember<ICoreDiscoverables>.Sources => this.GetSources<ICoreDiscoverables>();
+        IReadOnlyList<ICoreDiscoverables> IMerged<ICoreDiscoverables>.Sources => this.GetSources<ICoreDiscoverables>();
+
+        /// <inheritdoc />
+        public bool Equals(ICoreDiscoverables other) => _discoverables.Equals(other);
     }
 }

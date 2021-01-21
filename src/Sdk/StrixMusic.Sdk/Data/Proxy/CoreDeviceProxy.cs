@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
@@ -9,23 +8,19 @@ using StrixMusic.Sdk.MediaPlayback;
 namespace StrixMusic.Sdk.Data.Merged
 {
     /// <summary>
-    /// Translates a <see cref="ICoreDevice"/> to a <see cref="IDevice"/>.
+    /// Translates a <see cref="ICoreDevice"/> to a <see cref="IDevice"/>. Does not provide merging.
     /// </summary>
-    public class MergedDevice : IDevice
+    public class CoreDeviceProxy : IDevice
     {
         private readonly ICoreDevice _source;
-        private readonly IReadOnlyList<ICoreDevice> _sources;
 
         /// <summary>
-        /// Creates a new instance of <see cref="MergedDevice"/>.
+        /// Creates a new instance of <see cref="CoreDeviceProxy"/>.
         /// </summary>
         /// <param name="source"></param>
-        public MergedDevice(ICoreDevice source)
+        public CoreDeviceProxy(ICoreDevice source)
         {
             _source = source;
-            _sources = _source.IntoList();
-            
-            SourceCores = _source.SourceCore.IntoList();
 
             Name = _source.Name;
             IsActive = _source.IsActive;
@@ -209,10 +204,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task ChangeVolumeAsync(double volume) => _source.ChangeVolumeAsync(volume);
 
         /// <inheritdoc />
-        public IReadOnlyList<ICore> SourceCores { get; }
+        public ICore? SourceCore => _source.SourceCore;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreDevice> ISdkMember<ICoreDevice>.Sources => _sources;
+        public ICoreDevice? Source => _source;
 
         /// <inheritdoc />
         public ITrackCollection? PlaybackQueue { get; }

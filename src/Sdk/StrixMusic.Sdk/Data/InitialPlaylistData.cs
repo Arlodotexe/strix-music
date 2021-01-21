@@ -6,6 +6,7 @@ using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data
@@ -212,23 +213,23 @@ namespace StrixMusic.Sdk.Data
             return Task.CompletedTask;
         }
 
-        /// <inheritdoc cref="ISdkMember{T}.SourceCores" />
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; } = new List<ICore>();
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => _sources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreTrackCollection> ISdkMember<ICoreTrackCollection>.Sources => _sources;
+        IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => _sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreGenreCollection> ISdkMember<ICoreGenreCollection>.Sources => _sources;
+        IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => _sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlaylistCollectionItem> ISdkMember<ICorePlaylistCollectionItem>.Sources => _sources;
+        IReadOnlyList<ICorePlaylistCollectionItem> IMerged<ICorePlaylistCollectionItem>.Sources => _sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlaylist> ISdkMember<ICorePlaylist>.Sources => _sources;
+        IReadOnlyList<ICorePlaylist> IMerged<ICorePlaylist>.Sources => _sources;
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
@@ -241,5 +242,20 @@ namespace StrixMusic.Sdk.Data
         {
             return Task.FromResult<IReadOnlyList<ITrack>>(Tracks.Skip(offset).Take(limit).ToList());
         }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other) => false;
+
+        /// <inheritdoc />
+        public bool Equals(ICoreTrackCollection other) => false;
+
+        /// <inheritdoc />
+        public bool Equals(ICoreGenreCollection other) => false;
+
+        /// <inheritdoc />
+        public bool Equals(ICorePlaylistCollectionItem other) => false;
+
+        /// <inheritdoc />
+        public bool Equals(ICorePlaylist other) => false;
     }
 }

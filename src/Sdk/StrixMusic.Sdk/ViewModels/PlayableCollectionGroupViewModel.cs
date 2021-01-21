@@ -8,10 +8,10 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -376,7 +376,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public string Id => _collectionGroup.Id;
 
-        /// <inheritdoc cref="ISdkMember{T}" />
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <summary>
@@ -385,34 +385,34 @@ namespace StrixMusic.Sdk.ViewModels
         public IReadOnlyList<ICorePlayableCollectionGroup> Sources => _collectionGroup.GetSources<ICorePlayableCollectionGroup>();
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlayableCollectionGroup> ISdkMember<ICorePlayableCollectionGroup>.Sources => Sources;
+        IReadOnlyList<ICorePlayableCollectionGroup> IMerged<ICorePlayableCollectionGroup>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlayableCollectionGroupChildren> ISdkMember<ICorePlayableCollectionGroupChildren>.Sources => Sources;
+        IReadOnlyList<ICorePlayableCollectionGroupChildren> IMerged<ICorePlayableCollectionGroupChildren>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => Sources;
+        IReadOnlyList<ICoreArtistCollection> IMerged<ICoreArtistCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => Sources;
+        IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollection> ISdkMember<ICoreAlbumCollection>.Sources => Sources;
+        IReadOnlyList<ICoreAlbumCollection> IMerged<ICoreAlbumCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollectionItem> ISdkMember<ICoreAlbumCollectionItem>.Sources => Sources;
+        IReadOnlyList<ICoreAlbumCollectionItem> IMerged<ICoreAlbumCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreTrackCollection> ISdkMember<ICoreTrackCollection>.Sources => Sources;
+        IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlaylistCollection> ISdkMember<ICorePlaylistCollection>.Sources => Sources;
+        IReadOnlyList<ICorePlaylistCollection> IMerged<ICorePlaylistCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlaylistCollectionItem> ISdkMember<ICorePlaylistCollectionItem>.Sources => Sources;
+        IReadOnlyList<ICorePlaylistCollectionItem> IMerged<ICorePlaylistCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => Sources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
         public TimeSpan Duration => _collectionGroup.Duration;
@@ -715,5 +715,35 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICorePlaylistCollectionItem other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICorePlaylistCollection other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreTrackCollection other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollectionItem other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollection other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollectionItem other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollection other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICorePlayableCollectionGroupChildren other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICorePlayableCollectionGroup other) => _collectionGroup.Equals(other);
     }
 }

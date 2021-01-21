@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// A base that merges multiple <see cref="IPlayableCollectionGroupBase"/>s.
     /// </summary>
-    public abstract class MergedPlayableCollectionGroupBase<TCoreBase> : IPlayableCollectionGroup
+    public abstract class MergedPlayableCollectionGroupBase<TCoreBase> : IPlayableCollectionGroup, IMergedMutable<TCoreBase>
         where TCoreBase : class, ICorePlayableCollectionGroup
     {
         private readonly MergedCollectionMap<IAlbumCollection, ICoreAlbumCollection, IAlbumCollectionItem, ICoreAlbumCollectionItem> _albumCollectionMap;
@@ -258,40 +258,40 @@ namespace StrixMusic.Sdk.Data.Merged
             ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        /// <inheritdoc cref="ISdkMember{T}.SourceCores"/>
+        /// <inheritdoc cref="IMerged{T}.SourceCores"/>
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlayableCollectionGroupChildren> ISdkMember<ICorePlayableCollectionGroupChildren>.Sources => StoredSources;
+        IReadOnlyList<ICorePlayableCollectionGroupChildren> IMerged<ICorePlayableCollectionGroupChildren>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollection> ISdkMember<ICoreArtistCollection>.Sources => StoredSources;
+        IReadOnlyList<ICoreArtistCollection> IMerged<ICoreArtistCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreArtistCollectionItem> ISdkMember<ICoreArtistCollectionItem>.Sources => StoredSources;
+        IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollection> ISdkMember<ICoreAlbumCollection>.Sources => StoredSources;
+        IReadOnlyList<ICoreAlbumCollection> IMerged<ICoreAlbumCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreTrackCollection> ISdkMember<ICoreTrackCollection>.Sources => StoredSources;
+        IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlaylistCollection> ISdkMember<ICorePlaylistCollection>.Sources => StoredSources;
+        IReadOnlyList<ICorePlaylistCollection> IMerged<ICorePlaylistCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlaylistCollectionItem> ISdkMember<ICorePlaylistCollectionItem>.Sources => StoredSources;
+        IReadOnlyList<ICorePlaylistCollectionItem> IMerged<ICorePlaylistCollectionItem>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> ISdkMember<ICoreImageCollection>.Sources => StoredSources;
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICorePlayableCollectionGroup> ISdkMember<ICorePlayableCollectionGroup>.Sources => StoredSources;
+        IReadOnlyList<ICorePlayableCollectionGroup> IMerged<ICorePlayableCollectionGroup>.Sources => StoredSources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreAlbumCollectionItem> ISdkMember<ICoreAlbumCollectionItem>.Sources => StoredSources;
+        IReadOnlyList<ICoreAlbumCollectionItem> IMerged<ICoreAlbumCollectionItem>.Sources => StoredSources;
 
-        /// <inheritdoc cref="ISdkMember{T}.Sources"/>
+        /// <inheritdoc cref="IMerged{T}.Sources"/>
         public virtual IReadOnlyList<TCoreBase> Sources => StoredSources;
 
         /// <inheritdoc/>
@@ -519,8 +519,8 @@ namespace StrixMusic.Sdk.Data.Merged
             return _playableCollectionGroupMap.RemoveAt(index);
         }
 
-        /// <inheritdoc cref="IMerged{TCoreBase}.AddSource" />
-        public void AddSource(TCoreBase itemToAdd)
+        /// <inheritdoc />
+        void IMergedMutable<TCoreBase>.AddSource(TCoreBase itemToAdd)
         {
             Guard.IsNotNull(itemToAdd, nameof(itemToAdd));
 
@@ -530,27 +530,71 @@ namespace StrixMusic.Sdk.Data.Merged
             StoredSources.Add(itemToAdd);
             _sourceCores.Add(itemToAdd.SourceCore);
 
-            _albumCollectionMap.AddSource(itemToAdd);
-            _artistCollectionMap.AddSource(itemToAdd);
-            _playableCollectionGroupMap.AddSource(itemToAdd);
-            _playlistCollectionMap.AddSource(itemToAdd);
-            _trackCollectionMap.AddSource(itemToAdd);
+            _imagesCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().AddSource(itemToAdd);
+            _albumCollectionMap.Cast<IMergedMutable<ICoreAlbumCollection>>().AddSource(itemToAdd);
+            _artistCollectionMap.Cast<IMergedMutable<ICoreArtistCollection>>().AddSource(itemToAdd);
+            _playableCollectionGroupMap.Cast<IMergedMutable<ICorePlayableCollectionGroup>>().AddSource(itemToAdd);
+            _playlistCollectionMap.Cast<IMergedMutable<ICorePlaylistCollection>>().AddSource(itemToAdd);
+            _trackCollectionMap.Cast<IMergedMutable<ICoreTrackCollection>>().AddSource(itemToAdd);
         }
 
-        /// <inheritdoc cref="IMerged{TCoreBase}.RemoveSource(TCoreBase)" />
-        public void RemoveSource(TCoreBase itemToRemove)
+        /// <inheritdoc />
+        void IMergedMutable<TCoreBase>.RemoveSource(TCoreBase itemToRemove)
         {
             Guard.IsNotNull(itemToRemove, nameof(itemToRemove));
 
             StoredSources.Remove(itemToRemove);
             _sourceCores.Remove(itemToRemove.SourceCore);
 
-            _imagesCollectionMap.RemoveSource(itemToRemove);
-            _albumCollectionMap.RemoveSource(itemToRemove);
-            _artistCollectionMap.RemoveSource(itemToRemove);
-            _trackCollectionMap.RemoveSource(itemToRemove);
-            _playableCollectionGroupMap.RemoveSource(itemToRemove);
-            _playlistCollectionMap.RemoveSource(itemToRemove);
+            _imagesCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().RemoveSource(itemToRemove);
+            _albumCollectionMap.Cast<IMergedMutable<ICoreAlbumCollection>>().RemoveSource(itemToRemove);
+            _artistCollectionMap.Cast<IMergedMutable<ICoreArtistCollection>>().RemoveSource(itemToRemove);
+            _trackCollectionMap.Cast<IMergedMutable<ICoreTrackCollection>>().RemoveSource(itemToRemove);
+            _playableCollectionGroupMap.Cast<IMergedMutable<ICorePlayableCollectionGroup>>().RemoveSource(itemToRemove);
+            _playlistCollectionMap.Cast<IMergedMutable<ICorePlaylistCollection>>().RemoveSource(itemToRemove);
+        }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other) => Equals(other as ICorePlayableCollectionGroup);
+
+        /// <inheritdoc />
+        public bool Equals(ICorePlaylistCollectionItem other) => Equals(other as ICorePlayableCollectionGroup);
+
+        /// <inheritdoc />
+        public bool Equals(ICorePlaylistCollection other) => Equals(other as ICorePlayableCollectionGroup);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreTrackCollection other) => Equals(other as ICorePlayableCollectionGroup);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollectionItem other) => Equals(other as ICorePlayableCollectionGroup);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreAlbumCollection other) => Equals(other as ICorePlayableCollectionGroup);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollectionItem other) => Equals(other as ICorePlayableCollectionGroup);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreArtistCollection other) => Equals(other as ICorePlayableCollectionGroup);
+
+        /// <inheritdoc />
+        public bool Equals(ICorePlayableCollectionGroupChildren other) => Equals(other as ICorePlayableCollectionGroup);
+
+        /// <inheritdoc />
+        public bool Equals(ICorePlayableCollectionGroup? other)
+        {
+            return Equals(other as TCoreBase);
+        }
+
+        /// <summary>
+        /// Overrides the default equality comparer.
+        /// </summary>
+        /// <param name="other">The object to compare.</param>
+        /// <returns>True if this is a match, otherwise false.</returns>
+        public virtual bool Equals(TCoreBase? other)
+        {
+            return other != null && other.Name.Equals(Name, StringComparison.InvariantCulture);
         }
     }
 }

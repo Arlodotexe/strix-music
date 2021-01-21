@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -10,6 +11,8 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public class RecentlyPlayedViewModel : PlayableCollectionGroupViewModel, IRecentlyPlayed
     {
+        private readonly IRecentlyPlayed _recentlyPlayed;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RecentlyPlayedViewModel"/> class.
         /// </summary>
@@ -17,9 +20,13 @@ namespace StrixMusic.Sdk.ViewModels
         public RecentlyPlayedViewModel(IRecentlyPlayed recentlyPlayed)
             : base(recentlyPlayed)
         {
+            _recentlyPlayed = recentlyPlayed;
         }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreRecentlyPlayed> ISdkMember<ICoreRecentlyPlayed>.Sources => this.GetSources<ICoreRecentlyPlayed>();
+        IReadOnlyList<ICoreRecentlyPlayed> IMerged<ICoreRecentlyPlayed>.Sources => this.GetSources<ICoreRecentlyPlayed>();
+
+        /// <inheritdoc />
+        public bool Equals(ICoreRecentlyPlayed other) => _recentlyPlayed.Equals(other);
     }
 }

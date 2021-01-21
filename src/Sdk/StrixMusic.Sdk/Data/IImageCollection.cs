@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 
 namespace StrixMusic.Sdk.Data
 {
     /// <inheritdoc cref="IImageCollectionBase"/>
     /// <remarks>This interface should be implemented in the Sdk.</remarks>
-    public interface IImageCollection : IImageCollectionBase, ISdkMember<ICoreImageCollection>
+    public interface IImageCollection : IImageCollectionBase, ISdkMember, IMerged<ICoreImageCollection>
     {
         /// <summary>
         /// Gets a requested number of <see cref="IImageBase"/>s starting at the given offset in the backend.
