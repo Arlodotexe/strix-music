@@ -11,83 +11,72 @@ using StrixMusic.Sdk.Data.Core;
 namespace StrixMusic.Sdk.Data.Merged
 {
     /// <summary>
-    /// A class that handles turning a <see cref="ICoreUser"/> into a <see cref="IUser"/>.
+    /// A class that handles turning a <see cref="ICoreUserProfile"/> into a <see cref="IUserProfile"/>.
     /// </summary>
     /// <remarks>
-    /// Users are not actually merged.
+    /// User profiles are not actually merged (yet).
     /// </remarks>
-    public class MergedUser : IUser
+    public class CoreUserProfileProxy : IUserProfile
     {
-        private readonly ICoreUser _user;
+        private readonly ICoreUserProfile _userProfile;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageMap;
-        private readonly IReadOnlyList<ICoreImageCollection> _sources;
 
         /// <summary>
-        /// Creates a new instance of <see cref="MergedUser"/>.
+        /// Creates a new instance of <see cref="CoreUserProfileProxy"/>.
         /// </summary>
-        /// <param name="user">The user to wrap around.</param>
-        public MergedUser(ICoreUser user)
+        /// <param name="userProfile">The user to wrap around.</param>
+        public CoreUserProfileProxy(ICoreUserProfile userProfile)
         {
-            _user = user ?? ThrowHelper.ThrowArgumentNullException<ICoreUser>(nameof(user));
-            
-            SourceCore = _user.SourceCore;
+            _userProfile = userProfile ?? ThrowHelper.ThrowArgumentNullException<ICoreUserProfile>(nameof(userProfile));
 
-            Library = new MergedLibrary(_user.Library.IntoList());
+            Sources = _userProfile.IntoList();
+            SourceCores = _userProfile.SourceCore.IntoList();
 
-            // For image collection.
-            _sources = _user.IntoList();
-            SourceCores = _user.SourceCore.IntoList();
             _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
 
             AttachEvents();
         }
 
         /// <inheritdoc />
-        public ICore? SourceCore { get; set; }
-
-        /// <inheritdoc />
-        public ICoreUser? Source { get; set; }
-
-        /// <inheritdoc />
         public event EventHandler<string>? DisplayNameChanged
         {
-            add => _user.DisplayNameChanged += value;
-            remove => _user.DisplayNameChanged -= value;
+            add => _userProfile.DisplayNameChanged += value;
+            remove => _userProfile.DisplayNameChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<DateTime>? BirthDateChanged
         {
-            add => _user.BirthDateChanged += value;
-            remove => _user.BirthDateChanged -= value;
+            add => _userProfile.BirthDateChanged += value;
+            remove => _userProfile.BirthDateChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string>? FullNameChanged
         {
-            add => _user.FullNameChanged += value;
-            remove => _user.FullNameChanged -= value;
+            add => _userProfile.FullNameChanged += value;
+            remove => _userProfile.FullNameChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<CultureInfo>? RegionChanged
         {
-            add => _user.RegionChanged += value;
-            remove => _user.RegionChanged -= value;
+            add => _userProfile.RegionChanged += value;
+            remove => _userProfile.RegionChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string?>? EmailChanged
         {
-            add => _user.EmailChanged += value;
-            remove => _user.EmailChanged -= value;
+            add => _userProfile.EmailChanged += value;
+            remove => _userProfile.EmailChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged
         {
-            add => _user.ImagesCountChanged += value;
-            remove => _user.ImagesCountChanged -= value;
+            add => _userProfile.ImagesCountChanged += value;
+            remove => _userProfile.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc />
@@ -109,112 +98,109 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public int TotalImageCount => _user.TotalImageCount;
+        public int TotalImageCount => _userProfile.TotalImageCount;
 
         /// <inheritdoc />
-        public string Id => _user.Id;
+        public string Id => _userProfile.Id;
 
         /// <inheritdoc />
-        public string DisplayName => _user.DisplayName;
+        public string DisplayName => _userProfile.DisplayName;
 
         /// <inheritdoc />
-        public string? FullName => _user.FullName;
+        public string? FullName => _userProfile.FullName;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<Uri>? Urls => _user.Urls;
+        public SynchronizedObservableCollection<Uri>? Urls => _userProfile.Urls;
 
         /// <inheritdoc />
-        public string? Email => _user.Email;
+        public string? Email => _userProfile.Email;
 
         /// <inheritdoc />
-        public DateTime? Birthdate => _user.Birthdate;
+        public DateTime? Birthdate => _userProfile.Birthdate;
 
         /// <inheritdoc />
-        public CultureInfo Region => _user.Region;
+        public CultureInfo Region => _userProfile.Region;
 
         /// <inheritdoc />
-        public bool IsChangeDisplayNameSupported => _user.IsChangeDisplayNameSupported;
+        public bool IsChangeDisplayNameSupported => _userProfile.IsChangeDisplayNameSupported;
 
         /// <inheritdoc />
-        public bool IsChangeBirthDateAsyncSupported => _user.IsChangeBirthDateAsyncSupported;
+        public bool IsChangeBirthDateAsyncSupported => _userProfile.IsChangeBirthDateAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeFullNameAsyncAsyncSupported => _user.IsChangeFullNameAsyncAsyncSupported;
+        public bool IsChangeFullNameAsyncAsyncSupported => _userProfile.IsChangeFullNameAsyncAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeRegionAsyncSupported => _user.IsChangeRegionAsyncSupported;
+        public bool IsChangeRegionAsyncSupported => _userProfile.IsChangeRegionAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeEmailAsyncSupported => _user.IsChangeEmailAsyncSupported;
+        public bool IsChangeEmailAsyncSupported => _userProfile.IsChangeEmailAsyncSupported;
 
         /// <inheritdoc />
         public Task<bool> IsAddUrlSupported(int index)
         {
-            return _user.IsAddUrlSupported(index);
+            return _userProfile.IsAddUrlSupported(index);
         }
 
         /// <inheritdoc />
         public Task<bool> IsAddImageSupported(int index)
         {
-            return _user.IsAddImageSupported(index);
+            return _userProfile.IsAddImageSupported(index);
         }
 
         /// <inheritdoc />
         public Task<bool> IsRemoveUrlSupported(int index)
         {
-            return _user.IsRemoveUrlSupported(index);
+            return _userProfile.IsRemoveUrlSupported(index);
         }
 
         /// <inheritdoc />
         public Task<bool> IsRemoveImageSupported(int index)
         {
-            return _user.IsRemoveImageSupported(index);
+            return _userProfile.IsRemoveImageSupported(index);
         }
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
         {
-            return _user.RemoveImageAsync(index);
+            return _userProfile.RemoveImageAsync(index);
         }
 
         /// <inheritdoc />
         public Task ChangeDisplayNameAsync(string displayName)
         {
-            return _user.ChangeDisplayNameAsync(displayName);
+            return _userProfile.ChangeDisplayNameAsync(displayName);
         }
 
         /// <inheritdoc />
         public Task ChangeBirthDateAsync(DateTime birthdate)
         {
-            return _user.ChangeBirthDateAsync(birthdate);
+            return _userProfile.ChangeBirthDateAsync(birthdate);
         }
 
         /// <inheritdoc />
         public Task ChangeFullNameAsync(string fullname)
         {
-            return _user.ChangeFullNameAsync(fullname);
+            return _userProfile.ChangeFullNameAsync(fullname);
         }
 
         /// <inheritdoc />
         public Task ChangeRegionAsync(CultureInfo region)
         {
-            return _user.ChangeRegionAsync(region);
+            return _userProfile.ChangeRegionAsync(region);
         }
 
         /// <inheritdoc />
         public Task ChangeEmailAsync(string? email)
         {
-            return _user.ChangeEmailAsync(email);
+            return _userProfile.ChangeEmailAsync(email);
         }
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;
+        public IReadOnlyList<ICoreImageCollection> Sources { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
-
-        /// <inheritdoc />
-        public ILibrary Library { get; }
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
@@ -231,8 +217,8 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public bool Equals(ICoreImageCollection other)
         {
-            // Users are never merged.
+            // User profiles are never merged.
             return false;
-        }
+        } 
     }
 }

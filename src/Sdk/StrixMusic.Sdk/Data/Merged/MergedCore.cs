@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.Data.Merged
             SourceCores = _sources.Select(x => x.SourceCore).ToList();
             Pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull());
             RecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed));
-            Devices = new SynchronizedObservableCollection<IDevice>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceProxy(device)));
+            Devices = new SynchronizedObservableCollection<IDevice>(_sources.SelectMany(x => x.Devices, (core, device) => new CoreDeviceProxy(device)));
 
             AttachEvents();
         }
@@ -54,7 +54,7 @@ namespace StrixMusic.Sdk.Data.Merged
             {
                 if (item is ICoreDevice device)
                 {
-                    Devices.Add(new DeviceProxy(device));
+                    Devices.Add(new CoreDeviceProxy(device));
                 }
             }
 

@@ -91,7 +91,7 @@ namespace StrixMusic.Sdk
 
             Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_sources.Select(x => x.Discoverables)));
 
-            Devices = new SynchronizedObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new DeviceProxy(device))));
+            Devices = new SynchronizedObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new CoreDeviceProxy(device))));
 
             AttachEvents();
         }
@@ -148,10 +148,10 @@ namespace StrixMusic.Sdk
             _ = new CoreViewModel(core);
 #pragma warning restore CA2000 // Dispose objects before losing scope
 
-            Users.Add(new UserViewModel(new MergedUser(core.User)));
+            Users.Add(new UserViewModel(new CoreUserProxy(core.User)));
 
             foreach (var device in core.Devices)
-                _devices.Add(new DeviceProxy(device));
+                _devices.Add(new CoreDeviceProxy(device));
 
             core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
             cancellationToken.Dispose();

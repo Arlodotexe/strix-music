@@ -10,15 +10,15 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <summary>
     /// Translates a <see cref="ICoreDevice"/> to a <see cref="IDevice"/>. Does not provide merging.
     /// </summary>
-    public class DeviceProxy : IDevice
+    public class CoreDeviceProxy : IDevice
     {
         private readonly ICoreDevice _source;
 
         /// <summary>
-        /// Creates a new instance of <see cref="DeviceProxy"/>.
+        /// Creates a new instance of <see cref="CoreDeviceProxy"/>.
         /// </summary>
         /// <param name="source"></param>
-        public DeviceProxy(ICoreDevice source)
+        public CoreDeviceProxy(ICoreDevice source)
         {
             _source = source;
 

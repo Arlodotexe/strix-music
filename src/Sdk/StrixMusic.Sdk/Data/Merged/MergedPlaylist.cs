@@ -58,7 +58,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
             if (_preferredSource.Owner != null)
             {
-                Owner = new MergedUserProfile(_preferredSource.Owner);
+                Owner = new CoreUserProfileProxy(_preferredSource.Owner);
             }
 
             AttachEvents(_preferredSource);
