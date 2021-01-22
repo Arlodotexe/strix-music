@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Uno.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Uno.Extensions.Specialized;
@@ -57,6 +58,17 @@ namespace StrixMusic.Sdk.Uno.Controls
         private ScrollViewer? PART_Scroller { get; set; }
 
         private ContentPresenter? PART_EmptyContentPresenter { get; set; }
+
+        /// <summary>
+        /// Clears all selected items.
+        /// </summary>
+        public void ClearSelected()
+        {
+            if (PART_Selector == null)
+                return;
+
+            PART_Selector.SelectedItem = null;
+        }
 
         /// <summary>
         /// Perform incremental loading.

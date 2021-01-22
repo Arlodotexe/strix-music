@@ -4,6 +4,8 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
+using StrixMusic.Sdk.Uno.Controls.Events;
+using StrixMusic.Sdk.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,7 +30,7 @@ namespace StrixMusic.Shells.Groove
         private readonly Stack<Control> _history = new Stack<Control>();
         private INavigationService<Control>? _navigationService;
         private ILocalizationService? _localizationService;
-        private ToggleButton _selectedPage;
+        private ToggleButton? _selectedPage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GrooveShell"/> class.
@@ -127,7 +129,9 @@ namespace StrixMusic.Shells.Groove
             {
                 // Clear history and change the selected page
                 _history.Clear();
-                _selectedPage.IsChecked = false;
+                if (_selectedPage != null)
+                    _selectedPage.IsChecked = false;
+                PlaylistList.ClearSelected();
                 button.IsChecked = true;
                 _selectedPage = button;
             }
@@ -148,6 +152,14 @@ namespace StrixMusic.Shells.Groove
             {
                 MainSplitView.IsPaneOpen = false;
             }
+        }
+
+        private void PlaylistClicked(object sender, SelectionChangedEventArgs<PlaylistViewModel> e)
+        {
+            if (_selectedPage != null)
+                _selectedPage.IsChecked = false;
+
+            _selectedPage = null;
         }
 
         private void Shell_BackRequested(object sender, EventArgs e)

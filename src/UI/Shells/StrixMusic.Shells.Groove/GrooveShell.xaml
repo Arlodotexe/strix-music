@@ -186,7 +186,8 @@
                         </Grid>
                     </StackPanel>
 
-                    <defaultcontrols:PlaylistCollection DataContext="{x:Bind ViewModel.Library}" Grid.Row="1" Style="{StaticResource PanePlaylistCollectionStyle}"/>
+                    <defaultcontrols:PlaylistCollection x:Name="PlaylistList" DataContext="{x:Bind ViewModel.Library}" Grid.Row="1" Style="{StaticResource PanePlaylistCollectionStyle}"
+                                                        SelectionChanged="PlaylistClicked"/>
                 </Grid>
             </SplitView.Pane>
         </SplitView>
