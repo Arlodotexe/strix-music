@@ -6,6 +6,7 @@ using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.Uno.Controls.Events;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Shells.Groove.Controls;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -43,6 +44,7 @@ namespace StrixMusic.Shells.Groove
             {
                 { MyMusicButton, typeof(HomeView) },
                 { NowPlayingButton, typeof(NowPlayingView) },
+                { PlaylistsButton, typeof(PlaylistsPage) },
             };
 
             _pageHeaderMapping = new Dictionary<Type, string>
@@ -50,11 +52,14 @@ namespace StrixMusic.Shells.Groove
                 { typeof(HomeView), "MyMusic" },
                 { typeof(AlbumView), "Album" },
                 { typeof(ArtistView), "Artist" },
+                { typeof(PlaylistView), "Playlist" },
+                { typeof(PlaylistsPage), "Playlists" },
             };
 
             _pageHeaderVisibilitySet = new HashSet<Type>
             {
                 typeof(HomeView),
+                typeof(PlaylistsPage),
             };
 
             _selectedPage = MyMusicButton;

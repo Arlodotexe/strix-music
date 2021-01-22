@@ -166,8 +166,8 @@
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <ToggleButton Style="{StaticResource GrooveNavigationButton}"
-                                              Click="NavigationButtonClicked">
+                            <ToggleButton x:Name="PlaylistsButton" Style="{StaticResource GrooveNavigationButton}"
+                                          Click="NavigationButtonClicked">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="48"/>

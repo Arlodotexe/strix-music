@@ -315,4 +315,7 @@
   <data name="SimilarArtistsPVI.Header" xml:space="preserve">
     <value>Similar Artists</value>
   </data>
+  <data name="Playlist" xml:space="preserve">
+    <value>Playlist</value>
+  </data>
 </root>
