@@ -1,7 +1,9 @@
 ﻿using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Core.LocalFiles.Backing.Models;
+using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
@@ -9,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
+    ///NOTE: There are some methods set to NotSupported temporarily although they are supported, so the playback can be implemented.
     /// <summary>
     /// A LocalFileCore implementation of <see cref="ICoreAlbum"/>.
     /// </summary>
@@ -20,11 +23,12 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// Initializes a new instance of the <see cref="LocalFilesCoreAlbum"/> class.
         /// </summary>
         /// <param name="sourceCore">The core that created this object.</param>
-        public LocalFilesCoreAlbum(ICore sourceCore, AlbumMetadata albumMetadata)
+        public LocalFilesCoreAlbum(ICore sourceCore, AlbumMetadata albumMetadata, int totalTracksCount)
         {
             SourceCore = sourceCore;
             _albumMetadata = albumMetadata;
             TotalArtistItemsCount = _albumMetadata.TotalTracksCount ?? 0;
+            TotalTracksCount = totalTracksCount;
         }
 
         /// <inheritdoc/>
@@ -85,7 +89,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public string? Description => _albumMetadata.Description;
 
         /// <inheritdoc/>
-        public PlaybackState PlaybackState => PlaybackState.None;
+        public PlaybackState PlaybackState { get; private set; }
 
         /// <inheritdoc/>
         public TimeSpan Duration => _albumMetadata.Duration ?? new TimeSpan(0, 0, 0);
@@ -165,106 +169,126 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeDatePublishedAsync(DateTime datePublished)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeNameAsync(string name)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task PauseAsync()
         {
-            throw new NotSupportedException();
+            PlaybackState = PlaybackState.Paused;
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public Task PlayAsync()
         {
-            throw new NotSupportedException();
+            PlaybackState = PlaybackState.Playing;
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            var tracksList = SourceCore.GetService<TrackService>();
+
+            var tracks = await tracksList.GetTracksByAlbumId(Id, offset, limit);
+
+            foreach (var track in tracks)
+            {
+                yield return new LocalFilesCoreTrack(SourceCore, track);
+            }
         }
 
         /// <inheritdoc />
         public Task AddTrackAsync(ICoreTrack track, int index)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task AddImageAsync(ICoreImage image, int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task<bool> IsAddArtistItemSupported(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task<bool> IsRemoveArtistItemSupported(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            var artistService = SourceCore.GetService<ArtistService>();
+
+            var artists = await artistService.GetArtistsByAlbumId(Id, offset, limit);
+
+            foreach (var artist in artists)
+            {
+                // just to test
+                var tracks = await SourceCore.GetService<TrackService>().GetTracksByAlbumId(artist.Id, 0, 1000);
+                yield return new LocalFilesCoreArtist(SourceCore, artist, tracks.Count);
+            }
         }
 
         /// <inheritdoc />
         public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }
