@@ -14,7 +14,7 @@ namespace StrixMusic.Core.LocalFiles.Services
         /// <param name="instanceId">The ID of the current <see cref="LocalFilesCore"/> instance.</param>
         public LocalFilesCoreSettingsService(string instanceId)
         {
-            Id = $"{nameof(LocalFilesCore)}.{instanceId}";
+            Id = instanceId;
         }
 
         /// <inheritdoc />
