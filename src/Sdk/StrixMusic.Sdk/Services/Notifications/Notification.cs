@@ -1,5 +1,5 @@
-﻿using OwlCore.AbstractUI.Models;
-using System;
+﻿using System;
+using OwlCore.AbstractUI.Models;
 
 namespace StrixMusic.Sdk.Services.Notifications
 {
@@ -26,6 +26,11 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// The <see cref="AbstractUIElementGroup"/> to be displayed for the notification.
         /// </summary>
         public AbstractUIElementGroup AbstractUIElementGroup { get; }
+
+        /// <summary>
+        /// If true, the notification is being displayed to the user.
+        /// </summary>
+        internal bool IsDisplayed { get; set; }
 
         /// <summary>
         /// Raises the <see cref="Dismissed"/> event for the Core.

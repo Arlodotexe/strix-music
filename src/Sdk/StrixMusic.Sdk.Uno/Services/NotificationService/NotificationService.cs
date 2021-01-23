@@ -1,7 +1,9 @@
-﻿using OwlCore.AbstractUI.Models;
-using StrixMusic.Sdk.Services.Notifications;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.AbstractUI.Models;
+using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Uno.Services.NotificationService
 {
@@ -10,23 +12,31 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
     /// </summary>
     public class NotificationService : INotificationService
     {
-        private const int MAX_ACTIVE_NOTIFICATIONS = 1;
-
-        private Queue<Notification> _notifications;
-        private int _activeNotifications = 0;
+        private readonly List<Notification> _notifications;
+        private int _activeNotifications;
 
         /// <summary>
         /// Raised when a new notification needs to be displayed.
         /// </summary>
-        public event EventHandler<object>? NotificationRaised;
+        public event EventHandler<Notification>? NotificationRaised;
+
+        /// <summary>
+        /// Raised when the user dismisses a notification.
+        /// </summary>
+        public event EventHandler<Notification>? NotificationDismissed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationService"/> class.
         /// </summary>
         public NotificationService()
         {
-            _notifications = new Queue<Notification>();
+            _notifications = new List<Notification>();
         }
+
+        /// <summary>
+        /// The maximum number of notification that will be raised at once. Dismiss a notification to show remaining notifications in the queue.
+        /// </summary>
+        public int MaxActiveNotifications { get; set; } = 1;
 
         /// <inheritdoc/>
         public Notification RaiseNotification(string title, string message)
@@ -47,25 +57,58 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         public Notification RaiseNotification(AbstractUIElementGroup elementGroup)
         {
             var notification = new Notification(elementGroup);
-            _notifications.Enqueue(notification);
+
+            notification.Dismissed += Notification_Dismissed;
+
+            _notifications.Add(notification);
+
+            FireIfReady();
             return notification;
         }
 
-        /// <summary>
-        /// Dimisses the top notification and raises the next notification.
-        /// </summary>
-        public void DismissNotification()
+        private void Notification_Dismissed(object sender, EventArgs e)
         {
+            if (sender is Notification notification)
+            {
+                var index = _notifications.FindIndex(x => ReferenceEquals(x, notification));
+
+                if (index == -1)
+                    return;
+
+                DismissNotification(index);
+            }
+        }
+
+        /// <summary>
+        /// Dismisses the top notification and raises the next notification.
+        /// </summary>
+        public void DismissNotification(int? index = null)
+        {
+            var targetNotification = _notifications.ElementAtOrDefault(index ?? _notifications.Count - 1);
+
+            Guard.IsNotNull(targetNotification, nameof(targetNotification));
+
+            _notifications.Remove(targetNotification);
+            NotificationDismissed?.Invoke(this, targetNotification);
+            targetNotification.Dismissed -= Notification_Dismissed;
+
             _activeNotifications--;
-            _notifications.Dequeue().Dismiss();
+
             FireIfReady();
         }
 
+        /// <summary>
+        /// Fires the next notification if there is space for it.
+        /// </summary>
         private void FireIfReady()
         {
-            if (_notifications.Count > 0 && _activeNotifications < MAX_ACTIVE_NOTIFICATIONS)
+            if (_notifications.Count > 0 && _activeNotifications < MaxActiveNotifications)
             {
-                NotificationRaised?.Invoke(this, _notifications.Peek());
+                var nextNotification = _notifications.FirstOrDefault(x => !x.IsDisplayed);
+
+                nextNotification.IsDisplayed = true;
+
+                NotificationRaised?.Invoke(this, nextNotification);
             }
         }
     }
