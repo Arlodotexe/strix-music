@@ -20,9 +20,9 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         private IReadOnlyList<RelatedMetadata>? _relatedMetadata;
 
         /// <summary>
-        /// Scans mediafile list for metadata.
+        /// Scans a folder and all subfolders for music and music metadata.
         /// </summary>
-        /// <param name="fileData">The path to the file.</param>
+        /// <param name="folderData">The path to a root folder to scan.</param>
         /// <returns>Fully scanned <see cref="IReadOnlyList{RelatedMetadata}"/>.</returns>
         public async Task ScanFolderForMetadata(IFolderData folderData)
         {
