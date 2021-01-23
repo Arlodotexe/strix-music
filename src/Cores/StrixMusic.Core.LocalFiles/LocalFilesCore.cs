@@ -21,7 +21,7 @@ namespace StrixMusic.Core.LocalFiles
     public class LocalFilesCore : ICore
     {
         private static int CoreCount = 0;
-        private ICoreLibrary? _coreLibrary;
+        private readonly ICoreLibrary? _coreLibrary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCore"/> class.
@@ -123,7 +123,6 @@ namespace StrixMusic.Core.LocalFiles
             CoreCount++;
             if (CoreCount == LocalFileCoreManager.Instances?.Count)
                 await LocalFileCoreManager.InitializeDataForAllCores();
-
 
             if (_coreLibrary is LocalFilesCoreLibrary localFilesCore)
                 await localFilesCore.InitAsync();

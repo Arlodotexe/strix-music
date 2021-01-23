@@ -21,7 +21,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         private readonly string _pathToMetadatafile;
         private readonly FileMetadataScanner _fileMetadataScanner;
         private readonly IFileSystemService _fileSystemService;
-        private readonly IFolderData? _folderData;
 
         /// <summary>
         /// Creates a new instance for <see cref="TrackService"/>.

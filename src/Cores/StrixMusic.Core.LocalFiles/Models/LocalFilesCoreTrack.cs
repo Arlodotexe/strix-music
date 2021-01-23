@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
-    ///NOTE: There are some methods set to NotSupported temporarily although they are supported, so the playback can be implemented.
+    ///NOTE: There are some methods set to throw empty stuff temporarily although they are supported, so the playback can be implemented.
     /// <inheritdoc />
     public class LocalFilesCoreTrack : ICoreTrack
     {
@@ -208,49 +208,49 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task ChangeAlbumAsync(ICoreAlbum? albums)
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.FromResult(false);//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.FromResult(false);//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.FromResult(false);//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeIsExplicitAsync(bool isExplicit)
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.FromResult(false);//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeLanguageAsync(CultureInfo language)
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.FromResult(false);//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeLyricsAsync(ICoreLyrics? lyrics)
         {
-            throw new NotSupportedException();
+            return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
         public Task ChangeNameAsync(string name)
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.FromResult(false);//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeTrackNumberAsync(int? trackNumber)
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.FromResult(false);//temporary for playback
         }
 
         /// <inheritdoc/>
@@ -274,25 +274,25 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.FromResult(false);//temporary for playback
         }
 
         /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.FromResult(false);//temporary for playback
         }
 
         /// <inheritdoc />
         public Task AddImageAsync(ICoreImage image, int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.FromResult(false);//temporary for playback
         }
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.FromResult(false);//temporary for playback
         }
 
         /// <inheritdoc/>
@@ -313,8 +313,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            //temporary just to show tracks
-            yield return null;//temporary for playback
+            await Task.CompletedTask;
+            yield break; //temporary for playback
         }
     }
 }

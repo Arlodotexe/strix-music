@@ -16,14 +16,13 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc/>
     public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary, IAsyncInit
     {
-        private LocalFilesCoreTrack _localFileCoreTrack;
+        private  ArtistService _artistService;
+        private  TrackService _trackService;
+        private  AlbumService _albumService;
+
         private IEnumerable<TrackMetadata> _trackMetadatas;
         private IEnumerable<AlbumMetadata> _albumMetadatas;
         private IEnumerable<ArtistMetadata> _artistMetadatas;
-
-        private ArtistService _artistService;
-        private TrackService _trackService;
-        private AlbumService _albumService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreLibrary"/> class.
