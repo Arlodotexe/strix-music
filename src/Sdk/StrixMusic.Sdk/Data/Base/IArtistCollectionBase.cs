@@ -24,13 +24,13 @@ namespace StrixMusic.Sdk.Data.Base
         /// Checks if the backend supports adding an <see cref="IArtistCollectionItemBase"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IArtistCollectionItemBase"/> can be added.</returns>
-        Task<bool> IsAddArtistItemSupported(int index);
+        Task<bool> IsAddArtistItemAvailable(int index);
 
         /// <summary>
         /// Checks if the backend supports removing an <see cref="IArtist"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IArtistCollectionItemBase"/> can be removed.</returns>
-        Task<bool> IsRemoveArtistItemSupported(int index);
+        Task<bool> IsRemoveArtistItemAvailable(int index);
 
         /// <summary>
         /// Fires when the merged <see cref="TotalArtistItemsCount"/> changes.

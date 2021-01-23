@@ -327,19 +327,19 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _artist.PlaybackState;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _artist.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _artist.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _artist.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _artist.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _artist.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _artist.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _artist.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _artist.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _artist.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _artist.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Task PlayAsync() => _artist.PlayAsync();
@@ -357,28 +357,28 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration) => _artist.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _artist.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _artist.IsAddImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumItemSupported(int index) => _artist.IsAddAlbumItemSupported(index);
+        public Task<bool> IsAddAlbumItemAvailable(int index) => _artist.IsAddAlbumItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index) => _artist.IsAddTrackSupported(index);
+        public Task<bool> IsAddTrackAvailable(int index) => _artist.IsAddTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreSupported(int index) => _artist.IsAddGenreSupported(index);
+        public Task<bool> IsAddGenreAvailable(int index) => _artist.IsAddGenreAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _artist.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _artist.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index) => _artist.IsRemoveTrackSupported(index);
+        public Task<bool> IsRemoveTrackAvailable(int index) => _artist.IsRemoveTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemSupported(int index) => _artist.IsRemoveAlbumItemSupported(index);
+        public Task<bool> IsRemoveAlbumItemAvailable(int index) => _artist.IsRemoveAlbumItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index) => _artist.IsRemoveGenreSupported(index);
+        public Task<bool> IsRemoveGenreAvailable(int index) => _artist.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => _artist.GetAlbumItemsAsync(limit, offset);

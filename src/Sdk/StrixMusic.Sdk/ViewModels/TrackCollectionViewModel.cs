@@ -192,19 +192,19 @@ namespace StrixMusic.Sdk.ViewModels
         public string Id => _collection.Id;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _collection.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _collection.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _collection.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _collection.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _collection.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _collection.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _collection.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _collection.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _collection.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _collection.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Uri? Url => _collection.Url;
@@ -254,16 +254,16 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index) => _collection.IsAddTrackSupported(index);
+        public Task<bool> IsAddTrackAvailable(int index) => _collection.IsAddTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index) => _collection.IsRemoveTrackSupported(index);
+        public Task<bool> IsRemoveTrackAvailable(int index) => _collection.IsRemoveTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _collection.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _collection.IsAddImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _collection.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _collection.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
         public Task AddTrackAsync(ITrack track, int index) => _collection.AddTrackAsync(track, index);

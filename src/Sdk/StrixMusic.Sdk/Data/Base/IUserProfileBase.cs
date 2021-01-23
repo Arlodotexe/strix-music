@@ -45,27 +45,27 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// If true, <see cref="ChangeDisplayNameAsync(string)"/> is supported.
         /// </summary>
-        bool IsChangeDisplayNameSupported { get; }
+        bool IsChangeDisplayNameAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="ChangeBirthDateAsync(DateTime)"/> is supported.
         /// </summary>
-        bool IsChangeBirthDateAsyncSupported { get; }
+        bool IsChangeBirthDateAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="ChangeFullNameAsync(string)"/> is supported.
         /// </summary>
-        bool IsChangeFullNameAsyncAsyncSupported { get; }
+        bool IsChangeFullNameAsyncAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="ChangeRegionAsync(CultureInfo)"/> is supported.
         /// </summary>
-        bool IsChangeRegionAsyncSupported { get; }
+        bool IsChangeRegionAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="ChangeEmailAsync(string?)"/> is supported.
         /// </summary>
-        bool IsChangeEmailAsyncSupported { get; }
+        bool IsChangeEmailAsyncAvailable { get; }
 
         /// <summary>
         /// Changes the <see cref="DisplayName"/> for this user.

@@ -162,67 +162,67 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public ICorePlayableCollectionGroup? RelatedItems => null;
 
         /// <inheritdoc/>
-        public bool IsChangeAlbumAsyncSupported => false;
+        public bool IsChangeAlbumAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeTrackNumberAsyncSupported => false;
+        public bool IsChangeTrackNumberAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeLanguageAsyncSupported => false;
+        public bool IsChangeLanguageAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeLyricsAsyncSupported => false;
+        public bool IsChangeLyricsAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeIsExplicitAsyncSupported => false;
+        public bool IsChangeIsExplicitAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => false;
+        public bool IsPlayAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => false;
+        public bool IsPauseAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeNameAsyncSupported => false;
+        public bool IsChangeNameAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDescriptionAsyncSupported => false;
+        public bool IsChangeDescriptionAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDurationAsyncSupported => false;
+        public bool IsChangeDurationAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageSupported(int index)
+        public Task<bool> IsAddImageAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreSupported(int index)
+        public Task<bool> IsAddGenreAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddArtistItemSupported(int index)
-        {
-            return Task.FromResult(false);
-        }
-
-        /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index)
+        public Task<bool> IsAddArtistItemAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemSupported(int index)
+        public Task<bool> IsRemoveImageAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index)
+        public Task<bool> IsRemoveArtistItemAvailable(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveGenreAvailable(int index)
         {
             return Task.FromResult(false);
         }

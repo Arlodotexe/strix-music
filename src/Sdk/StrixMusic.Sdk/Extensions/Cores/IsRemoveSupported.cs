@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Extensions
         /// <param name="source">The source collection.</param>
         /// <param name="index">The index to check.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public static Task<bool> IsRemoveSupported<TCollection>(this TCollection source, int index)
+        public static Task<bool> IsRemoveAvailable<TCollection>(this TCollection source, int index)
             where TCollection : class, ICollectionBase, ICoreMember
         {
             if (source == null)
@@ -22,12 +22,12 @@ namespace StrixMusic.Sdk.Extensions
 
             return typeof(TCollection) switch
             {
-                IPlayableCollectionGroupBase _ => ((ICorePlayableCollectionGroup)source).IsRemoveChildSupported(index),
-                IAlbumCollectionBase _ => ((ICoreAlbumCollection)source).IsRemoveAlbumItemSupported(index),
-                IArtistCollectionBase _ => ((ICoreArtistCollection)source).IsRemoveArtistItemSupported(index),
-                IPlaylistCollectionBase _ => ((ICorePlaylistCollection)source).IsRemovePlaylistItemSupported(index),
-                ITrackCollectionBase _ => ((ICoreTrackCollection)source).IsRemoveTrackSupported(index),
-                IImageCollectionBase _ => ((ICoreImageCollection)source).IsRemoveImageSupported(index),
+                IPlayableCollectionGroupBase _ => ((ICorePlayableCollectionGroup)source).IsRemoveChildAvailable(index),
+                IAlbumCollectionBase _ => ((ICoreAlbumCollection)source).IsRemoveAlbumItemAvailable(index),
+                IArtistCollectionBase _ => ((ICoreArtistCollection)source).IsRemoveArtistItemAvailable(index),
+                IPlaylistCollectionBase _ => ((ICorePlaylistCollection)source).IsRemovePlaylistItemAvailable(index),
+                ITrackCollectionBase _ => ((ICoreTrackCollection)source).IsRemoveTrackAvailable(index),
+                IImageCollectionBase _ => ((ICoreImageCollection)source).IsRemoveImageAvailable(index),
                 _ => throw new NotSupportedException("Collection type not handled"),
             };
         }

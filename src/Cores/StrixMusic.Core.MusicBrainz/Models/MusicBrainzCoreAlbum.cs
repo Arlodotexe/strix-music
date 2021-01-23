@@ -132,55 +132,55 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => false;
+        public bool IsPlayAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => false;
+        public bool IsPauseAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeNameAsyncSupported => false;
+        public bool IsChangeNameAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDatePublishedAsyncSupported => false;
+        public bool IsChangeDatePublishedAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDescriptionAsyncSupported => false;
+        public bool IsChangeDescriptionAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDurationAsyncSupported => false;
+        public bool IsChangeDurationAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreSupported(int index)
+        public Task<bool> IsAddGenreAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddTrackSupported(int index)
+        public Task<bool> IsAddTrackAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageSupported(int index)
-        {
-            return Task.FromResult(false);
-        }
-
-        /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index)
+        public Task<bool> IsAddImageAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index)
+        public Task<bool> IsRemoveTrackAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index)
+        public Task<bool> IsRemoveImageAvailable(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveGenreAvailable(int index)
         {
             return Task.FromResult(false);
         }
@@ -345,13 +345,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistItemSupported(int index)
+        public Task<bool> IsAddArtistItemAvailable(int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemSupported(int index)
+        public Task<bool> IsRemoveArtistItemAvailable(int index)
         {
             throw new NotSupportedException();
         }

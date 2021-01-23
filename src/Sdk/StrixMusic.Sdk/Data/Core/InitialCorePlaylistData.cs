@@ -99,52 +99,52 @@ namespace StrixMusic.Sdk.Data
         public ICorePlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported { get; }
+        public bool IsPlayAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported { get; }
+        public bool IsPauseAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported { get; }
+        public bool IsChangeNameAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported { get; }
+        public bool IsChangeDescriptionAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported { get; }
+        public bool IsChangeDurationAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index)
+        public Task<bool> IsAddTrackAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index)
+        public Task<bool> IsRemoveTrackAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index)
+        public Task<bool> IsAddImageAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index)
+        public Task<bool> IsRemoveImageAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreSupported(int index)
+        public Task<bool> IsAddGenreAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index)
+        public Task<bool> IsRemoveGenreAvailable(int index)
         {
             return Task.FromResult(false);
         }

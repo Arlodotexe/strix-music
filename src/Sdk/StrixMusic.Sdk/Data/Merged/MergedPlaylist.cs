@@ -217,22 +217,22 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _trackCollectionMap.GetItems(limit, offset);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreSupported(int index) => _preferredSource.IsAddGenreSupported(index);
+        public Task<bool> IsAddGenreAvailable(int index) => _preferredSource.IsAddGenreAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageSupported(int index) => _preferredSource.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _preferredSource.IsAddImageAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddTrackSupported(int index) => _preferredSource.IsAddTrackSupported(index);
+        public Task<bool> IsAddTrackAvailable(int index) => _preferredSource.IsAddTrackAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveGenreSupported(int index) => _preferredSource.IsRemoveGenreSupported(index);
+        public Task<bool> IsRemoveGenreAvailable(int index) => _preferredSource.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveImageSupported(int index) => _preferredSource.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _preferredSource.IsRemoveImageAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveTrackSupported(int index) => _preferredSource.IsRemoveTrackSupported(index);
+        public Task<bool> IsRemoveTrackAvailable(int index) => _preferredSource.IsRemoveTrackAvailable(index);
 
         /// <inheritdoc/>
         public Task PauseAsync()
@@ -295,19 +295,19 @@ namespace StrixMusic.Sdk.Data.Merged
         public DateTime? AddedAt { get; internal set; }
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _preferredSource.IsPlayAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => _preferredSource.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _preferredSource.IsPauseAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeNameAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores => _sourceCores;

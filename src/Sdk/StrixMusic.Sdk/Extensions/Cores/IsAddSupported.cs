@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Extensions
         /// <param name="source">The source collection.</param>
         /// <param name="index">The index to check.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public static Task<bool> IsAddSupported<TCollection>(this TCollection source, int index)
+        public static Task<bool> IsAddAvailable<TCollection>(this TCollection source, int index)
             where TCollection : ICoreCollection
         {
             if (source == null)
@@ -23,12 +23,12 @@ namespace StrixMusic.Sdk.Extensions
 
             return typeof(TCollection) switch
             {
-                IPlayableCollectionGroupBase _ => ((ICorePlayableCollectionGroup)source).IsAddChildSupported(index),
-                IAlbumCollectionBase _ => ((ICoreAlbumCollection)source).IsAddAlbumItemSupported(index),
-                IArtistCollectionBase _ => ((ICoreArtistCollection)source).IsAddArtistItemSupported(index),
-                IPlaylistCollectionBase _ => ((ICorePlaylistCollection)source).IsAddPlaylistItemSupported(index),
-                ITrackCollectionBase _ => ((ICoreTrackCollection)source).IsAddTrackSupported(index),
-                IImageCollectionBase _ => ((ICoreImageCollection)source).IsAddImageSupported(index),
+                IPlayableCollectionGroupBase _ => ((ICorePlayableCollectionGroup)source).IsAddChildAvailable(index),
+                IAlbumCollectionBase _ => ((ICoreAlbumCollection)source).IsAddAlbumItemAvailable(index),
+                IArtistCollectionBase _ => ((ICoreArtistCollection)source).IsAddArtistItemAvailable(index),
+                IPlaylistCollectionBase _ => ((ICorePlaylistCollection)source).IsAddPlaylistItemAvailable(index),
+                ITrackCollectionBase _ => ((ICoreTrackCollection)source).IsAddTrackAvailable(index),
+                IImageCollectionBase _ => ((ICoreImageCollection)source).IsAddImageAvailable(index),
                 _ => throw new NotSupportedException("Collection type not handled"),
             };
         }

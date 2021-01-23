@@ -315,4 +315,7 @@
   <data name="SimilarArtistsPVI.Header" xml:space="preserve">
     <value>מעריצים אהבו גם...</value>
   </data>
+  <data name="Playlist" xml:space="preserve">
+    <value>פלייליסט</value>
+  </data>
 </root>

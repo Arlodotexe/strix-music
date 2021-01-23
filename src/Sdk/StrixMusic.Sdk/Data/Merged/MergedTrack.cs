@@ -272,43 +272,43 @@ namespace StrixMusic.Sdk.Data.Merged
         public DateTime? AddedAt => _preferredSource.AddedAt;
 
         /// <inheritdoc/>
-        public bool IsChangeAlbumAsyncSupported => _preferredSource.IsChangeAlbumAsyncSupported;
+        public bool IsChangeAlbumAsyncAvailable => _preferredSource.IsChangeAlbumAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeTrackNumberAsyncSupported => _preferredSource.IsChangeTrackNumberAsyncSupported;
+        public bool IsChangeTrackNumberAsyncAvailable => _preferredSource.IsChangeTrackNumberAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeLanguageAsyncSupported => _preferredSource.IsChangeLanguageAsyncSupported;
+        public bool IsChangeLanguageAsyncAvailable => _preferredSource.IsChangeLanguageAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeLyricsAsyncSupported => _preferredSource.IsChangeLyricsAsyncSupported;
+        public bool IsChangeLyricsAsyncAvailable => _preferredSource.IsChangeLyricsAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeIsExplicitAsyncSupported => _preferredSource.IsChangeIsExplicitAsyncSupported;
+        public bool IsChangeIsExplicitAsyncAvailable => _preferredSource.IsChangeIsExplicitAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _preferredSource.IsPlayAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => _preferredSource.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _preferredSource.IsPauseAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeNameAsyncSupported => _preferredSource.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _preferredSource.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _preferredSource.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveImageSupported(int index) => _imageCollectionMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _imageCollectionMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveGenreSupported(int index) => _preferredSource.IsRemoveGenreSupported(index);
+        public Task<bool> IsRemoveGenreAvailable(int index) => _preferredSource.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveArtistItemSupported(int index) => _artistMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveArtistItemAvailable(int index) => _artistMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc/>
         public Task PauseAsync() => _preferredSource.PauseAsync();
@@ -321,7 +321,7 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             return _sources.InParallel(x =>
             {
-                if (!x.IsChangeAlbumAsyncSupported)
+                if (!x.IsChangeAlbumAsyncAvailable)
                     return Task.CompletedTask;
 
                 var sourceAlbum = album?.GetSources<ICoreAlbum>().First(y => y.SourceCore == x.SourceCore);
@@ -364,13 +364,13 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task ChangeDurationAsync(TimeSpan duration) => _preferredSource.ChangeDurationAsync(duration);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddArtistItemSupported(int index) => _preferredSource.IsAddArtistItemSupported(index);
+        public Task<bool> IsAddArtistItemAvailable(int index) => _preferredSource.IsAddArtistItemAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageSupported(int index) => _preferredSource.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _preferredSource.IsAddImageAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreSupported(int index) => _preferredSource.IsAddGenreSupported(index);
+        public Task<bool> IsAddGenreAvailable(int index) => _preferredSource.IsAddGenreAvailable(index);
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _artistMap.GetItems(limit, offset);
