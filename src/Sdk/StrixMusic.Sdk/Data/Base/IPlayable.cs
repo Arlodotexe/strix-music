@@ -25,7 +25,7 @@ namespace StrixMusic.Sdk.Data.Base
         string Name { get; }
 
         /// <summary>
-        /// Provides comments about the item.
+        /// Provides comments about the item. This may contain markdown content.
         /// </summary>
         string? Description { get; }
 
