@@ -155,10 +155,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public bool IsChangeIsExplicitAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncAvailable => true;
+        public bool IsPlayAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncAvailable => true;
+        public bool IsPauseAsyncAvailable => false;
 
         /// <inheritdoc/>
         public bool IsChangeNameAsyncAvailable => false;
@@ -172,85 +172,85 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task<bool> IsAddImageAvailable(int index)
         {
-            return Task.FromResult(false);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task<bool> IsAddGenreAvailable(int index)
         {
-            return Task.FromResult(false);
+               throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task<bool> IsAddArtistItemAvailable(int index)
         {
-            return Task.FromResult(false);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task<bool> IsRemoveImageAvailable(int index)
         {
-            return Task.FromResult(false);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task<bool> IsRemoveArtistItemAvailable(int index)
         {
-            return Task.FromResult(false);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task<bool> IsRemoveGenreAvailable(int index)
         {
-            return Task.FromResult(false);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeAlbumAsync(ICoreAlbum? albums)
         {
-            return Task.FromResult(false);//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
         {
-            return Task.FromResult(false);//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            return Task.FromResult(false);//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeIsExplicitAsync(bool isExplicit)
         {
-            return Task.FromResult(false);//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeLanguageAsync(CultureInfo language)
         {
-            return Task.FromResult(false);//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeLyricsAsync(ICoreLyrics? lyrics)
         {
-            return Task.FromResult(false);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeNameAsync(string name)
         {
-            return Task.FromResult(false);//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeTrackNumberAsync(int? trackNumber)
         {
-            return Task.FromResult(false);//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
@@ -274,25 +274,25 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
-            return Task.FromResult(false);//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index)
         {
-            return Task.FromResult(false);//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task AddImageAsync(ICoreImage image, int index)
         {
-            return Task.FromResult(false);//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
         {
-            return Task.FromResult(false);//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
