@@ -17,11 +17,11 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
     /// </summary>
     public class ArtistService
     {
-        private readonly string _ArtistMetadataCacheFileName = "TrackMeta.lfc"; //lfc represents LocalFileCore format.
+        private readonly string _ArtistMetadataCacheFileName = "ArtistMeta.lfc"; //lfc represents LocalFileCore format.
         private readonly string _pathToMetadatafile;
         private readonly FileMetadataScanner _fileMetadataScanner;
         private readonly IFileSystemService _fileSystemService;
-        private IFolderData? _folderData;
+        private readonly IFolderData? _folderData;
 
         /// <summary>
         /// Creates a new instance for <see cref="TrackService"/>.
@@ -70,23 +70,45 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// <summary>
         /// Gets the filtered artist by album ids.
         /// </summary>
-        /// <param name="artistId">The artist Id.</param>
+        /// <param name="albumId">The artist Id.</param>
         /// <returns>The filtered <see cref="IReadOnlyList{ArtistMetadata}"/>></returns>
-        public async Task<IReadOnlyList<ArtistMetadata>> GetAlbumsByArtistId(string artistId, int offset, int limit)
+        public async Task<IReadOnlyList<ArtistMetadata>> GetArtistsByAlbumId(string albumId, int offset, int limit)
         {
-            var filtredAlbums = new List<ArtistMetadata>();
+            var filteredArtists = new List<ArtistMetadata>();
 
             var artists = await GetArtistMetadata(offset, limit);
 
             foreach (var item in artists)
             {
-                if (item.AlbumIds != null && item.AlbumIds.Contains(artistId))
+                if (item.AlbumIds != null && item.AlbumIds.Contains(albumId))
                 {
-                    filtredAlbums.Add(item);
+                    filteredArtists.Add(item);
                 }
             }
 
-            return filtredAlbums;
+            return filteredArtists;
+        }
+
+        /// <summary>
+        /// Gets the filtered artist by album ids.
+        /// </summary>
+        /// <param name="trackId">The artist Id.</param>
+        /// <returns>The filtered <see cref="IReadOnlyList{ArtistMetadata}"/>></returns>
+        public async Task<IReadOnlyList<ArtistMetadata>> GetArtistsByTrackId(string trackId, int offset, int limit)
+        {
+            var filteredArtists = new List<ArtistMetadata>();
+
+            var artists = await GetArtistMetadata(offset, limit);
+
+            foreach (var item in artists)
+            {
+                if (item.AlbumIds != null && item.AlbumIds.Contains(trackId))
+                {
+                    filteredArtists.Add(item);
+                }
+            }
+
+            return filteredArtists;
         }
     }
 }

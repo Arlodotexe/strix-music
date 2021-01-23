@@ -17,17 +17,18 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc/>
     public class LocalFilesCoreArtist : ICoreArtist
     {
+        ///NOTE: There are some methods set to NotSupported temporarily although they are supported, so the playback can be implemented.
         private ArtistMetadata _artistMetadata;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreArtist"/> class.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
-        public LocalFilesCoreArtist(ICore sourceCore, ArtistMetadata artistMetadata)
+        public LocalFilesCoreArtist(ICore sourceCore, ArtistMetadata artistMetadata, int totalTracksCount)
         {
             SourceCore = sourceCore;
-
             _artistMetadata = artistMetadata;
+            TotalTracksCount = totalTracksCount;
         }
 
         /// <inheritdoc/>
@@ -70,7 +71,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public string Id => _artistMetadata.Id;
 
         /// <inheritdoc/>
-        public int TotalAlbumItemsCount => throw new NotImplementedException();
+        public int TotalAlbumItemsCount => 0;
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 0;
@@ -82,19 +83,20 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public Uri? Url => _artistMetadata.Url;
+        public Uri? Url => _artistMetadata.Url ?? new Uri("http://google.com");
 
         /// <inheritdoc/>
         public string? Name => _artistMetadata.Name;
 
+        //This is incorrect value.
         /// <inheritdoc/>
-        public string Description => throw new NotImplementedException();
+        public string Description => _artistMetadata.Name ?? "No Description";
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => PlaybackState.None;
 
         /// <inheritdoc/>
-        public TimeSpan Duration => throw new NotImplementedException();
+        public TimeSpan Duration => new TimeSpan(0, 0, 0);
 
         /// <inheritdoc />
         public DateTime? LastPlayed { get; }
@@ -174,31 +176,31 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task ChangeNameAsync(string name)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task PauseAsync()
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
         public Task PlayAsync()
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
@@ -210,7 +212,9 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             foreach (var album in albums)
             {
-                yield return new LocalFilesCoreAlbum(SourceCore, album);
+                // just to test
+                var tracks = await SourceCore.GetService<TrackService>().GetTracksByAlbumId(album.Id, 0, 1000);
+                yield return new LocalFilesCoreAlbum(SourceCore, album, tracks.Count);
             }
         }
 
@@ -230,43 +234,43 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task AddTrackAsync(ICoreTrack track, int index)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task RemoveAlbumItemAsync(int index)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task AddImageAsync(ICoreImage image, int index)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
         {
-            throw new NotSupportedException();
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
         public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException(); //temporary for playback
         }
     }
 }

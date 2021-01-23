@@ -18,6 +18,12 @@ namespace StrixMusic.Core.LocalFiles.Models
     {
         private LocalFilesCoreTrack _localFileCoreTrack;
         private IEnumerable<TrackMetadata> _trackMetadatas;
+        private IEnumerable<AlbumMetadata> _albumMetadatas;
+        private IEnumerable<ArtistMetadata> _artistMetadatas;
+
+        private ArtistService _artistService;
+        private TrackService _trackService;
+        private AlbumService _albumService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreLibrary"/> class.
@@ -31,10 +37,17 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async Task InitAsync()
         {
-            var trackService = SourceCore.GetService<TrackService>();
-            _trackMetadatas = await trackService.GetTrackMetadata(0, int.MaxValue);
+            _trackService = SourceCore.GetService<TrackService>();
+            _artistService = SourceCore.GetService<ArtistService>();
+            _albumService = SourceCore.GetService<AlbumService>();
+
+            _trackMetadatas = await _trackService.GetTrackMetadata(0, int.MaxValue);
+            _albumMetadatas = await _albumService.GetAlbumMetadata(0, int.MaxValue);
+            _artistMetadatas = await _artistService.GetArtistMetadata(0, int.MaxValue);
 
             TotalTracksCount = _trackMetadatas.Count();
+            TotalArtistItemsCount = _artistMetadatas.Count();
+            TotalAlbumItemsCount = _albumMetadatas.Count();
         }
 
         /// <inheritdoc />
@@ -50,16 +63,16 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override string? Description { get; protected set; } = null;
 
         /// <inheritdoc />
-        public override int TotalChildrenCount { get; internal set; } = 0;
+        public override int TotalChildrenCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalArtistItemsCount { get; internal set; } = 0;
+        public override int TotalArtistItemsCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalAlbumItemsCount { get; internal set; } = 0;
+        public override int TotalAlbumItemsCount { get; internal set; } 
 
         /// <inheritdoc />
-        public override int TotalPlaylistItemsCount { get; internal set; } = 0;
+        public override int TotalPlaylistItemsCount { get; internal set; } 
 
         /// <inheritdoc />
         public override int TotalTracksCount { get; internal set; }
@@ -80,31 +93,31 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
+        public async override IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            foreach (var album in _albumMetadatas)
+            {
+                // just to test
+                var tracks = await SourceCore.GetService<TrackService>().GetTracksByAlbumId(album.Id, 0, 1000);
+                yield return new LocalFilesCoreAlbum(SourceCore, album, tracks.Count);
+            }
         }
 
         /// <inheritdoc/>
         public async override IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            var artistService = SourceCore.GetService<ArtistService>();
-
-            var artists = await artistService.GetArtistMetadata(limit, offset);
-
-            foreach (var artist in artists)
+            foreach (var artist in _artistMetadatas)
             {
-                yield return new LocalFilesCoreArtist(SourceCore, artist);
+                // just to test
+                var tracks = await SourceCore.GetService<TrackService>().GetTracksByAlbumId(artist.Id, 0, 1000);
+                yield return new LocalFilesCoreArtist(SourceCore, artist, tracks.Count);
             }
         }
 
         /// <inheritdoc/>
         public async override IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
-            var trackService = SourceCore.GetService<TrackService>();
-            var tracks = await trackService.GetTrackMetadata(offset, limit);
-
-            foreach (var track in tracks)
+            foreach (var track in _trackMetadatas)
             {
                 yield return new LocalFilesCoreTrack(SourceCore, track);
             }

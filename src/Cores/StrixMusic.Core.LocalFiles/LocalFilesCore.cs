@@ -124,7 +124,6 @@ namespace StrixMusic.Core.LocalFiles
             if (CoreCount == LocalFileCoreManager.Instances?.Count)
                 await LocalFileCoreManager.InitializeDataForAllCores();
 
-            _coreLibrary = new LocalFilesCoreLibrary(this);
 
             if (_coreLibrary is LocalFilesCoreLibrary localFilesCore)
                 await localFilesCore.InitAsync();
