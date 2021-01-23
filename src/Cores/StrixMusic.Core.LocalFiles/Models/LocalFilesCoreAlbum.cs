@@ -230,7 +230,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            throw new NotSupportedException();//temporary for playback
+            await Task.CompletedTask;
+            yield break; //temporary for playback
         }
 
         /// <inheritdoc />
