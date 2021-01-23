@@ -87,6 +87,7 @@ namespace StrixMusic.Shells.Groove
         protected override void PostShellSetup()
         {
             NavigationButtonClicked(MyMusicButton, new RoutedEventArgs());
+            UpdatePaneState();
         }
 
         /// <inheritdoc />
@@ -208,6 +209,28 @@ namespace StrixMusic.Shells.Groove
             {
                 OverlayContent.Content = e.Page;
                 OverlayContent.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void OnPaneOpening(SplitView sender, object e)
+        {
+            UpdatePaneState();
+        }
+
+        private void OnPaneClosing(SplitView sender, object e)
+        {
+            UpdatePaneState();
+        }
+
+        private void UpdatePaneState()
+        {
+            if (MainSplitView.IsPaneOpen)
+            {
+                VisualStateManager.GoToState(this, "Full", true);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Compact", true);
             }
         }
     }

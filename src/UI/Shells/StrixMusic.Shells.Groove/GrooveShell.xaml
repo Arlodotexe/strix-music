@@ -47,9 +47,35 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+            <VisualStateGroup x:Name="PaneStates">
+                <VisualState x:Name="Full">
+                    <!--<VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind MainSplitView.IsPaneOpen, Mode=OneWay}"/>
+                    </VisualState.StateTriggers>-->
+                    <VisualState.Setters>
+                        <Setter Target="Seperator.Width" Value="auto"/>
+                        <Setter Target="Seperator.HorizontalAlignment" Value="Stretch"/>
+                        <Setter Target="CompactCreatePlaylistButton.Visibility" Value="Collapsed"/>
+                        <Setter Target="PlaylistList.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Compact">
+                    <!--<VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind !MainSplitView.IsPaneOpen, Mode=OneWay}"/>
+                    </VisualState.StateTriggers>-->
+                    <VisualState.Setters>
+                        <Setter Target="Seperator.Width" Value="24"/>
+                        <Setter Target="Seperator.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="CompactCreatePlaylistButton.Visibility" Value="Visible"/>
+                        <Setter Target="PlaylistList.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        
         <SplitView x:Name="MainSplitView" DisplayMode="CompactInline" OpenPaneLength="320"
-                   PaneBackground="{ThemeResource PaneHostBackgroundBrush}">
+                   PaneBackground="{ThemeResource PaneHostBackgroundBrush}"
+                   PaneOpening="OnPaneOpening" PaneClosing="OnPaneClosing">
             <SplitView.Content>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -108,7 +134,7 @@
                         </Button>
 
                         <!--Search Box-->
-                        <Button Width="48" Style="{StaticResource GrooveButton}" HorizontalAlignment="Left">
+                        <Button x:Name="SearchButton" Width="48" Style="{StaticResource GrooveButton}" HorizontalAlignment="Left">
                             <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
                         <!--<AutoSuggestBox x:Name="AutoSuggest" x:Uid="/Common/SearchTBox"
@@ -130,7 +156,7 @@
                             </Grid>
                         </ToggleButton>
                         <ToggleButton x:Name="RecentButton" Style="{StaticResource GrooveNavigationButton}"
-                                          Click="NavigationButtonClicked">
+                                      Click="NavigationButtonClicked">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="48"/>
@@ -158,8 +184,9 @@
                         </ToggleButton>
 
                         <!--Seperator-->
-                        <Rectangle Fill="{ThemeResource SystemBaseHighColor}" Opacity=".5" Height="1" Margin="12,0"/>
+                        <Rectangle x:Name="Seperator" Fill="{ThemeResource SystemBaseHighColor}" Opacity=".5" Height="1" Margin="12,0"/>
 
+                        <!--Playlist button-->
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -184,6 +211,11 @@
                                 <SymbolIcon Symbol="Add"/>
                             </Button>
                         </Grid>
+
+                        <Button x:Name="CompactCreatePlaylistButton" Style="{StaticResource GrooveButton}" Width="48" Visibility="Collapsed"
+                                HorizontalAlignment="Left">
+                            <SymbolIcon Symbol="Add"/>
+                        </Button>
                     </StackPanel>
 
                     <defaultcontrols:PlaylistCollection x:Name="PlaylistList" DataContext="{x:Bind ViewModel.Library}" Grid.Row="1" Style="{StaticResource PanePlaylistCollectionStyle}"
