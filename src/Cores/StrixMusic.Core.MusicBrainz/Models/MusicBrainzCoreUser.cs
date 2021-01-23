@@ -72,40 +72,40 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public CultureInfo Region => CultureInfo.CurrentUICulture;
 
         /// <inheritdoc />
-        public bool IsChangeDisplayNameSupported => false;
+        public bool IsChangeDisplayNameAvailable => false;
 
         /// <inheritdoc />
-        public bool IsChangeBirthDateAsyncSupported => false;
+        public bool IsChangeBirthDateAsyncAvailable => false;
 
         /// <inheritdoc />
-        public bool IsChangeFullNameAsyncAsyncSupported => false;
+        public bool IsChangeFullNameAsyncAsyncAvailable => false;
 
         /// <inheritdoc />
-        public bool IsChangeRegionAsyncSupported => false;
+        public bool IsChangeRegionAsyncAvailable => false;
 
         /// <inheritdoc />
-        public bool IsChangeEmailAsyncSupported => false;
+        public bool IsChangeEmailAsyncAvailable => false;
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlSupported(int index)
+        public Task<bool> IsAddUrlAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index)
+        public Task<bool> IsAddImageAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlSupported(int index)
+        public Task<bool> IsRemoveUrlAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index)
+        public Task<bool> IsRemoveImageAvailable(int index)
         {
             return Task.FromResult(false);
         }

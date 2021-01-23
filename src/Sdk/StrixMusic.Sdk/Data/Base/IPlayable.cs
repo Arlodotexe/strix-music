@@ -25,7 +25,7 @@ namespace StrixMusic.Sdk.Data.Base
         string Name { get; }
 
         /// <summary>
-        /// Provides comments about the item.
+        /// Provides comments about the item. This may contain markdown content.
         /// </summary>
         string? Description { get; }
 
@@ -44,29 +44,29 @@ namespace StrixMusic.Sdk.Data.Base
         TimeSpan Duration { get; }
 
         /// <summary>
-        /// If true, <see cref="PlayAsync()"/> is supported.
+        /// If true, <see cref="PlayAsync()"/> can be used.
         /// </summary>
-        bool IsPlayAsyncSupported { get; }
+        bool IsPlayAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="PauseAsync()"/> is supported.
+        /// If true, <see cref="PauseAsync()"/> can be used.
         /// </summary>
-        bool IsPauseAsyncSupported { get; }
+        bool IsPauseAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeNameAsync(string)"/> is supported.
+        /// If true, <see cref="ChangeNameAsync(string)"/> can be used.
         /// </summary>
-        bool IsChangeNameAsyncSupported { get; }
+        bool IsChangeNameAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeDescriptionAsync(string)"/> is supported.
+        /// If true, <see cref="ChangeDescriptionAsync(string)"/> can be used.
         /// </summary>
-        bool IsChangeDescriptionAsyncSupported { get; }
+        bool IsChangeDescriptionAsyncAvailable { get; }
 
         /// <summary>
-        /// If true, <see cref="ChangeDurationAsync(TimeSpan)"/> is supported.
+        /// If true, <see cref="ChangeDurationAsync(TimeSpan)"/> can be used.
         /// </summary>
-        bool IsChangeDurationAsyncSupported { get; }
+        bool IsChangeDurationAsyncAvailable { get; }
 
         /// <summary>
         /// Attempts to play the item, or resumes playback if already playing.

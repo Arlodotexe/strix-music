@@ -276,37 +276,37 @@ namespace StrixMusic.Sdk.ViewModels
         public int TotalImageCount => _playlist.TotalImageCount;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _playlist.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _playlist.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _playlist.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _playlist.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _playlist.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _playlist.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _playlist.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _playlist.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _playlist.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _playlist.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index) => _playlist.IsAddTrackSupported(index);
+        public Task<bool> IsAddTrackAvailable(int index) => _playlist.IsAddTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreSupported(int index) => _playlist.IsAddGenreSupported(index);
+        public Task<bool> IsAddGenreAvailable(int index) => _playlist.IsAddGenreAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _playlist.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _playlist.IsAddImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _playlist.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _playlist.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index) => _playlist.IsRemoveGenreSupported(index);
+        public Task<bool> IsRemoveGenreAvailable(int index) => _playlist.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index) => _playlist.IsRemoveTrackSupported(index);
+        public Task<bool> IsRemoveTrackAvailable(int index) => _playlist.IsRemoveTrackAvailable(index);
 
         /// <inheritdoc />
         public Task PauseAsync() => _playlist.PauseAsync();

@@ -183,19 +183,19 @@ namespace StrixMusic.Sdk.Data.Merged
         public DateTime? AddedAt { get; internal set; }
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _preferredSource.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _preferredSource.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _preferredSource.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _preferredSource.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _preferredSource.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _preferredSource.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public int TotalAlbumItemsCount { get; internal set; }
@@ -204,16 +204,16 @@ namespace StrixMusic.Sdk.Data.Merged
         public int TotalImageCount { get; internal set; }
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumItemSupported(int index) => _albumMap.IsAddItemSupported(index);
+        public Task<bool> IsAddAlbumItemAvailable(int index) => _albumMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemSupported(int index) => _albumMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveAlbumItemAvailable(int index) => _albumMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _imageMap.IsAddItemSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _imageMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _imageMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _imageMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc />
         public Task PlayAsync() => _preferredSource.PlayAsync();

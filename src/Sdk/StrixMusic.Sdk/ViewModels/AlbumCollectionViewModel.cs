@@ -259,34 +259,34 @@ namespace StrixMusic.Sdk.ViewModels
         public int TotalImageCount => _collection.TotalImageCount;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _collection.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _collection.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _collection.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _collection.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _collection.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _collection.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _collection.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _collection.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _collection.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _collection.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumItemSupported(int index) => _collection.IsAddAlbumItemSupported(index);
+        public Task<bool> IsAddAlbumItemAvailable(int index) => _collection.IsAddAlbumItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemSupported(int index) => _collection.IsRemoveAlbumItemSupported(index);
+        public Task<bool> IsRemoveAlbumItemAvailable(int index) => _collection.IsRemoveAlbumItemAvailable(index);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => _collection.GetAlbumItemsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _collection.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _collection.IsAddImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _collection.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _collection.IsRemoveImageAvailable(index);
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }

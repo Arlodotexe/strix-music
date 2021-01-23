@@ -146,31 +146,31 @@ namespace StrixMusic.Sdk.ViewModels
         public double PlaybackSpeed => Model.PlaybackSpeed;
 
         /// <inheritdoc />
-        public bool IsToggleShuffleAsyncSupported => Model.IsToggleShuffleAsyncSupported;
+        public bool IsToggleShuffleAsyncAvailable => Model.IsToggleShuffleAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsToggleRepeatAsyncSupported => Model.IsToggleRepeatAsyncSupported;
+        public bool IsToggleRepeatAsyncAvailable => Model.IsToggleRepeatAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeVolumeAsyncSupported => Model.IsChangeVolumeAsyncSupported;
+        public bool IsChangeVolumeAsyncAvailable => Model.IsChangeVolumeAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangePlaybackSpeedSupported => Model.IsChangePlaybackSpeedSupported;
+        public bool IsChangePlaybackSpeedAvailable => Model.IsChangePlaybackSpeedAvailable;
 
         /// <inheritdoc />
-        public bool IsResumeAsyncSupported => Model.IsResumeAsyncSupported;
+        public bool IsResumeAsyncAvailable => Model.IsResumeAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => Model.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => Model.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsNextAsyncSupported => Model.IsNextAsyncSupported;
+        public bool IsNextAsyncAvailable => Model.IsNextAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPreviousAsyncSupported => Model.IsPreviousAsyncSupported;
+        public bool IsPreviousAsyncAvailable => Model.IsPreviousAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsSeekAsyncSupported => Model.IsSeekAsyncSupported;
+        public bool IsSeekAsyncAvailable => Model.IsSeekAsyncAvailable;
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsActiveChanged

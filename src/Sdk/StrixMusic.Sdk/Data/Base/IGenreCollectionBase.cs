@@ -18,12 +18,12 @@ namespace StrixMusic.Sdk.Data.Base
         /// Checks if the backend supports adding a <see cref="string"/> at a specific position in <see cref="Genres"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="string"/> can be added.</returns>
-        Task<bool> IsAddGenreSupported(int index);
+        Task<bool> IsAddGenreAvailable(int index);
 
         /// <summary>
         /// Checks if the backend supports removing a <see cref="string"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="string"/> can be removed.</returns>
-        Task<bool> IsRemoveGenreSupported(int index);
+        Task<bool> IsRemoveGenreAvailable(int index);
     }
 }

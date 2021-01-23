@@ -65,27 +65,27 @@ namespace StrixMusic.Sdk.Data.Merged
             switch (sourceCollection)
             {
                 case ICorePlayableCollectionGroup playableCollection:
-                    if (await playableCollection.IsAddChildSupported(originalIndex))
+                    if (await playableCollection.IsAddChildAvailable(originalIndex))
                         await playableCollection.AddChildAsync((ICorePlayableCollectionGroup)itemToAdd, originalIndex);
                     break;
                 case ICoreAlbumCollection albumCollection:
-                    if (await albumCollection.IsAddAlbumItemSupported(originalIndex))
+                    if (await albumCollection.IsAddAlbumItemAvailable(originalIndex))
                         await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)itemToAdd, originalIndex);
                     break;
                 case ICoreArtistCollection artistCollection:
-                    if (await artistCollection.IsAddArtistItemSupported(originalIndex))
+                    if (await artistCollection.IsAddArtistItemAvailable(originalIndex))
                         await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)itemToAdd, originalIndex);
                     break;
                 case ICorePlaylistCollection playlistCollection:
-                    if (await playlistCollection.IsAddPlaylistItemSupported(originalIndex))
+                    if (await playlistCollection.IsAddPlaylistItemAvailable(originalIndex))
                         await playlistCollection.AddPlaylistItemAsync((ICorePlaylistCollectionItem)itemToAdd, originalIndex);
                     break;
                 case ICoreTrackCollection trackCollection:
-                    if (await trackCollection.IsAddTrackSupported(originalIndex))
+                    if (await trackCollection.IsAddTrackAvailable(originalIndex))
                         await trackCollection.AddTrackAsync((ICoreTrack)itemToAdd, originalIndex);
                     break;
                 case ICoreImageCollection imageCollection:
-                    if (await imageCollection.IsAddImageSupported(originalIndex))
+                    if (await imageCollection.IsAddImageAvailable(originalIndex))
                         await imageCollection.AddImageAsync((ICoreImage)itemToAdd, originalIndex);
                     break;
                 default:
@@ -459,23 +459,23 @@ namespace StrixMusic.Sdk.Data.Merged
                 switch (sourceCollection)
                 {
                     case ICorePlayableCollectionGroup playableCollection:
-                        if (await playableCollection.IsAddChildSupported(index))
+                        if (await playableCollection.IsAddChildAvailable(index))
                             await playableCollection.AddChildAsync((ICorePlayableCollectionGroup)source, mappedData.OriginalIndex);
                         break;
                     case ICoreAlbumCollection albumCollection:
-                        if (await albumCollection.IsAddAlbumItemSupported(index))
+                        if (await albumCollection.IsAddAlbumItemAvailable(index))
                             await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)source, mappedData.OriginalIndex);
                         break;
                     case ICoreArtistCollection artistCollection:
-                        if (await artistCollection.IsAddArtistItemSupported(index))
+                        if (await artistCollection.IsAddArtistItemAvailable(index))
                             await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)source, mappedData.OriginalIndex);
                         break;
                     case ICorePlaylistCollection playlistCollection:
-                        if (await playlistCollection.IsAddPlaylistItemSupported(index))
+                        if (await playlistCollection.IsAddPlaylistItemAvailable(index))
                             await playlistCollection.AddPlaylistItemAsync((ICorePlaylistCollectionItem)source, mappedData.OriginalIndex);
                         break;
                     case ICoreTrackCollection trackCollection:
-                        if (await trackCollection.IsAddTrackSupported(index))
+                        if (await trackCollection.IsAddTrackAvailable(index))
                             await trackCollection.AddTrackAsync((ICoreTrack)source, mappedData.OriginalIndex);
                         break;
                     default:
@@ -490,12 +490,12 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         /// <param name="index">The index to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public async Task<bool> IsAddItemSupported(int index)
+        public async Task<bool> IsAddItemAvailable(int index)
         {
             await TryInitAsync();
 
             var sourceResults = await _mergedMappedData[index].MergedMapData
-                .InParallel(async x => await x.SourceCollection.IsAddSupported(x.OriginalIndex));
+                .InParallel(async x => await x.SourceCollection.IsAddAvailable(x.OriginalIndex));
 
             return sourceResults.Any();
         }
@@ -510,7 +510,7 @@ namespace StrixMusic.Sdk.Data.Merged
             await TryInitAsync();
 
             var sourceResults = await _mergedMappedData[index].MergedMapData
-                .InParallel(async x => await x.SourceCollection.IsAddSupported(x.OriginalIndex));
+                .InParallel(async x => await x.SourceCollection.IsAddAvailable(x.OriginalIndex));
 
             return sourceResults.Any();
         }

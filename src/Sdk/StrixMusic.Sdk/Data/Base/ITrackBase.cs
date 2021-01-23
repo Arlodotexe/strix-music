@@ -39,27 +39,27 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// If true, changing albums is supported.
         /// </summary>
-        bool IsChangeAlbumAsyncSupported { get; }
+        bool IsChangeAlbumAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="ChangeTrackNumberAsync(int?)"/> is supported.
         /// </summary>
-        bool IsChangeTrackNumberAsyncSupported { get; }
+        bool IsChangeTrackNumberAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="ChangeLanguageAsync(CultureInfo)"/> is supported.
         /// </summary>
-        bool IsChangeLanguageAsyncSupported { get; }
+        bool IsChangeLanguageAsyncAvailable { get; }
 
         /// <summary>
         /// If true, changing lyrics is supported.
         /// </summary>
-        bool IsChangeLyricsAsyncSupported { get; }
+        bool IsChangeLyricsAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="ChangeIsExplicitAsync(bool)"/> is supported.
         /// </summary>
-        bool IsChangeIsExplicitAsyncSupported { get; }
+        bool IsChangeIsExplicitAsyncAvailable { get; }
 
         /// <summary>
         /// Changes the <see cref="TrackNumber"/> on this track.

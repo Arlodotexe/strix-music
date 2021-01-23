@@ -19,12 +19,12 @@ namespace StrixMusic.Sdk.Data.Base
         /// Checks if the backend supports adding an <see cref="Uri"/> at a specific position in <see cref="Urls"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="Uri"/> can be added.</returns>
-        Task<bool> IsAddUrlSupported(int index);
+        Task<bool> IsAddUrlAvailable(int index);
 
         /// <summary>
         /// Checks if the backend supports removing a <see cref="Uri"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="Uri"/> can be removed.</returns>
-        Task<bool> IsRemoveUrlSupported(int index);
+        Task<bool> IsRemoveUrlAvailable(int index);
     }
 }

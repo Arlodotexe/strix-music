@@ -168,19 +168,19 @@ namespace StrixMusic.Sdk.Data.Merged
         public int TotalImageCount { get; private set; }
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _preferredSource.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _preferredSource.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _preferredSource.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _preferredSource.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _preferredSource.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _preferredSource.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Task PlayAsync()
@@ -213,27 +213,27 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index)
+        public Task<bool> IsAddTrackAvailable(int index)
         {
-            return _preferredSource.IsAddTrackSupported(index);
+            return _preferredSource.IsAddTrackAvailable(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index)
+        public Task<bool> IsRemoveTrackAvailable(int index)
         {
-            return _preferredSource.IsRemoveTrackSupported(index);
+            return _preferredSource.IsRemoveTrackAvailable(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index)
+        public Task<bool> IsAddImageAvailable(int index)
         {
-            return _preferredSource.IsAddImageSupported(index);
+            return _preferredSource.IsAddImageAvailable(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index)
+        public Task<bool> IsRemoveImageAvailable(int index)
         {
-            return _preferredSource.IsRemoveImageSupported(index);
+            return _preferredSource.IsRemoveImageAvailable(index);
         }
 
         /// <inheritdoc />

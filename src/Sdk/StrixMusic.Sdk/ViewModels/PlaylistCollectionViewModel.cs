@@ -199,19 +199,19 @@ namespace StrixMusic.Sdk.ViewModels
         public string Id => _collection.Id;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _collection.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _collection.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _collection.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _collection.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _collection.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _collection.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _collection.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _collection.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _collection.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _collection.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Uri? Url => _collection.Url;
@@ -285,16 +285,16 @@ namespace StrixMusic.Sdk.ViewModels
         public IReadOnlyList<ICorePlaylistCollection> Sources => _collection.GetSources<ICorePlaylistCollection>();
 
         /// <inheritdoc />
-        public Task<bool> IsAddPlaylistItemSupported(int index) => _collection.IsAddPlaylistItemSupported(index);
+        public Task<bool> IsAddPlaylistItemAvailable(int index) => _collection.IsAddPlaylistItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemovePlaylistItemSupported(int index) => _collection.IsRemovePlaylistItemSupported(index);
+        public Task<bool> IsRemovePlaylistItemAvailable(int index) => _collection.IsRemovePlaylistItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _collection.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _collection.IsAddImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _collection.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _collection.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
         public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index) => _collection.AddPlaylistItemAsync(playlist, index);

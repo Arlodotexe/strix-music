@@ -136,31 +136,31 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public RepeatState RepeatState => _playbackHandler.RepeatState;
 
         /// <inheritdoc />
-        public bool IsSeekAsyncSupported => true;
+        public bool IsSeekAsyncAvailable => true;
 
         /// <inheritdoc />
-        public bool IsResumeAsyncSupported => true;
+        public bool IsResumeAsyncAvailable => true;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => true;
+        public bool IsPauseAsyncAvailable => true;
 
         /// <inheritdoc />
-        public bool IsChangeVolumeAsyncSupported => true;
+        public bool IsChangeVolumeAsyncAvailable => true;
 
         /// <inheritdoc />
-        public bool IsChangePlaybackSpeedSupported => true;
+        public bool IsChangePlaybackSpeedAvailable => true;
 
         /// <inheritdoc />
-        public bool IsNextAsyncSupported => true;
+        public bool IsNextAsyncAvailable => true;
 
         /// <inheritdoc />
-        public bool IsPreviousAsyncSupported => true;
+        public bool IsPreviousAsyncAvailable => true;
 
         /// <inheritdoc />
-        public bool IsToggleShuffleAsyncSupported => true;
+        public bool IsToggleShuffleAsyncAvailable => true;
 
         /// <inheritdoc />
-        public bool IsToggleRepeatAsyncSupported => true;
+        public bool IsToggleRepeatAsyncAvailable => true;
 
         /// <inheritdoc />
         public Task NextAsync() => _playbackHandler.NextAsync();

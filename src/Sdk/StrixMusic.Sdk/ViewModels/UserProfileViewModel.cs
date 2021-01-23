@@ -143,31 +143,31 @@ namespace StrixMusic.Sdk.ViewModels
         public CultureInfo Region => _userProfile.Region;
 
         /// <inheritdoc />
-        public bool IsChangeDisplayNameSupported => _userProfile.IsChangeDisplayNameSupported;
+        public bool IsChangeDisplayNameAvailable => _userProfile.IsChangeDisplayNameAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeBirthDateAsyncSupported => _userProfile.IsChangeBirthDateAsyncSupported;
+        public bool IsChangeBirthDateAsyncAvailable => _userProfile.IsChangeBirthDateAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeFullNameAsyncAsyncSupported => _userProfile.IsChangeFullNameAsyncAsyncSupported;
+        public bool IsChangeFullNameAsyncAsyncAvailable => _userProfile.IsChangeFullNameAsyncAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeRegionAsyncSupported => _userProfile.IsChangeRegionAsyncSupported;
+        public bool IsChangeRegionAsyncAvailable => _userProfile.IsChangeRegionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeEmailAsyncSupported => _userProfile.IsChangeEmailAsyncSupported;
+        public bool IsChangeEmailAsyncAvailable => _userProfile.IsChangeEmailAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlSupported(int index) => _userProfile.IsAddUrlSupported(index);
+        public Task<bool> IsAddUrlAvailable(int index) => _userProfile.IsAddUrlAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _userProfile.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _userProfile.IsAddImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _userProfile.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _userProfile.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlSupported(int index) => _userProfile.IsRemoveUrlSupported(index);
+        public Task<bool> IsRemoveUrlAvailable(int index) => _userProfile.IsRemoveUrlAvailable(index);
 
         /// <inheritdoc />
         public Task ChangeDisplayNameAsync(string displayName) => _userProfile.ChangeDisplayNameAsync(displayName);

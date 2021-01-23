@@ -317,22 +317,22 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _album.PlaybackState;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _album.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _album.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _album.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _album.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _album.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _album.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _album.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _album.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDatePublishedAsyncSupported => _album.IsChangeDatePublishedAsyncSupported;
+        public bool IsChangeDatePublishedAsyncAvailable => _album.IsChangeDatePublishedAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _album.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _album.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Task PauseAsync() => _album.PauseAsync();
@@ -398,28 +398,28 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration) => _album.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _album.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _album.IsAddImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index) => _album.IsAddTrackSupported(index);
+        public Task<bool> IsAddTrackAvailable(int index) => _album.IsAddTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistItemSupported(int index) => _album.IsAddArtistItemSupported(index);
+        public Task<bool> IsAddArtistItemAvailable(int index) => _album.IsAddArtistItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreSupported(int index) => _album.IsAddGenreSupported(index);
+        public Task<bool> IsAddGenreAvailable(int index) => _album.IsAddGenreAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _album.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _album.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index) => _album.IsRemoveGenreSupported(index);
+        public Task<bool> IsRemoveGenreAvailable(int index) => _album.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index) => _album.IsRemoveTrackSupported(index);
+        public Task<bool> IsRemoveTrackAvailable(int index) => _album.IsRemoveTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemSupported(int index) => _album.IsRemoveArtistItemSupported(index);
+        public Task<bool> IsRemoveArtistItemAvailable(int index) => _album.IsRemoveArtistItemAvailable(index);
 
         /// <inheritdoc />
         public Task ChangeDatePublishedAsync(DateTime datePublished) => _album.ChangeDatePublishedAsync(datePublished);
