@@ -254,16 +254,16 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index) => _collection.IsAddTrackSupported(index);
+        public Task<bool> IsAddTrackAvailable(int index) => _collection.IsAddTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index) => _collection.IsRemoveTrackSupported(index);
+        public Task<bool> IsRemoveTrackAvailable(int index) => _collection.IsRemoveTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _collection.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _collection.IsAddImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _collection.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _collection.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
         public Task AddTrackAsync(ITrack track, int index) => _collection.AddTrackAsync(track, index);

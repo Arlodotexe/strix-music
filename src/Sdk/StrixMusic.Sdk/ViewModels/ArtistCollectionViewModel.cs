@@ -287,16 +287,16 @@ namespace StrixMusic.Sdk.ViewModels
         public SynchronizedObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistItemSupported(int index) => _collection.IsAddArtistItemSupported(index);
+        public Task<bool> IsAddArtistItemAvailable(int index) => _collection.IsAddArtistItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _collection.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _collection.IsAddImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemSupported(int index) => _collection.IsRemoveArtistItemSupported(index);
+        public Task<bool> IsRemoveArtistItemAvailable(int index) => _collection.IsRemoveArtistItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _collection.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _collection.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _collection.GetArtistItemsAsync(limit, offset);

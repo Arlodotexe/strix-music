@@ -140,19 +140,19 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICorePlayableCollectionGroup? RelatedItems => null;
 
         /// <inheritdoc/>
-        public bool IsChangeAlbumAsyncSupported => false;
+        public bool IsChangeAlbumAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeTrackNumberAsyncSupported => false;
+        public bool IsChangeTrackNumberAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeLanguageAsyncSupported => false;
+        public bool IsChangeLanguageAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeLyricsAsyncSupported => false;
+        public bool IsChangeLyricsAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeIsExplicitAsyncSupported => false;
+        public bool IsChangeIsExplicitAsyncAvailable => false;
 
         /// <inheritdoc/>
         public bool IsPlayAsyncAvailable => true;
@@ -170,37 +170,37 @@ namespace StrixMusic.Core.LocalFiles.Models
         public bool IsChangeDurationAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageSupported(int index)
+        public Task<bool> IsAddImageAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreSupported(int index)
+        public Task<bool> IsAddGenreAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddArtistItemSupported(int index)
+        public Task<bool> IsAddArtistItemAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index)
+        public Task<bool> IsRemoveImageAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemSupported(int index)
+        public Task<bool> IsRemoveArtistItemAvailable(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index)
+        public Task<bool> IsRemoveGenreAvailable(int index)
         {
             return Task.FromResult(false);
         }

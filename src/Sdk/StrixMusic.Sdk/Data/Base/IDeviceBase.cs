@@ -43,47 +43,47 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// If true, <see cref="IAudioPlayerBase.SeekAsync(TimeSpan)"/> is supported.
         /// </summary>
-        bool IsSeekAsyncSupported { get; }
+        bool IsSeekAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="IAudioPlayerBase.ResumeAsync()"/> is supported.
         /// </summary>
-        bool IsResumeAsyncSupported { get; }
+        bool IsResumeAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="IAudioPlayerBase.PauseAsync()"/> is supported.
         /// </summary>
-        bool IsPauseAsyncSupported { get; }
+        bool IsPauseAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="IAudioPlayerBase.ChangeVolumeAsync(double)"/> is supported.
         /// </summary>
-        bool IsChangeVolumeAsyncSupported { get; }
+        bool IsChangeVolumeAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="IAudioPlayerBase.ChangePlaybackSpeedAsync(double)"/> is supported.
         /// </summary>
-        bool IsChangePlaybackSpeedSupported { get; }
+        bool IsChangePlaybackSpeedAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="NextAsync()"/> is supported.
         /// </summary>
-        bool IsNextAsyncSupported { get; }
+        bool IsNextAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="PreviousAsync()"/> is supported.
         /// </summary>
-        bool IsPreviousAsyncSupported { get; }
+        bool IsPreviousAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="ToggleShuffleAsync"/> is supported.
         /// </summary>
-        bool IsToggleShuffleAsyncSupported { get; }
+        bool IsToggleShuffleAsyncAvailable { get; }
 
         /// <summary>
         /// If true, <see cref="ToggleRepeatAsync"/> is supported.
         /// </summary>
-        bool IsToggleRepeatAsyncSupported { get; }
+        bool IsToggleRepeatAsyncAvailable { get; }
 
         /// <summary>
         /// Advances to the next track. If there is no next track, playback is paused.

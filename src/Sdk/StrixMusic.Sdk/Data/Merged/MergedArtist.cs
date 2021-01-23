@@ -259,28 +259,28 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool IsChangeDurationAsyncAvailable => _preferredSource.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index) => _trackCollectionMap.IsAddItemSupported(index);
+        public Task<bool> IsAddTrackAvailable(int index) => _trackCollectionMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumItemSupported(int index) => _albumCollectionItemMap.IsAddItemSupported(index);
+        public Task<bool> IsAddAlbumItemAvailable(int index) => _albumCollectionItemMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _imageCollectionMap.IsAddItemSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _imageCollectionMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreSupported(int index) => _preferredSource.IsAddGenreSupported(index);
+        public Task<bool> IsAddGenreAvailable(int index) => _preferredSource.IsAddGenreAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index) => _trackCollectionMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveTrackAvailable(int index) => _trackCollectionMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemSupported(int index) => _albumCollectionItemMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveAlbumItemAvailable(int index) => _albumCollectionItemMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _imageCollectionMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _imageCollectionMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index) => _preferredSource.IsRemoveGenreSupported(index);
+        public Task<bool> IsRemoveGenreAvailable(int index) => _preferredSource.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => _albumCollectionItemMap.GetItems(limit, offset);

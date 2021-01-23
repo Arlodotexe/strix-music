@@ -491,40 +491,40 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeDurationAsyncAvailable => _collectionGroup.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _collectionGroup.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _collectionGroup.IsAddImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddPlaylistItemSupported(int index) => _collectionGroup.IsAddPlaylistItemSupported(index);
+        public Task<bool> IsAddPlaylistItemAvailable(int index) => _collectionGroup.IsAddPlaylistItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackSupported(int index) => _collectionGroup.IsAddTrackSupported(index);
+        public Task<bool> IsAddTrackAvailable(int index) => _collectionGroup.IsAddTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumItemSupported(int index) => _collectionGroup.IsAddAlbumItemSupported(index);
+        public Task<bool> IsAddAlbumItemAvailable(int index) => _collectionGroup.IsAddAlbumItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistItemSupported(int index) => _collectionGroup.IsAddArtistItemSupported(index);
+        public Task<bool> IsAddArtistItemAvailable(int index) => _collectionGroup.IsAddArtistItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddChildSupported(int index) => _collectionGroup.IsAddChildSupported(index);
+        public Task<bool> IsAddChildAvailable(int index) => _collectionGroup.IsAddChildAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _collectionGroup.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _collectionGroup.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemovePlaylistItemSupported(int index) => _collectionGroup.IsRemovePlaylistItemSupported(index);
+        public Task<bool> IsRemovePlaylistItemAvailable(int index) => _collectionGroup.IsRemovePlaylistItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackSupported(int index) => _collectionGroup.IsRemoveTrackSupported(index);
+        public Task<bool> IsRemoveTrackAvailable(int index) => _collectionGroup.IsRemoveTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemSupported(int index) => _collectionGroup.IsRemoveArtistItemSupported(index);
+        public Task<bool> IsRemoveArtistItemAvailable(int index) => _collectionGroup.IsRemoveArtistItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemSupported(int index) => _collectionGroup.IsRemoveAlbumItemSupported(index);
+        public Task<bool> IsRemoveAlbumItemAvailable(int index) => _collectionGroup.IsRemoveAlbumItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveChildSupported(int index) => _collectionGroup.IsRemoveChildSupported(index);
+        public Task<bool> IsRemoveChildAvailable(int index) => _collectionGroup.IsRemoveChildAvailable(index);
 
         /// <inheritdoc />
         public Task PauseAsync() => _collectionGroup.PauseAsync();

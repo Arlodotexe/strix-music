@@ -147,31 +147,31 @@ namespace StrixMusic.Sdk.Data.Merged
         public PlaybackState PlaybackState { get; internal set; }
 
         /// <inheritdoc />
-        public bool IsSeekAsyncSupported => _source.IsSeekAsyncSupported;
+        public bool IsSeekAsyncAvailable => _source.IsSeekAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsResumeAsyncSupported => _source.IsResumeAsyncSupported;
+        public bool IsResumeAsyncAvailable => _source.IsResumeAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _source.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _source.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeVolumeAsyncSupported => _source.IsChangeVolumeAsyncSupported;
+        public bool IsChangeVolumeAsyncAvailable => _source.IsChangeVolumeAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangePlaybackSpeedSupported => _source.IsChangePlaybackSpeedSupported;
+        public bool IsChangePlaybackSpeedAvailable => _source.IsChangePlaybackSpeedAvailable;
 
         /// <inheritdoc />
-        public bool IsNextAsyncSupported => _source.IsNextAsyncSupported;
+        public bool IsNextAsyncAvailable => _source.IsNextAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPreviousAsyncSupported => _source.IsPreviousAsyncSupported;
+        public bool IsPreviousAsyncAvailable => _source.IsPreviousAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsToggleShuffleAsyncSupported => _source.IsToggleShuffleAsyncSupported;
+        public bool IsToggleShuffleAsyncAvailable => _source.IsToggleShuffleAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsToggleRepeatAsyncSupported => _source.IsToggleRepeatAsyncSupported;
+        public bool IsToggleRepeatAsyncAvailable => _source.IsToggleRepeatAsyncAvailable;
 
         /// <inheritdoc />
         public Task NextAsync() => _source.NextAsync();

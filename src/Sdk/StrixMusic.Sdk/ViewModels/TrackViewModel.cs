@@ -393,37 +393,37 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeDurationAsyncAvailable => Model.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeAlbumAsyncSupported => Model.IsChangeAlbumAsyncSupported;
+        public bool IsChangeAlbumAsyncAvailable => Model.IsChangeAlbumAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeTrackNumberAsyncSupported => Model.IsChangeTrackNumberAsyncSupported;
+        public bool IsChangeTrackNumberAsyncAvailable => Model.IsChangeTrackNumberAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeLanguageAsyncSupported => Model.IsChangeLanguageAsyncSupported;
+        public bool IsChangeLanguageAsyncAvailable => Model.IsChangeLanguageAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeLyricsAsyncSupported => Model.IsChangeLyricsAsyncSupported;
+        public bool IsChangeLyricsAsyncAvailable => Model.IsChangeLyricsAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeIsExplicitAsyncSupported => Model.IsChangeIsExplicitAsyncSupported;
+        public bool IsChangeIsExplicitAsyncAvailable => Model.IsChangeIsExplicitAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistItemSupported(int index) => Model.IsAddArtistItemSupported(index);
+        public Task<bool> IsAddArtistItemAvailable(int index) => Model.IsAddArtistItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreSupported(int index) => Model.IsAddGenreSupported(index);
+        public Task<bool> IsAddGenreAvailable(int index) => Model.IsAddGenreAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => Model.IsAddImageSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => Model.IsAddImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => Model.IsRemoveImageSupported(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => Model.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreSupported(int index) => Model.IsRemoveGenreSupported(index);
+        public Task<bool> IsRemoveGenreAvailable(int index) => Model.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemSupported(int index) => Model.IsRemoveArtistItemSupported(index);
+        public Task<bool> IsRemoveArtistItemAvailable(int index) => Model.IsRemoveArtistItemAvailable(index);
 
         /// <inheritdoc />
         public Task ChangeAlbumAsync(IAlbum? album) => Model.ChangeAlbumAsync(album);

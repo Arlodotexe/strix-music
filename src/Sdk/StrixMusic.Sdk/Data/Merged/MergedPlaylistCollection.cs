@@ -221,27 +221,27 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddPlaylistItemSupported(int index)
+        public Task<bool> IsAddPlaylistItemAvailable(int index)
         {
-            return _preferredSource.IsAddPlaylistItemSupported(index);
+            return _preferredSource.IsAddPlaylistItemAvailable(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemovePlaylistItemSupported(int index)
+        public Task<bool> IsRemovePlaylistItemAvailable(int index)
         {
-            return _preferredSource.IsRemovePlaylistItemSupported(index);
+            return _preferredSource.IsRemovePlaylistItemAvailable(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index)
+        public Task<bool> IsAddImageAvailable(int index)
         {
-            return _preferredSource.IsAddImageSupported(index);
+            return _preferredSource.IsAddImageAvailable(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index)
+        public Task<bool> IsRemoveImageAvailable(int index)
         {
-            return _preferredSource.IsRemoveImageSupported(index);
+            return _preferredSource.IsRemoveImageAvailable(index);
         }
 
         /// <inheritdoc />

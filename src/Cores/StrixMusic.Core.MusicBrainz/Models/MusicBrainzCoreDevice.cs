@@ -71,31 +71,31 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public double PlaybackSpeed { get; }
 
         /// <inheritdoc />
-        public bool IsToggleShuffleAsyncSupported { get; }
+        public bool IsToggleShuffleAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsToggleRepeatAsyncSupported { get; }
+        public bool IsToggleRepeatAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsChangeVolumeAsyncSupported { get; }
+        public bool IsChangeVolumeAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsChangePlaybackSpeedSupported { get; }
+        public bool IsChangePlaybackSpeedAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsResumeAsyncSupported { get; }
+        public bool IsResumeAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported { get; }
+        public bool IsPauseAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsNextAsyncSupported { get; }
+        public bool IsNextAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsPreviousAsyncSupported { get; }
+        public bool IsPreviousAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsSeekAsyncSupported { get; }
+        public bool IsSeekAsyncAvailable { get; }
 
         /// <inheritdoc />
         public Task ChangePlaybackSpeedAsync(double speed)

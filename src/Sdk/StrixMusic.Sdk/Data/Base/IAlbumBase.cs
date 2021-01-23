@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// If true, <see cref="ChangeDatePublishedAsync(DateTime)"/> is supported.
         /// </summary>
-        bool IsChangeDatePublishedAsyncSupported { get; }
+        bool IsChangeDatePublishedAsyncAvailable { get; }
 
         /// <summary>
         /// Changes the <see cref="DatePublished"/> for this album.

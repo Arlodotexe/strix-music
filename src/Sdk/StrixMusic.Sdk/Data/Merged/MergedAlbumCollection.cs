@@ -204,16 +204,16 @@ namespace StrixMusic.Sdk.Data.Merged
         public int TotalImageCount { get; internal set; }
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumItemSupported(int index) => _albumMap.IsAddItemSupported(index);
+        public Task<bool> IsAddAlbumItemAvailable(int index) => _albumMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemSupported(int index) => _albumMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveAlbumItemAvailable(int index) => _albumMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index) => _imageMap.IsAddItemSupported(index);
+        public Task<bool> IsAddImageAvailable(int index) => _imageMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index) => _imageMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _imageMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc />
         public Task PlayAsync() => _preferredSource.PlayAsync();

@@ -133,42 +133,42 @@ namespace StrixMusic.Sdk.Data.Merged
         public CultureInfo Region => _user.Region;
 
         /// <inheritdoc />
-        public bool IsChangeDisplayNameSupported => _user.IsChangeDisplayNameSupported;
+        public bool IsChangeDisplayNameAvailable => _user.IsChangeDisplayNameAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeBirthDateAsyncSupported => _user.IsChangeBirthDateAsyncSupported;
+        public bool IsChangeBirthDateAsyncAvailable => _user.IsChangeBirthDateAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeFullNameAsyncAsyncSupported => _user.IsChangeFullNameAsyncAsyncSupported;
+        public bool IsChangeFullNameAsyncAsyncAvailable => _user.IsChangeFullNameAsyncAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeRegionAsyncSupported => _user.IsChangeRegionAsyncSupported;
+        public bool IsChangeRegionAsyncAvailable => _user.IsChangeRegionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeEmailAsyncSupported => _user.IsChangeEmailAsyncSupported;
+        public bool IsChangeEmailAsyncAvailable => _user.IsChangeEmailAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlSupported(int index)
+        public Task<bool> IsAddUrlAvailable(int index)
         {
-            return _user.IsAddUrlSupported(index);
+            return _user.IsAddUrlAvailable(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageSupported(int index)
+        public Task<bool> IsAddImageAvailable(int index)
         {
-            return _user.IsAddImageSupported(index);
+            return _user.IsAddImageAvailable(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlSupported(int index)
+        public Task<bool> IsRemoveUrlAvailable(int index)
         {
-            return _user.IsRemoveUrlSupported(index);
+            return _user.IsRemoveUrlAvailable(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageSupported(int index)
+        public Task<bool> IsRemoveImageAvailable(int index)
         {
-            return _user.IsRemoveImageSupported(index);
+            return _user.IsRemoveImageAvailable(index);
         }
 
         /// <inheritdoc />
