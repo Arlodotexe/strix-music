@@ -17,8 +17,8 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc/>
     public class LocalFilesCoreArtist : ICoreArtist
     {
-        /// NOTE: There are some methods set to throw empty stuff temporarily although they are supported, so the playback can be implemented.
-        private readonly ArtistMetadata _artistMetadata;
+        ///NOTE: There are some methods set to NotAvailabletemporarily although they are supported, so the playback can be implemented.
+        private ArtistMetadata _artistMetadata;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreArtist"/> class.
@@ -128,49 +128,49 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task<bool> IsAddImageAvailable(int index)
         {
-            throw new NotSupportedException();
+            return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
         public Task<bool> IsAddTrackAvailable(int index)
         {
-            throw new NotSupportedException();
+            return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
         public Task<bool> IsAddAlbumItemAvailable(int index)
         {
-            throw new NotSupportedException();
+            return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
         public Task<bool> IsAddGenreAvailable(int index)
         {
-            throw new NotSupportedException();
+            return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
         public Task<bool> IsRemoveImageAvailable(int index)
         {
-            throw new NotSupportedException();
+            return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
         public Task<bool> IsRemoveTrackAvailable(int index)
         {
-            throw new NotSupportedException();
+            return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
         public Task<bool> IsRemoveAlbumItemAvailable(int index)
         {
-            throw new NotSupportedException();
+            return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
         public Task<bool> IsRemoveGenreAvailable(int index)
         {
-            throw new NotSupportedException();
+            return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
@@ -180,27 +180,27 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public async Task ChangeDurationAsync(TimeSpan duration)
+        public Task ChangeDurationAsync(TimeSpan duration)
         {
             throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
-        public async Task ChangeNameAsync(string name)
-        {
-            throw new NotSupportedException();// temporary for playback
-        }
-
-        /// <inheritdoc/>
-        public async Task PauseAsync()
+        public Task ChangeNameAsync(string name)
         {
             throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc/>
-        public async Task PlayAsync()
+        public Task PauseAsync()
         {
-            throw new NotSupportedException();//temporary for playback
+            return Task.CompletedTask;//temporary for playback
+        }
+
+        /// <inheritdoc/>
+        public Task PlayAsync()
+        {
+            return Task.CompletedTask;//temporary for playback
         }
 
         /// <inheritdoc/>
@@ -246,7 +246,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index)
         {
-            throw new NotSupportedException(); ;//temporary for playback
+            throw new NotSupportedException();//temporary for playback
         }
 
         /// <inheritdoc />
@@ -268,10 +268,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            await Task.CompletedTask;
-            yield break; //temporary for playback
+            throw new NotSupportedException(); //temporary for playback
         }
     }
 }

@@ -121,10 +121,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncAvailable => true;
+        public bool IsPlayAsyncAvailable => false;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncAvailable => true;
+        public bool IsPauseAsyncAvailable => false;
 
         /// <inheritdoc />
         public bool IsChangeNameAsyncAvailable => true;
@@ -228,13 +228,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task PauseAsync()
         {
-            throw new NotSupportedException();
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
         public Task PlayAsync()
         {
-            throw new NotSupportedException();
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
