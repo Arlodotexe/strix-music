@@ -199,19 +199,19 @@ namespace StrixMusic.Sdk.ViewModels
         public string Id => _collection.Id;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _collection.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _collection.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _collection.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _collection.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _collection.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _collection.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _collection.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _collection.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _collection.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _collection.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Uri? Url => _collection.Url;

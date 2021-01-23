@@ -378,19 +378,19 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => Model.PlaybackState;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => Model.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => Model.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => Model.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => Model.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => Model.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => Model.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => Model.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => Model.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => Model.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => Model.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public bool IsChangeAlbumAsyncSupported => Model.IsChangeAlbumAsyncSupported;

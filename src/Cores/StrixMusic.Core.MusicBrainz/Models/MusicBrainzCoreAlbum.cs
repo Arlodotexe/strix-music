@@ -132,22 +132,22 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => false;
+        public bool IsPlayAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => false;
+        public bool IsPauseAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeNameAsyncSupported => false;
+        public bool IsChangeNameAsyncAvailable => false;
 
         /// <inheritdoc/>
         public bool IsChangeDatePublishedAsyncSupported => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDescriptionAsyncSupported => false;
+        public bool IsChangeDescriptionAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDurationAsyncSupported => false;
+        public bool IsChangeDurationAsyncAvailable => false;
 
         /// <inheritdoc/>
         public Task<bool> IsAddGenreSupported(int index)

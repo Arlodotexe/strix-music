@@ -476,19 +476,19 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _collectionGroup.PlaybackState;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _collectionGroup.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _collectionGroup.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _collectionGroup.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _collectionGroup.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _collectionGroup.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _collectionGroup.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _collectionGroup.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _collectionGroup.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _collectionGroup.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _collectionGroup.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Task<bool> IsAddImageSupported(int index) => _collectionGroup.IsAddImageSupported(index);

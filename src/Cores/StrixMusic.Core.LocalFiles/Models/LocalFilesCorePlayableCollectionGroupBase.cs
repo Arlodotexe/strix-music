@@ -121,19 +121,19 @@ namespace StrixMusic.Core.LocalFiles.Models
         public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => true;
+        public bool IsPlayAsyncAvailable => true;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => true;
+        public bool IsPauseAsyncAvailable => true;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => true;
+        public bool IsChangeNameAsyncAvailable => true;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => true;
+        public bool IsChangeDescriptionAsyncAvailable => true;
 
         /// <inheritdoc/>
-        public bool IsChangeDurationAsyncSupported => true;
+        public bool IsChangeDurationAsyncAvailable => true;
 
         /// <inheritdoc/>
         public Task<bool> IsAddChildSupported(int index)

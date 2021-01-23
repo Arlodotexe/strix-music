@@ -295,19 +295,19 @@ namespace StrixMusic.Sdk.Data.Merged
         public DateTime? AddedAt { get; internal set; }
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _preferredSource.IsPlayAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => _preferredSource.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _preferredSource.IsPauseAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeNameAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores => _sourceCores;

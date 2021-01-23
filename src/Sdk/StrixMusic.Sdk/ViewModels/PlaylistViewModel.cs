@@ -276,19 +276,19 @@ namespace StrixMusic.Sdk.ViewModels
         public int TotalImageCount => _playlist.TotalImageCount;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _playlist.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _playlist.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _playlist.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _playlist.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _playlist.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _playlist.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _playlist.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _playlist.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _playlist.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _playlist.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Task<bool> IsAddTrackSupported(int index) => _playlist.IsAddTrackSupported(index);

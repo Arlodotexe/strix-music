@@ -101,19 +101,19 @@ namespace StrixMusic.Sdk.Data
         public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported { get; }
+        public bool IsPlayAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported { get; }
+        public bool IsPauseAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported { get; }
+        public bool IsChangeNameAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported { get; }
+        public bool IsChangeDescriptionAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported { get; }
+        public bool IsChangeDurationAsyncAvailable { get; }
 
         /// <inheritdoc />
         public Task<bool> IsRemoveTrackSupported(int index)

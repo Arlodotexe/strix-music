@@ -111,19 +111,19 @@ namespace StrixMusic.Core.LocalFiles.Models
         public SynchronizedObservableCollection<string>? Genres { get; }
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncSupported => true;
+        public bool IsPlayAsyncAvailable => true;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncSupported => true;
+        public bool IsPauseAsyncAvailable => true;
 
         /// <inheritdoc/>
-        public bool IsChangeNameAsyncSupported => false;
+        public bool IsChangeNameAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDescriptionAsyncSupported => false;
+        public bool IsChangeDescriptionAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsChangeDurationAsyncSupported => false;
+        public bool IsChangeDurationAsyncAvailable => false;
 
         /// <inheritdoc/>
         public Task<bool> IsAddImageSupported(int index)

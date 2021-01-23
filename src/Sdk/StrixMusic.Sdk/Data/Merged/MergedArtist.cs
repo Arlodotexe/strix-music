@@ -244,19 +244,19 @@ namespace StrixMusic.Sdk.Data.Merged
         public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _preferredSource.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _preferredSource.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _preferredSource.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _preferredSource.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _preferredSource.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _preferredSource.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _preferredSource.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _preferredSource.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _preferredSource.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Task<bool> IsAddTrackSupported(int index) => _trackCollectionMap.IsAddItemSupported(index);

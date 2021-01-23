@@ -259,19 +259,19 @@ namespace StrixMusic.Sdk.ViewModels
         public int TotalImageCount => _collection.TotalImageCount;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _collection.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _collection.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _collection.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _collection.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _collection.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _collection.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _collection.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _collection.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _collection.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _collection.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Task<bool> IsAddAlbumItemSupported(int index) => _collection.IsAddAlbumItemSupported(index);

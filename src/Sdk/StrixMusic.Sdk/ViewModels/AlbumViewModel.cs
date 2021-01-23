@@ -317,22 +317,22 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => _album.PlaybackState;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncSupported => _album.IsPlayAsyncSupported;
+        public bool IsPlayAsyncAvailable => _album.IsPlayAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncSupported => _album.IsPauseAsyncSupported;
+        public bool IsPauseAsyncAvailable => _album.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncSupported => _album.IsChangeNameAsyncSupported;
+        public bool IsChangeNameAsyncAvailable => _album.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncSupported => _album.IsChangeDescriptionAsyncSupported;
+        public bool IsChangeDescriptionAsyncAvailable => _album.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc />
         public bool IsChangeDatePublishedAsyncSupported => _album.IsChangeDatePublishedAsyncSupported;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncSupported => _album.IsChangeDurationAsyncSupported;
+        public bool IsChangeDurationAsyncAvailable => _album.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Task PauseAsync() => _album.PauseAsync();

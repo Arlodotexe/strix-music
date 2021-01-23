@@ -337,19 +337,19 @@ namespace StrixMusic.Sdk.Data.Merged
         public int TotalImageCount { get; internal set; }
 
         /// <inheritdoc/>
-        public virtual bool IsPlayAsyncSupported => PreferredSource.IsPlayAsyncSupported;
+        public virtual bool IsPlayAsyncAvailable => PreferredSource.IsPlayAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual bool IsPauseAsyncSupported => PreferredSource.IsPauseAsyncSupported;
+        public virtual bool IsPauseAsyncAvailable => PreferredSource.IsPauseAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual bool IsChangeNameAsyncSupported => PreferredSource.IsChangeNameAsyncSupported;
+        public virtual bool IsChangeNameAsyncAvailable => PreferredSource.IsChangeNameAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual bool IsChangeDescriptionAsyncSupported => PreferredSource.IsChangeDescriptionAsyncSupported;
+        public virtual bool IsChangeDescriptionAsyncAvailable => PreferredSource.IsChangeDescriptionAsyncAvailable;
 
         /// <inheritdoc/>
-        public virtual bool IsChangeDurationAsyncSupported => PreferredSource.IsChangeDurationAsyncSupported;
+        public virtual bool IsChangeDurationAsyncAvailable => PreferredSource.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
         public Task<bool> IsAddTrackSupported(int index) => _trackCollectionMap.IsAddItemSupported(index);
@@ -432,19 +432,19 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public Task ChangeNameAsync(string name)
         {
-            return Sources.InParallel(source => source.IsChangeNameAsyncSupported ? source.ChangeNameAsync(name) : Task.CompletedTask);
+            return Sources.InParallel(source => source.IsChangeNameAsyncAvailable ? source.ChangeNameAsync(name) : Task.CompletedTask);
         }
 
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
         {
-            return Sources.InParallel(source => source.IsChangeDescriptionAsyncSupported ? source.ChangeDescriptionAsync(description) : Task.CompletedTask);
+            return Sources.InParallel(source => source.IsChangeDescriptionAsyncAvailable ? source.ChangeDescriptionAsync(description) : Task.CompletedTask);
         }
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            return Sources.InParallel(source => source.IsChangeDurationAsyncSupported ? source.ChangeDurationAsync(duration) : Task.CompletedTask);
+            return Sources.InParallel(source => source.IsChangeDurationAsyncAvailable ? source.ChangeDurationAsync(duration) : Task.CompletedTask);
         }
 
         /// <inheritdoc/>
