@@ -9,6 +9,7 @@ using OwlCore;
 using OwlCore.AbstractStorage;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.Uno.Models;
@@ -62,12 +63,14 @@ namespace StrixMusic.Shared
         {
             var services = new ServiceCollection();
 
+            var notificationService = CurrentWindow.AppFrame.NotificationService;
             var localizationService = new LocalizationResourceLoader();
             localizationService.RegisterProvider(Helpers.Constants.Localization.CommonResource);
             localizationService.RegisterProvider(Helpers.Constants.Localization.MusicResource);
 
             services.AddSingleton<INavigationService<Control>>(new NavigationService<Control>());
             services.AddSingleton(localizationService);
+            services.AddSingleton<INotificationService>(notificationService);
 
             shell.InitServices(services);
         }
@@ -163,6 +166,7 @@ namespace StrixMusic.Shared
                 var shell = CreateShellControl(shellDataType);
                 InjectServices(shell);
 
+                CurrentWindow.AppFrame.NotificationService.IsHandled = false;
                 shell.DataContext = MainViewModel.Singleton;
 
                 ShellDisplay.Content = shell;

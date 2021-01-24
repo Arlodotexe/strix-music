@@ -13,6 +13,7 @@ using StrixMusic.Core.LocalFiles.MetadataScanner;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Core.LocalFiles
@@ -98,8 +99,7 @@ namespace StrixMusic.Core.LocalFiles
         /// <summary>
         /// Scans metadata for the configured folders.
         /// </summary>
-        /// <param name="configuredPath"></param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task ScanFileMetadata()
         {
             Guard.IsNotNull(Services, nameof(Services));
@@ -110,7 +110,13 @@ namespace StrixMusic.Core.LocalFiles
 
             Guard.IsNotNull(folderData, nameof(folderData));
 
+            var notificationService = Services.GetRequiredService<INotificationService>();
+
+            var notification = notificationService.RaiseNotification("Searching for music", $"Scanning {folderData.Path}...");
+
             await _fileMetadataScanner.ScanFolderForMetadata(folderData);
+
+            notification.Dismiss();
         }
 
         /// <summary>

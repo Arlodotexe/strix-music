@@ -120,6 +120,7 @@ namespace StrixMusic.Core.LocalFiles
             await coreConfig.ScanFileMetadata();
 
             ChangeCoreState(CoreState.Loaded);
+
             CoreCount++;
             if (CoreCount == LocalFileCoreManager.Instances?.Count)
                 await LocalFileCoreManager.InitializeDataForAllCores();

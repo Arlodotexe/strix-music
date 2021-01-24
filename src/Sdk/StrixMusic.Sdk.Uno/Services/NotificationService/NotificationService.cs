@@ -38,6 +38,11 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// </summary>
         public int MaxActiveNotifications { get; set; } = 1;
 
+        /// <summary>
+        /// If true, then app will not handle displaying the notifications.
+        /// </summary>
+        public bool IsHandled { get; set; }
+
         /// <inheritdoc/>
         public Notification RaiseNotification(string title, string message)
         {
@@ -105,6 +110,8 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
             if (_notifications.Count > 0 && _activeNotifications < MaxActiveNotifications)
             {
                 var nextNotification = _notifications.FirstOrDefault(x => !x.IsDisplayed);
+                if (nextNotification == null)
+                    return;
 
                 nextNotification.IsDisplayed = true;
 

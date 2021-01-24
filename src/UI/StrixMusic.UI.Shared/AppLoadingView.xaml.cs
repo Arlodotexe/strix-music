@@ -30,6 +30,8 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.Services.Notifications;
+using StrixMusic.Sdk.Uno.Services.NotificationService;
 
 namespace StrixMusic.Shared
 {
@@ -292,6 +294,7 @@ namespace StrixMusic.Shared
             services.AddSingleton<CacheServiceBase>(cacheFileSystemService);
             services.AddSingleton<ISharedFactory, SharedFactory>();
             services.AddSingleton<IFileSystemService>(fileSystemService);
+            services.AddSingleton<INotificationService>(CurrentWindow.AppFrame.NotificationService);
 
             _playbackHandlerService = new PlaybackHandlerService();
             services.AddSingleton(_playbackHandlerService);
@@ -361,7 +364,11 @@ namespace StrixMusic.Shared
             var services = new ServiceCollection();
             StorageFolder rootStorageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(core.InstanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
 
+            // The same INotificationService instance should be used across all core instances.
+            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
+
             services.AddSingleton<IFileSystemService>(new FileSystemService(rootStorageFolder));
+            services.AddSingleton(notificationService);
 
             return services;
         }

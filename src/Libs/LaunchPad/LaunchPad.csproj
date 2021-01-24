@@ -40,6 +40,7 @@
     <None Remove="AbstractUI\AbstractUIGroupListPresenter.xaml" />
     <None Remove="AbstractUI\AbstractUIGroupPresenterTemplateSelector.xaml" />
     <None Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
+    <None Remove="AbstractUI\Controls\AbstractUIGroupPresenter.xaml" />
     <None Remove="AbstractUI\Themes\AbstractBooleanUIElementTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractButtonTemplate.xaml" />
     <None Remove="AbstractUI\Themes\AbstractDataListTemplate.xaml" />
@@ -52,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenter.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenterTemplateSelector.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractBooleanUIElementTemplate.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonTemplate.xaml" />

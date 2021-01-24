@@ -6,6 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:LaunchPad.Controls"
+    xmlns:abstractUIControls="using:LaunchPad.AbstractUI.Controls"
+    xmlns:notificationModels="using:StrixMusic.Sdk.Services.Notifications"
+    xmlns:viewModels="using:StrixMusic.Sdk.Uno.ViewModels"
     mc:Ignorable="d"
     Loaded="AppFrame_OnLoaded">
 
@@ -13,5 +16,15 @@
         <ContentPresenter x:Name="PART_ContentPresenter" />
 
         <controls:ContentOverlay x:Name="OverlayPresenter"/>
+
+        <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:NotificationViewModel">
+                    <Grid Background="{ThemeResource SystemChromeMediumHighColor}" Padding="20,25">
+                        <abstractUIControls:AbstractUIGroupPresenter DataContext="{x:Bind AbstractUIElementGroup}" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>

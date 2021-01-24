@@ -130,7 +130,7 @@ namespace LaunchPad.AbstractUI.ViewModels
             randomStream.Seek(0);
 
             var image = new BitmapImage();
-            Task.Run(() => image.SetSourceAsync(randomStream).AsTask());
+            image.SetSourceAsync(randomStream).AsTask();
 
             return image;
         }

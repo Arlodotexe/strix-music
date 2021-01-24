@@ -8,6 +8,8 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Services.Localization;
+using StrixMusic.Sdk.Uno.Services.NotificationService;
+using StrixMusic.Sdk.Uno.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -19,6 +21,11 @@ namespace StrixMusic.Shared
         /// The navigation service used exclusively by the <see cref="AppFrame"/> to display various top-level app content.
         /// </summary>
         public INavigationService<Control> NavigationService { get; }
+
+        /// <summary>
+        /// The notification service used by all cores and shells.
+        /// </summary>
+        public NotificationService NotificationService { get; }
 
         private LocalizationResourceLoader? _localizationService;
 
@@ -37,6 +44,14 @@ namespace StrixMusic.Shared
         /// </summary>
         public MainPage MainPage { get; private set; }
 
+        /// <inheritdoc cref="NotificationsViewModel"/>
+        public NotificationsViewModel NotificationsViewModel { get; set; }
+
+        /// <summary>
+        /// The Window handle this AppFrame was created on.
+        /// </summary>
+        public Window Window { get; set; }
+
         /// <summary>
         /// Creates a new instance of <see cref="AppFrame"/>.
         /// </summary>
@@ -44,10 +59,15 @@ namespace StrixMusic.Shared
         {
             this.InitializeComponent();
 
+            Window = Window.Current;
+
             Threading.SetPrimarySynchronizationContext(SynchronizationContext.Current);
-            Threading.SetPrimaryThreadInvokeHandler(a => Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => a()).AsTask());
+            Threading.SetPrimaryThreadInvokeHandler(a => Window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => a()).AsTask());
 
             NavigationService = new NavigationService<Control>();
+            NotificationService = new NotificationService();
+
+            NotificationsViewModel = new NotificationsViewModel(NotificationService);
 
             MainViewModel = new MainViewModel();
 

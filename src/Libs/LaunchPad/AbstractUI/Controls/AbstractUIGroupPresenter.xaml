@@ -1,0 +1,44 @@
+﻿<UserControl
+    x:Class="LaunchPad.AbstractUI.Controls.AbstractUIGroupPresenter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LaunchPad.AbstractUI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:launchPad="using:LaunchPad"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <StackPanel Margin="10,20">
+
+        <TextBlock Text="{x:Bind ViewModel.Title}" FontSize="30" ToolTipService.ToolTip="{x:Bind ViewModel.TooltipText}" />
+
+        <TextBlock Text="{x:Bind ViewModel.Subtitle}" FontSize="18" FontWeight="SemiLight" Opacity="0.5"
+                   Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(ViewModel.Subtitle)}"/>
+
+        <ListView ItemsSource="{x:Bind ViewModel.Items}"
+                  Margin="0,20,0,0"
+                  ItemTemplateSelector="{x:Bind TemplateSelector}"
+                  SelectionMode="None">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <ListViewItemPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Spacing="20"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+
+    </StackPanel>
+
+</UserControl>

@@ -6,44 +6,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:launchPad="using:LaunchPad"
-    xmlns:abstractUI="using:LaunchPad.AbstractUI.ViewModels">
+    xmlns:abstractUI="using:LaunchPad.AbstractUI.ViewModels"
+    xmlns:controls="using:LaunchPad.AbstractUI.Controls"
+    x:Name="AbstractUIGroupListPresenterControl">
 
-    <UserControl.Resources>
-        <DataTemplate x:Key="AbstractUIGroupItemTemplate"  x:DataType="abstractUI:AbstractUIElementGroupViewModel">
-            <StackPanel Margin="10,20">
 
-                <TextBlock Text="{x:Bind Title}" FontSize="30" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+    <ListView ItemsSource="{x:Bind ViewModel, Mode=OneWay}" SelectionMode="None">
+        <ListView.ItemTemplate>
+            <DataTemplate x:Key="AbstractUIGroupItemTemplate"  x:DataType="abstractUI:AbstractUIGroupListPresenterItemViewModel">
+                <controls:AbstractUIGroupPresenter TemplateSelector="{x:Bind TemplateSelector}" DataContext="{x:Bind ViewModel}" />
+            </DataTemplate>
+        </ListView.ItemTemplate>
 
-                <TextBlock Text="{x:Bind Subtitle}" FontSize="18" FontWeight="SemiLight" Opacity="0.5"
-                           Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
-
-                <ListView ItemsSource="{x:Bind Items}"
-                          Margin="0,20,0,0"
-                          ItemTemplateSelector="{x:Bind TemplateSelector}"
-                          SelectionMode="None">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ListViewItem">
-                                        <ListViewItemPresenter />
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Spacing="20"/>
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                </ListView>
-
-            </StackPanel>
-        </DataTemplate>
-    </UserControl.Resources>
-
-    <ListView ItemsSource="{x:Bind ViewModel, Mode=OneWay}" SelectionMode="None" ItemTemplate="{StaticResource AbstractUIGroupItemTemplate}">
         <ListView.ItemContainerStyle>
             <Style TargetType="ListViewItem">
                 <Setter Property="Template">

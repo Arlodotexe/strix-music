@@ -74,7 +74,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// <returns>The filtered <see cref="IReadOnlyList{AlbumMetadata}"/>></returns>
         public async Task<IReadOnlyList<AlbumMetadata>> GetAlbumsByArtistId(string artistId, int offset, int limit)
         {
-            var filtredAlbums = new List<AlbumMetadata>();
+            var filteredAlbums = new List<AlbumMetadata>();
 
             var albums = await GetAlbumMetadata(offset, limit);
 
@@ -82,11 +82,11 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             {
                 if (item.ArtistIds != null && item.ArtistIds.Contains(artistId))
                 {
-                    filtredAlbums.Add(item);
+                    filteredAlbums.Add(item);
                 }
             }
 
-            return filtredAlbums;
+            return filteredAlbums;
         }
     }
 }

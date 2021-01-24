@@ -14,9 +14,8 @@ namespace LaunchPad.AbstractUI.ViewModels
         private readonly AbstractUIElementGroup _model;
 
         /// <inheritdoc />
-        public AbstractUIElementGroupViewModel(AbstractUIElementGroup model, DataTemplateSelector templateSelector) : base(model)
+        public AbstractUIElementGroupViewModel(AbstractUIElementGroup model) : base(model)
         {
-            TemplateSelector = templateSelector;
             _model = model;
             Items = SetupItemViewModels();
         }
@@ -51,10 +50,5 @@ namespace LaunchPad.AbstractUI.ViewModels
 
         /// <inheritdoc cref="OwlCore.AbstractUI.Models.PreferredOrientation"/>
         public PreferredOrientation PreferredOrientation => _model.PreferredOrientation;
-
-        /// <summary>
-        /// The template selector used to decide the template for each item in <see cref="Items"/>.
-        /// </summary>
-        public DataTemplateSelector TemplateSelector { get; }
     }
 }
