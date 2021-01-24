@@ -64,11 +64,14 @@ namespace StrixMusic.Core.MusicBrainz
         /// <inheritdoc/>
         public ICoreLibrary Library { get; private set; }
 
-        /// <inheritdoc/>
-        public ICoreRecentlyPlayed RecentlyPlayed { get; }
+        /// <inheritdoc />
+        public ICoreSearch? Search { get; }
 
         /// <inheritdoc/>
-        public ICoreDiscoverables Discoverables { get; }
+        public ICoreRecentlyPlayed? RecentlyPlayed { get; }
+
+        /// <inheritdoc/>
+        public ICoreDiscoverables? Discoverables { get; }
 
         /// <inheritdoc/>
         public string InstanceId { get; }

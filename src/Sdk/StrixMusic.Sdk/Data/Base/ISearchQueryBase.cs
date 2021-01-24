@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data.Base
 {

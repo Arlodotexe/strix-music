@@ -22,16 +22,21 @@ namespace StrixMusic.Sdk.Data
         /// <summary>
         /// A list of pinned playable items.
         /// </summary>
-        public IPlayableCollectionGroup Pins { get; }
+        public IPlayableCollectionGroup? Pins { get; }
+
+        /// <summary>
+        /// Contains various search-related data and activities.
+        /// </summary>
+        public ISearch? Search { get; }
 
         /// <summary>
         /// Gets the recently played items for this .
         /// </summary>
-        public IRecentlyPlayed RecentlyPlayed { get; }
+        public IRecentlyPlayed? RecentlyPlayed { get; }
 
         /// <summary>
         /// Used to browse and discover new music.
         /// </summary>
-        public IDiscoverables Discoverables { get; }
+        public IDiscoverables? Discoverables { get; }
     }
 }

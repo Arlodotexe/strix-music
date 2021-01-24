@@ -87,9 +87,11 @@ namespace StrixMusic.Sdk
 
             Library = new LibraryViewModel(new MergedLibrary(_sources.Select(x => x.Library)));
 
-            RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed)));
+            if (_sources.All(x => x.RecentlyPlayed == null))
+                RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull()));
 
-            Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_sources.Select(x => x.Discoverables)));
+            if (_sources.All(x => x.Discoverables == null))
+                Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull()));
 
             Devices = new SynchronizedObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new CoreDeviceProxy(device))));
 
@@ -232,13 +234,16 @@ namespace StrixMusic.Sdk
         ILibrary IAppCore.Library { get; } = null!;
 
         /// <inheritdoc />
-        public IPlayableCollectionGroup Pins { get; } = null!;
+        IPlayableCollectionGroup? IAppCore.Pins { get; }
 
         /// <inheritdoc />
-        IRecentlyPlayed IAppCore.RecentlyPlayed { get; } = null!;
+        IRecentlyPlayed? IAppCore.RecentlyPlayed { get; }
 
         /// <inheritdoc />
-        IDiscoverables IAppCore.Discoverables { get; } = null!;
+        IDiscoverables? IAppCore.Discoverables { get; }
+
+        /// <inheritdoc />
+        ISearch? IAppCore.Search { get; }
 
         /// <summary>
         /// Gets the active device in <see cref="Devices"/>.
@@ -264,6 +269,9 @@ namespace StrixMusic.Sdk
         /// Used to browse and discovered new music.
         /// </summary>
         public DiscoverablesViewModel? Discoverables { get; private set; }
+
+        /// <inheritdoc cref="SearchViewModel" />
+        public SearchViewModel? Search { get; }
 
         /// <summary>
         /// The current playback queue. First item plays next.

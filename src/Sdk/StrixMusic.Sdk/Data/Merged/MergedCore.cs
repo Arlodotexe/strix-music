@@ -8,7 +8,7 @@ using StrixMusic.Sdk.Data.Core;
 namespace StrixMusic.Sdk.Data.Merged
 {
     /// <summary>
-    /// Merges multiple inputted <see cref="ICore"/>s into a single core.
+    /// Aggregates many <see cref="ICore"/> instances into one.
     /// </summary>
     public class MergedCore : IAppCore
     {
@@ -21,12 +21,19 @@ namespace StrixMusic.Sdk.Data.Merged
         public MergedCore(IEnumerable<ICore> cores)
         {
             _sources = cores?.ToList() ?? ThrowHelper.ThrowArgumentNullException<List<ICore>>(nameof(cores));
-
-            Discoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables));
-            Library = new MergedLibrary(_sources.Select(x => x.Library));
             SourceCores = _sources.Select(x => x.SourceCore).ToList();
-            Pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull());
-            RecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed));
+
+            Library = new MergedLibrary(_sources.Select(x => x.Library));
+
+            if (_sources.All(x => x.Discoverables == null))
+                Discoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull());
+
+            if (_sources.All(x => x.Pins == null))
+                Pins = new MergedPlayableCollectionGroup(_sources.Select(x => x.Pins).PruneNull());
+
+            if (_sources.All(x => x.RecentlyPlayed == null))
+                RecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull());
+
             Devices = new SynchronizedObservableCollection<IDevice>(_sources.SelectMany(x => x.Devices, (core, device) => new CoreDeviceProxy(device)));
 
             AttachEvents();
@@ -75,18 +82,6 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public IReadOnlyList<ICore> SourceCores { get; }
 
-        /// <inheritdoc />
-        public void AddSource(ICore itemToMerge)
-        {
-            ThrowHelper.ThrowNotSupportedException("Adding or removing cores are not supported. ViewModel must be reset.");
-        }
-
-        /// <inheritdoc />
-        public void RemoveSource(ICore itemToRemove)
-        {
-            ThrowHelper.ThrowNotSupportedException("Adding or removing sources are not supported. ViewModel must be reset.");
-        }
-
         /// <inheritdoc cref="IMerged{T}.Sources"/>
         public IReadOnlyList<ICore> Sources => _sources;
 
@@ -97,13 +92,16 @@ namespace StrixMusic.Sdk.Data.Merged
         public ILibrary Library { get; }
 
         /// <inheritdoc />
-        public IPlayableCollectionGroup Pins { get; }
+        public IPlayableCollectionGroup? Pins { get; }
 
         /// <inheritdoc />
-        public IRecentlyPlayed RecentlyPlayed { get; }
+        public ISearch? Search { get; }
 
         /// <inheritdoc />
-        public IDiscoverables Discoverables { get; }
+        public IRecentlyPlayed? RecentlyPlayed { get; }
+
+        /// <inheritdoc />
+        public IDiscoverables? Discoverables { get; }
 
         /// <inheritdoc />
         /// <remarks>

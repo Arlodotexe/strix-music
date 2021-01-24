@@ -61,13 +61,16 @@ namespace StrixMusic.Core.LocalFiles
         public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
 
         /// <inheritdoc/>
-        public ICoreLibrary? Library => _coreLibrary;
+        public ICoreLibrary Library => _coreLibrary;
+
+        /// <inheritdoc />
+        public ICoreSearch? Search { get; }
 
         /// <inheritdoc/>
-        public ICoreRecentlyPlayed RecentlyPlayed { get; }
+        public ICoreRecentlyPlayed? RecentlyPlayed { get; }
 
         /// <inheritdoc/>
-        public ICoreDiscoverables Discoverables { get; }
+        public ICoreDiscoverables? Discoverables { get; }
 
         /// <inheritdoc/>
         public string InstanceId { get; }

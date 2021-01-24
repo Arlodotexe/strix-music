@@ -15,7 +15,7 @@ using StrixMusic.Sdk.MediaPlayback;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Contains information about a <see cref="ICore"/>
+    /// Contains information about an <see cref="ICore"/>
     /// </summary>
     public class CoreViewModel : ObservableObject, ICore
     {
@@ -35,13 +35,20 @@ namespace StrixMusic.Sdk.ViewModels
             MainViewModel.Singleton?.Cores.Add(this);
 
             Library = new LibraryViewModel(new MergedLibrary(_core.Library.IntoList()));
-            RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_core.RecentlyPlayed.IntoList()));
-            Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_core.Discoverables.IntoList()));
 
-            CoreState = _core.CoreState;
+            if (_core.RecentlyPlayed != null)
+                RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_core.RecentlyPlayed.IntoList()));
+
+            if (_core.Discoverables != null)
+                Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_core.Discoverables.IntoList()));
 
             if (_core.Pins != null)
                 Pins = new PlayableCollectionGroupViewModel(new MergedPlayableCollectionGroup(_core.Pins.IntoList()));
+
+            if (_core.Search != null)
+                Search = new SearchViewModel(new MergedSearch(_core.Search.IntoList()));
+            
+            CoreState = _core.CoreState;
 
             AttachEvents();
         }
@@ -88,17 +95,23 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="LibraryViewModel"/>
         public LibraryViewModel Library { get; }
 
+        /// <inheritdoc />
+        ICoreSearch? ICore.Search { get; }
+
+        /// <inheritdoc cref="SearchViewModel"/>
+        public SearchViewModel? Search { get; }
+
         /// <inheritdoc cref="ICore.RecentlyPlayed" />
-        ICoreRecentlyPlayed ICore.RecentlyPlayed => _core.RecentlyPlayed;
+        ICoreRecentlyPlayed? ICore.RecentlyPlayed => _core.RecentlyPlayed;
 
         /// <inheritdoc cref="RecentlyPlayed"/>
-        public RecentlyPlayedViewModel RecentlyPlayed { get; }
+        public RecentlyPlayedViewModel? RecentlyPlayed { get; }
 
         /// <inheritdoc cref="ICore.Discoverables" />
-        ICoreDiscoverables ICore.Discoverables => _core.Discoverables;
+        ICoreDiscoverables? ICore.Discoverables => _core.Discoverables;
 
         /// <inheritdoc cref="DiscoverablesViewModel" />
-        public DiscoverablesViewModel Discoverables { get; }
+        public DiscoverablesViewModel? Discoverables { get; }
 
         /// <inheritdoc cref="ICore.Pins" />
         ICorePlayableCollectionGroup? ICore.Pins => _core.Pins;

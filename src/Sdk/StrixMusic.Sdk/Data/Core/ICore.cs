@@ -46,14 +46,19 @@ namespace StrixMusic.Sdk.Data.Core
         public ICorePlayableCollectionGroup? Pins { get; }
 
         /// <summary>
+        /// Contains various search-related data and activities.
+        /// </summary>
+        public ICoreSearch? Search { get; }
+
+        /// <summary>
         /// Gets the recently played items for this core.
         /// </summary>
-        public ICoreRecentlyPlayed RecentlyPlayed { get; }
+        public ICoreRecentlyPlayed? RecentlyPlayed { get; }
 
         /// <summary>
         /// Used to browse and discover new music.
         /// </summary>
-        public ICoreDiscoverables Discoverables { get; }
+        public ICoreDiscoverables? Discoverables { get; }
 
         /// <inheritdoc cref="Data.CoreState" />
         public CoreState CoreState { get; }

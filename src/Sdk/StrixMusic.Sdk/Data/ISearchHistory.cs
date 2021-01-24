@@ -5,10 +5,10 @@ using StrixMusic.Sdk.Data.Merged;
 
 namespace StrixMusic.Sdk.Data
 {
-    /// <inheritdoc cref="IRecentlyPlayedBase"/>
+    /// <inheritdoc cref="ISearchHistoryBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
     [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
-    public interface IRecentlyPlayed : IRecentlyPlayedBase, IPlayableCollectionGroup, ISdkMember, IMerged<ICoreRecentlyPlayed>
+    public interface ISearchHistory : ISearchHistoryBase, IPlayableCollectionGroup, ISdkMember, IMerged<ICoreSearchHistory>
     {
     }
 }
