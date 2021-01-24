@@ -6,9 +6,65 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:launchPad="using:LaunchPad"
+    xmlns:controls="using:LaunchPad.AbstractUI.Controls"
+    xmlns:abstractUIVm="using:LaunchPad.AbstractUI.ViewModels"
+    xmlns:themes="using:LaunchPad.AbstractUI.Themes"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <themes:AbstractBooleanUIElementStyle />
+                <themes:AbstractButtonStyle />
+                <themes:AbstractDataListStyle />
+                <themes:AbstractMultiChoiceUIElementStyle />
+                <themes:AbstractMutableDataListStyle />
+                <themes:AbstractRichTextBlockStyle />
+                <themes:AbstractTextBoxStyle />
+            </ResourceDictionary.MergedDictionaries>
+
+            <controls:AbstractUIGroupItemTemplateSelector x:Name="GroupTemplateSelector">
+                <controls:AbstractUIGroupItemTemplateSelector.BooleanTemplate>
+                    <DataTemplate x:DataType="abstractUIVm:AbstractBooleanViewModel">
+                        <controls:AbstractBooleanUIElementPresenter />
+                    </DataTemplate>
+                </controls:AbstractUIGroupItemTemplateSelector.BooleanTemplate>
+
+                <controls:AbstractUIGroupItemTemplateSelector.ButtonTemplate>
+                    <DataTemplate x:DataType="abstractUIVm:AbstractButtonViewModel">
+                        <controls:AbstractButtonPresenter />
+                    </DataTemplate>
+                </controls:AbstractUIGroupItemTemplateSelector.ButtonTemplate>
+
+                <controls:AbstractUIGroupItemTemplateSelector.DataListTemplate>
+                    <DataTemplate x:DataType="abstractUIVm:AbstractDataListViewModel">
+                        <controls:AbstractDataListPresenter />
+                    </DataTemplate>
+                </controls:AbstractUIGroupItemTemplateSelector.DataListTemplate>
+
+                <controls:AbstractUIGroupItemTemplateSelector.MultiChoiceTemplate>
+                    <DataTemplate x:DataType="abstractUIVm:AbstractMultiChoiceUIElementViewModel">
+                        <controls:AbstractMultiChoicePresenter />
+                    </DataTemplate>
+                </controls:AbstractUIGroupItemTemplateSelector.MultiChoiceTemplate>
+
+                <controls:AbstractUIGroupItemTemplateSelector.MutableDataListTemplate>
+                    <DataTemplate x:DataType="abstractUIVm:AbstractMutableDataListViewModel">
+                        <controls:AbstractMutableDataListPresenter />
+                    </DataTemplate>
+                </controls:AbstractUIGroupItemTemplateSelector.MutableDataListTemplate>
+
+                <controls:AbstractUIGroupItemTemplateSelector.TextBoxTemplate>
+                    <DataTemplate x:DataType="abstractUIVm:AbstractTextBoxViewModel">
+                        <controls:AbstractTextBoxPresenter />
+                    </DataTemplate>
+                </controls:AbstractUIGroupItemTemplateSelector.TextBoxTemplate>
+            </controls:AbstractUIGroupItemTemplateSelector>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <StackPanel Margin="10,20">
 
@@ -17,27 +73,9 @@
         <TextBlock Text="{x:Bind ViewModel.Subtitle}" FontSize="18" FontWeight="SemiLight" Opacity="0.5"
                    Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(ViewModel.Subtitle)}"/>
 
-        <ListView ItemsSource="{x:Bind ViewModel.Items}"
+        <ItemsControl ItemsSource="{x:Bind ViewModel.Items}"
                   Margin="0,20,0,0"
-                  ItemTemplateSelector="{x:Bind TemplateSelector}"
-                  SelectionMode="None">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListViewItem">
-                                <ListViewItemPresenter />
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Spacing="20"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-        </ListView>
+                  ItemTemplateSelector="{x:Bind TemplateSelector}" />
 
     </StackPanel>
 

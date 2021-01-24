@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Extensions;
@@ -13,6 +14,7 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk

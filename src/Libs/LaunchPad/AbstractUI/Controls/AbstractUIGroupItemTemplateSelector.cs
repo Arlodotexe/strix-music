@@ -16,33 +16,32 @@ namespace LaunchPad.AbstractUI.Controls
         /// </summary>
         public AbstractUIGroupItemTemplateSelector()
         {
-            // ReSharper disable CollectionNeverUpdated.Local
-            if (!new Themes.AbstractTextBoxTemplate().TryGetValue("DefaultAbstractTextBoxTemplate", out var textBoxTemplate))
+            if (!new Themes.AbstractTextBoxStyle().TryGetValue("DefaultAbstractTextBoxTemplate", out var textBoxTemplate))
             {
                 TextBoxTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(textBoxTemplate));
             }
 
-            if (!new Themes.AbstractDataListTemplate().TryGetValue("DefaultAbstractDataListTemplate", out var dataListTemplate))
+            if (!new Themes.AbstractDataListStyle().TryGetValue("DefaultAbstractDataListTemplate", out var dataListTemplate))
             {
                 DataListTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(dataListTemplate));
             }
 
-            if (!new Themes.AbstractMutableDataListTemplate().TryGetValue("DefaultAbstractMutableDataListTemplate", out var mutableDataListTemplate))
+            if (!new Themes.AbstractMutableDataListStyle().TryGetValue("DefaultAbstractMutableDataListTemplate", out var mutableDataListTemplate))
             {
                 MutableDataListTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(mutableDataListTemplate));
             }
 
-            if (!new Themes.AbstractButtonTemplate().TryGetValue("DefaultAbstractButtonTemplate", out var buttonTemplate))
+            if (!new Themes.AbstractButtonStyle().TryGetValue("DefaultAbstractButtonTemplate", out var buttonTemplate))
             {
                 ButtonTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(buttonTemplate));
             }
 
-            if (!new Themes.AbstractMultiChoiceUIElementTemplate().TryGetValue("DefaultAbstractMultipleChoiceTemplate", out var multiChoiceTemplate))
+            if (!new Themes.AbstractMultiChoiceUIElementStyle().TryGetValue("DefaultAbstractMultipleChoiceTemplate", out var multiChoiceTemplate))
             {
                 MultiChoiceTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(multiChoiceTemplate));
             }
 
-            if (!new Themes.AbstractBooleanUIElementTemplate().TryGetValue("DefaultAbstractBooleanUIElementTemplate", out var booleanTemplate))
+            if (!new Themes.AbstractBooleanUIElementStyle().TryGetValue("DefaultAbstractBooleanUIElementTemplate", out var booleanTemplate))
             {
                 BooleanTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(booleanTemplate));
             }

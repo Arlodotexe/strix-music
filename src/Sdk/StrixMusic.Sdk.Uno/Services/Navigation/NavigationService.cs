@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using OwlCore;
-using LaunchPad.Extensions;
-using Windows.UI.Xaml;
 
 namespace StrixMusic.Sdk.Services.Navigation
 {
@@ -24,22 +21,19 @@ namespace StrixMusic.Sdk.Services.Navigation
         /// <inheritdoc/>
         public void NavigateTo(Type type, bool overlay = false, params object[] args)
         {
-            _ = NavigateToTypeAsync(type, overlay, args);
+            _ = Threading.OnPrimaryThread(() => NavigateToType(type, overlay, args));
         }
 
         /// <inheritdoc/>
         public void NavigateTo(T page, bool overlay = false)
         {
-            _ = NavigateToInstanceAsync(page, overlay);
+            _ = Threading.OnPrimaryThread(() => NavigateToInstance(page, overlay));
         }
 
         /// <inheritdoc/>
         public void RegisterCommonPage(Type type)
         {
-            using (Threading.PrimaryContext)
-            {
-                _registeredPages.Add(type, (T)Activator.CreateInstance(type));
-            }
+            _ = Threading.OnPrimaryThread(() => _registeredPages.Add(type, (T)Activator.CreateInstance(type)));
         }
 
         /// <inheritdoc />
@@ -57,18 +51,14 @@ namespace StrixMusic.Sdk.Services.Navigation
             BackRequested?.Invoke(this, null);
         }
 
-        private async Task NavigateToInstanceAsync(T page, bool overlay = false)
+        private void NavigateToInstance(T page, bool overlay = false)
         {
-            await Window.Current.Dispatcher.SwitchToUI();
-
             var eventArgs = new NavigateEventArgs<T>(page, overlay);
             NavigationRequested?.Invoke(this, eventArgs);
         }
 
-        private async Task NavigateToTypeAsync(Type type, bool overlay = false, params object[] args)
+        private void NavigateToType(Type type, bool overlay = false, params object[] args)
         {
-            await Window.Current.Dispatcher.SwitchToUI();
-
             T page;
             if (_registeredPages.ContainsKey(type))
             {

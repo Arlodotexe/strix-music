@@ -6,12 +6,12 @@ namespace LaunchPad.AbstractUI.Themes
     /// <summary>
     /// Default template for the <see cref="AbstractDataList"/>
     /// </summary>
-    public sealed partial class AbstractDataListTemplate : ResourceDictionary
+    public sealed partial class AbstractMultiChoiceUIElementStyle : ResourceDictionary
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractDataListTemplate"/> class.
+        /// Initializes a new instance of the <see cref="AbstractMultiChoiceUIElementStyle"/> class.
         /// </summary>
-        public AbstractDataListTemplate()
+        public AbstractMultiChoiceUIElementStyle()
         {
             this.InitializeComponent();
         }

@@ -16,14 +16,14 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <summary>
         /// The template selector used for this item.
         /// </summary>
-        public DataTemplateSelector TemplateSelector { get; }
+        public DataTemplateSelector? TemplateSelector { get; }
 
         /// <summary>
         /// Creates a  new instance of <see cref="AbstractUIGroupListPresenterItemViewModel"/>.
         /// </summary>
         /// <param name="viewModel">The view model to use in the template.</param>
         /// <param name="templateSelector">The template selector to use when displaying the abstract ui elements.</param>
-        public AbstractUIGroupListPresenterItemViewModel(AbstractUIElementGroupViewModel viewModel, DataTemplateSelector templateSelector)
+        public AbstractUIGroupListPresenterItemViewModel(AbstractUIElementGroupViewModel viewModel, DataTemplateSelector? templateSelector)
         {
             ViewModel = viewModel;
             TemplateSelector = templateSelector;
