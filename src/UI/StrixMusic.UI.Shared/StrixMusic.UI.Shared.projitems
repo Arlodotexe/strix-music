@@ -69,10 +69,14 @@
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Music.resw" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\he\Splash Screen.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Strix\logo.svg" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\Splash Screen.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\en\Splash Screen.svg" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\MusicBrainz\logo.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Assets\Strix\en\" />
   </ItemGroup>
 </Project>
