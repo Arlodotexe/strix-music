@@ -138,4 +138,7 @@
   <data name="SetupMedia" xml:space="preserve">
     <value>Setting up media players</value>
   </data>
+  <data name="SplashScreenImageSVGIS.UriSource" xml:space="preserve">
+    <value>ms-appx:///Assets/Strix/en/Splash Screen.svg</value>
+  </data>
 </root>
