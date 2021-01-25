@@ -117,16 +117,14 @@ namespace StrixMusic.Core.LocalFiles
             }
 
             await coreConfig.ConfigureServices(services);
-            await coreConfig.ScanFileMetadata();
 
             ChangeCoreState(CoreState.Loaded);
 
+            coreConfig.ScanFileMetadata().FireAndForget();
+
             CoreCount++;
             if (CoreCount == LocalFileCoreManager.Instances?.Count)
-                await LocalFileCoreManager.InitializeDataForAllCores();
-
-            if (_coreLibrary is LocalFilesCoreLibrary localFilesCore)
-                await localFilesCore.InitAsync();
+                LocalFileCoreManager.InitializeDataForAllCores();
         }
 
         private async Task PickAndSetupFolder()

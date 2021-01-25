@@ -1,17 +1,23 @@
-﻿using OwlCore.Events;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.MediaPlayback;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Events;
+using OwlCore.Provisos;
+using StrixMusic.Core.LocalFiles.MetadataScanner;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <inheritdoc/>
-    public abstract class LocalFilesCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup
+    public abstract class LocalFilesCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup, IAsyncInit
     {
+        private FileMetadataScanner _fileMetadataScanner;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCorePlayableCollectionGroupBase"/> class.
         /// </summary>
@@ -19,6 +25,52 @@ namespace StrixMusic.Core.LocalFiles.Models
         protected LocalFilesCorePlayableCollectionGroupBase(ICore sourceCore)
         {
             SourceCore = sourceCore;
+        }
+
+        private void MetadataScanner_RelatedMetadataChanged(object sender, Backing.Models.RelatedMetadata e)
+        {
+            // Its not complete yet, some data is forcefully given for testing.
+
+            LocalFilesCoreAlbum fileCoreAlbum;
+            LocalFilesCoreTrack filesCoreTrack;
+            LocalFilesCoreArtist filesCoreArtist;
+
+            if (e.AlbumMetadata != null)
+            {
+                fileCoreAlbum = new LocalFilesCoreAlbum(SourceCore, e.AlbumMetadata, 1000); // track count is temporary
+
+                var addedItems = new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>
+                {
+                    new CollectionChangedEventItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
+                };
+
+                AlbumItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>()); // nothing is being removed for now.
+            }
+
+            // Merged Albums are having issues.
+            //if (e.ArtistMetadata != null)
+            //{
+            //    filesCoreArtist = new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, 1000); // track count is temporary
+
+            //    var addedItems = new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>
+            //    {
+            //        new CollectionChangedEventItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
+            //    };
+
+            //    ArtistItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>());  // nothing is being removed for now.
+            //}
+
+            if (e.TrackMetadata != null)
+            {
+                filesCoreTrack = new LocalFilesCoreTrack(SourceCore, e.TrackMetadata);
+
+                var addedItems = new List<CollectionChangedEventItem<ICoreTrack>>
+                {
+                    new CollectionChangedEventItem<ICoreTrack>(filesCoreTrack, 0),
+                };
+
+                TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreTrack>>());  // nothing is being removed for now.
+            }
         }
 
         /// <inheritdoc />
@@ -134,6 +186,11 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncAvailable => true;
+
+        /// <summary>
+        /// Determines if collection base is initialized or not.
+        /// </summary>
+        public bool IsInitialized => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public Task<bool> IsAddChildAvailable(int index)
@@ -328,6 +385,19 @@ namespace StrixMusic.Core.LocalFiles.Models
         public Task AddImageAsync(ICoreImage image, int index)
         {
             throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Initializes the collection group base.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task InitAsync()
+        {
+            _fileMetadataScanner = SourceCore.GetService<FileMetadataScanner>();
+
+            _fileMetadataScanner.RelatedMetadataChanged += MetadataScanner_RelatedMetadataChanged;
+
+            return Task.CompletedTask;
         }
     }
 }

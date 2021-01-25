@@ -1,4 +1,6 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Events;
+using OwlCore.Extensions;
 using OwlCore.Provisos;
 using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Core.LocalFiles.Backing.Services;
@@ -16,13 +18,13 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc/>
     public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary, IAsyncInit
     {
-        private  ArtistService _artistService;
-        private  TrackService _trackService;
-        private  AlbumService _albumService;
+        private ArtistService _artistService;
+        private TrackService _trackService;
+        private AlbumService _albumService;
 
-        private IEnumerable<TrackMetadata> _trackMetadatas;
-        private IEnumerable<AlbumMetadata> _albumMetadatas;
-        private IEnumerable<ArtistMetadata> _artistMetadatas;
+        private List<TrackMetadata> _trackMetadatas;
+        private List<AlbumMetadata> _albumMetadatas;
+        private List<ArtistMetadata> _artistMetadatas;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreLibrary"/> class.
@@ -31,18 +33,44 @@ namespace StrixMusic.Core.LocalFiles.Models
         public LocalFilesCoreLibrary(ICore sourceCore)
             : base(sourceCore)
         {
+            AlbumItemsChanged += LocalFilesCoreLibrary_AlbumItemsChanged;
+            TrackItemsChanged += LocalFilesCoreLibrary_TrackItemsChanged;
+            ArtistItemsChanged += LocalFilesCoreLibrary_ArtistItemsChanged;
+        }
+
+        private void LocalFilesCoreLibrary_ArtistItemsChanged(
+            object sender,
+            IReadOnlyList<CollectionChangedEventItem<ICoreArtistCollectionItem>> addedItems,
+            IReadOnlyList<CollectionChangedEventItem<ICoreArtistCollectionItem>> removedItems)
+        {
+        }
+
+        private void LocalFilesCoreLibrary_TrackItemsChanged(
+            object sender,
+            IReadOnlyList<CollectionChangedEventItem<ICoreTrack>> addedItems,
+            IReadOnlyList<CollectionChangedEventItem<ICoreTrack>> removedItems)
+        {
+        }
+
+        private void LocalFilesCoreLibrary_AlbumItemsChanged(
+            object sender,
+            IReadOnlyList<CollectionChangedEventItem<ICoreAlbumCollectionItem>> addedItems,
+            IReadOnlyList<CollectionChangedEventItem<ICoreAlbumCollectionItem>> removedItems)
+        {
         }
 
         /// <inheritdoc/>
         public async Task InitAsync()
         {
+            base.InitAsync().FireAndForget();
+
             _trackService = SourceCore.GetService<TrackService>();
             _artistService = SourceCore.GetService<ArtistService>();
             _albumService = SourceCore.GetService<AlbumService>();
 
-            _trackMetadatas = await _trackService.GetTrackMetadata(0, int.MaxValue);
-            _albumMetadatas = await _albumService.GetAlbumMetadata(0, int.MaxValue);
-            _artistMetadatas = await _artistService.GetArtistMetadata(0, int.MaxValue);
+            _trackMetadatas = new List<TrackMetadata>(await _trackService.GetTrackMetadata(0, int.MaxValue));
+            _albumMetadatas = new List<AlbumMetadata>(await _albumService.GetAlbumMetadata(0, int.MaxValue));
+            _artistMetadatas = new List<ArtistMetadata>(await _artistService.GetArtistMetadata(0, int.MaxValue));
 
             TotalTracksCount = _trackMetadatas.Count();
             TotalArtistItemsCount = _artistMetadatas.Count();
@@ -68,10 +96,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override int TotalArtistItemsCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalAlbumItemsCount { get; internal set; } 
+        public override int TotalAlbumItemsCount { get; internal set; }
 
         /// <inheritdoc />
-        public override int TotalPlaylistItemsCount { get; internal set; } 
+        public override int TotalPlaylistItemsCount { get; internal set; }
 
         /// <inheritdoc />
         public override int TotalTracksCount { get; internal set; }

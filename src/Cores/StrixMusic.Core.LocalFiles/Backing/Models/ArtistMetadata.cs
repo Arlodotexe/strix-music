@@ -7,7 +7,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
     /// <summary>
     /// Holds the information of artist metadata.
     /// </summary>
-    public class ArtistMetadata
+    public class ArtistMetadata : IMetadata
     {
         /// <summary>
         /// The unique identifier for the <see cref="ArtistMetadata"/>.

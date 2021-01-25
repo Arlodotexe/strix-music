@@ -7,7 +7,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
     /// <summary>
     /// The metadata associated with an album.
     /// </summary>
-    public class AlbumMetadata
+    public class AlbumMetadata : IMetadata
     {
         /// <summary>
         /// The unique identifier for this album.

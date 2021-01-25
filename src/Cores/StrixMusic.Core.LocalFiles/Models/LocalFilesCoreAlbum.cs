@@ -101,7 +101,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public DateTime? AddedAt { get; }
 
         /// <inheritdoc />
-        public int TotalImageCount { get; } = 3;
+        public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc />
         public int TotalArtistItemsCount { get; }
@@ -133,25 +133,25 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task<bool> IsAddGenreAvailable(int index)
         {
-            return Task.FromResult(false);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task<bool> IsAddTrackAvailable(int index)
         {
-            return Task.FromResult(false);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task<bool> IsAddImageAvailable(int index)
         {
-            return Task.FromResult(false);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task<bool> IsRemoveTrackAvailable(int index)
         {
-            return Task.FromResult(false);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
@@ -163,7 +163,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task<bool> IsRemoveGenreAvailable(int index)
         {
-            return Task.FromResult(false);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>

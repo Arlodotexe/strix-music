@@ -20,6 +20,18 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         private IReadOnlyList<RelatedMetadata>? _relatedMetadata;
 
         /// <summary>
+        /// Creates a new instance of <see cref="FileMetadataScanner"/>.
+        /// </summary>
+        public FileMetadataScanner()
+        {
+        }
+
+        /// <summary>
+        /// It is raised whenever a new related metadata is added during scan.
+        /// </summary>
+        public event EventHandler<RelatedMetadata>? RelatedMetadataChanged;
+
+        /// <summary>
         /// Scans a folder and all subfolders for music and music metadata.
         /// </summary>
         /// <param name="folderData">The path to a root folder to scan.</param>
@@ -29,6 +41,8 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             var files = await folderData.RecursiveDepthFileSearchAsync();
             var relatedMetaDataList = new List<RelatedMetadata>();
 
+            var count = 0;
+            var packet = new List<RelatedMetadata>();
             foreach (var item in files)
             {
                 var scannedRelatedMetadata = await ScanFileMetadata(item);
@@ -37,9 +51,23 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     continue;
 
                 relatedMetaDataList.Add(scannedRelatedMetadata);
-            }
+                ApplyRelatedMetadataIds(relatedMetaDataList);
+                packet.Add(scannedRelatedMetadata);
+                
+                //This is for packets.. its coming soon.
+                count++;
 
-            ApplyRelatedMetadataIds(relatedMetaDataList);
+                //if (files.Count >= 10)
+                //{
+                //    if (count % 10 == 0)
+                //    {
+                //        packet.Clear();
+                //        RelatedMetadataChanged?.Invoke(this, packet);
+                //    }
+                //}
+
+                RelatedMetadataChanged?.Invoke(this, scannedRelatedMetadata);
+            }
         }
 
         private async Task<RelatedMetadata?> ScanFileMetadata(IFileData fileData)
