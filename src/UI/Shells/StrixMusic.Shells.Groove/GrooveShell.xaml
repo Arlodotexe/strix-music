@@ -57,6 +57,8 @@
                         <Setter Target="Seperator.HorizontalAlignment" Value="Stretch"/>
                         <Setter Target="CompactCreatePlaylistButton.Visibility" Value="Collapsed"/>
                         <Setter Target="PlaylistList.Visibility" Value="Visible"/>
+                        <Setter Target="SearchButton.Visibility" Value="Collapsed"/>
+                        <Setter Target="SearchBox.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Compact">
@@ -68,6 +70,8 @@
                         <Setter Target="Seperator.HorizontalAlignment" Value="Left"/>
                         <Setter Target="CompactCreatePlaylistButton.Visibility" Value="Visible"/>
                         <Setter Target="PlaylistList.Visibility" Value="Collapsed"/>
+                        <Setter Target="SearchButton.Visibility" Value="Visible"/>
+                        <Setter Target="SearchBox.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -137,9 +141,9 @@
                         <Button x:Name="SearchButton" Width="48" Style="{StaticResource GrooveButton}" HorizontalAlignment="Left">
                             <FontIcon Glyph="&#xE11A;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                         </Button>
-                        <!--<AutoSuggestBox x:Name="AutoSuggest" x:Uid="/Common/SearchTBox"
-                                    QuerySubmitted="AutoSuggestBox_QuerySubmitted" Margin="8,12"
-                                    Padding="4" BorderThickness="0"/>-->
+                        <AutoSuggestBox x:Name="SearchBox" x:Uid="/Common/SearchTBox" Style="{StaticResource GrooveSearchAutoSuggestBox}"
+                                        QuerySubmitted="AutoSuggestBox_QuerySubmitted" Margin="8"
+                                        QueryIcon="Find" BorderThickness="0"/>
 
                         <!--Main Nav Buttons-->
                         <ToggleButton x:Name="MyMusicButton" Style="{StaticResource GrooveNavigationButton}"
