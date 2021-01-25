@@ -123,4 +123,10 @@
   <data name="ResourceError" xml:space="preserve">
     <value>מקור משאבים לא נמצא</value>
   </data>
+  <data name="AppShortName" xml:space="preserve">
+    <value>סטריקס</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>סטריקסמוסיקה</value>
+  </data>
 </root>
