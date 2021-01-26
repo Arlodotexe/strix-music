@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Extensions;
@@ -14,7 +13,6 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
-using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk
@@ -152,7 +150,8 @@ namespace StrixMusic.Sdk
             _ = new CoreViewModel(core);
 #pragma warning restore CA2000 // Dispose objects before losing scope
 
-            Users.Add(new UserViewModel(new CoreUserProxy(core.User)));
+            if (core.User != null)
+                Users.Add(new UserViewModel(new CoreUserProxy(core.User)));
 
             foreach (var device in core.Devices)
                 _devices.Add(new CoreDeviceProxy(device));
