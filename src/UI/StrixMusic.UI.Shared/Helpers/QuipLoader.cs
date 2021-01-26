@@ -22,7 +22,7 @@ namespace StrixMusic.Helpers
                 Name = name;
                 Count = count;
                 Rule = rule;
-                Weight = weight * count;
+                Weight = weight;
                 Generic = Name == "Generic";
             }
 
@@ -56,7 +56,7 @@ namespace StrixMusic.Helpers
                 "en",
                 new QuipGroup[]
                 {
-                    new QuipGroup("Generic", count:2, rule:null),
+                    new QuipGroup("Generic", count:10, rule:null),
                     new QuipGroup("Christmas", count:3, rule:new AnnualRangeRule(new DateTime(1, 12, 24), new DateTime(1, 12, 26)), weight:10),
                     new QuipGroup("NewYears", count:2, rule:new AnnualRangeRule(new DateTime(1, 12, 31), new DateTime(1, 1, 2)), weight:10),
                     new QuipGroup("NewYearsEve", count:1, rule:new AnnualRangeRule(new DateTime(1, 12, 31), new DateTime(1, 1, 1))),
@@ -79,8 +79,8 @@ namespace StrixMusic.Helpers
                 "he",
                 new QuipGroup[]
                 {
-                    new QuipGroup("Generic", count:1, rule:null),
-                    new QuipGroup("Shabbot", count:2, rule:new WeeklyRule(DayOfWeek.Saturday)),
+                    new QuipGroup("Generic", count:3, rule:null),
+                    new QuipGroup("Saturday", count:1, rule:new WeeklyRule(DayOfWeek.Saturday)),
                     new QuipGroup("Sunday", count:1, rule:new WeeklyRule(DayOfWeek.Sunday)),
                     new QuipGroup("Morning", count:1, rule:new DailyRangeRule(TimeSpan.FromHours(7), TimeSpan.FromHours(12)), weight:2),
                     new QuipGroup("Afternoon", count:1, rule:new DailyRangeRule(TimeSpan.FromHours(12), TimeSpan.FromHours(15)), weight:2),
@@ -111,7 +111,7 @@ namespace StrixMusic.Helpers
             {
                 if (group.Applies(now))
                 {
-                    _sumWeight += group.Weight;
+                    _sumWeight += group.Weight * group.Count;
                     _activeQuipGroups.Add(group);
                 }
             }
@@ -128,13 +128,13 @@ namespace StrixMusic.Helpers
 
             foreach (var group in _activeQuipGroups)
             {
-                if (i <= group.Weight - 1)
+                if (i <= (group.Weight * group.Count) - 1)
                 {
                     i /= group.Weight;
                     return (group.Name, i);
                 } else
                 {
-                    i -= group.Weight;
+                    i -= group.Weight * group.Count;
                 }
             }
 

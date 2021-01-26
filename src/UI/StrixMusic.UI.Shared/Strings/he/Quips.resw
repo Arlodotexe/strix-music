@@ -118,21 +118,39 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Afternoon0" xml:space="preserve">
-    <value>צהריים</value>
+    <value>צהריים טוב</value>
+    <comment>Good Afternoon</comment>
   </data>
   <data name="Evening0" xml:space="preserve">
     <value>ערב טוב</value>
+    <comment>Good Evening</comment>
   </data>
   <data name="Generic0" xml:space="preserve">
     <value>עובד</value>
+    <comment>Working</comment>
+  </data>
+  <data name="Generic1" xml:space="preserve">
+    <value>קבלת פנים לציונים</value>
+    <comment>Welcoming Zionists</comment>
+  </data>
+  <data name="Generic2" xml:space="preserve">
+    <value>צוחק בקול רם</value>
+    <comment>Laughs out loud</comment>
   </data>
   <data name="Morning0" xml:space="preserve">
     <value>בוקר טוב</value>
+    <comment>Good Morning</comment>
   </data>
   <data name="Night0" xml:space="preserve">
     <value>לילה טוב</value>
+    <comment>Good Night</comment>
   </data>
-  <data name="Shabbot0" xml:space="preserve">
-    <value>שבת שלופ</value>
+  <data name="Saturday0" xml:space="preserve">
+    <value>שבת שלום</value>
+    <comment>Shabbot Shalom (doesn't translate well, just an expression)</comment>
+  </data>
+  <data name="Sunday0" xml:space="preserve">
+    <value>שבוע טוב</value>
+    <comment>Good Week (like saying have a good week)</comment>
   </data>
 </root>

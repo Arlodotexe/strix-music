@@ -137,18 +137,51 @@
   </data>
   <data name="Generic0" xml:space="preserve">
     <value>Spinning right round</value>
+    <comment>You Spin Me Round by Dead Or Alive</comment>
   </data>
   <data name="Generic1" xml:space="preserve">
     <value>Hiding the ugly code</value>
   </data>
+  <data name="Generic2" xml:space="preserve">
+    <value>Generating stuff</value>
+  </data>
+  <data name="Generic3" xml:space="preserve">
+    <value>Shaken not Shtirred</value>
+    <comment>James Bond</comment>
+  </data>
+  <data name="Generic4" xml:space="preserve">
+    <value>¡ǝldoǝd uɐᴉlɐɹʇsn∀ 'ǝɯoɔlǝM</value>
+    <comment>Meme</comment>
+  </data>
+  <data name="Generic5" xml:space="preserve">
+    <value>Theeeeres a bathroom on the right</value>
+    <comment>Bad Moon Rising by CCR</comment>
+  </data>
+  <data name="Generic6" xml:space="preserve">
+    <value>Roooooxanne</value>
+    <comment>Roxanne by The Police</comment>
+  </data>
+  <data name="Generic7" xml:space="preserve">
+    <value>We're halfway there...</value>
+    <comment>Living on a prayer by Bon Jovi</comment>
+  </data>
+  <data name="Generic8" xml:space="preserve">
+    <value>Party time!</value>
+  </data>
+  <data name="Generic9" xml:space="preserve">
+    <value>3 days since last workplace injury</value>
+  </data>
   <data name="May4th0" xml:space="preserve">
     <value>﻿May the force be with you</value>
+    <comment>Star wars</comment>
   </data>
   <data name="May4th1" xml:space="preserve">
     <value>May the fourth be with you</value>
+    <comment>Star wars</comment>
   </data>
   <data name="May4th2" xml:space="preserve">
     <value>A long time ago in a galaxy far, far away...</value>
+    <comment>Star wars</comment>
   </data>
   <data name="May4th3" xml:space="preserve">
     <value>Happy Cinco de Quatro</value>
