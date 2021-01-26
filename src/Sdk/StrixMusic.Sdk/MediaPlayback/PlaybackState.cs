@@ -11,6 +11,11 @@
         None,
 
         /// <summary>
+        /// Playback was initiated but failed.
+        /// </summary>
+        Failed,
+
+        /// <summary>
         /// The audio is currently playing.
         /// </summary>
         Playing,
