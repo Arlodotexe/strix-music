@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
@@ -16,6 +10,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.MediaPlayback;
+using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 using StrixMusic.Sdk.Uno.Assembly;
@@ -24,14 +19,18 @@ using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.MediaPlayback;
 using StrixMusic.Shared.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.Services.Notifications;
-using StrixMusic.Sdk.Uno.Services.NotificationService;
 
 namespace StrixMusic.Shared
 {
@@ -40,6 +39,7 @@ namespace StrixMusic.Shared
     /// </summary>
     public sealed partial class AppLoadingView : UserControl
     {
+        private bool _showingQuip = false;
         private DefaultSettingsService? _settingsService;
         private LocalizationResourceLoader? _localizationService;
         private IPlaybackHandlerService? _playbackHandlerService;
@@ -66,8 +66,27 @@ namespace StrixMusic.Shared
 #endif
         }
 
+        private void ShowQuip()
+        {
+            if (_localizationService == null)
+            {
+                PART_Status.Text = "Localization Error";
+                return;
+            }
+
+            (string, int) quip = new QuipLoader(Language).GetGroupIndexQuip();
+
+            PART_Status.Text = _localizationService[Constants.Localization.QuipsResource, $"{quip.Item1}{quip.Item2}"];
+            _showingQuip = true;
+        }
+
         private void UpdateStatus(string text)
         {
+            if (_showingQuip)
+            {
+                return;
+            }
+
             if (_localizationService != null)
             {
                 text = _localizationService[Constants.Localization.StartupResource, text];
@@ -272,10 +291,14 @@ namespace StrixMusic.Shared
             IServiceCollection services = new ServiceCollection();
             _localizationService = new LocalizationResourceLoader();
             _localizationService.RegisterProvider(Constants.Localization.StartupResource);
+            _localizationService.RegisterProvider(Constants.Localization.QuipsResource);
 
             _localizationService.RegisterProvider(Constants.Localization.SuperShellResource);
             _localizationService.RegisterProvider(Constants.Localization.CommonResource);
             _localizationService.RegisterProvider(Constants.Localization.MusicResource);
+
+            // TODO: Add debug boot mode.
+            ShowQuip();
 
             UpdateStatus("InitServices");
 
