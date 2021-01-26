@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StrixMusic.Helpers.TimeSpanRules;
+using System;
 using System.Collections.Generic;
 
 namespace StrixMusic.Helpers
@@ -139,120 +140,6 @@ namespace StrixMusic.Helpers
             }
 
             return ("Generic", 0);
-        }
-    }
-
-    /// <summary>
-    /// An interface for checking if a time matches.
-    /// </summary>
-    public interface ITimeSpanRule
-    {
-        /// <summary>
-        /// Gets if a time fits the rule.
-        /// </summary>
-        /// <param name="now">The time to check.</param>
-        /// <returns>Whether or not the time <paramref name="now"/> fits the rule.</returns>
-        public bool IsNow(DateTime now);
-    }
-
-    /// <summary>
-    /// A rule for if day is with in a certain time range.
-    /// </summary>
-    public class AnnualRangeRule : ITimeSpanRule
-    {
-        private int _startDay;
-        private int _endDay;
-        private bool _wrapped = false;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DailyRangeRule"/> class.
-        /// </summary>
-        /// <param name="start">The time of day to start as a DateTime.</param>
-        /// <param name="end">The time of day to start as a DateTime.</param>
-        public AnnualRangeRule(DateTime start, DateTime end)
-        {
-            _startDay = start.DayOfYear;
-            _endDay = end.DayOfYear;
-
-            if (_endDay < _startDay)
-            {
-                int cache = _endDay;
-                _endDay = _startDay;
-                _startDay = cache + 366;
-                _wrapped = true;
-            }
-        }
-
-        /// <inheritdoc/>
-        public bool IsNow(DateTime now)
-        {
-            int currentDay = now.DayOfYear;
-            if (_wrapped && currentDay < 366)
-                currentDay += 366;
-
-            return currentDay < _endDay && currentDay > _startDay;
-        }
-    }
-
-    /// <summary>
-    /// A rule for if it's a certain day of the week.
-    /// </summary>
-    public class WeeklyRule : ITimeSpanRule
-    {
-        private DayOfWeek _day;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DailyRangeRule"/> class.
-        /// </summary>
-        /// <param name="start">The day of the week.</param>
-        public WeeklyRule(DayOfWeek day)
-        {
-            _day = day;
-        }
-
-        /// <inheritdoc/>
-        public bool IsNow(DateTime now)
-        {
-            return now.DayOfWeek == _day;
-        }
-    }
-
-    /// <summary>
-    /// A rule for if it's a certain range of times in the day.
-    /// </summary>
-    public class DailyRangeRule : ITimeSpanRule
-    {
-        private TimeSpan _startTime;
-        private TimeSpan _endTime;
-        private bool _wrapped = false;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DailyRangeRule"/> class.
-        /// </summary>
-        /// <param name="start">The time of day to start as a TimeSpan.</param>
-        /// <param name="end">The time of day to start as a TimeSpan.</param>
-        public DailyRangeRule(TimeSpan start, TimeSpan end)
-        {
-            _startTime = start;
-            _endTime = end;
-
-            if (_endTime < _startTime)
-            {
-                TimeSpan cache = _endTime;
-                _endTime = _startTime;
-                _startTime = cache.Add(TimeSpan.FromDays(1));
-                _wrapped = true;
-            }
-        }
-
-        /// <inheritdoc/>
-        public bool IsNow(DateTime now)
-        {
-            TimeSpan currentTime = now.TimeOfDay;
-            if (_wrapped && currentTime < TimeSpan.FromDays(1))
-                currentTime = currentTime.Add(TimeSpan.FromDays(1));
-
-            return currentTime < _endTime && currentTime > _startTime;
         }
     }
 }
