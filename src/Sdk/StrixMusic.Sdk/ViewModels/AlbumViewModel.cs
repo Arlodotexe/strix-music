@@ -68,6 +68,13 @@ namespace StrixMusic.Sdk.ViewModels
             DatePublishedChanged += AlbumDatePublishedChanged;
             NameChanged += AlbumNameChanged;
             UrlChanged += AlbumUrlChanged;
+
+            IsPlayAsyncAvailableChanged += OnIsPlayAsyncAvailableChanged;
+            IsPauseAsyncAvailableChanged += OnIsPauseAsyncAvailableChanged;
+            IsChangeNameAsyncAvailableChanged += OnIsChangeNameAsyncAvailableChanged;
+            IsChangeDurationAsyncAvailableChanged += OnIsChangeDurationAsyncAvailableChanged;
+            IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
+
             TrackItemsCountChanged += AlbumOnTrackItemsCountChanged;
             TrackItemsChanged += AlbumViewModel_TrackItemsChanged;
             ImagesCountChanged += AlbumViewModel_ImagesCountChanged;
@@ -82,6 +89,13 @@ namespace StrixMusic.Sdk.ViewModels
             DatePublishedChanged -= AlbumDatePublishedChanged;
             NameChanged -= AlbumNameChanged;
             UrlChanged -= AlbumUrlChanged;
+
+            IsPlayAsyncAvailableChanged -= OnIsPlayAsyncAvailableChanged;
+            IsPauseAsyncAvailableChanged -= OnIsPauseAsyncAvailableChanged;
+            IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
+            IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
+            IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
+
             TrackItemsCountChanged += AlbumOnTrackItemsCountChanged;
             TrackItemsChanged -= AlbumViewModel_TrackItemsChanged;
             ImagesCountChanged -= AlbumViewModel_ImagesCountChanged;
@@ -93,7 +107,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => _album.PlaybackStateChanged += value;
-
             remove => _album.PlaybackStateChanged -= value;
         }
 
@@ -101,7 +114,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<string>? NameChanged
         {
             add => _album.NameChanged += value;
-
             remove => _album.NameChanged -= value;
         }
 
@@ -109,7 +121,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<string?>? DescriptionChanged
         {
             add => _album.DescriptionChanged += value;
-
             remove => _album.DescriptionChanged -= value;
         }
 
@@ -117,7 +128,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<Uri?>? UrlChanged
         {
             add => _album.UrlChanged += value;
-
             remove => _album.UrlChanged -= value;
         }
 
@@ -125,7 +135,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<TimeSpan>? DurationChanged
         {
             add => _album.DurationChanged += value;
-
             remove => _album.DurationChanged -= value;
         }
 
@@ -133,8 +142,42 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<DateTime?>? LastPlayedChanged
         {
             add => _album.LastPlayedChanged += value;
-
             remove => _album.LastPlayedChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayAsyncAvailableChanged
+        {
+            add => _album.IsPlayAsyncAvailableChanged += value;
+            remove => _album.IsPlayAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseAsyncAvailableChanged
+        {
+            add => _album.IsPauseAsyncAvailableChanged += value;
+            remove => _album.IsPauseAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
+        {
+            add => _album.IsChangeNameAsyncAvailableChanged += value;
+            remove => _album.IsChangeNameAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
+        {
+            add => _album.IsChangeDescriptionAsyncAvailableChanged += value;
+            remove => _album.IsChangeDescriptionAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
+        {
+            add => _album.IsChangeDurationAsyncAvailableChanged += value;
+            remove => _album.IsChangeDurationAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
@@ -209,6 +252,16 @@ namespace StrixMusic.Sdk.ViewModels
         private void AlbumViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
         private void OnLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
+
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable));
+
+        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable));
+
+        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable));
+
+        private void OnIsPauseAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPauseAsyncAvailable));
+
+        private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
 
         private void AlbumViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
         {

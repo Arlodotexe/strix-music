@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.Data.Core
         /// <summary>
         /// The user that is authenticated with this core.
         /// </summary>
-        public ICoreUser User { get; }
+        public ICoreUser? User { get; }
 
         /// <summary>
         /// The available devices.

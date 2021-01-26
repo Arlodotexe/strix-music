@@ -69,6 +69,12 @@ namespace StrixMusic.Sdk.ViewModels
             UrlChanged += CorePlaylistUrlChanged;
             LastPlayedChanged += CorePlaylistLastPlayedChanged;
 
+            IsPlayAsyncAvailableChanged += OnIsPlayAsyncAvailableChanged;
+            IsPauseAsyncAvailableChanged += OnIsPauseAsyncAvailableChanged;
+            IsChangeNameAsyncAvailableChanged += OnIsChangeNameAsyncAvailableChanged;
+            IsChangeDurationAsyncAvailableChanged += OnIsChangeDurationAsyncAvailableChanged;
+            IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
+
             TrackItemsCountChanged += PlaylistOnTrackItemsCountChanged;
             TrackItemsChanged += PlaylistViewModel_TrackItemsChanged;
             ImagesCountChanged += PlaylistViewModel_ImagesCountChanged;
@@ -83,6 +89,12 @@ namespace StrixMusic.Sdk.ViewModels
             UrlChanged -= CorePlaylistUrlChanged;
             LastPlayedChanged += CorePlaylistLastPlayedChanged;
 
+            IsPlayAsyncAvailableChanged -= OnIsPlayAsyncAvailableChanged;
+            IsPauseAsyncAvailableChanged -= OnIsPauseAsyncAvailableChanged;
+            IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
+            IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
+            IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
+
             TrackItemsCountChanged -= PlaylistOnTrackItemsCountChanged;
             TrackItemsChanged -= PlaylistViewModel_TrackItemsChanged;
             ImagesCountChanged -= PlaylistViewModel_ImagesCountChanged;
@@ -93,7 +105,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => _playlist.PlaybackStateChanged += value;
-
             remove => _playlist.PlaybackStateChanged -= value;
         }
 
@@ -101,7 +112,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<string>? NameChanged
         {
             add => _playlist.NameChanged += value;
-
             remove => _playlist.NameChanged -= value;
         }
 
@@ -109,7 +119,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<string?>? DescriptionChanged
         {
             add => _playlist.DescriptionChanged += value;
-
             remove => _playlist.DescriptionChanged -= value;
         }
 
@@ -117,7 +126,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<Uri?>? UrlChanged
         {
             add => _playlist.UrlChanged += value;
-
             remove => _playlist.UrlChanged -= value;
         }
 
@@ -133,6 +141,41 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _playlist.LastPlayedChanged += value;
             remove => _playlist.LastPlayedChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayAsyncAvailableChanged
+        {
+            add => _playlist.IsPlayAsyncAvailableChanged += value;
+            remove => _playlist.IsPlayAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseAsyncAvailableChanged
+        {
+            add => _playlist.IsPauseAsyncAvailableChanged += value;
+            remove => _playlist.IsPauseAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
+        {
+            add => _playlist.IsChangeNameAsyncAvailableChanged += value;
+            remove => _playlist.IsChangeNameAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
+        {
+            add => _playlist.IsChangeDescriptionAsyncAvailableChanged += value;
+            remove => _playlist.IsChangeDescriptionAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
+        {
+            add => _playlist.IsChangeDurationAsyncAvailableChanged += value;
+            remove => _playlist.IsChangeDurationAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
@@ -176,6 +219,16 @@ namespace StrixMusic.Sdk.ViewModels
         private void PlaylistViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
         private void CorePlaylistLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
+
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable));
+
+        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable));
+
+        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable));
+
+        private void OnIsPauseAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPauseAsyncAvailable));
+
+        private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
 
         private void PlaylistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {

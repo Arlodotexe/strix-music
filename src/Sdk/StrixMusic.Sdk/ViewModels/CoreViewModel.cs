@@ -68,7 +68,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             CoreState = e;
 
-            Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(CoreState)));
+            _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(CoreState)));
         }
 
         /// <inheritdoc />
@@ -78,7 +78,7 @@ namespace StrixMusic.Sdk.ViewModels
         public string Name => _core.Name;
 
         /// <inheritdoc cref="ICore.User" />
-        public ICoreUser User => _core.User;
+        public ICoreUser? User => _core.User;
 
         /// <inheritdoc cref="ICore.CoreConfig" />
         public ICoreConfig CoreConfig => _core.CoreConfig;

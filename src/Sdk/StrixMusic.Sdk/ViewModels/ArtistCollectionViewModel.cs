@@ -54,11 +54,18 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged += OnNameChanged;
             DescriptionChanged += OnDescriptionChanged;
             UrlChanged += OnUrlChanged;
+            LastPlayedChanged += OnLastPlayedChanged;
+
+            IsPlayAsyncAvailableChanged += OnIsPlayAsyncAvailableChanged;
+            IsPauseAsyncAvailableChanged += OnIsPauseAsyncAvailableChanged;
+            IsChangeNameAsyncAvailableChanged += OnIsChangeNameAsyncAvailableChanged;
+            IsChangeDurationAsyncAvailableChanged += OnIsChangeDurationAsyncAvailableChanged;
+            IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
+
             ArtistItemsCountChanged += OnArtistItemsCountChanged;
             ArtistItemsChanged += ArtistCollectionViewModel_ArtistItemsChanged;
             ImagesCountChanged += ArtistCollectionViewModel_ImagesCountChanged;
             ImagesChanged += ArtistCollectionViewModel_ImagesChanged;
-            LastPlayedChanged += OnLastPlayedChanged;
         }
 
         private void DetachEvents()
@@ -67,11 +74,18 @@ namespace StrixMusic.Sdk.ViewModels
             NameChanged -= OnNameChanged;
             DescriptionChanged -= OnDescriptionChanged;
             UrlChanged -= OnUrlChanged;
+            LastPlayedChanged -= OnLastPlayedChanged;
+
+            IsPlayAsyncAvailableChanged -= OnIsPlayAsyncAvailableChanged;
+            IsPauseAsyncAvailableChanged -= OnIsPauseAsyncAvailableChanged;
+            IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
+            IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
+            IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
+
             ArtistItemsCountChanged -= OnArtistItemsCountChanged;
             ArtistItemsChanged -= ArtistCollectionViewModel_ArtistItemsChanged;
             ImagesCountChanged -= ArtistCollectionViewModel_ImagesCountChanged;
             ImagesChanged -= ArtistCollectionViewModel_ImagesChanged;
-            LastPlayedChanged -= OnLastPlayedChanged;
         }
 
         private void OnUrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
@@ -87,6 +101,16 @@ namespace StrixMusic.Sdk.ViewModels
         private void OnArtistItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalArtistItemsCount));
 
         private void OnLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
+
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable));
+
+        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable));
+
+        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable));
+
+        private void OnIsPauseAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPauseAsyncAvailable));
+
+        private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
 
         private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
@@ -167,6 +191,41 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _collection.LastPlayedChanged += value;
             remove => _collection.LastPlayedChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayAsyncAvailableChanged
+        {
+            add => _collection.IsPlayAsyncAvailableChanged += value;
+            remove => _collection.IsPlayAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseAsyncAvailableChanged
+        {
+            add => _collection.IsPauseAsyncAvailableChanged += value;
+            remove => _collection.IsPauseAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
+        {
+            add => _collection.IsChangeNameAsyncAvailableChanged += value;
+            remove => _collection.IsChangeNameAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
+        {
+            add => _collection.IsChangeDescriptionAsyncAvailableChanged += value;
+            remove => _collection.IsChangeDescriptionAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
+        {
+            add => _collection.IsChangeDurationAsyncAvailableChanged += value;
+            remove => _collection.IsChangeDurationAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
