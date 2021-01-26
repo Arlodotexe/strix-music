@@ -94,6 +94,11 @@ namespace StrixMusic.Sdk.Data.Merged
             source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
             source.LastPlayedChanged += LastPlayedChanged;
+            source.IsPlayAsyncAvailableChanged += IsPlayAsyncAvailableChanged;
+            source.IsPauseAsyncAvailableChanged += IsPauseAsyncAvailableChanged;
+            source.IsChangeNameAsyncAvailableChanged += IsChangeNameAsyncAvailableChanged;
+            source.IsChangeDurationAsyncAvailableChanged += IsChangeDurationAsyncAvailableChanged;
+            source.IsChangeDescriptionAsyncAvailableChanged += IsChangeDescriptionAsyncAvailableChanged;
         }
 
         private void DetachPlayableEvents(IPlayable source)
@@ -104,6 +109,11 @@ namespace StrixMusic.Sdk.Data.Merged
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
             source.LastPlayedChanged -= LastPlayedChanged;
+            source.IsPlayAsyncAvailableChanged -= IsPlayAsyncAvailableChanged;
+            source.IsPauseAsyncAvailableChanged -= IsPauseAsyncAvailableChanged;
+            source.IsChangeNameAsyncAvailableChanged -= IsChangeNameAsyncAvailableChanged;
+            source.IsChangeDurationAsyncAvailableChanged -= IsChangeDurationAsyncAvailableChanged;
+            source.IsChangeDescriptionAsyncAvailableChanged -= IsChangeDescriptionAsyncAvailableChanged;
         }
 
         private void ImageCollectionMap_ItemsCountChanged(object sender, int e)
@@ -178,6 +188,21 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public event EventHandler<DateTime?>? LastPlayedChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? ArtistItemsCountChanged;

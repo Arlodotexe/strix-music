@@ -45,6 +45,21 @@ namespace StrixMusic.Sdk.Data
         public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
+
+        /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc />

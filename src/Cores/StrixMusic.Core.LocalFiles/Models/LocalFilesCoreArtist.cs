@@ -50,6 +50,21 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
+
+        /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />

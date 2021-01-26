@@ -130,5 +130,30 @@ namespace StrixMusic.Sdk.Data.Base
         /// Raised when <see cref="LastPlayed"/> changes.
         /// </summary>
         event EventHandler<DateTime?>? LastPlayedChanged;
+
+        /// <summary>
+        /// Raised when <see cref="IsPlayAsyncAvailable"/> changes.
+        /// </summary>
+        event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+
+        /// <summary>
+        /// Raised when <see cref="IsPauseAsyncAvailable"/> changes.
+        /// </summary>
+        event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+
+        /// <summary>
+        /// Raised when <see cref="IsChangeNameAsyncAvailable"/> changes.
+        /// </summary>
+        event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
+
+        /// <summary>
+        /// Raised when <see cref="IsChangeDescriptionAsyncAvailable"/> changes.
+        /// </summary>
+        event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged;
+
+        /// <summary>
+        /// Raised when <see cref="IsChangeDurationAsyncAvailable"/> changes.
+        /// </summary>
+        event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
     }
 }
