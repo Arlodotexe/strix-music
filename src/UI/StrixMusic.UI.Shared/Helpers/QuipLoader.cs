@@ -64,18 +64,30 @@ namespace StrixMusic.Helpers
                 "en",
                 new QuipGroup[]
                 {
+                    // Generic English
                     new QuipGroup("Generic", count:13, rule:null),
+
+                    // Holidays
                     new QuipGroup("Christmas", count:4, rule:new AnnualRangeRule(new DateTime(1, 12, 24), new DateTime(1, 12, 26)), weight:10),
                     new QuipGroup("NewYears", count:1, rule:new AnnualRangeRule(new DateTime(1, 12, 31), new DateTime(1, 1, 2)), weight:10),
                     new QuipGroup("NewYearsEve", count:1, rule:new AnnualRangeRule(new DateTime(1, 12, 31), new DateTime(1, 1, 1))),
                     new QuipGroup("May4th", count:4, rule:new AnnualRangeRule(new DateTime(1, 5, 4), new DateTime(1, 5, 5)), weight:10),
                     new QuipGroup("StParticks", count:3, rule:new AnnualRangeRule(new DateTime(1, 3, 17), new DateTime(1, 3, 18, 5, 0, 0)), weight:10),
+                    holidayQuips["Halloween"],
+                    
+                    // Time of day
                     new QuipGroup("Dawn", count:2, rule:new DailyRangeRule(TimeSpan.FromHours(4), TimeSpan.FromHours(7)), weight:2),
                     new QuipGroup("Morning", count:2, rule:new DailyRangeRule(TimeSpan.FromHours(7), TimeSpan.FromHours(12)), weight:2),
                     new QuipGroup("Afternoon", count:2, rule:new DailyRangeRule(TimeSpan.FromHours(12), TimeSpan.FromHours(15)), weight:2),
                     new QuipGroup("Evening", count:1, rule:new DailyRangeRule(TimeSpan.FromHours(15), TimeSpan.FromHours(21)), weight:2),
                     new QuipGroup("Night", count:1, rule:new DailyRangeRule(TimeSpan.FromHours(21), TimeSpan.FromHours(0)), weight:2),
-                    holidayQuips["Halloween"],
+                    
+                    // Seasonal
+                    // TODO: Overrule Seasonal quips in Southern hemisphere
+                    new QuipGroup("Autumn", count:3, rule:new AnnualRangeRule(new DateTime(1, 9, 22), new DateTime(1, 12, 21)), weight:2), // TODO: Compute seasonal times
+                    new QuipGroup("Winter", count:3, rule:new AnnualRangeRule(new DateTime(1, 12, 21), new DateTime(1, 3, 20)), weight:2), // TODO: Compute seasonal times
+                    new QuipGroup("Sprint", count:1, rule:new AnnualRangeRule(new DateTime(1, 3, 20), new DateTime(1, 6, 21)), weight:2), // TODO: Compute seasonal times
+                    new QuipGroup("Summer", count:1, rule:new AnnualRangeRule(new DateTime(1, 6, 21), new DateTime(1, 9, 22)), weight:2), // TODO: Compute seasonal times
                 }
             },
 

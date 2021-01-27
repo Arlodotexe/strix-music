@@ -129,6 +129,15 @@
   <data name="April1st1" xml:space="preserve">
     <value>Unhandled exception: AprilFoolsDayException</value>
   </data>
+  <data name="Autumn0" xml:space="preserve">
+    <value>Raking up leaves</value>
+  </data>
+  <data name="Autumn1" xml:space="preserve">
+    <value>Drinking pumpkin spice</value>
+  </data>
+  <data name="Autumn2" xml:space="preserve">
+    <value>Making apple cider</value>
+  </data>
   <data name="Christmas0" xml:space="preserve">
     <value>Merry Christmas!</value>
   </data>
@@ -245,6 +254,9 @@
   <data name="Night0" xml:space="preserve">
     <value>Good Night!</value>
   </data>
+  <data name="Spring0" xml:space="preserve">
+    <value>Blooming</value>
+  </data>
   <data name="StPatricks0" xml:space="preserve">
     <value>Getting hammered</value>
   </data>
@@ -253,5 +265,17 @@
   </data>
   <data name="StPatricks2" xml:space="preserve">
     <value>Oh how do you do, young Willie McBride</value>
+  </data>
+  <data name="Summer0" xml:space="preserve">
+    <value>Turning on the AC</value>
+  </data>
+  <data name="Winter0" xml:space="preserve">
+    <value>Drinking Horchata</value>
+  </data>
+  <data name="Winter1" xml:space="preserve">
+    <value>Mixing Choclate Milk</value>
+  </data>
+  <data name="Winter2" xml:space="preserve">
+    <value>Shoveling snow</value>
   </data>
 </root>
