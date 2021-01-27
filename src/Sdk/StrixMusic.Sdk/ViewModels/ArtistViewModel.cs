@@ -8,6 +8,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -227,10 +228,10 @@ namespace StrixMusic.Sdk.ViewModels
                 switch (item.Data)
                 {
                     case IAlbum album:
-                        Albums.Insert(item.Index, new AlbumViewModel(album));
+                        Albums.InsertOrAdd(item.Index, new AlbumViewModel(album));
                         break;
                     case IAlbumCollection collection:
-                        Albums.Insert(item.Index, new AlbumCollectionViewModel(collection));
+                        Albums.InsertOrAdd(item.Index, new AlbumCollectionViewModel(collection));
                         break;
                     default:
                         ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
