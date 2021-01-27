@@ -117,45 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DrWhoAniversary0" xml:space="preserve">
-    <value>Vwoop, Vwoop</value>
-  </data>
-  <data name="DrWhoAniversary1" xml:space="preserve">
-    <value>Allons-y!</value>
-  </data>
-  <data name="DrWhoAniversary10" xml:space="preserve">
-    <value>Wibbly wobbly. Timey wimey</value>
-  </data>
-  <data name="DrWhoAniversary11" xml:space="preserve">
-    <value>Now with a fez</value>
-  </data>
-  <data name="DrWhoAniversary12" xml:space="preserve">
-    <value>You’ve redecorated...</value>
-  </data>
-  <data name="DrWhoAniversary2" xml:space="preserve">
-    <value>Spoilers</value>
-  </data>
-  <data name="DrWhoAniversary3" xml:space="preserve">
-    <value>Geronimo</value>
-  </data>
-  <data name="DrWhoAniversary4" xml:space="preserve">
-    <value>Fantastic!</value>
-  </data>
-  <data name="DrWhoAniversary5" xml:space="preserve">
-    <value>Jelly baby?</value>
-  </data>
-  <data name="DrWhoAniversary6" xml:space="preserve">
-    <value>Bow ties are cool</value>
-  </data>
-  <data name="DrWhoAniversary7" xml:space="preserve">
-    <value>Bigger on the inside</value>
-  </data>
-  <data name="DrWhoAniversary8" xml:space="preserve">
-    <value>Smaller on the outside?</value>
-  </data>
-  <data name="DrWhoAniversary9" xml:space="preserve">
-    <value>Hello Sweety</value>
-  </data>
   <data name="November5th0" xml:space="preserve">
     <value>Remember remember...</value>
   </data>

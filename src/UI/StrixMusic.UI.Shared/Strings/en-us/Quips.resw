@@ -117,20 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ColumbusDay0" xml:space="preserve">
-    <value>White washing history</value>
-  </data>
-  <data name="January6th0" xml:space="preserve">
-    <value>Insurrecting</value>
-  </data>
   <data name="July4th0" xml:space="preserve">
     <value>*Eagle Screech*</value>
   </data>
   <data name="July4th1" xml:space="preserve">
     <value>Starting the Monster Truck</value>
-  </data>
-  <data name="MLKDay0" xml:space="preserve">
-    <value>White washing history</value>
   </data>
   <data name="US-StParticks0" xml:space="preserve">
     <value>Give it up for Boston</value>

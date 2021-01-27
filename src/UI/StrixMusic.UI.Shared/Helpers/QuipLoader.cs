@@ -55,6 +55,7 @@ namespace StrixMusic.Helpers
         {
             { "GroundhogDay", new QuipGroup("GroundhogDay", count:2, rule:new AnnualRangeRule(new DateTime(1, 2, 2), new DateTime(1, 2, 3)), weight:10) },
             { "Halloween", new QuipGroup("Halloween", count:4, rule:new AnnualRangeRule(new DateTime(1, 10, 31), new DateTime(1, 11, 1)), weight:10) },
+            { "DrWhoAniversary", new QuipGroup("DrWhoAniversary", count:13, rule:new AnnualRangeRule(new DateTime(1, 7, 23), new DateTime(1, 7, 24)), weight:20),},
         };
 
         private static Dictionary<string, QuipGroup[]> _languageSpecialDayMap = new Dictionary<string, QuipGroup[]>
@@ -73,6 +74,7 @@ namespace StrixMusic.Helpers
                     new QuipGroup("NewYearsEve", count:1, rule:new AnnualRangeRule(new DateTime(1, 12, 31), new DateTime(1, 1, 1))),
                     new QuipGroup("May4th", count:4, rule:new AnnualRangeRule(new DateTime(1, 5, 4), new DateTime(1, 5, 5)), weight:10),
                     new QuipGroup("StParticks", count:3, rule:new AnnualRangeRule(new DateTime(1, 3, 17), new DateTime(1, 3, 18, 5, 0, 0)), weight:10),
+                    new QuipGroup("April1st", count:3, rule:new AnnualRangeRule(new DateTime(1, 4, 1), new DateTime(1, 4, 2)), weight:10),
                     holidayQuips["Halloween"],
                     
                     // Time of day
@@ -96,12 +98,10 @@ namespace StrixMusic.Helpers
                 "en-us",
                 new QuipGroup[]
                 {
-                    new QuipGroup("January6th", count:1, rule:new AnnualRangeRule(new DateTime(1, 1, 6), new DateTime(1, 1, 6)), weight:2),
-                    new QuipGroup("MLKDay", count:1, rule:new AnnualRangeRule(new DateTime(1, 1, 20), new DateTime(1, 1, 20)), weight:2),
                     new QuipGroup("US-StParticks", count:1, rule:new AnnualRangeRule(new DateTime(1, 3, 17), new DateTime(1, 3, 18, 5, 0, 0)), weight:2),
                     new QuipGroup("July4th", count:2, rule:new AnnualRangeRule(new DateTime(1, 7, 4), new DateTime(1, 7, 5)), weight:10),
-                    new QuipGroup("ColumbusDay", count:1, rule:new AnnualRangeRule(new DateTime(1, 10, 10), new DateTime(1, 10, 11)), weight:2), // Rewrite as seconday monday of October. // Change to NativeAmericansDay
                     new QuipGroup("VoteRegister", count:1, rule:new AnnualRangeRule(new DateTime(1, 10, 7), new DateTime(1, 11, 1)), weight:2),
+                    holidayQuips["DrWhoAniversary"],
                     holidayQuips["GroundhogDay"],
                 }
             },
@@ -112,7 +112,7 @@ namespace StrixMusic.Helpers
                 new QuipGroup[]
                 {
                     new QuipGroup("November5th", count:2, rule:new AnnualRangeRule(new DateTime(1, 11, 5), new DateTime(1,11, 6)), weight:10),
-                    new QuipGroup("DrWhoAniversary", count:13, rule:new AnnualRangeRule(new DateTime(1, 7, 23), new DateTime(1, 7, 24)), weight:20),
+                    holidayQuips["DrWhoAniversary"],
                 }
             },
 

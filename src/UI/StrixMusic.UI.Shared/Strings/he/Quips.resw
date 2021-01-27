@@ -126,8 +126,8 @@
     <comment>Good Evening</comment>
   </data>
   <data name="Generic0" xml:space="preserve">
-    <value>עובד</value>
-    <comment>Working</comment>
+    <value>טוען</value>
+    <comment>Loading</comment>
   </data>
   <data name="Generic1" xml:space="preserve">
     <value>קבלת פנים לציונים</value>
@@ -141,6 +141,14 @@
     <value>משבח גל גדות</value>
     <comment>Praising Gal Gadot</comment>
   </data>
+  <data name="Generic4" xml:space="preserve">
+    <value>לומד עברית</value>
+    <comment>Learning Hebrew</comment>
+  </data>
+  <data name="Generic5" xml:space="preserve">
+    <value>מזבזב זמן</value>
+    <comment>Wasting time</comment>
+  </data>
   <data name="Morning0" xml:space="preserve">
     <value>בוקר טוב</value>
     <comment>Good Morning</comment>
@@ -152,6 +160,10 @@
   <data name="Saturday0" xml:space="preserve">
     <value>שבת שלום</value>
     <comment>Shabbot Shalom (doesn't translate well, just an expression)</comment>
+  </data>
+  <data name="Summer0" xml:space="preserve">
+    <value>מקררע</value>
+    <comment>Cooling off</comment>
   </data>
   <data name="Sunday0" xml:space="preserve">
     <value>שבוע טוב</value>

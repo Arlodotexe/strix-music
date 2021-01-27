@@ -129,6 +129,9 @@
   <data name="April1st1" xml:space="preserve">
     <value>Unhandled exception: AprilFoolsDayException</value>
   </data>
+  <data name="April1st2" xml:space="preserve">
+    <value>Task failed successfully</value>
+  </data>
   <data name="Autumn0" xml:space="preserve">
     <value>Raking up leaves</value>
   </data>
@@ -156,6 +159,45 @@
   <data name="Dawn1" xml:space="preserve">
     <value>Calling the rooster</value>
   </data>
+  <data name="DrWhoAniversary0" xml:space="preserve">
+    <value>Vwoop, Vwoop</value>
+  </data>
+  <data name="DrWhoAniversary1" xml:space="preserve">
+    <value>Allons-y!</value>
+  </data>
+  <data name="DrWhoAniversary10" xml:space="preserve">
+    <value>Wibbly wobbly. Timey wimey</value>
+  </data>
+  <data name="DrWhoAniversary11" xml:space="preserve">
+    <value>Now with a fez</value>
+  </data>
+  <data name="DrWhoAniversary12" xml:space="preserve">
+    <value>You’ve redecorated...</value>
+  </data>
+  <data name="DrWhoAniversary2" xml:space="preserve">
+    <value>Spoilers</value>
+  </data>
+  <data name="DrWhoAniversary3" xml:space="preserve">
+    <value>Geronimo</value>
+  </data>
+  <data name="DrWhoAniversary4" xml:space="preserve">
+    <value>Fantastic!</value>
+  </data>
+  <data name="DrWhoAniversary5" xml:space="preserve">
+    <value>Jelly baby?</value>
+  </data>
+  <data name="DrWhoAniversary6" xml:space="preserve">
+    <value>Bow ties are cool</value>
+  </data>
+  <data name="DrWhoAniversary7" xml:space="preserve">
+    <value>Bigger on the inside</value>
+  </data>
+  <data name="DrWhoAniversary8" xml:space="preserve">
+    <value>Smaller on the outside?</value>
+  </data>
+  <data name="DrWhoAniversary9" xml:space="preserve">
+    <value>Hello Sweety</value>
+  </data>
   <data name="Evening0" xml:space="preserve">
     <value>Good Evening!</value>
   </data>
@@ -176,8 +218,39 @@
   <data name="Generic12" xml:space="preserve">
     <value>Killing time</value>
   </data>
+  <data name="Generic13" xml:space="preserve">
+    <value>Picking random numbers</value>
+  </data>
+  <data name="Generic14" xml:space="preserve">
+    <value>Squashing bugs</value>
+  </data>
+  <data name="Generic15" xml:space="preserve">
+    <value>Yielding the high ground</value>
+  </data>
+  <data name="Generic16" xml:space="preserve">
+    <value>No Touching!</value>
+    <comment>Arrested Development</comment>
+  </data>
+  <data name="Generic17" xml:space="preserve">
+    <value>Are you still there?</value>
+  </data>
+  <data name="Generic18" xml:space="preserve">
+    <value>Evading Velociraptors</value>
+    <comment>XKCD</comment>
+  </data>
+  <data name="Generic19" xml:space="preserve">
+    <value>Water tribe...</value>
+    <comment>Avatar: The Last Airbender</comment>
+  </data>
   <data name="Generic2" xml:space="preserve">
     <value>Generating stuff</value>
+  </data>
+  <data name="Generic20" xml:space="preserve">
+    <value>That's no moon...</value>
+    <comment>Star wars</comment>
+  </data>
+  <data name="Generic21" xml:space="preserve">
+    <value>Learning English</value>
   </data>
   <data name="Generic3" xml:space="preserve">
     <value>Shaken not Shtirred</value>
@@ -238,6 +311,7 @@
   </data>
   <data name="May4th3" xml:space="preserve">
     <value>Happy Cinco de Quatro</value>
+    <comment>Arrested Development</comment>
   </data>
   <data name="Morning0" xml:space="preserve">
     <value>Good Morning!</value>
@@ -258,13 +332,14 @@
     <value>Blooming</value>
   </data>
   <data name="StPatricks0" xml:space="preserve">
-    <value>Getting hammered</value>
+    <value>Looking for gold</value>
   </data>
   <data name="StPatricks1" xml:space="preserve">
-    <value>Drink up</value>
+    <value>Searching for four leaf clovers</value>
   </data>
   <data name="StPatricks2" xml:space="preserve">
     <value>Oh how do you do, young Willie McBride</value>
+    <comment>Willie McBride (Green Fields of France) by Tommy Makem &amp; Liam Clancy</comment>
   </data>
   <data name="Summer0" xml:space="preserve">
     <value>Turning on the AC</value>
