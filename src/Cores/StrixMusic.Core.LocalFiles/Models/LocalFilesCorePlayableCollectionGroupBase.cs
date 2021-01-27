@@ -1,10 +1,8 @@
 ﻿using OwlCore.Events;
-using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Core.LocalFiles.Models

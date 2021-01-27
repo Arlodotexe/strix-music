@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using OwlCore.AbstractStorage;
+﻿using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Core.LocalFiles.Extensions;
@@ -73,62 +72,31 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                 if (mergedMetaData.TrackMetadata != null && item.TrackMetadata != null)
                 {
-                    if (mergedMetaData.TrackMetadata.TrackNumber is null)
-                        mergedMetaData.TrackMetadata.TrackNumber = item.TrackMetadata.TrackNumber;
-
-                    if (mergedMetaData.TrackMetadata.Genres is null)
-                        mergedMetaData.TrackMetadata.Genres = item.TrackMetadata.Genres;
-
-                    if (mergedMetaData.TrackMetadata.DiscNumber is null)
-                        mergedMetaData.TrackMetadata.DiscNumber = item.TrackMetadata.DiscNumber;
-
-                    if (mergedMetaData.TrackMetadata.Duration is null)
-                        mergedMetaData.TrackMetadata.Duration = item.TrackMetadata.Duration;
-
-                    if (mergedMetaData.TrackMetadata.Lyrics is null)
-                        mergedMetaData.TrackMetadata.Lyrics = item.TrackMetadata.Lyrics;
-
-                    if (mergedMetaData.TrackMetadata.Language is null)
-                        mergedMetaData.TrackMetadata.Language = item.TrackMetadata.Language;
-
-                    if (mergedMetaData.TrackMetadata.Description is null)
-                        mergedMetaData.TrackMetadata.Description = item.TrackMetadata.Description;
-
-                    if (mergedMetaData.TrackMetadata.Title is null)
-                        mergedMetaData.TrackMetadata.Title = item.TrackMetadata.Title;
-
-                    if (mergedMetaData.TrackMetadata.Url is null)
-                        mergedMetaData.TrackMetadata.Url = item.TrackMetadata.Url;
-
-                    if (mergedMetaData.TrackMetadata.Year is null)
-                        mergedMetaData.TrackMetadata.Year = item.TrackMetadata.Year;
+                    mergedMetaData.TrackMetadata.TrackNumber ??= item.TrackMetadata.TrackNumber;
+                    mergedMetaData.TrackMetadata.Genres ??= item.TrackMetadata.Genres;
+                    mergedMetaData.TrackMetadata.DiscNumber ??= item.TrackMetadata.DiscNumber;
+                    mergedMetaData.TrackMetadata.Duration ??= item.TrackMetadata.Duration;
+                    mergedMetaData.TrackMetadata.Lyrics ??= item.TrackMetadata.Lyrics;
+                    mergedMetaData.TrackMetadata.Language ??= item.TrackMetadata.Language;
+                    mergedMetaData.TrackMetadata.Description ??= item.TrackMetadata.Description;
+                    mergedMetaData.TrackMetadata.Title ??= item.TrackMetadata.Title;
+                    mergedMetaData.TrackMetadata.Url ??= item.TrackMetadata.Url;
+                    mergedMetaData.TrackMetadata.Year ??= item.TrackMetadata.Year;
                 }
 
                 if (mergedMetaData.AlbumMetadata != null && item.AlbumMetadata != null)
                 {
-                    if (mergedMetaData.AlbumMetadata.DatePublished is null)
-                        mergedMetaData.AlbumMetadata.DatePublished = item.AlbumMetadata.DatePublished;
-
-                    if (mergedMetaData.AlbumMetadata.Genres is null)
-                        mergedMetaData.AlbumMetadata.Genres = item.AlbumMetadata.Genres;
-
-                    if (mergedMetaData.AlbumMetadata.Duration is null)
-                        mergedMetaData.AlbumMetadata.Duration = item.AlbumMetadata.Duration;
-
-                    if (mergedMetaData.AlbumMetadata.Description is null)
-                        mergedMetaData.AlbumMetadata.Description = item.AlbumMetadata.Description;
-
-                    if (mergedMetaData.AlbumMetadata.Title is null)
-                        mergedMetaData.AlbumMetadata.Title = item.AlbumMetadata.Title;
+                    mergedMetaData.AlbumMetadata.DatePublished ??= item.AlbumMetadata.DatePublished;
+                    mergedMetaData.AlbumMetadata.Genres ??= item.AlbumMetadata.Genres;
+                    mergedMetaData.AlbumMetadata.Duration ??= item.AlbumMetadata.Duration;
+                    mergedMetaData.AlbumMetadata.Description ??= item.AlbumMetadata.Description;
+                    mergedMetaData.AlbumMetadata.Title ??= item.AlbumMetadata.Title;
                 }
 
                 if (mergedMetaData.ArtistMetadata != null && item.ArtistMetadata != null)
                 {
-                    if (mergedMetaData.ArtistMetadata.Name is null)
-                        mergedMetaData.ArtistMetadata.Name = item.ArtistMetadata.Name;
-
-                    if (mergedMetaData.ArtistMetadata.Url is null)
-                        mergedMetaData.ArtistMetadata.Url = item.ArtistMetadata.Url;
+                    mergedMetaData.ArtistMetadata.Name ??= item.ArtistMetadata.Name;
+                    mergedMetaData.ArtistMetadata.Url ??= item.ArtistMetadata.Url;
                 }
             }
 
