@@ -65,7 +65,6 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             Guard.IsNotNull(_folderData, nameof(_folderData));
         }
 
-
         /// <summary>
         /// Create or Update <see cref="PlaylistMetadata"/> information in files.
         /// </summary>

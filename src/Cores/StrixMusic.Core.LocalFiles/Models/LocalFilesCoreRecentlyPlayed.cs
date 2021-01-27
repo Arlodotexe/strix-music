@@ -10,7 +10,6 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <summary>
     /// The recently played items for the <see cref="LocalFilesCore"/>.
     /// </summary>
-    /// <remarks>LocalFileCore has no playback mechanism, so collections should never return anything.</remarks>
     public class LocalFilesCoreRecentlyPlayed : LocalFilesCorePlayableCollectionGroupBase, ICoreRecentlyPlayed
     {
         /// <inheritdoc />
