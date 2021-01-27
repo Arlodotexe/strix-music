@@ -8,6 +8,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -315,7 +316,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in addedItems)
             {
-                Images.Insert(item.Index, item.Data);
+                Images.InsertOrAdd(item.Index, item.Data);
             }
 
             foreach (var item in removedItems)
@@ -329,7 +330,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in addedItems)
             {
-                Children.Insert(item.Index, new PlayableCollectionGroupViewModel(item.Data));
+                Children.InsertOrAdd(item.Index, new PlayableCollectionGroupViewModel(item.Data));
             }
 
             foreach (var item in removedItems)
@@ -346,10 +347,10 @@ namespace StrixMusic.Sdk.ViewModels
                 switch (item.Data)
                 {
                     case IPlaylist playlist:
-                        Playlists.Insert(item.Index, new PlaylistViewModel(playlist));
+                        Playlists.InsertOrAdd(item.Index, new PlaylistViewModel(playlist));
                         break;
                     case IPlaylistCollection collection:
-                        Playlists.Insert(item.Index, new PlaylistCollectionViewModel(collection));
+                        Playlists.InsertOrAdd(item.Index, new PlaylistCollectionViewModel(collection));
                         break;
                     default:
                         ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
@@ -371,10 +372,10 @@ namespace StrixMusic.Sdk.ViewModels
                 switch (item.Data)
                 {
                     case IArtist artist:
-                        Artists.Insert(item.Index, new ArtistViewModel(artist));
+                        Artists.InsertOrAdd(item.Index, new ArtistViewModel(artist));
                         break;
                     case IArtistCollection collection:
-                        Artists.Insert(item.Index, new ArtistCollectionViewModel(collection));
+                        Artists.InsertOrAdd(item.Index, new ArtistCollectionViewModel(collection));
                         break;
                     default:
                         ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
@@ -393,7 +394,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in addedItems)
             {
-                Tracks.Insert(item.Index, new TrackViewModel(item.Data));
+                Tracks.InsertOrAdd(item.Index, new TrackViewModel(item.Data));
             }
 
             foreach (var item in removedItems)
@@ -410,10 +411,10 @@ namespace StrixMusic.Sdk.ViewModels
                 switch (item.Data)
                 {
                     case IAlbum album:
-                        Albums.Insert(item.Index, new AlbumViewModel(album));
+                        Albums.InsertOrAdd(item.Index, new AlbumViewModel(album));
                         break;
                     case IAlbumCollection collection:
-                        Albums.Insert(item.Index, new AlbumCollectionViewModel(collection));
+                        Albums.InsertOrAdd(item.Index, new AlbumCollectionViewModel(collection));
                         break;
                     default:
                         ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");

@@ -8,6 +8,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
@@ -116,7 +117,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in addedItems)
             {
-                Images.Insert(item.Index, item.Data);
+                Images.InsertOrAdd(item.Index, item.Data);
             }
 
             foreach (var item in removedItems)
@@ -132,10 +133,10 @@ namespace StrixMusic.Sdk.ViewModels
                 switch (item.Data)
                 {
                     case IAlbum album:
-                        Albums.Insert(item.Index, new AlbumViewModel(album));
+                        Albums.InsertOrAdd(item.Index, new AlbumViewModel(album));
                         break;
                     case IAlbumCollection collection:
-                        Albums.Insert(item.Index, new AlbumCollectionViewModel(collection));
+                        Albums.InsertOrAdd(item.Index, new AlbumCollectionViewModel(collection));
                         break;
                     default:
                         ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");

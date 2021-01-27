@@ -330,12 +330,21 @@ namespace StrixMusic.Sdk.Data.Merged
                         }
                     }
 
+                    var newItemsCount = newItems.Count;
+
                     // TODO: Sorting is not handled.
                     var mergedImpl = MergeOrAdd(newItems, collectionItemData);
 
                     var mappedData = new MappedData(item.Index, (TCoreCollection)sender, collectionItemData);
+
                     _sortedMap.Add(mappedData);
                     _mergedMappedData.Add(new MergedMappedData(mergedImpl, new[] { mappedData }));
+
+                    // If the number of items in this list changes, the item was not merged and should be emitted on the ItemsChanged event.
+                    if (newItemsCount != newItems.Count)
+                    {
+                        added.Add(new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)mergedImpl, _mergedMappedData.Count + 1));
+                    }
                 }
 
                 return added;

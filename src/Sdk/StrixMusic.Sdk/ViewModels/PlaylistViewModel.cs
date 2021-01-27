@@ -8,6 +8,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
@@ -234,7 +235,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in addedItems)
             {
-                Images.Insert(item.Index, item.Data);
+                Images.InsertOrAdd(item.Index, item.Data);
             }
 
             foreach (var item in removedItems)
@@ -248,7 +249,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in addedItems)
             {
-                Tracks.Insert(item.Index, new TrackViewModel(item.Data));
+                Tracks.InsertOrAdd(item.Index, new TrackViewModel(item.Data));
             }
 
             foreach (var item in removedItems)
