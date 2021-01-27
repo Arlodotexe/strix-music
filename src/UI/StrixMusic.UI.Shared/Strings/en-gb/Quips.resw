@@ -117,44 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Afternoon0" xml:space="preserve">
-    <value>צהריים טוב</value>
-    <comment>Good Afternoon</comment>
+  <data name="DrWhoAniversary0" xml:space="preserve">
+    <value>Vwoop, Vwoop</value>
   </data>
-  <data name="Evening0" xml:space="preserve">
-    <value>ערב טוב</value>
-    <comment>Good Evening</comment>
+  <data name="DrWhoAniversary1" xml:space="preserve">
+    <value>Allons-y!</value>
   </data>
-  <data name="Generic0" xml:space="preserve">
-    <value>עובד</value>
-    <comment>Working</comment>
+  <data name="DrWhoAniversary10" xml:space="preserve">
+    <value>Wibbly wobbly. Timey wimey</value>
   </data>
-  <data name="Generic1" xml:space="preserve">
-    <value>קבלת פנים לציונים</value>
-    <comment>Welcoming Zionists</comment>
+  <data name="DrWhoAniversary11" xml:space="preserve">
+    <value>Now with a fez</value>
   </data>
-  <data name="Generic2" xml:space="preserve">
-    <value>צוחק בקול רם</value>
-    <comment>Laughs out loud</comment>
+  <data name="DrWhoAniversary12" xml:space="preserve">
+    <value>You’ve redecorated...</value>
   </data>
-  <data name="Generic3" xml:space="preserve">
-    <value>משבח גל גדות</value>
-    <comment>Praising Gal Gadot</comment>
+  <data name="DrWhoAniversary2" xml:space="preserve">
+    <value>Spoilers</value>
   </data>
-  <data name="Morning0" xml:space="preserve">
-    <value>בוקר טוב</value>
-    <comment>Good Morning</comment>
+  <data name="DrWhoAniversary3" xml:space="preserve">
+    <value>Geronimo</value>
   </data>
-  <data name="Night0" xml:space="preserve">
-    <value>לילה טוב</value>
-    <comment>Good Night</comment>
+  <data name="DrWhoAniversary4" xml:space="preserve">
+    <value>Fantastic!</value>
   </data>
-  <data name="Saturday0" xml:space="preserve">
-    <value>שבת שלום</value>
-    <comment>Shabbot Shalom (doesn't translate well, just an expression)</comment>
+  <data name="DrWhoAniversary5" xml:space="preserve">
+    <value>Jelly baby?</value>
   </data>
-  <data name="Sunday0" xml:space="preserve">
-    <value>שבוע טוב</value>
-    <comment>Good Week (like saying have a good week)</comment>
+  <data name="DrWhoAniversary6" xml:space="preserve">
+    <value>Bow ties are cool</value>
+  </data>
+  <data name="DrWhoAniversary7" xml:space="preserve">
+    <value>Bigger on the inside</value>
+  </data>
+  <data name="DrWhoAniversary8" xml:space="preserve">
+    <value>Smaller on the outside?</value>
+  </data>
+  <data name="DrWhoAniversary9" xml:space="preserve">
+    <value>Hello Sweety</value>
+  </data>
+  <data name="November5th0" xml:space="preserve">
+    <value>Remember remember...</value>
+  </data>
+  <data name="November5th1" xml:space="preserve">
+    <value>Kaboom?</value>
   </data>
 </root>

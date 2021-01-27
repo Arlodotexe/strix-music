@@ -120,6 +120,15 @@
   <data name="Afternoon0" xml:space="preserve">
     <value>Good Afternoon!</value>
   </data>
+  <data name="Afternoon1" xml:space="preserve">
+    <value>Finishing lunch</value>
+  </data>
+  <data name="April1st0" xml:space="preserve">
+    <value>Error: April fools day</value>
+  </data>
+  <data name="April1st1" xml:space="preserve">
+    <value>Unhandled exception: AprilFoolsDayException</value>
+  </data>
   <data name="Christmas0" xml:space="preserve">
     <value>Merry Christmas!</value>
   </data>
@@ -129,8 +138,14 @@
   <data name="Christmas2" xml:space="preserve">
     <value>Whipping elves</value>
   </data>
+  <data name="Christmas3" xml:space="preserve">
+    <value>Merry Chrystler</value>
+  </data>
   <data name="Dawn0" xml:space="preserve">
     <value>Waking up or staying up?</value>
+  </data>
+  <data name="Dawn1" xml:space="preserve">
+    <value>Calling the rooster</value>
   </data>
   <data name="Evening0" xml:space="preserve">
     <value>Good Evening!</value>
@@ -141,6 +156,16 @@
   </data>
   <data name="Generic1" xml:space="preserve">
     <value>Hiding the ugly code</value>
+  </data>
+  <data name="Generic10" xml:space="preserve">
+    <value>Curse your sudden but inevitable betrayl</value>
+    <comment>Firefly</comment>
+  </data>
+  <data name="Generic11" xml:space="preserve">
+    <value>Trying ever so hard</value>
+  </data>
+  <data name="Generic12" xml:space="preserve">
+    <value>Killing time</value>
   </data>
   <data name="Generic2" xml:space="preserve">
     <value>Generating stuff</value>
@@ -171,6 +196,25 @@
   <data name="Generic9" xml:space="preserve">
     <value>3 days since last workplace injury</value>
   </data>
+  <data name="GroundhogDay0" xml:space="preserve">
+    <value>Checking on Punxsutawney Phil</value>
+  </data>
+  <data name="GroundhogDay1" xml:space="preserve">
+    <value>Looking for Spring</value>
+  </data>
+  <data name="Halloween0" xml:space="preserve">
+    <value>Boo!</value>
+  </data>
+  <data name="Halloween1" xml:space="preserve">
+    <value>Resurrecting Frankenstein's monster</value>
+  </data>
+  <data name="Halloween2" xml:space="preserve">
+    <value>Trick or treat?
+</value>
+  </data>
+  <data name="Halloween3" xml:space="preserve">
+    <value>Feasting on Candy</value>
+  </data>
   <data name="May4th0" xml:space="preserve">
     <value>﻿May the force be with you</value>
     <comment>Star wars</comment>
@@ -189,6 +233,9 @@
   <data name="Morning0" xml:space="preserve">
     <value>Good Morning!</value>
   </data>
+  <data name="Morning1" xml:space="preserve">
+    <value>Waking up...</value>
+  </data>
   <data name="NewYears0" xml:space="preserve">
     <value>Happy New Years!</value>
   </data>
@@ -197,5 +244,14 @@
   </data>
   <data name="Night0" xml:space="preserve">
     <value>Good Night!</value>
+  </data>
+  <data name="StPatricks0" xml:space="preserve">
+    <value>Getting hammered</value>
+  </data>
+  <data name="StPatricks1" xml:space="preserve">
+    <value>Drink up</value>
+  </data>
+  <data name="StPatricks2" xml:space="preserve">
+    <value>Oh how do you do, young Willie McBride</value>
   </data>
 </root>
