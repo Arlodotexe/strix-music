@@ -6,7 +6,6 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
 using OwlCore.Extensions;
-using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data;
@@ -20,8 +19,8 @@ namespace StrixMusic.Core.LocalFiles
     /// <inheritdoc />
     public class LocalFilesCore : ICore
     {
-        private static int CoreCount = 0;
-        private readonly ICoreLibrary? _coreLibrary;
+        private static int CoreCount;
+        private readonly ICoreLibrary _coreLibrary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCore"/> class.
@@ -35,7 +34,6 @@ namespace StrixMusic.Core.LocalFiles
             Devices = new SynchronizedObservableCollection<ICoreDevice>();
             RecentlyPlayed = new LocalFilesCoreRecentlyPlayed(this);
             Discoverables = new LocalFilesCoreDiscoverables(this);
-            User = new LocalFilesCoreUser(this);
             CoreConfig = new LocalFileCoreConfig(this);
             _coreLibrary = new LocalFilesCoreLibrary(this);
 
@@ -55,7 +53,7 @@ namespace StrixMusic.Core.LocalFiles
         public string Name => "LocalFileCore";
 
         /// <inheritdoc/>
-        public ICoreUser User { get; }
+        public ICoreUser? User { get; }
 
         /// <inheritdoc/>
         public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
