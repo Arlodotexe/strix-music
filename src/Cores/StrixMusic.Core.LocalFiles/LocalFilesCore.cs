@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Core.LocalFiles.Services;
@@ -56,7 +57,7 @@ namespace StrixMusic.Core.LocalFiles
         public ICoreUser? User { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
+        public IReadOnlyList<ICoreDevice> Devices { get; }
 
         /// <inheritdoc/>
         public ICoreLibrary Library => _coreLibrary;
@@ -78,6 +79,9 @@ namespace StrixMusic.Core.LocalFiles
 
         /// <inheritdoc/>
         public event EventHandler<CoreState>? CoreStateChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
 
         /// <summary>
         /// Change the <see cref="CoreState"/>.

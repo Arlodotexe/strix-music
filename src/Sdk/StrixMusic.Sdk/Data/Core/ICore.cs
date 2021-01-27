@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Collections;
+using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.MediaPlayback;
 
@@ -33,7 +34,7 @@ namespace StrixMusic.Sdk.Data.Core
         /// <summary>
         /// The available devices.
         /// </summary>
-        public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
+        public IReadOnlyList<ICoreDevice> Devices { get; }
 
         /// <summary>
         /// Gets the library for the user on this core.
@@ -87,5 +88,10 @@ namespace StrixMusic.Sdk.Data.Core
         /// Fires when the <see cref="Data.CoreState"/> has changed.
         /// </summary>
         public event EventHandler<CoreState>? CoreStateChanged;
+
+        /// <summary>
+        /// Raised when the contents of <see cref="Devices"/> is changed.
+        /// </summary>
+        public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
     }
 }
