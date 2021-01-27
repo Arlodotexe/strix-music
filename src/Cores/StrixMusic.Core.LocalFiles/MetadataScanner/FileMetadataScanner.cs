@@ -73,43 +73,29 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 if (mergedMetaData.TrackMetadata != null && item.TrackMetadata != null)
                 {
                     mergedMetaData.TrackMetadata.TrackNumber ??= item.TrackMetadata.TrackNumber;
-
                     mergedMetaData.TrackMetadata.Genres ??= item.TrackMetadata.Genres;
-
                     mergedMetaData.TrackMetadata.DiscNumber ??= item.TrackMetadata.DiscNumber;
-
                     mergedMetaData.TrackMetadata.Duration ??= item.TrackMetadata.Duration;
-
                     mergedMetaData.TrackMetadata.Lyrics ??= item.TrackMetadata.Lyrics;
-
                     mergedMetaData.TrackMetadata.Language ??= item.TrackMetadata.Language;
-
                     mergedMetaData.TrackMetadata.Description ??= item.TrackMetadata.Description;
-
                     mergedMetaData.TrackMetadata.Title ??= item.TrackMetadata.Title;
-
                     mergedMetaData.TrackMetadata.Url ??= item.TrackMetadata.Url;
-
                     mergedMetaData.TrackMetadata.Year ??= item.TrackMetadata.Year;
                 }
 
                 if (mergedMetaData.AlbumMetadata != null && item.AlbumMetadata != null)
                 {
                     mergedMetaData.AlbumMetadata.DatePublished ??= item.AlbumMetadata.DatePublished;
-
                     mergedMetaData.AlbumMetadata.Genres ??= item.AlbumMetadata.Genres;
-
                     mergedMetaData.AlbumMetadata.Duration ??= item.AlbumMetadata.Duration;
-
                     mergedMetaData.AlbumMetadata.Description ??= item.AlbumMetadata.Description;
-
                     mergedMetaData.AlbumMetadata.Title ??= item.AlbumMetadata.Title;
                 }
 
                 if (mergedMetaData.ArtistMetadata != null && item.ArtistMetadata != null)
                 {
                     mergedMetaData.ArtistMetadata.Name ??= item.ArtistMetadata.Name;
-
                     mergedMetaData.ArtistMetadata.Url ??= item.ArtistMetadata.Url;
                 }
             }
