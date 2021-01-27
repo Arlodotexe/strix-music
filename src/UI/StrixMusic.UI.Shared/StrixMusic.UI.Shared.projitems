@@ -26,6 +26,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)AppLoadingView.xaml.cs">
       <DependentUpon>AppLoadingView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\QuipLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\AnnualRangeRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\DailyRangeRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\ITimeSpanRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TimeSpanRules\WeeklyRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -57,12 +62,16 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-gb\Quips.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-us\Quips.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Common.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Quips.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Startup.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\SuperShell.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Music.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Common.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Quips.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Resources.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\Startup.resw" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\he\SuperShell.resw" />
