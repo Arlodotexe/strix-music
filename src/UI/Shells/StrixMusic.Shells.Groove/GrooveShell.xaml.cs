@@ -222,6 +222,11 @@ namespace StrixMusic.Shells.Groove
             UpdatePaneState();
         }
 
+        private void OnPaneClosed(SplitView sender, object e)
+        {
+            UpdatePaneState();
+        }
+
         private void UpdatePaneState()
         {
             if (MainSplitView.IsPaneOpen)

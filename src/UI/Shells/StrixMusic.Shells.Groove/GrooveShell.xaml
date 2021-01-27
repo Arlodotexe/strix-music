@@ -79,7 +79,8 @@
         
         <SplitView x:Name="MainSplitView" DisplayMode="CompactInline" OpenPaneLength="320"
                    PaneBackground="{ThemeResource PaneHostBackgroundBrush}"
-                   PaneOpening="OnPaneOpening" PaneClosing="OnPaneClosing">
+                   PaneOpening="OnPaneOpening" PaneClosing="OnPaneClosing"
+                   PaneClosed="OnPaneClosed">
             <SplitView.Content>
                 <Grid>
                     <Grid.RowDefinitions>
