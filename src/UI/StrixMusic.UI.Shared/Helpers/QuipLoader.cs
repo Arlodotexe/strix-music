@@ -55,7 +55,7 @@ namespace StrixMusic.Helpers
         {
             { "GroundhogDay", new QuipGroup("GroundhogDay", count:2, rule:new AnnualRangeRule(new DateTime(1, 2, 2), new DateTime(1, 2, 3)), weight:10) },
             { "Halloween", new QuipGroup("Halloween", count:4, rule:new AnnualRangeRule(new DateTime(1, 10, 31), new DateTime(1, 11, 1)), weight:10) },
-            { "DrWhoAniversary", new QuipGroup("DrWhoAniversary", count:13, rule:new AnnualRangeRule(new DateTime(1, 7, 23), new DateTime(1, 7, 24)), weight:20),},
+            { "DrWhoAniversary", new QuipGroup("DrWhoAniversary", count:13, rule:new AnnualRangeRule(new DateTime(1, 7, 23), new DateTime(1, 7, 24)), weight:20) },
         };
 
         private static Dictionary<string, QuipGroup[]> _languageSpecialDayMap = new Dictionary<string, QuipGroup[]>
