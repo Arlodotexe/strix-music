@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
@@ -47,7 +49,9 @@ namespace StrixMusic.Sdk.ViewModels
 
             if (_core.Search != null)
                 Search = new SearchViewModel(new MergedSearch(_core.Search.IntoList()));
-            
+
+            Devices = new SynchronizedObservableCollection<ICoreDevice>();
+
             CoreState = _core.CoreState;
 
             AttachEvents();
@@ -56,11 +60,46 @@ namespace StrixMusic.Sdk.ViewModels
         private void AttachEvents()
         {
             _core.CoreStateChanged += Core_CoreStateChanged;
+            _core.DevicesChanged += Core_DevicesChanged;
         }
 
         private void DetachEvents()
         {
             _core.CoreStateChanged -= Core_CoreStateChanged;
+            _core.DevicesChanged -= Core_DevicesChanged;
+        }
+
+        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreDevice>> removedItems)
+        {
+            foreach (var item in removedItems)
+            {
+                Devices.RemoveAt(item.Index);
+            }
+
+            var sortedIndices = removedItems.Select(x => x.Index).ToList();
+            sortedIndices.Sort();
+
+            // If elements are removed before they are added, the added items may be inserted at the wrong index.
+            // To compensate, we need to check how many items were removed before the current index and shift the insert position back by that amount.
+            for (var i = 0; i > addedItems.Count; i++)
+            {
+                var item = addedItems[i];
+                var insertOffset = item.Index;
+
+                // Finds the last removed index where the value is less than current pos.
+                // Quicker to do this by getting the first removed index where value is greater than current pos, minus 1 index.
+                var closestPrecedingRemovedIndex = sortedIndices.FindIndex(x => x > i) - 1;
+
+                // If found
+                if (closestPrecedingRemovedIndex != -1)
+                {
+                    // Shift the insert position backwards by the number of items that were removed
+                    insertOffset = closestPrecedingRemovedIndex * -1;
+                }
+
+                // Insert the item
+                Devices.InsertOrAdd(insertOffset, item.Data);
+            }
         }
 
         /// <inheritdoc cref="ICore.CoreState" />
@@ -87,7 +126,10 @@ namespace StrixMusic.Sdk.ViewModels
         public CoreState CoreState { get; internal set; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<ICoreDevice> Devices => _core.Devices;
+        IReadOnlyList<ICoreDevice> ICore.Devices => Devices;
+
+        /// <inheritdoc cref="ICore.Devices" />
+        public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
 
         /// <inheritdoc cref="ICore.Library" />
         ICoreLibrary ICore.Library => _core.Library;
@@ -142,6 +184,9 @@ namespace StrixMusic.Sdk.ViewModels
 
             remove => _core.CoreStateChanged -= value;
         }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
 
         /// <inheritdoc />
         public ICore SourceCore => _core.SourceCore;
