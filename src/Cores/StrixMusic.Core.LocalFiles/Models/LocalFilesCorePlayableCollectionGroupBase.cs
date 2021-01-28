@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Events;
 using OwlCore.Provisos;
+using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Core.LocalFiles.MetadataScanner;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
@@ -17,6 +19,9 @@ namespace StrixMusic.Core.LocalFiles.Models
     public abstract class LocalFilesCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup, IAsyncInit
     {
         private FileMetadataScanner _fileMetadataScanner;
+        private IList<ArtistMetadata>? _artistMetadatas;
+        private IList<AlbumMetadata>? _albumMetadatas;
+        private IList<TrackMetadata>? _trackMetadatas;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCorePlayableCollectionGroupBase"/> class.
@@ -25,6 +30,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         protected LocalFilesCorePlayableCollectionGroupBase(ICore sourceCore)
         {
             SourceCore = sourceCore;
+
+            _artistMetadatas = new List<ArtistMetadata>();
+            _albumMetadatas = new List<AlbumMetadata>();
+            _trackMetadatas = new List<TrackMetadata>();
         }
 
         private void MetadataScanner_RelatedMetadataChanged(object sender, Backing.Models.RelatedMetadata e)
@@ -37,14 +46,18 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             if (e.AlbumMetadata != null)
             {
-                fileCoreAlbum = new LocalFilesCoreAlbum(SourceCore, e.AlbumMetadata, 1000); // track count is temporary
-
-                var addedItems = new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>
+                if (!_albumMetadatas?.Contains(e.AlbumMetadata) ?? false)
                 {
-                    new CollectionChangedEventItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
-                };
+                    fileCoreAlbum = new LocalFilesCoreAlbum(SourceCore, e.AlbumMetadata, 1000); // track count is temporary
 
-                AlbumItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>()); // nothing is being removed for now.
+                    var addedItems = new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>
+                      {
+                            new CollectionChangedEventItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
+                      };
+
+                    _albumMetadatas?.Add(e.AlbumMetadata);
+                    AlbumItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>()); // nothing is being removed for now.
+                }
             }
 
             // Merged Albums are having issues.
@@ -62,14 +75,18 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             if (e.TrackMetadata != null)
             {
-                filesCoreTrack = new LocalFilesCoreTrack(SourceCore, e.TrackMetadata);
+                if (!_trackMetadatas?.Contains(e.TrackMetadata) ?? false)
+                {
+                    filesCoreTrack = new LocalFilesCoreTrack(SourceCore, e.TrackMetadata);
 
-                var addedItems = new List<CollectionChangedEventItem<ICoreTrack>>
+                    var addedItems = new List<CollectionChangedEventItem<ICoreTrack>>
                 {
                     new CollectionChangedEventItem<ICoreTrack>(filesCoreTrack, 0),
                 };
 
-                TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreTrack>>());  // nothing is being removed for now.
+                    _trackMetadatas?.Add(e.TrackMetadata);
+                    TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreTrack>>());  // nothing is being removed for now.
+                }
             }
         }
 

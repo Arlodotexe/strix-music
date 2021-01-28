@@ -52,20 +52,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                 relatedMetaDataList.Add(scannedRelatedMetadata);
                 ApplyRelatedMetadataIds(relatedMetaDataList);
-                packet.Add(scannedRelatedMetadata);
                 
-                //This is for packets.. its coming soon.
-                count++;
-
-                //if (files.Count >= 10)
-                //{
-                //    if (count % 10 == 0)
-                //    {
-                //        packet.Clear();
-                //        RelatedMetadataChanged?.Invoke(this, packet);
-                //    }
-                //}
-
                 RelatedMetadataChanged?.Invoke(this, scannedRelatedMetadata);
             }
         }
@@ -310,12 +297,12 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// Gets all unique albums. Make sure filemeta is already scanned.
         /// </summary>
         /// <returns>A list of unique <see cref="AlbumMetadata"/></returns>
-        public IReadOnlyList<AlbumMetadata?> GetUniqueAlbumMetadata()
+        public IReadOnlyCollection<AlbumMetadata?> GetUniqueAlbumMetadata()
         {
             var albums = _relatedMetadata.Select(c => c.AlbumMetadata);
 
             if (albums is null)
-                return new List<AlbumMetadata>();
+                return new List<AlbumMetadata?>();
 
             return albums.DistinctBy(c => c?.Id).ToList();
         }
@@ -329,7 +316,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             var artists = _relatedMetadata.Select(c => c.ArtistMetadata);
 
             if (artists is null)
-                return new List<ArtistMetadata>();
+                return new List<ArtistMetadata?>();
 
             return artists.DistinctBy(c => c?.Id).ToList();
         }
@@ -343,7 +330,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             var tracks = _relatedMetadata.Select(c => c.TrackMetadata);
 
             if (tracks is null)
-                return new List<TrackMetadata>();
+                return new List<TrackMetadata?>();
 
             return tracks.DistinctBy(c => c?.Id).ToList();
         }
