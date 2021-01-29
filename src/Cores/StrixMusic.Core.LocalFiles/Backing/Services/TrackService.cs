@@ -40,15 +40,27 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// <param name="offset">Get items starting at this index.</param>
         /// <param name="limit">Get items starting at this index.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task<IReadOnlyList<TrackMetadata>> GetTrackMetadata(int offset, int limit)
+        public Task<IReadOnlyList<TrackMetadata?>> GetTrackMetadata(int offset, int limit)
         {
-            if (!File.Exists(_pathToMetadatafile))
-                throw new FileNotFoundException(_pathToMetadatafile);
+            //if (!File.Exists(_pathToMetadatafile))
+            //    throw new FileNotFoundException(_pathToMetadatafile);
 
-            var bytes = File.ReadAllBytes(_pathToMetadatafile);
-            var trackMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<TrackMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            //var bytes = File.ReadAllBytes(_pathToMetadatafile);
+            //var trackMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<TrackMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            // return Task.FromResult<IReadOnlyList<TrackMetadata>>(trackMetadataLst.Skip(offset).Take(limit).ToList());
 
-            return Task.FromResult<IReadOnlyList<TrackMetadata>>(trackMetadataLst.Skip(offset).Take(limit).ToList());
+            var allTracks = _fileMetadataScanner.GetUniqueTrackMetadata();
+
+            if (limit == -1)
+            {
+                return Task.FromResult(allTracks);
+            }
+            else
+            {
+                var filteredTracks = allTracks.Skip(offset).Take(limit).ToList() as IReadOnlyList<TrackMetadata?>;
+
+                return Task.FromResult(filteredTracks);
+            }
         }
 
         /// <summary>
@@ -98,17 +110,17 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         {
             var filtredAlbums = new List<TrackMetadata>();
 
-            var tracks = await GetTrackMetadata(offset, limit);
+            var tracks = await GetTrackMetadata(offset, -1);
 
             foreach (var item in tracks)
             {
-                if (item.AlbumId != null && item.AlbumId.Contains(artistId))
+                if (item?.AlbumId != null && item.AlbumId.Contains(artistId))
                 {
                     filtredAlbums.Add(item);
                 }
             }
 
-            return filtredAlbums;
+            return filtredAlbums.Skip(offset).Take(limit).ToList();
         }
     }
 }

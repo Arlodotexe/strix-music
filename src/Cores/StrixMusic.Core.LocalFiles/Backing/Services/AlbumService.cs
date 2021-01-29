@@ -40,15 +40,28 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// <param name="offset">Get items starting at this index.</param>
         /// <param name="limit">Get items starting at this index.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task<IReadOnlyList<AlbumMetadata>> GetAlbumMetadata(int offset, int limit)
+        public Task<IReadOnlyList<AlbumMetadata?>> GetAlbumMetadata(int offset, int limit)
         {
-            if (!File.Exists(_pathToMetadatafile))
-                throw new FileNotFoundException(_pathToMetadatafile);
+            //if (!File.Exists(_pathToMetadatafile))
+            //    throw new FileNotFoundException(_pathToMetadatafile);
 
-            var bytes = File.ReadAllBytes(_pathToMetadatafile);
-            var albumMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<AlbumMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            //var bytes = File.ReadAllBytes(_pathToMetadatafile);
+            //var albumMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<AlbumMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
-            return Task.FromResult<IReadOnlyList<AlbumMetadata>>(albumMetadataLst.Skip(offset).Take(limit).ToList());
+            //return Task.FromResult<IReadOnlyList<AlbumMetadata>>(albumMetadataLst.Skip(offset).Take(limit).ToList());
+
+            var allAlbums = _fileMetadataScanner.GetUniqueAlbumMetadata();
+
+            if (limit == -1)
+            {
+                return Task.FromResult(allAlbums);
+            }
+            else
+            {
+                var filteredAlbums = allAlbums.Skip(offset).Take(limit).ToList() as IReadOnlyList<AlbumMetadata?>;
+
+                return Task.FromResult(filteredAlbums);
+            }
         }
 
         /// <summary>
@@ -80,13 +93,13 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
 
             foreach (var item in albums)
             {
-                if (item.ArtistIds != null && item.ArtistIds.Contains(artistId))
+                if (item?.ArtistIds != null && item.ArtistIds.Contains(artistId))
                 {
                     filteredAlbums.Add(item);
                 }
             }
 
-            return filteredAlbums;
+            return filteredAlbums.Skip(offset).Take(limit).ToList();
         }
     }
 }

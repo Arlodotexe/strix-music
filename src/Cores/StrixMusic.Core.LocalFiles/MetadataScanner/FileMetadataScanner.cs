@@ -297,7 +297,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// Gets all unique albums. Make sure filemeta is already scanned.
         /// </summary>
         /// <returns>A list of unique <see cref="AlbumMetadata"/></returns>
-        public IReadOnlyCollection<AlbumMetadata?> GetUniqueAlbumMetadata()
+        public IReadOnlyList<AlbumMetadata?> GetUniqueAlbumMetadata()
         {
             var albums = _relatedMetadata.Select(c => c.AlbumMetadata);
 

@@ -16,15 +16,15 @@ using System.Threading.Tasks;
 namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <inheritdoc/>
-    public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary, IAsyncInit
+    public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary
     {
         private ArtistService _artistService;
         private TrackService _trackService;
         private AlbumService _albumService;
 
-        private List<TrackMetadata> _trackMetadatas;
-        private List<AlbumMetadata> _albumMetadatas;
-        private List<ArtistMetadata> _artistMetadatas;
+        private IReadOnlyList<TrackMetadata> _trackMetadatas;
+        private IReadOnlyList<AlbumMetadata> _albumMetadatas;
+        private IReadOnlyList<ArtistMetadata> _artistMetadatas;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreLibrary"/> class.
@@ -43,6 +43,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             IReadOnlyList<CollectionChangedEventItem<ICoreArtistCollectionItem>> addedItems,
             IReadOnlyList<CollectionChangedEventItem<ICoreArtistCollectionItem>> removedItems)
         {
+            TotalAlbumItemsCount++;
         }
 
         private void LocalFilesCoreLibrary_TrackItemsChanged(
@@ -50,6 +51,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             IReadOnlyList<CollectionChangedEventItem<ICoreTrack>> addedItems,
             IReadOnlyList<CollectionChangedEventItem<ICoreTrack>> removedItems)
         {
+            TotalTracksCount++;
         }
 
         private void LocalFilesCoreLibrary_AlbumItemsChanged(
@@ -57,24 +59,16 @@ namespace StrixMusic.Core.LocalFiles.Models
             IReadOnlyList<CollectionChangedEventItem<ICoreAlbumCollectionItem>> addedItems,
             IReadOnlyList<CollectionChangedEventItem<ICoreAlbumCollectionItem>> removedItems)
         {
+            TotalArtistItemsCount++;
         }
 
         /// <inheritdoc/>
-        public async Task InitAsync()
+        public override async Task InitAsync()
         {
-            base.InitAsync().FireAndForget();
-
             _trackService = SourceCore.GetService<TrackService>();
             _artistService = SourceCore.GetService<ArtistService>();
             _albumService = SourceCore.GetService<AlbumService>();
-
-            _trackMetadatas = new List<TrackMetadata>(await _trackService.GetTrackMetadata(0, int.MaxValue));
-            _albumMetadatas = new List<AlbumMetadata>(await _albumService.GetAlbumMetadata(0, int.MaxValue));
-            _artistMetadatas = new List<ArtistMetadata>(await _artistService.GetArtistMetadata(0, int.MaxValue));
-
-            TotalTracksCount = _trackMetadatas.Count();
-            TotalArtistItemsCount = _artistMetadatas.Count();
-            TotalAlbumItemsCount = _albumMetadatas.Count();
+            await base.InitAsync();
         }
 
         /// <inheritdoc />
@@ -122,6 +116,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async override IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
+            _albumMetadatas = await _albumService.GetAlbumMetadata(offset, limit);
+
             foreach (var album in _albumMetadatas)
             {
                 // just to test
@@ -133,6 +129,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async override IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
+            _artistMetadatas = await _artistService.GetArtistMetadata(offset, limit);
+
             foreach (var artist in _artistMetadatas)
             {
                 // just to test
@@ -144,6 +142,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async override IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
+            _trackMetadatas = await _trackService.GetTrackMetadata(offset, limit);
+
             foreach (var track in _trackMetadatas)
             {
                 yield return new LocalFilesCoreTrack(SourceCore, track);

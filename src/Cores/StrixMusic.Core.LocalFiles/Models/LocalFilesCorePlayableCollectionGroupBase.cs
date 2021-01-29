@@ -46,7 +46,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             if (e.AlbumMetadata != null)
             {
-                if (!_albumMetadatas?.Contains(e.AlbumMetadata) ?? false)
+                if (!_albumMetadatas?.Any(c => c.Title?.Contains(e.AlbumMetadata.Title) ?? false) ?? false)
                 {
                     fileCoreAlbum = new LocalFilesCoreAlbum(SourceCore, e.AlbumMetadata, 1000); // track count is temporary
 
@@ -60,17 +60,21 @@ namespace StrixMusic.Core.LocalFiles.Models
                 }
             }
 
-            // Merged Albums are having issues.
+            ////// Merged Artists are having issues.
             //if (e.ArtistMetadata != null)
             //{
-            //    filesCoreArtist = new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, 1000); // track count is temporary
+            //    if (!_artistMetadatas?.Any(c => c.Name?.Contains(e.ArtistMetadata.Name) ?? false) ?? false)
+            //    {
+            //        filesCoreArtist = new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, 1000); // track count is temporary
 
-            //    var addedItems = new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>
+            //        var addedItems = new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>
             //    {
             //        new CollectionChangedEventItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
             //    };
 
-            //    ArtistItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>());  // nothing is being removed for now.
+            //        ArtistItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>());
+            //    }
+            //    // nothing is being removed for now.
             //}
 
             if (e.TrackMetadata != null)
@@ -408,7 +412,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// Initializes the collection group base.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task InitAsync()
+        public virtual Task InitAsync()
         {
             _fileMetadataScanner = SourceCore.GetService<FileMetadataScanner>();
 
