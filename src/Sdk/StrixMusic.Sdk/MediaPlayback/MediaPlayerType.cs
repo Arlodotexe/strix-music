@@ -1,7 +1,7 @@
 ﻿namespace StrixMusic.Sdk.MediaPlayback
 {
     /// <summary>
-    /// Preferred player type.
+    /// The media player types supported by a core.
     /// </summary>
     public enum MediaPlayerType
     {
@@ -11,17 +11,17 @@
         None,
 
         /// <summary>
-        /// A standard MediaPlayerElement with no special features.
+        /// Plays using a standard playback source (web resources or local files).
         /// </summary>
         Standard,
 
         /// <summary>
-        /// A PlayReady-enabled MediaPlayerElement.
+        /// Plays using a PlayReady-enabled playback source.
         /// </summary>
         PlayReady,
 
         /// <summary>
-        /// No in-app MediaPlayerElement will be created, and all device manipulations will be directly delegated to the core.
+        /// The core does not support local playback. All device manipulations will be delegated to the core.
         /// </summary>
         RemoteOnly,
     }

@@ -68,10 +68,8 @@ namespace StrixMusic.Sdk
         /// Initializes and loads the cores given.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitializeCoresAsync((ICore core, IServiceCollection services)[] initData)
+        public async Task InitializeCoresAsync(List<ICore> cores, Func<ICore, Task<IServiceCollection>> getInjectedCoreServices)
         {
-            var cores = initData.Select(x => x.core);
-
             _sources.AddRange(cores);
 
             await Cores.InParallel(x => x.DisposeAsync().AsTask());
@@ -82,9 +80,10 @@ namespace StrixMusic.Sdk
             Users.Clear();
             PlaybackQueue.Clear();
 
-            foreach (var coreInitData in initData)
+            foreach (var core in cores)
             {
-                await InitCore(coreInitData);
+                var services = await getInjectedCoreServices(core);
+                await InitCore(core, services);
             }
 
             Library = new LibraryViewModel(new MergedLibrary(_sources.Select(x => x.Library)));
@@ -100,10 +99,8 @@ namespace StrixMusic.Sdk
             AttachEvents();
         }
 
-        private async Task InitCore((ICore core, IServiceCollection services) data)
+        private async Task InitCore(ICore core, IServiceCollection services)
         {
-            var (core, services) = data;
-
             var cancellationToken = new CancellationTokenSource();
             _coreInitData.Add(new ValueTuple<ICore, CancellationTokenSource>(core, cancellationToken));
 
@@ -134,7 +131,7 @@ namespace StrixMusic.Sdk
                 }
                 else if (updatedState.Value.Result == CoreState.Configured)
                 {
-                    await InitCore(data);
+                    await InitCore(core, services);
                 }
                 else if (updatedState.Value.Result == CoreState.Unloaded)
                 {

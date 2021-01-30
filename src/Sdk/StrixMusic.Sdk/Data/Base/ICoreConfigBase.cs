@@ -22,8 +22,8 @@ namespace StrixMusic.Sdk.Data.Base
         Uri LogoSvgUrl { get; }
 
         /// <summary>
-        /// A core's preferred player type.
+        /// The player type supported by this core. <see cref="MediaPlayerType"/> for information on the different types.
         /// </summary>
-        MediaPlayerType PreferredPlayerType { get; }
+        MediaPlayerType PlaybackType { get; }
     }
 }

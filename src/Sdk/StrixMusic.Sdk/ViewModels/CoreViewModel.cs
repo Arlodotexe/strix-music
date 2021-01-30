@@ -172,7 +172,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<ICoreMember> GetContextById(string id) => _core.GetContextById(id);
+        public Task<ICoreMember> GetContextById(string id) => _core.GetContextById(id);
 
         /// <inheritdoc />
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track) => _core.GetMediaSource(track);

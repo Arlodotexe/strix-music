@@ -3,7 +3,7 @@
 namespace StrixMusic.Sdk.Data
 {
     /// <summary>
-    /// The state of a <see cref="ICore"/>.
+    /// The state of an <see cref="ICore"/>.
     /// </summary>
     public enum CoreState
     {

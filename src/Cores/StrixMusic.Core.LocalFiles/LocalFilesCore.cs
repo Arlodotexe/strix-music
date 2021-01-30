@@ -153,7 +153,7 @@ namespace StrixMusic.Core.LocalFiles
         }
 
         /// <inheritdoc/>
-        public IAsyncEnumerable<ICoreMember> GetContextById(string id)
+        public Task<ICoreMember> GetContextById(string id)
         {
             throw new NotImplementedException();
         }
