@@ -153,6 +153,7 @@ namespace StrixMusic.Sdk.Data.Merged
             _playlistCollectionMap.ItemsCountChanged -= PlaylistCollectionMap_ItemsCountChanged;
             _playableCollectionGroupMap.ItemsCountChanged -= PlayableCollectionGroupMap_ItemsCountChanged;
             _imagesCollectionMap.ItemsCountChanged -= ImagesCollectionMap_ItemsCountChanged;
+            _trackCollectionMap.ItemsCountChanged -= TrackCollectionMap_ItemsCountChanged;
         }
 
         /// <inheritdoc/>
