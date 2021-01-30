@@ -61,7 +61,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 TotalImageCount += item.TotalImageCount;
                 Duration += item.Duration;
             }
-            
+
             Name = PreferredSource.Name;
             Url = PreferredSource.Url;
             Description = PreferredSource.Description;
@@ -133,6 +133,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
             _albumCollectionMap.ItemsCountChanged += AlbumCollectionMap_ItemsCountChanged;
             _artistCollectionMap.ItemsCountChanged += ArtistCollectionMap_ItemsCountChanged;
+            _trackCollectionMap.ItemsCountChanged += TrackCollectionMap_ItemsCountChanged;
             _playlistCollectionMap.ItemsCountChanged += PlaylistCollectionMap_ItemsCountChanged;
             _playableCollectionGroupMap.ItemsCountChanged += PlayableCollectionGroupMap_ItemsCountChanged;
             _imagesCollectionMap.ItemsCountChanged += ImagesCollectionMap_ItemsCountChanged;
@@ -243,14 +244,20 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private void ArtistCollectionMap_ItemsCountChanged(object sender, int e)
         {
-            TotalArtistItemsCount = 0;
-            AlbumItemsCountChanged?.Invoke(this, e);
+            TotalArtistItemsCount = e;
+            ArtistItemsCountChanged?.Invoke(this, e);
         }
 
         private void AlbumCollectionMap_ItemsCountChanged(object sender, int e)
         {
-            TotalAlbumItemsCount = 0;
+            TotalAlbumItemsCount = e;
             AlbumItemsCountChanged?.Invoke(this, e);
+        }
+
+        private void TrackCollectionMap_ItemsCountChanged(object sender, int e)
+        {
+            TotalTracksCount = e;
+            TrackItemsCountChanged?.Invoke(this, e);
         }
 
         private void ImagesCollectionMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
