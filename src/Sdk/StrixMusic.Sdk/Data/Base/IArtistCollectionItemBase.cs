@@ -1,9 +1,7 @@
-﻿using StrixMusic.Sdk.Data.Core;
-
-namespace StrixMusic.Sdk.Data.Base
+﻿namespace StrixMusic.Sdk.Data.Base
 {
     /// <summary>
-    /// An item that belongs in an <see cref="ICoreArtistCollection"/>.
+    /// An item that belongs in an <see cref="IArtistCollection"/>.
     /// </summary>
     public interface IArtistCollectionItemBase : IPlayableCollectionItem
     {
