@@ -43,7 +43,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             IReadOnlyList<CollectionChangedEventItem<ICoreArtistCollectionItem>> addedItems,
             IReadOnlyList<CollectionChangedEventItem<ICoreArtistCollectionItem>> removedItems)
         {
-            TotalAlbumItemsCount++;
+            //TODO: Not handled yet.
         }
 
         private void LocalFilesCoreLibrary_TrackItemsChanged(
@@ -59,7 +59,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             IReadOnlyList<CollectionChangedEventItem<ICoreAlbumCollectionItem>> addedItems,
             IReadOnlyList<CollectionChangedEventItem<ICoreAlbumCollectionItem>> removedItems)
         {
-            TotalArtistItemsCount++;
+            //TODO: Not handled yet.
         }
 
         /// <inheritdoc/>
@@ -120,7 +120,6 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             foreach (var album in _albumMetadatas)
             {
-                // just to test
                 var tracks = await SourceCore.GetService<TrackService>().GetTracksByAlbumId(album.Id, 0, 1000);
                 yield return new LocalFilesCoreAlbum(SourceCore, album, tracks.Count);
             }

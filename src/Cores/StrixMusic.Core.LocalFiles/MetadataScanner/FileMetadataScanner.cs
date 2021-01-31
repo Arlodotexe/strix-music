@@ -41,8 +41,6 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             var files = await folderData.RecursiveDepthFileSearchAsync();
             var relatedMetaDataList = new List<RelatedMetadata>();
 
-            var count = 0;
-            var packet = new List<RelatedMetadata>();
             foreach (var item in files)
             {
                 var scannedRelatedMetadata = await ScanFileMetadata(item);

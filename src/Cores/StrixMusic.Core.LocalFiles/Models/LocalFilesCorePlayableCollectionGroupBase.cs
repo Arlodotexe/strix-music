@@ -60,22 +60,21 @@ namespace StrixMusic.Core.LocalFiles.Models
                 }
             }
 
-            ////// Merged Artists are having issues.
-            //if (e.ArtistMetadata != null)
-            //{
-            //    if (!_artistMetadatas?.Any(c => c.Name?.Contains(e.ArtistMetadata.Name) ?? false) ?? false)
-            //    {
-            //        filesCoreArtist = new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, 1000); // track count is temporary
+            if (e.ArtistMetadata != null)
+            {
+                if (!_artistMetadatas?.Any(c => c.Name?.Contains(e.ArtistMetadata.Name) ?? false) ?? false)
+                {
+                    filesCoreArtist = new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, 1000); // track count is temporary
 
-            //        var addedItems = new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>
-            //    {
-            //        new CollectionChangedEventItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
-            //    };
+                    var addedItems = new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>
+                    {
+                        new CollectionChangedEventItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
+                    };
 
-            //        ArtistItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>());
-            //    }
-            //    // nothing is being removed for now.
-            //}
+                    _artistMetadatas?.Add(e.ArtistMetadata);
+                    ArtistItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>());
+                }
+            }
 
             if (e.TrackMetadata != null)
             {

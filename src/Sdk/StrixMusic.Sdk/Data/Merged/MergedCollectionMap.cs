@@ -219,8 +219,8 @@ namespace StrixMusic.Sdk.Data.Merged
             }
             else if (typeof(TCoreCollection) == typeof(ICorePlaylistCollection))
             {
-                ((ICoreArtistCollection)item).ArtistItemsCountChanged += MergedCollectionMap_CountChanged;
-                ((ICoreArtistCollection)item).ArtistItemsChanged += MergedCollectionMap_ArtistItemsChanged;
+                ((ICorePlaylistCollection)item).PlaylistItemsCountChanged += MergedCollectionMap_CountChanged;
+                ((ICorePlaylistCollection)item).PlaylistItemsChanged += MergedCollectionMap_PlaylistItemsChanged;
             }
             else if (typeof(TCoreCollection) == typeof(ICoreTrackCollection))
             {
@@ -303,6 +303,11 @@ namespace StrixMusic.Sdk.Data.Merged
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
+        private void MergedCollectionMap_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICorePlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICorePlaylistCollectionItem>> removedItems)
+        {
+            MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
+        }
+
         private void MergedCollectionMap_ItemsChanged<T>(object sender, IReadOnlyList<CollectionChangedEventItem<T>> addedItems, IReadOnlyList<CollectionChangedEventItem<T>> removedItems)
             where T : class, ICollectionItemBase, ICoreMember
         {
@@ -316,6 +321,9 @@ namespace StrixMusic.Sdk.Data.Merged
 
                 foreach (var item in addedItems)
                 {
+                    var test = item.Data is ICoreArtist;
+                    var test2 = item.Data is TCoreCollectionItem;
+
                     if (!(item.Data is TCoreCollectionItem collectionItemData))
                         return ThrowHelper.ThrowInvalidOperationException<List<CollectionChangedEventItem<TCollectionItem>>>($"{nameof(item.Data)} couldn't be cast to {nameof(TCoreCollectionItem)}.");
 
