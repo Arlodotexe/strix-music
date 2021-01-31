@@ -36,7 +36,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             _trackMetadatas = new List<TrackMetadata>();
         }
 
-        private void MetadataScanner_RelatedMetadataChanged(object sender, Backing.Models.RelatedMetadata e)
+        private void MetadataScannerFileMetadataChanged(object sender, Backing.Models.FileMetadata e)
         {
             // Its not complete yet, some data is forcefully given for testing.
 
@@ -430,7 +430,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             _fileMetadataScanner = SourceCore.GetService<FileMetadataScanner>();
 
-            _fileMetadataScanner.RelatedMetadataChanged += MetadataScanner_RelatedMetadataChanged;
+            _fileMetadataScanner.FileMetadataChanged += MetadataScannerFileMetadataChanged;
 
             IsInitialized = true;
 
