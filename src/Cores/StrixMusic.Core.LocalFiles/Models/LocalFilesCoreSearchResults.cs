@@ -1,12 +1,12 @@
-﻿using StrixMusic.Core.LocalFiles.Backing.Models;
-using StrixMusic.Core.LocalFiles.Backing.Services;
-using StrixMusic.Core.LocalFiles.Models;
+﻿using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using StrixMusic.Sdk.Services.FileMetadataManager;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
@@ -15,9 +15,9 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// </summary>
     public class LocalFilesCoreSearchResults : LocalFilesCorePlayableCollectionGroupBase, ICoreSearchResults
     {
-        private ArtistService _artistService;
-        private TrackService _trackService;
-        private AlbumService _albumService;
+        private ArtistRepository _artistService;
+        private TrackRepository _trackService;
+        private AlbumRepository _albumCacheRepository;
 
         private IEnumerable<TrackMetadata> _trackMetadatas;
         private IEnumerable<AlbumMetadata> _albumMetadatas;
@@ -33,9 +33,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         public LocalFilesCoreSearchResults(ICore sourceCore, string query)
             : base(sourceCore)
         {
-            _trackService = SourceCore.GetService<TrackService>();
-            _artistService = SourceCore.GetService<ArtistService>();
-            _albumService = SourceCore.GetService<AlbumService>();
+            _trackService = SourceCore.GetService<TrackRepository>();
+            _artistService = SourceCore.GetService<ArtistRepository>();
+            _albumCacheRepository = SourceCore.GetService<AlbumRepository>();
         }
 
         /// <inheritdoc />
@@ -80,14 +80,14 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async override IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            _albumMetadatas = await _albumService.GetAlbumMetadata(0, int.MaxValue);
+            _albumMetadatas = await _albumCacheRepository.GetAlbumMetadata(0, int.MaxValue);
 
             _albumMetadatas = _albumMetadatas.Where(c => c.Title?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
 
             foreach (var album in _albumMetadatas)
             {
                 // just to test
-                var tracks = await SourceCore.GetService<TrackService>().GetTracksByAlbumId(album.Id, 0, 1000);
+                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(album.Id, 0, 1000);
                 yield return new LocalFilesCoreAlbum(SourceCore, album, tracks.Count);
             }
         }
@@ -102,7 +102,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             foreach (var album in _albumMetadatas)
             {
                 // just to test
-                var tracks = await SourceCore.GetService<TrackService>().GetTracksByAlbumId(album.Id, 0, 1000);
+                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(album.Id, 0, 1000);
                 yield return new LocalFilesCoreAlbum(SourceCore, album, tracks.Count);
             }
         }

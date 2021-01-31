@@ -1,11 +1,8 @@
-﻿using MessagePack;
-using StrixMusic.Core.LocalFiles.Backing.Models;
-using StrixMusic.Sdk.Data.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace StrixMusic.Core.LocalFiles.Backing.Models
+namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
 {
     /// <summary>
     /// The metadata associated with a track.

@@ -6,13 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
-using StrixMusic.Core.LocalFiles.Backing.Models;
-using StrixMusic.Core.LocalFiles.Backing.Services;
-using StrixMusic.Core.LocalFiles.Extensions;
-using StrixMusic.Core.LocalFiles.MetadataScanner;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 
@@ -22,9 +19,9 @@ namespace StrixMusic.Core.LocalFiles
     public class LocalFileCoreConfig : ICoreConfig
     {
         private IFileSystemService? _fileSystemService;
-        private FileMetadataScanner? _fileMetadataScanner;
         private ISettingsService? _settingsService;
         private bool _baseServicesSetup;
+        private FileMetadataManager? _fileMetadataManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFileCoreConfig"/> class.
@@ -59,6 +56,14 @@ namespace StrixMusic.Core.LocalFiles
             await SetupConfigurationServices(services);
             Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
 
+            var folderData = await GetConfiguredFolder();
+
+            Guard.IsNotNull(folderData, nameof(folderData));
+
+            _fileMetadataManager = new FileMetadataManager(SourceCore.InstanceId, folderData);
+
+            services.AddSingleton<IFileMetadataManager>(_fileMetadataManager);
+
             Services = null;
             Services = services.BuildServiceProvider();
         }
@@ -83,15 +88,6 @@ namespace StrixMusic.Core.LocalFiles
 
             services.AddSingleton(_settingsService);
 
-            _fileMetadataScanner = new FileMetadataScanner();
-
-            services.Add(new ServiceDescriptor(typeof(FileMetadataScanner), new FileMetadataScanner()));
-            services.Add(new ServiceDescriptor(typeof(ArtistService), new ArtistService(_fileSystemService, _fileMetadataScanner)));
-            services.Add(new ServiceDescriptor(typeof(TrackService), new TrackService(_fileSystemService, _fileMetadataScanner)));
-            services.Add(new ServiceDescriptor(typeof(AlbumService), new AlbumService(_fileSystemService, _fileMetadataScanner)));
-            services.Add(new ServiceDescriptor(typeof(FileMetadataScanner), _fileMetadataScanner));
-            services.Add(new ServiceDescriptor(typeof(PlaylistMetadata), new PlaylistService(_fileSystemService)));
-
             Services = services.BuildServiceProvider();
 
             return _fileSystemService.InitAsync();
@@ -104,18 +100,18 @@ namespace StrixMusic.Core.LocalFiles
         public async Task ScanFileMetadata()
         {
             Guard.IsNotNull(Services, nameof(Services));
-
-            Guard.IsNotNull(_fileMetadataScanner, nameof(_fileMetadataScanner));
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
 
             var folderData = await GetConfiguredFolder();
 
             Guard.IsNotNull(folderData, nameof(folderData));
 
             var notificationService = Services.GetRequiredService<INotificationService>();
-
             var notification = notificationService.RaiseNotification("Searching for music", $"Scanning {folderData.Path}...");
+
+            await _fileMetadataManager.InitAsync();
+
             notification.Dismiss();
-            await _fileMetadataScanner.ScanFolderForMetadata(folderData);
         }
 
         /// <summary>

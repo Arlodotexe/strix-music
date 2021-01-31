@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace StrixMusic.Core.LocalFiles.MetadataScanner
+namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
     /// <inheritdoc/>
     public class FileAbstraction : TagLib.File.IFileAbstraction

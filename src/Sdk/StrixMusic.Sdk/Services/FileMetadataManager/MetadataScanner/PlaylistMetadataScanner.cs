@@ -1,7 +1,4 @@
-﻿using OwlCore.AbstractStorage;
-using OwlCore.Extensions;
-using StrixMusic.Core.LocalFiles.Backing.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,8 +6,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using OwlCore.AbstractStorage;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Core.LocalFiles.MetadataScanner
+namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
     /// <summary>
     /// Handles scanning playlists for all supported metadata.

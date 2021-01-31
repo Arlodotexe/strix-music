@@ -1,14 +1,12 @@
-﻿using OwlCore.AbstractStorage;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using OwlCore.AbstractStorage;
 
-namespace StrixMusic.Core.LocalFiles.Extensions
+namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
     /// <summary>
-    /// <see cref="IFolderData"/> extentions methods for <see cref="LocalFilesCore"/>.
+    /// <see cref="IFolderData"/> extensions methods for <see cref="LocalFilesCore"/>.
     /// </summary>
     public static class FolderDataExtensions
     {
@@ -18,6 +16,8 @@ namespace StrixMusic.Core.LocalFiles.Extensions
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the folders in this directory.</returns>
         public static async Task<IList<IFileData>> RecursiveDepthFileSearchAsync(this IFolderData folder)
         {
+            // TODO https://dev.azure.com/arloappx/Strix-Music/_backlogs/backlog/Strix-Music%20Team/Epics/?workitem=459
+            // Move out of an extension method
             var files = await folder.GetFilesAsync();
 
             return await RecursiveDepthFileSearchAsync(folder, files.ToList());

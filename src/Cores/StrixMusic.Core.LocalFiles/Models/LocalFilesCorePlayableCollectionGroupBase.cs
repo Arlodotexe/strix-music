@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Events;
 using OwlCore.Provisos;
-using StrixMusic.Core.LocalFiles.Backing.Models;
-using StrixMusic.Core.LocalFiles.MetadataScanner;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
-    /// <inheritdoc/>
+    /// <inheritdoc cref="ICorePlayableCollectionGroup"/>
     public abstract class LocalFilesCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup, IAsyncInit
     {
         private FileMetadataScanner _fileMetadataScanner;
@@ -36,7 +36,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             _trackMetadatas = new List<TrackMetadata>();
         }
 
-        private void MetadataScannerFileMetadataChanged(object sender, Backing.Models.FileMetadata e)
+        private void MetadataScannerFileMetadataAdded(object sender, FileMetadata e)
         {
             // Its not complete yet, some data is forcefully given for testing.
 
@@ -430,7 +430,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             _fileMetadataScanner = SourceCore.GetService<FileMetadataScanner>();
 
-            _fileMetadataScanner.FileMetadataChanged += MetadataScannerFileMetadataChanged;
+            _fileMetadataScanner.FileMetadataAdded += MetadataScannerFileMetadataAdded;
 
             IsInitialized = true;
 
