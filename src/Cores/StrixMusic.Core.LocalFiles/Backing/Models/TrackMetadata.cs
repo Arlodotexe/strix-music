@@ -10,7 +10,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
     /// <summary>
     /// The metadata associated with a track.
     /// </summary>
-    public class TrackMetadata : IMetadata
+    public class TrackMetadata
     {
         /// <summary>
         /// The unique identifier for this track.
