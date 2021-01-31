@@ -93,20 +93,11 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             {
                 var item = metadatas[i];
 
-                if (mergedMetaData.Url is null)
-                    mergedMetaData.Url = item.Url;
-
-                if (mergedMetaData.TrackIds is null)
-                    mergedMetaData.TrackIds = item.TrackIds;
-
-                if (mergedMetaData.Duration is null)
-                    mergedMetaData.Duration = item.Duration;
-
-                if (mergedMetaData.Description is null)
-                    mergedMetaData.Description = item.Description;
-
-                if (mergedMetaData.Title is null)
-                    mergedMetaData.Title = item.Title;
+                mergedMetaData.Url ??= item.Url;
+                mergedMetaData.TrackIds ??= item.TrackIds;
+                mergedMetaData.Duration ??= item.Duration;
+                mergedMetaData.Description ??= item.Description;
+                mergedMetaData.Title ??= item.Title;
             }
 
             return mergedMetaData;
