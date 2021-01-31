@@ -146,7 +146,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
+                var stream = await fileData.GetStreamAsync();
 
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
@@ -198,7 +198,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         }
 
         /// <summary>
-        /// Create groups and apply ids to the <see cref="List{RelatedMetadata}>"/>
+        /// Create groups and apply ids to the <see cref="List{RelatedMetadata}"/>
         /// </summary>
         /// <param name="relatedMetadata"></param>
         public void ApplyRelatedMetadataIds(List<RelatedMetadata> relatedMetadata)
@@ -253,17 +253,12 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         }
 
         /// <summary>
-        /// Gets all unique albums. Make sure filemeta is already scanned.
+        /// Gets all unique albums. Make sure file metadata is already scanned.
         /// </summary>
         /// <returns>A list of unique <see cref="AlbumMetadata"/></returns>
         public IReadOnlyList<AlbumMetadata?> GetUniqueAlbumMetadata()
         {
-            var albums = _relatedMetadata.Select(c => c.AlbumMetadata);
-
-            if (albums is null)
-                return new List<AlbumMetadata>();
-
-            albums = albums.PruneNull();
+            var albums = _relatedMetadata.Select(c => c.AlbumMetadata).PruneNull();
 
             return albums.DistinctBy(c => c?.Id).ToList();
         }
@@ -274,12 +269,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
         public IReadOnlyList<ArtistMetadata?> GetUniqueArtistMetadata()
         {
-            var artists = _relatedMetadata.Select(c => c.ArtistMetadata);
-
-            if (artists is null)
-                return new List<ArtistMetadata>();
-
-            artists = artists.PruneNull();
+            var artists = _relatedMetadata.Select(c => c.ArtistMetadata).PruneNull();
 
             return artists.DistinctBy(c => c?.Id).ToList();
         }
@@ -290,12 +280,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
         public IReadOnlyList<TrackMetadata?> GetUniqueTrackMetadata()
         {
-            var tracks = _relatedMetadata.Select(c => c.TrackMetadata);
-
-            if (tracks is null)
-                return new List<TrackMetadata>();
-
-            tracks = tracks.PruneNull();
+            var tracks = _relatedMetadata.Select(c => c.TrackMetadata).PruneNull();
 
             return tracks.DistinctBy(c => c?.Id).ToList();
         }

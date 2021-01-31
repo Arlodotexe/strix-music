@@ -60,7 +60,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// <summary>
         /// The lyrics for this track.
         /// </summary>
-        public FileCoreLyrics? Lyrics { get; set; }
+        public Lyrics? Lyrics { get; set; }
 
         /// <summary>
         /// The external link associated with this track.

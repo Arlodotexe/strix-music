@@ -8,7 +8,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
     /// <summary>
     /// Holds lyrics information from file metadata.
     /// </summary>
-    public class FileCoreLyrics : ILyricsBase
+    public class Lyrics : ILyricsBase
     {
         ///<inheritdoc />
         public Dictionary<TimeSpan, string>? TimedLyrics => throw new NotImplementedException();

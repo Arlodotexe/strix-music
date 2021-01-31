@@ -2,7 +2,6 @@
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
-using OwlCore.Extensions;
 using OwlCore.Services;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
@@ -104,8 +103,8 @@ namespace StrixMusic.Shared
         {
             await InitializeServices();
             await InitializeAssemblies();
-            //await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("10ebf138-6a4f-4421-8fcb-c15f91fe0495");
-            await ManuallyRegisterCore<Core.MusicBrainz.MusicBrainzCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0495");
+            await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("10ebf138-6a4f-4421-8fcb-c15f91fe0495");
+            //await ManuallyRegisterCore<Core.MusicBrainz.MusicBrainzCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0495");
             await InitializeCoreRanking();
             await InitializeOutOfBoxSetupIfNeeded();
             await InitializeConfiguredCores();
@@ -367,15 +366,9 @@ namespace StrixMusic.Shared
                 return (ICore)Activator.CreateInstance(coreDataType, instanceId);
             }).ToList());
 
-            //UpdateStatus("Initializing cores");
             UpdateStatus("InitCores");
-            var initData = await cores.InParallel(async core =>
-            {
-                var services = await CreateInitialCoreServices(core);
-                return (core, services);
-            });
 
-            await Task.Run(() => CurrentWindow.MainViewModel.InitializeCoresAsync(initData));
+            await Task.Run(() => CurrentWindow.MainViewModel.InitializeCoresAsync(cores, CreateInitialCoreServices));
 
             // UpdateStatus("Setting up media players");
             UpdateStatus("SetupMedia");
@@ -400,7 +393,7 @@ namespace StrixMusic.Shared
         {
             Guard.IsNotNull(_playbackHandlerService, nameof(_playbackHandlerService));
 
-            if (core.CoreConfig.PreferredPlayerType == MediaPlayerType.Standard)
+            if (core.CoreConfig.PlaybackType == MediaPlayerType.Standard)
             {
                 var mediaPlayerElement = CurrentWindow.AppFrame.MainPage.CreateMediaPlayerElement();
 

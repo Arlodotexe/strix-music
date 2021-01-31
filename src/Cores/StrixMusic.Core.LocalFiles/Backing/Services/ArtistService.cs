@@ -1,19 +1,16 @@
 ﻿using MessagePack;
-using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using StrixMusic.Core.LocalFiles.Backing.Models;
 using StrixMusic.Core.LocalFiles.MetadataScanner;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Core.LocalFiles.Backing.Services
 {
     /// <summary>
-    /// Service to retreive artist records.
+    /// Service to retrieve artist records.
     /// </summary>
     public class ArtistService
     {
@@ -57,9 +54,9 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             }
             else
             {
-                var filteredArtists = allArtists.Skip(offset).Take(limit).ToList() as IReadOnlyList<ArtistMetadata?>;
+                var filteredArtists = allArtists.Skip(offset).Take(limit).ToList();
 
-                return Task.FromResult(filteredArtists);
+                return Task.FromResult<IReadOnlyList<ArtistMetadata>>(filteredArtists);
             }
         }
 
@@ -72,7 +69,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
             if (!await _fileSystemService.FileExistsAsync(_pathToMetadatafile))
                 File.Create(_pathToMetadatafile).Close(); // creates the file and closes the file stream.
 
-            // NOTE: Make sure you have already scanned the filemetadata.
+            // NOTE: Make sure you have already scanned the file metadata.
             var metadata = _fileMetadataScanner.GetUniqueArtistMetadata();
 
             var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
@@ -105,6 +102,8 @@ namespace StrixMusic.Core.LocalFiles.Backing.Services
         /// Gets the filtered artist by album ids.
         /// </summary>
         /// <param name="trackId">The artist Id.</param>
+        /// <param name="offset">The starting index for retrieving items.</param>
+        /// <param name="limit">The maximum number of items to return.</param>
         /// <returns>The filtered <see cref="IReadOnlyList{ArtistMetadata}"/>></returns>
         public async Task<IReadOnlyList<ArtistMetadata>> GetArtistsByTrackId(string trackId, int offset, int limit)
         {

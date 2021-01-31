@@ -24,7 +24,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// <returns>Fully scanned <see cref="PlaylistMetadata"/>.</returns>
         public async Task<PlaylistMetadata?> ScanPlaylistMetadata(IFileData fileData)
         {
-            PlaylistMetadata? playlistMetadata = null;
+            PlaylistMetadata? playlistMetadata;
             switch (fileData.FileExtension)
             {
                 case ".zpl":
@@ -89,7 +89,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 return metadatas[0];
 
             var mergedMetaData = metadatas[0];
-            for (int i = 1; i < metadatas.Length; i++)
+            for (var i = 1; i < metadatas.Length; i++)
             {
                 var item = metadatas[i];
 
@@ -163,7 +163,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             if (string.IsNullOrWhiteSpace(path) || path.IndexOfAny(Path.GetInvalidPathChars()) != -1 || !Path.IsPathRooted(path))
                 return false;
 
-            string pathRoot = Path.GetPathRoot(path);
+            var pathRoot = Path.GetPathRoot(path);
             if (pathRoot.Length <= 2 && pathRoot != "/") // Accepts X:\ and \\UNC\PATH, rejects empty string, \ and X:, but accepts / to support Linux
                 return false;
 
@@ -181,7 +181,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         {
             try
             {
-                using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
+                using var stream = await fileData.GetStreamAsync();
 
                 var doc = XDocument.Load(stream);
                 var smil = doc.Root;
@@ -239,7 +239,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                 // Make sure the file is either a "pointer" to a folder
                 // or an M3U playlist
-                string firstLine = await content.ReadLineAsync();
+                var firstLine = await content.ReadLineAsync();
                 if (firstLine != "#EXTM3U")
                 {
                     if (Directory.Exists(firstLine))
@@ -285,7 +285,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     else
                     {
                         // Assume the line is a path to a music file
-                        string fullPath = ResolveFilePath(line, fileData);
+                        var fullPath = ResolveFilePath(line, fileData);
                         trackMetadataTemp.Url = new Uri(fullPath);
                         tracks.Add(trackMetadataTemp);
 
@@ -313,7 +313,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                 var doc = XDocument.Load(stream);
                 var playlist = doc.Root;
-                string xmlns = playlist.GetDefaultNamespace().NamespaceName;
+                var xmlns = playlist.GetDefaultNamespace().NamespaceName;
                 var tracklist = playlist.Element(XName.Get("trackList", xmlns));
                 var trackListElements = tracklist.Elements(XName.Get("track", xmlns));
 
@@ -323,7 +323,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     TotalTracksCount = trackListElements.Count(),
                     Description = playlist.Element(XName.Get("annotation", xmlns))?.Value,
                 };
-                string? url = playlist.Element(XName.Get("info", xmlns))?.Value;
+                var url = playlist.Element(XName.Get("info", xmlns))?.Value;
                 if (url != null)
                     metadata.Url = new Uri(url);
 
@@ -331,7 +331,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 var trackMetadata = new List<TrackMetadata>(metadata.TotalTracksCount);
                 foreach (var media in trackListElements)
                 {
-                    int dur = int.Parse(media.Element(XName.Get("duration", xmlns))?.Value);
+                    var dur = int.Parse(media.Element(XName.Get("duration", xmlns))?.Value);
 
                     // TODO: Where does the track ID come from?
                     var track = new TrackMetadata
@@ -341,7 +341,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                         Duration = new TimeSpan(0, 0, 0, 0, dur),
                         Description = media.Element(XName.Get("annotation", xmlns))?.Value,
                     };
-                    string? trackNum = media.Element(XName.Get("trackNum", xmlns))?.Value;
+                    var trackNum = media.Element(XName.Get("trackNum", xmlns))?.Value;
                     if (trackNum != null)
                         track.TrackNumber = uint.Parse(trackNum);
 
@@ -369,7 +369,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 var doc = XDocument.Load(stream);
                 var asx = doc.Root;
                 var entries = asx.Elements("entry");
-                string baseUrl = asx.Element("base")?.Value ?? string.Empty;
+                var baseUrl = asx.Element("base")?.Value ?? string.Empty;
 
                 var metadata = new PlaylistMetadata()
                 {
@@ -381,7 +381,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 var trackMetadata = new List<TrackMetadata>(metadata.TotalTracksCount);
                 foreach (var entry in entries)
                 {
-                    string entryBaseUrl = entry.Element("base")?.Value ?? string.Empty;
+                    var entryBaseUrl = entry.Element("base")?.Value ?? string.Empty;
 
                     // TODO: Where does the track ID come from?
                     var track = new TrackMetadata
@@ -389,7 +389,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                         Title = entry.Element("title")?.Value,
                         Url = new Uri(baseUrl + entryBaseUrl + entry.Element("ref").Attribute("href").Value),
                     };
-                    string? durString = entry.Element("duration")?.Value;
+                    var durString = entry.Element("duration")?.Value;
                     if (durString != null)
                         track.Duration = TimeSpan.Parse(durString);
 
@@ -416,14 +416,14 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             try
             {
                 using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
-                StreamReader content = new StreamReader(stream);
+                var content = new StreamReader(stream);
 
                 var metadata = new PlaylistMetadata();
                 var tracks = new List<TrackMetadata>();
 
                 // Make sure the file is either a "pointer" to a folder
                 // or an MPC playlist
-                string firstLine = await content.ReadLineAsync();
+                var firstLine = await content.ReadLineAsync();
                 if (firstLine != "MPCPLAYLIST")
                     return null;
 
@@ -437,10 +437,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     switch (components["attr"].Value)
                     {
                         case "filename":
-                            string fullPath = ResolveFilePath(components["val"].Value, fileData.Path);
+                            var fullPath = ResolveFilePath(components["val"].Value, fileData.Path);
                             trackMetadata.Url = new Uri(fullPath);
 
-                            int idx = int.Parse(components["idx"].Value);
+                            var idx = int.Parse(components["idx"].Value);
                             if (idx >= tracks.Count)
                                 tracks.Add(trackMetadata);
                             else
@@ -484,7 +484,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 var tracks = new List<TrackMetadata>();
 
                 // Make sure the file is an FPL
-                byte[] fileMagic = content.ReadBytes(FplMagic.Length);
+                var fileMagic = content.ReadBytes(FplMagic.Length);
                 if (!fileMagic.SequenceEqual(FplMagic))
                     return null;
 
@@ -493,17 +493,17 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 metadata.Title = fileData.DisplayName;
 
                 // Get size of meta
-                uint metaSize = content.ReadUInt32();
+                var metaSize = content.ReadUInt32();
 
                 // Read meta strings (null-terminated)
-                byte[] metaBytes = new byte[metaSize];
-                long metaPos = stream.Position;
+                var metaBytes = new byte[metaSize];
+                var metaPos = stream.Position;
                 await stream.ReadAsync(metaBytes, 0, metaBytes.Length);
                 var metas = new List<string>();
-                string metaTemp = string.Empty;
-                for (int i = 0; i < metaBytes.Length; i++)
+                var metaTemp = string.Empty;
+                for (var i = 0; i < metaBytes.Length; i++)
                 {
-                    byte b = metaBytes[i];
+                    var b = metaBytes[i];
                     if (b == 0x00)
                     {
                         // End of string
@@ -518,28 +518,28 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 }
 
                 // Get track count
-                uint trackCount = content.ReadUInt32();
+                var trackCount = content.ReadUInt32();
 
                 // Read track metadata
                 var trackMetadatas = new List<TrackMetadata>();
-                for (int i = 0; i < trackCount; i++)
+                for (var i = 0; i < trackCount; i++)
                 {
                     var trackMetadata = new TrackMetadata();
 
                     // Get flags
-                    int flags = content.ReadInt32();
+                    var flags = content.ReadInt32();
 
                     // Get file name offset
-                    uint fileNameOffset = content.ReadUInt32();
+                    var fileNameOffset = content.ReadUInt32();
 
                     // Retrieve file name
-                    long curPos = stream.Position;
+                    var curPos = stream.Position;
                     stream.Seek(metaPos + fileNameOffset, SeekOrigin.Begin);
                     trackMetadata.Url = new Uri(stream.ReadNullTerminatedString(Encoding.UTF8));
                     stream.Seek(curPos, SeekOrigin.Begin);
 
                     // Get sub-song index (for files containing multiple tracks, like chapters)
-                    uint subSongIndex = content.ReadUInt32();
+                    var subSongIndex = content.ReadUInt32();
 
                     // Check if the track has metadata
                     if ((flags & 1) == 0)
@@ -549,36 +549,36 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     }
 
                     // Get track file size
-                    ulong fileSize = content.ReadUInt64();
+                    var fileSize = content.ReadUInt64();
 
                     // Get track file time (last modified)
-                    ulong fileTime = content.ReadUInt64();
+                    var fileTime = content.ReadUInt64();
 
                     // Get track duration
-                    double durationSeconds = content.ReadDouble();
+                    var durationSeconds = content.ReadDouble();
                     trackMetadata.Duration = new TimeSpan(0, 0, (int)durationSeconds);
 
                     // Get rpg_album, rpg_track, rpk_album, rpk_track
                     // We don't need it but might as well read it
-                    float rpgAlbum = content.ReadSingle();
-                    float rpgTrack = content.ReadSingle();
-                    float rpkAlbum = content.ReadSingle();
-                    float rpkTrack = content.ReadSingle();
+                    var rpgAlbum = content.ReadSingle();
+                    var rpgTrack = content.ReadSingle();
+                    var rpkAlbum = content.ReadSingle();
+                    var rpkTrack = content.ReadSingle();
 
                     // Get entry count
-                    int entryCount = (int)content.ReadUInt32();
-                    int primaryKeyCount = (int)content.ReadUInt32();
-                    int secondaryKeyCount = (int)content.ReadUInt32();
-                    int secondaryKeysOffset = (int)content.ReadUInt32();
+                    var entryCount = (int)content.ReadUInt32();
+                    var primaryKeyCount = (int)content.ReadUInt32();
+                    var secondaryKeyCount = (int)content.ReadUInt32();
+                    var secondaryKeysOffset = (int)content.ReadUInt32();
 
                     var primaryPairs = new Dictionary<string, string>(primaryKeyCount);
 
                     // Get primary keys
                     var primaryKeys = new Dictionary<uint, string>(primaryKeyCount);
-                    for (int x = 0; x < primaryKeyCount; x++)
+                    for (var x = 0; x < primaryKeyCount; x++)
                     {
-                        uint id = content.ReadUInt32();
-                        uint nameOffset = content.ReadUInt32();
+                        var id = content.ReadUInt32();
+                        var nameOffset = content.ReadUInt32();
                         curPos = stream.Position;
                         stream.Seek(metaPos + nameOffset, SeekOrigin.Begin);
                         primaryKeys[id] = stream.ReadNullTerminatedString(Encoding.UTF8);
@@ -586,16 +586,16 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     }
 
                     // Read 'unk0', no idea what it does
-                    uint unk0 = content.ReadUInt32();
+                    var unk0 = content.ReadUInt32();
 
                     // Get primary pair values
-                    string previousPrimaryKey = primaryKeys.First().Value;
+                    var previousPrimaryKey = primaryKeys.First().Value;
                     for (uint x = 0; x < primaryKeyCount; x++)
                     {
-                        uint valueOffset = content.ReadUInt32();
+                        var valueOffset = content.ReadUInt32();
                         curPos = stream.Position;
                         stream.Seek(metaPos + valueOffset, SeekOrigin.Begin);
-                        string value = stream.ReadNullTerminatedString(Encoding.UTF8);
+                        var value = stream.ReadNullTerminatedString(Encoding.UTF8);
                         stream.Seek(curPos, SeekOrigin.Begin);
 
                         if (primaryKeys.ContainsKey(x))
@@ -606,20 +606,20 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                     // Get secondary pairs
                     var secondaryPairs = new Dictionary<string, string>(secondaryKeyCount);
-                    for (int x = 0; x < secondaryKeyCount; x++)
+                    for (var x = 0; x < secondaryKeyCount; x++)
                     {
                         // Read key
-                        uint keyOffset = content.ReadUInt32();
+                        var keyOffset = content.ReadUInt32();
                         curPos = stream.Position;
                         stream.Seek(metaPos + keyOffset, SeekOrigin.Begin);
-                        string key = stream.ReadNullTerminatedString(Encoding.UTF8);
+                        var key = stream.ReadNullTerminatedString(Encoding.UTF8);
                         stream.Seek(curPos, SeekOrigin.Begin);
 
                         // Read value
-                        uint valueOffset = content.ReadUInt32();
+                        var valueOffset = content.ReadUInt32();
                         curPos = stream.Position;
                         stream.Seek(metaPos + valueOffset, SeekOrigin.Begin);
-                        string value = stream.ReadNullTerminatedString(Encoding.UTF8);
+                        var value = stream.ReadNullTerminatedString(Encoding.UTF8);
                         stream.Seek(curPos, SeekOrigin.Begin);
 
                         secondaryPairs.Add(key, value);
@@ -630,13 +630,13 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                         stream.Seek(64, SeekOrigin.Current);
 
                     // Populate TrackMetadata
-                    if (primaryPairs.TryGetValue("title", out string title))
+                    if (primaryPairs.TryGetValue("title", out var title))
                         trackMetadata.Title = title;
-                    if (primaryPairs.TryGetValue("discnumber", out string discNumStr))
+                    if (primaryPairs.TryGetValue("discnumber", out var discNumStr))
                         trackMetadata.DiscNumber = uint.Parse(discNumStr);
-                    if (primaryPairs.TryGetValue("tracknumber", out string trackNumStr))
+                    if (primaryPairs.TryGetValue("tracknumber", out var trackNumStr))
                         trackMetadata.TrackNumber = uint.Parse(trackNumStr);
-                    if (primaryPairs.TryGetValue("genre", out string genre))
+                    if (primaryPairs.TryGetValue("genre", out var genre))
                         trackMetadata.Genres = genre.IntoList();
 
                     // Add the current track to the list
@@ -659,12 +659,12 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             try
             {
                 using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
-                StreamReader content = new StreamReader(stream);
+                var content = new StreamReader(stream);
 
                 var metadata = new PlaylistMetadata();
 
                 // Make sure the file is really a PLS file
-                string firstLine = await content.ReadLineAsync();
+                var firstLine = await content.ReadLineAsync();
                 if (firstLine != "[playlist]")
                     // Not a valid PLS playlist
                     return null;
@@ -678,16 +678,16 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                         matches.Add(match);
                 }
 
-                Match trackCountMatch = matches.First(m => m.Groups["key"].Value == "NumberOfEntries");
-                uint trackCount = uint.Parse(trackCountMatch.Groups["val"].Value);
+                var trackCountMatch = matches.First(m => m.Groups["key"].Value == "NumberOfEntries");
+                var trackCount = uint.Parse(trackCountMatch.Groups["val"].Value);
                 matches.Remove(trackCountMatch);
                 var tracksTable = new Dictionary<int, TrackMetadata>((int)trackCount);
 
                 foreach (var match in matches)
                 {
-                    string value = match.Groups["val"].Value;
-                    string? indexStr = match.Groups["idx"]?.Value;
-                    if (int.TryParse(indexStr, out int index))
+                    var value = match.Groups["val"].Value;
+                    var indexStr = match.Groups["idx"]?.Value;
+                    if (int.TryParse(indexStr, out var index))
                     {
                         if (!tracksTable.ContainsKey(index))
                             tracksTable[index] = new TrackMetadata();
@@ -710,7 +710,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                 }
 
                 // Collapse the tracks table to a plain list
-                List<TrackMetadata> tracks = tracksTable.Select(t => t.Value).PruneNull().ToList();
+                var tracks = tracksTable.Select(t => t.Value).PruneNull().ToList();
 
                 return metadata;
             }
@@ -737,7 +737,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             try
             {
                 using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
-                StreamReader content = new StreamReader(stream);
+                var content = new StreamReader(stream);
 
                 var metadata = new PlaylistMetadata();
 
@@ -813,21 +813,21 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                             //track.Artist = trackComponents.ElementAtOrDefault(2);
                             //track.Album = trackComponents.ElementAtOrDefault(3);
                             //track.AlbumArtist = trackComponents.ElementAtOrDefault(4);
-                            string genreStr = trackComponents.ElementAtOrDefault(5);
+                            var genreStr = trackComponents.ElementAtOrDefault(5);
                             if (!string.IsNullOrEmpty(genreStr))
                                 track.Genres = genreStr.IntoList();
-                            if (uint.TryParse(trackComponents.ElementAtOrDefault(6), out uint year))
+                            if (uint.TryParse(trackComponents.ElementAtOrDefault(6), out var year))
                                 track.Year = year;
-                            if (uint.TryParse(trackComponents.ElementAtOrDefault(7), out uint trackNum))
+                            if (uint.TryParse(trackComponents.ElementAtOrDefault(7), out var trackNum))
                                 track.TrackNumber = trackNum;
-                            if (uint.TryParse(trackComponents.ElementAtOrDefault(8), out uint trackDisc))
+                            if (uint.TryParse(trackComponents.ElementAtOrDefault(8), out var trackDisc))
                                 track.DiscNumber = trackDisc;
                             //track.Composer = trackComponents.ElementAtOrDefault(9);
                             //track.Publisher = trackComponents.ElementAtOrDefault(10);
                             //track.BitrateKbps = trackComponents.ElementAtOrDefault(11);
                             //track.Channels = trackComponents.ElementAtOrDefault(12);
                             //track.SampleRateHz = trackComponents.ElementAtOrDefault(13);
-                            if (int.TryParse(trackComponents.ElementAtOrDefault(14), out int trackDuration))
+                            if (int.TryParse(trackComponents.ElementAtOrDefault(14), out var trackDuration))
                                 track.Duration = new TimeSpan(0, 0, 0, 0, trackDuration);
                             //track.SizeBytes = trackComponents.ElementAtOrDefault(15);
                             //track.Bpm = trackComponents.ElementAtOrDefault(16);
