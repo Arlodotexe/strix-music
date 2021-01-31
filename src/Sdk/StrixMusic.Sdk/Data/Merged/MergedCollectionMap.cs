@@ -219,8 +219,8 @@ namespace StrixMusic.Sdk.Data.Merged
             }
             else if (typeof(TCoreCollection) == typeof(ICorePlaylistCollection))
             {
-                ((ICoreArtistCollection)item).ArtistItemsCountChanged += MergedCollectionMap_CountChanged;
-                ((ICoreArtistCollection)item).ArtistItemsChanged += MergedCollectionMap_ArtistItemsChanged;
+                ((ICorePlaylistCollection)item).PlaylistItemsCountChanged += MergedCollectionMap_CountChanged;
+                ((ICorePlaylistCollection)item).PlaylistItemsChanged += MergedCollectionMap_PlaylistItemsChanged;
             }
             else if (typeof(TCoreCollection) == typeof(ICoreTrackCollection))
             {
@@ -299,6 +299,11 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         private void MergedCollectionMap_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICorePlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICorePlayableCollectionGroup>> removedItems)
+        {
+            MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
+        }
+
+        private void MergedCollectionMap_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICorePlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICorePlaylistCollectionItem>> removedItems)
         {
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }

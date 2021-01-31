@@ -85,6 +85,7 @@ namespace StrixMusic.Core.LocalFiles
 
             _fileMetadataScanner = new FileMetadataScanner();
 
+            services.Add(new ServiceDescriptor(typeof(FileMetadataScanner), new FileMetadataScanner()));
             services.Add(new ServiceDescriptor(typeof(ArtistService), new ArtistService(_fileSystemService, _fileMetadataScanner)));
             services.Add(new ServiceDescriptor(typeof(TrackService), new TrackService(_fileSystemService, _fileMetadataScanner)));
             services.Add(new ServiceDescriptor(typeof(AlbumService), new AlbumService(_fileSystemService, _fileMetadataScanner)));
@@ -113,10 +114,8 @@ namespace StrixMusic.Core.LocalFiles
             var notificationService = Services.GetRequiredService<INotificationService>();
 
             var notification = notificationService.RaiseNotification("Searching for music", $"Scanning {folderData.Path}...");
-
-            await _fileMetadataScanner.ScanFolderForMetadata(folderData);
-
             notification.Dismiss();
+            await _fileMetadataScanner.ScanFolderForMetadata(folderData);
         }
 
         /// <summary>

@@ -19,6 +19,11 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         private IReadOnlyList<RelatedMetadata>? _relatedMetadata;
 
         /// <summary>
+        /// It is raised whenever a new related metadata is added during scan.
+        /// </summary>
+        public event EventHandler<RelatedMetadata>? RelatedMetadataChanged;
+
+        /// <summary>
         /// Scans a folder and all subfolders for music and music metadata.
         /// </summary>
         /// <param name="folderData">The path to a root folder to scan.</param>
@@ -36,9 +41,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     continue;
 
                 relatedMetaDataList.Add(scannedRelatedMetadata);
-            }
+                ApplyRelatedMetadataIds(relatedMetaDataList);
 
-            ApplyRelatedMetadataIds(relatedMetaDataList);
+                RelatedMetadataChanged?.Invoke(this, scannedRelatedMetadata);
+            }
         }
 
         private async Task<RelatedMetadata?> ScanFileMetadata(IFileData fileData)
@@ -257,6 +263,8 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             if (albums is null)
                 return new List<AlbumMetadata>();
 
+            albums = albums.PruneNull();
+
             return albums.DistinctBy(c => c?.Id).ToList();
         }
 
@@ -271,6 +279,8 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             if (artists is null)
                 return new List<ArtistMetadata>();
 
+            artists = artists.PruneNull();
+
             return artists.DistinctBy(c => c?.Id).ToList();
         }
 
@@ -284,6 +294,8 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
             if (tracks is null)
                 return new List<TrackMetadata>();
+
+            tracks = tracks.PruneNull();
 
             return tracks.DistinctBy(c => c?.Id).ToList();
         }
