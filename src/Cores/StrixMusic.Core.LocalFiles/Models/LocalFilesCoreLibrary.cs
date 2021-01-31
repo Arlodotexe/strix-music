@@ -69,6 +69,8 @@ namespace StrixMusic.Core.LocalFiles.Models
             _artistService = SourceCore.GetService<ArtistService>();
             _albumService = SourceCore.GetService<AlbumService>();
             await base.InitAsync();
+
+            IsInitialized = true;
         }
 
         /// <inheritdoc />
@@ -99,7 +101,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override int TotalTracksCount { get; internal set; }
 
         /// <inheritdoc />
-        public bool IsInitialized => false;
+        public bool IsInitialized { get; private set; }
 
         /// <inheritdoc/>
         public override IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)

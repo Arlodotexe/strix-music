@@ -27,7 +27,7 @@ namespace StrixMusic.Core.LocalFiles
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task InitializeDataForAllCores()
         {
-            await Instances.InParallel(x => (x.Library as LocalFilesCoreLibrary).InitAsync());
+            await Instances.InParallel(x => x.Library.Cast<LocalFilesCoreLibrary>().InitAsync());
 
             await Task.CompletedTask;
         }

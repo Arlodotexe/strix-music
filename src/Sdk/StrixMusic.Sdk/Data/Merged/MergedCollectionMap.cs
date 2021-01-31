@@ -321,9 +321,6 @@ namespace StrixMusic.Sdk.Data.Merged
 
                 foreach (var item in addedItems)
                 {
-                    var test = item.Data is ICoreArtist;
-                    var test2 = item.Data is TCoreCollectionItem;
-
                     if (!(item.Data is TCoreCollectionItem collectionItemData))
                         return ThrowHelper.ThrowInvalidOperationException<List<CollectionChangedEventItem<TCollectionItem>>>($"{nameof(item.Data)} couldn't be cast to {nameof(TCoreCollectionItem)}.");
 

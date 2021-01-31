@@ -225,7 +225,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <summary>
         /// Determines if collection base is initialized or not.
         /// </summary>
-        public bool IsInitialized => throw new NotImplementedException();
+        public bool IsInitialized { get; private set; }
 
         /// <inheritdoc/>
         public Task<bool> IsAddChildAvailable(int index)
@@ -431,6 +431,8 @@ namespace StrixMusic.Core.LocalFiles.Models
             _fileMetadataScanner = SourceCore.GetService<FileMetadataScanner>();
 
             _fileMetadataScanner.RelatedMetadataChanged += MetadataScanner_RelatedMetadataChanged;
+
+            IsInitialized = true;
 
             return Task.CompletedTask;
         }

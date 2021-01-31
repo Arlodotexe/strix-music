@@ -19,13 +19,6 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         private IReadOnlyList<RelatedMetadata>? _relatedMetadata;
 
         /// <summary>
-        /// Creates a new instance of <see cref="FileMetadataScanner"/>.
-        /// </summary>
-        public FileMetadataScanner()
-        {
-        }
-
-        /// <summary>
         /// It is raised whenever a new related metadata is added during scan.
         /// </summary>
         public event EventHandler<RelatedMetadata>? RelatedMetadataChanged;
@@ -49,7 +42,7 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
 
                 relatedMetaDataList.Add(scannedRelatedMetadata);
                 ApplyRelatedMetadataIds(relatedMetaDataList);
-                
+
                 RelatedMetadataChanged?.Invoke(this, scannedRelatedMetadata);
             }
         }
@@ -268,7 +261,9 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             var albums = _relatedMetadata.Select(c => c.AlbumMetadata);
 
             if (albums is null)
-                return new List<AlbumMetadata?>();
+                return new List<AlbumMetadata>();
+
+            albums = albums.PruneNull();
 
             return albums.DistinctBy(c => c?.Id).ToList();
         }
@@ -282,7 +277,9 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             var artists = _relatedMetadata.Select(c => c.ArtistMetadata);
 
             if (artists is null)
-                return new List<ArtistMetadata?>();
+                return new List<ArtistMetadata>();
+
+            artists = artists.PruneNull();
 
             return artists.DistinctBy(c => c?.Id).ToList();
         }
@@ -296,7 +293,9 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             var tracks = _relatedMetadata.Select(c => c.TrackMetadata);
 
             if (tracks is null)
-                return new List<TrackMetadata?>();
+                return new List<TrackMetadata>();
+
+            tracks = tracks.PruneNull();
 
             return tracks.DistinctBy(c => c?.Id).ToList();
         }
