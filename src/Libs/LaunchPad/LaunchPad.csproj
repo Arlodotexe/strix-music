@@ -39,29 +39,29 @@
   <ItemGroup>
     <None Remove="AbstractUI\AbstractUIGroupListPresenter.xaml" />
     <None Remove="AbstractUI\AbstractUIGroupPresenterTemplateSelector.xaml" />
-    <None Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
     <None Remove="AbstractUI\Controls\AbstractUIGroupPresenter.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractBooleanUIElementTemplate.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractButtonTemplate.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractDataListTemplate.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementTemplate.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractMutableDataListTemplate.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractRichTextBlockTemplate.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractBooleanUIElementStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractMutableDataListStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
     <None Remove="Controls\ContentOverlay.xaml" />
     <None Remove="Themes\Generic.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenter.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenterTemplateSelector.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractBooleanUIElementTemplate.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonTemplate.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListTemplate.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementTemplate.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMutableDataListTemplate.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockTemplate.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxTemplate.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractBooleanUIElementStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMutableDataListStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
     <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml" />
     <UpToDateCheckInput Remove="Themes\Generic.xaml" />
   </ItemGroup>
@@ -69,32 +69,32 @@
     <ProjectReference Include="..\OwlCore\OwlCore.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml.cs">
-      <DependentUpon>AbstractUIGroupListPresenter.xaml</DependentUpon>
+    <Compile Update="AbstractUI\Themes\AbstractBooleanUIElementStyle.xaml.cs">
+      <DependentUpon>AbstractBooleanUIElementStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractBooleanUIElementTemplate.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="AbstractUI\Themes\AbstractButtonStyle.xaml.cs">
+      <DependentUpon>AbstractButtonStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractButtonTemplate.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="AbstractUI\Themes\AbstractDataListStyle.xaml.cs">
+      <DependentUpon>AbstractDataListStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractMultiChoiceUIElementTemplate.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml.cs">
+      <DependentUpon>AbstractMultiChoiceUIElementStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractRichTextBlockTemplate.xaml.cs">
-      <DependentUpon>AbstractRichTextBlockTemplate.xaml</DependentUpon>
+    <Compile Update="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml.cs">
+      <DependentUpon>AbstractRichTextBlockStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractMutableDataListTemplate.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
+    <Compile Update="AbstractUI\Themes\AbstractMutableDataListStyle.xaml.cs">
+      <DependentUpon>AbstractMutableDataListStyle.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="AbstractUI\Themes\AbstractTextBoxStyle - Copy.xaml.cs">
+      <DependentUpon>AbstractTextBoxStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Controls\ContentOverlay.xaml.cs">
       <DependentUpon>ContentOverlay.xaml</DependentUpon>
     </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractTextBoxTemplate.xaml.cs">
-      <DependentUpon>AbstractTextBoxTemplate.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="AbstractUI\Controls\AbstractUIGroupListPresenter.xaml.cs">
-      <DependentUpon>AbstractTextBoxTemplate.xaml</DependentUpon>
+    <Compile Update="AbstractUI\Themes\AbstractTextBoxStyle.xaml.cs">
+      <DependentUpon>AbstractTextBoxStyle.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.17763'">

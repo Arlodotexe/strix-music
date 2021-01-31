@@ -9,12 +9,12 @@ namespace LaunchPad.AbstractUI.Themes
     /// <summary>
     /// Default template for the <see cref="AbstractTextBox"/>
     /// </summary>
-    public sealed partial class AbstractTextBoxTemplate : ResourceDictionary
+    public sealed partial class AbstractTextBoxStyle : ResourceDictionary
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractTextBoxTemplate"/> class.
+        /// Initializes a new instance of the <see cref="AbstractTextBoxStyle"/> class.
         /// </summary>
-        public AbstractTextBoxTemplate()
+        public AbstractTextBoxStyle()
         {
             this.InitializeComponent();
         }

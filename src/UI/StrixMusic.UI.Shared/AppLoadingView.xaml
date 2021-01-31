@@ -12,7 +12,7 @@
 
         <Image Stretch="UniformToFill" Height="315" Width="612">
             <Image.Source>
-                <SvgImageSource UriSource="ms-appx:///Assets/Strix/Splash Screen.svg"
+                <SvgImageSource x:Uid="/Startup/SplashScreenImageSVGIS" UriSource="ms-appx:///Assets/Strix/en/Splash Screen.svg"
                                 RasterizePixelHeight="315" RasterizePixelWidth="612" />
             </Image.Source>
         </Image>

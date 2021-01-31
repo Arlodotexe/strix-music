@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:StrixMusic.Sdk.Uno.Models"
     xmlns:controls="using:LaunchPad.AbstractUI.Controls"
+    xmlns:abstractUIModels="using:OwlCore.AbstractUI.Models"
     mc:Ignorable="d"
     MinHeight="250"
     MinWidth="400"
@@ -31,7 +32,13 @@
         </ComboBox>
 
         <ScrollViewer VerticalScrollMode="Auto" Grid.Row="2">
-            <controls:AbstractUIGroupListPresenter DataContext="{x:Bind AbstractUIGroups}" />
+            <ItemsControl ItemsSource="{x:Bind AbstractUIGroups}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="abstractUIModels:AbstractUIElementGroup">
+                        <controls:AbstractUIGroupPresenter />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
 
     </Grid>

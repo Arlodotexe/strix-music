@@ -138,4 +138,7 @@
   <data name="SetupMedia" xml:space="preserve">
     <value>אתחול נגני מדיה</value>
   </data>
+  <data name="SplashScreenImageSVGIS.UriSource" xml:space="preserve">
+    <value>ms-appx:///Assets/Strix/he/Splash Screen.svg</value>
+  </data>
 </root>

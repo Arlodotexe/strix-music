@@ -20,6 +20,11 @@ namespace StrixMusic.Sdk.Data.Core
         /// Gets the recently searched 
         /// </summary>
         /// <returns>The recent search queries.</returns>
-        public IAsyncEnumerable<ICoreSearchQuery> GetSearchHistory();
+        public IAsyncEnumerable<ICoreSearchQuery> GetRecentSearchQueries();
+
+        /// <summary>
+        /// Contains items that the user has recently selected from the search results.
+        /// </summary>
+        ICoreSearchHistory? SearchHistory { get; }
     }
 }

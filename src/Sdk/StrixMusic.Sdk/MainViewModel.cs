@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
@@ -23,8 +24,6 @@ namespace StrixMusic.Sdk
     public partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncDisposable
     {
         private readonly List<ICore> _sources = new List<ICore>();
-        private readonly SynchronizedObservableCollection<IDevice> _devices = new SynchronizedObservableCollection<IDevice>();
-
         private readonly List<(ICore core, CancellationTokenSource cancellationToken)> _coreInitData = new List<(ICore, CancellationTokenSource)>();
 
         /// <summary>
@@ -46,11 +45,14 @@ namespace StrixMusic.Sdk
         /// </summary>
         public event EventHandler<AppNavigationTarget>? AppNavigationRequested;
 
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
+
         private void AttachEvents()
         {
             foreach (var source in _sources)
             {
-                source.Devices.CollectionChanged += Devices_CollectionChanged;
+                source.DevicesChanged += Core_DevicesChanged;
             }
         }
 
@@ -58,7 +60,7 @@ namespace StrixMusic.Sdk
         {
             foreach (var source in _sources)
             {
-                source.Devices.CollectionChanged -= Devices_CollectionChanged;
+                source.DevicesChanged -= Core_DevicesChanged;
             }
         }
 
@@ -87,9 +89,11 @@ namespace StrixMusic.Sdk
 
             Library = new LibraryViewModel(new MergedLibrary(_sources.Select(x => x.Library)));
 
-            RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed)));
+            if (_sources.All(x => x.RecentlyPlayed == null))
+                RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull()));
 
-            Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_sources.Select(x => x.Discoverables)));
+            if (_sources.All(x => x.Discoverables == null))
+                Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull()));
 
             Devices = new SynchronizedObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new CoreDeviceProxy(device))));
 
@@ -148,10 +152,11 @@ namespace StrixMusic.Sdk
             _ = new CoreViewModel(core);
 #pragma warning restore CA2000 // Dispose objects before losing scope
 
-            Users.Add(new UserViewModel(new CoreUserProxy(core.User)));
+            if (core.User != null)
+                Users.Add(new UserViewModel(new CoreUserProxy(core.User)));
 
             foreach (var device in core.Devices)
-                _devices.Add(new CoreDeviceProxy(device));
+                Devices.Add(new DeviceViewModel(new CoreDeviceProxy(device)));
 
             core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
             cancellationToken.Dispose();
@@ -172,41 +177,46 @@ namespace StrixMusic.Sdk
             }
         }
 
-        private void Devices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreDevice>> removedItems)
         {
-            if (e.NewItems != null)
+            foreach (var item in removedItems)
             {
-                foreach (var item in e.NewItems)
-                {
-                    if (item is IDevice device)
-                    {
-                        _devices.Add(device);
-                        Devices.Add(new DeviceViewModel(device));
-                    }
-                }
+                Devices.RemoveAt(item.Index);
             }
 
-            if (e.OldItems != null)
+            var sortedIndices = removedItems.Select(x => x.Index).ToList();
+            sortedIndices.Sort();
+
+            // If elements are removed before they are added, the added items may be inserted at the wrong index.
+            // To compensate, we need to check how many items were removed before the current index and shift the insert position back by that amount.
+            for (var i = 0; i > addedItems.Count; i++)
             {
-                foreach (var item in e.OldItems)
+                var item = addedItems[i];
+                var insertOffset = item.Index;
+
+                // Finds the last removed index where the value is less than current pos.
+                // Quicker to do this by getting the first removed index where value is greater than current pos, minus 1 index.
+                var closestPrecedingRemovedIndex = sortedIndices.FindIndex(x => x > i) - 1;
+
+                // If found
+                if (closestPrecedingRemovedIndex != -1)
                 {
-                    if (item is IDevice device)
-                    {
-                        _devices.Remove(device);
-                        var vmToRemove = Devices.FirstOrDefault(x => x.Id == device.Id && x.Name == device.Name);
-                        Devices.Remove(vmToRemove);
-                    }
+                    // Shift the insert position backwards by the number of items that were removed
+                    insertOffset = closestPrecedingRemovedIndex * -1;
                 }
+
+                // Insert the item
+                Devices.InsertOrAdd(insertOffset, new DeviceViewModel(new CoreDeviceProxy(item.Data)));
             }
         }
 
         /// <summary>
-        /// The single instance of the <see cref="MainViewModel"/>.
+        /// The singleton instance of the <see cref="MainViewModel"/>.
         /// </summary>
         /// <remarks>
         /// The <see cref="MainViewModel"/> contains only logic for interacting with instance of cores, and relaying them to the UI.
-        /// With how the settings are set up, creating more than one <see cref="MainViewModel"/> off the same instance IDs would result in a
-        /// second instance of MainViewModel with identical states and functionality. Therefore, a singleton is desired over multi-instance.
+        /// Creating more than one <see cref="MainViewModel"/> off the same instance IDs would result in a second instance of
+        /// MainViewModel with identical states and functionality. Therefore, a singleton is desired over multi-instance.
         /// </remarks>
         public static MainViewModel? Singleton { get; private set; }
 
@@ -226,19 +236,22 @@ namespace StrixMusic.Sdk
         public SynchronizedObservableCollection<DeviceViewModel> Devices { get; private set; }
 
         /// <inheritdoc />
-        SynchronizedObservableCollection<IDevice> IAppCore.Devices => _devices;
+        IReadOnlyList<IDevice> IAppCore.Devices => Devices;
 
         /// <inheritdoc />
         ILibrary IAppCore.Library { get; } = null!;
 
         /// <inheritdoc />
-        public IPlayableCollectionGroup Pins { get; } = null!;
+        IPlayableCollectionGroup? IAppCore.Pins { get; }
 
         /// <inheritdoc />
-        IRecentlyPlayed IAppCore.RecentlyPlayed { get; } = null!;
+        IRecentlyPlayed? IAppCore.RecentlyPlayed { get; }
 
         /// <inheritdoc />
-        IDiscoverables IAppCore.Discoverables { get; } = null!;
+        IDiscoverables? IAppCore.Discoverables { get; }
+
+        /// <inheritdoc />
+        ISearch? IAppCore.Search { get; }
 
         /// <summary>
         /// Gets the active device in <see cref="Devices"/>.
@@ -264,6 +277,9 @@ namespace StrixMusic.Sdk
         /// Used to browse and discovered new music.
         /// </summary>
         public DiscoverablesViewModel? Discoverables { get; private set; }
+
+        /// <inheritdoc cref="SearchViewModel" />
+        public SearchViewModel? Search { get; }
 
         /// <summary>
         /// The current playback queue. First item plays next.

@@ -34,7 +34,7 @@ namespace LaunchPad.AbstractUI.Controls
         /// Backing property for <see cref="TemplateSelector"/>.
         /// </summary>
         public static readonly DependencyProperty TemplateSelectorProperty =
-            DependencyProperty.Register(nameof(TemplateSelector), typeof(DataTemplateSelector), typeof(AbstractUIGroupPresenter), new PropertyMetadata(new AbstractUIGroupItemTemplateSelector()));
+            DependencyProperty.Register(nameof(TemplateSelector), typeof(DataTemplateSelector), typeof(AbstractUIGroupPresenter), new PropertyMetadata(null));
 
         /// <summary>
         /// The ViewModel for this UserControl.
@@ -48,7 +48,7 @@ namespace LaunchPad.AbstractUI.Controls
         /// <summary>
         /// The template selector used to display Abstract UI elements. Use this to define your own custom styles for each control. You may specify the existing, default styles for those you don't want to override.
         /// </summary>
-        public DataTemplateSelector TemplateSelector
+        public DataTemplateSelector? TemplateSelector
         {
             get => (DataTemplateSelector)GetValue(TemplateSelectorProperty);
             set => SetValue(TemplateSelectorProperty, value);
@@ -60,6 +60,8 @@ namespace LaunchPad.AbstractUI.Controls
         public AbstractUIGroupPresenter()
         {
             this.InitializeComponent();
+
+            TemplateSelector ??= Resources["GroupTemplateSelector"] as DataTemplateSelector;
 
             AttachEvents();
         }

@@ -85,12 +85,17 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private void AttachPlayableEvents(IPlayable source)
         {
-            source.PlaybackStateChanged += PlaybackStateChanged;
+            source.PlaybackStateChanged -= PlaybackStateChanged;
             source.NameChanged += NameChanged;
             source.DescriptionChanged += DescriptionChanged;
             source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
             source.LastPlayedChanged += LastPlayedChanged;
+            source.IsPlayAsyncAvailableChanged += IsPlayAsyncAvailableChanged;
+            source.IsPauseAsyncAvailableChanged += IsPauseAsyncAvailableChanged;
+            source.IsChangeNameAsyncAvailableChanged += IsChangeNameAsyncAvailableChanged;
+            source.IsChangeDurationAsyncAvailableChanged += IsChangeDurationAsyncAvailableChanged;
+            source.IsChangeDescriptionAsyncAvailableChanged += IsChangeDescriptionAsyncAvailableChanged;
         }
 
         private void DetachPlayableEvents(IPlayable source)
@@ -101,6 +106,11 @@ namespace StrixMusic.Sdk.Data.Merged
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
             source.LastPlayedChanged -= LastPlayedChanged;
+            source.IsPlayAsyncAvailableChanged -= IsPlayAsyncAvailableChanged;
+            source.IsPauseAsyncAvailableChanged -= IsPauseAsyncAvailableChanged;
+            source.IsChangeNameAsyncAvailableChanged -= IsChangeNameAsyncAvailableChanged;
+            source.IsChangeDurationAsyncAvailableChanged -= IsChangeDurationAsyncAvailableChanged;
+            source.IsChangeDescriptionAsyncAvailableChanged -= IsChangeDescriptionAsyncAvailableChanged;
         }
 
         private void TrackCollectionMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
@@ -240,6 +250,21 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public event EventHandler<DateTime?>? LastPlayedChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? TrackItemsCountChanged;

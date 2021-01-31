@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Collections;
+using OwlCore.Events;
 using StrixMusic.Core.MusicBrainz.Models;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Statics;
@@ -59,16 +60,19 @@ namespace StrixMusic.Core.MusicBrainz
         public ICoreUser User { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
+        public IReadOnlyList<ICoreDevice> Devices { get; }
 
         /// <inheritdoc/>
         public ICoreLibrary Library { get; private set; }
 
-        /// <inheritdoc/>
-        public ICoreRecentlyPlayed RecentlyPlayed { get; }
+        /// <inheritdoc />
+        public ICoreSearch? Search { get; }
 
         /// <inheritdoc/>
-        public ICoreDiscoverables Discoverables { get; }
+        public ICoreRecentlyPlayed? RecentlyPlayed { get; }
+
+        /// <inheritdoc/>
+        public ICoreDiscoverables? Discoverables { get; }
 
         /// <inheritdoc/>
         public string InstanceId { get; }
@@ -84,6 +88,9 @@ namespace StrixMusic.Core.MusicBrainz
 
         /// <inheritdoc/>
         public event EventHandler<CoreState>? CoreStateChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
 
         /// <summary>
         /// Change the <see cref="CoreState"/>.
@@ -214,8 +221,6 @@ namespace StrixMusic.Core.MusicBrainz
 
             CoreState = CoreState.Loaded;
             CoreStateChanged?.Invoke(this, CoreState);
-
-            Devices.Add(new MusicBrainzCoreDevice(this, "TestDevice", true)); // Hardcoded for now.
         }
     }
 }

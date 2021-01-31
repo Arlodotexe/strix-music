@@ -1,4 +1,6 @@
-﻿using OwlCore.Collections;
+﻿using System.Collections.Generic;
+using OwlCore.Collections;
+using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
@@ -12,7 +14,7 @@ namespace StrixMusic.Sdk.Data
         /// <summary>
         /// The available devices.
         /// </summary>
-        public SynchronizedObservableCollection<IDevice> Devices { get; }
+        public IReadOnlyList<IDevice> Devices { get; }
 
         /// <summary>
         /// Gets the library for the user on this core.
@@ -22,16 +24,26 @@ namespace StrixMusic.Sdk.Data
         /// <summary>
         /// A list of pinned playable items.
         /// </summary>
-        public IPlayableCollectionGroup Pins { get; }
+        public IPlayableCollectionGroup? Pins { get; }
+
+        /// <summary>
+        /// Contains various search-related data and activities.
+        /// </summary>
+        public ISearch? Search { get; }
 
         /// <summary>
         /// Gets the recently played items for this .
         /// </summary>
-        public IRecentlyPlayed RecentlyPlayed { get; }
+        public IRecentlyPlayed? RecentlyPlayed { get; }
 
         /// <summary>
         /// Used to browse and discover new music.
         /// </summary>
-        public IDiscoverables Discoverables { get; }
+        public IDiscoverables? Discoverables { get; }
+
+        /// <summary>
+        /// Raised when the contents of <see cref="Devices"/> is changed.
+        /// </summary>
+        public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
     }
 }

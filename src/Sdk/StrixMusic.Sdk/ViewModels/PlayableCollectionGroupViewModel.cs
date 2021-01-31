@@ -76,6 +76,12 @@ namespace StrixMusic.Sdk.ViewModels
             TotalChildrenCountChanged += CollectionGroupOnTotalChildrenCountChanged;
             ImagesCountChanged += PlayableCollectionGroupViewModel_ImagesCountChanged;
 
+            IsPlayAsyncAvailableChanged += OnIsPlayAsyncAvailableChanged;
+            IsPauseAsyncAvailableChanged += OnIsPauseAsyncAvailableChanged;
+            IsChangeNameAsyncAvailableChanged += OnIsChangeNameAsyncAvailableChanged;
+            IsChangeDurationAsyncAvailableChanged += OnIsChangeDurationAsyncAvailableChanged;
+            IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
+
             AlbumItemsChanged += PlayableCollectionGroupViewModel_AlbumItemsChanged;
             TrackItemsChanged += PlayableCollectionGroupViewModel_TrackItemsChanged;
             ArtistItemsChanged += PlayableCollectionGroupViewModel_ArtistItemsChanged;
@@ -98,6 +104,12 @@ namespace StrixMusic.Sdk.ViewModels
             PlaylistItemsCountChanged -= CollectionGroupOnPlaylistItemsCountChanged;
             TotalChildrenCountChanged -= CollectionGroupOnTotalChildrenCountChanged;
             ImagesCountChanged += PlayableCollectionGroupViewModel_ImagesCountChanged;
+
+            IsPlayAsyncAvailableChanged -= OnIsPlayAsyncAvailableChanged;
+            IsPauseAsyncAvailableChanged -= OnIsPauseAsyncAvailableChanged;
+            IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
+            IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
+            IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
 
             AlbumItemsChanged -= PlayableCollectionGroupViewModel_AlbumItemsChanged;
             TrackItemsChanged -= PlayableCollectionGroupViewModel_TrackItemsChanged;
@@ -132,7 +144,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
             add => _collectionGroup.PlaybackStateChanged += value;
-
             remove => _collectionGroup.PlaybackStateChanged -= value;
         }
 
@@ -140,7 +151,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<TimeSpan>? DurationChanged
         {
             add => _collectionGroup.DurationChanged += value;
-
             remove => _collectionGroup.DurationChanged -= value;
         }
 
@@ -149,6 +159,41 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _collectionGroup.LastPlayedChanged += value;
             remove => _collectionGroup.LastPlayedChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayAsyncAvailableChanged
+        {
+            add => _collectionGroup.IsPlayAsyncAvailableChanged += value;
+            remove => _collectionGroup.IsPlayAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseAsyncAvailableChanged
+        {
+            add => _collectionGroup.IsPauseAsyncAvailableChanged += value;
+            remove => _collectionGroup.IsPauseAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
+        {
+            add => _collectionGroup.IsChangeNameAsyncAvailableChanged += value;
+            remove => _collectionGroup.IsChangeNameAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
+        {
+            add => _collectionGroup.IsChangeDescriptionAsyncAvailableChanged += value;
+            remove => _collectionGroup.IsChangeDescriptionAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
+        {
+            add => _collectionGroup.IsChangeDurationAsyncAvailableChanged += value;
+            remove => _collectionGroup.IsChangeDurationAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
@@ -256,6 +301,16 @@ namespace StrixMusic.Sdk.ViewModels
         private void PlayableCollectionGroupViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
         private void CollectionGroupLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
+
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable));
+
+        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable));
+
+        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable));
+
+        private void OnIsPauseAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPauseAsyncAvailable));
+
+        private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
 
         private void PlayableCollectionGroupViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {

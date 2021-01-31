@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Afternoon0" xml:space="preserve">
+    <value>Good Afternoon!</value>
+  </data>
+  <data name="Afternoon1" xml:space="preserve">
+    <value>Finishing lunch</value>
+  </data>
+  <data name="April1st0" xml:space="preserve">
+    <value>Error: April fools day</value>
+  </data>
+  <data name="April1st1" xml:space="preserve">
+    <value>Unhandled exception: AprilFoolsDayException</value>
+  </data>
+  <data name="April1st2" xml:space="preserve">
+    <value>Task failed successfully</value>
+  </data>
+  <data name="Autumn0" xml:space="preserve">
+    <value>Raking up leaves</value>
+  </data>
+  <data name="Autumn1" xml:space="preserve">
+    <value>Drinking pumpkin spice</value>
+  </data>
+  <data name="Autumn2" xml:space="preserve">
+    <value>Making apple cider</value>
+  </data>
+  <data name="Christmas0" xml:space="preserve">
+    <value>Merry Christmas!</value>
+  </data>
+  <data name="Christmas1" xml:space="preserve">
+    <value>﻿Ho ho ho</value>
+  </data>
+  <data name="Christmas2" xml:space="preserve">
+    <value>Whipping elves</value>
+  </data>
+  <data name="Christmas3" xml:space="preserve">
+    <value>Merry Chrystler</value>
+  </data>
+  <data name="Dawn0" xml:space="preserve">
+    <value>Waking up or staying up?</value>
+  </data>
+  <data name="Dawn1" xml:space="preserve">
+    <value>Calling the rooster</value>
+  </data>
+  <data name="DrWhoAniversary0" xml:space="preserve">
+    <value>Vwoop, Vwoop</value>
+  </data>
+  <data name="DrWhoAniversary1" xml:space="preserve">
+    <value>Allons-y!</value>
+  </data>
+  <data name="DrWhoAniversary10" xml:space="preserve">
+    <value>Wibbly wobbly. Timey wimey</value>
+  </data>
+  <data name="DrWhoAniversary11" xml:space="preserve">
+    <value>Now with a fez</value>
+  </data>
+  <data name="DrWhoAniversary12" xml:space="preserve">
+    <value>You’ve redecorated...</value>
+  </data>
+  <data name="DrWhoAniversary2" xml:space="preserve">
+    <value>Spoilers</value>
+  </data>
+  <data name="DrWhoAniversary3" xml:space="preserve">
+    <value>Geronimo</value>
+  </data>
+  <data name="DrWhoAniversary4" xml:space="preserve">
+    <value>Fantastic!</value>
+  </data>
+  <data name="DrWhoAniversary5" xml:space="preserve">
+    <value>Jelly baby?</value>
+  </data>
+  <data name="DrWhoAniversary6" xml:space="preserve">
+    <value>Bow ties are cool</value>
+  </data>
+  <data name="DrWhoAniversary7" xml:space="preserve">
+    <value>Bigger on the inside</value>
+  </data>
+  <data name="DrWhoAniversary8" xml:space="preserve">
+    <value>Smaller on the outside?</value>
+  </data>
+  <data name="DrWhoAniversary9" xml:space="preserve">
+    <value>Hello Sweety</value>
+  </data>
+  <data name="Evening0" xml:space="preserve">
+    <value>Good Evening!</value>
+  </data>
+  <data name="Generic0" xml:space="preserve">
+    <value>Spinning right round</value>
+    <comment>You Spin Me Round by Dead Or Alive</comment>
+  </data>
+  <data name="Generic1" xml:space="preserve">
+    <value>Hiding the ugly code</value>
+  </data>
+  <data name="Generic10" xml:space="preserve">
+    <value>Curse your sudden but inevitable betrayl</value>
+    <comment>Firefly</comment>
+  </data>
+  <data name="Generic11" xml:space="preserve">
+    <value>Trying ever so hard</value>
+  </data>
+  <data name="Generic12" xml:space="preserve">
+    <value>Killing time</value>
+  </data>
+  <data name="Generic13" xml:space="preserve">
+    <value>Picking random numbers</value>
+  </data>
+  <data name="Generic14" xml:space="preserve">
+    <value>Squashing bugs</value>
+  </data>
+  <data name="Generic15" xml:space="preserve">
+    <value>Yielding the high ground</value>
+  </data>
+  <data name="Generic16" xml:space="preserve">
+    <value>No Touching!</value>
+    <comment>Arrested Development</comment>
+  </data>
+  <data name="Generic17" xml:space="preserve">
+    <value>Are you still there?</value>
+  </data>
+  <data name="Generic18" xml:space="preserve">
+    <value>Evading Velociraptors</value>
+    <comment>XKCD</comment>
+  </data>
+  <data name="Generic19" xml:space="preserve">
+    <value>Water tribe...</value>
+    <comment>Avatar: The Last Airbender</comment>
+  </data>
+  <data name="Generic2" xml:space="preserve">
+    <value>Generating stuff</value>
+  </data>
+  <data name="Generic20" xml:space="preserve">
+    <value>That's no moon...</value>
+    <comment>Star wars</comment>
+  </data>
+  <data name="Generic21" xml:space="preserve">
+    <value>Learning English</value>
+  </data>
+  <data name="Generic3" xml:space="preserve">
+    <value>Shaken not Shtirred</value>
+    <comment>James Bond</comment>
+  </data>
+  <data name="Generic4" xml:space="preserve">
+    <value>¡ǝldoǝd uɐᴉlɐɹʇsn∀ 'ǝɯoɔlǝM</value>
+    <comment>Meme</comment>
+  </data>
+  <data name="Generic5" xml:space="preserve">
+    <value>Theeeeres a bathroom on the right</value>
+    <comment>Bad Moon Rising by CCR</comment>
+  </data>
+  <data name="Generic6" xml:space="preserve">
+    <value>Roooooxanne</value>
+    <comment>Roxanne by The Police</comment>
+  </data>
+  <data name="Generic7" xml:space="preserve">
+    <value>We're halfway there...</value>
+    <comment>Living on a prayer by Bon Jovi</comment>
+  </data>
+  <data name="Generic8" xml:space="preserve">
+    <value>Party time!</value>
+  </data>
+  <data name="Generic9" xml:space="preserve">
+    <value>3 days since last workplace injury</value>
+  </data>
+  <data name="GroundhogDay0" xml:space="preserve">
+    <value>Checking on Punxsutawney Phil</value>
+  </data>
+  <data name="GroundhogDay1" xml:space="preserve">
+    <value>Looking for Spring</value>
+  </data>
+  <data name="Halloween0" xml:space="preserve">
+    <value>Boo!</value>
+  </data>
+  <data name="Halloween1" xml:space="preserve">
+    <value>Resurrecting Frankenstein's monster</value>
+  </data>
+  <data name="Halloween2" xml:space="preserve">
+    <value>Trick or treat?
+</value>
+  </data>
+  <data name="Halloween3" xml:space="preserve">
+    <value>Feasting on Candy</value>
+  </data>
+  <data name="May4th0" xml:space="preserve">
+    <value>﻿May the force be with you</value>
+    <comment>Star wars</comment>
+  </data>
+  <data name="May4th1" xml:space="preserve">
+    <value>May the fourth be with you</value>
+    <comment>Star wars</comment>
+  </data>
+  <data name="May4th2" xml:space="preserve">
+    <value>A long time ago in a galaxy far, far away...</value>
+    <comment>Star wars</comment>
+  </data>
+  <data name="May4th3" xml:space="preserve">
+    <value>Happy Cinco de Quatro</value>
+    <comment>Arrested Development</comment>
+  </data>
+  <data name="Morning0" xml:space="preserve">
+    <value>Good Morning!</value>
+  </data>
+  <data name="Morning1" xml:space="preserve">
+    <value>Waking up...</value>
+  </data>
+  <data name="NewYears0" xml:space="preserve">
+    <value>Happy New Years!</value>
+  </data>
+  <data name="NewYearsEve0" xml:space="preserve">
+    <value>﻿See you next year</value>
+  </data>
+  <data name="Night0" xml:space="preserve">
+    <value>Good Night!</value>
+  </data>
+  <data name="Spring0" xml:space="preserve">
+    <value>Blooming</value>
+  </data>
+  <data name="StPatricks0" xml:space="preserve">
+    <value>Looking for gold</value>
+  </data>
+  <data name="StPatricks1" xml:space="preserve">
+    <value>Searching for four leaf clovers</value>
+  </data>
+  <data name="StPatricks2" xml:space="preserve">
+    <value>Oh how do you do, young Willie McBride</value>
+    <comment>Willie McBride (Green Fields of France) by Tommy Makem &amp; Liam Clancy</comment>
+  </data>
+  <data name="Summer0" xml:space="preserve">
+    <value>Turning on the AC</value>
+  </data>
+  <data name="Winter0" xml:space="preserve">
+    <value>Drinking Horchata</value>
+  </data>
+  <data name="Winter1" xml:space="preserve">
+    <value>Mixing Choclate Milk</value>
+  </data>
+  <data name="Winter2" xml:space="preserve">
+    <value>Shoveling snow</value>
+  </data>
+</root>

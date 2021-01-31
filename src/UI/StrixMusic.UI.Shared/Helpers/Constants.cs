@@ -43,6 +43,11 @@ namespace StrixMusic.Helpers
             /// The PRI path of the Music resource.
             /// </summary>
             public const string MusicResource = "Music";
+
+            /// <summary>
+            /// The PRI path of the Quips resource.
+            /// </summary>
+            public const string QuipsResource = "Quips";
         }
     }
 }

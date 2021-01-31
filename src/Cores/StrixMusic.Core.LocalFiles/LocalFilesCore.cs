@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
+using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data;
@@ -20,8 +20,8 @@ namespace StrixMusic.Core.LocalFiles
     /// <inheritdoc />
     public class LocalFilesCore : ICore
     {
-        private static int CoreCount = 0;
-        private readonly ICoreLibrary? _coreLibrary;
+        private static int CoreCount;
+        private readonly ICoreLibrary _coreLibrary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCore"/> class.
@@ -35,7 +35,6 @@ namespace StrixMusic.Core.LocalFiles
             Devices = new SynchronizedObservableCollection<ICoreDevice>();
             RecentlyPlayed = new LocalFilesCoreRecentlyPlayed(this);
             Discoverables = new LocalFilesCoreDiscoverables(this);
-            User = new LocalFilesCoreUser(this);
             CoreConfig = new LocalFileCoreConfig(this);
             _coreLibrary = new LocalFilesCoreLibrary(this);
 
@@ -55,19 +54,22 @@ namespace StrixMusic.Core.LocalFiles
         public string Name => "LocalFileCore";
 
         /// <inheritdoc/>
-        public ICoreUser User { get; }
+        public ICoreUser? User { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
+        public IReadOnlyList<ICoreDevice> Devices { get; }
 
         /// <inheritdoc/>
-        public ICoreLibrary? Library => _coreLibrary;
+        public ICoreLibrary Library => _coreLibrary;
+
+        /// <inheritdoc />
+        public ICoreSearch? Search { get; }
 
         /// <inheritdoc/>
-        public ICoreRecentlyPlayed RecentlyPlayed { get; }
+        public ICoreRecentlyPlayed? RecentlyPlayed { get; }
 
         /// <inheritdoc/>
-        public ICoreDiscoverables Discoverables { get; }
+        public ICoreDiscoverables? Discoverables { get; }
 
         /// <inheritdoc/>
         public string InstanceId { get; }
@@ -77,6 +79,9 @@ namespace StrixMusic.Core.LocalFiles
 
         /// <inheritdoc/>
         public event EventHandler<CoreState>? CoreStateChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
 
         /// <summary>
         /// Change the <see cref="CoreState"/>.

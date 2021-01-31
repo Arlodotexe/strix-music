@@ -88,6 +88,11 @@ namespace StrixMusic.Sdk.Data.Merged
             source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
             source.LastPlayedChanged += LastPlayedChanged;
+            source.IsPlayAsyncAvailableChanged += IsPlayAsyncAvailableChanged;
+            source.IsPauseAsyncAvailableChanged += IsPauseAsyncAvailableChanged;
+            source.IsChangeNameAsyncAvailableChanged += IsChangeNameAsyncAvailableChanged;
+            source.IsChangeDurationAsyncAvailableChanged += IsChangeDurationAsyncAvailableChanged;
+            source.IsChangeDescriptionAsyncAvailableChanged += IsChangeDescriptionAsyncAvailableChanged;
 
             source.AlbumItemsCountChanged += AlbumItemsCountChanged;
             source.ArtistItemsCountChanged += ArtistItemsCountChanged;
@@ -104,6 +109,11 @@ namespace StrixMusic.Sdk.Data.Merged
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
             source.LastPlayedChanged -= LastPlayedChanged;
+            source.IsPlayAsyncAvailableChanged -= IsPlayAsyncAvailableChanged;
+            source.IsPauseAsyncAvailableChanged -= IsPauseAsyncAvailableChanged;
+            source.IsChangeNameAsyncAvailableChanged -= IsChangeNameAsyncAvailableChanged;
+            source.IsChangeDurationAsyncAvailableChanged -= IsChangeDurationAsyncAvailableChanged;
+            source.IsChangeDescriptionAsyncAvailableChanged -= IsChangeDescriptionAsyncAvailableChanged;
 
             source.AlbumItemsCountChanged -= AlbumItemsCountChanged;
             source.ArtistItemsCountChanged -= ArtistItemsCountChanged;
@@ -143,6 +153,7 @@ namespace StrixMusic.Sdk.Data.Merged
             _playlistCollectionMap.ItemsCountChanged -= PlaylistCollectionMap_ItemsCountChanged;
             _playableCollectionGroupMap.ItemsCountChanged -= PlayableCollectionGroupMap_ItemsCountChanged;
             _imagesCollectionMap.ItemsCountChanged -= ImagesCollectionMap_ItemsCountChanged;
+            _trackCollectionMap.ItemsCountChanged -= TrackCollectionMap_ItemsCountChanged;
         }
 
         /// <inheritdoc/>
@@ -162,6 +173,21 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public event EventHandler<DateTime?>? LastPlayedChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? TrackItemsCountChanged;

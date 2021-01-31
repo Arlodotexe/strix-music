@@ -123,4 +123,10 @@
   <data name="ResourceError" xml:space="preserve">
     <value>Resource source not found</value>
   </data>
+  <data name="AppShortName" xml:space="preserve">
+    <value>Strix</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>StrixMusic</value>
+  </data>
 </root>
