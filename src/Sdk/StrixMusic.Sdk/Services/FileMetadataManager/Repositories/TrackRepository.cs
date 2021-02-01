@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MessagePack;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
@@ -28,7 +29,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <param name="fileMetadataScanner">The file scanner instance to use for getting new track data.</param>
         public TrackRepository(FileMetadataScanner fileMetadataScanner)
         {
+            Guard.IsNotNull(fileMetadataScanner, nameof(fileMetadataScanner));
+
             _fileMetadataScanner = fileMetadataScanner;
+            _pathToMetadataFile = string.Empty;
         }
 
         private void AttachEvents()

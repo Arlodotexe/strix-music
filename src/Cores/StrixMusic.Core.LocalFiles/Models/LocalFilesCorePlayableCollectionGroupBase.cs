@@ -10,6 +10,7 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
@@ -18,7 +19,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc cref="ICorePlayableCollectionGroup"/>
     public abstract class LocalFilesCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup, IAsyncInit
     {
-        private FileMetadataScanner _fileMetadataScanner;
+        private IFileMetadataManager _fileMetadataManager;
         private IList<ArtistMetadata>? _artistMetadatas;
         private IList<AlbumMetadata>? _albumMetadatas;
         private IList<TrackMetadata>? _trackMetadatas;
@@ -31,6 +32,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             SourceCore = sourceCore;
 
+            _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
             _artistMetadatas = new List<ArtistMetadata>();
             _albumMetadatas = new List<AlbumMetadata>();
             _trackMetadatas = new List<TrackMetadata>();
@@ -428,9 +430,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public virtual Task InitAsync()
         {
-            _fileMetadataScanner = SourceCore.GetService<FileMetadataScanner>();
-
-            _fileMetadataScanner.FileMetadataAdded += MetadataScannerFileMetadataAdded;
+            _fileMetadataManager.FileMetadataAdded += MetadataScannerFileMetadataAdded;
 
             IsInitialized = true;
 

@@ -19,6 +19,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     {
         ///NOTE: There are some methods set to NotAvailabletemporarily although they are supported, so the playback can be implemented.
         private ArtistMetadata _artistMetadata;
+        private IFileMetadataManager _fileMetadataManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreArtist"/> class.
@@ -29,6 +30,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             SourceCore = sourceCore;
             _artistMetadata = artistMetadata;
             TotalTracksCount = totalTracksCount;
+            _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
         }
 
         /// <inheritdoc/>
@@ -221,7 +223,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            var albumsService = SourceCore.GetService<AlbumRepository>();
+            var albumsService = _fileMetadataManager.Albums;
 
             var albums = await albumsService.GetAlbumsByArtistId(Id, offset, limit);
 
@@ -236,8 +238,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
-            var trackService = SourceCore.GetService<TrackRepository>();
-
+            var trackService = _fileMetadataManager.Tracks;
             var albums = await trackService.GetTracksByArtistId(Id, offset, limit);
 
             foreach (var album in albums)

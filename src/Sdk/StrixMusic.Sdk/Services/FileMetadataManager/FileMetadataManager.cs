@@ -7,6 +7,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using StrixMusic.Sdk.Services.StorageService;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
@@ -56,11 +57,24 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private void AttachEvents()
         {
             // todo, attach changed events?
+            _fileMetadataScanner.FileMetadataAdded += FileMetadataScanner_FileMetadataAdded;
+        }
+
+        private void FileMetadataScanner_FileMetadataAdded(object sender, FileMetadata e)
+        {
+            FileMetadataAdded?.Invoke(sender, e);
         }
 
         private void DetachEvents()
         {
+            _fileMetadataScanner.FileMetadataAdded -= FileMetadataScanner_FileMetadataAdded;
         }
+
+        ///<inheritdoc />
+        public event EventHandler<FileMetadata>? FileMetadataAdded;
+
+        ///<inheritdoc />
+        public event EventHandler<FileMetadata>? FileMetadataRemoved;
 
         /// <inheritdoc />
         public event EventHandler? ScanningStarted;

@@ -15,13 +15,11 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// </summary>
     public class LocalFilesCoreSearchResults : LocalFilesCorePlayableCollectionGroupBase, ICoreSearchResults
     {
-        private ArtistRepository _artistService;
-        private TrackRepository _trackService;
-        private AlbumRepository _albumCacheRepository;
-
         private IEnumerable<TrackMetadata> _trackMetadatas;
         private IEnumerable<AlbumMetadata> _albumMetadatas;
         private IEnumerable<ArtistMetadata> _artistMetadatas;
+
+        private IFileMetadataManager _fileMetadataManager;
 
         private readonly string _query = string.Empty;
 
@@ -33,9 +31,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public LocalFilesCoreSearchResults(ICore sourceCore, string query)
             : base(sourceCore)
         {
-            _trackService = SourceCore.GetService<TrackRepository>();
-            _artistService = SourceCore.GetService<ArtistRepository>();
-            _albumCacheRepository = SourceCore.GetService<AlbumRepository>();
+            _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
         }
 
         /// <inheritdoc />
@@ -78,9 +74,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public async override IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
+        public override async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            _albumMetadatas = await _albumCacheRepository.GetAlbumMetadata(0, int.MaxValue);
+            _albumMetadatas = await _fileMetadataManager.Albums.GetAlbumMetadata(0, int.MaxValue);
 
             _albumMetadatas = _albumMetadatas.Where(c => c.Title?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
 
@@ -93,24 +89,24 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public async override IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
+        public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            _artistMetadatas = await _artistService.GetArtistMetadata(0, int.MaxValue);
+            _artistMetadatas = await _fileMetadataManager.Artists.GetArtistMetadata(0, int.MaxValue);
 
-            _albumMetadatas = _albumMetadatas.Where(c => c.Title?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
+            _artistMetadatas = _artistMetadatas.Where(c => c.Name?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
 
-            foreach (var album in _albumMetadatas)
+            foreach (var artist in _artistMetadatas)
             {
                 // just to test
-                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(album.Id, 0, 1000);
-                yield return new LocalFilesCoreAlbum(SourceCore, album, tracks.Count);
+                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(artist.Id, 0, 1000);
+                yield return new LocalFilesCoreArtist(SourceCore, artist, tracks.Count);
             }
         }
 
         /// <inheritdoc/>
-        public async override IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
+        public override async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
-            _trackMetadatas = await _trackService.GetTrackMetadata(0, int.MaxValue);
+            _trackMetadatas = await _fileMetadataManager.Tracks.GetTrackMetadata(0, int.MaxValue);
 
             _trackMetadatas = _trackMetadatas.Where(c => c.Title?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
 

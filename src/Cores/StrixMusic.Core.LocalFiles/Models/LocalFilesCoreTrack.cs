@@ -19,6 +19,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     public class LocalFilesCoreTrack : ICoreTrack
     {
         private TrackMetadata _trackMetadata;
+        private IFileMetadataManager _fileMetadataManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreTrack"/> class.
@@ -307,9 +308,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            var artistService = SourceCore.GetService<ArtistRepository>();
+            var artistRepo = _fileMetadataManager.Artists;
 
-            var artists = await artistService.GetArtistsByTrackId(Id, offset, limit);
+            var artists = await artistRepo.GetArtistsByTrackId(Id, offset, limit);
 
             foreach (var artist in artists)
             {

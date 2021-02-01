@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
 using OwlCore.Provisos;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
@@ -39,5 +40,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// Raised when metadata scanning has completed.
         /// </summary>
         event EventHandler? ScanningCompleted;
+
+        /// <summary>
+        /// Raised when a new file with metadata is discovered.
+        /// </summary>
+        event EventHandler<FileMetadata>? FileMetadataAdded;
+
+        /// <summary>
+        /// Raised when a previously scanned file has been removed from the file system.
+        /// </summary>
+        event EventHandler<FileMetadata>? FileMetadataRemoved;
     }
 }
