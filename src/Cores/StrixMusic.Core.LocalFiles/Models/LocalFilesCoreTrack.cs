@@ -98,7 +98,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public TrackType Type => TrackType.Song;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount => _trackMetadata.ArtistIds.Count;
+        public int TotalArtistItemsCount => 0;
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 0;

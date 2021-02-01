@@ -368,7 +368,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 FileMetadataAdded?.Invoke(this, fileMetadata);
             }
 
-            _folderScanningTaskCompletion.SetResult(_fileMetadata);
+            _folderScanningTaskCompletion?.SetResult(_fileMetadata);
             _folderScanningTaskCompletion = null;
 
             return _fileMetadata;

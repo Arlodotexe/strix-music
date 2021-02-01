@@ -23,6 +23,7 @@ namespace StrixMusic.Core.LocalFiles
         private ISettingsService? _settingsService;
         private bool _baseServicesSetup;
         private FileMetadataManager? _fileMetadataManager;
+        private Notification _notification;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFileCoreConfig"/> class.
@@ -110,11 +111,16 @@ namespace StrixMusic.Core.LocalFiles
             Guard.IsNotNull(folderData, nameof(folderData));
 
             var notificationService = Services.GetRequiredService<INotificationService>();
-            var notification = notificationService.RaiseNotification("Searching for music", $"Scanning {folderData.Path}...");
+         //   _notification = notificationService.RaiseNotification("Searching for music", $"Scanning {folderData.Path}...");
 
             await _fileMetadataManager.InitAsync();
 
-            notification.Dismiss();
+            _fileMetadataManager.ScanningCompleted += _fileMetadataManager_ScanningCompleted;
+        }
+
+        private void _fileMetadataManager_ScanningCompleted(object sender, EventArgs e)
+        {
+          //  _notification.Dismiss();
         }
 
         /// <summary>

@@ -123,6 +123,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             });
 
             IsInitialized = true;
+
+            ScanningCompleted?.Invoke(this, new EventArgs());
         }
 
         /// <inheritdoc />
