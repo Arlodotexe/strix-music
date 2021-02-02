@@ -392,14 +392,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             int doneWork = 0;
             while (doneWork != -1)
             {
-                if (_unscannedFolders.TryTake(out IFolderData folder))
-                {
-                    await QueueItemsFromFolder(folder);
-                    doneWork = 1;
-                }
-                else if (_unscannedFiles.TryTake(out IFileData file))
+                if (_unscannedFiles.TryTake(out IFileData file))
                 {
                     await ProcessFile(file);
+                    doneWork = 1;
+                }
+                else if (_unscannedFolders.TryTake(out IFolderData folder))
+                {
+                    await QueueItemsFromFolder(folder);
                     doneWork = 1;
                 }
                 else if (doneWork != 0)
