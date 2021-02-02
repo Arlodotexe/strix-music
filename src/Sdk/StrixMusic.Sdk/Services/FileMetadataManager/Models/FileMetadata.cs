@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Core.LocalFiles.Backing.Models
+﻿namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
 {
     /// <summary>
     /// Holds multiple sets of metadata scanned from a single file.

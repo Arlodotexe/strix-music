@@ -1,11 +1,8 @@
-﻿using MessagePack;
-using StrixMusic.Core.LocalFiles.Backing.Models;
-using StrixMusic.Sdk.Data.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace StrixMusic.Core.LocalFiles.Backing.Models
+namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
 {
     /// <summary>
     /// The metadata associated with a track.
@@ -15,12 +12,12 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// <summary>
         /// The unique identifier for this track.
         /// </summary>
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         /// <summary>
         /// The location of the file.
         /// </summary>
-        public Uri Source { get; set; }
+        public Uri? Source { get; set; }
 
         /// <summary>
         /// The unique identifier for this track's album.
@@ -30,7 +27,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// <summary>
         /// The unique identifier(s) for this track's artist(s).
         /// </summary>
-        public List<string> ArtistIds { get; set; }
+        public List<string>? ArtistIds { get; set; }
 
         /// <summary>
         /// The title of this track.

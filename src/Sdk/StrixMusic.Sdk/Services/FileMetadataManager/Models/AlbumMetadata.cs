@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace StrixMusic.Core.LocalFiles.Backing.Models
+namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
 {
     /// <summary>
     /// The metadata associated with an album.
@@ -12,7 +11,7 @@ namespace StrixMusic.Core.LocalFiles.Backing.Models
         /// <summary>
         /// The unique identifier for this album.
         /// </summary>
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         /// <summary>
         /// The title of this album.

@@ -1,8 +1,6 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Events;
-using StrixMusic.Core.LocalFiles.Backing.Models;
-using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -11,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.Services.FileMetadataManager;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
@@ -19,6 +19,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     {
         ///NOTE: There are some methods set to NotAvailabletemporarily although they are supported, so the playback can be implemented.
         private ArtistMetadata _artistMetadata;
+        private IFileMetadataManager _fileMetadataManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreArtist"/> class.
@@ -29,6 +30,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             SourceCore = sourceCore;
             _artistMetadata = artistMetadata;
             TotalTracksCount = totalTracksCount;
+            _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
         }
 
         /// <inheritdoc/>
@@ -221,14 +223,14 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            var albumsService = SourceCore.GetService<AlbumService>();
+            var albumsService = _fileMetadataManager.Albums;
 
             var albums = await albumsService.GetAlbumsByArtistId(Id, offset, limit);
 
             foreach (var album in albums)
             {
                 // just to test
-                var tracks = await SourceCore.GetService<TrackService>().GetTracksByAlbumId(album.Id, 0, 1000);
+                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(album.Id, 0, 1000);
                 yield return new LocalFilesCoreAlbum(SourceCore, album, tracks.Count);
             }
         }
@@ -236,8 +238,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
-            var trackService = SourceCore.GetService<TrackService>();
-
+            var trackService = _fileMetadataManager.Tracks;
             var albums = await trackService.GetTracksByArtistId(Id, offset, limit);
 
             foreach (var album in albums)

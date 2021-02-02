@@ -1,51 +1,60 @@
-﻿using OwlCore.AbstractStorage;
-using OwlCore.Extensions;
-using StrixMusic.Core.LocalFiles.Backing.Models;
-using StrixMusic.Core.LocalFiles.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using OwlCore.AbstractStorage;
+using OwlCore.Extensions;
+using OwlCore.Provisos;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using TagLib;
 using File = TagLib.File;
 
-namespace StrixMusic.Core.LocalFiles.MetadataScanner
+namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
     /// <summary>
-    /// Handles scanning tracks for all supported metadata.
+    /// Handles scanning tracks for all supported metadata, including notification support for when data changes.
     /// </summary>
-    public class FileMetadataScanner
+    public class FileMetadataScanner : IAsyncInit, IDisposable
     {
-        private IReadOnlyList<FileMetadata>? __fileMetadata;
+        private readonly List<FileMetadata> _fileMetadata = new List<FileMetadata>();
+        private readonly IFolderData _folderData;
+        private TaskCompletionSource<List<FileMetadata>>? _folderScanningTaskCompletion;
+        private SynchronizationContext _sync;
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
 
         /// <summary>
-        /// It is raised whenever a new related metadata is added during scan.
+        /// Creates a new instance of <see cref="FileMetadataScanner"/>.
         /// </summary>
-        public event EventHandler<FileMetadata>? FileMetadataChanged;
-
-        /// <summary>
-        /// Scans a folder and all subfolders for music and music metadata.
-        /// </summary>
-        /// <param name="folderData">The path to a root folder to scan.</param>
-        /// <returns>Fully scanned <see cref="IReadOnlyList{RelatedMetadata}"/>.</returns>
-        public async Task ScanFolderForMetadata(IFolderData folderData)
+        /// <param name="rootFolder">The root folder to operate in when scanning. Will be scanned recursively.</param>
+        public FileMetadataScanner(IFolderData rootFolder)
         {
-            var files = await folderData.RecursiveDepthFileSearchAsync();
-            var relatedMetaDataList = new List<FileMetadata>();
+            _folderData = rootFolder;
+            _sync = SynchronizationContext.Current;
 
-            foreach (var item in files)
-            {
-                var fileMetadata = await ScanFileMetadata(item);
-
-                if (fileMetadata == null)
-                    continue;
-
-                relatedMetaDataList.Add(fileMetadata);
-                ApplyRelatedMetadataIds(relatedMetaDataList);
-
-                FileMetadataChanged?.Invoke(this, fileMetadata);
-            }
+            AttachEvents();
         }
+
+        private void AttachEvents()
+        {
+            // todo subscribe to file system changes.
+        }
+
+        private void DetachEvents()
+        {
+        }
+
+        /// <summary>
+        /// Raised when a new file with metadata is discovered.
+        /// </summary>
+        public event EventHandler<FileMetadata>? FileMetadataAdded;
+
+        /// <summary>
+        /// Raised when a previously scanned file has been removed from the file system.
+        /// </summary>
+        public event EventHandler<FileMetadata>? FileMetadataRemoved;
 
         private async Task<FileMetadata?> ScanFileMetadata(IFileData fileData)
         {
@@ -55,15 +64,15 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             // var propertyMetadata = await GetMusicFilesProperties(fileData);
             var foundMetadata = new[] { id3Metadata };
 
-            var validMetadatas = foundMetadata.PruneNull().ToArray();
+            var validMetadata = foundMetadata.PruneNull().ToArray();
 
-            if (validMetadatas.Length == 0)
+            if (validMetadata.Length == 0)
                 return null;
 
-            var mergedTrackMetada = MergeTrackMetadata(validMetadatas);
-            mergedTrackMetada.Id = Guid.NewGuid().ToString();
+            var mergeTrackMetadata = MergeTrackMetadata(validMetadata);
+            mergeTrackMetadata.Id = Guid.NewGuid().ToString();
 
-            return mergedTrackMetada;
+            return mergeTrackMetadata;
         }
 
         private FileMetadata MergeTrackMetadata(FileMetadata[] metadata)
@@ -148,7 +157,12 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
             {
                 var stream = await fileData.GetStreamAsync();
 
+                var prevSync = SynchronizationContext.Current;
+                SynchronizationContext.SetSynchronizationContext(_sync);
+
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
+
+                SynchronizationContext.SetSynchronizationContext(prevSync);
 
                 // Read the raw tags
                 var tags = tagFile.GetTag(TagTypes.Id3v2);
@@ -198,10 +212,10 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         }
 
         /// <summary>
-        /// Create groups and apply ids to the <see cref="List{RelatedMetadata}"/>
+        /// Create groups and apply ids to all data in a <see cref="List{RelatedMetadata}"/>.
         /// </summary>
-        /// <param name="relatedMetadata"></param>
-        public void ApplyRelatedMetadataIds(List<FileMetadata> relatedMetadata)
+        /// <param name="relatedMetadata">The data to parse.</param>
+        private void ApplyRelatedMetadataIds(List<FileMetadata> relatedMetadata)
         {
             var artistGroup = relatedMetadata.GroupBy(c => c.ArtistMetadata?.Name);
             var albumGroup = relatedMetadata.GroupBy(c => c.AlbumMetadata?.Title);
@@ -248,17 +262,18 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
                     }
                 }
             }
-
-            __fileMetadata = new List<FileMetadata>(relatedMetadata);
         }
 
         /// <summary>
         /// Gets all unique albums. Make sure file metadata is already scanned.
         /// </summary>
         /// <returns>A list of unique <see cref="AlbumMetadata"/></returns>
-        public IReadOnlyList<AlbumMetadata?> GetUniqueAlbumMetadata()
+        public async Task<IReadOnlyList<AlbumMetadata>> GetUniqueAlbumMetadata()
         {
-            var albums = __fileMetadata.Select(c => c.AlbumMetadata).PruneNull();
+            if (_folderScanningTaskCompletion != null)
+                await _folderScanningTaskCompletion.Task;
+
+            var albums = _fileMetadata.Select(c => c.AlbumMetadata).PruneNull();
 
             return albums.DistinctBy(c => c?.Id).ToList();
         }
@@ -267,9 +282,13 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// Gets all unique artist.
         /// </summary>
         /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
-        public IReadOnlyList<ArtistMetadata?> GetUniqueArtistMetadata()
+        public async Task<IReadOnlyList<ArtistMetadata>> GetUniqueArtistMetadata()
         {
-            var artists = __fileMetadata.Select(c => c.ArtistMetadata).PruneNull();
+            if (_folderScanningTaskCompletion != null)
+                await _folderScanningTaskCompletion.Task;
+
+            // todo check and throw if metadata isn't scanned
+            var artists = _fileMetadata.Select(c => c.ArtistMetadata).PruneNull();
 
             return artists.DistinctBy(c => c?.Id).ToList();
         }
@@ -278,11 +297,92 @@ namespace StrixMusic.Core.LocalFiles.MetadataScanner
         /// Gets all unique tracks. Make sure file meta is already scanned.
         /// </summary>
         /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
-        public IReadOnlyList<TrackMetadata?> GetUniqueTrackMetadata()
+        public async Task<IReadOnlyList<TrackMetadata>> GetUniqueTrackMetadata()
         {
-            var tracks = __fileMetadata.Select(c => c.TrackMetadata).PruneNull();
+            if (_folderScanningTaskCompletion != null)
+                await _folderScanningTaskCompletion.Task;
+
+            // todo check and throw if metadata isn't scanned
+            var tracks = _fileMetadata.Select(c => c.TrackMetadata).PruneNull();
 
             return tracks.DistinctBy(c => c?.Id).ToList();
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            DetachEvents();
+        }
+
+        /// <inheritdoc cref="Dispose()"/>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!IsInitialized)
+                return;
+
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+                // dispose any objects you created here
+            }
+
+            IsInitialized = false;
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        ~FileMetadataScanner()
+        {
+            Dispose(false);
+        }
+
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            if (IsInitialized)
+                return;
+
+            await Task.Run(ScanFolderForMetadata);
+            IsInitialized = true;
+        }
+
+        /// <summary>
+        /// Scans a folder and all subfolders for music and music metadata.
+        /// </summary>
+        /// <returns>Fully scanned <see cref="IReadOnlyList{RelatedMetadata}"/>.</returns>
+        private async Task<List<FileMetadata>> ScanFolderForMetadata()
+        {
+            _folderScanningTaskCompletion = new TaskCompletionSource<List<FileMetadata>>();
+
+            var files = await _folderData.RecursiveDepthFileSearchAsync();
+
+            _fileMetadata.Clear();
+
+            foreach (var item in files)
+            {
+                var fileMetadata = await ScanFileMetadata(item);
+
+                if (fileMetadata == null)
+                    continue;
+
+                lock (_fileMetadata)
+                {
+                    _fileMetadata.Add(fileMetadata);
+                    ApplyRelatedMetadataIds(_fileMetadata);
+                }
+
+                FileMetadataAdded?.Invoke(this, fileMetadata);
+            }
+
+            _folderScanningTaskCompletion?.SetResult(_fileMetadata);
+            _folderScanningTaskCompletion = null;
+
+            return _fileMetadata;
         }
     }
 }

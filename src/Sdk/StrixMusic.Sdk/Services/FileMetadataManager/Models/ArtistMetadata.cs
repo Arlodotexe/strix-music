@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace StrixMusic.Core.LocalFiles.Backing.Models
+namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
 {
     /// <summary>
     /// Holds the information of artist metadata.

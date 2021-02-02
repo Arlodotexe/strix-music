@@ -1,7 +1,5 @@
 ﻿using OwlCore.Collections;
 using OwlCore.Events;
-using StrixMusic.Core.LocalFiles.Backing.Models;
-using StrixMusic.Core.LocalFiles.Backing.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -11,6 +9,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.Services.FileMetadataManager;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
@@ -19,6 +19,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     public class LocalFilesCoreTrack : ICoreTrack
     {
         private TrackMetadata _trackMetadata;
+        private IFileMetadataManager _fileMetadataManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreTrack"/> class.
@@ -97,7 +98,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public TrackType Type => TrackType.Song;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount => _trackMetadata.ArtistIds.Count;
+        public int TotalArtistItemsCount => 0;
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 0;
@@ -307,14 +308,14 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            var artistService = SourceCore.GetService<ArtistService>();
+            var artistRepo = _fileMetadataManager.Artists;
 
-            var artists = await artistService.GetArtistsByTrackId(Id, offset, limit);
+            var artists = await artistRepo.GetArtistsByTrackId(Id, offset, limit);
 
             foreach (var artist in artists)
             {
                 // just to test
-                var tracks = await SourceCore.GetService<TrackService>().GetTracksByAlbumId(artist.Id, 0, 1000);
+                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(artist.Id, 0, 1000);
                 yield return new LocalFilesCoreArtist(SourceCore, artist, tracks.Count);
             }
         }
