@@ -171,6 +171,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 if (tags == null)
                     return null;
 
+                if (tags.Pictures != null && tags.Pictures.Length > 0)
+                {
+                    var albumArt = tags.Pictures.First(p => p.Type == PictureType.FrontCover);
+                    string filename = albumArt.Filename;
+                    byte[] imageData = albumArt.Data.Data;
+                    
+                }
+
                 return new FileMetadata
                 {
                     AlbumMetadata = new AlbumMetadata()
