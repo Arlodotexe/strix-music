@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
+using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
@@ -17,7 +20,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     /// </summary>
     public class FileMetadataScanner : IAsyncInit, IDisposable
     {
-        private readonly List<FileMetadata> _fileMetadata = new List<FileMetadata>();
+        private readonly ConcurrentBag<FileMetadata> _fileMetadata = new ConcurrentBag<FileMetadata>();
         private readonly IFolderData _folderData;
         private TaskCompletionSource<List<FileMetadata>>? _folderScanningTaskCompletion;
         private SynchronizationContext _sync;
@@ -32,6 +35,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         public FileMetadataScanner(IFolderData rootFolder)
         {
             _folderData = rootFolder;
+
             _sync = SynchronizationContext.Current;
 
             AttachEvents();
@@ -215,7 +219,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Create groups and apply ids to all data in a <see cref="List{RelatedMetadata}"/>.
         /// </summary>
         /// <param name="relatedMetadata">The data to parse.</param>
-        private void ApplyRelatedMetadataIds(List<FileMetadata> relatedMetadata)
+        private void ApplyRelatedMetadataIds(ConcurrentBag<FileMetadata> relatedMetadata)
         {
             var artistGroup = relatedMetadata.GroupBy(c => c.ArtistMetadata?.Name);
             var albumGroup = relatedMetadata.GroupBy(c => c.AlbumMetadata?.Title);
@@ -359,30 +363,88 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             _folderScanningTaskCompletion = new TaskCompletionSource<List<FileMetadata>>();
 
-            var files = await _folderData.RecursiveDepthFileSearchAsync();
+            await ScanFolderForMetadataRecursively(_folderData);
 
-            _fileMetadata.Clear();
+            var result = _fileMetadata.ToList();
 
-            foreach (var item in files)
-            {
-                var fileMetadata = await ScanFileMetadata(item);
-
-                if (fileMetadata == null)
-                    continue;
-
-                lock (_fileMetadata)
-                {
-                    _fileMetadata.Add(fileMetadata);
-                    ApplyRelatedMetadataIds(_fileMetadata);
-                }
-
-                FileMetadataAdded?.Invoke(this, fileMetadata);
-            }
-
-            _folderScanningTaskCompletion?.SetResult(_fileMetadata);
+            _folderScanningTaskCompletion?.SetResult(result);
             _folderScanningTaskCompletion = null;
 
-            return _fileMetadata;
+            return result;
+        }
+
+        private async Task ScanFolderForMetadataRecursively(IFolderData rootFolder)
+        {
+            Debug.WriteLine($"Scanning for folders: {rootFolder.Path}");
+
+            var bag = new ConcurrentBag<IFolderData>();
+            const int degreesOfParallelism = 16;
+
+            await GetAllFoldersRecursively(rootFolder, bag, degreesOfParallelism);
+
+            var fileScanningTasks = new Task[degreesOfParallelism];
+
+            for (var i = 0; i < degreesOfParallelism; i++)
+            {
+                fileScanningTasks[i] = Task.Run(() => ScanNextFolderForMetadata(bag));
+            }
+
+            await Task.WhenAll(fileScanningTasks);
+        }
+
+        private async Task GetAllFoldersRecursively(IFolderData rootFolder, ConcurrentBag<IFolderData> foldersToScanForMetadata, int degreesOfParallelism)
+        {
+            var foldersToScanForFolders = new ConcurrentBag<IFolderData> { rootFolder };
+
+            var folderScanningTasks = new Task[degreesOfParallelism];
+
+            for (var i = 0; i < degreesOfParallelism; i++)
+            {
+                folderScanningTasks[i] = Task.Run(() => ScanNextFolderForFolders(foldersToScanForMetadata, foldersToScanForFolders));
+            }
+
+            await Task.WhenAll(folderScanningTasks);
+        }
+
+        private async Task ScanNextFolderForFolders(ConcurrentBag<IFolderData> foldersToScanForMetadata, ConcurrentBag<IFolderData> foldersToScanForFolders)
+        {
+            while (foldersToScanForFolders.TryTake(out IFolderData rootFolder))
+            {
+                Debug.WriteLine($"Scanning for folders: {rootFolder.Path}");
+                var folders = await rootFolder.GetFoldersAsync();
+
+                foreach (var folder in folders)
+                {
+                    foldersToScanForMetadata.Add(folder);
+                    foldersToScanForFolders.Add(folder);
+                }
+            }
+        }
+
+        private async Task ScanNextFolderForMetadata(ConcurrentBag<IFolderData> bag)
+        {
+            // Continue as long as there is data to work with
+            while (bag.TryTake(out IFolderData folder))
+            {
+                var files = await folder.GetFilesAsync();
+
+                await files.InParallel(ScanFileForMetadata);
+            }
+        }
+
+        private async Task ScanFileForMetadata(IFileData file)
+        {
+            Debug.WriteLine($"Scanning file: {file.Path}");
+
+            var fileMetadata = await ScanFileMetadata(file);
+
+            if (fileMetadata == null)
+                return;
+
+            _fileMetadata.Add(fileMetadata);
+            ApplyRelatedMetadataIds(_fileMetadata);
+
+            FileMetadataAdded?.Invoke(this, fileMetadata);
         }
     }
 }
