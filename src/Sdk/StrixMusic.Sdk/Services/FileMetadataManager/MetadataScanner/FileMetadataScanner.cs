@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
+using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
@@ -17,7 +20,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     /// </summary>
     public class FileMetadataScanner : IAsyncInit, IDisposable
     {
-        private readonly List<FileMetadata> _fileMetadata = new List<FileMetadata>();
+        private readonly ConcurrentBag<FileMetadata> _fileMetadata = new ConcurrentBag<FileMetadata>();
+        private readonly ConcurrentBag<IFileData> _unscannedFiles = new ConcurrentBag<IFileData>();
+        private readonly ConcurrentBag<IFolderData> _unscannedFolders = new ConcurrentBag<IFolderData>();
         private readonly IFolderData _folderData;
         private TaskCompletionSource<List<FileMetadata>>? _folderScanningTaskCompletion;
         private SynchronizationContext _sync;
@@ -32,6 +37,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         public FileMetadataScanner(IFolderData rootFolder)
         {
             _folderData = rootFolder;
+
             _sync = SynchronizationContext.Current;
 
             AttachEvents();
@@ -223,7 +229,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Create groups and apply ids to all data in a <see cref="List{RelatedMetadata}"/>.
         /// </summary>
         /// <param name="relatedMetadata">The data to parse.</param>
-        private void ApplyRelatedMetadataIds(List<FileMetadata> relatedMetadata)
+        private void ApplyRelatedMetadataIds(ConcurrentBag<FileMetadata> relatedMetadata)
         {
             var artistGroup = relatedMetadata.GroupBy(c => c.ArtistMetadata?.Name);
             var albumGroup = relatedMetadata.GroupBy(c => c.AlbumMetadata?.Title);
@@ -355,7 +361,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (IsInitialized)
                 return;
 
-            await Task.Run(ScanFolderForMetadata);
+            await ScanFolderForMetadata();
+
             IsInitialized = true;
         }
 
@@ -367,30 +374,81 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             _folderScanningTaskCompletion = new TaskCompletionSource<List<FileMetadata>>();
 
-            var files = await _folderData.RecursiveDepthFileSearchAsync();
+            // Queue initial items from root folder on main thread.
+            _unscannedFolders.Add(_folderData);
 
-            _fileMetadata.Clear();
-
-            foreach (var item in files)
+            // Create a thread for each processor.
+            int threadCount = Environment.ProcessorCount;
+            for (int i = 0; i < threadCount; i++)
             {
-                var fileMetadata = await ScanFileMetadata(item);
-
-                if (fileMetadata == null)
-                    continue;
-
-                lock (_fileMetadata)
-                {
-                    _fileMetadata.Add(fileMetadata);
-                    ApplyRelatedMetadataIds(_fileMetadata);
-                }
-
-                FileMetadataAdded?.Invoke(this, fileMetadata);
+                await Task.Run(RunThreadLoop);
             }
 
-            _folderScanningTaskCompletion?.SetResult(_fileMetadata);
+            var result = _fileMetadata.ToList();
+
+            _folderScanningTaskCompletion?.SetResult(result);
             _folderScanningTaskCompletion = null;
 
-            return _fileMetadata;
+            return result;
+        }
+
+        /// <summary>
+        /// Runs a thread to scan for or process files.
+        /// </summary>
+        private async Task RunThreadLoop()
+        {
+            int doneWork = 0;
+            while (doneWork != -1)
+            {
+                if (_unscannedFiles.TryTake(out IFileData file))
+                {
+                    await ProcessFile(file);
+                    doneWork = 1;
+                }
+                else if (_unscannedFolders.TryTake(out IFolderData folder))
+                {
+                    await QueueItemsFromFolder(folder);
+                    doneWork = 1;
+                }
+                else if (doneWork != 0)
+                {
+                    doneWork = -1;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Finds all storage items in a folder and adds them to their unscanned bags.
+        /// </summary>
+        /// <param name="folder">The folder to iterate for items.</param>
+        private async Task QueueItemsFromFolder(IFolderData folder)
+        {
+            Debug.WriteLine($"Scanning for items in: {folder.Path}");
+            var subfolders = await folder.GetFoldersAsync();
+            var files = await folder.GetFilesAsync();
+            foreach (var subfolder in subfolders)
+            {
+                _unscannedFolders.Add(subfolder);
+            }
+            foreach (var file in files)
+            {
+                _unscannedFiles.Add(file);
+            }
+        }
+
+        private async Task ProcessFile(IFileData file)
+        {
+            Debug.WriteLine($"Processing file: {file.Path}");
+
+            var fileMetadata = await ScanFileMetadata(file);
+
+            if (fileMetadata == null)
+                return;
+
+            _fileMetadata.Add(fileMetadata);
+            ApplyRelatedMetadataIds(_fileMetadata);
+
+            FileMetadataAdded?.Invoke(this, fileMetadata);
         }
     }
 }

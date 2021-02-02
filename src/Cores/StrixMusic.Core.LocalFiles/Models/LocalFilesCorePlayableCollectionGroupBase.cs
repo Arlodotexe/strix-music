@@ -50,7 +50,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             {
                 if (e.AlbumMetadata != null)
                 {
-                    if (!_albumMetadatas?.Any(c => c.Title?.Contains(e.AlbumMetadata.Title) ?? false) ?? false)
+                    if (!_albumMetadatas?.Any(c => c.Title?.Contains(e.AlbumMetadata.Title ?? string.Empty) ?? false) ?? false)
                     {
                         fileCoreAlbum =
                             new LocalFilesCoreAlbum(SourceCore, e.AlbumMetadata, 1000); // track count is temporary
@@ -67,7 +67,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
                 if (e.ArtistMetadata != null)
                 {
-                    if (!_artistMetadatas?.Any(c => c.Name?.Contains(e.ArtistMetadata.Name) ?? false) ?? false)
+                    if (!_artistMetadatas?.Any(c => c.Name?.Contains(e.ArtistMetadata.Name ?? string.Empty) ?? false) ?? false)
                     {
                         filesCoreArtist =
                             new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, 1000); // track count is temporary
@@ -84,7 +84,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
                 if (e.TrackMetadata != null)
                 {
-                    if (!_trackMetadatas?.Any(c => c.Title?.Contains(e.TrackMetadata.Title) ?? false) ?? false)
+                    if (!_trackMetadatas?.Any(c => c.Title?.Contains(e.TrackMetadata.Title ?? string.Empty) ?? false) ?? false)
                     {
                         filesCoreTrack = new LocalFilesCoreTrack(SourceCore, e.TrackMetadata);
 
