@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
@@ -19,6 +20,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private readonly List<FileMetadata> _fileMetadata = new List<FileMetadata>();
         private readonly IFolderData _folderData;
         private TaskCompletionSource<List<FileMetadata>>? _folderScanningTaskCompletion;
+        private SynchronizationContext _sync;
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
@@ -30,6 +32,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         public FileMetadataScanner(IFolderData rootFolder)
         {
             _folderData = rootFolder;
+            _sync = SynchronizationContext.Current;
 
             AttachEvents();
         }
@@ -154,7 +157,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 var stream = await fileData.GetStreamAsync();
 
+                var prevSync = SynchronizationContext.Current;
+                SynchronizationContext.SetSynchronizationContext(_sync);
+
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
+
+                SynchronizationContext.SetSynchronizationContext(prevSync);
 
                 // Read the raw tags
                 var tags = tagFile.GetTag(TagTypes.Id3v2);
@@ -362,8 +370,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 if (fileMetadata == null)
                     continue;
 
-                _fileMetadata.Add(fileMetadata);
-                ApplyRelatedMetadataIds(_fileMetadata);
+                lock (_fileMetadata)
+                {
+                    _fileMetadata.Add(fileMetadata);
+                    ApplyRelatedMetadataIds(_fileMetadata);
+                }
 
                 FileMetadataAdded?.Invoke(this, fileMetadata);
             }
