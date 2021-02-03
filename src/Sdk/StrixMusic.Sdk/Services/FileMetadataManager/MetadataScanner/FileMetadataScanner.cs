@@ -21,6 +21,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     public class FileMetadataScanner : IAsyncInit, IDisposable
     {
         private readonly ConcurrentBag<FileMetadata> _fileMetadata = new ConcurrentBag<FileMetadata>();
+        private readonly ConcurrentBag<IFileData> _unscannedFiles = new ConcurrentBag<IFileData>();
+        private readonly ConcurrentBag<IFolderData> _unscannedFolders = new ConcurrentBag<IFolderData>();
         private readonly IFolderData _folderData;
         private TaskCompletionSource<List<FileMetadata>>? _folderScanningTaskCompletion;
         private SynchronizationContext _sync;
@@ -174,6 +176,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 // If there's no metadata to read, return null
                 if (tags == null)
                     return null;
+
+                if (tags.Pictures != null && tags.Pictures.Length > 0)
+                {
+                    var albumArt = tags.Pictures.First(p => p.Type == PictureType.FrontCover);
+                    string filename = albumArt.Filename;
+                    byte[] imageData = albumArt.Data.Data;
+                    
+                }
 
                 return new FileMetadata
                 {
@@ -351,7 +361,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (IsInitialized)
                 return;
 
-            await Task.Run(ScanFolderForMetadata);
+            await ScanFolderForMetadata();
+
             IsInitialized = true;
         }
 
@@ -363,7 +374,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             _folderScanningTaskCompletion = new TaskCompletionSource<List<FileMetadata>>();
 
-            await ScanFolderForMetadataRecursively(_folderData);
+            // Queue initial items from root folder on main thread.
+            _unscannedFolders.Add(_folderData);
+
+            // Create a thread for each processor.
+            int threadCount = Environment.ProcessorCount;
+            for (int i = 0; i < threadCount; i++)
+            {
+                await Task.Run(RunThreadLoop);
+            }
 
             var result = _fileMetadata.ToList();
 
@@ -373,68 +392,53 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             return result;
         }
 
-        private async Task ScanFolderForMetadataRecursively(IFolderData rootFolder)
+        /// <summary>
+        /// Runs a thread to scan for or process files.
+        /// </summary>
+        private async Task RunThreadLoop()
         {
-            Debug.WriteLine($"Scanning for folders: {rootFolder.Path}");
-
-            var bag = new ConcurrentBag<IFolderData>();
-            const int degreesOfParallelism = 16;
-
-            await GetAllFoldersRecursively(rootFolder, bag, degreesOfParallelism);
-
-            var fileScanningTasks = new Task[degreesOfParallelism];
-
-            for (var i = 0; i < degreesOfParallelism; i++)
+            int doneWork = 0;
+            while (doneWork != -1)
             {
-                fileScanningTasks[i] = Task.Run(() => ScanNextFolderForMetadata(bag));
-            }
-
-            await Task.WhenAll(fileScanningTasks);
-        }
-
-        private async Task GetAllFoldersRecursively(IFolderData rootFolder, ConcurrentBag<IFolderData> foldersToScanForMetadata, int degreesOfParallelism)
-        {
-            var foldersToScanForFolders = new ConcurrentBag<IFolderData> { rootFolder };
-
-            var folderScanningTasks = new Task[degreesOfParallelism];
-
-            for (var i = 0; i < degreesOfParallelism; i++)
-            {
-                folderScanningTasks[i] = Task.Run(() => ScanNextFolderForFolders(foldersToScanForMetadata, foldersToScanForFolders));
-            }
-
-            await Task.WhenAll(folderScanningTasks);
-        }
-
-        private async Task ScanNextFolderForFolders(ConcurrentBag<IFolderData> foldersToScanForMetadata, ConcurrentBag<IFolderData> foldersToScanForFolders)
-        {
-            while (foldersToScanForFolders.TryTake(out IFolderData rootFolder))
-            {
-                Debug.WriteLine($"Scanning for folders: {rootFolder.Path}");
-                var folders = await rootFolder.GetFoldersAsync();
-
-                foreach (var folder in folders)
+                if (_unscannedFiles.TryTake(out IFileData file))
                 {
-                    foldersToScanForMetadata.Add(folder);
-                    foldersToScanForFolders.Add(folder);
+                    await ProcessFile(file);
+                    doneWork = 1;
+                }
+                else if (_unscannedFolders.TryTake(out IFolderData folder))
+                {
+                    await QueueItemsFromFolder(folder);
+                    doneWork = 1;
+                }
+                else if (doneWork != 0)
+                {
+                    doneWork = -1;
                 }
             }
         }
 
-        private async Task ScanNextFolderForMetadata(ConcurrentBag<IFolderData> bag)
+        /// <summary>
+        /// Finds all storage items in a folder and adds them to their unscanned bags.
+        /// </summary>
+        /// <param name="folder">The folder to iterate for items.</param>
+        private async Task QueueItemsFromFolder(IFolderData folder)
         {
-            // Continue as long as there is data to work with
-            while (bag.TryTake(out IFolderData folder))
+            Debug.WriteLine($"Scanning for items in: {folder.Path}");
+            var subfolders = await folder.GetFoldersAsync();
+            var files = await folder.GetFilesAsync();
+            foreach (var subfolder in subfolders)
             {
-                var files = await folder.GetFilesAsync();
-
-                await files.InParallel(ScanFileForMetadata);
+                _unscannedFolders.Add(subfolder);
+            }
+            foreach (var file in files)
+            {
+                _unscannedFiles.Add(file);
             }
         }
 
-        private async Task ScanFileForMetadata(IFileData file)
+        private async Task ProcessFile(IFileData file)
         {
-            Debug.WriteLine($"Scanning file: {file.Path}");
+            Debug.WriteLine($"Processing file: {file.Path}");
 
             var fileMetadata = await ScanFileMetadata(file);
 
