@@ -23,7 +23,6 @@ namespace StrixMusic.Core.LocalFiles
         private ISettingsService? _settingsService;
         private bool _baseServicesSetup;
         private FileMetadataManager? _fileMetadataManager;
-        private Notification _notification;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFileCoreConfig"/> class.
