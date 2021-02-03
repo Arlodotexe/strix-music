@@ -20,10 +20,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     /// </summary>
     public class FileMetadataScanner : IAsyncInit, IDisposable
     {
+        private readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac" };
         private readonly ConcurrentBag<FileMetadata> _fileMetadata = new ConcurrentBag<FileMetadata>();
         private readonly ConcurrentBag<IFileData> _unscannedFiles = new ConcurrentBag<IFileData>();
-        private readonly ConcurrentBag<IFolderData> _unscannedFolders = new ConcurrentBag<IFolderData>();
-        private readonly ConcurrentBag<IFolderData> _unscannedFoldersItems = new ConcurrentBag<IFolderData>();
+        private readonly ConcurrentBag<IFolderData> _foldersToScanForFolders = new ConcurrentBag<IFolderData>();
+        private readonly ConcurrentBag<IFolderData> _foldersToScanForFiles = new ConcurrentBag<IFolderData>();
         private readonly IFolderData _folderData;
         private TaskCompletionSource<List<FileMetadata>>? _folderScanningTaskCompletion;
         private SynchronizationContext _sync;
@@ -376,17 +377,28 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             _folderScanningTaskCompletion = new TaskCompletionSource<List<FileMetadata>>();
 
             // Queue initial items from root folder on main thread.
-            _unscannedFolders.Add(_folderData);
-            _unscannedFoldersItems.Add(_folderData);
+            _foldersToScanForFolders.Add(_folderData);
+            _foldersToScanForFiles.Add(_folderData);
 
             // Create a thread for each processor.
-            int threadCount = Environment.ProcessorCount - 1;
-            for (int i = 0; i < threadCount; i++)
+            var threadCount = Environment.ProcessorCount / 4;
+
+            // Make sure it always uses at least 1
+            if (threadCount < 1)
+                threadCount = 1;
+
+            var threads = new Task[threadCount];
+
+            for (var i = 0; i < threadCount; i++)
             {
-                Thread thread = new Thread(RunThreadLoop);
-                thread.Name = $"SC Thr #{i}";
-                thread.Start();
+                // If the user has more than one processor core, every other thread scans with folder priority.
+                if (i % 2 == 1)
+                    threads[i] = Task.Run(RunThreadLoopWithFolderPriority);
+                else
+                    threads[i] = Task.Run(RunThreadLoopWithFilePriority);
             }
+
+            await Task.WhenAll(threads);
 
             var result = _fileMetadata.ToList();
 
@@ -399,29 +411,48 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Runs a thread to scan for or process files.
         /// </summary>
-        private async void RunThreadLoop()
+        private async Task RunThreadLoopWithFilePriority()
         {
-            bool doneWork = false;
             while (true)
             {
                 if (_unscannedFiles.TryTake(out IFileData file))
                 {
                     await ProcessFile(file);
-                    doneWork = true;
                 }
-                else if (_unscannedFoldersItems.TryTake(out IFolderData folder))
+                else if (_foldersToScanForFiles.TryTake(out IFolderData folder))
                 {
                     await QueueFilesFromFolder(folder);
-                    doneWork = true;
                 }
-                else if (_unscannedFolders.TryTake(out folder))
+                else if (_foldersToScanForFolders.TryTake(out folder))
                 {
                     await QueueFoldersFromFolder(folder);
-                    doneWork = true;
                 }
-                else if (doneWork)
+                else
                 {
-                    continue;
+                    break;
+                }
+            }
+        }
+
+        private async Task RunThreadLoopWithFolderPriority()
+        {
+            while (true)
+            {
+                if (_foldersToScanForFolders.TryTake(out IFolderData folder))
+                {
+                    await QueueFoldersFromFolder(folder);
+                }
+                else if (_foldersToScanForFiles.TryTake(out folder))
+                {
+                    await QueueFilesFromFolder(folder);
+                }
+                else if (_unscannedFiles.TryTake(out IFileData file))
+                {
+                    await ProcessFile(file);
+                }
+                else
+                {
+                    break;
                 }
             }
         }
@@ -433,6 +464,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private async Task QueueFilesFromFolder(IFolderData folder)
         {
             Debug.WriteLine($"Thread {Thread.CurrentThread.Name} scanning for files in: {folder.Path}");
+
             var files = await folder.GetFilesAsync();
             foreach (var file in files)
             {
@@ -447,16 +479,20 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private async Task QueueFoldersFromFolder(IFolderData folder)
         {
             Debug.WriteLine($"Thread {Thread.CurrentThread.Name} scanning for folders in: {folder.Path}");
+
             var subfolders = await folder.GetFoldersAsync();
             foreach (var subfolder in subfolders)
             {
-                _unscannedFoldersItems.Add(subfolder);
-                _unscannedFolders.Add(subfolder);
+                _foldersToScanForFiles.Add(subfolder);
+                _foldersToScanForFolders.Add(subfolder);
             }
         }
 
         private async Task ProcessFile(IFileData file)
         {
+            if (!_supportedMusicFileFormats.Contains(file.FileExtension))
+                return;
+
             Debug.WriteLine($"Thread {Thread.CurrentThread.Name} processing file: {file.Path}");
 
             var fileMetadata = await ScanFileMetadata(file);

@@ -161,11 +161,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             IFileData? fileData;
 
             if (!await _fileSystemService.FileExistsAsync(_pathToMetadataFile))
-                fileData = await _folderData.CreateFileAsync(_pathToMetadataFile); // creates the file and closes the file stream.
-            else fileData = await _folderData.GetFileAsync(TRACK_DATA_FILENAME);
-
-            if (!await _fileSystemService.FileExistsAsync(_pathToMetadataFile))
-                fileData = await _folderData.CreateFileAsync(_pathToMetadataFile); // creates the file and closes the file stream.
+                fileData = await _folderData.CreateFileAsync(TRACK_DATA_FILENAME); // creates the file and closes the file stream.
             else fileData = await _folderData.GetFileAsync(TRACK_DATA_FILENAME);
 
             Guard.IsNotNull(fileData, nameof(fileData));

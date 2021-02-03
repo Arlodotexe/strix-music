@@ -97,8 +97,8 @@ namespace OwlCore.AbstractStorage
         {
             try
             {
-                await StorageFile.GetFileFromPathAsync(path);
-                return true;
+                var res = await StorageFile.GetFileFromPathAsync(path);
+                return res != null;
             }
             catch (Exception)
             {
