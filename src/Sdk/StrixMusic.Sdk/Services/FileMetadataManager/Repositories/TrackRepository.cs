@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
@@ -17,8 +17,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
     public class TrackRepository : IMetadataRepository
     {
         private const string TRACK_DATA_FILENAME = "TrackData.bin";
+
         private readonly FileMetadataScanner _fileMetadataScanner;
-        private string _pathToMetadataFile;
+        private IFolderData? _folderData;
+        private IFileSystemService? _fileSystemService;
+        private string? _pathToMetadataFile;
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
@@ -31,6 +34,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             Guard.IsNotNull(fileMetadataScanner, nameof(fileMetadataScanner));
 
+            _fileSystemService = Ioc.Default.GetService<IFileSystemService>();
             _fileMetadataScanner = fileMetadataScanner;
             _pathToMetadataFile = string.Empty;
         }
@@ -64,6 +68,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public void SetDataFolder(IFolderData rootFolder)
         {
             _pathToMetadataFile = $"{rootFolder.Path}\\{TRACK_DATA_FILENAME}";
+            _folderData = rootFolder;
         }
 
         /// <summary>
@@ -74,13 +79,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<IReadOnlyList<TrackMetadata>> GetTrackMetadata(int offset, int limit)
         {
-            //if (!File.Exists(_pathToMetadatafile))
-            //    throw new FileNotFoundException(_pathToMetadatafile);
-
-            //var bytes = File.ReadAllBytes(_pathToMetadatafile);
-            //var trackMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<TrackMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
-            // return Task.FromResult<IReadOnlyList<TrackMetadata>>(trackMetadataLst.Skip(offset).Take(limit).ToList());
-
             var allTracks = await _fileMetadataScanner.GetUniqueTrackMetadata();
 
             if (limit == -1)
@@ -156,8 +154,21 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
         private async Task ScanForTracks()
         {
-            if (!File.Exists(_pathToMetadataFile))
-                File.Create(_pathToMetadataFile).Close(); // creates the file and closes the file stream.
+            Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
+            Guard.IsNotNull(_pathToMetadataFile, nameof(_pathToMetadataFile));
+            Guard.IsNotNull(_folderData, nameof(_folderData));
+
+            IFileData? fileData;
+
+            if (!await _fileSystemService.FileExistsAsync(_pathToMetadataFile))
+                fileData = await _folderData.CreateFileAsync(_pathToMetadataFile); // creates the file and closes the file stream.
+            else fileData = await _folderData.GetFileAsync(TRACK_DATA_FILENAME);
+
+            if (!await _fileSystemService.FileExistsAsync(_pathToMetadataFile))
+                fileData = await _folderData.CreateFileAsync(_pathToMetadataFile); // creates the file and closes the file stream.
+            else fileData = await _folderData.GetFileAsync(TRACK_DATA_FILENAME);
+
+            Guard.IsNotNull(fileData, nameof(fileData));
 
             // NOTE: Make sure you have already scanned the file metadata. 
             var metadata = await _fileMetadataScanner.GetUniqueTrackMetadata();
@@ -165,7 +176,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (metadata != null && metadata.Count > 0)
             {
                 var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
-                File.WriteAllBytes(_pathToMetadataFile, bytes);
+                await fileData.WriteAllBytesAsync(bytes);
             }
         }
 

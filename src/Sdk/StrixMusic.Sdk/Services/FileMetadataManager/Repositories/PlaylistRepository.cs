@@ -5,12 +5,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
+    //TODO: This repo is not complete.
+
     /// <summary>
     /// The service that helps in interacting with the saved file core track information.
     /// </summary>
@@ -20,8 +23,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private readonly List<PlaylistMetadata> _allPlaylistMetadata = new List<PlaylistMetadata>();
         private readonly PlaylistMetadataScanner _playlistMetadataScanner;
+        private IFolderData? _folderData;
+        private IFileSystemService? _fileSystemService;
         private string? _pathToMetadataFile;
-        private IFolderData? _rootFolder;
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
@@ -32,11 +36,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public PlaylistRepository()
         {
             _playlistMetadataScanner = new PlaylistMetadataScanner();
+
+            _fileSystemService = Ioc.Default.GetService<IFileSystemService>();
         }
 
         private void AttachEvents()
         {
-            
+
         }
 
         private void DetachEvents()
@@ -60,7 +66,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <param name="rootFolder">The root folder to work in.</param>
         public void SetDataFolder(IFolderData rootFolder)
         {
-            _rootFolder = rootFolder;
+            _folderData = rootFolder;
             _pathToMetadataFile = $"{rootFolder.Path}\\{PLAYLIST_DATA_FILENAME}";
         }
 
@@ -87,26 +93,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>The <see cref="PlaylistMetadata"/> collection.</returns>
         private async Task ScanForPlaylists()
         {
-            Guard.IsNotNull(_rootFolder, nameof(_rootFolder));
+            Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
+            Guard.IsNotNull(_pathToMetadataFile, nameof(_pathToMetadataFile));
+            Guard.IsNotNull(_folderData, nameof(_folderData));
 
-            if (!File.Exists(_pathToMetadataFile))
-                File.Create(_pathToMetadataFile).Close(); // creates the file and closes the file stream.
+            IFileData? fileData;
 
-            _allPlaylistMetadata.Clear();
-
-            var files = await _rootFolder.RecursiveDepthFileSearchAsync();
-
-            foreach (var item in files)
-            {
-                var metadata = await _playlistMetadataScanner.ScanPlaylistMetadata(item);
-                if (metadata is null)
-                    continue;
-
-                _allPlaylistMetadata.Add(metadata);
-            }
-
-            var bytes = MessagePackSerializer.Serialize(_allPlaylistMetadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
-            File.WriteAllBytes(_pathToMetadataFile, bytes);
+            if (!await _fileSystemService.FileExistsAsync(_pathToMetadataFile))
+                fileData = await _folderData.CreateFileAsync(_pathToMetadataFile); // creates the file and closes the file stream.
+            else fileData = await _folderData.GetFileAsync(PLAYLIST_DATA_FILENAME);
         }
 
         /// <summary>

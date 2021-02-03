@@ -61,6 +61,12 @@ namespace StrixMusic.Sdk.Uno.Models
 
             return stream.AsStream();
         }
+
+        /// <inheritdoc />
+        public async Task WriteAllBytesAsync(byte[] bytes)
+        {
+            await FileIO.WriteBytesAsync(StorageFile, bytes);
+        }
     }
 
 }
