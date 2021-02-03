@@ -48,5 +48,11 @@ namespace OwlCore.AbstractStorage
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task Delete();
+
+        /// <summary>
+        /// Writes all text on the <see cref="IFileData"/>.
+        /// </summary>
+        /// <returns></returns>
+        public Task WriteAllBytesAsync(byte[] bytes);
     }
 }

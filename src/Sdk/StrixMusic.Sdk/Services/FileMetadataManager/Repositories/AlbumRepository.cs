@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
@@ -19,6 +19,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private const string ALBUM_DATA_FILENAME = "AlbumData.bin";
 
         private readonly FileMetadataScanner _fileMetadataScanner;
+        private IFolderData? _folderData;
+        private IFileSystemService? _fileSystemService;
         private string? _pathToMetadataFile;
 
         /// <inheritdoc />
@@ -31,6 +33,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public AlbumRepository(FileMetadataScanner fileMetadataScanner)
         {
             _fileMetadataScanner = fileMetadataScanner;
+            _fileSystemService = Ioc.Default.GetService<IFileSystemService>();
 
             AttachEvents();
         }
@@ -64,6 +67,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public void SetDataFolder(IFolderData rootFolder)
         {
             _pathToMetadataFile = $"{rootFolder.Path}\\{ALBUM_DATA_FILENAME}";
+            _folderData = rootFolder;
         }
 
         /// <summary>
@@ -75,14 +79,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public async Task<IReadOnlyList<AlbumMetadata>> GetAlbumMetadata(int offset, int limit)
         {
             Guard.IsNotNullOrWhiteSpace(_pathToMetadataFile, nameof(_pathToMetadataFile));
-
-            //if (!File.Exists(_pathToMetadatafile))
-            //    throw new FileNotFoundException(_pathToMetadatafile);
-
-            //var bytes = File.ReadAllBytes(_pathToMetadatafile);
-            //var albumMetadataLst = MessagePackSerializer.Deserialize<IReadOnlyList<AlbumMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
-
-            //return Task.FromResult<IReadOnlyList<AlbumMetadata>>(albumMetadataLst.Skip(offset).Take(limit).ToList());
 
             var allAlbums = await _fileMetadataScanner.GetUniqueAlbumMetadata();
 
@@ -135,18 +131,24 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>The <see cref="AlbumMetadata"/> collection.</returns>
         private async Task ScanForAlbums()
         {
-            if (!File.Exists(_pathToMetadataFile))
-            {
-                // creates the file and closes the file stream.
-                File.Create(_pathToMetadataFile).Close();
-            }
+            Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
+            Guard.IsNotNull(_pathToMetadataFile, nameof(_pathToMetadataFile));
+            Guard.IsNotNull(_folderData, nameof(_folderData));
+
+            IFileData? fileData;
+
+            if (!await _fileSystemService.FileExistsAsync(_pathToMetadataFile))
+                fileData = await _folderData.CreateFileAsync(_pathToMetadataFile); // creates the file and closes the file stream.
+            else fileData = await _folderData.GetFileAsync(ALBUM_DATA_FILENAME);
+
+            Guard.IsNotNull(fileData, nameof(fileData));
 
             var metadata = await _fileMetadataScanner.GetUniqueAlbumMetadata();
 
             if (metadata != null && metadata.Count > 0)
             {
                 var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
-                File.WriteAllBytes(_pathToMetadataFile, bytes);
+                await fileData.WriteAllBytesAsync(bytes);
             }
         }
 
