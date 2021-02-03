@@ -373,7 +373,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             int threadCount = Environment.ProcessorCount;
             for (int i = 0; i < threadCount; i++)
             {
-                await Task.Run(RunThreadLoop);
+                Thread thread = new Thread(RunThreadLoop);
+                thread.Name = $"SC Thr #{i}";
+                thread.Start();
             }
 
             var result = _fileMetadata.ToList();
@@ -387,24 +389,24 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Runs a thread to scan for or process files.
         /// </summary>
-        private async Task RunThreadLoop()
+        private async void RunThreadLoop()
         {
-            int doneWork = 0;
-            while (doneWork != -1)
+            bool doneWork = false;
+            while (true)
             {
                 if (_unscannedFiles.TryTake(out IFileData file))
                 {
                     await ProcessFile(file);
-                    doneWork = 1;
+                    doneWork = true;
                 }
                 else if (_unscannedFolders.TryTake(out IFolderData folder))
                 {
                     await QueueItemsFromFolder(folder);
-                    doneWork = 1;
+                    doneWork = true;
                 }
-                else if (doneWork != 0)
+                else if (doneWork)
                 {
-                    doneWork = -1;
+                    continue;
                 }
             }
         }
@@ -415,13 +417,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <param name="folder">The folder to iterate for items.</param>
         private async Task QueueItemsFromFolder(IFolderData folder)
         {
-            Debug.WriteLine($"Scanning for items in: {folder.Path}");
+            Debug.WriteLine($"Thread {Thread.CurrentThread.Name} scanning for items in: {folder.Path}");
             var subfolders = await folder.GetFoldersAsync();
             var files = await folder.GetFilesAsync();
             foreach (var subfolder in subfolders)
             {
                 _unscannedFolders.Add(subfolder);
             }
+
             foreach (var file in files)
             {
                 _unscannedFiles.Add(file);
@@ -430,7 +433,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task ProcessFile(IFileData file)
         {
-            Debug.WriteLine($"Processing file: {file.Path}");
+            Debug.WriteLine($"Thread {Thread.CurrentThread.Name} processing file: {file.Path}");
 
             var fileMetadata = await ScanFileMetadata(file);
 
