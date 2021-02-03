@@ -23,6 +23,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private readonly ConcurrentBag<FileMetadata> _fileMetadata = new ConcurrentBag<FileMetadata>();
         private readonly ConcurrentBag<IFileData> _unscannedFiles = new ConcurrentBag<IFileData>();
         private readonly ConcurrentBag<IFolderData> _unscannedFolders = new ConcurrentBag<IFolderData>();
+        private readonly ConcurrentBag<IFolderData> _unscannedFoldersItems = new ConcurrentBag<IFolderData>();
         private readonly IFolderData _folderData;
         private TaskCompletionSource<List<FileMetadata>>? _folderScanningTaskCompletion;
         private SynchronizationContext _sync;
@@ -182,7 +183,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     var albumArt = tags.Pictures.First(p => p.Type == PictureType.FrontCover);
                     string filename = albumArt.Filename;
                     byte[] imageData = albumArt.Data.Data;
-                    
+
                 }
 
                 return new FileMetadata
@@ -376,9 +377,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             // Queue initial items from root folder on main thread.
             _unscannedFolders.Add(_folderData);
+            _unscannedFoldersItems.Add(_folderData);
 
             // Create a thread for each processor.
-            int threadCount = Environment.ProcessorCount;
+            int threadCount = Environment.ProcessorCount - 1;
             for (int i = 0; i < threadCount; i++)
             {
                 Thread thread = new Thread(RunThreadLoop);
@@ -407,9 +409,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     await ProcessFile(file);
                     doneWork = true;
                 }
-                else if (_unscannedFolders.TryTake(out IFolderData folder))
+                else if (_unscannedFoldersItems.TryTake(out IFolderData folder))
                 {
-                    await QueueItemsFromFolder(folder);
+                    await QueueFilesFromFolder(folder);
+                    doneWork = true;
+                }
+                else if (_unscannedFolders.TryTake(out folder))
+                {
+                    await QueueFoldersFromFolder(folder);
                     doneWork = true;
                 }
                 else if (doneWork)
@@ -423,19 +430,28 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Finds all storage items in a folder and adds them to their unscanned bags.
         /// </summary>
         /// <param name="folder">The folder to iterate for items.</param>
-        private async Task QueueItemsFromFolder(IFolderData folder)
+        private async Task QueueFilesFromFolder(IFolderData folder)
         {
-            Debug.WriteLine($"Thread {Thread.CurrentThread.Name} scanning for items in: {folder.Path}");
-            var subfolders = await folder.GetFoldersAsync();
+            Debug.WriteLine($"Thread {Thread.CurrentThread.Name} scanning for files in: {folder.Path}");
             var files = await folder.GetFilesAsync();
-            foreach (var subfolder in subfolders)
-            {
-                _unscannedFolders.Add(subfolder);
-            }
-
             foreach (var file in files)
             {
                 _unscannedFiles.Add(file);
+            }
+        }
+
+        /// <summary>
+        /// Finds all storage items in a folder and adds them to their unscanned bags.
+        /// </summary>
+        /// <param name="folder">The folder to iterate for items.</param>
+        private async Task QueueFoldersFromFolder(IFolderData folder)
+        {
+            Debug.WriteLine($"Thread {Thread.CurrentThread.Name} scanning for folders in: {folder.Path}");
+            var subfolders = await folder.GetFoldersAsync();
+            foreach (var subfolder in subfolders)
+            {
+                _unscannedFoldersItems.Add(subfolder);
+                _unscannedFolders.Add(subfolder);
             }
         }
 
