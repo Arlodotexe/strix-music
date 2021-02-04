@@ -86,7 +86,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
 
         /// <inheritdoc />?
-        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+        public virtual event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc />?
         public virtual event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
@@ -95,7 +95,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public virtual event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc />?
-        public virtual event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
+        public  event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
 
         /// <inheritdoc />
         public ICore SourceCore { get; private set; }

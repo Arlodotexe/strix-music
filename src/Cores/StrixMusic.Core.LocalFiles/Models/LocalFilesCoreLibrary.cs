@@ -31,6 +31,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         public LocalFilesCoreLibrary(ICore sourceCore)
             : base(sourceCore)
         {
+            _artistMetadatas = new List<ArtistMetadata>();
+            _trackMetadatas = new List<TrackMetadata>();
+            _albumMetadatas = new List<AlbumMetadata>();
         }
 
         /// <inheritdoc/>
@@ -41,6 +44,8 @@ namespace StrixMusic.Core.LocalFiles.Models
             _fileMetadataManager.FileMetadataAdded += MetadataScannerFileMetadataAdded;
 
             IsInitialized = true;
+
+            await base.InitAsync();
         }
 
         /// <summary>
@@ -76,13 +81,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override int TotalTracksCount { get; internal set; }
 
         /// <inheritdoc />
-        public virtual event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
+        public override event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
 
         /// <inheritdoc />
-        public virtual event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
+        public override event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
-        /// <inheritdoc />
-        public virtual event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
+        /// <inheritdoc />?
+        public override event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc/>
         public override IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)
@@ -99,34 +104,34 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+
             var albumMetadata = await _fileMetadataManager.Albums.GetAlbumMetadata(offset, limit);
 
             foreach (var album in albumMetadata)
             {
-                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(album.Id, 0, album.TrackIds.Count);
-                yield return new LocalFilesCoreAlbum(SourceCore, album, tracks.Count);
+                yield return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0);
             }
         }
 
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+
             var artistMetadata = await _fileMetadataManager.Artists.GetArtistMetadata(offset, limit);
 
             foreach (var artist in artistMetadata)
             {
-                // just to test
-                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(artist.Id, 0, artist.TrackIds.Count);
-                yield return new LocalFilesCoreArtist(SourceCore, artist, tracks.Count);
+                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0);
             }
         }
-
-        /// <inheritdoc />?
-        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+
             var artistMetadata = await _fileMetadataManager.Tracks.GetTrackMetadata(offset, limit);
 
             foreach (var track in artistMetadata)
@@ -148,7 +153,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                     if (!_albumMetadatas?.Any(c => c.Title?.Equals(e.AlbumMetadata.Title ?? string.Empty) ?? false) ?? false)
                     {
                         fileCoreAlbum =
-                            new LocalFilesCoreAlbum(SourceCore, e.AlbumMetadata, 1000); // track count is temporary
+                            new LocalFilesCoreAlbum(SourceCore, e.AlbumMetadata, e.AlbumMetadata.TrackIds?.Count ?? 0); 
 
                         var addedItems = new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>
                         {
@@ -156,7 +161,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                         };
 
                         _albumMetadatas?.Add(e.AlbumMetadata);
-                        AlbumItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>()); // nothing is being removed for now.
+                        AlbumItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>());
                     }
                 }
 
@@ -165,7 +170,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                     if (!_artistMetadatas?.Any(c => c.Name?.Equals(e.ArtistMetadata.Name ?? string.Empty) ?? false) ?? false)
                     {
                         filesCoreArtist =
-                            new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, 1000); // track count is temporary
+                            new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, e.ArtistMetadata.TrackIds?.Count ?? 0); 
 
                         var addedItems = new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>
                         {
@@ -189,7 +194,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                         };
 
                         _trackMetadatas?.Add(e.TrackMetadata);
-                        TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreTrack>>()); // nothing is being removed for now.
+                        TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreTrack>>()); 
                     }
                 }
             }
