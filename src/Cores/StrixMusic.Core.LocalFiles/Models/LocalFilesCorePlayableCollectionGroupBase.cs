@@ -19,12 +19,6 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc cref="ICorePlayableCollectionGroup"/>
     public abstract class LocalFilesCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup, IAsyncInit
     {
-        private readonly object _lockObj = new object();
-        private IFileMetadataManager? _fileMetadataManager;
-        private IList<ArtistMetadata>? _artistMetadatas;
-        private IList<AlbumMetadata>? _albumMetadatas;
-        private IList<TrackMetadata>? _trackMetadatas;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCorePlayableCollectionGroupBase"/> class.
         /// </summary>
@@ -32,72 +26,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         protected LocalFilesCorePlayableCollectionGroupBase(ICore sourceCore)
         {
             SourceCore = sourceCore;
-
-            _artistMetadatas = new List<ArtistMetadata>();
-            _albumMetadatas = new List<AlbumMetadata>();
-            _trackMetadatas = new List<TrackMetadata>();
-        }
-
-        private void MetadataScannerFileMetadataAdded(object sender, FileMetadata e)
-        {
-            // Its not complete yet, some data is forcefully given for testing.
-
-            LocalFilesCoreAlbum fileCoreAlbum;
-            LocalFilesCoreTrack filesCoreTrack;
-            LocalFilesCoreArtist filesCoreArtist;
-
-            lock (_lockObj)
-            {
-                if (e.AlbumMetadata != null)
-                {
-                    if (!_albumMetadatas?.Any(c => c.Title?.Contains(e.AlbumMetadata.Title ?? string.Empty) ?? false) ?? false)
-                    {
-                        fileCoreAlbum =
-                            new LocalFilesCoreAlbum(SourceCore, e.AlbumMetadata, 1000); // track count is temporary
-
-                        var addedItems = new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>
-                        {
-                            new CollectionChangedEventItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
-                        };
-
-                        _albumMetadatas?.Add(e.AlbumMetadata);
-                        AlbumItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>()); // nothing is being removed for now.
-                    }
-                }
-
-                if (e.ArtistMetadata != null)
-                {
-                    if (!_artistMetadatas?.Any(c => c.Name?.Contains(e.ArtistMetadata.Name ?? string.Empty) ?? false) ?? false)
-                    {
-                        filesCoreArtist =
-                            new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, 1000); // track count is temporary
-
-                        var addedItems = new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>
-                        {
-                            new CollectionChangedEventItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
-                        };
-
-                        _artistMetadatas?.Add(e.ArtistMetadata);
-                        ArtistItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>());
-                    }
-                }
-
-                if (e.TrackMetadata != null)
-                {
-                    if (!_trackMetadatas?.Any(c => c.Title?.Contains(e.TrackMetadata.Title ?? string.Empty) ?? false) ?? false)
-                    {
-                        filesCoreTrack = new LocalFilesCoreTrack(SourceCore, e.TrackMetadata);
-
-                        var addedItems = new List<CollectionChangedEventItem<ICoreTrack>>
-                        {
-                            new CollectionChangedEventItem<ICoreTrack>(filesCoreTrack, 0),
-                        };
-
-                        _trackMetadatas?.Add(e.TrackMetadata);
-                        TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreTrack>>()); // nothing is being removed for now.
-                    }
-                }
-            }
         }
 
         /// <inheritdoc />
@@ -161,16 +89,16 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc />?
-        public event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
+        public virtual event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
 
         /// <inheritdoc />?
-        public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
+        public virtual event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc />?
-        public event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
+        public virtual event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
 
         /// <inheritdoc />
-        public ICore SourceCore { get; }
+        public ICore SourceCore { get; private set; }
 
         /// <inheritdoc />
         public abstract string Id { get; protected set; }
@@ -232,7 +160,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <summary>
         /// Determines if collection base is initialized or not.
         /// </summary>
-        public bool IsInitialized { get; private set; }
+        public virtual bool IsInitialized { get; protected set; }
 
         /// <inheritdoc/>
         public Task<bool> IsAddChildAvailable(int index)
@@ -435,12 +363,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public virtual Task InitAsync()
         {
-            _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
-
-            _fileMetadataManager.FileMetadataAdded += MetadataScannerFileMetadataAdded;
-
-            IsInitialized = true;
-
             return Task.CompletedTask;
         }
     }
