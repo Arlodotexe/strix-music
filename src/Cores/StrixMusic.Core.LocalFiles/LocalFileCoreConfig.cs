@@ -109,17 +109,7 @@ namespace StrixMusic.Core.LocalFiles
 
             Guard.IsNotNull(folderData, nameof(folderData));
 
-            var notificationService = Services.GetRequiredService<INotificationService>();
-         //   _notification = notificationService.RaiseNotification("Searching for music", $"Scanning {folderData.Path}...");
-
             await _fileMetadataManager.InitAsync();
-
-            _fileMetadataManager.ScanningCompleted += _fileMetadataManager_ScanningCompleted;
-        }
-
-        private void _fileMetadataManager_ScanningCompleted(object sender, EventArgs e)
-        {
-          //  _notification.Dismiss();
         }
 
         /// <summary>
