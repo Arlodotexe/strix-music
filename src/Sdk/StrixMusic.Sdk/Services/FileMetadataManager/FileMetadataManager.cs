@@ -103,6 +103,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (IsInitialized)
                 return;
 
+            IsInitialized = true;
+
             var dataFolder = await GetDataStorageFolder(_instanceId);
 
             await _fileMetadataScanner.InitAsync();
@@ -121,8 +123,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 x.SetDataFolder(dataFolder);
                 return x.InitAsync();
             });
-
-            IsInitialized = true;
 
             ScanningCompleted?.Invoke(this, new EventArgs());
         }

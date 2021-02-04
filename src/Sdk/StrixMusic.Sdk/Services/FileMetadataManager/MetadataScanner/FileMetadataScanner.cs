@@ -5,11 +5,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
+using StrixMusic.Sdk.Services.Notifications;
 using TagLib;
 using File = TagLib.File;
 
@@ -20,17 +22,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     /// </summary>
     public class FileMetadataScanner : IAsyncInit, IDisposable
     {
-        private readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac" };
-        private readonly ConcurrentBag<FileMetadata> _fileMetadata = new ConcurrentBag<FileMetadata>();
-        private readonly ConcurrentBag<IFileData> _unscannedFiles = new ConcurrentBag<IFileData>();
-        private readonly ConcurrentBag<IFolderData> _foldersToScanForFolders = new ConcurrentBag<IFolderData>();
-        private readonly ConcurrentBag<IFolderData> _foldersToScanForFiles = new ConcurrentBag<IFolderData>();
+        private readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a" };
+        private readonly List<FileMetadata> _fileMetadata = new List<FileMetadata>();
         private readonly IFolderData _folderData;
         private TaskCompletionSource<List<FileMetadata>>? _folderScanningTaskCompletion;
-        private SynchronizationContext _sync;
-        private bool _parallelFolderScanInitFinished;
-        private int _inProgressNestedFolderQueries;
-        private bool _parallelFolderScanInProgress;
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
@@ -42,8 +37,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         public FileMetadataScanner(IFolderData rootFolder)
         {
             _folderData = rootFolder;
-
-            _sync = SynchronizationContext.Current;
 
             AttachEvents();
         }
@@ -166,14 +159,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             try
             {
-                var stream = await fileData.GetStreamAsync();
-
-                var prevSync = SynchronizationContext.Current;
-                SynchronizationContext.SetSynchronizationContext(_sync);
+                using var stream = await fileData.GetStreamAsync();
 
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
-
-                SynchronizationContext.SetSynchronizationContext(prevSync);
 
                 // Read the raw tags
                 var tags = tagFile.GetTag(TagTypes.Id3v2);
@@ -220,6 +208,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     },
                 };
             }
+
+            // Catches have a big performance hit
             catch (CorruptFileException)
             {
                 return null;
@@ -234,7 +224,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Create groups and apply ids to all data in a <see cref="List{RelatedMetadata}"/>.
         /// </summary>
         /// <param name="relatedMetadata">The data to parse.</param>
-        private void ApplyRelatedMetadataIds(ConcurrentBag<FileMetadata> relatedMetadata)
+        private void ApplyRelatedMetadataIds(List<FileMetadata> relatedMetadata)
         {
             var artistGroup = relatedMetadata.GroupBy(c => c.ArtistMetadata?.Name);
             var albumGroup = relatedMetadata.GroupBy(c => c.AlbumMetadata?.Title);
@@ -321,7 +311,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (_folderScanningTaskCompletion != null)
                 await _folderScanningTaskCompletion.Task;
 
-            // todo check and throw if metadata isn't scanned
             var tracks = _fileMetadata.Select(c => c.TrackMetadata).PruneNull();
 
             return tracks.DistinctBy(c => c?.Id).ToList();
@@ -379,40 +368,25 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             _folderScanningTaskCompletion = new TaskCompletionSource<List<FileMetadata>>();
 
-            // Queue initial items from root folder on main thread.
-            _foldersToScanForFolders.Add(_folderData);
-            _foldersToScanForFiles.Add(_folderData);
+            // DFS search on a single thread
+            // Parallel.ForEach on resulting collection (system manages resources)
+            // Batch the scanned metadata at the end (in the event)
+            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
 
-            // Create a thread for each processor core (using half)
-            var threadCount = Environment.ProcessorCount / 2;
+            // notifications disabled until notification templates are reasonable and don't get in the way
+            //var dfsNotification = notificationService.RaiseNotification("Scanning folder structure", $"Scanning folder tree at {_folderData.Path}");
 
-            // If we only have 1 processor core to do work on
-            if (threadCount <= 1)
-            {
-                // Discover the entire folder tree first.
-                await Task.Run(() => RunFolderScanThreadLoop(1));
+            var allDiscoveredFolders = new Queue<IFolderData>();
+            var foldersToScan = new Stack<IFolderData>();
+            foldersToScan.Push(_folderData);
 
-                // Scan all contents, prioritizing file scanning over file discovery. This makes sure the user sees their music sooner.
-                await Task.Run(() => RunFileScanThreadLoop(1));
-            }
-            else
-            {
-                var threads = new Task[threadCount];
+            await DFSFolderContentScan(foldersToScan, allDiscoveredFolders);
 
-                for (var i = 0; i < threadCount; i++)
-                {
-                    var processorNum = i;
-                    threads[i] = (i % 3) switch
-                    {
-                        0 => Task.Run(() => RunFolderScanThreadLoop(processorNum)),
-                        1 => Task.Run(() => RunFolderContentsScanThreadLoop(processorNum)),
-                        2 => Task.Run(() => RunFileScanThreadLoop(processorNum)),
-                        _ => threads[i]
-                    };
-                }
+            await allDiscoveredFolders.InParallel(ProcessFolderContents);
 
-                await Task.WhenAll(threads);
-            }
+            //dfsNotification.Dismiss();
+
+            //var contentScanNotification = notificationService.RaiseNotification("Scanning folder contents", $"Processing data in {_folderData.Path}");
 
             var result = _fileMetadata.ToList();
 
@@ -422,128 +396,50 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             return result;
         }
 
-        private async Task RunFileScanThreadLoop(int processorNum)
+        private async Task DFSFolderContentScan(Stack<IFolderData> foldersToCrawl, Queue<IFolderData> allDiscoveredFolders)
         {
-            // Runs continuously as long as we haven't discovered the entire folder tree, or there's still folder contents / files to scan.
-            while (_parallelFolderScanInProgress || !_foldersToScanForFiles.IsEmpty || !_unscannedFiles.IsEmpty || !_foldersToScanForFolders.IsEmpty)
+            if (foldersToCrawl.Count == 0)
+                return;
+
+            var folders = await foldersToCrawl.Pop().GetFoldersAsync();
+
+            foreach (var folder in folders)
             {
-                if (_unscannedFiles.TryTake(out IFileData file))
-                {
-                    await ProcessFile(file, processorNum);
-                }
-
-                // Side work so we aren't just spinning the thread without doing anything
-                else if (_foldersToScanForFiles.TryTake(out IFolderData folder))
-                {
-                    await QueueFilesFromFolder(folder, processorNum);
-                }
-                else if (_foldersToScanForFolders.TryTake(out folder))
-                {
-                    await QueueFoldersFromFolder(folder, processorNum);
-                }
-            }
-        }
-
-        private async Task RunFolderContentsScanThreadLoop(int processorNum)
-        {
-            // Runs continuously as long as we haven't discovered the entire folder tree, or there's still folder contents / files to scan.
-            while (_parallelFolderScanInProgress || !_foldersToScanForFiles.IsEmpty || !_unscannedFiles.IsEmpty || !_foldersToScanForFolders.IsEmpty)
-            {
-                if (_foldersToScanForFiles.TryTake(out IFolderData folder))
-                {
-                    await QueueFilesFromFolder(folder, processorNum);
-                }
-
-                // Side work so we aren't just spinning the thread without doing anything
-                else if (_unscannedFiles.TryTake(out IFileData file))
-                {
-                    await ProcessFile(file, processorNum);
-                }
-                else if (_foldersToScanForFolders.TryTake(out folder))
-                {
-                    await QueueFoldersFromFolder(folder, processorNum);
-                }
-            }
-        }
-
-        private async Task RunFolderScanThreadLoop(int processorNum)
-        {
-            // Because the APIs we work with are async, we cannot rely on the count of the "folders to scan for folders" bag
-            // to decide if we should stop work in other worker threads, because the below will remove the only (root) folder that needs to be scanned, leaving all concurrent bags empty. 
-            // The very first run, all worker threads here will try to take from the bag.
-            // The first one will get the root folder, the rest will fail and spin until we're finished scanning the contents of the root.
-            _parallelFolderScanInitFinished = false;
-
-            // We need this extra flag for other workers because during init, all bags will be empty, and no queries will be in progress (everything is parallel), causing threads to quite prematurely.
-            _parallelFolderScanInProgress = true;
-
-            // This should continue to run until there are no more folders to find.
-            // All worker threads operating here will spin if there is nothing to scan and a folder query is still in progress
-            while (_foldersToScanForFolders.TryTake(out IFolderData folder) || !_parallelFolderScanInitFinished || _inProgressNestedFolderQueries > 0)
-            {
-                if (folder != null)
-                {
-                    await QueueFoldersFromFolder(folder, processorNum);
-                    _parallelFolderScanInitFinished = true;
-                }
+                foldersToCrawl.Push(folder);
+                allDiscoveredFolders.Enqueue(folder);
             }
 
-            _parallelFolderScanInProgress = false;
-
-            // Extra work after folder discovery is finished, so we aren't spinning the thread.
-            await RunFolderContentsScanThreadLoop(processorNum);
+            await DFSFolderContentScan(foldersToCrawl, allDiscoveredFolders);
         }
 
-        /// <summary>
-        /// Finds all storage items in a folder and adds them to their unscanned bags.
-        /// </summary>
-        /// <param name="folder">The folder to iterate for items.</param>
-        private async Task QueueFilesFromFolder(IFolderData folder, int processorNum)
+        private async Task ProcessFolderContents(IFolderData folder)
         {
-            Debug.WriteLine($"Thread {processorNum} scanning for files in: {folder.Path}");
-
             var files = await folder.GetFilesAsync();
+
             foreach (var file in files)
             {
-                _unscannedFiles.Add(file);
+                var metadata = await ProcessFile(file);
+
+                if (metadata != null)
+                {
+                    lock (_fileMetadata)
+                    {
+                        _fileMetadata.Add(metadata);
+                        ApplyRelatedMetadataIds(_fileMetadata);
+                    }
+
+                    // TODO: Major issue. If any related metadata is updated but already emitted, we need to update the data externally as well.
+                    FileMetadataAdded?.Invoke(this, metadata);
+                }
             }
         }
 
-        /// <summary>
-        /// Finds all storage items in a folder and adds them to their unscanned bags.
-        /// </summary>
-        /// <param name="folder">The folder to iterate for items.</param>
-        private async Task QueueFoldersFromFolder(IFolderData folder, int processorNum)
-        {
-            Debug.WriteLine($"Thread {processorNum} scanning for folders in: {folder.Path}");
-
-            _inProgressNestedFolderQueries++;
-            var subfolders = await folder.GetFoldersAsync();
-
-            foreach (var subfolder in subfolders)
-            {
-                _foldersToScanForFiles.Add(subfolder);
-                _foldersToScanForFolders.Add(subfolder);
-            }
-            _inProgressNestedFolderQueries--;
-        }
-
-        private async Task ProcessFile(IFileData file, int processorNum)
+        private Task<FileMetadata?> ProcessFile(IFileData file)
         {
             if (!_supportedMusicFileFormats.Contains(file.FileExtension))
-                return;
+                return Task.FromResult<FileMetadata?>(null);
 
-            Debug.WriteLine($"Thread {processorNum} processing file: {file.Path}");
-
-            var fileMetadata = await ScanFileMetadata(file);
-
-            if (fileMetadata == null)
-                return;
-
-            _fileMetadata.Add(fileMetadata);
-            ApplyRelatedMetadataIds(_fileMetadata);
-
-            FileMetadataAdded?.Invoke(this, fileMetadata);
+            return ScanFileMetadata(file);
         }
     }
 }

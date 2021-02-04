@@ -49,9 +49,9 @@ namespace StrixMusic.Sdk.Uno.Models
         }
 
         /// <inheritdoc/>
-        public async Task Delete()
+        public Task Delete()
         {
-            await StorageFile.DeleteAsync();
+            return StorageFile.DeleteAsync().AsTask();
         }
 
         /// <inheritdoc />
@@ -59,13 +59,13 @@ namespace StrixMusic.Sdk.Uno.Models
         {
             var stream = await StorageFile.OpenAsync((Windows.Storage.FileAccessMode)accessMode);
 
-            return stream.AsStream();
+            return stream.AsStream(0);
         }
 
         /// <inheritdoc />
-        public async Task WriteAllBytesAsync(byte[] bytes)
+        public Task WriteAllBytesAsync(byte[] bytes)
         {
-            await FileIO.WriteBytesAsync(StorageFile, bytes);
+            return FileIO.WriteBytesAsync(StorageFile, bytes).AsTask();
         }
     }
 
