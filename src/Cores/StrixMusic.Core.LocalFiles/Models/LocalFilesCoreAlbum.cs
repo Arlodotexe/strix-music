@@ -11,7 +11,6 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
-    ///NOTE: There are some methods set to NotAvailabletemporarily although they are supported, so the playback can be implemented.
     /// <summary>
     /// A LocalFileCore implementation of <see cref="ICoreAlbum"/>.
     /// </summary>
@@ -91,7 +90,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public string Id => _albumMetadata.Id;
+        public string Id => _albumMetadata.Id ?? null;
 
         /// <inheritdoc/>
         public Uri? Url => null;
@@ -147,6 +146,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncAvailable => false;
 
+        /// <inheritdoc />
+        public event EventHandler<int>? ArtistItemsCountChanged;
+
         /// <inheritdoc/>
         public Task<bool> IsAddGenreAvailable(int index)
         {
@@ -186,25 +188,25 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeDatePublishedAsync(DateTime datePublished)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeNameAsync(string name)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
@@ -254,35 +256,32 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task AddImageAsync(ICoreImage image, int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task<bool> IsAddArtistItemAvailable(int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task<bool> IsRemoveArtistItemAvailable(int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
-
-        /// <inheritdoc />
-        public event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
@@ -293,14 +292,12 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             foreach (var artist in artists)
             {
-                // just to test
-                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(artist.Id, 0, 1000);
-                yield return new LocalFilesCoreArtist(SourceCore, artist, tracks.Count);
+                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0);
             }
         }
 
         /// <inheritdoc />
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
+        public  Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
             throw new NotSupportedException();
         }
