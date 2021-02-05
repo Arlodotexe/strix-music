@@ -17,8 +17,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc/>
     public class LocalFilesCoreArtist : ICoreArtist
     {
-        ///NOTE: There are some methods set to NotAvailabletemporarily although they are supported, so the playback can be implemented.
-        private ArtistMetadata _artistMetadata;
+        private ArtistMetadata? _artistMetadata;
         private IFileMetadataManager _fileMetadataManager;
 
         /// <summary>
@@ -85,7 +84,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc/>
-        public string Id => _artistMetadata.Id;
+        public string Id => _artistMetadata?.Id ?? null;
 
         /// <inheritdoc/>
         public int TotalAlbumItemsCount => 0;
@@ -103,11 +102,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public Uri? Url => null;
 
         /// <inheritdoc/>
-        public string? Name => _artistMetadata.Name ?? null;
+        public string? Name => _artistMetadata?.Name;
 
-        //This is incorrect value.
         /// <inheritdoc/>
-        public string Description => _artistMetadata.Name ?? "No Description";
+        public string Description => _artistMetadata?.Description;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => PlaybackState.None;
@@ -193,31 +191,31 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeNameAsync(string name)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PauseAsync()
         {
-            return Task.CompletedTask;//temporary for playback
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
         public Task PlayAsync()
         {
-            return Task.CompletedTask;//temporary for playback
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
@@ -229,9 +227,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             foreach (var album in albums)
             {
-                // just to test
-                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(album.Id, 0, 1000);
-                yield return new LocalFilesCoreAlbum(SourceCore, album, tracks.Count);
+                yield return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0);
             }
         }
 
@@ -250,43 +246,43 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task AddTrackAsync(ICoreTrack track, int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveTrackAsync(int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveAlbumItemAsync(int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task AddImageAsync(ICoreImage image, int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            throw new NotSupportedException(); //temporary for playback
+            yield return null;
         }
     }
 }

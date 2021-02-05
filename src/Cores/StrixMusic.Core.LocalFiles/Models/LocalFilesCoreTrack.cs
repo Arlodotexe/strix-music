@@ -135,7 +135,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public Uri? Url => null;
 
         /// <inheritdoc/>
-        public string Name => _trackMetadata.Title ?? "No Title";
+        public string Name => _trackMetadata.Title;
 
         /// <inheritdoc/>
         public string? Description => _trackMetadata.Description;
@@ -224,31 +224,31 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task ChangeAlbumAsync(ICoreAlbum? albums)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeDescriptionAsync(string? description)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeIsExplicitAsync(bool isExplicit)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeLanguageAsync(CultureInfo language)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
@@ -260,13 +260,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task ChangeNameAsync(string name)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task ChangeTrackNumberAsync(int? trackNumber)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
@@ -284,25 +284,25 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task AddImageAsync(ICoreImage image, int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
         {
-            throw new NotSupportedException();//temporary for playback
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
@@ -314,16 +314,13 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             foreach (var artist in artists)
             {
-                // just to test
-                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(artist.Id, 0, 1000);
-                yield return new LocalFilesCoreArtist(SourceCore, artist, tracks.Count);
+                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds.Count);
             }
         }
 
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            //temporary just to show tracks
             yield return null;//temporary for playback
         }
     }

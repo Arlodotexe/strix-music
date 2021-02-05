@@ -39,6 +39,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         public int TotalTracksCount { get; set; }
 
         /// <summary>
+        /// Probably bio of the artist.
+        /// </summary>
+        public string? Description { get; set; }
+
+        /// <summary>
         /// The external link associated with the artist.
         /// </summary>
         public Uri? Url { get; set; }

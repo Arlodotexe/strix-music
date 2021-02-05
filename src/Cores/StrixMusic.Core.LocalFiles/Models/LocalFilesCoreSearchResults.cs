@@ -82,9 +82,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             foreach (var album in _albumMetadatas)
             {
-                // just to test
-                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(album.Id, 0, 1000);
-                yield return new LocalFilesCoreAlbum(SourceCore, album, tracks.Count);
+                yield return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0);
             }
         }
 
@@ -97,9 +95,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             foreach (var artist in _artistMetadatas)
             {
-                // just to test
-                var tracks = await SourceCore.GetService<TrackRepository>().GetTracksByAlbumId(artist.Id, 0, 1000);
-                yield return new LocalFilesCoreArtist(SourceCore, artist, tracks.Count);
+                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0);
             }
         }
 
