@@ -50,10 +50,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
             var eg = new AbstractUIElementGroup(NewGuid(), PreferredOrientation.Vertical)
             {
                 Title = title,
-                Items = new List<AbstractUIElement>()
-                {
-                    new AbstractTextBox(NewGuid(), message),
-                },
+                Subtitle = message,
             };
             return RaiseNotification(eg);
         }

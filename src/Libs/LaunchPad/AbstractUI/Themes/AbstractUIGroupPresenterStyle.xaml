@@ -13,15 +13,14 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///LaunchPad/AbstractUI/Themes/AbstractUIResources.xaml"/>
-            <themes:AbstractBooleanUIElementStyle />
-            <themes:AbstractButtonStyle />
-            <themes:AbstractDataListStyle />
-            <themes:AbstractMultiChoiceUIElementStyle />
-            <themes:AbstractMutableDataListStyle />
-            <themes:AbstractRichTextBlockStyle />
-            <themes:AbstractTextBoxStyle />
+        <themes:AbstractBooleanUIElementStyle />
+        <themes:AbstractButtonStyle />
+        <themes:AbstractDataListStyle />
+        <themes:AbstractMultiChoiceUIElementStyle />
+        <themes:AbstractMutableDataListStyle />
+        <themes:AbstractRichTextBlockStyle />
+        <themes:AbstractTextBoxStyle />
     </ResourceDictionary.MergedDictionaries>
-
 
     <controls:AbstractUIGroupItemTemplateSelector x:Key="GroupTemplateSelector">
         <controls:AbstractUIGroupItemTemplateSelector.BooleanTemplate>
@@ -89,5 +88,6 @@
             </Setter>
         </Style.Setters>
     </Style>
+    
 </ResourceDictionary>
     

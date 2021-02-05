@@ -15,6 +15,7 @@
         <styles:ArtistItemStyle/>
         <styles:ArtistViewStyle/>
         <styles:HomeViewStyle/>
+        <styles:NotificationAbstractUIGroupStyle/>
         <styles:NowPlayingViewStyle/>
         <styles:PlayableCollectionGroupPivotStyle />
         <styles:PlaylistCollectionStyle/>
