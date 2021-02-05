@@ -61,6 +61,7 @@
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMutableDataListStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIGroupPresenterStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
     <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml" />
     <UpToDateCheckInput Remove="Themes\Generic.xaml" />
@@ -69,6 +70,9 @@
     <ProjectReference Include="..\OwlCore\OwlCore.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="AbstractUI\Controls\AbstractUIGroupPresenter.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Update="AbstractUI\Themes\AbstractBooleanUIElementStyle.xaml.cs">
       <DependentUpon>AbstractBooleanUIElementStyle.xaml</DependentUpon>
     </Compile>
@@ -86,9 +90,6 @@
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractMutableDataListStyle.xaml.cs">
       <DependentUpon>AbstractMutableDataListStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractTextBoxStyle - Copy.xaml.cs">
-      <DependentUpon>AbstractTextBoxStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Controls\ContentOverlay.xaml.cs">
       <DependentUpon>ContentOverlay.xaml</DependentUpon>
