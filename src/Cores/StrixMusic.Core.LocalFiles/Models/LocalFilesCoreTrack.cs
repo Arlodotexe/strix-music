@@ -129,6 +129,11 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICore SourceCore { get; }
 
         /// <summary>
+        /// Image uri for <see cref="LocalFilesCoreTrack"/>
+        /// </summary>
+        public Uri? ImageUri => _trackMetadata?.ImagePath;
+
+        /// <summary>
         /// The path to the playable music file on disk.
         /// </summary>
         public Uri? LocalTrackPath => _trackMetadata?.Source;
@@ -312,7 +317,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             var artistRepo = _fileMetadataManager?.Artists;
 
-            var artists = await artistRepo.GetArtistsByTrackId(Id, offset, limit);
+            var artists = await artistRepo?.GetArtistsByTrackId(Id, offset, limit);
 
             foreach (var artist in artists)
             {
@@ -323,7 +328,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            yield return null;//temporary for playback
+            if (ImageUri != null)
+                yield return new LocalFilesCoreImage(SourceCore, ImageUri, 250, 250);
+
+            yield break;
         }
     }
 }
