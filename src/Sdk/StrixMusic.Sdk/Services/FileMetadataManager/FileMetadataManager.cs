@@ -17,7 +17,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
     {
         private readonly string _instanceId;
         private readonly IFolderData _rootFolder;
-        private readonly FileMetadataScanner _fileMetadataScanner;
+        private FileMetadataScanner _fileMetadataScanner;
+        private IFolderData _cacheFolder;
 
         /// <summary>
         /// Creates a new instance of <see cref="FileMetadataManager"/>.
@@ -28,7 +29,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             _instanceId = instanceId;
             _rootFolder = rootFolder;
-            _fileMetadataScanner = new FileMetadataScanner(rootFolder);
 
             Albums = new AlbumRepository(_fileMetadataScanner);
             Artists = new ArtistRepository(_fileMetadataScanner);
@@ -106,6 +106,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             IsInitialized = true;
 
             var dataFolder = await GetDataStorageFolder(_instanceId);
+
+            _cacheFolder = dataFolder;
+            _fileMetadataScanner = new FileMetadataScanner(_rootFolder, _cacheFolder);
 
             await _fileMetadataScanner.InitAsync();
 

@@ -25,6 +25,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a" };
         private readonly List<FileMetadata> _fileMetadata = new List<FileMetadata>();
         private readonly IFolderData _folderData;
+        private readonly IFolderData _cacheFolder;
         private TaskCompletionSource<List<FileMetadata>>? _folderScanningTaskCompletion;
 
         /// <inheritdoc />
@@ -34,9 +35,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Creates a new instance of <see cref="FileMetadataScanner"/>.
         /// </summary>
         /// <param name="rootFolder">The root folder to operate in when scanning. Will be scanned recursively.</param>
-        public FileMetadataScanner(IFolderData rootFolder)
+        /// <param name="cacheFolder"></param>
+        public FileMetadataScanner(IFolderData rootFolder, IFolderData cacheFolder)
         {
             _folderData = rootFolder;
+            _cacheFolder = cacheFolder;
 
             AttachEvents();
         }
@@ -170,20 +173,26 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 if (tags == null)
                     return null;
 
+                Uri? imagePath = null;
+
                 if (tags.Pictures != null && tags.Pictures.Length > 0)
                 {
                     var albumArt = tags.Pictures.FirstOrDefault(p => p.Type == PictureType.FrontCover);
 
                     if (albumArt != null)
                     {
-                        string filename = albumArt.Filename;
                         byte[] imageData = albumArt.Data.Data;
+
+                        var imageFile = await _cacheFolder.CreateFileAsync(fileData.Name);
+                        await imageFile.WriteAllBytesAsync(imageData);
+
+                        imagePath = new Uri(imageFile.Path);
                     }
                 }
 
                 return new FileMetadata
                 {
-                    AlbumMetadata = new AlbumMetadata()
+                    AlbumMetadata = new AlbumMetadata
                     {
                         Description = tags.Description,
                         Title = tags.Album,
@@ -193,10 +202,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         TotalTracksCount = Convert.ToInt32(tags.TrackCount),
                         TotalArtistsCount = tags.AlbumArtists.Length,
                     },
-
-                    TrackMetadata = new TrackMetadata()
+                    TrackMetadata = new TrackMetadata
                     {
                         Source = new Uri(fileData.Path),
+                        ImagePath = imagePath,
                         Description = tags.Description,
                         Title = tags.Title,
                         DiscNumber = tags.Disc,
@@ -205,7 +214,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         TrackNumber = tags.Track,
                         Year = tags.Year,
                     },
-                    ArtistMetadata = new ArtistMetadata()
+                    ArtistMetadata = new ArtistMetadata
                     {
                         Name = tags.FirstAlbumArtist,
                     },

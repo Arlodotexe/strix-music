@@ -65,6 +65,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         public Uri? Url { get; set; }
 
         /// <summary>
+        /// The path to the album artwork for this track.
+        /// </summary>
+        public Uri? ImagePath { get; set; }
+
+        /// <summary>
         /// The description of this track.
         /// </summary>
         public string? Description { get; set; }
