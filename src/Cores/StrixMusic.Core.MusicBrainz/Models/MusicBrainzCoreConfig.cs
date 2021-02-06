@@ -135,6 +135,15 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 Title = "AbstractBoolean test",
             };
 
+            var buttons = new AbstractUIElementGroup("OkOrCancel", PreferredOrientation.Horizontal)
+            {
+                Items = new List<AbstractUIElement>()
+                {
+                    new AbstractButton("OkButton", "Ok", "\uE001"),
+                    new AbstractButton("CanelButton", "Cancel", "\uE10A"),
+                },
+            };
+
             boolUi.StateChanged += BoolUi_StateChanged;
 
             AbstractUIElements = new List<AbstractUIElementGroup>
@@ -153,6 +162,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
                         dataListGrid,
                         mutableDataListGrid,
                         button,
+                        buttons,
                         mutableDataList,
                         allDoneButton,
                     },

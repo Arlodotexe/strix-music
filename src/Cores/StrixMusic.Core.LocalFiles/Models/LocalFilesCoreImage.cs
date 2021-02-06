@@ -1,7 +1,5 @@
 ﻿using StrixMusic.Sdk.Data.Core;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
@@ -12,9 +10,15 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// Creates a new instance of <see cref="LocalFilesCoreImage"/>.
         /// </summary>
         /// <param name="sourceCore"><inheritdoc cref="ICoreMember.SourceCore"/></param>
-        public LocalFilesCoreImage(ICore sourceCore)
+        /// <param name="uri">A <see cref="System.Uri"/> pointing to the image file on the disk.</param>
+        /// <param name="width">The width of the image, or <see langword="null"/> if not available.</param>
+        /// <param name="height">The height of the image, or <see langword="null"/> if not available.</param>
+        public LocalFilesCoreImage(ICore sourceCore, Uri uri, double? width, double? height)
         {
             SourceCore = sourceCore;
+            Uri = uri;
+            Width = width ?? 250;
+            Height = height ?? 250;
         }
 
         /// <inheritdoc />

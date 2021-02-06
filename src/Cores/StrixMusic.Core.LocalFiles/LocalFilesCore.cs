@@ -129,7 +129,7 @@ namespace StrixMusic.Core.LocalFiles
 
             CoreCount++;
             if (CoreCount == LocalFileCoreManager.Instances?.Count)
-                LocalFileCoreManager.InitializeDataForAllCores();
+                LocalFileCoreManager.InitializeDataForAllCores().FireAndForget();
         }
 
         private async Task PickAndSetupFolder()

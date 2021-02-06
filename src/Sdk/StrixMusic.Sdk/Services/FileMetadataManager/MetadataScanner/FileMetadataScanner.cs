@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
-using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
@@ -29,6 +26,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
+
+        /// <summary>
+        /// The folder to use for storing file metadata.
+        /// </summary>
+        public IFolderData? CacheFolder { get; internal set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="FileMetadataScanner"/>.
@@ -157,6 +159,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task<FileMetadata?> GetID3Metadata(IFileData fileData)
         {
+            Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
+
             try
             {
                 using var stream = await fileData.GetStreamAsync();
@@ -170,17 +174,26 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 if (tags == null)
                     return null;
 
+                Uri? imagePath = null;
+
                 if (tags.Pictures != null && tags.Pictures.Length > 0)
                 {
-                    var albumArt = tags.Pictures.First(p => p.Type == PictureType.FrontCover);
-                    string filename = albumArt.Filename;
-                    byte[] imageData = albumArt.Data.Data;
+                    var albumArt = tags.Pictures.FirstOrDefault(p => p.Type == PictureType.FrontCover);
 
+                    if (albumArt != null)
+                    {
+                        byte[] imageData = albumArt.Data.Data;
+
+                        var imageFile = await CacheFolder.CreateFileAsync(fileData.Name);
+                        await imageFile.WriteAllBytesAsync(imageData);
+                        
+                        imagePath = new Uri(imageFile.Path);
+                    }
                 }
 
                 return new FileMetadata
                 {
-                    AlbumMetadata = new AlbumMetadata()
+                    AlbumMetadata = new AlbumMetadata
                     {
                         Description = tags.Description,
                         Title = tags.Album,
@@ -190,10 +203,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         TotalTracksCount = Convert.ToInt32(tags.TrackCount),
                         TotalArtistsCount = tags.AlbumArtists.Length,
                     },
-
-                    TrackMetadata = new TrackMetadata()
+                    TrackMetadata = new TrackMetadata
                     {
                         Source = new Uri(fileData.Path),
+                        ImagePath = imagePath,
                         Description = tags.Description,
                         Title = tags.Title,
                         DiscNumber = tags.Disc,
@@ -202,7 +215,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         TrackNumber = tags.Track,
                         Year = tags.Year,
                     },
-                    ArtistMetadata = new ArtistMetadata()
+                    ArtistMetadata = new ArtistMetadata
                     {
                         Name = tags.FirstAlbumArtist,
                     },
@@ -355,6 +368,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (IsInitialized)
                 return;
 
+            Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
+
             await ScanFolderForMetadata();
 
             IsInitialized = true;
@@ -364,7 +379,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Scans a folder and all subfolders for music and music metadata.
         /// </summary>
         /// <returns>Fully scanned <see cref="IReadOnlyList{RelatedMetadata}"/>.</returns>
-        private async Task<List<FileMetadata>> ScanFolderForMetadata()
+        private async Task ScanFolderForMetadata()
         {
             _folderScanningTaskCompletion = new TaskCompletionSource<List<FileMetadata>>();
 
@@ -379,21 +394,22 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var allDiscoveredFolders = new Queue<IFolderData>();
             var foldersToScan = new Stack<IFolderData>();
             foldersToScan.Push(_folderData);
+            allDiscoveredFolders.Enqueue(_folderData);
 
             await DFSFolderContentScan(foldersToScan, allDiscoveredFolders);
-
-            await allDiscoveredFolders.InParallel(ProcessFolderContents);
-
+            
             dfsNotification.Dismiss();
 
             var contentScanNotification = notificationService.RaiseNotification("Scanning folder contents", $"Processing data in {_folderData.Path}");
+
+            await allDiscoveredFolders.InParallel(ProcessFolderContents);
+
+            contentScanNotification.Dismiss();
 
             var result = _fileMetadata.ToList();
 
             _folderScanningTaskCompletion?.SetResult(result);
             _folderScanningTaskCompletion = null;
-
-            return result;
         }
 
         private async Task DFSFolderContentScan(Stack<IFolderData> foldersToCrawl, Queue<IFolderData> allDiscoveredFolders)

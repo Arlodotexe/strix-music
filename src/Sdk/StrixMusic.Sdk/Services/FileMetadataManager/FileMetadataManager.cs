@@ -28,7 +28,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             _instanceId = instanceId;
             _rootFolder = rootFolder;
-            _fileMetadataScanner = new FileMetadataScanner(rootFolder);
+
+            _fileMetadataScanner = new FileMetadataScanner(_rootFolder);
 
             Albums = new AlbumRepository(_fileMetadataScanner);
             Artists = new ArtistRepository(_fileMetadataScanner);
@@ -107,6 +108,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             var dataFolder = await GetDataStorageFolder(_instanceId);
 
+            _fileMetadataScanner.CacheFolder = dataFolder;
             await _fileMetadataScanner.InitAsync();
 
             // Perform initialization tasks for all repos in parallel.
