@@ -18,8 +18,8 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc />
     public class LocalFilesCoreTrack : ICoreTrack
     {
-        private TrackMetadata _trackMetadata;
-        private IFileMetadataManager _fileMetadataManager;
+        private TrackMetadata? _trackMetadata;
+        private IFileMetadataManager? _fileMetadataManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreTrack"/> class.
@@ -92,7 +92,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc/>
-        public string Id => _trackMetadata.Id;
+        public string Id => _trackMetadata?.Id ?? string.Empty;
 
         /// <inheritdoc/>
         public TrackType Type => TrackType.Song;
@@ -111,7 +111,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc/>
         /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>
-        public int? TrackNumber => Convert.ToInt32(_trackMetadata.TrackNumber);
+        public int? TrackNumber => Convert.ToInt32(_trackMetadata?.TrackNumber);
 
         /// <inheritdoc />
         public int? DiscNumber { get; }
@@ -129,22 +129,22 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public Uri? LocalTrackPath => _trackMetadata.Source;
+        public Uri? LocalTrackPath => _trackMetadata?.Source;
 
         /// <inheritdoc/>
         public Uri? Url => null;
 
         /// <inheritdoc/>
-        public string Name => _trackMetadata.Title;
+        public string Name => _trackMetadata?.Title ?? string.Empty;
 
         /// <inheritdoc/>
-        public string? Description => _trackMetadata.Description;
+        public string? Description => _trackMetadata?.Description;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState { get; private set; }
 
         /// <inheritdoc/>
-        public TimeSpan Duration => _trackMetadata.Duration ?? new TimeSpan(0, 0, 0);
+        public TimeSpan Duration => _trackMetadata?.Duration ?? new TimeSpan(0, 0, 0);
 
         /// <inheritdoc />
         public DateTime? LastPlayed { get; }
@@ -308,13 +308,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            var artistRepo = _fileMetadataManager.Artists;
+            var artistRepo = _fileMetadataManager?.Artists;
 
             var artists = await artistRepo.GetArtistsByTrackId(Id, offset, limit);
 
             foreach (var artist in artists)
             {
-                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds.Count);
+                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0);
             }
         }
 

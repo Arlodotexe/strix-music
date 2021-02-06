@@ -84,7 +84,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc/>
-        public string Id => _artistMetadata?.Id ?? null;
+        public string Id => _artistMetadata?.Id ?? string.Empty;
 
         /// <inheritdoc/>
         public int TotalAlbumItemsCount => 0;
@@ -102,10 +102,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public Uri? Url => null;
 
         /// <inheritdoc/>
-        public string? Name => _artistMetadata?.Name;
+        public string Name => _artistMetadata?.Name ?? string.Empty;
 
         /// <inheritdoc/>
-        public string Description => _artistMetadata?.Description;
+        public string Description => _artistMetadata?.Description ?? string.Empty;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => PlaybackState.None;

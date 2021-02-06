@@ -15,13 +15,13 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// </summary>
     public class LocalFilesCoreSearchResults : LocalFilesCorePlayableCollectionGroupBase, ICoreSearchResults
     {
+        private readonly string _query = string.Empty;
+
         private IEnumerable<TrackMetadata> _trackMetadatas;
         private IEnumerable<AlbumMetadata> _albumMetadatas;
         private IEnumerable<ArtistMetadata> _artistMetadatas;
 
         private IFileMetadataManager _fileMetadataManager;
-
-        private readonly string _query = string.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreSearchResults"/> class.
@@ -31,11 +31,17 @@ namespace StrixMusic.Core.LocalFiles.Models
         public LocalFilesCoreSearchResults(ICore sourceCore, string query)
             : base(sourceCore)
         {
+            _albumMetadatas = new List<AlbumMetadata>();
+            _trackMetadatas = new List<TrackMetadata>();
+            _artistMetadatas = new List<ArtistMetadata>();
+
+            _query = query;
+
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
         }
 
         /// <inheritdoc />
-        public sealed override string Id { get; protected set; }
+        public sealed override string Id { get; protected set; } = string.Empty;
 
         /// <inheritdoc />
         public override Uri? Url { get; protected set; } = null;
