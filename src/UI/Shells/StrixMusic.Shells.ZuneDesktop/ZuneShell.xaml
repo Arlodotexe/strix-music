@@ -94,7 +94,7 @@
                                      a:TextHelpers.CharacterCasing="Upper"/>
                     <Rectangle Height="12" Width="2" Fill="{ThemeResource HyperlinkForeground}" Opacity=".5" Margin="8,3,8,0" VerticalAlignment="Top"/>
                     <HyperlinkButton x:Uid="/Common/HelpBTN" Content="HELP" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="12"
-                                     a:TextHelpers.CharacterCasing="Upper"/>
+                                     a:TextHelpers.CharacterCasing="Upper" NavigateUri="https://www.youtube.com/watch?v=dQw4w9WgXcQ"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="96,0,0,0">
