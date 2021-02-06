@@ -172,10 +172,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 if (tags.Pictures != null && tags.Pictures.Length > 0)
                 {
-                    var albumArt = tags.Pictures.First(p => p.Type == PictureType.FrontCover);
-                    string filename = albumArt.Filename;
-                    byte[] imageData = albumArt.Data.Data;
+                    var albumArt = tags.Pictures.FirstOrDefault(p => p.Type == PictureType.FrontCover);
 
+                    if (albumArt != null)
+                    {
+                        string filename = albumArt.Filename;
+                        byte[] imageData = albumArt.Data.Data;
+                    }
                 }
 
                 return new FileMetadata
@@ -379,6 +382,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var allDiscoveredFolders = new Queue<IFolderData>();
             var foldersToScan = new Stack<IFolderData>();
             foldersToScan.Push(_folderData);
+            allDiscoveredFolders.Enqueue(_folderData);
 
             await DFSFolderContentScan(foldersToScan, allDiscoveredFolders);
 
