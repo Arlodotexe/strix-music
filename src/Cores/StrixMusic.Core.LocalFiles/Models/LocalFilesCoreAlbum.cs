@@ -249,8 +249,23 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            await Task.CompletedTask;
-            yield break;
+            var tracksList = SourceCore.GetService<TrackRepository>();
+
+            var tracks = await tracksList.GetTracksByAlbumId(Id, 1, 0);
+
+            if (tracks.Count == 0)
+            {
+                yield break;
+            }
+
+            var imagePath = tracks[0].ImagePath;
+
+            if (imagePath == null)
+            {
+                yield break;
+            }
+
+            yield return new LocalFilesCoreImage(SourceCore, imagePath, 250, 250);
         }
 
         /// <inheritdoc />
@@ -297,7 +312,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public  Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
         {
             throw new NotSupportedException();
         }
