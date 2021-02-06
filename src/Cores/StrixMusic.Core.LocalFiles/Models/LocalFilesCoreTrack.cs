@@ -128,7 +128,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public ICore SourceCore { get; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// The path to the playable music file on disk.
+        /// </summary>
         public Uri? LocalTrackPath => _trackMetadata?.Source;
 
         /// <inheritdoc/>
@@ -141,7 +143,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public string? Description => _trackMetadata?.Description;
 
         /// <inheritdoc/>
-        public PlaybackState PlaybackState { get; private set; }
+        public PlaybackState PlaybackState { get; }
 
         /// <inheritdoc/>
         public TimeSpan Duration => _trackMetadata?.Duration ?? new TimeSpan(0, 0, 0);
