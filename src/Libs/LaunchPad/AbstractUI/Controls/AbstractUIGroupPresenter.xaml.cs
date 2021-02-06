@@ -20,7 +20,7 @@ namespace LaunchPad.AbstractUI.Controls
     /// <summary>
     /// Displays a group of abstract UI elements.
     /// </summary>
-    public sealed partial class AbstractUIGroupPresenter : UserControl
+    public sealed partial class AbstractUIGroupPresenter : Control
     {
         private bool _dataContextBeingSet;
 
@@ -59,9 +59,7 @@ namespace LaunchPad.AbstractUI.Controls
         /// </summary>
         public AbstractUIGroupPresenter()
         {
-            this.InitializeComponent();
-
-            TemplateSelector ??= Resources["GroupTemplateSelector"] as DataTemplateSelector;
+            this.DefaultStyleKey = typeof(AbstractUIGroupPresenter);
 
             AttachEvents();
         }

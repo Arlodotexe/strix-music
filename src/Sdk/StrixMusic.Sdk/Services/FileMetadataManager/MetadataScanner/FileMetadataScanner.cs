@@ -374,7 +374,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
 
             // notifications disabled until notification templates are reasonable and don't get in the way
-            //var dfsNotification = notificationService.RaiseNotification("Scanning folder structure", $"Scanning folder tree at {_folderData.Path}");
+            var dfsNotification = notificationService.RaiseNotification("Scanning folder structure", $"Scanning folder tree at {_folderData.Path}");
 
             var allDiscoveredFolders = new Queue<IFolderData>();
             var foldersToScan = new Stack<IFolderData>();
@@ -384,9 +384,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             await allDiscoveredFolders.InParallel(ProcessFolderContents);
 
-            //dfsNotification.Dismiss();
+            dfsNotification.Dismiss();
 
-            //var contentScanNotification = notificationService.RaiseNotification("Scanning folder contents", $"Processing data in {_folderData.Path}");
+            var contentScanNotification = notificationService.RaiseNotification("Scanning folder contents", $"Processing data in {_folderData.Path}");
 
             var result = _fileMetadata.ToList();
 

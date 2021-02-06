@@ -8,6 +8,7 @@
     xmlns:controls="using:LaunchPad.Controls"
     xmlns:abstractUIControls="using:LaunchPad.AbstractUI.Controls"
     xmlns:notificationModels="using:StrixMusic.Sdk.Services.Notifications"
+    xmlns:styles="using:StrixMusic.Sdk.Uno.Styles"
     xmlns:viewModels="using:StrixMusic.Sdk.Uno.ViewModels"
     mc:Ignorable="d"
     Loaded="AppFrame_OnLoaded">
@@ -20,11 +21,23 @@
         <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:NotificationViewModel">
-                    <Grid Background="{ThemeResource SystemChromeMediumHighColor}" Padding="20,25">
-                        <abstractUIControls:AbstractUIGroupPresenter DataContext="{x:Bind AbstractUIElementGroup}" />
+                    <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="40" Width="300"
+                          Background="{ThemeResource SystemChromeMediumHighColor}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <abstractUIControls:AbstractUIGroupPresenter DataContext="{x:Bind AbstractUIElementGroup}" Style="{StaticResource DefaultNotificationAbstractUIGroupStyle}"/>
+
+                        <Button CornerRadius="0" HorizontalAlignment="Right" VerticalAlignment="Stretch"
+                                Grid.Column="1" Width="48" Background="Transparent" Padding="0">
+                            <FontIcon FontSize="20" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE10A;"/>
+                        </Button>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
     </Grid>
 </UserControl>
+    

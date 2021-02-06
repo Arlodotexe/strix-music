@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:abstractui="using:LaunchPad.AbstractUI.Themes"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:styles="using:StrixMusic.Sdk.Uno.Styles"
@@ -14,6 +15,7 @@
         <styles:ArtistItemStyle/>
         <styles:ArtistViewStyle/>
         <styles:HomeViewStyle/>
+        <styles:NotificationAbstractUIGroupStyle/>
         <styles:NowPlayingViewStyle/>
         <styles:PlayableCollectionGroupPivotStyle />
         <styles:PlaylistCollectionStyle/>
@@ -24,6 +26,7 @@
         <styles:SettingsViewStyle/>
         <styles:TrackCollectionStyle/>
         <styles:TrackItemStyle/>
+        <abstractui:AbstractUIGroupPresenterStyle/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="MediaButton" TargetType="Button">
