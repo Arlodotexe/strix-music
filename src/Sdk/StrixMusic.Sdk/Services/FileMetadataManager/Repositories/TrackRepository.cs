@@ -120,11 +120,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <summary>
         /// Gets the filtered tracks by album ids.
         /// </summary>
-        /// <param name="artistId">The artist Id.</param>
+        /// <param name="albumId">The album Id.</param>
         /// <param name="offset">The starting index for retrieving items.</param>
         /// <param name="limit">The maximum number of items to return.</param>
         /// <returns>The filtered <see cref="IReadOnlyList{ArtistMetadata}"/>></returns>
-        public async Task<IReadOnlyList<TrackMetadata>> GetTracksByAlbumId(string artistId, int offset, int limit)
+        public async Task<IReadOnlyList<TrackMetadata>> GetTracksByAlbumId(string albumId, int offset, int limit)
         {
             var filteredAlbums = new List<TrackMetadata>();
 
@@ -132,7 +132,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             foreach (var item in tracks)
             {
-                if (item?.AlbumId != null && item.AlbumId.Contains(artistId))
+                if (item?.AlbumId != null && item.AlbumId.Contains(albumId))
                 {
                     filteredAlbums.Add(item);
                 }
