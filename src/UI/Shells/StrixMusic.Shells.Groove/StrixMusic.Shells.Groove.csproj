@@ -34,6 +34,7 @@
     <None Remove="Resources\ButtonStyles.xaml" />
     <None Remove="Resources\TextBoxStyles.xaml" />
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
+    <None Remove="Styles\NotificationAbstractUIGroupStyle.xaml" />
     <None Remove="Styles\PanePlaylistCollectionStyle.xaml" />
     <None Remove="Styles\PlaylistCollectionStyle.xaml" />
     <None Remove="Styles\TrackCollectionStyle.xaml" />
@@ -51,6 +52,7 @@
     <UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
     <UpToDateCheckInput Remove="Resources\TextBoxStyles.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\NotificationAbstractUIGroupStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PanePlaylistCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PivotStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PlaylistCollectionStyle.xaml" />
@@ -69,6 +71,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Update="GrooveShell.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\NotificationAbstractUIGroupStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Styles\PanePlaylistCollectionStyle.xaml.cs">
