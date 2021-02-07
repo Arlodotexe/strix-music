@@ -28,7 +28,7 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <abstractUIControls:AbstractUIGroupPresenter DataContext="{x:Bind AbstractUIElementGroup}" Style="{StaticResource DefaultNotificationAbstractUIGroupStyle}"/>
+                        <abstractUIControls:AbstractUIGroupPresenter DataContext="{x:Bind AbstractUINotificationViewModel}" Style="{StaticResource DefaultNotificationAbstractUIGroupStyle}"/>
 
                         <Button CornerRadius="0" HorizontalAlignment="Right" VerticalAlignment="Stretch"
                                 Grid.Column="1" Width="48" Background="Transparent" Padding="0"

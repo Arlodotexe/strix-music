@@ -1,6 +1,4 @@
-﻿using Windows.UI.Xaml.Controls;
-using LaunchPad.AbstractUI.ViewModels;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Services.Notifications;
 
@@ -11,7 +9,7 @@ namespace StrixMusic.Sdk.Uno.ViewModels
     /// </summary>
     public class NotificationViewModel : ObservableObject
     {
-        private AbstractUIElementGroupViewModel _abstractUIElementGroupView;
+        private AbstractUINotificationViewModel _abstractUINotificationViewModel;
 
         /// <summary>
         /// The original notification model.
@@ -26,14 +24,21 @@ namespace StrixMusic.Sdk.Uno.ViewModels
         {
             Model = model;
 
-            _abstractUIElementGroupView = new AbstractUIElementGroupViewModel(model.AbstractUIElementGroup);
+            _abstractUINotificationViewModel = new AbstractUINotificationViewModel(model.AbstractUIElementGroup);
             DismissCommand = new RelayCommand(model.Dismiss);
         }
 
-        public AbstractUIElementGroupViewModel AbstractUIElementGroup
+        /// <summary>
+        /// The view model of the Notification being show.
+        /// </summary>
+        public AbstractUINotificationViewModel AbstractUINotificationViewModel
         {
-            get => _abstractUIElementGroupView;
-            set { _abstractUIElementGroupView = value; OnPropertyChanged(nameof(AbstractUIElementGroup)); }
+            get => _abstractUINotificationViewModel;
+            set
+            {
+                _abstractUINotificationViewModel = value;
+                OnPropertyChanged(nameof(AbstractUINotificationViewModel));
+            }
         }
 
         /// <summary>

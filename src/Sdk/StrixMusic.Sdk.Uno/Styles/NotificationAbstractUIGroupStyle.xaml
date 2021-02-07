@@ -5,6 +5,7 @@
     xmlns:launchPad="using:LaunchPad"
     xmlns:controls="using:LaunchPad.AbstractUI.Controls"
     xmlns:abstractUIVm="using:LaunchPad.AbstractUI.ViewModels"
+    xmlns:sdkvms="using:StrixMusic.Sdk.Uno.ViewModels"
     x:Class="StrixMusic.Sdk.Uno.Styles.NotificationAbstractUIGroupStyle">
 
     <Style x:Key="DefaultNotificationAbstractUIGroupStyle" TargetType="controls:AbstractUIGroupPresenter">
@@ -14,16 +15,16 @@
                     <ControlTemplate TargetType="controls:AbstractUIGroupPresenter">
                         <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                             <ContentControl.ContentTemplate>
-                                <DataTemplate x:DataType="abstractUIVm:AbstractUIElementGroupViewModel">
+                                <DataTemplate x:DataType="sdkvms:AbstractUINotificationViewModel">
                                     <StackPanel Padding="12">
                                         <TextBlock Text="{x:Bind Title}" FontSize="20" ToolTipService.ToolTip="{x:Bind TooltipText}" />
 
                                         <TextBlock Text="{x:Bind Subtitle}" FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextWrapping="WrapWholeWords"
                                                    Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
 
-                                        <ItemsControl ItemsSource="{x:Bind Items}"
+                                        <!--<ItemsControl ItemsSource="{x:Bind Items}"
                                                       Margin="0,8,0,0"
-                                                      ItemTemplateSelector="{StaticResource GroupTemplateSelector}" />
+                                                      ItemTemplateSelector="{StaticResource GroupTemplateSelector}" />-->
                                     </StackPanel>
                                 </DataTemplate>
                             </ContentControl.ContentTemplate>
