@@ -4,6 +4,7 @@
     xmlns:themes="using:LaunchPad.AbstractUI.Themes">
 
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///LaunchPad/Controls/MarqueeText/MarqueeTextBlock.xaml"/>
         <ResourceDictionary Source="ms-appx:///LaunchPad/Controls/ToggleContentButton/ToggleContentButton.xaml"/>
         <themes:AbstractBooleanUIElementStyle />
         <themes:AbstractButtonStyle />

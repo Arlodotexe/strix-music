@@ -50,6 +50,7 @@
     <None Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
     <None Remove="Controls\ContentOverlay.xaml" />
+    <None Remove="Controls\MarqueeText\MarqueeTextBlock.xaml" />
     <None Remove="Themes\Generic.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +67,7 @@
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIGroupPresenterStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
     <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml" />
+    <UpToDateCheckInput Remove="Controls\MarqueeText\MarqueeTextBlock.xaml" />
     <UpToDateCheckInput Remove="Themes\Generic.xaml" />
   </ItemGroup>
   <ItemGroup>
