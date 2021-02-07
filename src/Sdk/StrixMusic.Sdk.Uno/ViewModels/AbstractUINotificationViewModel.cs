@@ -20,10 +20,17 @@ namespace StrixMusic.Sdk.Uno.ViewModels
 
         private void EvaluateExpectedElements()
         {
-            // TODO: Track 1 ProgressBar, 2 or 3 buttons, and TBD Elements.
-            // foreach (var value in _model.Items)
-            // {
-            // }
+            // TODO: Track one ProgressBar, 2 or 3 buttons, and TBD Elements.
+            foreach (var value in _model.Items)
+            {
+                if (value is AbstractProgressUIElement progressUIElement)
+                    ProgressBarViewModel = new AbstractProgressUIElementViewModel(progressUIElement);
+            }
         }
+
+        /// <summary>
+        /// A <see cref="AbstractProgressUIElement"/> that may appear in a notification.
+        /// </summary>
+        public AbstractProgressUIElementViewModel? ProgressBarViewModel { get; set; }
     }
 }
