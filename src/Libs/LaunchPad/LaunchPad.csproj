@@ -45,6 +45,7 @@
     <None Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractMutableDataListStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractProgressUIElementStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
@@ -59,6 +60,7 @@
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMutableDataListStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressUIElementStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIGroupPresenterStyle.xaml" />

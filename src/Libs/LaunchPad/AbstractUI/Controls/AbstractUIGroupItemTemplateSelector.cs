@@ -45,6 +45,11 @@ namespace LaunchPad.AbstractUI.Controls
             {
                 BooleanTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(booleanTemplate));
             }
+
+            if (!new Themes.AbstractProgressUIElementStyle().TryGetValue("DefaultAbstractBooleanUIElementTemplate", out var progressTemplate))
+            {
+                ProgressTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(booleanTemplate));
+            }
             
             TextBoxTemplate = (DataTemplate)textBoxTemplate;
             DataListTemplate = (DataTemplate)dataListTemplate;
@@ -52,6 +57,7 @@ namespace LaunchPad.AbstractUI.Controls
             MutableDataListTemplate = (DataTemplate)mutableDataListTemplate;
             MultiChoiceTemplate = (DataTemplate)multiChoiceTemplate;
             BooleanTemplate = (DataTemplate)booleanTemplate;
+            ProgressTemplate = (DataTemplate)progressTemplate;
         }
 
         /// <summary>
@@ -80,6 +86,11 @@ namespace LaunchPad.AbstractUI.Controls
         public DataTemplate BooleanTemplate { get; set; }
 
         /// <summary>
+        /// The data template used to display an <see cref="AbstractProgressUIElement"/>.
+        /// </summary>
+        public DataTemplate ProgressTemplate { get; set; }
+
+        /// <summary>
         /// The data template used to display an <see cref="AbstractMultiChoiceUIElement"/>.
         /// </summary>
         public DataTemplate MultiChoiceTemplate { get; set; }
@@ -94,6 +105,7 @@ namespace LaunchPad.AbstractUI.Controls
                 AbstractMutableDataListViewModel _ => MutableDataListTemplate,
                 AbstractMultiChoiceUIElementViewModel _ => MultiChoiceTemplate,
                 AbstractBooleanViewModel _ => BooleanTemplate,
+                AbstractProgressUIElement _ => ProgressTemplate,
                 _ => base.SelectTemplateCore(item, container)
             };
     }
