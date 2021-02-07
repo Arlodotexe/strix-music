@@ -1,5 +1,7 @@
 ﻿using LaunchPad.AbstractUI.Controls;
+using LaunchPad.Controls;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 
 namespace StrixMusic.Shells.Groove.Styles
 {
@@ -14,6 +16,11 @@ namespace StrixMusic.Shells.Groove.Styles
         public NotificationAbstractUIGroupStyle()
         {   
             this.InitializeComponent();
+        }
+
+        private void MarqueeTextControl_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            ((MarqueeTextBlock)sender).IsStopped = false;
         }
     }
 }
