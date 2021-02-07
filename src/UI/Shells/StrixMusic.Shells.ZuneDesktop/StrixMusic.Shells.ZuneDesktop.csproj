@@ -55,6 +55,7 @@
 		<None Remove="Assets\Hover.png" />
 		<None Remove="Assets\Quickplay-Background.png" />
 		<None Remove="Assets\ZuneStrixLogo-gray.svg" />
+		<None Remove="Assets\ZuneStrixLogo-white.svg" />
 		<None Remove="Assets\ZuneStrixLogo.svg" />
 		<None Remove="Controls\AlbumWall.xaml" />
 		<None Remove="Controls\NowPlayingButtonContent.xaml" />
@@ -135,6 +136,7 @@
 	  <Content Include="Assets\Hover.png" />
 	  <Content Include="Assets\Quickplay-Background.png" />
 	  <Content Include="Assets\ZuneStrixLogo-gray.svg" />
+	  <Content Include="Assets\ZuneStrixLogo-white.svg" />
 	  <Content Include="Assets\ZuneStrixLogo.svg" />
 	</ItemGroup>
 	<ItemGroup>

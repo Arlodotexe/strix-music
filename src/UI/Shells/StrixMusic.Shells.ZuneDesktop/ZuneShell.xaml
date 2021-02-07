@@ -100,7 +100,14 @@
                 <StackPanel Orientation="Horizontal" Margin="96,0,0,0">
                     <HyperlinkButton x:Uid="/Common/SignInBTN" Content="SIGN IN" Style="{StaticResource ZuneTextHyperlinkButton}" FontSize="20" Margin="0,8,8,0"
                                      a:TextHelpers.CharacterCasing="Upper"/>
-                    <Rectangle Fill="#FF00FF" Height="48" Width="48" HorizontalAlignment="Right"/>
+                    <Border Background="#FF00FF" Height="48" Width="48" HorizontalAlignment="Right">
+                        <Image Margin="4">
+                            <Image.Source>
+                                <SvgImageSource UriSource="ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/ZuneStrixLogo-white.svg"
+                                                RasterizePixelHeight="150" RasterizePixelWidth="150"/>
+                            </Image.Source>
+                        </Image>
+                    </Border>
                 </StackPanel>
             </StackPanel>
 
