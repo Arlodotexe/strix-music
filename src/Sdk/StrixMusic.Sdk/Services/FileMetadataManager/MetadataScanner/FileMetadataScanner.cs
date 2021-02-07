@@ -75,10 +75,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             set
             {
                 _filesFound = value;
-                if (_progressUIElement != null)
-                {
-                    _progressUIElement.Maximum = value;
-                }
+
+                //TOFIX: This needs to be done on UI thread(Causing issues in the backgrond thread during scan)
+                //if (_progressUIElement != null)
+                //{
+                //    _progressUIElement.Maximum = value;
+                //}
             }
         }
 
@@ -88,10 +90,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             set
             {
                 _filesProcessed = value;
-                if (_progressUIElement != null)
-                {
-                    _progressUIElement.Value = value;
-                }
+
+                //TOFIX: This needs to be done on UI thread(Causing issues in the backgrond thread during scan)
+                //if (_progressUIElement != null)
+                //{
+                //    _progressUIElement.Value = value;
+                //}
             }
         }
 
