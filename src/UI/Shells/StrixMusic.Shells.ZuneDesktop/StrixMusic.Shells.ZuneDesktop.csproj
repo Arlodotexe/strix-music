@@ -54,6 +54,9 @@
 		<None Remove="Assets\Backgrounds\Wired.png" />
 		<None Remove="Assets\Hover.png" />
 		<None Remove="Assets\Quickplay-Background.png" />
+		<None Remove="Assets\ZuneStrixLogo-gray.svg" />
+		<None Remove="Assets\ZuneStrixLogo-white.svg" />
+		<None Remove="Assets\ZuneStrixLogo.svg" />
 		<None Remove="Controls\AlbumWall.xaml" />
 		<None Remove="Controls\NowPlayingButtonContent.xaml" />
 		<None Remove="Controls\QuickplayContent.xaml" />
@@ -132,6 +135,9 @@
 	  <Content Include="Assets\Backgrounds\Wired.png" />
 	  <Content Include="Assets\Hover.png" />
 	  <Content Include="Assets\Quickplay-Background.png" />
+	  <Content Include="Assets\ZuneStrixLogo-gray.svg" />
+	  <Content Include="Assets\ZuneStrixLogo-white.svg" />
+	  <Content Include="Assets\ZuneStrixLogo.svg" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />

@@ -10,10 +10,10 @@
     <DataTemplate x:Key="ZuneDesktopSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
         <Grid FlowDirection="LeftToRight">
             <!--Fallback SVG-->
-            <Image x:Name="PART_Fallback" Opacity=".5" Visibility="{x:Bind converters:CollectionNotAnyToVisibilityConverter.Convert(Images), Mode=OneWay}"
+            <Image x:Name="PART_Fallback" Visibility="{x:Bind converters:CollectionNotAnyToVisibilityConverter.Convert(Images), Mode=OneWay}"
                    Margin="8">
                 <Image.Source>
-                    <SvgImageSource UriSource="{x:Bind converters:SourceCoreLogoFromIndexConverter.Convert(SourceCores, 0)}"
+                    <SvgImageSource UriSource="ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/ZuneStrixLogo-gray.svg"
                                     RasterizePixelHeight="150" RasterizePixelWidth="150"/>
                 </Image.Source>
             </Image>
