@@ -55,7 +55,7 @@
                                            FontStretch="{TemplateBinding FontStretch}"
                                            FontStyle="{TemplateBinding FontStyle}"
                                            FontWeight="{TemplateBinding FontWeight}"
-                                           Margin="8,0,0,0"/>
+                                           Margin="{TemplateBinding TextMargin}"/>
                             </StackPanel>
                         </Grid>
                     </Canvas>

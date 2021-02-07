@@ -105,6 +105,14 @@ namespace LaunchPad.Controls
                 control.StartMarqueeAnimationIfNeeded();
             }));
 
+        private static readonly DependencyProperty TextMarginProperty = DependencyProperty.Register(nameof(TextMargin), typeof(Thickness), typeof(MarqueeTextBlock), new PropertyMetadata(new Thickness(8,0,0,0),
+            (sender, e) =>
+            {
+                var control = (MarqueeTextBlock)sender;
+
+                control.StartMarqueeAnimationIfNeeded();
+            }));
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MarqueeTextBlock"/> class.
         /// </summary>
@@ -178,7 +186,6 @@ namespace LaunchPad.Controls
             get { return (TimeSpan)GetValue(AnimationDurationProperty); }
             set { SetValue(AnimationDurationProperty, value); }
         }
-
         
         //public double AnimationSpeedRatio
         //{
@@ -202,6 +209,26 @@ namespace LaunchPad.Controls
         {
             get { return (bool)GetValue(IsRepeatingProperty); }
             set { SetValue(IsRepeatingProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the margin between the redundent texts.
+        /// </summary>
+        public double TextMarginLeft
+        {
+            get { return ((Thickness)GetValue(TextMarginProperty)).Left; }
+            set
+            {
+                SetValue(TextMarginProperty, new Thickness(value, 0, 0, 0));
+            }
+        }
+
+        /// <summary>
+        /// Gets the margin between the redundent texts.
+        /// </summary>
+        public Thickness TextMargin
+        {
+            get { return (Thickness)GetValue(TextMarginProperty); }
         }
 
         /// <inheritdoc/>
@@ -295,7 +322,7 @@ namespace LaunchPad.Controls
                         var frame2 = new EasingDoubleKeyFrame
                         {
                             KeyTime = KeyTime.FromTimeSpan(_storyboardMarquee.Duration.TimeSpan),
-                            Value = -textblock.ActualWidth,
+                            Value = -(textblock.ActualWidth + TextMarginLeft),
                             EasingFunction = this.EasingFunction
                         };
 
@@ -316,7 +343,7 @@ namespace LaunchPad.Controls
                             RepeatBehavior = _storyboardMarquee.RepeatBehavior,
                             //SpeedRatio = _storyboardMarquee.SpeedRatio,
                             From = 0.0d,
-                            To = -textblock.ActualWidth,
+                            To = -(textblock.ActualWidth + TextMarginLeft),
                             EasingFunction = this.EasingFunction
                         };
 
