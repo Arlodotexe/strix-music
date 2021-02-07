@@ -38,11 +38,6 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// </summary>
         public int MaxActiveNotifications { get; set; } = 1;
 
-        /// <summary>
-        /// If true, the AppFrame won't show notifications, allowing the current Shell to handle it instead.
-        /// </summary>
-        public bool IsHandled { get; set; }
-
         /// <inheritdoc/>
         public Notification RaiseNotification(string title, string message)
         {

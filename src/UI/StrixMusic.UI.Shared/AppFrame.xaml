@@ -5,6 +5,7 @@
     xmlns:local="using:StrixMusic"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:launchpad="using:LaunchPad"
     xmlns:controls="using:LaunchPad.Controls"
     xmlns:abstractUIControls="using:LaunchPad.AbstractUI.Controls"
     xmlns:notificationModels="using:StrixMusic.Sdk.Services.Notifications"
@@ -18,7 +19,8 @@
 
         <controls:ContentOverlay x:Name="OverlayPresenter"/>
 
-        <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}">
+        <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}"
+                      Visibility="{x:Bind launchpad:Converters.NotBoolToVisibility(NotificationsViewModel.IsHandled), Mode=OneWay}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:NotificationViewModel">
                     <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="40" Width="300"
@@ -32,6 +34,7 @@
 
                         <Button CornerRadius="0" HorizontalAlignment="Right" VerticalAlignment="Stretch"
                                 Grid.Column="1" Width="48" Background="Transparent" Padding="0"
+                                BorderThickness="0"
                                 Command="{x:Bind DismissCommand}">
                             <FontIcon FontSize="20" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE10A;"/>
                         </Button>

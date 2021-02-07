@@ -15,6 +15,7 @@ using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
+using StrixMusic.Sdk.Uno.ViewModels;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -64,6 +65,7 @@ namespace StrixMusic.Shared
             var services = new ServiceCollection();
 
             var notificationService = CurrentWindow.AppFrame.NotificationService;
+            var notificationsViewModel = CurrentWindow.AppFrame.NotificationsViewModel;
             var localizationService = new LocalizationResourceLoader();
             localizationService.RegisterProvider(Helpers.Constants.Localization.CommonResource);
             localizationService.RegisterProvider(Helpers.Constants.Localization.MusicResource);
@@ -71,6 +73,7 @@ namespace StrixMusic.Shared
             services.AddSingleton<INavigationService<Control>>(new NavigationService<Control>());
             services.AddSingleton(localizationService);
             services.AddSingleton<INotificationService>(notificationService);
+            services.AddSingleton(notificationsViewModel);
 
             shell.InitServices(services);
         }
@@ -164,9 +167,10 @@ namespace StrixMusic.Shared
 
                 var shellDataType = Type.GetType(shellAssemblyInfo.AttributeData.ShellTypeAssemblyQualifiedName);
                 var shell = CreateShellControl(shellDataType);
+
+                CurrentWindow.AppFrame.NotificationsViewModel.IsHandled = false;
                 InjectServices(shell);
 
-                CurrentWindow.AppFrame.NotificationService.IsHandled = false;
                 shell.DataContext = MainViewModel.Singleton;
 
                 ShellDisplay.Content = shell;
