@@ -75,10 +75,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             set
             {
                 _filesFound = value;
-                if (_progressUIElement != null)
-                {
-                    _progressUIElement.Maximum = value;
-                }
+
+                //TOFIX: This needs to be done on UI thread(Causing issues in the backgrond thread during scan)
+                //if (_progressUIElement != null)
+                //{
+                //    _progressUIElement.Maximum = value;
+                //}
             }
         }
 
@@ -88,10 +90,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             set
             {
                 _filesProcessed = value;
-                if (_progressUIElement != null)
-                {
-                    _progressUIElement.Value = value;
-                }
+
+                //TOFIX: This needs to be done on UI thread(Causing issues in the backgrond thread during scan)
+                //if (_progressUIElement != null)
+                //{
+                //    _progressUIElement.Value = value;
+                //}
             }
         }
 
@@ -219,7 +223,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                         var imageFile = await CacheFolder.CreateFileAsync(fileData.Name);
                         await imageFile.WriteAllBytesAsync(imageData);
-                        
+
                         imagePath = new Uri(imageFile.Path);
                     }
                 }
@@ -272,20 +276,42 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <param name="relatedMetadata">The data to parse.</param>
         private void ApplyRelatedMetadataIds(List<FileMetadata> relatedMetadata)
         {
+            var trackGroup = relatedMetadata.GroupBy(c => c.TrackMetadata?.Title);
             var artistGroup = relatedMetadata.GroupBy(c => c.ArtistMetadata?.Name);
             var albumGroup = relatedMetadata.GroupBy(c => c.AlbumMetadata?.Title);
-            var trackGroup = relatedMetadata.GroupBy(c => c.TrackMetadata?.Title);
+
+            foreach (var tracks in trackGroup)
+            {
+                var trackId = Guid.NewGuid().ToString();
+                foreach (var item in tracks)
+                {
+                    if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
+                    {
+                        item.TrackMetadata.Id = trackId;
+
+                        item.AlbumMetadata.TrackIds ??= new List<string>();
+                        item.ArtistMetadata.TrackIds ??= new List<string>();
+
+                        item.AlbumMetadata.TrackIds.Add(trackId);
+                        item.ArtistMetadata.TrackIds.Add(trackId);
+                    }
+                }
+            }
 
             foreach (var tracks in albumGroup)
             {
                 var albumId = Guid.NewGuid().ToString();
+
                 foreach (var item in tracks)
                 {
                     if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
                     {
                         item.AlbumMetadata.Id = albumId;
                         item.TrackMetadata.AlbumId = albumId;
-                        item.ArtistMetadata.AlbumIds = new List<string> { albumId };
+
+                        item.ArtistMetadata.AlbumIds ??= new List<string>();
+
+                        item.ArtistMetadata.AlbumIds.Add(albumId);
                     }
                 }
             }
@@ -298,22 +324,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
                     {
                         item.ArtistMetadata.Id = artistId;
-                        item.TrackMetadata.ArtistIds = new List<string> { artistId };
-                        item.AlbumMetadata.ArtistIds = new List<string> { artistId };
-                    }
-                }
-            }
 
-            foreach (var tracks in trackGroup)
-            {
-                var trackId = Guid.NewGuid().ToString();
-                foreach (var item in tracks)
-                {
-                    if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
-                    {
-                        item.TrackMetadata.Id = trackId;
-                        item.AlbumMetadata.TrackIds = new List<string> { trackId };
-                        item.ArtistMetadata.TrackIds = new List<string> { trackId };
+                        item.TrackMetadata.ArtistIds ??= new List<string>();
+                        item.AlbumMetadata.ArtistIds ??= new List<string>();
+
+                        item.TrackMetadata.ArtistIds.Add(artistId);
+                        item.AlbumMetadata.ArtistIds.Add(artistId);
                     }
                 }
             }
