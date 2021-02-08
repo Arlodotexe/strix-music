@@ -318,4 +318,40 @@
   <data name="Playlist" xml:space="preserve">
     <value>Playlist</value>
   </data>
+  <data name="Audiobooks" xml:space="preserve">
+    <value>Audiobooks</value>
+  </data>
+  <data name="AudiobooksBTN.Content" xml:space="preserve">
+    <value>Audiobooks</value>
+  </data>
+  <data name="AudiobooksPVI.Header" xml:space="preserve">
+    <value>Audiobooks</value>
+  </data>
+  <data name="AudiobooksTB.Text" xml:space="preserve">
+    <value>Audiobooks</value>
+  </data>
+  <data name="Music" xml:space="preserve">
+    <value>Music</value>
+  </data>
+  <data name="MusicBTN.Content" xml:space="preserve">
+    <value>Music</value>
+  </data>
+  <data name="MusicPVI.Header" xml:space="preserve">
+    <value>Music</value>
+  </data>
+  <data name="MusicTB.Text" xml:space="preserve">
+    <value>Music</value>
+  </data>
+  <data name="Podcasts" xml:space="preserve">
+    <value>Podcasts</value>
+  </data>
+  <data name="PodcastsBTN.Content" xml:space="preserve">
+    <value>Podcasts</value>
+  </data>
+  <data name="PodcastsPVI.Header" xml:space="preserve">
+    <value>Podcasts</value>
+  </data>
+  <data name="PodcastsTB.Text" xml:space="preserve">
+    <value>Podcasts</value>
+  </data>
 </root>
