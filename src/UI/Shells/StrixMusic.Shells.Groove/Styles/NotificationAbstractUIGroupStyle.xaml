@@ -29,11 +29,10 @@
                                                           Margin="0,8,0,0"
                                                           ItemTemplateSelector="{StaticResource GroupTemplateSelector}" />-->
 
-
                                             <ItemsControl ItemsSource="{x:Bind ButtonViewModels}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate x:DataType="abstractUIVm:AbstractButtonViewModel">
-                                                        <Button Content="{x:Bind Text}" Command="{x:Bind ClickCommand}" Margin="8,8,8,0"/>
+                                                        <abstractcontrols:AbstractButtonPresenter Margin="8,8,8,0"/>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                                 <ItemsControl.ItemsPanel>
