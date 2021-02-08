@@ -135,16 +135,5 @@ namespace StrixMusic.Sdk.Uno.Models
                 StorageFolder = await StorageFolder.CreateFolderAsync(StorageFolder.Name);
             }
         }
-
-        /// <inheritdoc />
-        public async Task RemoveAllFiles()
-        {
-            var files = await StorageFolder.GetFilesAsync();
-
-            Parallel.ForEach(files, file =>
-           {
-               _ = file.DeleteAsync();
-           });
-        }
     }
 }

@@ -47,13 +47,6 @@ namespace OwlCore.AbstractStorage
         Task<IFileData> CreateFileAsync(string desiredName);
 
         /// <summary>
-        /// Remove all files in the directory.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is a bool that is true if the file specified removed.</returns>
-        Task RemoveAllFiles();
-
-
-        /// <summary>
         /// Creates a new file with the specified name in the current folder.
         /// </summary>
         /// <param name="desiredName">The name of the new file to create in the current folder.</param>

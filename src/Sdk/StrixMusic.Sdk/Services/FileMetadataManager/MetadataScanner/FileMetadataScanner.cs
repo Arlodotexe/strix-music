@@ -203,8 +203,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 var primaryFileSystemService = Ioc.Default.GetRequiredService<IFileSystemService>();
 
-
-
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
                 // Read the raw tags
@@ -224,7 +222,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     {
                         byte[] imageData = albumArt.Data.Data;
 
-                        var imageFile = await CacheFolder.CreateFileAsync($"{fileData.DisplayName}.thumb");
+                        var imageFile = await CacheFolder.CreateFileAsync($"{fileData.DisplayName}.thumb",CreationCollisionOption.ReplaceExisting);
                         await imageFile.WriteAllBytesAsync(imageData);
 
                         imagePath = new Uri(imageFile.Path);
@@ -450,8 +448,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var contentScanNotification = RaiseProcessingNotification();
 
             Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
-
-            await CacheFolder.RemoveAllFiles();
 
             Parallel.ForEach(allDiscoveredFiles, file =>
            {
