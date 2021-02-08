@@ -32,7 +32,7 @@
                                             <ItemsControl ItemsSource="{x:Bind ButtonViewModels}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate x:DataType="abstractUIVm:AbstractButtonViewModel">
-                                                        <abstractcontrols:AbstractButtonPresenter Margin="8,8,8,0"/>
+                                                        <abstractcontrols:AbstractButtonPresenter Margin="8,0"/>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                                 <ItemsControl.ItemsPanel>
