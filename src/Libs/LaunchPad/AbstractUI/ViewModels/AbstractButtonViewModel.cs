@@ -28,6 +28,15 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// <summary>
         /// Text to show on the button.
         /// </summary>
+        public AbstractButton.ButtonType Type
+        {
+            get => _model.Type;
+            set => SetProperty(_model.Type, value, _model, (u, n) => _model.Type = n);
+        }
+
+        /// <summary>
+        /// Text to show on the button.
+        /// </summary>
         public string Text
         {
             get => _model.Text;

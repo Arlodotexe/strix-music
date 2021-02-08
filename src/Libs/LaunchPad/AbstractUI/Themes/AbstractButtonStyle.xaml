@@ -6,11 +6,32 @@
     xmlns:abstractUI="using:LaunchPad.AbstractUI.ViewModels"
     xmlns:launchPad="using:LaunchPad"
     xmlns:controls="using:LaunchPad.AbstractUI.Controls"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core">
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:local="using:LaunchPad.AbstractUI.Themes">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///LaunchPad/AbstractUI/Themes/AbstractUIResources.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
+    <local:AbstractButtonTemplateSelector x:Key="ButtonStyleSelector">
+        <local:AbstractButtonTemplateSelector.GenericStyle>
+            <Style TargetType="Button"/>
+        </local:AbstractButtonTemplateSelector.GenericStyle>
+        <local:AbstractButtonTemplateSelector.ConfirmStyle>
+            <Style TargetType="Button">
+                <Style.Setters>
+                    <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentBrush}"/>
+                </Style.Setters>
+            </Style>
+        </local:AbstractButtonTemplateSelector.ConfirmStyle>
+        <local:AbstractButtonTemplateSelector.DeleteStyle>
+            <Style TargetType="Button">
+                <Style.Setters>
+                    <Setter Property="Background" Value="Red"/>
+                </Style.Setters>
+            </Style>
+        </local:AbstractButtonTemplateSelector.DeleteStyle>
+    </local:AbstractButtonTemplateSelector>
 
     <Style TargetType="controls:AbstractButtonPresenter">
         <Style.Setters>
@@ -26,7 +47,6 @@
     </Style>
 
     <DataTemplate x:Key="DefaultAbstractButtonTemplate" x:DataType="abstractUI:AbstractButtonViewModel">
-
         <StackPanel>
             <TextBlock Text="{x:Bind Title}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText}" />
 
@@ -35,18 +55,11 @@
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
                        Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
 
-            <Button>
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon Glyph="{x:Bind IconCode}" FontFamily="Segoe MDL2 Assets" Grid.Column="0" FontSize="16"/>
-                        <TextBlock Text="{x:Bind Text}" Grid.Column="1"/>
-                    </StackPanel>
-                </Button.Content>
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="Click">
-                        <core:InvokeCommandAction Command="{x:Bind ClickCommand}" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
+            <Button Style="{x:Bind Type, Converter={StaticResource ButtonStyleSelector}}" Command="{x:Bind ClickCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="{x:Bind IconCode}" FontFamily="Segoe MDL2 Assets" Grid.Column="0" FontSize="16"/>
+                    <TextBlock Text="{x:Bind Text}" Grid.Column="1"/>
+                </StackPanel>
             </Button>
         </StackPanel>
     </DataTemplate>
