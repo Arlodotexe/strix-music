@@ -17,7 +17,7 @@ namespace LaunchPad.AbstractUI.ViewModels
         /// </summary>
         /// <param name="model">The model to wrap around.</param>
         public AbstractProgressUIElementViewModel(AbstractProgressUIElement model)
-            : base (model)
+            : base(model)
         {
             _value = model.Value ?? 0;
             _minimum = model.Minimum;
@@ -36,13 +36,22 @@ namespace LaunchPad.AbstractUI.ViewModels
 
         private void Model_ValueChanged(object sender, double? e)
         {
-            Value = e ?? 0;
-            IsIndeterminate = e == null;
+            _ = OwlCore.Threading.OnPrimaryThread(() =>
+            {
+                Value = e ?? 0;
+                IsIndeterminate = e == null;
+            });
         }
 
-        private void Model_MinimumChanged(object sender, double e) => Minimum = e;
+        private void Model_MinimumChanged(object sender, double e)
+        {
+            _ = OwlCore.Threading.OnPrimaryThread(() => Minimum = e);
+        }
 
-        private void Model_MaximumChanged(object sender, double e) => Maximum = e;
+        private void Model_MaximumChanged(object sender, double e)
+        {
+            _ = OwlCore.Threading.OnPrimaryThread(() => Maximum = e);
+        }
 
         /// <summary>
         /// Gets or sets the UI Element status minimum progress value.

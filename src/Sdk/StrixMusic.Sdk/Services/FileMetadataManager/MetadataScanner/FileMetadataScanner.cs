@@ -23,8 +23,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a" };
         private readonly List<FileMetadata> _fileMetadata = new List<FileMetadata>();
         private readonly IFolderData _folderData;
+        private readonly INotificationService _notificationService;
         private TaskCompletionSource<List<FileMetadata>>? _folderScanningTaskCompletion;
-        private INotificationService _notificationService;
         private int _filesFound;
         private int _filesProcessed;
         private AbstractProgressUIElement? _progressUIElement;
@@ -65,6 +65,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         public event EventHandler<FileMetadata>? FileMetadataAdded;
 
         /// <summary>
+        /// Raised when a previously scanned file has been updated with new information.
+        /// </summary>
+        public event EventHandler<FileMetadata>? FileMetadataUpdated;
+
+        /// <summary>
         /// Raised when a previously scanned file has been removed from the file system.
         /// </summary>
         public event EventHandler<FileMetadata>? FileMetadataRemoved;
@@ -76,11 +81,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 _filesFound = value;
 
-                //TOFIX: This needs to be done on UI thread(Causing issues in the backgrond thread during scan)
-                //if (_progressUIElement != null)
-                //{
-                //    _progressUIElement.Maximum = value;
-                //}
+                if (_progressUIElement != null)
+                    _progressUIElement.Maximum = value;
             }
         }
 
@@ -91,11 +93,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 _filesProcessed = value;
 
-                //TOFIX: This needs to be done on UI thread(Causing issues in the backgrond thread during scan)
-                //if (_progressUIElement != null)
-                //{
-                //    _progressUIElement.Value = value;
-                //}
+                if (_progressUIElement != null)
+                    _progressUIElement.Value = value;
             }
         }
 
@@ -221,7 +220,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     {
                         byte[] imageData = albumArt.Data.Data;
 
-                        var imageFile = await CacheFolder.CreateFileAsync(fileData.Name);
+                        var imageFile = await CacheFolder.CreateFileAsync($"{fileData.DisplayName}.thumb");
                         await imageFile.WriteAllBytesAsync(imageData);
 
                         imagePath = new Uri(imageFile.Path);
@@ -258,8 +257,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     },
                 };
             }
-
-            // Catches have a big performance hit
             catch (CorruptFileException)
             {
                 return null;
@@ -437,17 +434,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var dfsNotification = RaiseStructureNotification();
 
             var allDiscoveredFolders = new Queue<IFolderData>();
+            var allDiscoveredFiles = new Queue<IFileData>();
             var foldersToScan = new Stack<IFolderData>();
             foldersToScan.Push(_folderData);
             allDiscoveredFolders.Enqueue(_folderData);
 
-            await DFSFolderContentScan(foldersToScan, allDiscoveredFolders);
+            await DFSFolderContentScan(foldersToScan, allDiscoveredFolders, allDiscoveredFiles);
 
             dfsNotification.Dismiss();
 
             var contentScanNotification = RaiseProcessingNotification();
 
-            await allDiscoveredFolders.InParallel(ProcessFolderContents);
+            await allDiscoveredFiles.InParallel(ProcessFile);
 
             contentScanNotification.Dismiss();
 
@@ -457,59 +455,59 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             _folderScanningTaskCompletion = null;
         }
 
-        private async Task DFSFolderContentScan(Stack<IFolderData> foldersToCrawl, Queue<IFolderData> allDiscoveredFolders)
+        private async Task DFSFolderContentScan(Stack<IFolderData> foldersToCrawl, Queue<IFolderData> allDiscoveredFolders, Queue<IFileData> filesToScan)
         {
             if (foldersToCrawl.Count == 0)
                 return;
 
             IFolderData folderData = foldersToCrawl.Pop();
-
-            // TODO: Debate loading file count for progress status.
-            FilesFound += (await folderData.GetFilesAsync()).Count();
             var folders = await folderData.GetFoldersAsync();
 
             foreach (var folder in folders)
             {
+                // here
+                var files = await folder.GetFilesAsync();
+                var filesList = files.ToList();
+
+                foreach(var file in filesList)
+                {
+                    filesToScan.Enqueue(file);
+                }
+
+                FilesFound += filesList.Count;
+
                 foldersToCrawl.Push(folder);
                 allDiscoveredFolders.Enqueue(folder);
             }
 
-            await DFSFolderContentScan(foldersToCrawl, allDiscoveredFolders);
+            await DFSFolderContentScan(foldersToCrawl, allDiscoveredFolders, filesToScan);
         }
 
-        private async Task ProcessFolderContents(IFolderData folder)
-        {
-            var files = await folder.GetFilesAsync();
-
-            foreach (var file in files)
-            {
-                var metadata = await ProcessFile(file);
-
-                if (metadata != null)
-                {
-                    lock (_fileMetadata)
-                    {
-                        _fileMetadata.Add(metadata);
-                        ApplyRelatedMetadataIds(_fileMetadata);
-                    }
-
-                    FilesProcessed++;
-
-                    // TODO: Major issue. If any related metadata is updated but already emitted, we need to update the data externally as well.
-                    FileMetadataAdded?.Invoke(this, metadata);
-                }
-            }
-        }
-
-        private Task<FileMetadata?> ProcessFile(IFileData file)
+        private async Task<FileMetadata?> ProcessFile(IFileData file)
         {
             if (!_supportedMusicFileFormats.Contains(file.FileExtension))
             {
                 FilesFound--;
-                return Task.FromResult<FileMetadata?>(null);
+                return null;
             }
 
-            return ScanFileMetadata(file);
+            var metadata = await ScanFileMetadata(file);
+
+            if (metadata == null)
+                return null;
+
+            lock (_fileMetadata)
+            {
+                _fileMetadata.Add(metadata);
+                ApplyRelatedMetadataIds(_fileMetadata);
+
+                FilesProcessed++;
+            }
+
+            // todo If any related metadata is updated but already emitted, we need to update the data externally as well.
+            FileMetadataAdded?.Invoke(this, metadata);
+
+            return metadata;
         }
 
         private Notification RaiseStructureNotification()
