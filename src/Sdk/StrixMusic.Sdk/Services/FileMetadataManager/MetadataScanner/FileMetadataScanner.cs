@@ -309,7 +309,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (_folderScanningTaskCompletion != null)
                 await _folderScanningTaskCompletion.Task;
 
-            // todo check and throw if metadata isn't scanned
             var artists = _fileMetadata.Select(c => c.ArtistMetadata).PruneNull();
 
             return artists.DistinctBy(c => c?.Id).ToList();
