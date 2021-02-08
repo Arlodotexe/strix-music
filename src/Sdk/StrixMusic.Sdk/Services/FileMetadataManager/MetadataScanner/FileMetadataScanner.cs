@@ -445,7 +445,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var contentScanNotification = RaiseProcessingNotification();
 
-            await allDiscoveredFiles.InParallel(ProcessFile);
+            Parallel.ForEach(allDiscoveredFiles,  file =>
+            {
+                _ = ProcessFile(file).Result;
+            });
 
             contentScanNotification.Dismiss();
 
@@ -465,11 +468,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             foreach (var folder in folders)
             {
-                // here
                 var files = await folder.GetFilesAsync();
                 var filesList = files.ToList();
 
-                foreach(var file in filesList)
+                foreach (var file in filesList)
                 {
                     filesToScan.Enqueue(file);
                 }
