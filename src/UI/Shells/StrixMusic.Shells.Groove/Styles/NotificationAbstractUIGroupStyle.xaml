@@ -36,6 +36,7 @@
                                                      Minimum="{x:Bind ProgressBarViewModel.Minimum, Mode=OneWay}"
                                                      Maximum="{x:Bind ProgressBarViewModel.Maximum, Mode=OneWay}"
                                                      IsIndeterminate="{x:Bind ProgressBarViewModel.IsIndeterminate, Mode=OneWay}"
+                                                     Visibility="{x:Bind launchPad:Converters.VisibleIfNotNull(ProgressBarViewModel)}"
                                                      VerticalAlignment="Bottom"
                                                      Foreground="White"
                                                      Margin="0,0,-56,0"/>
