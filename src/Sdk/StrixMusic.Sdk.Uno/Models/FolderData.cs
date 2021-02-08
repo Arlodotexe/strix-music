@@ -82,6 +82,22 @@ namespace StrixMusic.Sdk.Uno.Models
             return new FileData(storageFile);
         }
 
+        /// <inheritdoc />
+        public async Task<bool> RemoveFileIfExistsAsync(string path)
+        {
+            try
+            {
+                var res = await StorageFolder.GetFileAsync(path);
+                await res.DeleteAsync();
+
+                return res != null;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         /// <inheritdoc/>
         public async Task<IFolderData?> GetFolderAsync(string name)
         {
@@ -118,6 +134,17 @@ namespace StrixMusic.Sdk.Uno.Models
             {
                 StorageFolder = await StorageFolder.CreateFolderAsync(StorageFolder.Name);
             }
+        }
+
+        /// <inheritdoc />
+        public async Task RemoveAllFiles()
+        {
+            var files = await StorageFolder.GetFilesAsync();
+
+            Parallel.ForEach(files, file =>
+           {
+               _ = file.DeleteAsync();
+           });
         }
     }
 }

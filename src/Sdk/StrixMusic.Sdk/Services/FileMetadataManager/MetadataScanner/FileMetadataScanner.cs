@@ -201,6 +201,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 using var stream = await fileData.GetStreamAsync();
 
+                var primaryFileSystemService = Ioc.Default.GetRequiredService<IFileSystemService>();
+
+
+
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
                 // Read the raw tags
@@ -445,10 +449,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var contentScanNotification = RaiseProcessingNotification();
 
-            Parallel.ForEach(allDiscoveredFiles,  file =>
-            {
-                _ = ProcessFile(file).Result;
-            });
+            Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
+
+            await CacheFolder.RemoveAllFiles();
+
+            Parallel.ForEach(allDiscoveredFiles, file =>
+           {
+               _ = ProcessFile(file).Result;
+           });
 
             contentScanNotification.Dismiss();
 
