@@ -318,4 +318,40 @@
   <data name="Playlist" xml:space="preserve">
     <value>פלייליסט</value>
   </data>
+  <data name="Audiobooks" xml:space="preserve">
+    <value>ספרים מוקלטים</value>
+  </data>
+  <data name="AudiobooksBTN.Content" xml:space="preserve">
+    <value>ספרים מוקלטים</value>
+  </data>
+  <data name="AudiobooksPVI.Header" xml:space="preserve">
+    <value>ספרים מוקלטים</value>
+  </data>
+  <data name="AudiobooksTB.Text" xml:space="preserve">
+    <value>ספרים מוקלטים</value>
+  </data>
+  <data name="Music" xml:space="preserve">
+    <value>מוסיקה</value>
+  </data>
+  <data name="MusicBTN.Content" xml:space="preserve">
+    <value>מוסיקה</value>
+  </data>
+  <data name="MusicPVI.Header" xml:space="preserve">
+    <value>מוסיקה</value>
+  </data>
+  <data name="MusicTB.Text" xml:space="preserve">
+    <value>מוסיקה</value>
+  </data>
+  <data name="Podcasts" xml:space="preserve">
+    <value>פודקסטים</value>
+  </data>
+  <data name="PodcastsBTN.Content" xml:space="preserve">
+    <value>פודקסטים</value>
+  </data>
+  <data name="PodcastsPVI.Header" xml:space="preserve">
+    <value>פודקסטים</value>
+  </data>
+  <data name="PodcastsTB.Text" xml:space="preserve">
+    <value>פודקסטים</value>
+  </data>
 </root>

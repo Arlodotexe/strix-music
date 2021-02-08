@@ -17,6 +17,7 @@
         <dstyles:ArtistCollectionStyle/>
         <dstyles:ArtistItemStyle/>
         <dstyles:ArtistViewStyle/>
+        <styles:NotificationAbstractUIGroupStyle/>
         <styles:NowPlayingBarStyle/>
         <styles:HomeStyle/>
         <styles:PlaylistCollectionStyle/>

@@ -89,12 +89,11 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <!--Core Filters-->
+        <!--Media Types-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <ToggleButton Content="MOCK" Style="{StaticResource SmallZuneMockPivotItemToggleButtonStyle}"/>
-            <ToggleButton Content="FILES" Style="{StaticResource SmallZuneMockPivotItemToggleButtonStyle}"/>
-            <ToggleButton Content="ONEDRIVE" Style="{StaticResource SmallZuneMockPivotItemToggleButtonStyle}"/>
-            <ToggleButton Content="SPOTIFY" Style="{StaticResource SmallZuneMockPivotItemToggleButtonStyle}"/>
+            <RadioButton x:Uid="/Music/MusicBTN" Content="MUSIC" a:TextHelpers.CharacterCasing="Upper" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" IsChecked="True" GroupName="MediaType"/>
+            <RadioButton x:Uid="/Music/PodcastsBTN" Content="PODCASTS" a:TextHelpers.CharacterCasing="Upper" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" GroupName="MediaType" IsEnabled="False"/>
+            <RadioButton x:Uid="/Music/AudiobooksBTN" Content="AUDIOBOOKS" a:TextHelpers.CharacterCasing="Upper" Style="{StaticResource SmallZuneMockPivotItemRadioButtonStyle}" GroupName="MediaType" IsEnabled="False"/>
         </StackPanel>
 
         <!--Search box-->

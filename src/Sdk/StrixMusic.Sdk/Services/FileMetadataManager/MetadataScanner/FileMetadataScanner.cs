@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
+using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
@@ -23,6 +24,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private readonly List<FileMetadata> _fileMetadata = new List<FileMetadata>();
         private readonly IFolderData _folderData;
         private TaskCompletionSource<List<FileMetadata>>? _folderScanningTaskCompletion;
+        private INotificationService _notificationService;
+        private int _filesFound;
+        private int _filesProcessed;
+        private AbstractProgressUIElement? _progressUIElement;
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
@@ -39,6 +44,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         public FileMetadataScanner(IFolderData rootFolder)
         {
             _folderData = rootFolder;
+
+            _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
 
             AttachEvents();
         }
@@ -61,6 +68,36 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Raised when a previously scanned file has been removed from the file system.
         /// </summary>
         public event EventHandler<FileMetadata>? FileMetadataRemoved;
+
+        private int FilesFound
+        {
+            get => _filesFound;
+            set
+            {
+                _filesFound = value;
+
+                //TOFIX: This needs to be done on UI thread(Causing issues in the backgrond thread during scan)
+                //if (_progressUIElement != null)
+                //{
+                //    _progressUIElement.Maximum = value;
+                //}
+            }
+        }
+
+        private int FilesProcessed
+        {
+            get => _filesProcessed;
+            set
+            {
+                _filesProcessed = value;
+
+                //TOFIX: This needs to be done on UI thread(Causing issues in the backgrond thread during scan)
+                //if (_progressUIElement != null)
+                //{
+                //    _progressUIElement.Value = value;
+                //}
+            }
+        }
 
         private async Task<FileMetadata?> ScanFileMetadata(IFileData fileData)
         {
@@ -186,7 +223,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                         var imageFile = await CacheFolder.CreateFileAsync(fileData.Name);
                         await imageFile.WriteAllBytesAsync(imageData);
-                        
+
                         imagePath = new Uri(imageFile.Path);
                     }
                 }
@@ -239,20 +276,42 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <param name="relatedMetadata">The data to parse.</param>
         private void ApplyRelatedMetadataIds(List<FileMetadata> relatedMetadata)
         {
+            var trackGroup = relatedMetadata.GroupBy(c => c.TrackMetadata?.Title);
             var artistGroup = relatedMetadata.GroupBy(c => c.ArtistMetadata?.Name);
             var albumGroup = relatedMetadata.GroupBy(c => c.AlbumMetadata?.Title);
-            var trackGroup = relatedMetadata.GroupBy(c => c.TrackMetadata?.Title);
+
+            foreach (var tracks in trackGroup)
+            {
+                var trackId = Guid.NewGuid().ToString();
+                foreach (var item in tracks)
+                {
+                    if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
+                    {
+                        item.TrackMetadata.Id = trackId;
+
+                        item.AlbumMetadata.TrackIds ??= new List<string>();
+                        item.ArtistMetadata.TrackIds ??= new List<string>();
+
+                        item.AlbumMetadata.TrackIds.Add(trackId);
+                        item.ArtistMetadata.TrackIds.Add(trackId);
+                    }
+                }
+            }
 
             foreach (var tracks in albumGroup)
             {
                 var albumId = Guid.NewGuid().ToString();
+
                 foreach (var item in tracks)
                 {
                     if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
                     {
                         item.AlbumMetadata.Id = albumId;
                         item.TrackMetadata.AlbumId = albumId;
-                        item.ArtistMetadata.AlbumIds = new List<string> { albumId };
+
+                        item.ArtistMetadata.AlbumIds ??= new List<string>();
+
+                        item.ArtistMetadata.AlbumIds.Add(albumId);
                     }
                 }
             }
@@ -265,22 +324,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
                     {
                         item.ArtistMetadata.Id = artistId;
-                        item.TrackMetadata.ArtistIds = new List<string> { artistId };
-                        item.AlbumMetadata.ArtistIds = new List<string> { artistId };
-                    }
-                }
-            }
 
-            foreach (var tracks in trackGroup)
-            {
-                var trackId = Guid.NewGuid().ToString();
-                foreach (var item in tracks)
-                {
-                    if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
-                    {
-                        item.TrackMetadata.Id = trackId;
-                        item.AlbumMetadata.TrackIds = new List<string> { trackId };
-                        item.ArtistMetadata.TrackIds = new List<string> { trackId };
+                        item.TrackMetadata.ArtistIds ??= new List<string>();
+                        item.AlbumMetadata.ArtistIds ??= new List<string>();
+
+                        item.TrackMetadata.ArtistIds.Add(artistId);
+                        item.AlbumMetadata.ArtistIds.Add(artistId);
                     }
                 }
             }
@@ -385,10 +434,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             // DFS search on a single thread
             // Parallel.ForEach on resulting collection (system manages resources)
             // Batch the scanned metadata at the end (in the event)
-            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-
-            // notifications disabled until notification templates are reasonable and don't get in the way
-            var dfsNotification = notificationService.RaiseNotification("Scanning folder structure", $"Scanning folder tree at {_folderData.Path}");
+            var dfsNotification = RaiseStructureNotification();
 
             var allDiscoveredFolders = new Queue<IFolderData>();
             var foldersToScan = new Stack<IFolderData>();
@@ -396,10 +442,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             allDiscoveredFolders.Enqueue(_folderData);
 
             await DFSFolderContentScan(foldersToScan, allDiscoveredFolders);
-            
+
             dfsNotification.Dismiss();
 
-            var contentScanNotification = notificationService.RaiseNotification("Scanning folder contents", $"Processing data in {_folderData.Path}");
+            var contentScanNotification = RaiseProcessingNotification();
 
             await allDiscoveredFolders.InParallel(ProcessFolderContents);
 
@@ -416,7 +462,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (foldersToCrawl.Count == 0)
                 return;
 
-            var folders = await foldersToCrawl.Pop().GetFoldersAsync();
+            IFolderData folderData = foldersToCrawl.Pop();
+
+            // TODO: Debate loading file count for progress status.
+            FilesFound += (await folderData.GetFilesAsync()).Count();
+            var folders = await folderData.GetFoldersAsync();
 
             foreach (var folder in folders)
             {
@@ -443,6 +493,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         ApplyRelatedMetadataIds(_fileMetadata);
                     }
 
+                    FilesProcessed++;
+
                     // TODO: Major issue. If any related metadata is updated but already emitted, we need to update the data externally as well.
                     FileMetadataAdded?.Invoke(this, metadata);
                 }
@@ -452,9 +504,39 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private Task<FileMetadata?> ProcessFile(IFileData file)
         {
             if (!_supportedMusicFileFormats.Contains(file.FileExtension))
+            {
+                FilesFound--;
                 return Task.FromResult<FileMetadata?>(null);
+            }
 
             return ScanFileMetadata(file);
+        }
+
+        private Notification RaiseStructureNotification()
+        {
+            string NewGuid() => Guid.NewGuid().ToString();
+            AbstractUIElementGroup elementGroup = new AbstractUIElementGroup(NewGuid(), PreferredOrientation.Vertical)
+            {
+                Title = "Scanning folder structure",
+                Subtitle = $"Scanning folder tree at {_folderData.Path}",
+                Items = { new AbstractProgressUIElement(NewGuid(), null) },
+            };
+
+            return _notificationService.RaiseNotification(elementGroup);
+        }
+
+        private Notification RaiseProcessingNotification()
+        {
+            string NewGuid() => Guid.NewGuid().ToString();
+            _progressUIElement = new AbstractProgressUIElement(NewGuid(), FilesProcessed, FilesFound);
+            AbstractUIElementGroup elementGroup = new AbstractUIElementGroup(NewGuid(), PreferredOrientation.Vertical)
+            {
+                Title = "Scanning folder contents",
+                Subtitle = $"Processing {FilesFound} files in {_folderData.Path}",
+                Items = { _progressUIElement },
+            };
+
+            return _notificationService.RaiseNotification(elementGroup);
         }
     }
 }

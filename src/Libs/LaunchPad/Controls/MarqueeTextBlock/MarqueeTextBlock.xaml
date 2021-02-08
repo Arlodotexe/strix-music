@@ -1,0 +1,66 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LaunchPad.Controls">
+
+    <Style TargetType="local:MarqueeTextBlock">
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:MarqueeTextBlock">
+                    <Canvas Name="canvas"
+                            Background="{TemplateBinding Background}"
+                            VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
+                        <Canvas.Clip>
+                            <RectangleGeometry x:Name="rectanglegeometeryClipCanvas"/>
+                        </Canvas.Clip>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="visualstateStopped">
+                                    <VisualState.Setters>
+                                        <Setter Target="translatetransformTextBlock.X" Value="0.0"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="visualstateMarquee">
+                                    <!-- NOTE: Storyboard animation will be added on runtime because
+                                                Width property is variable. Storyboard's properties are
+                                                not 'DependencyProperty' and cannot use 'TemplateBinding'. -->
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="{TemplateBinding BorderThickness}"
+                              Margin="{TemplateBinding Margin}"
+                              Padding="{TemplateBinding Padding}">
+                            <StackPanel x:Name="stackpanel" Orientation="Horizontal">
+                                <StackPanel.RenderTransform>
+                                    <TranslateTransform x:Name="translatetransformTextBlock"/>
+                                </StackPanel.RenderTransform>
+                                <TextBlock Name="textblock"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           Text="{TemplateBinding Text}"
+                                           FontFamily="{TemplateBinding FontFamily}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontStretch="{TemplateBinding FontStretch}"
+                                           FontStyle="{TemplateBinding FontStyle}"
+                                           FontWeight="{TemplateBinding FontWeight}"/>
+                                <TextBlock Name="textblock2"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           Text="{TemplateBinding Text}"
+                                           FontFamily="{TemplateBinding FontFamily}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           FontStretch="{TemplateBinding FontStretch}"
+                                           FontStyle="{TemplateBinding FontStyle}"
+                                           FontWeight="{TemplateBinding FontWeight}"
+                                           Margin="{TemplateBinding TextMargin}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
@@ -10,9 +11,10 @@ namespace StrixMusic.Sdk.Uno.ViewModels
     /// <summary>
     /// Manages the notifications coming from the <see cref="NotificationService"/>.
     /// </summary>
-    public class NotificationsViewModel : IDisposable
+    public class NotificationsViewModel : ObservableObject, IDisposable
     {
         private readonly NotificationService _notificationService;
+        private bool _isHandled;
 
         /// <summary>
         /// Creates a new instance of <see cref="NotificationsViewModel"/>.
@@ -29,6 +31,15 @@ namespace StrixMusic.Sdk.Uno.ViewModels
         /// The currently display notifications.
         /// </summary>
         public ObservableCollection<NotificationViewModel> Notifications { get; set; } = new ObservableCollection<NotificationViewModel>();
+
+        /// <summary>
+        /// Gets or sets whether or not notifications are handled by the Shell. Therefore not displayed in the AppFrame.
+        /// </summary>
+        public bool IsHandled
+        {
+            get => _isHandled;
+            set => SetProperty(ref _isHandled, value);
+        }
 
         private void AttachEvents()
         {

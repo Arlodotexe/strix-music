@@ -5,6 +5,8 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:abstractUIControls="using:LaunchPad.AbstractUI.Controls"
+    xmlns:viewModels="using:StrixMusic.Sdk.Uno.ViewModels"
     mc:Ignorable="d">
 
     <defaultcontrols:Shell.Resources>
@@ -234,5 +236,28 @@
         <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                         Visibility="Collapsed" Grid.RowSpan="2"/>
+
+        <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:NotificationViewModel">
+                    <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="40" Width="300"
+                          Background="{ThemeResource SystemAccentColorDark1}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <abstractUIControls:AbstractUIGroupPresenter DataContext="{x:Bind AbstractUINotificationViewModel}" Style="{StaticResource GrooveNotificationAbstractUIGroupStyle}"/>
+
+                        <Button CornerRadius="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0"
+                                Grid.Column="1" Width="40" Height="40" Background="Transparent" Padding="0"
+                                BorderThickness="0"
+                                Command="{x:Bind DismissCommand}">
+                            <FontIcon FontSize="20" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE10A;"/>
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </defaultcontrols:Shell>

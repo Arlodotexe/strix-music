@@ -3,16 +3,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:launchPad="using:LaunchPad"
-    xmlns:controls="using:LaunchPad.AbstractUI.Controls"
+    xmlns:controls="using:LaunchPad.Controls"
+    xmlns:abstractcontrols="using:LaunchPad.AbstractUI.Controls"
     xmlns:abstractUIVm="using:LaunchPad.AbstractUI.ViewModels"
     xmlns:sdkvms="using:StrixMusic.Sdk.Uno.ViewModels"
-    x:Class="StrixMusic.Sdk.Uno.Styles.NotificationAbstractUIGroupStyle">
+    x:Class="StrixMusic.Shells.Groove.Styles.NotificationAbstractUIGroupStyle">
 
-    <Style x:Key="DefaultNotificationAbstractUIGroupStyle" TargetType="controls:AbstractUIGroupPresenter">
+    <Style x:Key="GrooveNotificationAbstractUIGroupStyle" TargetType="abstractcontrols:AbstractUIGroupPresenter">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="controls:AbstractUIGroupPresenter">
+                    <ControlTemplate TargetType="abstractcontrols:AbstractUIGroupPresenter">
                         <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                             <ContentControl.ContentTemplate>
                                 <DataTemplate x:DataType="sdkvms:AbstractUINotificationViewModel">
@@ -20,8 +21,11 @@
                                         <StackPanel Padding="12">
                                             <TextBlock Text="{x:Bind Title}" FontSize="20" ToolTipService.ToolTip="{x:Bind TooltipText}" />
 
-                                            <TextBlock Text="{x:Bind Subtitle}" FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextWrapping="WrapWholeWords"
-                                                   Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+                                            <controls:MarqueeTextBlock Text="{x:Bind Subtitle}" FontSize="12" FontWeight="SemiLight" Opacity="0.5" IsRepeating="False"
+                                                                  IsAbsoluteSpeed="True" AbsoluteSpeed="48" Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"
+                                                                  TextMarginLeft="12" PointerEntered="MarqueeTextControl_PointerEntered"/>
+                                            <!--<TextBlock Text="{x:Bind Subtitle}" FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextWrapping="WrapWholeWords"
+                                                   Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>-->
 
                                             <!--<ItemsControl ItemsSource="{x:Bind Items}"
                                                           Margin="0,8,0,0"
@@ -32,7 +36,9 @@
                                                      Minimum="{x:Bind ProgressBarViewModel.Minimum, Mode=OneWay}"
                                                      Maximum="{x:Bind ProgressBarViewModel.Maximum, Mode=OneWay}"
                                                      IsIndeterminate="{x:Bind ProgressBarViewModel.IsIndeterminate, Mode=OneWay}"
-                                                     VerticalAlignment="Bottom"/>
+                                                     VerticalAlignment="Bottom"
+                                                     Foreground="White"
+                                                     Margin="0,0,-56,0"/>
                                     </Grid>
                                 </DataTemplate>
                             </ContentControl.ContentTemplate>

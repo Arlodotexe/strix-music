@@ -5,6 +5,7 @@ using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.Uno.Controls.Events;
+using StrixMusic.Sdk.Uno.ViewModels;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Shells.Groove.Controls;
 using System;
@@ -31,6 +32,7 @@ namespace StrixMusic.Shells.Groove
         private readonly Stack<Control> _history = new Stack<Control>();
         private INavigationService<Control>? _navigationService;
         private ILocalizationService? _localizationService;
+        private NotificationsViewModel? _notificationsViewModel;
         private ToggleButton? _selectedPage;
 
         /// <summary>
@@ -66,6 +68,8 @@ namespace StrixMusic.Shells.Groove
         }
 
         private MainViewModel ViewModel => (MainViewModel)DataContext;
+
+        private NotificationsViewModel? NotificationsViewModel => _notificationsViewModel;
 
         /// <inheritdoc/>
         protected override void SetupTitleBar()
@@ -103,6 +107,9 @@ namespace StrixMusic.Shells.Groove
 
                 if (service.ImplementationInstance is ILocalizationService localizationService)
                     _localizationService = localizationService;
+
+                if (service.ImplementationInstance is NotificationsViewModel notificationsViewModel)
+                    _notificationsViewModel = SetupNotificationsViewModel(notificationsViewModel);
             }
 
             return base.InitServices(services);
@@ -117,6 +124,12 @@ namespace StrixMusic.Shells.Groove
             navigationService.RegisterCommonPage(typeof(NowPlayingView));
 
             return navigationService;
+        }
+
+        private NotificationsViewModel SetupNotificationsViewModel(NotificationsViewModel notificationsViewModel)
+        {
+            notificationsViewModel.IsHandled = true;
+            return notificationsViewModel;
         }
 
         private void HamburgerToggled(object sender, RoutedEventArgs e)
