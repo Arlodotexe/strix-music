@@ -160,20 +160,17 @@ namespace StrixMusic.Core.LocalFiles.Models
             {
                 if (e.TrackMetadata is null || (_trackMetadatas?.Any(c => c.Title?.Contains(e.TrackMetadata.Title ?? string.Empty) ?? false) ?? false))
                     return;
-            }
 
-            var filesCoreTrack = new LocalFilesCoreTrack(SourceCore, e.TrackMetadata);
+                var filesCoreTrack = new LocalFilesCoreTrack(SourceCore, e.TrackMetadata);
 
-            var addedItems = new List<CollectionChangedEventItem<ICoreTrack>>
+                var addedItems = new List<CollectionChangedEventItem<ICoreTrack>>
                 {
                     new CollectionChangedEventItem<ICoreTrack>(filesCoreTrack, 0),
                 };
 
-            if (_trackMetadatas == null)
-                return;
+                if (_trackMetadatas == null)
+                    return;
 
-            lock (_trackMetadatas)
-            {
                 _trackMetadatas?.Add(e.TrackMetadata);
                 TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreTrack>>());
             }
@@ -181,27 +178,25 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         private void HandleArtistMetadataAdded(FileMetadata e)
         {
-            if (e.ArtistMetadata == null)
-                return;
-
             lock (_artistMetadatas)
             {
-                if (!(!_artistMetadatas?.Any(c => c.Name?.Equals(e.ArtistMetadata.Name ?? string.Empty) ?? false) ?? false))
+                if (e.ArtistMetadata == null)
                     return;
-            }
 
-            var filesCoreArtist = new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, e.ArtistMetadata.TrackIds?.Count ?? 0);
+                if (!(!_artistMetadatas?.Any(c => c.Name?.Equals(e.ArtistMetadata.Name ?? string.Empty) ?? false) ??
+                      false))
+                    return;
 
-            var addedItems = new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>
-            {
-                new CollectionChangedEventItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
-            };
+                var filesCoreArtist =
+                    new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, e.ArtistMetadata.TrackIds?.Count ?? 0);
 
-            if (_artistMetadatas == null)
-                return;
+                var addedItems = new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>
+                {
+                    new CollectionChangedEventItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
+                };
 
-            lock (_artistMetadatas)
-            {
+                if (_artistMetadatas == null)
+                    return;
                 _artistMetadatas?.Add(e.ArtistMetadata);
                 ArtistItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>());
             }
@@ -211,27 +206,24 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             lock (_albumMetadatas)
             {
-                if (e.AlbumMetadata == null || (_albumMetadatas.Count != 0 && _albumMetadatas.Any(c => c.Title?.Equals(e.AlbumMetadata.Title) ?? false)))
+                foreach (var album in _albumMetadatas)
                 {
-                    return;
+                    if (album.Title == e.AlbumMetadata?.Title)
+                        return;
                 }
-            }
 
-            Guard.IsNotNull(e.AlbumMetadata, nameof(e.AlbumMetadata));
-            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            Guard.IsNotNull(e.AlbumMetadata.Id, nameof(e.AlbumMetadata.Id));
+                Guard.IsNotNull(e.AlbumMetadata, nameof(e.AlbumMetadata));
+                Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+                Guard.IsNotNull(e.AlbumMetadata.Id, nameof(e.AlbumMetadata.Id));
 
-            var track = e.TrackMetadata;
+                var track = e.TrackMetadata;
 
-            var fileCoreAlbum = new LocalFilesCoreAlbum(SourceCore, e.AlbumMetadata, e.AlbumMetadata.TrackIds?.Count ?? 0, track?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, track.ImagePath) : null);
+                var fileCoreAlbum = new LocalFilesCoreAlbum(SourceCore, e.AlbumMetadata, e.AlbumMetadata.TrackIds?.Count ?? 0, track?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, track.ImagePath) : null);
 
-            var addedItems = new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>
+                var addedItems = new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>
                 {
                     new CollectionChangedEventItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
                 };
-
-            lock (_albumMetadatas)
-            {
                 _albumMetadatas.Add(e.AlbumMetadata);
 
                 AlbumItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>());

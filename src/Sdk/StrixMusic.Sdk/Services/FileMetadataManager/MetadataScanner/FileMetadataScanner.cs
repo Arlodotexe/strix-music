@@ -98,6 +98,40 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             }
         }
 
+        private static IPicture? GetAlbumArt(IPicture[] pics)
+        {
+            var albumPictureTypesRanking = new[]
+            {
+                PictureType.FrontCover,
+                PictureType.Illustration,
+                PictureType.Other,
+                PictureType.Media,
+                PictureType.MovieScreenCapture,
+                PictureType.DuringPerformance,
+                PictureType.DuringRecording,
+                PictureType.Artist,
+                PictureType.LeadArtist,
+                PictureType.Band,
+                PictureType.BandLogo,
+                PictureType.Composer,
+                PictureType.Conductor,
+                PictureType.RecordingLocation,
+                PictureType.FileIcon,
+                PictureType.OtherFileIcon,
+            };
+
+            foreach (var type in albumPictureTypesRanking)
+            {
+                foreach (var sourcePic in pics)
+                {
+                    if (sourcePic.Type == type)
+                        return sourcePic;
+                }
+            }
+
+            return null;
+        }
+
         private async Task<FileMetadata?> ScanFileMetadata(IFileData fileData)
         {
             var id3Metadata = await GetID3Metadata(fileData);
@@ -123,6 +157,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             if (mergeTrackMetadata.ArtistMetadata != null && string.IsNullOrWhiteSpace(mergeTrackMetadata.ArtistMetadata.Name))
                 mergeTrackMetadata.ArtistMetadata.Name = string.Empty;
+
+            if (mergeTrackMetadata.TrackMetadata != null && mergeTrackMetadata.TrackMetadata.ImagePath is null)
+            {
+                // TODO get file thumbnail
+            }
 
             return mergeTrackMetadata;
         }
@@ -222,9 +261,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 Uri? imagePath = null;
 
-                if (tags.Pictures != null && tags.Pictures.Length > 0)
+                if (tags.Pictures != null)
                 {
-                    var albumArt = tags.Pictures.FirstOrDefault(p => p.Type == PictureType.FrontCover);
+                    var albumArt = GetAlbumArt(tags.Pictures);
 
                     if (albumArt != null)
                     {
@@ -455,10 +494,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var contentScanNotification = RaiseProcessingNotification();
 
-            Parallel.ForEach(allDiscoveredFiles,  file =>
-            {
-                _ = ProcessFile(file).Result;
-            });
+            Parallel.ForEach(allDiscoveredFiles, file =>
+           {
+               _ = ProcessFile(file).Result;
+           });
 
             contentScanNotification.Dismiss();
 
