@@ -98,6 +98,40 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             }
         }
 
+        private static IPicture? GetAlbumArt(IPicture[] pics)
+        {
+            var albumPictureTypesRanking = new[]
+            {
+                PictureType.FrontCover,
+                PictureType.Illustration,
+                PictureType.Other,
+                PictureType.Media,
+                PictureType.MovieScreenCapture,
+                PictureType.DuringPerformance,
+                PictureType.DuringRecording,
+                PictureType.Artist,
+                PictureType.LeadArtist,
+                PictureType.Band,
+                PictureType.BandLogo,
+                PictureType.Composer,
+                PictureType.Conductor,
+                PictureType.RecordingLocation,
+                PictureType.FileIcon,
+                PictureType.OtherFileIcon,
+            };
+
+            foreach (var type in albumPictureTypesRanking)
+            {
+                foreach (var sourcePic in pics)
+                {
+                    if (sourcePic.Type == type)
+                        return sourcePic;
+                }
+            }
+
+            return null;
+        }
+
         private async Task<FileMetadata?> ScanFileMetadata(IFileData fileData)
         {
             var id3Metadata = await GetID3Metadata(fileData);
@@ -113,6 +147,21 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var mergeTrackMetadata = MergeTrackMetadata(validMetadata);
             mergeTrackMetadata.Id = Guid.NewGuid().ToString();
+
+            // If titles are missing, we leave it empty so the UI can localize the "Untitled" name
+            if (mergeTrackMetadata.AlbumMetadata != null && string.IsNullOrWhiteSpace(mergeTrackMetadata.AlbumMetadata.Title))
+                mergeTrackMetadata.AlbumMetadata.Title = string.Empty;
+
+            if (mergeTrackMetadata.TrackMetadata != null && string.IsNullOrWhiteSpace(mergeTrackMetadata.TrackMetadata.Title))
+                mergeTrackMetadata.TrackMetadata.Title = string.Empty;
+
+            if (mergeTrackMetadata.ArtistMetadata != null && string.IsNullOrWhiteSpace(mergeTrackMetadata.ArtistMetadata.Name))
+                mergeTrackMetadata.ArtistMetadata.Name = string.Empty;
+
+            if (mergeTrackMetadata.TrackMetadata != null && mergeTrackMetadata.TrackMetadata.ImagePath is null)
+            {
+                // TODO get file thumbnail
+            }
 
             return mergeTrackMetadata;
         }
@@ -212,9 +261,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 Uri? imagePath = null;
 
-                if (tags.Pictures != null && tags.Pictures.Length > 0)
+                if (tags.Pictures != null)
                 {
-                    var albumArt = tags.Pictures.FirstOrDefault(p => p.Type == PictureType.FrontCover);
+                    var albumArt = GetAlbumArt(tags.Pictures);
 
                     if (albumArt != null)
                     {
@@ -445,8 +494,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var contentScanNotification = RaiseProcessingNotification();
 
-            Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
-
             Parallel.ForEach(allDiscoveredFiles, file =>
            {
                _ = ProcessFile(file).Result;
@@ -531,7 +578,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             string NewGuid() => Guid.NewGuid().ToString();
             _progressUIElement = new AbstractProgressUIElement(NewGuid(), FilesProcessed, FilesFound);
-            AbstractUIElementGroup elementGroup = new AbstractUIElementGroup(NewGuid(), PreferredOrientation.Vertical)
+
+            var elementGroup = new AbstractUIElementGroup(NewGuid(), PreferredOrientation.Vertical)
             {
                 Title = "Scanning folder contents",
                 Subtitle = $"Processing {FilesFound} files in {_folderData.Path}",

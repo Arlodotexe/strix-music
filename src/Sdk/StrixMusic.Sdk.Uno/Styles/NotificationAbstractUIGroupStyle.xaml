@@ -22,16 +22,26 @@
 
                                             <TextBlock Text="{x:Bind Subtitle}" FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextWrapping="WrapWholeWords"
                                                    Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
-
-                                            <!--<ItemsControl ItemsSource="{x:Bind Items}"
-                                                          Margin="0,8,0,0"
-                                                          ItemTemplateSelector="{StaticResource GroupTemplateSelector}" />-->
+                                            
+                                            <ItemsControl ItemsSource="{x:Bind ButtonViewModels}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="abstractUIVm:AbstractButtonViewModel">
+                                                        <controls:AbstractButtonPresenter Margin="8,0"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal" Margin="-4,0"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                            </ItemsControl>
                                         </StackPanel>
 
                                         <ProgressBar Value="{x:Bind ProgressBarViewModel.Value, Mode=Oneway}"
                                                      Minimum="{x:Bind ProgressBarViewModel.Minimum, Mode=OneWay}"
                                                      Maximum="{x:Bind ProgressBarViewModel.Maximum, Mode=OneWay}"
                                                      IsIndeterminate="{x:Bind ProgressBarViewModel.IsIndeterminate, Mode=OneWay}"
+                                                     Visibility="{x:Bind launchPad:Converters.VisibleIfNotNull(ProgressBarViewModel)}"
                                                      VerticalAlignment="Bottom"/>
                                     </Grid>
                                 </DataTemplate>

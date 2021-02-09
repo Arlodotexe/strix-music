@@ -1,5 +1,6 @@
 ﻿using LaunchPad.AbstractUI.ViewModels;
 using OwlCore.AbstractUI.Models;
+using System.Collections.ObjectModel;
 
 namespace StrixMusic.Sdk.Uno.ViewModels
 {
@@ -8,6 +9,7 @@ namespace StrixMusic.Sdk.Uno.ViewModels
     /// </summary>
     public class AbstractUINotificationViewModel : AbstractUIElementGroupViewModel
     {
+        private const int MAX_BUTTONS = 3;
         private readonly AbstractUIElementGroup _model;
 
         /// <inheritdoc />
@@ -25,12 +27,26 @@ namespace StrixMusic.Sdk.Uno.ViewModels
             {
                 if (value is AbstractProgressUIElement progressUIElement)
                     ProgressBarViewModel = new AbstractProgressUIElementViewModel(progressUIElement);
+                else if (value is AbstractButton buttonElement && ButtonViewModels.Count < MAX_BUTTONS)
+                    ButtonViewModels.Add(new AbstractButtonViewModel(buttonElement));
+                else
+                    UnhandledItems.Add(value);
             }
         }
+
+        /// <summary>
+        /// A list of <see cref="AbstractUIBase"/>s that may appear in a notification that weren't explicitly handled.
+        /// </summary>
+        public ObservableCollection<AbstractUIBase> UnhandledItems { get; set; } = new ObservableCollection<AbstractUIBase>();
 
         /// <summary>
         /// A <see cref="AbstractProgressUIElement"/> that may appear in a notification.
         /// </summary>
         public AbstractProgressUIElementViewModel? ProgressBarViewModel { get; set; }
+
+        /// <summary>
+        /// A list of <see cref="AbstractButton"/>s that may appear in a notification
+        /// </summary>
+        public ObservableCollection<AbstractButtonViewModel> ButtonViewModels { get; set; } = new ObservableCollection<AbstractButtonViewModel>();
     }
 }

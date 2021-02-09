@@ -15,5 +15,13 @@ namespace LaunchPad
         /// <returns>Collapsed if null or empty, otherwise Visible.</returns>
         [Pure]
         public static Visibility VisibleIfNotNullOrEmpty(string? str) => !string.IsNullOrWhiteSpace(str) ? Visibility.Visible : Visibility.Collapsed;
+
+        /// <summary>
+        /// Returns visible if the object is not null.
+        /// </summary>
+        /// <param name="obj">Object to check.</param>
+        /// <returns>Collapsed if null, otherwise Visible.</returns>
+        [Pure]
+        public static Visibility VisibleIfNotNull(object? obj) => obj != null ? Visibility.Visible : Visibility.Collapsed;
     }
 }
