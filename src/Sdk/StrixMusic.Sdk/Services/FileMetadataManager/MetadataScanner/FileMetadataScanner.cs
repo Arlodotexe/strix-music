@@ -201,8 +201,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 using var stream = await fileData.GetStreamAsync();
 
-                var primaryFileSystemService = Ioc.Default.GetRequiredService<IFileSystemService>();
-
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
                 // Read the raw tags

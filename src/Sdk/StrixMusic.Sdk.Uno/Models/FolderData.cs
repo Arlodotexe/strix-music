@@ -82,22 +82,6 @@ namespace StrixMusic.Sdk.Uno.Models
             return new FileData(storageFile);
         }
 
-        /// <inheritdoc />
-        public async Task<bool> RemoveFileIfExistsAsync(string path)
-        {
-            try
-            {
-                var res = await StorageFolder.GetFileAsync(path);
-                await res.DeleteAsync();
-
-                return res != null;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
         /// <inheritdoc/>
         public async Task<IFolderData?> GetFolderAsync(string name)
         {
