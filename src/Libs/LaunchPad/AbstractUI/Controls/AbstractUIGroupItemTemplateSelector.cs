@@ -46,9 +46,9 @@ namespace LaunchPad.AbstractUI.Controls
                 BooleanTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(booleanTemplate));
             }
 
-            if (!new Themes.AbstractProgressUIElementStyle().TryGetValue("DefaultAbstractBooleanUIElementTemplate", out var progressTemplate))
+            if (!new Themes.AbstractProgressUIElementStyle().TryGetValue("DefaultAbstractProgressUIElementTemplate", out var progressTemplate))
             {
-                ProgressTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(booleanTemplate));
+                ProgressTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(progressTemplate));
             }
             
             TextBoxTemplate = (DataTemplate)textBoxTemplate;
