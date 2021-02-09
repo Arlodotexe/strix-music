@@ -114,6 +114,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var mergeTrackMetadata = MergeTrackMetadata(validMetadata);
             mergeTrackMetadata.Id = Guid.NewGuid().ToString();
 
+            // If titles are missing, we leave it empty so the UI can localize the "Untitled" name
+            if (mergeTrackMetadata.AlbumMetadata != null && string.IsNullOrWhiteSpace(mergeTrackMetadata.AlbumMetadata.Title))
+                mergeTrackMetadata.AlbumMetadata.Title = string.Empty;
+
+            if (mergeTrackMetadata.TrackMetadata != null && string.IsNullOrWhiteSpace(mergeTrackMetadata.TrackMetadata.Title))
+                mergeTrackMetadata.TrackMetadata.Title = string.Empty;
+
+            if (mergeTrackMetadata.ArtistMetadata != null && string.IsNullOrWhiteSpace(mergeTrackMetadata.ArtistMetadata.Name))
+                mergeTrackMetadata.ArtistMetadata.Name = string.Empty;
+
             return mergeTrackMetadata;
         }
 
@@ -529,7 +539,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             string NewGuid() => Guid.NewGuid().ToString();
             _progressUIElement = new AbstractProgressUIElement(NewGuid(), FilesProcessed, FilesFound);
-            AbstractUIElementGroup elementGroup = new AbstractUIElementGroup(NewGuid(), PreferredOrientation.Vertical)
+
+            var elementGroup = new AbstractUIElementGroup(NewGuid(), PreferredOrientation.Vertical)
             {
                 Title = "Scanning folder contents",
                 Subtitle = $"Processing {FilesFound} files in {_folderData.Path}",

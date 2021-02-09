@@ -13,7 +13,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <param name="uri">A <see cref="System.Uri"/> pointing to the image file on the disk.</param>
         /// <param name="width">The width of the image, or <see langword="null"/> if not available.</param>
         /// <param name="height">The height of the image, or <see langword="null"/> if not available.</param>
-        public LocalFilesCoreImage(ICore sourceCore, Uri uri, double? width, double? height)
+        public LocalFilesCoreImage(ICore sourceCore, Uri uri, double? width = null, double? height = null)
         {
             SourceCore = sourceCore;
             Uri = uri;

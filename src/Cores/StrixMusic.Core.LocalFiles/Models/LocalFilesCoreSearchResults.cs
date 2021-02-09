@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
@@ -88,7 +89,12 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             foreach (var album in _albumMetadatas)
             {
-                yield return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0);
+                Guard.IsNotNull(album.Id, nameof(album.Id));
+
+                var tracks = await _fileMetadataManager.Tracks.GetTracksByAlbumId(album.Id, 0, 1);
+                var track = tracks.FirstOrDefault();
+
+                yield return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0, track?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, track.ImagePath) : null);
             }
         }
 

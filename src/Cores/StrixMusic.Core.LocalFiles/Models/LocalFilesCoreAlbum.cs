@@ -16,18 +16,25 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// </summary>
     public class LocalFilesCoreAlbum : ICoreAlbum
     {
-        private AlbumMetadata _albumMetadata;
-        private IFileMetadataManager _fileMetadataManager;
+        private readonly AlbumMetadata _albumMetadata;
+        private readonly LocalFilesCoreImage? _image;
+        private readonly IFileMetadataManager _fileMetadataManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreAlbum"/> class.
         /// </summary>
         /// <param name="sourceCore">The core that created this object.</param>
-        public LocalFilesCoreAlbum(ICore sourceCore, AlbumMetadata albumMetadata, int totalTracksCount)
+        /// <param name="albumMetadata">The source album metadata to wrap around.</param>
+        /// <param name="totalTracksCount">The total number of tracks in this album.</param>
+        /// <param name="image">A cover image to use with this album, if applicable.</param>
+        public LocalFilesCoreAlbum(ICore sourceCore, AlbumMetadata albumMetadata, int totalTracksCount, LocalFilesCoreImage? image)
         {
             SourceCore = sourceCore;
-            _albumMetadata = albumMetadata;
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
+
+            _albumMetadata = albumMetadata;
+            _image = image;
+            TotalImageCount = image == null ? 0 : 1;
             TotalArtistItemsCount = _albumMetadata.TotalTracksCount ?? 0;
             TotalTracksCount = totalTracksCount;
         }
@@ -117,7 +124,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public DateTime? AddedAt { get; }
 
         /// <inheritdoc />
-        public int TotalImageCount { get; } = 0;
+        public int TotalImageCount { get; }
 
         /// <inheritdoc />
         public int TotalArtistItemsCount { get; }
@@ -249,23 +256,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            var tracksList = SourceCore.GetService<TrackRepository>();
+            if (_image != null)
+                yield return _image;
 
-            var tracks = await tracksList.GetTracksByAlbumId(Id, 1, 0);
-
-            if (tracks.Count == 0)
-            {
-                yield break;
-            }
-
-            var imagePath = tracks[0].ImagePath;
-
-            if (imagePath == null)
-            {
-                yield break;
-            }
-
-            yield return new LocalFilesCoreImage(SourceCore, imagePath, 250, 250);
+            await Task.CompletedTask;
         }
 
         /// <inheritdoc />
