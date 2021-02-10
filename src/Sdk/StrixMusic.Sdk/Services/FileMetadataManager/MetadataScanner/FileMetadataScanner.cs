@@ -269,7 +269,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     {
                         byte[] imageData = albumArt.Data.Data;
 
-                        var imageFile = await CacheFolder.CreateFileAsync($"{fileData.DisplayName}.thumb");
+                        var imageFile = await CacheFolder.CreateFileAsync($"{fileData.DisplayName}.thumb",CreationCollisionOption.ReplaceExisting);
                         await imageFile.WriteAllBytesAsync(imageData);
 
                         imagePath = new Uri(imageFile.Path);
