@@ -7,7 +7,7 @@
     mc:Ignorable="d"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
-    xmlns:a="using:LaunchPad.Attached"
+    xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
     x:Name="RootControl" RequestedTheme="Dark">
 

@@ -1,0 +1,19 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:themes="using:OwlCore.Uno.AbstractUI.Themes">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///OwlCore.Uno/Controls/MarqueeTextBlock/MarqueeTextBlock.xaml"/>
+        <ResourceDictionary Source="ms-appx:///OwlCore.Uno/Controls/ToggleContentButton/ToggleContentButton.xaml"/>
+        <themes:AbstractBooleanUIElementStyle />
+        <themes:AbstractButtonStyle />
+        <themes:AbstractDataListStyle />
+        <themes:AbstractMultiChoiceUIElementStyle />
+        <themes:AbstractMutableDataListStyle />
+        <themes:AbstractRichTextBlockStyle />
+        <themes:AbstractTextBoxStyle />
+    </ResourceDictionary.MergedDictionaries>
+    
+</ResourceDictionary>
+    

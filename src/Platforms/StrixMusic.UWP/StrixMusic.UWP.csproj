@@ -236,9 +236,9 @@
       <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>
       <Name>OwlCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj">
+    <ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj">
       <Project>{bd87b98b-b958-43ec-b3bf-6058afedcdc6}</Project>
-      <Name>LaunchPad</Name>
+      <Name>OwlCore.Uno</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj">
       <Project>{5f63ca91-0f29-4eb3-8954-e649a457acb2}</Project>

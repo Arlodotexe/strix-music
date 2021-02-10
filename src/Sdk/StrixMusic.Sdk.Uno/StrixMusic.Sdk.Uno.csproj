@@ -75,7 +75,7 @@
     <UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
+    <ProjectReference Include="..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
     <ProjectReference Include="..\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>

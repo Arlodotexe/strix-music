@@ -4,7 +4,7 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:launchpad="using:LaunchPad"
+    xmlns:owlcoreuno="using:OwlCore.Uno"
     x:Class="StrixMusic.Sdk.Uno.Styles.AlbumItemStyle">
 
     <DataTemplate x:Key="DefaultAlbumItemDataTemplate" x:DataType="viewModels:AlbumViewModel">

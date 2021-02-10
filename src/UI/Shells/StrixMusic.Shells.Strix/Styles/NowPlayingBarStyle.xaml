@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
-    xmlns:launchpad="using:LaunchPad.Controls">
+    xmlns:owlcoreuno="using:OwlCore.Uno.Controls">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.Strix/Resources/Brushes.xaml" />
@@ -77,25 +77,25 @@
                                         <Button Style="{StaticResource MediaButton}">
                                             <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </Button>
-                                        <launchpad:ToggleContentButton Style="{StaticResource StrixPlayPauseToggleContentButtonStyle}">
-                                            <launchpad:ToggleContentButton.CheckedContent>
+                                        <owlcoreuno:ToggleContentButton Style="{StaticResource StrixPlayPauseToggleContentButtonStyle}">
+                                            <owlcoreuno:ToggleContentButton.CheckedContent>
                                                 <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                            </launchpad:ToggleContentButton.CheckedContent>
+                                            </owlcoreuno:ToggleContentButton.CheckedContent>
                                             <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                        </launchpad:ToggleContentButton>
+                                        </owlcoreuno:ToggleContentButton>
                                         <Button Style="{StaticResource MediaButton}">
                                             <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                         </Button>
                                     </StackPanel>
-                                    <launchpad:ToggleContentButton IsThreeState="True" Style="{StaticResource StrixToggleContentButtonStyle}">
-                                        <launchpad:ToggleContentButton.IndeterminateContent>
+                                    <owlcoreuno:ToggleContentButton IsThreeState="True" Style="{StaticResource StrixToggleContentButtonStyle}">
+                                        <owlcoreuno:ToggleContentButton.IndeterminateContent>
                                             <FontIcon Glyph="&#xE1CC;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                        </launchpad:ToggleContentButton.IndeterminateContent>
-                                        <launchpad:ToggleContentButton.CheckedContent>
+                                        </owlcoreuno:ToggleContentButton.IndeterminateContent>
+                                        <owlcoreuno:ToggleContentButton.CheckedContent>
                                             <FontIcon Glyph="&#xE1CD;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                        </launchpad:ToggleContentButton.CheckedContent>
+                                        </owlcoreuno:ToggleContentButton.CheckedContent>
                                         <FontIcon Glyph="&#xE194;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                                    </launchpad:ToggleContentButton>
+                                    </owlcoreuno:ToggleContentButton>
                                     <ToggleButton Style="{StaticResource StrixMediaToggleButtonStyle}">
                                         <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                     </ToggleButton>

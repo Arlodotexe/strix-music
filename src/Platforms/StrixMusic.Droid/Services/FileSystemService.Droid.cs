@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LaunchPad.Extensions;
+using OwlCore.Uno.Extensions;
 using StrixMusic.Sdk.Uno.Models;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;

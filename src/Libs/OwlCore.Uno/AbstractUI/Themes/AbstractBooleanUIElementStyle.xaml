@@ -1,0 +1,47 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="OwlCore.Uno.AbstractUI.Themes.AbstractBooleanUIElementStyle"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:abstractUI="using:OwlCore.Uno.AbstractUI.ViewModels"
+    xmlns:owlCoreUno="using:OwlCore.Uno"
+    xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///OwlCore.Uno/AbstractUI/Themes/AbstractUIResources.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="controls:AbstractButtonPresenter">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="controls:AbstractButtonPresenter">
+                        <ContentControl ContentTemplate="{StaticResource DefaultAbstractBooleanUIElementTemplate}"
+                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <DataTemplate x:Key="DefaultAbstractBooleanUIElementTemplate" x:DataType="abstractUI:AbstractBooleanViewModel">
+        <StackPanel>
+            <TextBlock Text="{x:Bind Title}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+
+            <TextBlock Text="{x:Bind Subtitle}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
+                       FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
+                       Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
+                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+
+            <ToggleSwitch ToolTipService.ToolTip="{x:Bind TooltipText}" OffContent="{Binding Label}" OnContent="{Binding Label}" IsOn="{Binding IsToggled, Mode=TwoWay}">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Toggled">
+                        <core:InvokeCommandAction Command="{x:Bind ToggledCommand}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </ToggleSwitch>
+        </StackPanel>
+    </DataTemplate>
+
+</ResourceDictionary>

@@ -5,7 +5,7 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:abstractUIControls="using:LaunchPad.AbstractUI.Controls"
+    xmlns:abstractUIControls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.Uno.ViewModels"
     mc:Ignorable="d">
 

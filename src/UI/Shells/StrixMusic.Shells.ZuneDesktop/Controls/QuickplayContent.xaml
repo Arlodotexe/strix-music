@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:sys="using:System"
-    xmlns:a="using:LaunchPad.Attached"
+    xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:controls="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:sdkstyle="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
     x:Name="RootControl"

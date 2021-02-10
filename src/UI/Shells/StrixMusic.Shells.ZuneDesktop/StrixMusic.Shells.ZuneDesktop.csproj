@@ -143,7 +143,7 @@
 		<PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\Libs\LaunchPad\LaunchPad.csproj" />
+		<ProjectReference Include="..\..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
 		<ProjectReference Include="..\..\..\Libs\OwlCore\OwlCore.csproj" />
 		<ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
 		<ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />

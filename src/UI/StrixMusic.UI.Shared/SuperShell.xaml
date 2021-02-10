@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:StrixMusic.Sdk.Uno.Models"
-    xmlns:controls="using:LaunchPad.AbstractUI.Controls"
+    xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:abstractUIModels="using:OwlCore.AbstractUI.Models"
     mc:Ignorable="d"
     MinHeight="250"

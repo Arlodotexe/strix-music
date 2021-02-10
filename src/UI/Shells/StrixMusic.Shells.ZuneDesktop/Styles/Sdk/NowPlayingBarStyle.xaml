@@ -6,7 +6,7 @@
     xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:zunecontrols="using:StrixMusic.Shells.ZuneDesktop.Controls"
-    xmlns:launchpad="using:LaunchPad.Controls"
+    xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters">
 
     <ResourceDictionary.MergedDictionaries>
@@ -223,15 +223,15 @@
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
                                     <StackPanel Orientation="Horizontal">
-                                        <launchpad:ToggleContentButton x:Name="RepeatButton" Style="{StaticResource ZuneSmallToggleContentButton}" VerticalAlignment="Center" IsThreeState="True" FontSize="20">
+                                        <owlcoreuno:ToggleContentButton x:Name="RepeatButton" Style="{StaticResource ZuneSmallToggleContentButton}" VerticalAlignment="Center" IsThreeState="True" FontSize="20">
                                             <FontIcon Glyph="&#xE1CD;"/>
-                                            <launchpad:ToggleContentButton.CheckedContent>
+                                            <owlcoreuno:ToggleContentButton.CheckedContent>
                                                 <FontIcon Glyph="&#xE1CD;"/>
-                                            </launchpad:ToggleContentButton.CheckedContent>
-                                            <launchpad:ToggleContentButton.IndeterminateContent>
+                                            </owlcoreuno:ToggleContentButton.CheckedContent>
+                                            <owlcoreuno:ToggleContentButton.IndeterminateContent>
                                                 <FontIcon Glyph="&#xE1CC;"/>
-                                            </launchpad:ToggleContentButton.IndeterminateContent>
-                                        </launchpad:ToggleContentButton>
+                                            </owlcoreuno:ToggleContentButton.IndeterminateContent>
+                                        </owlcoreuno:ToggleContentButton>
                                         <ToggleButton x:Name="ShuffleButton" Style="{StaticResource ZuneSmallToggleButton}" Margin="-8,0,8,0" VerticalAlignment="Center" FontSize="20">
                                             <FontIcon Glyph="&#xE8B1;"/>
                                         </ToggleButton>
@@ -242,13 +242,13 @@
                                                 <PathIcon Data="M 0 4.2357127 6.3582224 8.4666673 V 0.0047581 Z M 6.3417776 4.2309543 12.7 8.4619093 V 0 Z" Margin="-2,0,0,0"/>
                                                 <!--<FontIcon Glyph="&#xE100;" FontSize="12"/>-->
                                             </Button>
-                                            <launchpad:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42">
-                                                <launchpad:ToggleContentButton.CheckedContent>
+                                            <owlcoreuno:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42">
+                                                <owlcoreuno:ToggleContentButton.CheckedContent>
                                                     <FontIcon Glyph="&#xE103;" FontSize="20"/>
-                                                </launchpad:ToggleContentButton.CheckedContent>
+                                                </owlcoreuno:ToggleContentButton.CheckedContent>
                                                 <PathIcon Data="M 11.1125 6.4158049 2.3841858e-7 12.83161 l 0 -12.831609975863432 z"/>
                                                 <!--<FontIcon Glyph="&#xE102;" FontSize="20"/>-->
-                                            </launchpad:ToggleContentButton>
+                                            </owlcoreuno:ToggleContentButton>
                                             <Button x:Name="SkipButton" Style="{StaticResource ZuneButton}" Width="32">
                                                 <PathIcon Data="M 12.7 4.2357127 6.3417776 8.4666673 V 0.0047581 Z M 6.3582224 4.2309543 0 8.4619093 V 0 Z" Margin="2,0,0,0"/>
                                                 <!--<FontIcon Glyph="&#xE101;" FontSize="12"/>-->

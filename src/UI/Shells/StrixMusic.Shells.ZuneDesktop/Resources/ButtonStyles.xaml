@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:launchpad="using:LaunchPad.Controls"
+    xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls">
 
     <ResourceDictionary.MergedDictionaries>
@@ -188,12 +188,12 @@
         </Setter>
     </Style>
 
-    <Style x:Key="ZuneToggleContentButtonStyle" TargetType="launchpad:ToggleContentButton">
+    <Style x:Key="ZuneToggleContentButtonStyle" TargetType="owlcoreuno:ToggleContentButton">
         <Style.Setters>
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="launchpad:ToggleContentButton">
+                    <ControlTemplate TargetType="owlcoreuno:ToggleContentButton">
                         <Grid Background="Transparent">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
@@ -439,11 +439,11 @@
         </Setter>
     </Style>
 
-    <Style x:Key="ZuneSmallToggleContentButton" TargetType="launchpad:ToggleContentButton">
+    <Style x:Key="ZuneSmallToggleContentButton" TargetType="owlcoreuno:ToggleContentButton">
         <Setter Property="Padding" Value="0"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="launchpad:ToggleContentButton">
+                <ControlTemplate TargetType="owlcoreuno:ToggleContentButton">
                     <Grid x:Name="RootGrid" Background="Transparent">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">

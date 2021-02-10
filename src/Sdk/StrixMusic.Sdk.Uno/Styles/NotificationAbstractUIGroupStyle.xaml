@@ -2,9 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    xmlns:launchPad="using:LaunchPad"
-    xmlns:controls="using:LaunchPad.AbstractUI.Controls"
-    xmlns:abstractUIVm="using:LaunchPad.AbstractUI.ViewModels"
+    xmlns:owlCoreUno="using:OwlCore.Uno"
+    xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
+    xmlns:abstractUIVm="using:OwlCore.Uno.AbstractUI.ViewModels"
     xmlns:sdkvms="using:StrixMusic.Sdk.Uno.ViewModels"
     x:Class="StrixMusic.Sdk.Uno.Styles.NotificationAbstractUIGroupStyle">
 
@@ -21,7 +21,7 @@
                                             <TextBlock Text="{x:Bind Title}" FontSize="20" ToolTipService.ToolTip="{x:Bind TooltipText}" />
 
                                             <TextBlock Text="{x:Bind Subtitle}" FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextWrapping="WrapWholeWords"
-                                                   Visibility="{x:Bind launchPad:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+                                                   Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
                                             
                                             <ItemsControl ItemsSource="{x:Bind ButtonViewModels}">
                                                 <ItemsControl.ItemTemplate>
@@ -41,7 +41,7 @@
                                                      Minimum="{x:Bind ProgressBarViewModel.Minimum, Mode=OneWay}"
                                                      Maximum="{x:Bind ProgressBarViewModel.Maximum, Mode=OneWay}"
                                                      IsIndeterminate="{x:Bind ProgressBarViewModel.IsIndeterminate, Mode=OneWay}"
-                                                     Visibility="{x:Bind launchPad:Converters.VisibleIfNotNull(ProgressBarViewModel)}"
+                                                     Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNull(ProgressBarViewModel)}"
                                                      VerticalAlignment="Bottom"/>
                                     </Grid>
                                 </DataTemplate>

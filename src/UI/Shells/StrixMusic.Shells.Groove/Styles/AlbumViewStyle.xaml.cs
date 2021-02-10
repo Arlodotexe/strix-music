@@ -1,9 +1,9 @@
 ﻿using ClusterNet;
 using ClusterNet.Kernels;
-using LaunchPad.ColorExtractor.Filters;
-using LaunchPad.ColorExtractor;
-using LaunchPad.ColorExtractor.ColorSpaces;
-using LaunchPad.ColorExtractor.Shapes;
+using OwlCore.Uno.ColorExtractor.Filters;
+using OwlCore.Uno.ColorExtractor;
+using OwlCore.Uno.ColorExtractor.ColorSpaces;
+using OwlCore.Uno.ColorExtractor.Shapes;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
 using SixLabors.ImageSharp;

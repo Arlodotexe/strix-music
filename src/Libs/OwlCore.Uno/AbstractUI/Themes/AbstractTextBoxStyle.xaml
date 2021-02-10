@@ -1,0 +1,51 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="OwlCore.Uno.AbstractUI.Themes.AbstractTextBoxStyle"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:abstractUI="using:OwlCore.Uno.AbstractUI.ViewModels"
+    xmlns:owlCoreUno="using:OwlCore.Uno"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
+    xmlns:automation="using:Windows.UI.Xaml.Automation">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///OwlCore.Uno/AbstractUI/Themes/AbstractUIResources.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="controls:AbstractTextBoxPresenter">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="controls:AbstractTextBoxPresenter">
+                        <ContentControl ContentTemplate="{StaticResource DefaultAbstractTextBoxTemplate}"
+                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <DataTemplate x:Key="DefaultAbstractTextBoxTemplate" x:DataType="abstractUI:AbstractTextBoxViewModel">
+        <StackPanel>
+            <TextBlock Text="{x:Bind Title}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+
+            <TextBlock Text="{x:Bind Subtitle}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
+                       FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
+                       Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
+                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+
+            <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,5,0,0"
+                     PlaceholderText="{x:Bind PlaceholderText}"
+                     ToolTipService.ToolTip="{x:Bind TooltipText}">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="TextChanging">
+                        <core:InvokeCommandAction Command="{x:Bind ValueChangedCommand}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </TextBox>
+        </StackPanel>
+    </DataTemplate>
+    
+</ResourceDictionary>
