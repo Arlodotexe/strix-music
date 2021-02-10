@@ -249,55 +249,65 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void ArtistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Images.Insert(item.Index, item.Data);
-            }
+                foreach (var item in addedItems)
+                {
+                    Images.Insert(item.Index, item.Data);
+                }
 
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
-                Images.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
+                    Images.RemoveAt(item.Index);
+                }
+            });
         }
 
         private void ArtistViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Tracks.Insert(item.Index, new TrackViewModel(item.Data));
-            }
+                foreach (var item in addedItems)
+                {
+                    Tracks.Insert(item.Index, new TrackViewModel(item.Data));
+                }
 
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
-                Tracks.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
+                    Tracks.RemoveAt(item.Index);
+                }
+            });
         }
 
         private void ArtistViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                switch (item.Data)
+                foreach (var item in addedItems)
                 {
-                    case IAlbum album:
-                        Albums.InsertOrAdd(item.Index, new AlbumViewModel(album));
-                        break;
-                    case IAlbumCollection collection:
-                        Albums.InsertOrAdd(item.Index, new AlbumCollectionViewModel(collection));
-                        break;
-                    default:
-                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
-                        break;
+                    switch (item.Data)
+                    {
+                        case IAlbum album:
+                            Albums.InsertOrAdd(item.Index, new AlbumViewModel(album));
+                            break;
+                        case IAlbumCollection collection:
+                            Albums.InsertOrAdd(item.Index, new AlbumCollectionViewModel(collection));
+                            break;
+                        default:
+                            ThrowHelper.ThrowNotSupportedException(
+                                $"{item.Data.GetType()} not supported for adding to {GetType()}");
+                            break;
+                    }
                 }
-            }
 
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IAlbumCollectionItem>)Albums, nameof(Albums));
-                Albums.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IAlbumCollectionItem>)Albums, nameof(Albums));
+                    Albums.RemoveAt(item.Index);
+                }
+            });
         }
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
@@ -444,31 +454,46 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreAlbumsAsync(int limit)
         {
-            foreach (var item in await _artist.GetAlbumItemsAsync(limit, Albums.Count))
+            var items = await _artist.GetAlbumItemsAsync(limit, Albums.Count);
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                if (item is IAlbum album)
+                foreach (var item in items)
                 {
-                    Albums.Add(new AlbumViewModel(album));
+                    if (item is IAlbum album)
+                    {
+                        _ = Threading.OnPrimaryThread(() => Albums.Add(new AlbumViewModel(album)));
+                    }
                 }
-            }
+            });
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            foreach (var item in await _artist.GetImagesAsync(limit, Images.Count))
+            var items = await _artist.GetImagesAsync(limit, Images.Count);
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Images.Add(item);
-            }
+                foreach (var item in items)
+                {
+                    Images.Add(item);
+                }
+            });
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
-            foreach (var item in await GetTracksAsync(limit, Tracks.Count))
+            var items = await GetTracksAsync(limit, Tracks.Count);
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Tracks.Add(new TrackViewModel(item));
-            }
+                foreach (var item in items)
+                {
+                    Tracks.Add(new TrackViewModel(item));
+                }
+            });
         }
 
         /// <inheritdoc />

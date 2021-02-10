@@ -295,41 +295,48 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void TrackViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Images.InsertOrAdd(item.Index, item.Data);
-            }
+                foreach (var item in addedItems)
+                {
+                    Images.InsertOrAdd(item.Index, item.Data);
+                }
 
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
-                Images.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
+                    Images.RemoveAt(item.Index);
+                }
+            });
         }
 
         private void TrackViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                switch (item.Data)
+                foreach (var item in addedItems)
                 {
-                    case IArtist artist:
-                        Artists.InsertOrAdd(item.Index, new ArtistViewModel(artist));
-                        break;
-                    case IArtistCollection collection:
-                        Artists.InsertOrAdd(item.Index, new ArtistCollectionViewModel(collection));
-                        break;
-                    default:
-                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
-                        break;
+                    switch (item.Data)
+                    {
+                        case IArtist artist:
+                            Artists.InsertOrAdd(item.Index, new ArtistViewModel(artist));
+                            break;
+                        case IArtistCollection collection:
+                            Artists.InsertOrAdd(item.Index, new ArtistCollectionViewModel(collection));
+                            break;
+                        default:
+                            ThrowHelper.ThrowNotSupportedException(
+                                $"{item.Data.GetType()} not supported for adding to {GetType()}");
+                            break;
+                    }
                 }
-            }
 
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IArtistCollectionItem>)Artists, nameof(Artists));
-                Artists.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IArtistCollectionItem>)Artists, nameof(Artists));
+                    Artists.RemoveAt(item.Index);
+                }
+            });
         }
 
         /// <summary>
@@ -559,27 +566,37 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            foreach (var item in await GetArtistItemsAsync(limit, Artists.Count))
-            {
-                if (item is IArtist artist)
-                {
-                    Artists.Add(new ArtistViewModel(artist));
-                }
+            var items = await GetArtistItemsAsync(limit, Artists.Count);
 
-                if (item is IArtistCollection collection)
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                foreach (var item in items)
                 {
-                    Artists.Add(new ArtistCollectionViewModel(collection));
+                    if (item is IArtist artist)
+                    {
+                        Artists.Add(new ArtistViewModel(artist));
+                    }
+
+                    if (item is IArtistCollection collection)
+                    {
+                        Artists.Add(new ArtistCollectionViewModel(collection));
+                    }
                 }
-            }
+            });
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            foreach (var item in await GetImagesAsync(limit, Images.Count))
+            var items = await GetImagesAsync(limit, Images.Count);
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Images.Add(item);
-            }
+                foreach (var item in items)
+                {
+                    Images.Add(item);
+                }
+            });
         }
 
         /// <inheritdoc />

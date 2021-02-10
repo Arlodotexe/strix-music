@@ -115,40 +115,46 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void AlbumCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Images.InsertOrAdd(item.Index, item.Data);
-            }
+                foreach (var item in addedItems)
+                {
+                    Images.InsertOrAdd(item.Index, item.Data);
+                }
 
-            foreach (var item in removedItems)
-            {
-                Images.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Images.RemoveAt(item.Index);
+                }
+            });
         }
 
         private void AlbumCollectionViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                switch (item.Data)
+                foreach (var item in addedItems)
                 {
-                    case IAlbum album:
-                        Albums.InsertOrAdd(item.Index, new AlbumViewModel(album));
-                        break;
-                    case IAlbumCollection collection:
-                        Albums.InsertOrAdd(item.Index, new AlbumCollectionViewModel(collection));
-                        break;
-                    default:
-                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
-                        break;
+                    switch (item.Data)
+                    {
+                        case IAlbum album:
+                            Albums.InsertOrAdd(item.Index, new AlbumViewModel(album));
+                            break;
+                        case IAlbumCollection collection:
+                            Albums.InsertOrAdd(item.Index, new AlbumCollectionViewModel(collection));
+                            break;
+                        default:
+                            ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
+                            break;
+                    }
                 }
-            }
 
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IAlbumCollectionItem>)Albums, nameof(Albums));
-                Albums.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IAlbumCollectionItem>)Albums, nameof(Albums));
+                    Albums.RemoveAt(item.Index);
+                }
+            });
         }
 
         /// <inheritdoc />
@@ -259,27 +265,37 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreAlbumsAsync(int limit)
         {
-            foreach (var item in await _collection.GetAlbumItemsAsync(limit, Albums.Count))
+            var items = await _collection.GetAlbumItemsAsync(limit, Albums.Count);
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                switch (item)
+                foreach (var item in items)
                 {
-                    case IAlbum album:
-                        Albums.Add(new AlbumViewModel(album));
-                        break;
-                    case IAlbumCollection collection:
-                        Albums.Add(new AlbumCollectionViewModel(collection));
-                        break;
+                    switch (item)
+                    {
+                        case IAlbum album:
+                            Albums.Add(new AlbumViewModel(album));
+                            break;
+                        case IAlbumCollection collection:
+                            Albums.Add(new AlbumCollectionViewModel(collection));
+                            break;
+                    }
                 }
-            }
+            });
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            foreach (var item in await _collection.GetImagesAsync(limit, Images.Count))
+            var items = await _collection.GetImagesAsync(limit, Images.Count);
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Images.Add(item);
-            }
+                foreach (var item in items)
+                {
+                    Images.Add(item);
+                }
+            });
         }
 
         /// <inheritdoc />

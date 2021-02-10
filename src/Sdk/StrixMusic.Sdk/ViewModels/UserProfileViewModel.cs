@@ -187,10 +187,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            foreach (var item in await GetImagesAsync(limit, Images.Count))
+            var items = await GetImagesAsync(limit, Images.Count);
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Images.Add(item);
-            }
+                foreach (var item in items)
+                {
+                    Images.Add(item);
+                }
+            });
         }
 
         /// <inheritdoc />

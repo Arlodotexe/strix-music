@@ -367,66 +367,77 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void PlayableCollectionGroupViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                switch (item.Data)
+                foreach (var item in addedItems)
                 {
-                    case IArtist artist:
-                        Artists.InsertOrAdd(item.Index, new ArtistViewModel(artist));
-                        break;
-                    case IArtistCollection collection:
-                        Artists.InsertOrAdd(item.Index, new ArtistCollectionViewModel(collection));
-                        break;
-                    default:
-                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
-                        break;
+                    switch (item.Data)
+                    {
+                        case IArtist artist:
+                            Artists.InsertOrAdd(item.Index, new ArtistViewModel(artist));
+                            break;
+                        case IArtistCollection collection:
+                            Artists.InsertOrAdd(item.Index, new ArtistCollectionViewModel(collection));
+                            break;
+                        default:
+                            ThrowHelper.ThrowNotSupportedException(
+                                $"{item.Data.GetType()} not supported for adding to {GetType()}");
+                            break;
+                    }
                 }
-            }
 
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IArtistCollectionItem>)Artists, nameof(Artists));
-                Artists.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IArtistCollectionItem>)Artists, nameof(Artists));
+                    Artists.RemoveAt(item.Index);
+                }
+            });
         }
 
         private void PlayableCollectionGroupViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Tracks.InsertOrAdd(item.Index, new TrackViewModel(item.Data));
-            }
+                foreach (var item in addedItems)
+                {
+                    Tracks.InsertOrAdd(item.Index, new TrackViewModel(item.Data));
+                }
 
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
-                Tracks.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
+                    Tracks.RemoveAt(item.Index);
+                }
+            });
         }
 
         private void PlayableCollectionGroupViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                switch (item.Data)
+                foreach (var item in addedItems)
                 {
-                    case IAlbum album:
-                        Albums.InsertOrAdd(item.Index, new AlbumViewModel(album));
-                        break;
-                    case IAlbumCollection collection:
-                        Albums.InsertOrAdd(item.Index, new AlbumCollectionViewModel(collection));
-                        break;
-                    default:
-                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
-                        break;
+                    switch (item.Data)
+                    {
+                        case IAlbum album:
+                            Albums.InsertOrAdd(item.Index, new AlbumViewModel(album));
+                            break;
+                        case IAlbumCollection collection:
+                            Albums.InsertOrAdd(item.Index, new AlbumCollectionViewModel(collection));
+                            break;
+                        default:
+                            ThrowHelper.ThrowNotSupportedException(
+                                $"{item.Data.GetType()} not supported for adding to {GetType()}");
+                            break;
+                    }
                 }
-            }
 
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IAlbumCollectionItem>)Albums, nameof(Albums));
-                Albums.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IAlbumCollectionItem>)Albums, nameof(Albums));
+                    Albums.RemoveAt(item.Index);
+                }
+            });
         }
 
         /// <inheritdoc />
@@ -654,79 +665,109 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMorePlaylistsAsync(int limit)
         {
-            foreach (var item in await Task.Run(() => _collectionGroup.GetPlaylistItemsAsync(limit, Playlists.Count)))
+            var items = await Task.Run(() => _collectionGroup.GetPlaylistItemsAsync(limit, Playlists.Count));
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                switch (item)
+                foreach (var item in items)
                 {
-                    case IPlaylist playlist:
-                        Playlists.Add(new PlaylistViewModel(playlist));
-                        break;
-                    case IPlaylistCollection collection:
-                        Playlists.Add(new PlaylistCollectionViewModel(collection));
-                        break;
+                    switch (item)
+                    {
+                        case IPlaylist playlist:
+                            Playlists.Add(new PlaylistViewModel(playlist));
+                            break;
+                        case IPlaylistCollection collection:
+                            Playlists.Add(new PlaylistCollectionViewModel(collection));
+                            break;
+                    }
                 }
-            }
+            });
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
-            foreach (var item in await Task.Run(() => _collectionGroup.GetTracksAsync(limit, Tracks.Count)))
+            var items = await Task.Run(() => _collectionGroup.GetTracksAsync(limit, Tracks.Count));
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Tracks.Add(new TrackViewModel(item));
-            }
+                foreach (var item in items)
+                {
+                    Tracks.Add(new TrackViewModel(item));
+                }
+            });
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreAlbumsAsync(int limit)
         {
-            foreach (var item in await Task.Run(() => _collectionGroup.GetAlbumItemsAsync(limit, Albums.Count)))
+            var items = await Task.Run(() => _collectionGroup.GetAlbumItemsAsync(limit, Albums.Count));
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                switch (item)
+                foreach (var item in items)
                 {
-                    case IAlbum album:
-                        Albums.Add(new AlbumViewModel(album));
-                        break;
-                    case IAlbumCollection collection:
-                        Albums.Add(new AlbumCollectionViewModel(collection));
-                        break;
+                    switch (item)
+                    {
+                        case IAlbum album:
+                            Albums.Add(new AlbumViewModel(album));
+                            break;
+                        case IAlbumCollection collection:
+                            Albums.Add(new AlbumCollectionViewModel(collection));
+                            break;
+                    }
                 }
-            }
+            });
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            foreach (var item in await Task.Run(() => _collectionGroup.GetArtistItemsAsync(limit, Artists.Count)))
-            {
-                if (item is IArtist artist)
-                {
-                    Artists.Add(new ArtistViewModel(artist));
-                }
+            var items = await Task.Run(() => _collectionGroup.GetArtistItemsAsync(limit, Artists.Count));
 
-                if (item is IArtistCollection collection)
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                foreach (var item in items)
                 {
-                    Artists.Add(new ArtistCollectionViewModel(collection));
+                    if (item is IArtist artist)
+                    {
+                        Artists.Add(new ArtistViewModel(artist));
+                    }
+
+                    if (item is IArtistCollection collection)
+                    {
+                        Artists.Add(new ArtistCollectionViewModel(collection));
+                    }
                 }
-            }
+            });
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreChildrenAsync(int limit)
         {
-            foreach (var item in await Task.Run(() => _collectionGroup.GetChildrenAsync(limit, Albums.Count)))
+            var items = await Task.Run(() => _collectionGroup.GetChildrenAsync(limit, Albums.Count));
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Children.Add(new PlayableCollectionGroupViewModel(item));
-            }
+                foreach (var item in items)
+                {
+                    Children.Add(new PlayableCollectionGroupViewModel(item));
+                }
+            });
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            foreach (var item in await Task.Run(() => _collectionGroup.GetImagesAsync(limit, Images.Count)))
+            var items = await Task.Run(() => _collectionGroup.GetImagesAsync(limit, Images.Count));
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Images.Add(item);
-            }
+                foreach (var item in items)
+                {
+                    Images.Add(item);
+                }
+            });
         }
 
         /// <summary>

@@ -264,30 +264,36 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void AlbumViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Tracks.InsertOrAdd(item.Index, new TrackViewModel(item.Data));
-            }
+                foreach (var item in addedItems)
+                {
+                    Tracks.InsertOrAdd(item.Index, new TrackViewModel(item.Data));
+                }
 
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
-                Tracks.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
+                    Tracks.RemoveAt(item.Index);
+                }
+            });
         }
 
         private void AlbumViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
         {
-            foreach (var item in addedItems)
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Images.InsertOrAdd(item.Index, item.Data);
-            }
+                foreach (var item in addedItems)
+                {
+                    Images.InsertOrAdd(item.Index, item.Data);
+                }
 
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
-                Images.RemoveAt(item.Index);
-            }
+                foreach (var item in removedItems)
+                {
+                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
+                    Images.RemoveAt(item.Index);
+                }
+            });
         }
 
         /// <inheritdoc />
@@ -524,22 +530,32 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            foreach (var item in await _album.GetImagesAsync(limit, Images.Count))
+            var items = await _album.GetImagesAsync(limit, Images.Count);
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                Images.Add(item);
-            }
+                foreach (var item in items)
+                {
+                    Images.Add(item);
+                }
+            });
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            foreach (var item in await _album.GetArtistItemsAsync(limit, Artists.Count))
+            var items = await _album.GetArtistItemsAsync(limit, Artists.Count);
+
+            _ = Threading.OnPrimaryThread(() =>
             {
-                if (item is IArtist artist)
+                foreach (var item in items)
                 {
-                    Artists.Add(new ArtistViewModel(artist));
+                    if (item is IArtist artist)
+                    {
+                        Artists.Add(new ArtistViewModel(artist));
+                    }
                 }
-            }
+            });
         }
 
         /// <inheritdoc />

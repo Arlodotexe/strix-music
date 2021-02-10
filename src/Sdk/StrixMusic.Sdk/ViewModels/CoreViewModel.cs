@@ -73,7 +73,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             foreach (var item in removedItems)
             {
-                Devices.RemoveAt(item.Index);
+                _ = Threading.OnPrimaryThread(() => Devices.RemoveAt(item.Index));
             }
 
             var sortedIndices = removedItems.Select(x => x.Index).ToList();
@@ -98,7 +98,7 @@ namespace StrixMusic.Sdk.ViewModels
                 }
 
                 // Insert the item
-                Devices.InsertOrAdd(insertOffset, item.Data);
+                _ = Threading.OnPrimaryThread(() => Devices.InsertOrAdd(insertOffset, item.Data));
             }
         }
 
