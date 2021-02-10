@@ -462,11 +462,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (IsInitialized)
                 return;
 
+            IsInitialized = true;
+
             Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
 
             await ScanFolderForMetadata();
-
-            IsInitialized = true;
         }
 
         /// <summary>
