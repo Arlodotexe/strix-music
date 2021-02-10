@@ -1,14 +1,13 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Collections;
-using OwlCore.Events;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.MediaPlayback;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Collections;
+using OwlCore.Events;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
@@ -17,13 +16,15 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc/>
     public class LocalFilesCoreArtist : ICoreArtist
     {
-        private ArtistMetadata? _artistMetadata;
-        private IFileMetadataManager _fileMetadataManager;
+        private readonly ArtistMetadata _artistMetadata;
+        private readonly IFileMetadataManager _fileMetadataManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreArtist"/> class.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
+        /// <param name="artistMetadata">The artist metadata to wrap around.</param>
+        /// <param name="totalTracksCount">The total number of track for this artist.</param>
         public LocalFilesCoreArtist(ICore sourceCore, ArtistMetadata artistMetadata, int totalTracksCount)
         {
             SourceCore = sourceCore;
@@ -287,7 +288,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            yield return null;
+            await Task.CompletedTask;
+            yield break;
         }
     }
 }

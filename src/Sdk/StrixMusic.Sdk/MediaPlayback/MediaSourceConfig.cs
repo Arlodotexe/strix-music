@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.MediaPlayback
         /// <param name="id"><inheritdoc cref="Id"/></param>
         /// <param name="mediaSourceUri"><inheritdoc cref="MediaSourceUri"/></param>
         /// <param name="expirationDate"><inheritdoc cref="ExpirationDate"/></param>
-        public MediaSourceConfig(ICoreTrack track, string id, Uri mediaSourceUri, DateTime expirationDate)
+        public MediaSourceConfig(ICoreTrack track, string id, Uri mediaSourceUri, DateTime? expirationDate = null)
         {
             Track = track;
             Id = id;

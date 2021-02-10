@@ -109,7 +109,7 @@ namespace StrixMusic.Core.MusicBrainz
         }
 
         /// <inheritdoc/>
-        public async Task<ICoreMember> GetContextById(string id)
+        public async Task<ICoreMember?> GetContextById(string id)
         {
             /*if (_musicBrainzClient != null && _artistHelperService != null)
             {

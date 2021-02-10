@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
@@ -14,6 +11,9 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.Settings;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Core.LocalFiles
 {
@@ -128,6 +128,7 @@ namespace StrixMusic.Core.LocalFiles
             coreConfig.ScanFileMetadata().FireAndForget();
 
             CoreCount++;
+
             if (CoreCount == LocalFileCoreManager.Instances?.Count)
                 LocalFileCoreManager.InitializeDataForAllCores().FireAndForget();
         }
@@ -151,23 +152,20 @@ namespace StrixMusic.Core.LocalFiles
         }
 
         /// <inheritdoc/>
-        public Task<ICoreMember> GetContextById(string id)
+        public Task<ICoreMember?> GetContextById(string id)
         {
-            throw new NotImplementedException();
+            return Task.FromResult<ICoreMember?>(null);
         }
 
         /// <inheritdoc/>
-        public async Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
+        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
         {
-            if (track is LocalFilesCoreTrack t)
-            {
-                Guard.IsNotNull(t.LocalTrackPath, nameof(t.LocalTrackPath));
-                return await Task.FromResult(new MediaSourceConfig(track, track.Id, t.LocalTrackPath, DateTime.Now.AddYears(10)));
-            }
-            else
-            {
-                throw new InvalidOperationException("Invalid track.");
-            }
+            if (!(track is LocalFilesCoreTrack t))
+                return Task.FromResult<IMediaSourceConfig?>(null);
+
+            Guard.IsNotNull(t.LocalTrackPath, nameof(t.LocalTrackPath));
+
+            return Task.FromResult<IMediaSourceConfig?>(new MediaSourceConfig(track, track.Id, t.LocalTrackPath));
         }
     }
 }

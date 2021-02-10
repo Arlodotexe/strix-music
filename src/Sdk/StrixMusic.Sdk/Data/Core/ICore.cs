@@ -108,7 +108,7 @@ namespace StrixMusic.Sdk.Data.Core
         /// Given the ID of an instance created by this core, return the fully constructed instance.
         /// </summary>
         /// <returns>The requested instance, cast down to <see cref="ICoreMember"/>.</returns>
-        public Task<ICoreMember> GetContextById(string id);
+        public Task<ICoreMember?> GetContextById(string id);
 
         /// <summary>
         /// Converts a <see cref="ICoreTrack"/> into a <see cref="IMediaSourceConfig"/> that can be used to play the track.
