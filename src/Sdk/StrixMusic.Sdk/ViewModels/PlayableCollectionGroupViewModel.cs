@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
@@ -50,12 +50,12 @@ namespace StrixMusic.Sdk.ViewModels
 
             using (Threading.PrimaryContext)
             {
-                Images = new SynchronizedObservableCollection<IImage>();
-                Tracks = new SynchronizedObservableCollection<TrackViewModel>();
-                Artists = new SynchronizedObservableCollection<IArtistCollectionItem>();
-                Children = new SynchronizedObservableCollection<PlayableCollectionGroupViewModel>();
-                Playlists = new SynchronizedObservableCollection<IPlaylistCollectionItem>();
-                Albums = new SynchronizedObservableCollection<IAlbumCollectionItem>();
+                Images = new ObservableCollection<IImage>();
+                Tracks = new ObservableCollection<TrackViewModel>();
+                Artists = new ObservableCollection<IArtistCollectionItem>();
+                Children = new ObservableCollection<PlayableCollectionGroupViewModel>();
+                Playlists = new ObservableCollection<IPlaylistCollectionItem>();
+                Albums = new ObservableCollection<IAlbumCollectionItem>();
             }
 
             AttachPropertyEvents();
@@ -480,26 +480,26 @@ namespace StrixMusic.Sdk.ViewModels
         public DateTime? AddedAt => _collectionGroup.AddedAt;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IPlaylistCollectionItem> Playlists { get; }
+        public ObservableCollection<IPlaylistCollectionItem> Playlists { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }
+        public ObservableCollection<TrackViewModel> Tracks { get; }
 
         /// <summary>
         /// The albums in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<IAlbumCollectionItem> Albums { get; }
+        public ObservableCollection<IAlbumCollectionItem> Albums { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
+        public ObservableCollection<IArtistCollectionItem> Artists { get; }
 
         /// <summary>
         /// The nested <see cref="IPlayableCollectionGroupBase"/> items in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<PlayableCollectionGroupViewModel> Children { get; }
+        public ObservableCollection<PlayableCollectionGroupViewModel> Children { get; }
 
         /// <inheritdoc />
         public string Name => _collectionGroup.Name;

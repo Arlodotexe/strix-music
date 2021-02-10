@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
@@ -34,8 +35,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             using (Threading.PrimaryContext)
             {
-                Images = new SynchronizedObservableCollection<IImage>();
-                Tracks = new SynchronizedObservableCollection<TrackViewModel>();
+                Images = new ObservableCollection<IImage>();
+                Tracks = new ObservableCollection<TrackViewModel>();
             }
 
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
@@ -292,10 +293,10 @@ namespace StrixMusic.Sdk.ViewModels
         public DateTime? AddedAt => _collection.AddedAt;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }
+        public ObservableCollection<TrackViewModel> Tracks { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }

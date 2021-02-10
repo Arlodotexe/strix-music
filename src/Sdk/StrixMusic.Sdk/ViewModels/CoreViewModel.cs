@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
@@ -50,7 +50,7 @@ namespace StrixMusic.Sdk.ViewModels
             if (_core.Search != null)
                 Search = new SearchViewModel(new MergedSearch(_core.Search.IntoList()));
 
-            Devices = new SynchronizedObservableCollection<ICoreDevice>();
+            Devices = new ObservableCollection<ICoreDevice>();
 
             CoreState = _core.CoreState;
 
@@ -129,7 +129,7 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreDevice> ICore.Devices => Devices;
 
         /// <inheritdoc cref="ICore.Devices" />
-        public SynchronizedObservableCollection<ICoreDevice> Devices { get; }
+        public ObservableCollection<ICoreDevice> Devices { get; }
 
         /// <inheritdoc cref="ICore.Library" />
         ICoreLibrary ICore.Library => _core.Library;

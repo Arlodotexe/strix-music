@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
-using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -13,7 +13,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The nested <see cref="IPlayableCollectionGroup"/> items in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<PlayableCollectionGroupViewModel> Children { get; }
+        public ObservableCollection<PlayableCollectionGroupViewModel> Children { get; }
 
         /// <summary>
         /// Populates the next set of children items into the collection.

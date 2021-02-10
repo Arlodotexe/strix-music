@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
@@ -13,7 +14,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The albums in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<IAlbumCollectionItem> Albums { get; }
+        public ObservableCollection<IAlbumCollectionItem> Albums { get; }
 
         /// <summary>
         /// Populates the next set of albums into the collection.

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
@@ -34,8 +34,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             using (Threading.PrimaryContext)
             {
-                Images = new SynchronizedObservableCollection<IImage>();
-                Albums = new SynchronizedObservableCollection<IAlbumCollectionItem>();
+                Images = new ObservableCollection<IImage>();
+                Albums = new ObservableCollection<IAlbumCollectionItem>();
             }
 
             SourceCores = _collection.GetSourceCores<ICoreAlbumCollection>().Select(MainViewModel.GetLoadedCore).ToList();
@@ -283,10 +283,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IAlbumCollectionItem> Albums { get; set; }
+        public ObservableCollection<IAlbumCollectionItem> Albums { get; set; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public string Id => _collection.Id;

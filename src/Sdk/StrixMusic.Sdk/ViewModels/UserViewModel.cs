@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 
@@ -16,10 +16,7 @@ namespace StrixMusic.Sdk.ViewModels
         public UserViewModel(IUser user)
             : base(user)
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
+            Guard.IsNotNull(user, nameof(user));
 
             Library = new LibraryViewModel(user.Library);
         }

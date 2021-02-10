@@ -1,8 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
-using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -14,7 +13,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The tracks in this collection.
         /// </summary>
-        public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }
+        public ObservableCollection<TrackViewModel> Tracks { get; }
 
         /// <summary>
         /// Populates the next set of tracks into the collection.

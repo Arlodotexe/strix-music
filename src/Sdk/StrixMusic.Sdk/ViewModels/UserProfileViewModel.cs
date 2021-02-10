@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,18 +42,8 @@ namespace StrixMusic.Sdk.ViewModels
                 if (userProfile.Urls != null)
                     Urls = new SynchronizedObservableCollection<Uri>(userProfile.Urls);
 
-                Images = new SynchronizedObservableCollection<IImage>();
+                Images = new ObservableCollection<IImage>();
             }
-        }
-
-        private void AttachEvents()
-        {
-            throw new NotImplementedException();
-        }
-
-        private void DetachEvents()
-        {
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -134,7 +125,7 @@ namespace StrixMusic.Sdk.ViewModels
         public DateTime? Birthdate => _userProfile.Birthdate;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<Uri>? Urls { get; }

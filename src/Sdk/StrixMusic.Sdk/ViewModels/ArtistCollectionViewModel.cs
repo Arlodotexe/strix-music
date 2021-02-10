@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
@@ -324,7 +325,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration) => _collection.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
+        public ObservableCollection<IArtistCollectionItem> Artists { get; }
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
@@ -344,7 +345,7 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public Task<bool> IsAddArtistItemAvailable(int index) => _collection.IsAddArtistItemAvailable(index);

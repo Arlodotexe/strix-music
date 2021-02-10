@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
@@ -42,9 +43,9 @@ namespace StrixMusic.Sdk.ViewModels
 
             using (Threading.PrimaryContext)
             {
-                Images = new SynchronizedObservableCollection<IImage>();
-                Tracks = new SynchronizedObservableCollection<TrackViewModel>();
-                Artists = new SynchronizedObservableCollection<IArtistCollectionItem>();
+                Images = new ObservableCollection<IImage>();
+                Tracks = new ObservableCollection<TrackViewModel>();
+                Artists = new ObservableCollection<IArtistCollectionItem>();
             }
 
             if (_album.RelatedItems != null)
@@ -235,9 +236,6 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _album.ArtistItemsChanged -= value;
         }
 
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
-
         private void AlbumUrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
 
         private void AlbumNameChanged(object sender, string e) => OnPropertyChanged(nameof(Name));
@@ -336,7 +334,7 @@ namespace StrixMusic.Sdk.ViewModels
         public IPlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<string>? Genres => _album.Genres;
@@ -344,7 +342,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The tracks for this album.
         /// </summary>
-        public SynchronizedObservableCollection<TrackViewModel> Tracks { get; }
+        public ObservableCollection<TrackViewModel> Tracks { get; }
+
+        /// <inheritdoc />
+        public ObservableCollection<IArtistCollectionItem> Artists { get; }
 
         /// <inheritdoc />
         public string Name => _album.Name;

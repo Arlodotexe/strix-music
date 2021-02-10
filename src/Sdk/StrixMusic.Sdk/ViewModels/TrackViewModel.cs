@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,8 +49,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             using (Threading.PrimaryContext)
             {
-                Images = new SynchronizedObservableCollection<IImage>();
-                Artists = new SynchronizedObservableCollection<IArtistCollectionItem>();
+                Images = new ObservableCollection<IImage>();
+                Artists = new ObservableCollection<IArtistCollectionItem>();
             }
 
             PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
@@ -362,13 +363,13 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The artists for this track.
         /// </summary>
-        public SynchronizedObservableCollection<IArtistCollectionItem> Artists { get; }
+        public ObservableCollection<IArtistCollectionItem> Artists { get; }
 
         /// <inheritdoc />
         public SynchronizedObservableCollection<string>? Genres => Model.Genres;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<IImage> Images { get; }
+        public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
         public TrackType Type => Model.Type;
