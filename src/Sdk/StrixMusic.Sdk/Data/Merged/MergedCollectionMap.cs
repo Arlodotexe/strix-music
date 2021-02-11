@@ -619,12 +619,12 @@ namespace StrixMusic.Sdk.Data.Merged
             _sortedMap.AddRange(BuildSortedMapRanked());
 
             // If the offset exceeds the number of items we have, return nothing.
-            if (offset >= _mergedMappedData.Count)
+            if (offset >= _sortedMap.Count)
                 return new List<TCollectionItem>();
 
             // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
-            if (offset + limit > _mergedMappedData.Count)
-                limit = _mergedMappedData.Count - offset;
+            if (offset + limit > _sortedMap.Count)
+                limit = _sortedMap.Count - offset;
 
             // Get all requested items using the sorted map
             for (var i = 0; i < limit; i++)
