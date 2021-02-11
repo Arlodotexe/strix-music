@@ -94,7 +94,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc/>
-        public int TotalTracksCount { get; }
+        public int TotalTracksCount { get; private set; }
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
@@ -217,6 +217,15 @@ namespace StrixMusic.Core.LocalFiles.Models
         public Task PlayAsync()
         {
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Updates the number of tracks for <see cref="LocalFilesCoreArtist"/>.
+        /// </summary>
+        /// <param name="newTrackCount">The new count.</param>
+        public void ChangeTotalTrackCount(int newTrackCount)
+        {
+            TotalTracksCount = newTrackCount;
         }
 
         /// <inheritdoc/>

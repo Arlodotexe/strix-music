@@ -269,7 +269,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     {
                         byte[] imageData = albumArt.Data.Data;
 
-                        var imageFile = await CacheFolder.CreateFileAsync($"{fileData.DisplayName}.thumb",CreationCollisionOption.ReplaceExisting);
+                        var imageFile = await CacheFolder.CreateFileAsync($"{fileData.DisplayName}.thumb", CreationCollisionOption.ReplaceExisting);
                         await imageFile.WriteAllBytesAsync(imageData);
 
                         imagePath = new Uri(imageFile.Path);
@@ -320,64 +320,86 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Create groups and apply ids to all data in a <see cref="List{RelatedMetadata}"/>.
         /// </summary>
         /// <param name="relatedMetadata">The data to parse.</param>
-        private void ApplyRelatedMetadataIds(List<FileMetadata> relatedMetadata)
+        private FileMetadata? ApplyRelatedMetadataIds(FileMetadata relatedMetadata)
         {
-            var trackGroup = relatedMetadata.GroupBy(c => c.TrackMetadata?.Title);
-            var artistGroup = relatedMetadata.GroupBy(c => c.ArtistMetadata?.Name);
-            var albumGroup = relatedMetadata.GroupBy(c => c.AlbumMetadata?.Title);
-
-            foreach (var tracks in trackGroup)
+            lock (relatedMetadata)
             {
-                var trackId = Guid.NewGuid().ToString();
-                foreach (var item in tracks)
+                var trackMetadata = relatedMetadata.TrackMetadata;
+                var albumMetadata = relatedMetadata.AlbumMetadata;
+                var artistMetadata = relatedMetadata.ArtistMetadata;
+
+                if (trackMetadata == null)
+                    return null;
+
+                if (albumMetadata == null)
+                    return null;
+
+                if (artistMetadata == null)
+                    return null;
+
+                trackMetadata.Id = Guid.NewGuid().ToString();
+
+                if (_fileMetadata.Count == 0)
                 {
-                    if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
+                    var albumId = Guid.NewGuid().ToString();
+                    albumMetadata.Id = albumId;
+
+                    var artistId = Guid.NewGuid().ToString();
+                    artistMetadata.Id = artistId;
+
+                    albumMetadata.TrackIds ??= new List<string>();
+                    albumMetadata.TrackIds.Add(trackMetadata.Id);
+
+                    return relatedMetadata;
+                }
+                else
+                {
+                    var existingAlbum = _fileMetadata.FirstOrDefault(c => c.AlbumMetadata?.Title?.Equals(albumMetadata.Title, StringComparison.OrdinalIgnoreCase) ?? false)?.AlbumMetadata;
+
+                    if (existingAlbum != null)
                     {
-                        item.TrackMetadata.Id = trackId;
+                        existingAlbum.TrackIds ??= new List<string>();
 
-                        item.AlbumMetadata.TrackIds ??= new List<string>();
-                        item.ArtistMetadata.TrackIds ??= new List<string>();
+                        existingAlbum.TrackIds.Add(trackMetadata.Id);
 
-                        item.AlbumMetadata.TrackIds.Add(trackId);
-                        item.ArtistMetadata.TrackIds.Add(trackId);
+                        relatedMetadata.AlbumMetadata = existingAlbum;
+
+                        FileMetadataUpdated?.Invoke(this, new FileMetadata() { AlbumMetadata = existingAlbum });
+                    }
+                    else
+                    {
+                        var albumId = Guid.NewGuid().ToString();
+                        albumMetadata.Id = albumId;
+
+                        albumMetadata.TrackIds = new List<string>();
+
+                        albumMetadata.TrackIds.Add(trackMetadata.Id);
+                    }
+
+                    var existingArtist = _fileMetadata.FirstOrDefault(c => c.ArtistMetadata?.Name?.Equals(artistMetadata.Name, StringComparison.OrdinalIgnoreCase) ?? false)?.ArtistMetadata;
+
+                    if (existingArtist != null)
+                    {
+                        existingArtist.TrackIds ??= new List<string>();
+
+                        existingArtist.TrackIds.Add(trackMetadata.Id);
+
+                        relatedMetadata.ArtistMetadata = existingArtist;
+
+                        FileMetadataUpdated?.Invoke(this, new FileMetadata() { ArtistMetadata = existingArtist });
+                    }
+                    else
+                    {
+                        var artistId = Guid.NewGuid().ToString();
+                        artistMetadata.Id = artistId;
+
+                        albumMetadata.TrackIds = new List<string>();
+
+                        albumMetadata.TrackIds.Add(trackMetadata.Id);
                     }
                 }
-            }
 
-            foreach (var tracks in albumGroup)
-            {
-                var albumId = Guid.NewGuid().ToString();
-
-                foreach (var item in tracks)
-                {
-                    if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
-                    {
-                        item.AlbumMetadata.Id = albumId;
-                        item.TrackMetadata.AlbumId = albumId;
-
-                        item.ArtistMetadata.AlbumIds ??= new List<string>();
-
-                        item.ArtistMetadata.AlbumIds.Add(albumId);
-                    }
-                }
-            }
-
-            foreach (var tracks in artistGroup)
-            {
-                var artistId = Guid.NewGuid().ToString();
-                foreach (var item in tracks)
-                {
-                    if (item.AlbumMetadata != null && item.TrackMetadata != null && item.ArtistMetadata != null)
-                    {
-                        item.ArtistMetadata.Id = artistId;
-
-                        item.TrackMetadata.ArtistIds ??= new List<string>();
-                        item.AlbumMetadata.ArtistIds ??= new List<string>();
-
-                        item.TrackMetadata.ArtistIds.Add(artistId);
-                        item.AlbumMetadata.ArtistIds.Add(artistId);
-                    }
-                }
+                return relatedMetadata;
             }
         }
 
@@ -549,14 +571,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             lock (_fileMetadata)
             {
-                _fileMetadata.Add(metadata);
-                ApplyRelatedMetadataIds(_fileMetadata);
+                metadata = ApplyRelatedMetadataIds(metadata);
+
+                if (metadata != null)
+                    _fileMetadata.Add(metadata);
 
                 FilesProcessed++;
             }
 
             // todo If any related metadata is updated but already emitted, we need to update the data externally as well.
-            FileMetadataAdded?.Invoke(this, metadata);
+
+            if (metadata != null)
+                FileMetadataAdded?.Invoke(this, metadata);
 
             return metadata;
         }

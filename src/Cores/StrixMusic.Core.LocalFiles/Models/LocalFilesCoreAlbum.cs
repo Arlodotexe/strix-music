@@ -91,7 +91,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc/>
-        public int TotalTracksCount { get; }
+        public int TotalTracksCount { get; private set; }
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
@@ -127,7 +127,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public int TotalImageCount { get; }
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount { get; }
+        public int TotalArtistItemsCount { get; private set; }
 
         /// <inheritdoc/>
         public ICorePlayableCollectionGroup? RelatedItems { get; }
@@ -228,12 +228,33 @@ namespace StrixMusic.Core.LocalFiles.Models
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Updates the number of tracks for <see cref="LocalFilesCoreAlbum"/>.
+        /// </summary>
+        /// <param name="newTrackCount">The new count.</param>
+        public void ChangeTotalTrackCount(int newTrackCount)
+        {
+            TotalTracksCount = newTrackCount;
+        }
+
+        /// <summary>
+        /// Updates the number of artists for <see cref="LocalFilesCoreArtist"/>.
+        /// </summary>
+        /// <param name="newArtistCount">The new count.</param>
+        public void ChangeTotalArtistCount(int newArtistCount)
+        {
+            TotalArtistItemsCount = newArtistCount;
+        }
+
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
-            var tracksList = SourceCore.GetService<TrackRepository>();
+            var tracksList = _fileMetadataManager.Tracks;
 
             var tracks = await tracksList.GetTracksByAlbumId(Id, offset, limit);
+
+            if (tracks.Count == 0)
+                 yield return null;
 
             foreach (var track in tracks)
             {
