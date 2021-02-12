@@ -354,6 +354,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 }
                 else
                 {
+                    //Checking for existing tracks. If found, the no new ids are created.
+
+                    var existingTrack = _fileMetadata.FirstOrDefault(c => c.TrackMetadata?.Title?.Equals(trackMetadata.Title, StringComparison.OrdinalIgnoreCase) ?? false)?.TrackMetadata;
+
+                    if (existingTrack != null)
+                    {
+                        trackMetadata = existingTrack;
+
+                        if (trackMetadata.Id == null)
+                            trackMetadata.Id = Guid.NewGuid().ToString();
+                    }
+
                     var existingAlbum = _fileMetadata.FirstOrDefault(c => c.AlbumMetadata?.Title?.Equals(albumMetadata.Title, StringComparison.OrdinalIgnoreCase) ?? false)?.AlbumMetadata;
 
                     if (existingAlbum != null)
@@ -362,7 +374,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                         existingAlbum.TrackIds.Add(trackMetadata.Id);
 
-                        relatedMetadata.AlbumMetadata = existingAlbum;
+                        albumMetadata = existingAlbum;
 
                         FileMetadataUpdated?.Invoke(this, new FileMetadata() { AlbumMetadata = existingAlbum });
                     }
@@ -393,9 +405,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         var artistId = Guid.NewGuid().ToString();
                         artistMetadata.Id = artistId;
 
-                        albumMetadata.TrackIds = new List<string>();
+                        artistMetadata.TrackIds = new List<string>();
 
-                        albumMetadata.TrackIds.Add(trackMetadata.Id);
+                        artistMetadata.TrackIds.Add(trackMetadata.Id);
+                    }
+
+                    if (trackMetadata != null)
+                    {
+                        trackMetadata.AlbumId = albumMetadata.Id;
                     }
                 }
 

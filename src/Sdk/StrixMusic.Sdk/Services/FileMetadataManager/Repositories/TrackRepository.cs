@@ -102,19 +102,19 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>The filtered <see cref="IReadOnlyList{ArtistMetadata}"/>></returns>
         public async Task<IReadOnlyList<TrackMetadata>> GetTracksByArtistId(string artistId, int offset, int limit)
         {
-            var filteredAlbums = new List<TrackMetadata>();
+            var filteredTracks = new List<TrackMetadata>();
 
-            var tracks = await GetTrackMetadata(offset, limit);
+            var tracks = await GetTrackMetadata(offset, -1);
 
             foreach (var item in tracks)
             {
-                if (item.ArtistIds != null && item.ArtistIds.Contains(artistId))
+                if (item?.ArtistIds != null && item.ArtistIds.Contains(artistId))
                 {
-                    filteredAlbums.Add(item);
+                    filteredTracks.Add(item);
                 }
             }
 
-            return filteredAlbums;
+            return filteredTracks.Skip(offset).Take(limit).ToList();
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>The filtered <see cref="IReadOnlyList{ArtistMetadata}"/>></returns>
         public async Task<IReadOnlyList<TrackMetadata>> GetTracksByAlbumId(string albumId, int offset, int limit)
         {
-            var filteredAlbums = new List<TrackMetadata>();
+            var filteredTracks = new List<TrackMetadata>();
 
             var tracks = await GetTrackMetadata(offset, -1);
 
@@ -134,11 +134,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             {
                 if (item?.AlbumId != null && item.AlbumId.Contains(albumId))
                 {
-                    filteredAlbums.Add(item);
+                    filteredTracks.Add(item);
                 }
             }
 
-            return filteredAlbums.Skip(offset).Take(limit).ToList();
+            return filteredTracks.Skip(offset).Take(limit).ToList();
         }
 
         /// <inheritdoc />
