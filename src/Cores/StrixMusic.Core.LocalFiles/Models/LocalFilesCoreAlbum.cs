@@ -253,10 +253,6 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             var tracks = await tracksList.GetTracksByAlbumId(Id, offset, limit);
 
-            // The freezing still exist, even if the track count on albums are correct.
-            if (tracks.Count == 0)
-                yield return null;
-
             foreach (var track in tracks)
             {
                 yield return new LocalFilesCoreTrack(SourceCore, track);

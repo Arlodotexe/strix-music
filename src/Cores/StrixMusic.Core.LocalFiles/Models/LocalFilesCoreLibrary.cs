@@ -180,6 +180,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                         if (_metadataCoreAlbumDictionary.Count > 0)
                         {
                             _metadataCoreAlbumDictionary[targetAlbumMetadata].ChangeTotalTrackCount(targetAlbumMetadata.TrackIds.Count());
+                            _metadataCoreAlbumDictionary[targetAlbumMetadata].ChangeTotalArtistCount(targetAlbumMetadata.ArtistIds.Count());
                         }
                     }
                 }

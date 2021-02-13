@@ -354,9 +354,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 }
                 else
                 {
-                    //Checking for existing tracks. If found, the no new ids are created.
-
+                    // Checking for existing tracks. If found, the no new ids are created.
                     var existingTrack = _fileMetadata.FirstOrDefault(c => c.TrackMetadata?.Title?.Equals(trackMetadata.Title, StringComparison.OrdinalIgnoreCase) ?? false)?.TrackMetadata;
+
+                    // Suppress any track with the same Title.
+                    if (existingTrack != null)
+                        return null;
 
                     if (existingTrack != null)
                     {
@@ -364,28 +367,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                         if (trackMetadata.Id == null)
                             trackMetadata.Id = Guid.NewGuid().ToString();
-                    }
-
-                    var existingAlbum = _fileMetadata.FirstOrDefault(c => c.AlbumMetadata?.Title?.Equals(albumMetadata.Title, StringComparison.OrdinalIgnoreCase) ?? false)?.AlbumMetadata;
-
-                    if (existingAlbum != null)
-                    {
-                        existingAlbum.TrackIds ??= new List<string>();
-
-                        existingAlbum.TrackIds.Add(trackMetadata.Id);
-
-                        albumMetadata = existingAlbum;
-
-                        FileMetadataUpdated?.Invoke(this, new FileMetadata() { AlbumMetadata = existingAlbum });
-                    }
-                    else
-                    {
-                        var albumId = Guid.NewGuid().ToString();
-                        albumMetadata.Id = albumId;
-
-                        albumMetadata.TrackIds = new List<string>();
-
-                        albumMetadata.TrackIds.Add(trackMetadata.Id);
                     }
 
                     var existingArtist = _fileMetadata.FirstOrDefault(c => c.ArtistMetadata?.Name?.Equals(artistMetadata.Name, StringComparison.OrdinalIgnoreCase) ?? false)?.ArtistMetadata;
@@ -396,7 +377,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                         existingArtist.TrackIds.Add(trackMetadata.Id);
 
-                        relatedMetadata.ArtistMetadata = existingArtist;
+                        artistMetadata = existingArtist;
 
                         FileMetadataUpdated?.Invoke(this, new FileMetadata() { ArtistMetadata = existingArtist });
                     }
@@ -410,9 +391,49 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         artistMetadata.TrackIds.Add(trackMetadata.Id);
                     }
 
+                    var existingAlbum = _fileMetadata.FirstOrDefault(c => c.AlbumMetadata?.Title?.Equals(albumMetadata.Title, StringComparison.OrdinalIgnoreCase) ?? false)?.AlbumMetadata;
+
+                    if (existingAlbum != null)
+                    {
+                        existingAlbum.TrackIds ??= new List<string>();
+
+                        existingAlbum.TrackIds.Add(trackMetadata.Id);
+
+                        albumMetadata = existingAlbum;
+
+                        albumMetadata.ArtistIds ??= new List<string>();
+
+                        if (artistMetadata?.Id != null)
+                        {
+                            if (!albumMetadata.ArtistIds?.Contains(artistMetadata.Id) ?? false)
+                            {
+                                albumMetadata.ArtistIds?.Add(artistMetadata.Id);
+                            }
+                        }
+
+                        FileMetadataUpdated?.Invoke(this, new FileMetadata() { AlbumMetadata = existingAlbum });
+                    }
+                    else
+                    {
+                        var albumId = Guid.NewGuid().ToString();
+                        albumMetadata.Id = albumId;
+
+                        albumMetadata.TrackIds = new List<string>();
+                        albumMetadata.ArtistIds = new List<string>();
+
+                        albumMetadata.TrackIds.Add(trackMetadata.Id);
+
+                        if (artistMetadata?.Id != null)
+                            albumMetadata.ArtistIds.Add(artistMetadata.Id);
+                    }
+
                     if (trackMetadata != null)
                     {
                         trackMetadata.AlbumId = albumMetadata.Id;
+                        trackMetadata.ArtistIds ??= new List<string>();
+
+                        if (artistMetadata?.Id != null)
+                            trackMetadata.ArtistIds.Add(artistMetadata.Id);
                     }
                 }
 
@@ -526,6 +547,17 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var foldersToScan = new Stack<IFolderData>();
             foldersToScan.Push(_folderData);
             allDiscoveredFolders.Enqueue(_folderData);
+
+            // Scanning files for the root folder.
+            var files = await _folderData.GetFilesAsync();
+            var filesList = files.ToList();
+
+            foreach (var file in filesList)
+            {
+                allDiscoveredFiles.Enqueue(file);
+            }
+
+            FilesFound += filesList.Count;
 
             await DFSFolderContentScan(foldersToScan, allDiscoveredFolders, allDiscoveredFiles);
 

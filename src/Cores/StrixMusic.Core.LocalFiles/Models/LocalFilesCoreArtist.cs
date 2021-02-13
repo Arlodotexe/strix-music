@@ -250,9 +250,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
             var trackService = _fileMetadataManager.Tracks;
-            var albums = await trackService.GetTracksByArtistId(Id, offset, limit);
+            var tracks = await trackService.GetTracksByArtistId(Id, offset, limit);
 
-            foreach (var album in albums)
+            foreach (var album in tracks)
             {
                 yield return new LocalFilesCoreTrack(SourceCore, album);
             }
