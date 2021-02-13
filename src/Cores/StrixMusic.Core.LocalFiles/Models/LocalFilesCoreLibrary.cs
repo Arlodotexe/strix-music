@@ -18,11 +18,15 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc cref="ICoreLibrary"/>
     public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary
     {
-        private readonly object _lockObj = new object();
-        private IFileMetadataManager? _fileMetadataManager;
         private readonly IList<ArtistMetadata> _artistMetadatas;
         private readonly IList<AlbumMetadata> _albumMetadatas;
         private readonly IList<TrackMetadata> _trackMetadatas;
+
+        private IFileMetadataManager? _fileMetadataManager;
+
+        private Dictionary<TrackMetadata, LocalFilesCoreTrack> _metadataCoreTrackDictionary;
+        private Dictionary<AlbumMetadata, LocalFilesCoreAlbum> _metadataCoreAlbumDictionary;
+        private Dictionary<ArtistMetadata, LocalFilesCoreArtist> _metadataCoreArtistDictionary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreLibrary"/> class.
@@ -34,6 +38,9 @@ namespace StrixMusic.Core.LocalFiles.Models
             _artistMetadatas = new List<ArtistMetadata>();
             _trackMetadatas = new List<TrackMetadata>();
             _albumMetadatas = new List<AlbumMetadata>();
+            _metadataCoreTrackDictionary = new Dictionary<TrackMetadata, LocalFilesCoreTrack>();
+            _metadataCoreAlbumDictionary = new Dictionary<AlbumMetadata, LocalFilesCoreAlbum>();
+            _metadataCoreArtistDictionary = new Dictionary<ArtistMetadata, LocalFilesCoreArtist>();
         }
 
         /// <inheritdoc/>
@@ -42,6 +49,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
 
             _fileMetadataManager.FileMetadataAdded += MetadataScannerFileMetadataAdded;
+            _fileMetadataManager.FileMetadataUpdated += MetadataScannerFileMetadataUpdated;
 
             IsInitialized = true;
 
@@ -145,6 +153,56 @@ namespace StrixMusic.Core.LocalFiles.Models
             }
         }
 
+        private void MetadataScannerFileMetadataUpdated(object sender, FileMetadata e)
+        {
+            lock (_metadataCoreTrackDictionary)
+            {
+                if (e.TrackMetadata != null)
+                {
+                    var targetTrackMetadata = _trackMetadatas?.FirstOrDefault(c => c.Title?.Equals(e.TrackMetadata.Title, StringComparison.OrdinalIgnoreCase) ?? false);
+
+                    if (targetTrackMetadata != null)
+                    {
+                        if (_metadataCoreTrackDictionary.Count > 0)
+                            _metadataCoreTrackDictionary[targetTrackMetadata].ChangeTotalArtistCount(targetTrackMetadata.ArtistIds.Count());
+                    }
+                }
+            }
+
+            lock (_metadataCoreAlbumDictionary)
+            {
+                if (e.AlbumMetadata != null)
+                {
+                    var targetAlbumMetadata = _albumMetadatas?.FirstOrDefault(c => c.Title?.Equals(e.AlbumMetadata.Title, StringComparison.OrdinalIgnoreCase) ?? false);
+
+                    if (targetAlbumMetadata != null)
+                    {
+                        if (_metadataCoreAlbumDictionary.Count > 0)
+                        {
+                            _metadataCoreAlbumDictionary[targetAlbumMetadata].ChangeTotalTrackCount(targetAlbumMetadata.TrackIds.Count());
+                            _metadataCoreAlbumDictionary[targetAlbumMetadata].ChangeTotalArtistCount(targetAlbumMetadata.ArtistIds.Count());
+                        }
+                    }
+                }
+            }
+
+            lock (_metadataCoreArtistDictionary)
+            {
+                if (e.ArtistMetadata != null)
+                {
+                    var targetArtistMetadata = _artistMetadatas?.FirstOrDefault(c => c.Name?.Equals(e.ArtistMetadata.Name, StringComparison.OrdinalIgnoreCase) ?? false);
+
+                    if (targetArtistMetadata != null)
+                    {
+                        if (_metadataCoreArtistDictionary.Count > 0)
+                        {
+                            _metadataCoreArtistDictionary[targetArtistMetadata].ChangeTotalTrackCount(targetArtistMetadata.TrackIds.Count());
+                        }
+                    }
+                }
+            }
+        }
+
         private void MetadataScannerFileMetadataAdded(object sender, FileMetadata e)
         {
             HandleAlbumMetadataAdded(e);
@@ -156,7 +214,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         private void HandleAddedTrackMetadata(FileMetadata e)
         {
-            lock (_trackMetadatas)
+            lock (_metadataCoreTrackDictionary)
             {
                 if (e.TrackMetadata is null || (_trackMetadatas?.Any(c => c.Title?.Contains(e.TrackMetadata.Title ?? string.Empty) ?? false) ?? false))
                     return;
@@ -172,13 +230,15 @@ namespace StrixMusic.Core.LocalFiles.Models
                     return;
 
                 _trackMetadatas?.Add(e.TrackMetadata);
+                _metadataCoreTrackDictionary.Add(e.TrackMetadata, filesCoreTrack);
+
                 TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreTrack>>());
             }
         }
 
         private void HandleArtistMetadataAdded(FileMetadata e)
         {
-            lock (_artistMetadatas)
+            lock (_metadataCoreArtistDictionary)
             {
                 if (e.ArtistMetadata == null)
                     return;
@@ -198,13 +258,14 @@ namespace StrixMusic.Core.LocalFiles.Models
                 if (_artistMetadatas == null)
                     return;
                 _artistMetadatas?.Add(e.ArtistMetadata);
+                _metadataCoreArtistDictionary.Add(e.ArtistMetadata, filesCoreArtist);
                 ArtistItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>());
             }
         }
 
         private void HandleAlbumMetadataAdded(FileMetadata e)
         {
-            lock (_albumMetadatas)
+            lock (_metadataCoreAlbumDictionary)
             {
                 foreach (var album in _albumMetadatas)
                 {
@@ -225,6 +286,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                     new CollectionChangedEventItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
                 };
                 _albumMetadatas.Add(e.AlbumMetadata);
+                _metadataCoreAlbumDictionary.Add(e.AlbumMetadata, fileCoreAlbum);
 
                 AlbumItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>());
             }

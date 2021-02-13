@@ -98,7 +98,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public TrackType Type => TrackType.Song;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount => 0;
+        public int TotalArtistItemsCount { get; private set; }
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 0;
@@ -310,6 +310,15 @@ namespace StrixMusic.Core.LocalFiles.Models
         public Task RemoveImageAsync(int index)
         {
             throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Updates the number of artists for <see cref="LocalFilesCoreTrack"/>.
+        /// </summary>
+        /// <param name="newArtistCount"></param>
+        public void ChangeTotalArtistCount(int newArtistCount)
+        {
+            TotalArtistItemsCount = newArtistCount;
         }
 
         /// <inheritdoc/>
