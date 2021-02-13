@@ -549,17 +549,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             foldersToScan.Push(_folderData);
             allDiscoveredFolders.Enqueue(_folderData);
 
-            // Scanning files for the root folder.
-            var files = await _folderData.GetFilesAsync();
-            var filesList = files.ToList();
-
-            foreach (var file in filesList)
-            {
-                allDiscoveredFiles.Enqueue(file);
-            }
-
-            FilesFound += filesList.Count;
-
             await DFSFolderContentScan(foldersToScan, allDiscoveredFolders, allDiscoveredFiles);
 
             dfsNotification.Dismiss();
