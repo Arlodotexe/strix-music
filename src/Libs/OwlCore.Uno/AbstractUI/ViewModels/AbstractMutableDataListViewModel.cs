@@ -77,7 +77,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
 
         private void Items_ItemAddRequested(object sender, EventArgs e) => RequestNewItem();
 
-        private void Model_ItemsChanged(object sender, System.Collections.Generic.IReadOnlyList<CollectionChangedEventItem<AbstractUIMetadata>> addedItems, System.Collections.Generic.IReadOnlyList<CollectionChangedEventItem<AbstractUIMetadata>> removedItems)
+        private void Model_ItemsChanged(object sender, System.Collections.Generic.IReadOnlyList<CollectionChangedItem<AbstractUIMetadata>> addedItems, System.Collections.Generic.IReadOnlyList<CollectionChangedItem<AbstractUIMetadata>> removedItems)
         {
             using (OwlCore.Threading.PrimaryContext)
             {

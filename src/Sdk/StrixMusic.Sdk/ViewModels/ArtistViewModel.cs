@@ -247,66 +247,32 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
 
-        private void ArtistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        private void ArtistViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
-                {
-                    Images.Insert(item.Index, item.Data);
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
-                    Images.RemoveAt(item.Index);
-                }
+                Images.ChangeCollection(addedItems, removedItems);
             });
         }
 
-        private void ArtistViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
+        private void ArtistViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
-                {
-                    Tracks.Insert(item.Index, new TrackViewModel(item.Data));
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
-                    Tracks.RemoveAt(item.Index);
-                }
+                Tracks.ChangeCollection(addedItems, removedItems, item => new TrackViewModel(item.Data));
             });
         }
 
-        private void ArtistViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> removedItems)
+        private void ArtistViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
+                Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    switch (item.Data)
-                    {
-                        case IAlbum album:
-                            Albums.InsertOrAdd(item.Index, new AlbumViewModel(album));
-                            break;
-                        case IAlbumCollection collection:
-                            Albums.InsertOrAdd(item.Index, new AlbumCollectionViewModel(collection));
-                            break;
-                        default:
-                            ThrowHelper.ThrowNotSupportedException(
-                                $"{item.Data.GetType()} not supported for adding to {GetType()}");
-                            break;
-                    }
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IAlbumCollectionItem>)Albums, nameof(Albums));
-                    Albums.RemoveAt(item.Index);
-                }
+                    IAlbum album => new AlbumViewModel(album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
             });
         }
 

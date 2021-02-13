@@ -56,10 +56,10 @@ namespace StrixMusic.Sdk.Data.Merged
             }
         }
 
-        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreDevice>> removedItems)
+        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            var itemsToAdd = addedItems.Select(x => new CollectionChangedEventItem<IDevice>(new CoreDeviceProxy(x.Data), x.Index)).ToList();
-            var itemsToRemove= removedItems.Select(x => new CollectionChangedEventItem<IDevice>(new CoreDeviceProxy(x.Data), x.Index)).ToList();
+            var itemsToAdd = addedItems.Select(x => new CollectionChangedItem<IDevice>(new CoreDeviceProxy(x.Data), x.Index)).ToList();
+            var itemsToRemove= removedItems.Select(x => new CollectionChangedItem<IDevice>(new CoreDeviceProxy(x.Data), x.Index)).ToList();
 
             DevicesChanged?.Invoke(this, itemsToAdd, itemsToRemove);
         }

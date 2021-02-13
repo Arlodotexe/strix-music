@@ -114,49 +114,24 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
 
-        private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        private void ArtistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
-                {
-                    Images.InsertOrAdd(item.Index, item.Data);
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
-                    Images.RemoveAt(item.Index);
-                }
+                Images.ChangeCollection(addedItems, removedItems);
             });
         }
 
-        private void ArtistCollectionViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> removedItems)
+        private void ArtistCollectionViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
+                Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    switch (item.Data)
-                    {
-                        case IArtist artist:
-                            Artists.InsertOrAdd(item.Index, new ArtistViewModel(artist));
-                            break;
-                        case IArtistCollection collection:
-                            Artists.InsertOrAdd(item.Index, new ArtistCollectionViewModel(collection));
-                            break;
-                        default:
-                            ThrowHelper.ThrowNotSupportedException(
-                                $"{item.Data.GetType()} not a supported artist item for {nameof(ArtistCollectionViewModel)}");
-                            break;
-                    }
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IArtistCollectionItem>)Artists, nameof(Artists));
-                    Artists.RemoveAt(item.Index);
-                }
+                    IArtist artist => new ArtistViewModel(artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
             });
         }
 

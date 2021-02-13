@@ -228,9 +228,9 @@ namespace StrixMusic.Core.LocalFiles.Models
 
                 var filesCoreTrack = new LocalFilesCoreTrack(SourceCore, e.TrackMetadata);
 
-                var addedItems = new List<CollectionChangedEventItem<ICoreTrack>>
+                var addedItems = new List<CollectionChangedItem<ICoreTrack>>
                 {
-                    new CollectionChangedEventItem<ICoreTrack>(filesCoreTrack, 0),
+                    new CollectionChangedItem<ICoreTrack>(filesCoreTrack, 0),
                 };
 
                 if (_trackMetadatas == null)
@@ -239,7 +239,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 _trackMetadatas?.Add(e.TrackMetadata);
                 _metadataCoreTrackDictionary.Add(e.TrackMetadata, filesCoreTrack);
 
-                TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreTrack>>());
+                TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreTrack>>());
             }
         }
 
@@ -257,16 +257,16 @@ namespace StrixMusic.Core.LocalFiles.Models
                 var filesCoreArtist =
                     new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, e.ArtistMetadata.TrackIds?.Count ?? 0);
 
-                var addedItems = new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>
+                var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>
                 {
-                    new CollectionChangedEventItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
+                    new CollectionChangedItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
                 };
 
                 if (_artistMetadatas == null)
                     return;
                 _artistMetadatas?.Add(e.ArtistMetadata);
                 _metadataCoreArtistDictionary.Add(e.ArtistMetadata, filesCoreArtist);
-                ArtistItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreArtistCollectionItem>>());
+                ArtistItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreArtistCollectionItem>>());
             }
         }
 
@@ -288,14 +288,14 @@ namespace StrixMusic.Core.LocalFiles.Models
 
                 var fileCoreAlbum = new LocalFilesCoreAlbum(SourceCore, e.AlbumMetadata, e.AlbumMetadata.TrackIds?.Count ?? 0, track?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, track.ImagePath) : null);
 
-                var addedItems = new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>
+                var addedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>
                 {
-                    new CollectionChangedEventItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
+                    new CollectionChangedItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
                 };
                 _albumMetadatas.Add(e.AlbumMetadata);
                 _metadataCoreAlbumDictionary.Add(e.AlbumMetadata, fileCoreAlbum);
 
-                AlbumItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedEventItem<ICoreAlbumCollectionItem>>());
+                AlbumItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreAlbumCollectionItem>>());
             }
         }
     }
