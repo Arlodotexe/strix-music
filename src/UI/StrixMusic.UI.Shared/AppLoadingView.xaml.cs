@@ -111,32 +111,8 @@ namespace StrixMusic.Shared
             await InitializeOutOfBoxSetupIfNeeded();
             await InitializeConfiguredCores();
 
-            _ = RaiseTestNotification();
-
             UpdateStatusRaw($"Done loading, navigating to {nameof(MainPage)}");
             CurrentWindow.NavigationService?.NavigateTo(typeof(MainPage));
-        }
-
-
-        private async Task RaiseTestNotification()
-        {
-
-            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-
-            var elements = new AbstractUIElementGroup("ID")
-            {
-                Title = "Test notification",
-                Subtitle = "I'm a subtitle. 🤯",
-                IconCode = "\uE115",
-            };
-
-            var notification = notificationService.RaiseNotification(elements);
-
-            await Task.Delay(1500);
-
-            elements.Title = "Another value";
-
-            notificationService.RaiseNotification("Done");
         }
 
         /// <summary>
