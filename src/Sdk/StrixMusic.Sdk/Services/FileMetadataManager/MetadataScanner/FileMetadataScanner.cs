@@ -585,20 +585,21 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 return;
 
             IFolderData folderData = foldersToCrawl.Pop();
+
+            var files = await folderData.GetFilesAsync();
+            var filesList = files.ToList();
+
+            foreach (var file in filesList)
+            {
+                filesToScan.Enqueue(file);
+            }
+
+            FilesFound += filesList.Count;
+
             var folders = await folderData.GetFoldersAsync();
 
             foreach (var folder in folders)
             {
-                var files = await folder.GetFilesAsync();
-                var filesList = files.ToList();
-
-                foreach (var file in filesList)
-                {
-                    filesToScan.Enqueue(file);
-                }
-
-                FilesFound += filesList.Count;
-
                 foldersToCrawl.Push(folder);
                 allDiscoveredFolders.Enqueue(folder);
             }
