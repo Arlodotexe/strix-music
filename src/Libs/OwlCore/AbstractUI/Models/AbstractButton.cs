@@ -10,27 +10,6 @@ namespace OwlCore.AbstractUI.Models
     public class AbstractButton : AbstractUIElement
     {
         /// <summary>
-        /// The type of button to display.
-        /// </summary>
-        public enum ButtonType
-        {
-            /// <summary>
-            /// A generic button, could serve any purpose.
-            /// </summary>
-            Generic,
-
-            /// <summary>
-            /// Some sort of confirmation button. Likely displayed with the accent color.
-            /// </summary>
-            Confirm,
-
-            /// <summary>
-            /// Scary click. Likely displayed in Red.
-            /// </summary>
-            Delete,
-        }
-
-        /// <summary>
         /// The label that is displayed in the button.
         /// </summary>
         public string Text { get; set; }
@@ -38,7 +17,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// The type of button.
         /// </summary>
-        public ButtonType Type { get; set; }
+        public AbstractButtonType Type { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AbstractButton"/>.
@@ -47,7 +26,7 @@ namespace OwlCore.AbstractUI.Models
         /// <param name="text">The label that is displayed in the button.</param>
         /// <param name="iconCode">The (optional) icon that is displayed with the label.</param>
         /// <param name="type">The type of button.</param>
-        public AbstractButton(string id, string text, string? iconCode = null, ButtonType type = ButtonType.Generic)
+        public AbstractButton(string id, string text, string? iconCode = null, AbstractButtonType type = AbstractButtonType.Generic)
             : base(id)
         {
             IconCode = iconCode;

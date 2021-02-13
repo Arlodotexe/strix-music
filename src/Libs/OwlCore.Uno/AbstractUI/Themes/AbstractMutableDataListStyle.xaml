@@ -99,11 +99,11 @@
                                    Source="{Binding ImageSource, Mode=OneWay}" />
 
                         <TextBlock Grid.Column="2" Text="{Binding Title, Mode=OneWay}" FontSize="20" VerticalAlignment="Center"
-                                   Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Title)}"/>
+                                   Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Title), Mode=OneWay}"/>
 
                         <TextBlock x:Name="SubtitleTextBlock" Grid.Column="2" Grid.Row="1"
                                        VerticalAlignment="Center"
-                                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"
+                                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle), Mode=OneWay}"
                                        Text="{Binding Subtitle, Mode=OneWay}"
                                        FontSize="16" FontWeight="SemiLight" Opacity="0.75" />
                     </Grid>
@@ -176,12 +176,12 @@
 
     <DataTemplate x:Key="DefaultAbstractMutableDataListTemplate" x:DataType="abstractUI:AbstractMutableDataListViewModel">
         <StackPanel>
-            <TextBlock Text="{x:Bind Title}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+            <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" />
 
-            <TextBlock Text="{x:Bind Subtitle}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
+            <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
-                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle), Mode=OneWay}"/>
 
             <ContentControl Content="{x:Bind}">
                 <ContentControl.ContentTemplateSelector>

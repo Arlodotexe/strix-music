@@ -13,7 +13,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
     /// <summary>
     /// Base view model for all AbstractUI elements.
     /// </summary>
-    public class AbstractUIViewModelBase : ObservableObject
+    public class AbstractUIViewModelBase : ObservableObject, IDisposable
     {
         private ImageSource _imageSource;
 
@@ -25,6 +25,39 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         {
             Model = model;
             _imageSource = SetupImageSource(model);
+            AttachEvents();
+        }
+
+        private void AttachEvents()
+        {
+            Model.IconCodeChanged += Model_IconCodeChanged;
+            Model.ImagePathChanged += Model_ImagePathChanged;
+            Model.SubtitleChanged += Model_SubtitleChanged;
+            Model.TitleChanged += Model_TitleChanged;
+            Model.TooltipTextChanged += Model_TooltipTextChanged;
+        }
+
+        private void DetachEvents()
+        {
+            Model.IconCodeChanged -= Model_IconCodeChanged;
+            Model.ImagePathChanged -= Model_ImagePathChanged;
+            Model.SubtitleChanged -= Model_SubtitleChanged;
+            Model.TitleChanged -= Model_TitleChanged;
+            Model.TooltipTextChanged -= Model_TooltipTextChanged;
+        }
+
+        private void Model_TooltipTextChanged(object sender, string? e) => OnPropertyChanged(nameof(TooltipText));
+
+        private void Model_TitleChanged(object sender, string? e) => OnPropertyChanged(nameof(Title));
+
+        private void Model_SubtitleChanged(object sender, string? e) => OnPropertyChanged(nameof(Subtitle));
+
+        private void Model_IconCodeChanged(object sender, string? e) => OnPropertyChanged(nameof(IconCode));
+
+        private void Model_ImagePathChanged(object sender, string? e)
+        {
+            _imageSource = SetupImageSource(Model);
+            OnPropertyChanged(nameof(ImageSource));
         }
 
         /// <summary>
@@ -133,6 +166,37 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
             image.SetSourceAsync(randomStream).AsTask();
 
             return image;
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            // TODO release unmanaged resources here
+            DetachEvents();
+        }
+
+        /// <inheritdoc cref="Dispose()"/>
+        protected virtual void Dispose(bool disposing)
+        {
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+#if __ANDROID__ || __WASM__
+                _imageSource.Dispose();
+#endif
+            }
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        ~AbstractUIViewModelBase()
+        {
+            Dispose(false);
         }
     }
 }

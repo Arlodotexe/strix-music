@@ -17,7 +17,7 @@ namespace OwlCore.AbstractUI.Models
         /// </summary>
         /// <param name="id"></param>
         /// <param name="preferredOrientation"></param>
-        public AbstractUIElementGroup(string id, PreferredOrientation preferredOrientation)
+        public AbstractUIElementGroup(string id, PreferredOrientation preferredOrientation = PreferredOrientation.Vertical)
             : base(id)
         {
             PreferredOrientation = preferredOrientation;
