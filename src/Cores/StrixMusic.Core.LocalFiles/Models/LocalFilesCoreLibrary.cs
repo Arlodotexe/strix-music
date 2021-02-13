@@ -164,7 +164,10 @@ namespace StrixMusic.Core.LocalFiles.Models
                     if (targetTrackMetadata != null)
                     {
                         if (_metadataCoreTrackDictionary.Count > 0)
-                            _metadataCoreTrackDictionary[targetTrackMetadata].ChangeTotalArtistCount(targetTrackMetadata.ArtistIds.Count());
+                        {
+                            if (targetTrackMetadata.ArtistIds != null)
+                                _metadataCoreTrackDictionary[targetTrackMetadata].ChangeTotalArtistCount(targetTrackMetadata.ArtistIds.Count());
+                        }
                     }
                 }
             }
@@ -179,8 +182,11 @@ namespace StrixMusic.Core.LocalFiles.Models
                     {
                         if (_metadataCoreAlbumDictionary.Count > 0)
                         {
-                            _metadataCoreAlbumDictionary[targetAlbumMetadata].ChangeTotalTrackCount(targetAlbumMetadata.TrackIds.Count());
-                            _metadataCoreAlbumDictionary[targetAlbumMetadata].ChangeTotalArtistCount(targetAlbumMetadata.ArtistIds.Count());
+                            if (targetAlbumMetadata.TrackIds != null)
+                                _metadataCoreAlbumDictionary[targetAlbumMetadata].ChangeTotalTrackCount(targetAlbumMetadata.TrackIds.Count());
+
+                            if (targetAlbumMetadata.ArtistIds != null)
+                                _metadataCoreAlbumDictionary[targetAlbumMetadata].ChangeTotalArtistCount(targetAlbumMetadata.ArtistIds.Count());
                         }
                     }
                 }
@@ -196,7 +202,8 @@ namespace StrixMusic.Core.LocalFiles.Models
                     {
                         if (_metadataCoreArtistDictionary.Count > 0)
                         {
-                            _metadataCoreArtistDictionary[targetArtistMetadata].ChangeTotalTrackCount(targetArtistMetadata.TrackIds.Count());
+                            if (targetArtistMetadata.TrackIds != null)
+                                _metadataCoreArtistDictionary[targetArtistMetadata].ChangeTotalTrackCount(targetArtistMetadata.TrackIds.Count());
                         }
                     }
                 }
