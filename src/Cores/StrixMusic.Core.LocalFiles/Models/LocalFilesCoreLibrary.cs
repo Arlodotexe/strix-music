@@ -22,7 +22,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         private readonly IList<AlbumMetadata> _albumMetadatas;
         private readonly IList<TrackMetadata> _trackMetadatas;
 
-        private readonly object _lockObj = new object();
         private IFileMetadataManager? _fileMetadataManager;
 
         private Dictionary<TrackMetadata, LocalFilesCoreTrack> _metadataCoreTrackDictionary;
@@ -180,7 +179,6 @@ namespace StrixMusic.Core.LocalFiles.Models
                     {
                         if (_metadataCoreAlbumDictionary.Count > 0)
                         {
-                            //_metadataCoreAlbumDictionary[targetAlbumMetadata].ChangeTotalArtistCount(targetAlbumMetadata.ArtistIds.Count());
                             _metadataCoreAlbumDictionary[targetAlbumMetadata].ChangeTotalTrackCount(targetAlbumMetadata.TrackIds.Count());
                         }
                     }
