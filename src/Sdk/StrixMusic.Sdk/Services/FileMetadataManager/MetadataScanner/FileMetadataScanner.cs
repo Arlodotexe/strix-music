@@ -346,6 +346,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                     var artistId = Guid.NewGuid().ToString();
                     artistMetadata.Id = artistId;
+                    trackMetadata.AlbumId = albumId;
 
                     albumMetadata.TrackIds ??= new List<string>();
                     albumMetadata.TrackIds.Add(trackMetadata.Id);
