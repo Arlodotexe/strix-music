@@ -19,7 +19,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
     /// <inheritdoc />
     public class PlaybackHandlerService : IPlaybackHandlerService
     {
-        private readonly ISettingsService _settingsService;
         private readonly Dictionary<ICore, IAudioPlayerService> _audioPlayerRegistry;
         private readonly List<IMediaSourceConfig> _nextItems;
         private readonly Stack<IMediaSourceConfig> _prevItems;
@@ -36,8 +35,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public PlaybackHandlerService()
         {
             _audioPlayerRegistry = new Dictionary<ICore, IAudioPlayerService>();
-            _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
-
 
             _prevItems = new Stack<IMediaSourceConfig>();
             _nextItems = new List<IMediaSourceConfig>();
@@ -233,7 +230,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
         private async Task<ICore> GetPlaybackCore(ITrack track)
         {
-            var coreRanking = await _settingsService.GetValue<IReadOnlyList<string>>(nameof(SettingsKeys.CoreRanking));
+            var settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+            var coreRanking = await settingsService.GetValue<IReadOnlyList<string>>(nameof(SettingsKeys.CoreRanking));
 
             // Find highest ranking core from the items merged into the track being played.
             foreach (var instanceId in coreRanking)

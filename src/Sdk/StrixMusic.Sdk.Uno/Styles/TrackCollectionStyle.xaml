@@ -20,8 +20,14 @@
                 </Grid>
             </ListView.Header>
             <ListView.ItemTemplate>
-                <DataTemplate>
-                    <defaultcontrols:TrackItem />
+                <DataTemplate x:DataType="viewModels:TrackViewModel">
+                    <defaultcontrols:TrackItem>
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="DoubleTapped">
+                                <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+                    </defaultcontrols:TrackItem>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

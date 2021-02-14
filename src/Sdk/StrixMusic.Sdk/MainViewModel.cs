@@ -93,6 +93,7 @@ namespace StrixMusic.Sdk
             }
 
             Library = new LibraryViewModel(new MergedLibrary(_sources.Select(x => x.Library)));
+            await Library.InitAsync();
 
             if (_sources.All(x => x.RecentlyPlayed == null))
                 RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull()));

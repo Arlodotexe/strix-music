@@ -50,6 +50,7 @@ namespace StrixMusic.Sdk.ViewModels
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrack);
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -416,6 +417,16 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PauseAlbumCollectionAsync() => _artist.PauseAlbumCollectionAsync();
 
+        /// <summary>
+        /// Plays a single track from this collection.
+        /// </summary>
+        /// <param name="track"></param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task PlayTrack(ITrack track)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => _artist.ChangeNameAsync(name);
 
@@ -535,6 +546,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand PlayTrackCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<ITrack> PlayTrackAsyncCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
