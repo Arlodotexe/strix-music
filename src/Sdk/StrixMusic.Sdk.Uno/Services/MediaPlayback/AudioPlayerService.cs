@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.UI.Xaml.Controls;
+using OwlCore;
 
 // ReSharper disable once CheckNamespace
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
@@ -41,6 +44,12 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             _player.MediaPlayer.PlaybackSession.PlaybackRateChanged += PlaybackSessionOnPlaybackRateChanged;
             _player.MediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSessionOnPlaybackStateChanged;
             _player.MediaPlayer.VolumeChanged += MediaPlayerOnVolumeChanged;
+            _player.MediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
+        }
+
+        private void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
+        {
+            Debug.WriteLine(args.ErrorMessage);
         }
 
         private void DetachEvents()
@@ -127,8 +136,18 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
 
             if (sourceConfig.MediaSourceUri != null)
             {
-                var source = MediaSource.CreateFromUri(sourceConfig.MediaSourceUri);
-                _player.MediaPlayer.Source = source;
+                if (sourceConfig.MediaSourceUri.IsFile)
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(sourceConfig.MediaSourceUri.LocalPath);
+
+                    var source = MediaSource.CreateFromStorageFile(file);
+                    _player.MediaPlayer.Source = source;
+                }
+                else
+                {
+                    var source = MediaSource.CreateFromUri(sourceConfig.MediaSourceUri);
+                    _player.MediaPlayer.Source = source;
+                }
             }
             else if (sourceConfig.FileStreamSource != null)
             {
@@ -136,8 +155,13 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
                 _player.MediaPlayer.Source = source;
             }
 
-            _player.MediaPlayer.Play();
-            _leech.Begin();
+            CurrentSource = sourceConfig;
+
+            await Threading.OnPrimaryThread(() =>
+            {
+                _player.MediaPlayer.Play();
+                _leech.Begin();
+            });
         }
 
         /// <inheritdoc />
@@ -152,43 +176,49 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         /// <inheritdoc />
         public Task PauseAsync()
         {
-            _player.MediaPlayer.Pause();
+            return Threading.OnPrimaryThread(() =>
+            {
+                _player.MediaPlayer.Pause();
 
-            _leech.Stop();
-            return Task.CompletedTask;
+                _leech.Stop();
+            });
         }
 
         /// <inheritdoc />
         public Task ResumeAsync()
         {
-            _player.MediaPlayer.Play();
-            _leech.Begin();
-
-            return Task.CompletedTask;
+            return Threading.OnPrimaryThread(() =>
+            {
+                _player.MediaPlayer.Play();
+                _leech.Begin();
+            });
         }
 
         /// <inheritdoc />
         public Task ChangeVolumeAsync(double volume)
         {
-            _player.MediaPlayer.Volume = volume;
-
-            return Task.CompletedTask;
+            return Threading.OnPrimaryThread(() =>
+            {
+                _player.MediaPlayer.Volume = volume;
+            });
         }
 
         /// <inheritdoc />
         public Task ChangePlaybackSpeedAsync(double speed)
         {
-            _player.MediaPlayer.PlaybackSession.PlaybackRate = speed;
-
-            return Task.CompletedTask;
+            return Threading.OnPrimaryThread(() =>
+            {
+                _player.MediaPlayer.PlaybackSession.PlaybackRate = speed;
+            });
         }
 
         /// <inheritdoc />
         public Task SeekAsync(TimeSpan position)
         {
-            _player.MediaPlayer.PlaybackSession.Position = position;
-
-            return Task.CompletedTask;
+            return Threading.OnPrimaryThread(() =>
+            {
+                _player.MediaPlayer.PlaybackSession.Position = position;
+            });
         }
     }
 }

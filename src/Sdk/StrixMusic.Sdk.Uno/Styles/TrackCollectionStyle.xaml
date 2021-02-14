@@ -15,7 +15,7 @@
                   SelectionMode="None" IsItemClickEnabled="True">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="ItemClick">
-                    <core:InvokeCommandAction Command="{x:Bind PlayAsyncCommand}" />
+                    <core:InvokeCommandAction Command="{x:Bind PlayAsyncCommand, Mode=OneWay}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <ListView.Header>

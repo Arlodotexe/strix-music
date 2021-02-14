@@ -34,11 +34,11 @@ namespace StrixMusic.Sdk
         {
             Singleton = this;
 
-            Devices = new SynchronizedObservableCollection<DeviceViewModel>();
+            Devices = new ObservableCollection<DeviceViewModel>();
 
-            Cores = new SynchronizedObservableCollection<CoreViewModel>();
-            Users = new SynchronizedObservableCollection<UserProfileViewModel>();
-            PlaybackQueue = new SynchronizedObservableCollection<TrackViewModel>();
+            Cores = new ObservableCollection<CoreViewModel>();
+            Users = new ObservableCollection<UserProfileViewModel>();
+            PlaybackQueue = new ObservableCollection<TrackViewModel>();
         }
 
         /// <summary>
@@ -71,6 +71,8 @@ namespace StrixMusic.Sdk
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task InitializeCoresAsync(List<ICore> cores, Func<ICore, Task<IServiceCollection>> getInjectedCoreServices)
         {
+            Guard.IsNotNull(cores, nameof(cores));
+
             _sources.AddRange(cores);
 
             await Cores.InParallel(x => x.DisposeAsync().AsTask());
@@ -83,8 +85,11 @@ namespace StrixMusic.Sdk
 
             foreach (var core in cores)
             {
-                var services = await getInjectedCoreServices(core);
-                await InitCore(core, services);
+                await Task.Run(async () =>
+                {
+                    var services = await getInjectedCoreServices(core);
+                    await InitCore(core, services);
+                });
             }
 
             Library = new LibraryViewModel(new MergedLibrary(_sources.Select(x => x.Library)));
@@ -95,7 +100,10 @@ namespace StrixMusic.Sdk
             if (_sources.All(x => x.Discoverables == null))
                 Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull()));
 
-            Devices = new SynchronizedObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new CoreDeviceProxy(device))));
+            Devices = new ObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new CoreDeviceProxy(device))))
+            {
+                new DeviceViewModel(new StrixDevice()),
+            };
 
             AttachEvents();
         }
@@ -145,16 +153,18 @@ namespace StrixMusic.Sdk
                 return;
             }
 
-            // Registers itself into Cores
+            await Threading.OnPrimaryThread(() =>
+            {
+                // Registers itself into Cores
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            _ = new CoreViewModel(core);
+                _ = new CoreViewModel(core);
 #pragma warning restore CA2000 // Dispose objects before losing scope
+                if (core.User != null)
+                    Users.Add(new UserViewModel(new CoreUserProxy(core.User)));
 
-            if (core.User != null)
-                Users.Add(new UserViewModel(new CoreUserProxy(core.User)));
-
-            foreach (var device in core.Devices)
-                Devices.Add(new DeviceViewModel(new CoreDeviceProxy(device)));
+                foreach (var device in core.Devices)
+                    Devices.Add(new DeviceViewModel(new CoreDeviceProxy(device)));
+            });
 
             core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
             cancellationToken.Dispose();
@@ -193,17 +203,17 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// Contains data about the cores that are loaded.
         /// </summary>
-        public SynchronizedObservableCollection<CoreViewModel> Cores { get; }
+        public ObservableCollection<CoreViewModel> Cores { get; }
 
         /// <summary>
         /// A consolidated list of all users in the app.
         /// </summary>
-        public SynchronizedObservableCollection<UserProfileViewModel> Users { get; }
+        public ObservableCollection<UserProfileViewModel> Users { get; }
 
         /// <summary>
         /// All available devices.
         /// </summary>
-        public SynchronizedObservableCollection<DeviceViewModel> Devices { get; private set; }
+        public ObservableCollection<DeviceViewModel> Devices { get; private set; }
 
         /// <inheritdoc />
         IReadOnlyList<IDevice> IAppCore.Devices => Devices;

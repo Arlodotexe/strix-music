@@ -68,7 +68,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
 
             // If the song is not over
-            if (_currentPlayerService.CurrentSource.Track.Duration < e)
+            if (_currentPlayerService.CurrentSource.Track.Duration > e)
                 return;
 
             switch (_repeatState)
@@ -170,8 +170,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <inheritdoc />
         public async Task PlayFromNext(int queueIndex)
         {
-            Guard.IsNotNull(_currentPlayerService, nameof(_currentPlayerService));
-
             if (_shuffleState && _shuffledNextItemsIndices != null)
                 queueIndex = _shuffledNextItemsIndices[queueIndex];
 
@@ -180,8 +178,11 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (mediaSource is null)
                 ThrowHelper.ThrowArgumentOutOfRangeException(nameof(queueIndex));
 
-            await _currentPlayerService.PauseAsync();
-            DetachEvents();
+            if (_currentPlayerService != null)
+            {
+                await _currentPlayerService.PauseAsync();
+                DetachEvents();
+            }
 
             _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore];
             AttachEvents();

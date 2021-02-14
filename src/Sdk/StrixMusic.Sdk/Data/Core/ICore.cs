@@ -115,7 +115,7 @@ namespace StrixMusic.Sdk.Data.Core
         /// </summary>
         /// <param name="track">The track to convert.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. The value is an <see cref="IMediaSourceConfig"/> that can be used to play the track.</returns>
-        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track);
+        public Task<IMediaSourceConfig?>? GetMediaSource(ICoreTrack track);
 
         /// <summary>
         /// Raised when the <see cref="Data.CoreState"/> has changed.

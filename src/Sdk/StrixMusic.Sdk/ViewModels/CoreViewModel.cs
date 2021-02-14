@@ -149,7 +149,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<ICoreMember?> GetContextById(string id) => _core.GetContextById(id);
 
         /// <inheritdoc />
-        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track) => _core.GetMediaSource(track);
+        public Task<IMediaSourceConfig?>? GetMediaSource(ICoreTrack track) => _core.GetMediaSource(track);
 
         /// <inheritdoc cref="ICore.CoreStateChanged" />
         public event EventHandler<CoreState>? CoreStateChanged

@@ -370,7 +370,7 @@ namespace StrixMusic.Shared
 
             UpdateStatus("InitCores");
 
-            await Task.Run(() => CurrentWindow.MainViewModel.InitializeCoresAsync(cores, CreateInitialCoreServices));
+            await CurrentWindow.MainViewModel.InitializeCoresAsync(cores, CreateInitialCoreServices);
 
             // UpdateStatus("Setting up media players");
             UpdateStatus("SetupMedia");

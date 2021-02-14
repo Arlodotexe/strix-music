@@ -17,7 +17,8 @@ namespace OwlCore.Extensions
             if (index < 0)
                 return;
 
-            Guard.HasSizeLessThanOrEqualTo(source, index, nameof(source));
+            if (index > source.Count)
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index));
 
             if (source.Count == index)
                 source.Add(itemToAdd);

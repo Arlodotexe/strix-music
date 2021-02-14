@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
@@ -14,7 +13,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
     /// </summary>
     public class StrixDevice : IDevice
     {
-        private readonly IPlaybackHandlerService _playbackHandler = Ioc.Default.GetService<IPlaybackHandlerService>() ?? ThrowHelper.ThrowInvalidOperationException<IPlaybackHandlerService>();
+        private readonly IPlaybackHandlerService _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
         /// <summary>
         /// Creates a new instance of <see cref="StrixDevice"/>.

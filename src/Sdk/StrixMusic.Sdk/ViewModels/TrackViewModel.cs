@@ -19,6 +19,7 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Services.MediaPlayback;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -481,34 +482,55 @@ namespace StrixMusic.Sdk.ViewModels
         {
             var activeDevice = MainViewModel.Singleton?.ActiveDevice;
 
-            if (activeDevice?.Type == DeviceType.Remote)
+            if (activeDevice is null)
+                return;
+
+            if (activeDevice.Type == DeviceType.Remote)
             {
                 await Model.PlayAsync();
                 return;
             }
 
-            if (_playbackHandler.PlaybackState == PlaybackState.Paused)
-            {
-                await _playbackHandler.ResumeAsync();
-            }
-            else
-            {
-                await _playbackHandler.PauseAsync();
+            // Get the preferred core based on ranking
+            var settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+            var coreRanking = await settingsService.GetValue<IReadOnlyList<string>>(nameof(SettingsKeys.CoreRanking));
 
-                // The actual playback
-                _playbackHandler.ClearNext();
-                _playbackHandler.ClearPrevious();
-
-                // TODO
+            // Find a valid source from the items merged into this.
+            // The highest ranking core will match first.
+            ICoreTrack? sourceTrack = null;
+            foreach (var instanceId in coreRanking)
+            {
+                sourceTrack = Sources.FirstOrDefault(x => x.SourceCore.InstanceId == instanceId);
+                if (sourceTrack != default)
+                    break;
             }
+
+            Guard.IsNotNull(sourceTrack, nameof(sourceTrack));
+
+            var mediaSource = await sourceTrack.SourceCore.GetMediaSource(sourceTrack);
+
+            Guard.IsNotNull(mediaSource, nameof(mediaSource));
+
+            _playbackHandler.InsertNext(0, mediaSource);
 
             if (MainViewModel.Singleton?.LocalDevice?.Model is StrixDevice device)
             {
                 device.SetPlaybackData(Model, Model);
             }
 
-            // Play the first thing in the queue.
-            await _playbackHandler.PlayFromNext(0);
+            if (_playbackHandler.PlaybackState == PlaybackState.Paused)
+            {
+                await _playbackHandler.ResumeAsync();
+            }
+            else if (_playbackHandler.PlaybackState == PlaybackState.Playing)
+            {
+                await _playbackHandler.PauseAsync();
+            }
+            else
+            {
+                // Play the first thing in the queue.
+                await _playbackHandler.PlayFromNext(0);
+            }
         }
 
         /// <inheritdoc />
