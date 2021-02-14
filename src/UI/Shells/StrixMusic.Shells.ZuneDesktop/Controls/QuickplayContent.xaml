@@ -525,7 +525,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 
-                <Grid Height="300" Margin="20,0"
+                <Grid Height="300" MaxWidth="800" Margin="20,0"
                       RenderTransformOrigin="1.5,.5">
                     <Grid.RenderTransform>
                         <CompositeTransform x:Name="PinsTransform"/>
