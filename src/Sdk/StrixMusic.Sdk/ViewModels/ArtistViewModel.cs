@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Collections;
@@ -16,6 +17,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -25,6 +27,7 @@ namespace StrixMusic.Sdk.ViewModels
     public class ArtistViewModel : ObservableObject, IArtist, IAlbumCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IArtist _artist;
+        private readonly IPlaybackHandlerService _playbackHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArtistViewModel"/> class.
@@ -35,6 +38,8 @@ namespace StrixMusic.Sdk.ViewModels
             _artist = artist;
 
             SourceCores = _artist.GetSourceCores<ICoreArtist>().Select(MainViewModel.GetLoadedCore).ToList();
+
+            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             if (_artist.RelatedItems != null)
                 RelatedItems = new PlayableCollectionGroupViewModel(_artist.RelatedItems);
@@ -424,7 +429,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PlayTrack(ITrack track)
         {
-            throw new NotImplementedException();
+            return _playbackHandler.Play(track, _artist, Tracks);
         }
 
         /// <inheritdoc />

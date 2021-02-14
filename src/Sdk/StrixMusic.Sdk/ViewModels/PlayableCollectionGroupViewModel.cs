@@ -855,7 +855,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PlayTrack(ITrack track)
         {
-            throw new NotImplementedException();
+            return _playbackHandler.Play(track, _collectionGroup, Tracks);
         }
 
         /// <summary>

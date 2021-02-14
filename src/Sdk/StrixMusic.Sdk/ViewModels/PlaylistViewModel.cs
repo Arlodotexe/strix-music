@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Collections;
@@ -14,6 +15,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -24,6 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IPlaylist _playlist;
         private readonly IUserProfile? _owner;
+        private IPlaybackHandlerService _playbackHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.
@@ -32,6 +35,7 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaylistViewModel(IPlaylist playlist)
         {
             _playlist = playlist ?? throw new ArgumentNullException(nameof(playlist));
+            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             SourceCores = playlist.GetSourceCores<ICorePlaylist>().Select(MainViewModel.GetLoadedCore).ToList();
 
@@ -365,7 +369,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PlayTrack(ITrack track)
         {
-            throw new NotImplementedException();
+            return _playbackHandler.Play(track, _playlist, Tracks);
         }
 
         /// <inheritdoc />
