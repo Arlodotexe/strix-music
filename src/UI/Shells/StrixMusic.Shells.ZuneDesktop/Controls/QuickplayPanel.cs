@@ -29,8 +29,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
 
             public ArrangeConfig(
                 int seed,
-                int initialMaxSizeIndex = 0,
-                int initialMinSizeIndex = 2,
+                int initialMaxSizeIndex = 1,
+                int initialMinSizeIndex = 1,
                 int newColumnMaxSizeIndex = 1,
                 int newColumnMinSizeIndex = 1)
             {
@@ -48,36 +48,36 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
 
             public double GetNextRelativeHeight()
             {
-                if (_itemHeights.Length - _maxSizeIndex <= _minSizeIndex)
-                {
-                    if (_minSizeIndex != 0)
-                    {
-                        _minSizeIndex = 0;
-                    }
-                    else
-                    {
-                        return double.PositiveInfinity;
-                    }
-                }
+                //if (_itemHeights.Length - _maxSizeIndex <= _minSizeIndex)
+                //{
+                //    if (_minSizeIndex != 0)
+                //    {
+                //        _minSizeIndex = 0;
+                //    }
+                //    else
+                //    {
+                //        return double.PositiveInfinity;
+                //    }
+                //}
 
                 int sizeIndex = _rand.Next(_minSizeIndex, _itemHeights.Length - _maxSizeIndex);
 
-                if (_maxSizeIndex == sizeIndex)
-                {
-                    // Only allow two of the same item sizes in a row (by column)
-                    _maxSizeIndex++;
-                }
-                else
-                {
-                    // Larger items cannot go below smaller items
-                    _maxSizeIndex = _itemHeights.Length - sizeIndex;
-                }
+                //if (_maxSizeIndex == sizeIndex)
+                //{
+                //    // Only allow two of the same item sizes in a row (by column)
+                //    _maxSizeIndex++;
+                //}
+                //else
+                //{
+                //    // Larger items cannot go below smaller items
+                //    _maxSizeIndex = _itemHeights.Length - sizeIndex;
+                //}
 
-                // Decrease the max offest each iteration by column till 0
-                if (_minSizeIndex > 0)
-                {
-                    _minSizeIndex--;
-                }
+                //// Decrease the max offest each iteration by column till 0
+                //if (_minSizeIndex > 0)
+                //{
+                //    _minSizeIndex--;
+                //}
 
                 return _itemHeights[sizeIndex];
             }
@@ -187,7 +187,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         private Size ArrangeTiles(Size finalSize)
         {
             // TODO: Allow inverted direction
-            ArrangeConfig arrangeConfig = new ArrangeConfig(-1);
+            ArrangeConfig arrangeConfig = new ArrangeConfig(Seed);
             ArrangeState arrangeState = new ArrangeState(finalSize.Height, ItemMargin);
 
             // Layout each child
