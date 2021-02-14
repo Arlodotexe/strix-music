@@ -9,6 +9,9 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.Uno/Styles/MediaSlider.xaml" />
+        <ResourceDictionary>
+            <owlcoreunobase:LongToDoubleConverter x:Name="LongToDoubleConverter" />
+        </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="DefaultNowPlayingBarStyle" TargetType="defaultcontrols:NowPlayingBar">
@@ -74,8 +77,9 @@
                                                 <!--<Rectangle Fill="#FF00FF" Width="96" Height="96"/>-->
                                             </Grid>
 
-                                            <defaultcontrols:ProgressSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0" Maximum="{x:Bind owlcoreunobase:Converters.LongToDouble(ActiveDevice.NowPlaying.Duration.Ticks), Mode=OneWay}" Style="{StaticResource MediaSlider}"
-                                                                FlowDirection="LeftToRight"/>
+                                            <defaultcontrols:ProgressSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Style="{StaticResource MediaSlider}"
+                                                                            Minimum="0" Maximum="{Binding ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}" 
+                                                                            FlowDirection="LeftToRight"/>
 
                                             <StackPanel Orientation="Horizontal" Grid.Column="2">
                                                 <!--Skip and Prev buttons shouldn't flip with Bi-directional languages-->
