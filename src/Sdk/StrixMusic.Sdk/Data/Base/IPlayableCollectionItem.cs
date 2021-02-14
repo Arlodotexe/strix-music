@@ -3,9 +3,9 @@
 namespace StrixMusic.Sdk.Data.Base
 {
     /// <summary>
-    /// An <see cref="IPlayable"/> that belongs to a playable collection.
+    /// An <see cref="IPlayableBase"/> that belongs to a playable collection.
     /// </summary>
-    public interface IPlayableCollectionItem : IPlayable, ICollectionItemBase
+    public interface IPlayableCollectionItem : IPlayableBase, ICollectionItemBase
     {
         /// <summary>
         /// The date this item was added to a collection. If unknown, value is null.

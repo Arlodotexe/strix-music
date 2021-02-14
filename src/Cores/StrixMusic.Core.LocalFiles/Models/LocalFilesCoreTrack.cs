@@ -65,10 +65,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPauseArtistCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
@@ -178,10 +178,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public bool IsChangeIsExplicitAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncAvailable => false;
+        public bool IsPlayArtistCollectionAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncAvailable => false;
+        public bool IsPauseArtistCollectionAsyncAvailable => false;
 
         /// <inheritdoc/>
         public bool IsChangeNameAsyncAvailable => false;
@@ -277,13 +277,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public Task PauseAsync()
+        public Task PauseArtistCollectionAsync()
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public Task PlayAsync()
+        public Task PlayArtistCollectionAsync()
         {
             return Task.CompletedTask;
         }
@@ -340,7 +340,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             if (ImageUri != null)
                 yield return new LocalFilesCoreImage(SourceCore, ImageUri, 250, 250);
 
-            yield break;
+            await Task.CompletedTask;
         }
     }
 }

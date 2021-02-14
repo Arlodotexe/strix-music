@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.Data
         ILyrics? Lyrics { get; }
 
         /// <summary>
-        /// A <see cref="IPlayable"/> of items related to this item.
+        /// A <see cref="IPlayableBase"/> of items related to this item.
         /// </summary>
         IPlayableCollectionGroup? RelatedItems { get; }
 

@@ -64,10 +64,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPauseArtistCollectionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseTrackCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
@@ -147,10 +153,16 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncAvailable => false;
+        public bool IsPlayTrackCollectionAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncAvailable => false;
+        public bool IsPauseTrackCollectionAsyncAvailable => false;
+
+        /// <inheritdoc/>
+        public bool IsPlayArtistCollectionAsyncAvailable => false;
+
+        /// <inheritdoc/>
+        public bool IsPauseArtistCollectionAsyncAvailable => false;
 
         /// <inheritdoc/>
         public bool IsChangeNameAsyncAvailable => false;
@@ -225,13 +237,25 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public Task PauseAsync()
+        public Task PauseTrackCollectionAsync()
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
-        public Task PlayAsync()
+        public Task PlayTrackCollectionAsync()
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PauseArtistCollectionAsync()
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public Task PlayArtistCollectionAsync()
         {
             throw new NotSupportedException();
         }

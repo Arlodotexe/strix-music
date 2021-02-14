@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// The context of the currently playing track.
         /// </summary>
-        IPlayable? PlaybackContext { get; }
+        IPlayableBase? PlaybackContext { get; }
 
         /// <inheritdoc cref="DeviceType" />
         DeviceType Type { get; }
@@ -123,7 +123,7 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// Fires when <see cref="PlaybackContext"/> changes.
         /// </summary>
-        event EventHandler<IPlayable>? PlaybackContextChanged;
+        event EventHandler<IPlayableBase>? PlaybackContextChanged;
 
         /// <summary>
         /// Fires when <see cref="ShuffleState"/> changes.

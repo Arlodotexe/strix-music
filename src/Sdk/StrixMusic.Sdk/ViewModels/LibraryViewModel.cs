@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -10,7 +12,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// A bindable wrapper of the <see cref="ILibraryBase"/>.
     /// </summary>
-    public class LibraryViewModel : PlayableCollectionGroupViewModel, ILibrary
+    public class LibraryViewModel : PlayableCollectionGroupViewModel, ILibrary, IAsyncInit
     {
         private readonly ILibrary _library;
 
@@ -29,5 +31,17 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreLibrary other) => _library.Equals(other);
+
+        /// <inheritdoc />
+        public Task InitAsync()
+        {
+            IsInitialized = true;
+
+            // TODO sync library completely or pull from cache
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
     }
 }

@@ -87,10 +87,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPauseArtistCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
@@ -192,10 +192,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeIsExplicitAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncAvailable => false;
+        public bool IsPlayArtistCollectionAsyncAvailable => false;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncAvailable => false;
+        public bool IsPauseArtistCollectionAsyncAvailable => false;
 
         /// <inheritdoc/>
         public bool IsChangeNameAsyncAvailable => false;
@@ -291,13 +291,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc/>
-        public Task PauseAsync()
+        public Task PauseArtistCollectionAsync()
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
-        public Task PlayAsync()
+        public Task PlayArtistCollectionAsync()
         {
             throw new NotSupportedException();
         }

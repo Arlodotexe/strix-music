@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Events;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services.FileMetadataManager;
-using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
-using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
@@ -47,10 +39,28 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPlayAlbumCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPauseAlbumCollectionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseArtistCollectionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayPlaylistCollectionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPausePlaylistCollectionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseTrackCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
@@ -143,10 +153,28 @@ namespace StrixMusic.Core.LocalFiles.Models
         public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncAvailable => false;
+        public bool IsPlayAlbumCollectionAsyncAvailable => false;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncAvailable => false;
+        public bool IsPauseAlbumCollectionAsyncAvailable => false;
+
+        /// <inheritdoc />
+        public bool IsPlayArtistCollectionAsyncAvailable => false;
+
+        /// <inheritdoc />
+        public bool IsPauseArtistCollectionAsyncAvailable => false;
+
+        /// <inheritdoc />
+        public bool IsPlayPlaylistCollectionAsyncAvailable => false;
+
+        /// <inheritdoc />
+        public bool IsPausePlaylistCollectionAsyncAvailable => false;
+
+        /// <inheritdoc />
+        public bool IsPlayTrackCollectionAsyncAvailable => false;
+
+        /// <inheritdoc />
+        public bool IsPauseTrackCollectionAsyncAvailable => false;
 
         /// <inheritdoc />
         public bool IsChangeNameAsyncAvailable => true;
@@ -253,13 +281,49 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public Task PauseAsync()
+        public Task PauseAlbumCollectionAsync()
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task PlayAsync()
+        public Task PlayAlbumCollectionAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task PauseArtistCollectionAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task PausePlaylistCollectionAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task PlayPlaylistCollectionAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task PauseTrackCollectionAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync()
         {
             return Task.CompletedTask;
         }

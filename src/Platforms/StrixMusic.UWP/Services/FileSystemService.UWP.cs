@@ -132,6 +132,17 @@ namespace OwlCore.AbstractStorage
         }
 
         /// <inheritdoc/>
+        public async Task<IFileData?> GetFileFromPathAsync(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                throw new ArgumentException();
+
+            var file = await StorageFile.GetFileFromPathAsync(path);
+
+            return new FileData(file);
+        }
+
+        /// <inheritdoc/>
         public async Task<IFolderData> CreateDirectoryAsync(string folderName)
         {
             var folderData = await RootFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);

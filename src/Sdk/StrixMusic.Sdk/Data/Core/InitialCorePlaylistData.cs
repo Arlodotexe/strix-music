@@ -45,10 +45,10 @@ namespace StrixMusic.Sdk.Data
         public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPauseTrackCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
@@ -114,10 +114,10 @@ namespace StrixMusic.Sdk.Data
         public ICorePlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc />
-        public bool IsPlayAsyncAvailable { get; }
+        public bool IsPlayTrackCollectionAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public bool IsPauseAsyncAvailable { get; }
+        public bool IsPauseTrackCollectionAsyncAvailable { get; }
 
         /// <inheritdoc />
         public bool IsChangeNameAsyncAvailable { get; }
@@ -189,13 +189,13 @@ namespace StrixMusic.Sdk.Data
         }
 
         /// <inheritdoc />
-        public Task PlayAsync()
+        public Task PlayTrackCollectionAsync()
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task PauseAsync()
+        public Task PauseTrackCollectionAsync()
         {
             throw new NotSupportedException();
         }

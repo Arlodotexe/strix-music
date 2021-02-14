@@ -46,7 +46,7 @@ namespace StrixMusic.Core.LocalFiles
         public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/Strix/logo.svg");
 
         /// <inheritdoc />
-        public MediaPlayerType PlaybackType => MediaPlayerType.None;
+        public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
 
         /// <summary>
         /// Configures services for this instance of the core.

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
@@ -14,7 +13,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
     /// </summary>
     public class StrixDevice : IDevice
     {
-        private readonly IPlaybackHandlerService _playbackHandler = Ioc.Default.GetService<IPlaybackHandlerService>() ?? ThrowHelper.ThrowInvalidOperationException<IPlaybackHandlerService>();
+        private readonly IPlaybackHandlerService _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
         /// <summary>
         /// Creates a new instance of <see cref="StrixDevice"/>.
@@ -52,7 +51,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public event EventHandler<bool>? IsActiveChanged;
 
         /// <inheritdoc />
-        public event EventHandler<IPlayable>? PlaybackContextChanged;
+        public event EventHandler<IPlayableBase>? PlaybackContextChanged;
 
         /// <inheritdoc />
         public event EventHandler<ITrack>? NowPlayingChanged;
@@ -121,7 +120,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         public ITrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc />
-        public IPlayable? PlaybackContext { get; private set; }
+        public IPlayableBase? PlaybackContext { get; private set; }
 
         /// <inheritdoc />
         public ITrack? NowPlaying { get; private set; }
@@ -183,7 +182,7 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
         /// </summary>
         /// <param name="playbackContext">The playback context.</param>
         /// <param name="nowPlaying">The track that is playing.</param>
-        internal void SetPlaybackData(IPlayable playbackContext, ITrack nowPlaying)
+        internal void SetPlaybackData(IPlayableBase playbackContext, ITrack nowPlaying)
         {
             PlaybackContext = playbackContext;
             PlaybackContextChanged?.Invoke(this, playbackContext);

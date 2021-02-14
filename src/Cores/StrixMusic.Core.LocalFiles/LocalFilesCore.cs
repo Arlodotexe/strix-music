@@ -20,7 +20,7 @@ namespace StrixMusic.Core.LocalFiles
     /// <inheritdoc />
     public class LocalFilesCore : ICore
     {
-        private static int CoreCount;
+        private static int _coreCount;
         private readonly ICoreLibrary _coreLibrary;
 
         /// <summary>
@@ -29,7 +29,6 @@ namespace StrixMusic.Core.LocalFiles
         /// <param name="instanceId"></param>
         public LocalFilesCore(string instanceId)
         {
-            //TODO: The constructor warnings will be fixed once models are added to initialize the interfaces.
             InstanceId = instanceId;
 
             Devices = new SynchronizedObservableCollection<ICoreDevice>();
@@ -127,9 +126,9 @@ namespace StrixMusic.Core.LocalFiles
 
             coreConfig.ScanFileMetadata().FireAndForget();
 
-            CoreCount++;
+            _coreCount++;
 
-            if (CoreCount == LocalFileCoreManager.Instances?.Count)
+            if (_coreCount == LocalFileCoreManager.Instances?.Count)
                 LocalFileCoreManager.InitializeDataForAllCores().FireAndForget();
         }
 
@@ -165,7 +164,8 @@ namespace StrixMusic.Core.LocalFiles
 
             Guard.IsNotNull(t.LocalTrackPath, nameof(t.LocalTrackPath));
 
-            return Task.FromResult<IMediaSourceConfig?>(new MediaSourceConfig(track, track.Id, t.LocalTrackPath));
+            var mediaSource = new MediaSourceConfig(track, track.Id, t.LocalTrackPath);
+            return Task.FromResult<IMediaSourceConfig?>(mediaSource);
         }
     }
 }

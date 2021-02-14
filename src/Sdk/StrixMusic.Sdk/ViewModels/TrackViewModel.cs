@@ -17,7 +17,6 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -53,8 +52,9 @@ namespace StrixMusic.Sdk.ViewModels
                 Artists = new ObservableCollection<IArtistCollectionItem>();
             }
 
-            PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
-            PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
+            PlayArtistCollectionAsyncCommand = new AsyncRelayCommand(PlayArtistCollectionAsync);
+            PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
+
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
@@ -67,27 +67,28 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void AttachEvents()
         {
-            AlbumChanged += Track_AlbumChanged;
-            DescriptionChanged += Track_DescriptionChanged;
-            IsExplicitChanged += Track_IsExplicitChanged;
-            LanguageChanged += Track_LanguageChanged;
-            LyricsChanged += Track_LyricsChanged;
-            NameChanged += Track_NameChanged;
-            PlaybackStateChanged += Track_PlaybackStateChanged;
-            TrackNumberChanged += Track_TrackNumberChanged;
-            UrlChanged += Track_UrlChanged;
-            LastPlayedChanged += OnLastPlayedChanged;
+            AlbumChanged -= Track_AlbumChanged;
+            DescriptionChanged -= Track_DescriptionChanged;
+            IsExplicitChanged -= Track_IsExplicitChanged;
+            LanguageChanged -= Track_LanguageChanged;
+            LyricsChanged -= Track_LyricsChanged;
+            NameChanged -= Track_NameChanged;
+            PlaybackStateChanged -= Track_PlaybackStateChanged;
+            TrackNumberChanged -= Track_TrackNumberChanged;
+            UrlChanged -= Track_UrlChanged;
+            LastPlayedChanged -= OnLastPlayedChanged;
 
-            IsPlayAsyncAvailableChanged += OnIsPlayAsyncAvailableChanged;
-            IsPauseAsyncAvailableChanged += OnIsPauseAsyncAvailableChanged;
-            IsChangeNameAsyncAvailableChanged += OnIsChangeNameAsyncAvailableChanged;
-            IsChangeDurationAsyncAvailableChanged += OnIsChangeDurationAsyncAvailableChanged;
-            IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
+            IsPlayArtistCollectionAsyncAvailableChanged -= OnIsPlayArtistCollectionAsyncAvailableChanged;
+            IsPauseArtistCollectionAsyncAvailableChanged -= OnIsPauseArtistCollectionAsyncAvailableChanged;
 
-            ArtistItemsCountChanged += ModelOnArtistItemsCountChanged;
-            ArtistItemsChanged += TrackViewModel_ArtistItemsChanged;
-            ImagesCountChanged += TrackViewModel_ImagesCountChanged;
-            ImagesChanged += TrackViewModel_ImagesChanged;
+            IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
+            IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
+            IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
+
+            ArtistItemsCountChanged -= ModelOnArtistItemsCountChanged;
+            ArtistItemsChanged -= TrackViewModel_ArtistItemsChanged;
+            ImagesCountChanged -= TrackViewModel_ImagesCountChanged;
+            ImagesChanged -= TrackViewModel_ImagesChanged;
         }
 
         private void DetachEvents()
@@ -103,155 +104,156 @@ namespace StrixMusic.Sdk.ViewModels
             UrlChanged -= Track_UrlChanged;
             LastPlayedChanged -= OnLastPlayedChanged;
 
-            IsPlayAsyncAvailableChanged -= OnIsPlayAsyncAvailableChanged;
-            IsPauseAsyncAvailableChanged -= OnIsPauseAsyncAvailableChanged;
+            IsPlayArtistCollectionAsyncAvailableChanged -= OnIsPlayArtistCollectionAsyncAvailableChanged;
+            IsPauseArtistCollectionAsyncAvailableChanged -= OnIsPauseArtistCollectionAsyncAvailableChanged;
+
             IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
             IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
             IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
 
-            ArtistItemsCountChanged += ModelOnArtistItemsCountChanged;
-            ArtistItemsChanged += TrackViewModel_ArtistItemsChanged;
-            ImagesCountChanged += TrackViewModel_ImagesCountChanged;
-            ImagesChanged += TrackViewModel_ImagesChanged;
+            ArtistItemsCountChanged -= ModelOnArtistItemsCountChanged;
+            ArtistItemsChanged -= TrackViewModel_ArtistItemsChanged;
+            ImagesCountChanged -= TrackViewModel_ImagesCountChanged;
+            ImagesChanged -= TrackViewModel_ImagesChanged;
         }
 
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
-            add => Model.PlaybackStateChanged += value;
+            add => Model.PlaybackStateChanged -= value;
             remove => Model.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<IAlbum?>? AlbumChanged
         {
-            add => Model.AlbumChanged += value;
+            add => Model.AlbumChanged -= value;
             remove => Model.AlbumChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int?>? TrackNumberChanged
         {
-            add => Model.TrackNumberChanged += value;
+            add => Model.TrackNumberChanged -= value;
             remove => Model.TrackNumberChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<CultureInfo?>? LanguageChanged
         {
-            add => Model.LanguageChanged += value;
+            add => Model.LanguageChanged -= value;
             remove => Model.LanguageChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<ILyrics?>? LyricsChanged
         {
-            add => Model.LyricsChanged += value;
+            add => Model.LyricsChanged -= value;
             remove => Model.LyricsChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsExplicitChanged
         {
-            add => Model.IsExplicitChanged += value;
+            add => Model.IsExplicitChanged -= value;
             remove => Model.IsExplicitChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string>? NameChanged
         {
-            add => Model.NameChanged += value;
+            add => Model.NameChanged -= value;
             remove => Model.NameChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string?>? DescriptionChanged
         {
-            add => Model.DescriptionChanged += value;
+            add => Model.DescriptionChanged -= value;
             remove => Model.DescriptionChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<Uri?>? UrlChanged
         {
-            add => Model.UrlChanged += value;
+            add => Model.UrlChanged -= value;
             remove => Model.UrlChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged
         {
-            add => Model.DurationChanged += value;
+            add => Model.DurationChanged -= value;
             remove => Model.DurationChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<DateTime?>? LastPlayedChanged
         {
-            add => Model.LastPlayedChanged += value;
+            add => Model.LastPlayedChanged -= value;
             remove => Model.LastPlayedChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayAsyncAvailableChanged
+        public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged
         {
-            add => Model.IsPlayAsyncAvailableChanged += value;
-            remove => Model.IsPlayAsyncAvailableChanged -= value;
+            add => Model.IsPlayArtistCollectionAsyncAvailableChanged -= value;
+            remove => Model.IsPlayArtistCollectionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPauseAsyncAvailableChanged
+        public event EventHandler<bool>? IsPauseArtistCollectionAsyncAvailableChanged
         {
-            add => Model.IsPauseAsyncAvailableChanged += value;
-            remove => Model.IsPauseAsyncAvailableChanged -= value;
+            add => Model.IsPauseArtistCollectionAsyncAvailableChanged -= value;
+            remove => Model.IsPauseArtistCollectionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
         {
-            add => Model.IsChangeNameAsyncAvailableChanged += value;
+            add => Model.IsChangeNameAsyncAvailableChanged -= value;
             remove => Model.IsChangeNameAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
         {
-            add => Model.IsChangeDescriptionAsyncAvailableChanged += value;
+            add => Model.IsChangeDescriptionAsyncAvailableChanged -= value;
             remove => Model.IsChangeDescriptionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
         {
-            add => Model.IsChangeDurationAsyncAvailableChanged += value;
+            add => Model.IsChangeDurationAsyncAvailableChanged -= value;
             remove => Model.IsChangeDurationAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int>? ArtistItemsCountChanged
         {
-            add => Model.ArtistItemsCountChanged += value;
+            add => Model.ArtistItemsCountChanged -= value;
             remove => Model.ArtistItemsCountChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged
         {
-            add => Model.ImagesCountChanged += value;
+            add => Model.ImagesCountChanged -= value;
             remove => Model.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
-            add => Model.ImagesChanged += value;
+            add => Model.ImagesChanged -= value;
             remove => Model.ImagesChanged -= value;
         }
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged
         {
-            add => Model.ArtistItemsChanged += value;
+            add => Model.ArtistItemsChanged -= value;
             remove => Model.ArtistItemsChanged -= value;
         }
 
@@ -279,9 +281,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable));
 
-        private void OnIsPauseAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPauseAsyncAvailable));
+        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPauseArtistCollectionAsyncAvailable));
 
-        private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
+        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable));
 
         private void Track_AlbumChanged(object sender, IAlbum? e)
         {
@@ -323,7 +325,7 @@ namespace StrixMusic.Sdk.ViewModels
         public IReadOnlyList<ICore> SourceCores { get; }
 
         /// <summary>
-        /// The merged sources for this model
+        /// The merged sources for this model.
         /// </summary>
         public IReadOnlyList<ICoreTrack> Sources => Model.GetSources<ICoreTrack>();
 
@@ -411,10 +413,10 @@ namespace StrixMusic.Sdk.ViewModels
         public PlaybackState PlaybackState => Model.PlaybackState;
 
         /// <inheritdoc />
-        public bool IsPlayAsyncAvailable => Model.IsPlayAsyncAvailable;
+        public bool IsPlayArtistCollectionAsyncAvailable => Model.IsPlayArtistCollectionAsyncAvailable;
 
         /// <inheritdoc />
-        public bool IsPauseAsyncAvailable => Model.IsPauseAsyncAvailable;
+        public bool IsPauseArtistCollectionAsyncAvailable => Model.IsPauseArtistCollectionAsyncAvailable;
 
         /// <inheritdoc />
         public bool IsChangeNameAsyncAvailable => Model.IsChangeNameAsyncAvailable;
@@ -474,42 +476,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeIsExplicitAsync(bool isExplicit) => Model.ChangeIsExplicitAsync(isExplicit);
 
         /// <inheritdoc />
-        public Task PauseAsync() => Model.PauseAsync();
+        public Task PlayArtistCollectionAsync() => _playbackHandler.Play(Model, Model, Model.IntoList());
 
         /// <inheritdoc />
-        public async Task PlayAsync()
-        {
-            var activeDevice = MainViewModel.Singleton?.ActiveDevice;
-
-            if (activeDevice?.Type == DeviceType.Remote)
-            {
-                await Model.PlayAsync();
-                return;
-            }
-
-            if (_playbackHandler.PlaybackState == PlaybackState.Paused)
-            {
-                await _playbackHandler.ResumeAsync();
-            }
-            else
-            {
-                await _playbackHandler.PauseAsync();
-
-                // The actual playback
-                _playbackHandler.ClearNext();
-                _playbackHandler.ClearPrevious();
-
-                // TODO
-            }
-
-            if (MainViewModel.Singleton?.LocalDevice?.Model is StrixDevice device)
-            {
-                device.SetPlaybackData(Model, Model);
-            }
-
-            // Play the first thing in the queue.
-            await _playbackHandler.PlayFromNext(0);
-        }
+        public Task PauseArtistCollectionAsync() => Model.PauseArtistCollectionAsync();
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => Model.ChangeNameAsync(name);
@@ -577,15 +547,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }
 
-        /// <summary>
-        /// Attempts to play the track.
-        /// </summary>
-        public IAsyncRelayCommand PlayAsyncCommand { get; }
+        /// <inheritdoc />
+        public IAsyncRelayCommand PlayArtistCollectionAsyncCommand { get; }
 
-        /// <summary>
-        /// Attempts to pause the track, if playing.
-        /// </summary>
-        public IAsyncRelayCommand PauseAsyncCommand { get; }
+        /// <inheritdoc />
+        public IAsyncRelayCommand PauseArtistCollectionAsyncCommand { get; }
 
         /// <summary>
         /// Attempts to change the name of the album, if supported.

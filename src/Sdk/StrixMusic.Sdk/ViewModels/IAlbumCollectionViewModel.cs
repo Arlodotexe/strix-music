@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
-using OwlCore.Collections;
 using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Base;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -27,5 +27,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="PopulateMoreAlbumsAsync"/>
         /// </summary>
         public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }
+
+        /// <summary>
+        /// <inheritdoc cref="IAlbumCollectionBase.PlayAlbumCollectionAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand PlayAlbumCollectionAsyncCommand { get; }
+
+        /// <summary>
+        /// <inheritdoc cref="IAlbumCollectionBase.PauseAlbumCollectionAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }
     }
 }

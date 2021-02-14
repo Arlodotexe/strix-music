@@ -14,6 +14,28 @@ namespace StrixMusic.Sdk.Data.Base
         int TotalPlaylistItemsCount { get; }
 
         /// <summary>
+        /// If true, <see cref="PlayPlaylistCollectionAsync()"/> can be used.
+        /// </summary>
+        bool IsPlayPlaylistCollectionAsyncAvailable { get; }
+
+        /// <summary>
+        /// If true, <see cref="PausePlaylistCollectionAsync()"/> can be used.
+        /// </summary>
+        bool IsPausePlaylistCollectionAsyncAvailable { get; }
+
+        /// <summary>
+        /// Attempts to play the Playlist collection, or resumes playback if already playing.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayPlaylistCollectionAsync();
+
+        /// <summary>
+        /// Attempts to pause the Playlist collection.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PausePlaylistCollectionAsync();
+
+        /// <summary>
         /// Removes the playlist from the collection on the backend.
         /// </summary>
         /// <param name="index">The index of the playlist to remove.</param>
@@ -31,6 +53,16 @@ namespace StrixMusic.Sdk.Data.Base
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IPlaylistCollectionItemBase"/> can be removed.</returns>
         Task<bool> IsRemovePlaylistItemAvailable(int index);
+
+        /// <summary>
+        /// Raised when <see cref="IsPlayPlaylistCollectionAsyncAvailable"/> changes.
+        /// </summary>
+        event EventHandler<bool>? IsPlayPlaylistCollectionAsyncAvailableChanged;
+
+        /// <summary>
+        /// Raised when <see cref="IsPausePlaylistCollectionAsyncAvailable"/> changes.
+        /// </summary>
+        event EventHandler<bool>? IsPausePlaylistCollectionAsyncAvailableChanged;
 
         /// <summary>
         /// Fires when the merged <see cref="TotalPlaylistItemsCount"/> changes.

@@ -65,5 +65,15 @@ namespace OwlCore.AbstractStorage
         /// <exception cref="UnauthorizedAccessException">You don't have permission to access the specified folder.</exception>
         /// <exception cref="ArgumentException">The path cannot be a relative path or a Uri. Check the value of path.</exception>
         Task<IFolderData?> GetFolderFromPathAsync(string path);
+
+        /// <summary>
+        /// Gets the file that has the specified absolute path in the file system.
+        /// </summary>
+        /// <param name="path">The absolute path in the file system (not the Uri) of the file to get.</param>
+        /// <returns>When this method completes successfully, it returns a <see cref="IFileData"/> that represents the specified folder.</returns>
+        /// <exception cref="FileNotFoundException">The specified file does not exist. Check the value of path.</exception>
+        /// <exception cref="UnauthorizedAccessException">You don't have permission to access the specified file.</exception>
+        /// <exception cref="ArgumentException">The path cannot be a relative path or a Uri. Check the value of path.</exception>
+        Task<IFileData?> GetFileFromPathAsync(string path);
     }
 }
