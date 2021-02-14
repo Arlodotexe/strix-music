@@ -94,6 +94,23 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <summary>
+        /// Gets the <see cref="TrackMetadata"/> by specific <see cref="TrackMetadata"/> id. 
+        /// </summary>
+        /// <param name="id">The id of the corresponding <see cref="TrackMetadata"/></param>
+        /// <returns>If found return <see cref="TrackMetadata"/> otherwise returns null.</returns>
+        public async Task<TrackMetadata?> GetTrackMetadataById(string id)
+        {
+            var allTracks = await GetTrackMetadata(0, -1);
+
+            if (allTracks.Count > 0)
+            {
+                return allTracks.FirstOrDefault(c => c.Id == id);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets the filtered tracks by artist ids.
         /// </summary>
         /// <param name="artistId">The artist Id.</param>
