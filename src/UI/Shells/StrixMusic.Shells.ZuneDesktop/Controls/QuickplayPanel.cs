@@ -9,7 +9,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
     /// <summary>
     /// A panel that arranges objects in a very **very** visualy striking way.
     /// </summary>
-    public class QuickplayPanel
+    public partial class QuickplayPanel
         : Panel
     {
         /// <summary>
