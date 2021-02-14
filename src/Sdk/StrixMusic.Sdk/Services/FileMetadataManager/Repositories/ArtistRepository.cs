@@ -68,6 +68,23 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <summary>
+        /// Gets the <see cref="ArtistMetadata"/> by specific <see cref="ArtistMetadata"/> id. 
+        /// </summary>
+        /// <param name="id">The id of the corresponding <see cref="ArtistMetadata"/></param>
+        /// <returns>If found return <see cref="ArtistMetadata"/> otherwise returns null.</returns>
+        public async Task<ArtistMetadata?> GetArtistMetadataById(string id)
+        {
+            var allArtists = await GetArtistMetadata(0, -1);
+
+            if (allArtists.Count > 0)
+            {
+                return allArtists.FirstOrDefault(c => c.Id == id);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets all <see cref="TrackMetadata"/> over the file system.
         /// </summary>
         /// <param name="offset">The starting index for retrieving items.</param>
@@ -90,6 +107,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 return filteredArtists;
             }
         }
+
 
         /// <summary>
         /// Gets the filtered artist by album ids.

@@ -71,6 +71,23 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <summary>
+        /// Gets the <see cref="AlbumMetadata"/> by specific <see cref="AlbumMetadata"/> id. 
+        /// </summary>
+        /// <param name="id">The id of the corresponding <see cref="AlbumMetadata"/></param>
+        /// <returns>If found return <see cref="AlbumMetadata"/> otherwise returns null.</returns>
+        public async Task<AlbumMetadata?> GetAlbumMetadataById(string id)
+        {
+            var allAlbums = await GetAlbumMetadata(0, -1);
+
+            if (allAlbums.Count > 0)
+            {
+                return allAlbums.FirstOrDefault(c => c.Id == id);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets all <see cref="TrackMetadata"/> over the file system.
         /// </summary>
         /// <param name="offset">The starting index for retrieving items.</param>

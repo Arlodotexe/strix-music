@@ -10,6 +10,8 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.FileMetadataManager;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using StrixMusic.Sdk.Services.Settings;
 using System;
 using System.Collections.Generic;
@@ -151,9 +153,47 @@ namespace StrixMusic.Core.LocalFiles
         }
 
         /// <inheritdoc/>
-        public Task<ICoreMember?> GetContextById(string id)
+        public async Task<ICoreMember?> GetContextById(string id)
         {
-            return Task.FromResult<ICoreMember?>(null);
+            var fileMetadataManager = this.GetService<FileMetadataManager>();
+
+            var artist = await fileMetadataManager.Artists.GetArtistMetadataById(id);
+
+            if (artist != null)
+                return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0);
+
+            var album = await fileMetadataManager.Albums.GetAlbumMetadataById(id);
+
+            if (album != null)
+            {
+                TrackMetadata? trackWithImage = null;
+
+                if (album.TrackIds != null)
+                {
+                    foreach (var item in album.TrackIds)
+                    {
+                        var relatedTrack = await fileMetadataManager.Tracks.GetTrackMetadataById(item);
+
+                        if (relatedTrack == null)
+                            continue;
+
+                        if (relatedTrack.ImagePath != null)
+                            trackWithImage = relatedTrack;
+                    }
+                }
+
+                if (trackWithImage == null)
+                    return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0, trackWithImage?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, trackWithImage.ImagePath) : null);
+
+                return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0, null);
+            }
+
+            var track = await fileMetadataManager.Tracks.GetTrackMetadataById(id);
+
+            if (track != null)
+                return new LocalFilesCoreTrack(SourceCore, track);
+
+            return null;
         }
 
         /// <inheritdoc/>
