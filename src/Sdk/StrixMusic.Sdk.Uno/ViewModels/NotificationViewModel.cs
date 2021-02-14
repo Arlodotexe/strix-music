@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore;
 using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Uno.ViewModels
@@ -37,7 +38,7 @@ namespace StrixMusic.Sdk.Uno.ViewModels
             set
             {
                 _abstractUINotificationViewModel = value;
-                OnPropertyChanged(nameof(AbstractUINotificationViewModel));
+                _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(AbstractUINotificationViewModel)));
             }
         }
 

@@ -322,49 +322,49 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _collectionGroup.TotalChildrenCountChanged -= value;
         }
 
-        private void CollectionGroupUrlChanged(object sender, Uri? e) => OnPropertyChanged(nameof(Url));
+        private void CollectionGroupUrlChanged(object sender, Uri? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Url)));
 
-        private void CollectionGroupNameChanged(object sender, string e) => OnPropertyChanged(nameof(Name));
+        private void CollectionGroupNameChanged(object sender, string e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Name)));
 
-        private void CollectionGroupDescriptionChanged(object sender, string? e) => OnPropertyChanged(nameof(Description));
+        private void CollectionGroupDescriptionChanged(object sender, string? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Description)));
 
-        private void CollectionGroupPlaybackStateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState));
+        private void CollectionGroupPlaybackStateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
 
-        private void CollectionGroupOnTotalChildrenCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalChildrenCount));
+        private void CollectionGroupOnTotalChildrenCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalChildrenCount)));
 
-        private void CollectionGroupOnPlaylistItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalPlaylistItemsCount));
+        private void CollectionGroupOnPlaylistItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalPlaylistItemsCount)));
 
-        private void CollectionGroupOnArtistItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalArtistItemsCount));
+        private void CollectionGroupOnArtistItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalArtistItemsCount)));
 
-        private void CollectionGroupOnTrackItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalTracksCount));
+        private void CollectionGroupOnTrackItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTracksCount)));
 
-        private void CollectionGroupOnAlbumItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalAlbumItemsCount));
+        private void CollectionGroupOnAlbumItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalAlbumItemsCount)));
 
-        private void PlayableCollectionGroupViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
+        private void PlayableCollectionGroupViewModel_ImagesCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalImageCount)));
 
-        private void CollectionGroupLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
+        private void CollectionGroupLastPlayedChanged(object sender, DateTime? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(LastPlayed)));
 
-        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable));
+        private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)));
 
-        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable));
+        private void OnIsChangeDurationAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDurationAsyncAvailable)));
 
-        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable));
+        private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable)));
 
-        private void OnIsPauseAlbumCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPauseAlbumCollectionAsyncAvailable));
+        private void OnIsPauseAlbumCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPauseAlbumCollectionAsyncAvailable)));
 
-        private void OnIsPlayAlbumCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAlbumCollectionAsyncAvailable));
+        private void OnIsPlayAlbumCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayAlbumCollectionAsyncAvailable)));
 
-        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPauseArtistCollectionAsyncAvailable));
+        private void OnIsPauseArtistCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPauseArtistCollectionAsyncAvailable)));
 
-        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable));
+        private void OnIsPlayArtistCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayArtistCollectionAsyncAvailable)));
 
-        private void OnIsPausePlaylistCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPausePlaylistCollectionAsyncAvailable));
+        private void OnIsPausePlaylistCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPausePlaylistCollectionAsyncAvailable)));
 
-        private void OnIsPlayPlaylistCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayPlaylistCollectionAsyncAvailable));
+        private void OnIsPlayPlaylistCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayPlaylistCollectionAsyncAvailable)));
 
-        private void OnIsPauseTrackCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPauseTrackCollectionAsyncAvailable));
+        private void OnIsPauseTrackCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPauseTrackCollectionAsyncAvailable)));
 
-        private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayTrackCollectionAsyncAvailable));
+        private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayTrackCollectionAsyncAvailable)));
 
         private void PlayableCollectionGroupViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
         {

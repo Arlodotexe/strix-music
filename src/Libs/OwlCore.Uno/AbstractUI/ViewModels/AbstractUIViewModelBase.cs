@@ -46,18 +46,18 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
             Model.TooltipTextChanged -= Model_TooltipTextChanged;
         }
 
-        private void Model_TooltipTextChanged(object sender, string? e) => OnPropertyChanged(nameof(TooltipText));
+        private void Model_TooltipTextChanged(object sender, string? e) => _ = OwlCore.Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TooltipText)));
 
-        private void Model_TitleChanged(object sender, string? e) => OnPropertyChanged(nameof(Title));
+        private void Model_TitleChanged(object sender, string? e) => _ = OwlCore.Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Title)));
 
-        private void Model_SubtitleChanged(object sender, string? e) => OnPropertyChanged(nameof(Subtitle));
+        private void Model_SubtitleChanged(object sender, string? e) => _ = OwlCore.Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Subtitle)));
 
-        private void Model_IconCodeChanged(object sender, string? e) => OnPropertyChanged(nameof(IconCode));
+        private void Model_IconCodeChanged(object sender, string? e) => _ = OwlCore.Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IconCode)));
 
         private void Model_ImagePathChanged(object sender, string? e)
         {
             _imageSource = SetupImageSource(Model);
-            OnPropertyChanged(nameof(ImageSource));
+            _ = OwlCore.Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(ImageSource)));
         }
 
         /// <summary>

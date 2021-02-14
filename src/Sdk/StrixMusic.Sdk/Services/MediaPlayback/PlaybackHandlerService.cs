@@ -195,6 +195,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (activeDevice is null)
             {
                 await localDevice.SwitchToAsync();
+                activeDevice ??= mainViewModel?.ActiveDevice;
             }
 
             Guard.IsNotNull(activeDevice, nameof(activeDevice));
@@ -212,6 +213,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             }
 
             // Setup for local playback
+            var trackPlaybackIndex = 0;
+
             for (var i = 0; i < completeTrackQueue.Count; i++)
             {
                 var item = completeTrackQueue[i];
@@ -221,11 +224,14 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 if (mediaSource is null)
                     continue;
 
+                if (item.Id == track.Id)
+                    trackPlaybackIndex = i;
+
                 InsertNext(i, mediaSource);
             }
 
             localDevice.SetPlaybackData(context, track);
-            await PlayFromNext(0);
+            await PlayFromNext(trackPlaybackIndex);
         }
 
         private async Task<ICore> GetPlaybackCore(ITrack track)
@@ -236,7 +242,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             // Find highest ranking core from the items merged into the track being played.
             foreach (var instanceId in coreRanking)
             {
-                var core = track.GetSourceCores<ICoreTrack>().FirstOrDefault(x => x.InstanceId == instanceId);
+                var sourceCores = track.GetSourceCores<ICoreTrack>();
+                var core = sourceCores.FirstOrDefault(x => x.InstanceId == instanceId);
+
                 if (core != default)
                     return core;
             }

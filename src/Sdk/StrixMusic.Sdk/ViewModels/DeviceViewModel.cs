@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -73,25 +74,25 @@ namespace StrixMusic.Sdk.ViewModels
             Model.VolumeChanged -= Device_VolumeChanged;
         }
 
-        private void Device_VolumeChanged(object sender, double e) => OnPropertyChanged(nameof(Volume));
+        private void Device_VolumeChanged(object sender, double e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Volume)));
 
-        private void Device_StateChanged(object sender, PlaybackState e) => OnPropertyChanged(nameof(PlaybackState));
+        private void Device_StateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
 
-        private void Device_ShuffleStateChanged(object sender, bool e) => OnPropertyChanged(nameof(ShuffleState));
+        private void Device_ShuffleStateChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(ShuffleState)));
 
-        private void Device_RepeatStateChanged(object sender, RepeatState e) => OnPropertyChanged(nameof(RepeatState));
+        private void Device_RepeatStateChanged(object sender, RepeatState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(RepeatState)));
 
-        private void Device_PositionChanged(object sender, TimeSpan e) => OnPropertyChanged(nameof(Position));
+        private void Device_PositionChanged(object sender, TimeSpan e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Position)));
 
-        private void Device_PlaybackSpeedChanged(object sender, double e) => OnPropertyChanged(nameof(PlaybackSpeed));
+        private void Device_PlaybackSpeedChanged(object sender, double e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackSpeed)));
 
-        private void Device_PlaybackContextChanged(object sender, IPlayableBase e) => OnPropertyChanged(nameof(PlaybackContext));
+        private void Device_PlaybackContextChanged(object sender, IPlayableBase e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackContext)));
 
-        private void Device_IsActiveChanged(object sender, bool e) => OnPropertyChanged(nameof(IsActive));
+        private void Device_IsActiveChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsActive)));
 
         private void Device_NowPlayingChanged(object sender, ITrack e)
         {
-            OnPropertyChanged(nameof(NowPlaying));
+            _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(NowPlaying)));
             _nowPlaying = new TrackViewModel(e);
         }
 
