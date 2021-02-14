@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Base;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -24,5 +25,15 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="PopulateMorePlaylistsAsync" />
         public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }
+
+        /// <summary>
+        /// <inheritdoc cref="IPlaylistCollectionBase.PlayPlaylistCollectionAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand PlayPlaylistCollectionAsyncCommand { get; }
+
+        /// <summary>
+        /// <inheritdoc cref="IPlaylistCollectionBase.PausePlaylistCollectionAsync"/>
+        /// </summary>
+        public IAsyncRelayCommand PausePlaylistCollectionAsyncCommand { get; }
     }
 }

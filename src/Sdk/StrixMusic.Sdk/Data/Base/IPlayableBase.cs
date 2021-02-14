@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// Represents an item that can be played.
     /// </summary>
-    public interface IPlayable : IImageCollectionBase
+    public interface IPlayableBase : IImageCollectionBase
     {
         /// <summary>
         /// The ID of the playable item.
@@ -44,16 +44,6 @@ namespace StrixMusic.Sdk.Data.Base
         TimeSpan Duration { get; }
 
         /// <summary>
-        /// If true, <see cref="PlayAsync()"/> can be used.
-        /// </summary>
-        bool IsPlayAsyncAvailable { get; }
-
-        /// <summary>
-        /// If true, <see cref="PauseAsync()"/> can be used.
-        /// </summary>
-        bool IsPauseAsyncAvailable { get; }
-
-        /// <summary>
         /// If true, <see cref="ChangeNameAsync(string)"/> can be used.
         /// </summary>
         bool IsChangeNameAsyncAvailable { get; }
@@ -67,18 +57,6 @@ namespace StrixMusic.Sdk.Data.Base
         /// If true, <see cref="ChangeDurationAsync(TimeSpan)"/> can be used.
         /// </summary>
         bool IsChangeDurationAsyncAvailable { get; }
-
-        /// <summary>
-        /// Attempts to play the item, or resumes playback if already playing.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAsync();
-
-        /// <summary>
-        /// Attempts to pause the item.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PauseAsync();
 
         /// <summary>
         /// Changes the <see cref="Name"/> of this playable item.
@@ -130,16 +108,6 @@ namespace StrixMusic.Sdk.Data.Base
         /// Raised when <see cref="LastPlayed"/> changes.
         /// </summary>
         event EventHandler<DateTime?>? LastPlayedChanged;
-
-        /// <summary>
-        /// Raised when <see cref="IsPlayAsyncAvailable"/> changes.
-        /// </summary>
-        event EventHandler<bool>? IsPlayAsyncAvailableChanged;
-
-        /// <summary>
-        /// Raised when <see cref="IsPauseAsyncAvailable"/> changes.
-        /// </summary>
-        event EventHandler<bool>? IsPauseAsyncAvailableChanged;
 
         /// <summary>
         /// Raised when <see cref="IsChangeNameAsyncAvailable"/> changes.

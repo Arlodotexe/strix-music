@@ -89,10 +89,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPauseTrackCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
@@ -109,25 +109,33 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public event EventHandler<int>? ImagesCountChanged;
 
-        private void AttachEvents(ICorePlaylist preferredSource)
+        private void AttachEvents(ICorePlaylist source)
         {
-            AttachPlayableEvents(preferredSource);
+            AttachPlayableEvents(source);
+
+            source.IsPlayTrackCollectionAsyncAvailableChanged += IsPlayTrackCollectionAsyncAvailableChanged;
+            source.IsPauseTrackCollectionAsyncAvailableChanged += IsPauseTrackCollectionAsyncAvailableChanged;
+
             _trackCollectionMap.ItemsCountChanged += TrackCollectionMap_ItemsCountChanged;
             _trackCollectionMap.ItemsChanged += TrackCollectionMap_ItemsChanged;
             _imageCollectionMap.ItemsChanged += ImageCollectionMap_ItemsChanged;
             _imageCollectionMap.ItemsCountChanged += ImageCollectionMap_ItemsCountChanged;
         }
 
-        private void DetachEvents(ICoreAlbum source)
+        private void DetachEvents(ICorePlaylist source)
         {
             DetachPlayableEvents(source);
+
+            source.IsPlayTrackCollectionAsyncAvailableChanged += IsPlayTrackCollectionAsyncAvailableChanged;
+            source.IsPauseTrackCollectionAsyncAvailableChanged += IsPauseTrackCollectionAsyncAvailableChanged;
+
             _trackCollectionMap.ItemsChanged -= TrackCollectionMap_ItemsChanged;
             _trackCollectionMap.ItemsCountChanged -= TrackCollectionMap_ItemsCountChanged;
             _imageCollectionMap.ItemsChanged -= ImageCollectionMap_ItemsChanged;
             _imageCollectionMap.ItemsCountChanged -= ImageCollectionMap_ItemsCountChanged;
         }
 
-        private void AttachPlayableEvents(IPlayable source)
+        private void AttachPlayableEvents(IPlayableBase source)
         {
             source.PlaybackStateChanged += PlaybackStateChanged;
             source.NameChanged += NameChanged;
@@ -135,14 +143,12 @@ namespace StrixMusic.Sdk.Data.Merged
             source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
             source.LastPlayedChanged += LastPlayedChanged;
-            source.IsPlayAsyncAvailableChanged += IsPlayAsyncAvailableChanged;
-            source.IsPauseAsyncAvailableChanged += IsPauseAsyncAvailableChanged;
             source.IsChangeNameAsyncAvailableChanged += IsChangeNameAsyncAvailableChanged;
             source.IsChangeDurationAsyncAvailableChanged += IsChangeDurationAsyncAvailableChanged;
             source.IsChangeDescriptionAsyncAvailableChanged += IsChangeDescriptionAsyncAvailableChanged;
         }
 
-        private void DetachPlayableEvents(IPlayable source)
+        private void DetachPlayableEvents(IPlayableBase source)
         {
             source.PlaybackStateChanged -= PlaybackStateChanged;
             source.NameChanged -= NameChanged;
@@ -150,8 +156,6 @@ namespace StrixMusic.Sdk.Data.Merged
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
             source.LastPlayedChanged -= LastPlayedChanged;
-            source.IsPlayAsyncAvailableChanged -= IsPlayAsyncAvailableChanged;
-            source.IsPauseAsyncAvailableChanged -= IsPauseAsyncAvailableChanged;
             source.IsChangeNameAsyncAvailableChanged -= IsChangeNameAsyncAvailableChanged;
             source.IsChangeDurationAsyncAvailableChanged -= IsChangeDurationAsyncAvailableChanged;
             source.IsChangeDescriptionAsyncAvailableChanged -= IsChangeDescriptionAsyncAvailableChanged;
@@ -260,16 +264,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsRemoveTrackAvailable(int index) => _preferredSource.IsRemoveTrackAvailable(index);
 
         /// <inheritdoc/>
-        public Task PauseAsync()
-        {
-            return _preferredSource.PauseAsync();
-        }
+        public Task PauseTrackCollectionAsync() => _preferredSource.PauseTrackCollectionAsync();
 
         /// <inheritdoc/>
-        public Task PlayAsync()
-        {
-            return _preferredSource.PlayAsync();
-        }
+        public Task PlayTrackCollectionAsync() => _preferredSource.PlayTrackCollectionAsync();
 
         /// <inheritdoc/>
         public Task RemoveImageAsync(int index)
@@ -320,10 +318,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public DateTime? AddedAt { get; internal set; }
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncAvailable => _preferredSource.IsPlayAsyncAvailable;
+        public bool IsPlayTrackCollectionAsyncAvailable => _preferredSource.IsPlayTrackCollectionAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncAvailable => _preferredSource.IsPauseAsyncAvailable;
+        public bool IsPauseTrackCollectionAsyncAvailable => _preferredSource.IsPauseTrackCollectionAsyncAvailable;
 
         /// <inheritdoc/>
         public bool IsChangeNameAsyncAvailable => _preferredSource.IsChangeDescriptionAsyncAvailable;

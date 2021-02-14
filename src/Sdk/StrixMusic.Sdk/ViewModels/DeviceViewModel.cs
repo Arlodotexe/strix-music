@@ -85,7 +85,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Device_PlaybackSpeedChanged(object sender, double e) => OnPropertyChanged(nameof(PlaybackSpeed));
 
-        private void Device_PlaybackContextChanged(object sender, IPlayable e) => OnPropertyChanged(nameof(PlaybackContext));
+        private void Device_PlaybackContextChanged(object sender, IPlayableBase e) => OnPropertyChanged(nameof(PlaybackContext));
 
         private void Device_IsActiveChanged(object sender, bool e) => OnPropertyChanged(nameof(IsActive));
 
@@ -125,7 +125,7 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsActive => Model.IsActive;
 
         /// <inheritdoc />
-        public IPlayable? PlaybackContext => Model.PlaybackContext;
+        public IPlayableBase? PlaybackContext => Model.PlaybackContext;
 
         /// <inheritdoc />
         public TimeSpan Position => Model.Position;
@@ -181,7 +181,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<IPlayable>? PlaybackContextChanged
+        public event EventHandler<IPlayableBase>? PlaybackContextChanged
         {
             add => Model.PlaybackContextChanged += value;
 

@@ -44,7 +44,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public ICoreTrackCollection? PlaybackQueue { get; }
 
         /// <inheritdoc />
-        public IPlayable? PlaybackContext { get; }
+        public IPlayableBase? PlaybackContext { get; }
 
         /// <inheritdoc />
         public ICoreTrack? NowPlaying { get; }
@@ -161,7 +161,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<bool>? IsActiveChanged;
 
         /// <inheritdoc />
-        public event EventHandler<IPlayable>? PlaybackContextChanged;
+        public event EventHandler<IPlayableBase>? PlaybackContextChanged;
 
         /// <inheritdoc />
         public event EventHandler<ICoreTrack>? NowPlayingChanged;

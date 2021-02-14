@@ -62,7 +62,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public event EventHandler<IPlayable>? PlaybackContextChanged
+        public event EventHandler<IPlayableBase>? PlaybackContextChanged
         {
             add => _source.PlaybackContextChanged += value;
             remove => _source.PlaybackContextChanged -= value;
@@ -129,7 +129,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public double PlaybackSpeed { get; internal set; }
 
         /// <inheritdoc />
-        public IPlayable? PlaybackContext { get; internal set; }
+        public IPlayableBase? PlaybackContext { get; internal set; }
 
         /// <inheritdoc />
         public double Volume { get; internal set; }

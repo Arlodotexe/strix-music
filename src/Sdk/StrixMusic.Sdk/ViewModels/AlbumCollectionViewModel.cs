@@ -43,8 +43,8 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
-            PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
-            PlayAsyncCommand = new AsyncRelayCommand(PlayAsync);
+            PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
+            PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
 
             AttachEvents();
         }
@@ -57,8 +57,8 @@ namespace StrixMusic.Sdk.ViewModels
             UrlChanged += OnUrlChanged;
             LastPlayedChanged += OnLastPlayedChanged;
 
-            IsPlayAsyncAvailableChanged += OnIsPlayAsyncAvailableChanged;
-            IsPauseAsyncAvailableChanged += OnIsPauseAsyncAvailableChanged;
+            IsPlayAlbumCollectionAsyncAvailableChanged += OnIsPlayAlbumCollectionAsyncAvailableChanged;
+            IsPauseAlbumCollectionAsyncAvailableChanged += OnIsPauseAlbumCollectionAsyncAvailableChanged;
             IsChangeNameAsyncAvailableChanged += OnIsChangeNameAsyncAvailableChanged;
             IsChangeDurationAsyncAvailableChanged += OnIsChangeDurationAsyncAvailableChanged;
             IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
@@ -77,8 +77,8 @@ namespace StrixMusic.Sdk.ViewModels
             UrlChanged -= OnUrlChanged;
             LastPlayedChanged -= OnLastPlayedChanged;
 
-            IsPlayAsyncAvailableChanged -= OnIsPlayAsyncAvailableChanged;
-            IsPauseAsyncAvailableChanged -= OnIsPauseAsyncAvailableChanged;
+            IsPlayAlbumCollectionAsyncAvailableChanged -= OnIsPlayAlbumCollectionAsyncAvailableChanged;
+            IsPauseAlbumCollectionAsyncAvailableChanged -= OnIsPauseAlbumCollectionAsyncAvailableChanged;
             IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
             IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
             IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
@@ -109,9 +109,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsChangeNameAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeNameAsyncAvailable));
 
-        private void OnIsPauseAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPauseAsyncAvailable));
+        private void OnIsPauseAlbumCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPauseAlbumCollectionAsyncAvailable));
 
-        private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
+        private void OnIsPlayAlbumCollectionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAlbumCollectionAsyncAvailable));
 
         private void AlbumCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
         {
@@ -177,20 +177,6 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayAsyncAvailableChanged
-        {
-            add => _collection.IsPlayAsyncAvailableChanged += value;
-            remove => _collection.IsPlayAsyncAvailableChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<bool>? IsPauseAsyncAvailableChanged
-        {
-            add => _collection.IsPauseAsyncAvailableChanged += value;
-            remove => _collection.IsPauseAsyncAvailableChanged -= value;
-        }
-
-        /// <inheritdoc />
         public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
         {
             add => _collection.IsChangeNameAsyncAvailableChanged += value;
@@ -209,6 +195,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _collection.IsChangeDurationAsyncAvailableChanged += value;
             remove => _collection.IsChangeDurationAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseAlbumCollectionAsyncAvailableChanged
+        {
+            add => _collection.IsPauseAlbumCollectionAsyncAvailableChanged += value;
+            remove => _collection.IsPauseAlbumCollectionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc/>
@@ -309,13 +302,13 @@ namespace StrixMusic.Sdk.ViewModels
         public int TotalAlbumItemsCount => _collection.TotalAlbumItemsCount;
 
         /// <inheritdoc />
+        public bool IsPlayAlbumCollectionAsyncAvailable => _collection.IsPlayAlbumCollectionAsyncAvailable;
+
+        /// <inheritdoc />
+        public bool IsPauseAlbumCollectionAsyncAvailable => _collection.IsPauseAlbumCollectionAsyncAvailable;
+
+        /// <inheritdoc />
         public int TotalImageCount => _collection.TotalImageCount;
-
-        /// <inheritdoc />
-        public bool IsPlayAsyncAvailable => _collection.IsPlayAsyncAvailable;
-
-        /// <inheritdoc />
-        public bool IsPauseAsyncAvailable => _collection.IsPauseAsyncAvailable;
 
         /// <inheritdoc />
         public bool IsChangeNameAsyncAvailable => _collection.IsChangeNameAsyncAvailable;
@@ -331,6 +324,13 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task<bool> IsRemoveAlbumItemAvailable(int index) => _collection.IsRemoveAlbumItemAvailable(index);
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayAlbumCollectionAsyncAvailableChanged
+        {
+            add => _collection.IsPlayAlbumCollectionAsyncAvailableChanged += value;
+            remove => _collection.IsPlayAlbumCollectionAsyncAvailableChanged -= value;
+        }
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => _collection.GetAlbumItemsAsync(limit, offset);
@@ -359,18 +359,6 @@ namespace StrixMusic.Sdk.ViewModels
         public IReadOnlyList<ICoreAlbumCollection> Sources => _collection.GetSources<ICoreAlbumCollection>();
 
         /// <inheritdoc />
-        public Task PlayAsync()
-        {
-            return _collection.PlayAsync();
-        }
-
-        /// <inheritdoc />
-        public Task PauseAsync()
-        {
-            return _collection.PauseAsync();
-        }
-
-        /// <inheritdoc />
         public Task ChangeNameAsync(string name) => _collection.ChangeNameAsync(name);
 
         /// <inheritdoc />
@@ -378,6 +366,18 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task ChangeDurationAsync(TimeSpan duration) => _collection.ChangeDurationAsync(duration);
+
+        /// <inheritdoc />
+        public Task PlayAlbumCollectionAsync()
+        {
+            return _collection.PlayAlbumCollectionAsync();
+        }
+
+        /// <inheritdoc />
+        public Task PauseAlbumCollectionAsync()
+        {
+            return _collection.PauseAlbumCollectionAsync();
+        }
 
         /// <inheritdoc />
         public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index) => _collection.AddAlbumItemAsync(album, index);
@@ -401,10 +401,10 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
 
         /// <inheritdoc />
-        public IAsyncRelayCommand PlayAsyncCommand { get; }
+        public IAsyncRelayCommand PlayAlbumCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public IAsyncRelayCommand PauseAsyncCommand { get; }
+        public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
         public bool Equals(ICoreAlbumCollectionItem other) => _collection.Equals(other);

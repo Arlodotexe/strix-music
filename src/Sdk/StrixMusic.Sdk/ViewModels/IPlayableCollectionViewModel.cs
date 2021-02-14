@@ -8,14 +8,5 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public interface IPlayableCollectionViewModel : IPlayableCollectionBase
     {
-        /// <summary>
-        /// <inheritdoc cref="IPlayable.PlayAsync"/>
-        /// </summary>
-        public IAsyncRelayCommand PlayAsyncCommand { get; }
-
-        /// <summary>
-        /// <inheritdoc cref="IPlayable.PauseAsync"/>
-        /// </summary>
-        public IAsyncRelayCommand PauseAsyncCommand { get; }
     }
 }

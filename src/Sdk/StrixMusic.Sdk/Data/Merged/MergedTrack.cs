@@ -58,6 +58,9 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             AttachPlayableEvents(source);
 
+            source.IsPlayArtistCollectionAsyncAvailableChanged += IsPlayArtistCollectionAsyncAvailableChanged;
+            source.IsPauseArtistCollectionAsyncAvailableChanged += IsPauseArtistCollectionAsyncAvailableChanged;
+
             source.LanguageChanged += LanguageChanged;
             source.LyricsChanged += Source_LyricsChanged;
             source.IsExplicitChanged += IsExplicitChanged;
@@ -74,6 +77,9 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             DetachPlayableEvents(source);
 
+            source.IsPlayArtistCollectionAsyncAvailableChanged -= IsPlayArtistCollectionAsyncAvailableChanged;
+            source.IsPauseArtistCollectionAsyncAvailableChanged -= IsPauseArtistCollectionAsyncAvailableChanged;
+
             source.LanguageChanged -= LanguageChanged;
             source.LyricsChanged -= Source_LyricsChanged;
             source.IsExplicitChanged -= IsExplicitChanged;
@@ -86,7 +92,7 @@ namespace StrixMusic.Sdk.Data.Merged
             _artistMap.ItemsCountChanged -= ArtistMap_ItemsCountChanged;
         }
 
-        private void AttachPlayableEvents(IPlayable source)
+        private void AttachPlayableEvents(IPlayableBase source)
         {
             source.PlaybackStateChanged += PlaybackStateChanged;
             source.NameChanged += NameChanged;
@@ -94,14 +100,12 @@ namespace StrixMusic.Sdk.Data.Merged
             source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
             source.LastPlayedChanged += LastPlayedChanged;
-            source.IsPlayAsyncAvailableChanged += IsPlayAsyncAvailableChanged;
-            source.IsPauseAsyncAvailableChanged += IsPauseAsyncAvailableChanged;
             source.IsChangeNameAsyncAvailableChanged += IsChangeNameAsyncAvailableChanged;
             source.IsChangeDurationAsyncAvailableChanged += IsChangeDurationAsyncAvailableChanged;
             source.IsChangeDescriptionAsyncAvailableChanged += IsChangeDescriptionAsyncAvailableChanged;
         }
 
-        private void DetachPlayableEvents(IPlayable source)
+        private void DetachPlayableEvents(IPlayableBase source)
         {
             source.PlaybackStateChanged -= PlaybackStateChanged;
             source.NameChanged -= NameChanged;
@@ -109,8 +113,6 @@ namespace StrixMusic.Sdk.Data.Merged
             source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
             source.LastPlayedChanged -= LastPlayedChanged;
-            source.IsPlayAsyncAvailableChanged -= IsPlayAsyncAvailableChanged;
-            source.IsPauseAsyncAvailableChanged -= IsPauseAsyncAvailableChanged;
             source.IsChangeNameAsyncAvailableChanged -= IsChangeNameAsyncAvailableChanged;
             source.IsChangeDurationAsyncAvailableChanged -= IsChangeDurationAsyncAvailableChanged;
             source.IsChangeDescriptionAsyncAvailableChanged -= IsChangeDescriptionAsyncAvailableChanged;
@@ -190,10 +192,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public event EventHandler<DateTime?>? LastPlayedChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPauseAsyncAvailableChanged;
+        public event EventHandler<bool>? IsPauseArtistCollectionAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged;
@@ -312,10 +314,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool IsChangeIsExplicitAsyncAvailable => _preferredSource.IsChangeIsExplicitAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsPlayAsyncAvailable => _preferredSource.IsPlayAsyncAvailable;
+        public bool IsPlayArtistCollectionAsyncAvailable => _preferredSource.IsPlayArtistCollectionAsyncAvailable;
 
         /// <inheritdoc/>
-        public bool IsPauseAsyncAvailable => _preferredSource.IsPauseAsyncAvailable;
+        public bool IsPauseArtistCollectionAsyncAvailable => _preferredSource.IsPauseArtistCollectionAsyncAvailable;
 
         /// <inheritdoc/>
         public bool IsChangeNameAsyncAvailable => _preferredSource.IsChangeNameAsyncAvailable;
@@ -336,10 +338,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsRemoveArtistItemAvailable(int index) => _artistMap.IsRemoveItemSupport(index);
 
         /// <inheritdoc/>
-        public Task PauseAsync() => _preferredSource.PauseAsync();
+        public Task PauseArtistCollectionAsync() => _preferredSource.PauseArtistCollectionAsync();
 
         /// <inheritdoc/>
-        public Task PlayAsync() => _preferredSource.PlayAsync();
+        public Task PlayArtistCollectionAsync() => _preferredSource.PlayArtistCollectionAsync();
 
         /// <inheritdoc/>
         public Task ChangeAlbumAsync(IAlbum? album)

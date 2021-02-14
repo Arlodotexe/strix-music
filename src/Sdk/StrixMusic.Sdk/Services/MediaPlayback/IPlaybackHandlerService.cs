@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.Events;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {
@@ -41,6 +44,15 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
         /// <inheritdoc cref="Sdk.MediaPlayback.RepeatState"/>
         RepeatState RepeatState { get; }
+
+        /// <summary>
+        /// Loads the given track collection into the play queue and plays the given track.
+        /// </summary>
+        /// <param name="track">The track to play.</param>
+        /// <param name="context">The playback context.</param>
+        /// <param name="completeTrackQueue">The tracks to use in the queue.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task Play(ITrack track, IPlayableBase context, IReadOnlyList<ITrack> completeTrackQueue);
 
         /// <summary>
         /// Plays a specific media from <see cref="NextItems"/>.

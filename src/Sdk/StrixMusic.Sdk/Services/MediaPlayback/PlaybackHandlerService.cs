@@ -3,16 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Events;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {
     /// <inheritdoc />
     public class PlaybackHandlerService : IPlaybackHandlerService
     {
+        private readonly ISettingsService _settingsService;
         private readonly Dictionary<ICore, IAudioPlayerService> _audioPlayerRegistry;
         private readonly List<IMediaSourceConfig> _nextItems;
         private readonly Stack<IMediaSourceConfig> _prevItems;
@@ -21,7 +28,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         private RepeatState _repeatState;
         private bool _shuffleState;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1011:Closing square brackets should be spaced correctly", Justification = "Recursive spacing rule.")]
         private int[]? _shuffledNextItemsIndices;
 
         /// <summary>
@@ -30,6 +36,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public PlaybackHandlerService()
         {
             _audioPlayerRegistry = new Dictionary<ICore, IAudioPlayerService>();
+            _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+
 
             _prevItems = new Stack<IMediaSourceConfig>();
             _nextItems = new List<IMediaSourceConfig>();
@@ -166,6 +174,77 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
         /// <inheritdoc />
         public Task ChangeVolumeAsync(double volume) => _currentPlayerService?.ResumeAsync() ?? Task.CompletedTask;
+
+        /// <inheritdoc />
+        public async Task Play(ITrack track, IPlayableBase context, IReadOnlyList<ITrack> completeTrackQueue)
+        {
+            var mainViewModel = MainViewModel.Singleton;
+
+            Guard.IsTrue(mainViewModel?.Library?.IsInitialized ?? false, nameof(mainViewModel.Library.IsInitialized));
+
+            var core = await GetPlaybackCore(track);
+            var activeDevice = mainViewModel?.ActiveDevice;
+            var localDevice = mainViewModel?.LocalDevice?.Model as StrixDevice;
+
+            Guard.IsNotNull(localDevice, nameof(localDevice));
+
+            // Pause the active player first.
+            if (!(activeDevice is null))
+            {
+                _ = activeDevice.PauseAsync();
+            }
+
+            // If there is no active device, activate the associated local device.
+            if (activeDevice is null)
+            {
+                await localDevice.SwitchToAsync();
+            }
+
+            Guard.IsNotNull(activeDevice, nameof(activeDevice));
+
+            // Don't continue if playing this track isn't supported by the core.
+            if (activeDevice.SourceCore?.CoreConfig.PlaybackType == MediaPlayerType.None)
+                return;
+
+            // If the active device is controlled remotely, the rest is handled there.
+            if (activeDevice.Type == DeviceType.Remote)
+            {
+                // TODO 
+                //await context.PlayAsync();
+                return;
+            }
+
+            // Setup for local playback
+            for (var i = 0; i < completeTrackQueue.Count; i++)
+            {
+                var item = completeTrackQueue[i];
+                var coreTrack = item.GetSources<ICoreTrack>().First(x => x.Id == item.Id);
+
+                var mediaSource = await core.GetMediaSource(coreTrack);
+                if (mediaSource is null)
+                    continue;
+
+                InsertNext(i, mediaSource);
+            }
+
+            localDevice.SetPlaybackData(context, track);
+            await PlayFromNext(0);
+        }
+
+        private async Task<ICore> GetPlaybackCore(ITrack track)
+        {
+            var coreRanking = await _settingsService.GetValue<IReadOnlyList<string>>(nameof(SettingsKeys.CoreRanking));
+
+            // Find highest ranking core from the items merged into the track being played.
+            foreach (var instanceId in coreRanking)
+            {
+                var core = track.GetSourceCores<ICoreTrack>().FirstOrDefault(x => x.InstanceId == instanceId);
+                if (core != default)
+                    return core;
+            }
+
+            return ThrowHelper.ThrowInvalidOperationException<ICore>($"None of the source cores from the given {nameof(track)} are registered in {nameof(coreRanking)}");
+        }
 
         /// <inheritdoc />
         public async Task PlayFromNext(int queueIndex)
