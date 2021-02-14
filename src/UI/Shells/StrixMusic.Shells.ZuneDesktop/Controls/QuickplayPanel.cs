@@ -10,7 +10,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
     /// <summary>
     /// A panel that arranges objects in a very **very** visualy striking way.
     /// </summary>
-    public class QuickplayPanel
+    public partial class QuickplayPanel
         : Panel
     {
         private struct ArrangeConfig
@@ -168,7 +168,23 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         public int Seed { get; set; } = 1;
 
         /// <inheritdoc/>
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            foreach (var child in Children)
+            {
+                child.Measure(availableSize);
+            }
+
+            return ArrangeTiles(availableSize);
+        }
+
+        /// <inheritdoc/>
         protected override Size ArrangeOverride(Size finalSize)
+        {
+            return ArrangeTiles(finalSize);
+        }
+
+        private Size ArrangeTiles(Size finalSize)
         {
             // TODO: Allow inverted direction
             ArrangeConfig arrangeConfig = new ArrangeConfig(-1);
@@ -178,7 +194,6 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
             foreach (var child in Children)
             {
                 // Find the child's ratio
-                child.Measure(finalSize);
                 Size desiredSize = child.DesiredSize;
                 double widthRatio = 1;
                 if (desiredSize.Height + desiredSize.Height != 0)
