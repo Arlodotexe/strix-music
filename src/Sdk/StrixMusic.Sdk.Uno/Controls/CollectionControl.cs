@@ -95,8 +95,9 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             Unloaded += CollectionControl_Unloaded;
 
-            Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
-            Guard.IsNotNull(PART_Scroller, nameof(PART_Scroller));
+            if (PART_Selector == null || PART_Scroller == null)
+                return;
+
             PART_Selector.SelectionChanged += SelectedItemChanged;
             PART_Scroller.ViewChanged += CollectionControl_ViewChanged;
         }
@@ -105,8 +106,9 @@ namespace StrixMusic.Sdk.Uno.Controls
         {
             Loaded -= CollectionControl_Loaded;
 
-            Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
-            Guard.IsNotNull(PART_Selector, nameof(PART_Scroller));
+            if (PART_Selector == null || PART_Scroller == null)
+                return;
+
             PART_Selector!.SelectionChanged -= SelectedItemChanged;
             PART_Scroller!.ViewChanged -= CollectionControl_ViewChanged;
         }
@@ -134,7 +136,8 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void CheckScrollPosition()
         {
-            Guard.IsNotNull(PART_Scroller, nameof(PART_Scroller));
+            if (PART_Scroller == null)
+                return;
 
             double fromBottom = PART_Scroller.ScrollableHeight - PART_Scroller.VerticalOffset;
 
@@ -165,7 +168,8 @@ namespace StrixMusic.Sdk.Uno.Controls
                 }
             });
 
-            Guard.IsNotNull(PART_Selector, nameof(PART_Selector));
+            if (PART_Selector == null)
+                return;
 
             // Get selected item
             // Invoke event

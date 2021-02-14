@@ -5,7 +5,9 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
+    xmlns:controls="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.QuickplayAlbumCollectionStyle">
 
     <ResourceDictionary.MergedDictionaries>
@@ -13,24 +15,21 @@
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="QuickplayAlbumCollectionItemStyle">
-        <defaultcontrols:AlbumItem />
+    <DataTemplate x:Key="QuickplayAlbumCollectionItemStyle" x:DataType="viewModels:IImageCollectionViewModel">
+        <!--<Rectangle Fill="#353535"/>-->
+        <defaultcontrols:SafeImage/>
     </DataTemplate>
 
     <DataTemplate x:Key="QuickplayAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
-
-        <GridView x:Name="PART_Selector"
-                  ItemTemplate="{StaticResource QuickplayAlbumCollectionItemStyle}"
-                  ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}"
-                  SelectionMode="Extended" IsItemClickEnabled="True"
-                  ItemsSource="{x:Bind Albums}">
-            <!--<ItemsControl.ItemsPanel>
+        <ItemsControl ItemTemplate="{StaticResource QuickplayAlbumCollectionItemStyle}"
+                      ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}"
+                      ItemsSource="{x:Bind Albums}">
+            <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <tkcontrols:WrapPanel VerticalSpacing="5"
-                                          HorizontalSpacing="5" />
+                    <controls:QuickplayPanel BaseTileHeight="48" VerticalAlignment="Top"/>
                 </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>-->
-        </GridView>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
     </DataTemplate>
 
     <Style x:Key="QuickplayAlbumCollectionStyle" TargetType="defaultcontrols:AlbumCollection">
