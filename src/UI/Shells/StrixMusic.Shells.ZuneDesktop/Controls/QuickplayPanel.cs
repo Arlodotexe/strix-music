@@ -15,7 +15,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
         /// <summary>
         /// An array of potential item sizes.
         /// </summary>
-        private double[] _itemHeights = { 264, 200, 98, 48 };
+        private double[] _itemHeights = { 5.2, 4, 2, 1 };
+
+        /// <summary>
+        /// Gets or sets the size of the smallest tile and basis for all tiles being rendered.
+        /// </summary>
+        public double BaseTileHeight { get; set; } = 48;
 
         /// <summary>
         /// Gets or sets the direction the elements move.
@@ -82,7 +87,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
                     maxSizeIndex--;
                 }
 
-                return _itemHeights[sizeIndex];
+                return GetRealHeight(_itemHeights[sizeIndex]);
             }
 
             // Track the current top left most point and furthest right point
@@ -134,6 +139,14 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls
             }
 
             return new Size(point.X, point.Y);
+        }
+
+        /// <summary>
+        /// Converts factors of heights to real heights, accounting for factor and margins.
+        /// </summary>
+        private double GetRealHeight(double factor)
+        {
+            return factor * BaseTileHeight + ((factor - 1) * ItemMargin);
         }
     }
 }
