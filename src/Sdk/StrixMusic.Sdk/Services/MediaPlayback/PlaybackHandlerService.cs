@@ -173,7 +173,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public Task ChangeVolumeAsync(double volume) => _currentPlayerService?.ResumeAsync() ?? Task.CompletedTask;
 
         /// <inheritdoc />
-        public async Task Play(ITrack track, IPlayableBase context, IReadOnlyList<ITrack> completeTrackQueue)
+        public async Task PlayAsync(ITrack track, IPlayableBase context, IReadOnlyList<ITrack> completeTrackQueue)
         {
             var mainViewModel = MainViewModel.Singleton;
 

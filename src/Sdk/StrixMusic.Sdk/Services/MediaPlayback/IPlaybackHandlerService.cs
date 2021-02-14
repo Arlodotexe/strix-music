@@ -50,9 +50,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// </summary>
         /// <param name="track">The track to play.</param>
         /// <param name="context">The playback context.</param>
-        /// <param name="completeTrackQueue">The tracks to use in the queue.</param>
+        /// <param name="trackCollection">The tracks to use in the queue.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task Play(ITrack track, IPlayableBase context, IReadOnlyList<ITrack> completeTrackQueue);
+        Task PlayAsync(ITrack track, IPlayableBase context, IReadOnlyList<ITrack> trackCollection);
 
         /// <summary>
         /// Plays a specific media from <see cref="NextItems"/>.

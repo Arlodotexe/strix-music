@@ -243,7 +243,7 @@ namespace StrixMusic.Sdk
         IReadOnlyList<IDevice> IAppCore.Devices => Devices;
 
         /// <inheritdoc />
-        ILibrary IAppCore.Library { get; } = null!;
+        ILibrary IAppCore.Library => Library ?? throw new InvalidOperationException($"{nameof(MainViewModel)} not yet initialized.");
 
         /// <inheritdoc />
         IPlayableCollectionGroup? IAppCore.Pins { get; }

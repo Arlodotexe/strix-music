@@ -476,7 +476,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeIsExplicitAsync(bool isExplicit) => Model.ChangeIsExplicitAsync(isExplicit);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync() => _playbackHandler.Play(Model, Model, Model.IntoList());
+        public Task PlayArtistCollectionAsync() => _playbackHandler.PlayAsync(Model, Model, Model.IntoList());
 
         /// <inheritdoc />
         public Task PauseArtistCollectionAsync() => Model.PauseArtistCollectionAsync();
