@@ -18,6 +18,6 @@ namespace StrixMusic.Sdk.Uno.Controls
         /// <summary>
         /// The ViewModel for this page item
         /// </summary>
-        public MainViewModel ViewModel => (DataContext as MainViewModel)!;
+        public MainViewModel ViewModel => (MainViewModel)DataContext;
     }
 }

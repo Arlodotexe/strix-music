@@ -55,6 +55,11 @@ namespace StrixMusic.Sdk
             {
                 source.DevicesChanged += Core_DevicesChanged;
             }
+
+            foreach (var device in Devices)
+            {
+                device.IsActiveChanged += Device_IsActiveChanged;
+            }
         }
 
         private void DetachEvents()
@@ -62,6 +67,11 @@ namespace StrixMusic.Sdk
             foreach (var source in _sources)
             {
                 source.DevicesChanged -= Core_DevicesChanged;
+            }
+
+            foreach (var device in Devices)
+            {
+                device.IsActiveChanged -= Device_IsActiveChanged;
             }
         }
 
@@ -189,7 +199,20 @@ namespace StrixMusic.Sdk
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
             Devices.ChangeCollection(addedItems, removedItems, x => new DeviceViewModel(new CoreDeviceProxy(x.Data)));
+
+            foreach (var device in addedItems)
+            {
+                device.Data.IsActiveChanged += Device_IsActiveChanged;
+            }
+
+            foreach (var device in removedItems)
+            {
+                // TODO: Handle devices that haven't subscribed to the IsActiveChanged event.
+                device.Data.IsActiveChanged -= Device_IsActiveChanged;
+            }
         }
+
+        private void Device_IsActiveChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(ActiveDevice)));
 
         /// <summary>
         /// The singleton instance of the <see cref="MainViewModel"/>.
@@ -220,7 +243,7 @@ namespace StrixMusic.Sdk
         IReadOnlyList<IDevice> IAppCore.Devices => Devices;
 
         /// <inheritdoc />
-        ILibrary IAppCore.Library { get; } = null!;
+        ILibrary IAppCore.Library => Library ?? throw new InvalidOperationException($"{nameof(MainViewModel)} not yet initialized.");
 
         /// <inheritdoc />
         IPlayableCollectionGroup? IAppCore.Pins { get; }

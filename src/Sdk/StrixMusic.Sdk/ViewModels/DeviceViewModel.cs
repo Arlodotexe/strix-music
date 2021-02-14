@@ -92,8 +92,11 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Device_NowPlayingChanged(object sender, ITrack e)
         {
-            _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(NowPlaying)));
-            _nowPlaying = new TrackViewModel(e);
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                _nowPlaying = new TrackViewModel(e);
+                OnPropertyChanged(nameof(NowPlaying));
+            });
         }
 
         /// <summary>
@@ -119,8 +122,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public ITrackCollection? PlaybackQueue { get; }
 
+        /// <inheritdoc cref="IDevice.NowPlaying"/>
+        public TrackViewModel? NowPlaying => _nowPlaying;
+
         /// <inheritdoc />
-        public ITrack? NowPlaying => _nowPlaying;
+        ITrack? IDevice.NowPlaying => _nowPlaying;
 
         /// <inheritdoc />
         public bool IsActive => Model.IsActive;
