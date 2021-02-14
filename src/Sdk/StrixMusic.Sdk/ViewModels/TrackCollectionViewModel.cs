@@ -114,37 +114,19 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
 
-        private void TrackCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        private void TrackCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
-                {
-                    Images.InsertOrAdd(item.Index, item.Data);
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
-                    Images.RemoveAt(item.Index);
-                }
+                Images.ChangeCollection(addedItems, removedItems);
             });
         }
 
-        private void TrackCollectionViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
+        private void TrackCollectionViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
-                {
-                    Tracks.InsertOrAdd(item.Index, new TrackViewModel(item.Data));
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
-                    Tracks.RemoveAt(item.Index);
-                }
+                Tracks.ChangeCollection(addedItems, removedItems, item => new TrackViewModel(item.Data));
             });
         }
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore;
 using OwlCore.Collections;
@@ -174,37 +175,9 @@ namespace StrixMusic.Sdk
             }
         }
 
-        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreDevice>> removedItems)
+        private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
-            foreach (var item in removedItems)
-            {
-                Devices.RemoveAt(item.Index);
-            }
-
-            var sortedIndices = removedItems.Select(x => x.Index).ToList();
-            sortedIndices.Sort();
-
-            // If elements are removed before they are added, the added items may be inserted at the wrong index.
-            // To compensate, we need to check how many items were removed before the current index and shift the insert position back by that amount.
-            for (var i = 0; i > addedItems.Count; i++)
-            {
-                var item = addedItems[i];
-                var insertOffset = item.Index;
-
-                // Finds the last removed index where the value is less than current pos.
-                // Quicker to do this by getting the first removed index where value is greater than current pos, minus 1 index.
-                var closestPrecedingRemovedIndex = sortedIndices.FindIndex(x => x > i) - 1;
-
-                // If found
-                if (closestPrecedingRemovedIndex != -1)
-                {
-                    // Shift the insert position backwards by the number of items that were removed
-                    insertOffset = closestPrecedingRemovedIndex * -1;
-                }
-
-                // Insert the item
-                Devices.InsertOrAdd(insertOffset, new DeviceViewModel(new CoreDeviceProxy(item.Data)));
-            }
+            Devices.ChangeCollection(addedItems, removedItems, x => new DeviceViewModel(new CoreDeviceProxy(x.Data)));
         }
 
         /// <summary>

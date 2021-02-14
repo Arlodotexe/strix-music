@@ -107,48 +107,24 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
 
-        private void PlaylistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        private void PlaylistCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
-                {
-                    Images.InsertOrAdd(item.Index, item.Data);
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
-                    Images.RemoveAt(item.Index);
-                }
+                Images.ChangeCollection(addedItems, removedItems);
             });
         }
 
-        private void PlaylistCollectionViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IPlaylistCollectionItem>> removedItems)
+        private void PlaylistCollectionViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
+                Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    switch (item.Data)
-                    {
-                        case IPlaylist playlist:
-                            Playlists.InsertOrAdd(item.Index, new PlaylistViewModel(playlist));
-                            break;
-                        case IPlaylistCollection collection:
-                            Playlists.InsertOrAdd(item.Index, new PlaylistCollectionViewModel(collection));
-                            break;
-                        default:
-                            ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
-                            break;
-                    }
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IPlaylistCollectionItem>)Playlists, nameof(Playlists));
-                    Playlists.RemoveAt(item.Index);
-                }
+                    IPlaylist playlist => new PlaylistViewModel(playlist),
+                    IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
             });
         }
 

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using OwlCore.Extensions;
 
 namespace OwlCore.Net.HttpClientHandlers
 {
@@ -159,27 +160,7 @@ namespace OwlCore.Net.HttpClientHandlers
         /// <returns>The file path.</returns>
         private static string GetCachedFilePath(string basePath, string requestUri)
         {
-            return Path.Combine(basePath, GetHash(requestUri)) + ".cache";
-        }
-
-        /// <summary>
-        /// Returns hash of a string (based on MD5, but only 16 instead of 32 bytes).
-        /// </summary>
-        /// <param name="seed">Input string.</param>
-        /// <returns>MD5 hash.</returns>
-        private static string GetHash(string seed)
-        {
-            unchecked
-            {
-                int hash = 23;
-
-                foreach (char c in seed)
-                {
-                    hash = hash * 31 + c;
-                }
-
-                return Convert.ToString(hash, 16);
-            }
+            return Path.Combine(basePath, requestUri.HashMD5Fast()) + ".cache";
         }
 
         /// <summary>

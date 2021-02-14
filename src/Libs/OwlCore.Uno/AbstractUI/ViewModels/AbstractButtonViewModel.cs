@@ -28,7 +28,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         /// <summary>
         /// Text to show on the button.
         /// </summary>
-        public AbstractButton.ButtonType Type
+        public AbstractButtonType Type
         {
             get => _model.Type;
             set => SetProperty(_model.Type, value, _model, (u, n) => _model.Type = n);

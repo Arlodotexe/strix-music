@@ -26,12 +26,12 @@
 
     <DataTemplate x:Key="DefaultAbstractRichTextBlockTemplate" x:DataType="abstractUI:AbstractRichTextBlockViewModel">
         <StackPanel>
-            <TextBlock Text="{x:Bind Title}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+            <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" />
 
-            <TextBlock Text="{x:Bind Subtitle}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
+            <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
-                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle), Mode=OneWay}"/>
 
             <!-- Disabled until we can resolve the namespace conflicts caused by the Windows Community Toolkit v7 prerelease4 -->
             <!--<controls:MarkdownTextBlock Text="{x:Bind RichText}"/>-->

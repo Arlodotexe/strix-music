@@ -312,131 +312,66 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
 
-        private void PlayableCollectionGroupViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
-        {
-            foreach (var item in addedItems)
-            {
-                Images.InsertOrAdd(item.Index, item.Data);
-            }
-
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
-                Images.RemoveAt(item.Index);
-            }
-        }
-
-        private void PlayableCollectionGroupViewModel_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IPlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedEventItem<IPlayableCollectionGroup>> removedItems)
-        {
-            foreach (var item in addedItems)
-            {
-                Children.InsertOrAdd(item.Index, new PlayableCollectionGroupViewModel(item.Data));
-            }
-
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IPlayableCollectionGroup>)Children, nameof(Children));
-                Tracks.RemoveAt(item.Index);
-            }
-        }
-
-        private void PlayableCollectionGroupViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IPlaylistCollectionItem>> removedItems)
-        {
-            foreach (var item in addedItems)
-            {
-                switch (item.Data)
-                {
-                    case IPlaylist playlist:
-                        Playlists.InsertOrAdd(item.Index, new PlaylistViewModel(playlist));
-                        break;
-                    case IPlaylistCollection collection:
-                        Playlists.InsertOrAdd(item.Index, new PlaylistCollectionViewModel(collection));
-                        break;
-                    default:
-                        ThrowHelper.ThrowNotSupportedException($"{item.Data.GetType()} not supported for adding to {GetType()}");
-                        break;
-                }
-            }
-
-            foreach (var item in removedItems)
-            {
-                Guard.IsInRangeFor(item.Index, (IReadOnlyList<IPlaylistCollectionItem>)Playlists, nameof(Playlists));
-                Playlists.RemoveAt(item.Index);
-            }
-        }
-
-        private void PlayableCollectionGroupViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IArtistCollectionItem>> removedItems)
+        private void PlayableCollectionGroupViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
-                {
-                    switch (item.Data)
-                    {
-                        case IArtist artist:
-                            Artists.InsertOrAdd(item.Index, new ArtistViewModel(artist));
-                            break;
-                        case IArtistCollection collection:
-                            Artists.InsertOrAdd(item.Index, new ArtistCollectionViewModel(collection));
-                            break;
-                        default:
-                            ThrowHelper.ThrowNotSupportedException(
-                                $"{item.Data.GetType()} not supported for adding to {GetType()}");
-                            break;
-                    }
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IArtistCollectionItem>)Artists, nameof(Artists));
-                    Artists.RemoveAt(item.Index);
-                }
+                Images.ChangeCollection(addedItems, removedItems);
             });
         }
 
-        private void PlayableCollectionGroupViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
+        private void PlayableCollectionGroupViewModel_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<IPlayableCollectionGroup>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
-                {
-                    Tracks.InsertOrAdd(item.Index, new TrackViewModel(item.Data));
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
-                    Tracks.RemoveAt(item.Index);
-                }
+                Children.ChangeCollection(addedItems, removedItems, item => new PlayableCollectionGroupViewModel(item.Data));
             });
         }
 
-        private void PlayableCollectionGroupViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<IAlbumCollectionItem>> removedItems)
+        private void PlayableCollectionGroupViewModel_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IPlaylistCollectionItem>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
+                Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    switch (item.Data)
-                    {
-                        case IAlbum album:
-                            Albums.InsertOrAdd(item.Index, new AlbumViewModel(album));
-                            break;
-                        case IAlbumCollection collection:
-                            Albums.InsertOrAdd(item.Index, new AlbumCollectionViewModel(collection));
-                            break;
-                        default:
-                            ThrowHelper.ThrowNotSupportedException(
-                                $"{item.Data.GetType()} not supported for adding to {GetType()}");
-                            break;
-                    }
-                }
+                    IPlaylist playlist => new PlaylistViewModel(playlist),
+                    IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+            });
+        }
 
-                foreach (var item in removedItems)
+        private void PlayableCollectionGroupViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
+        {
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IAlbumCollectionItem>)Albums, nameof(Albums));
-                    Albums.RemoveAt(item.Index);
-                }
+                    IArtist artist => new ArtistViewModel(artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+            });
+        }
+
+        private void PlayableCollectionGroupViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
+        {
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                Tracks.ChangeCollection(addedItems, removedItems, item => new TrackViewModel(item.Data));
+            });
+        }
+
+        private void PlayableCollectionGroupViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
+        {
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                {
+                    IAlbum album => new AlbumViewModel(album),
+                    IAlbumCollection collection => new AlbumCollectionViewModel(collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
             });
         }
 

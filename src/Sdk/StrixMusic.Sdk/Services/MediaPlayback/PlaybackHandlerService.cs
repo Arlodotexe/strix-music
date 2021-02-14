@@ -235,12 +235,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 _prevItems.Push(_currentPlayerService.CurrentSource);
                 _nextItems.Remove(nextItem);
 
-                var removedItems = new List<CollectionChangedEventItem<IMediaSourceConfig>>()
+                var removedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
                 {
-                    new CollectionChangedEventItem<IMediaSourceConfig>(nextItem, nextIndex),
+                    new CollectionChangedItem<IMediaSourceConfig>(nextItem, nextIndex),
                 };
 
-                var addedItems = Array.Empty<CollectionChangedEventItem<IMediaSourceConfig>>();
+                var addedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
 
                 NextItemsChanged?.Invoke(this, addedItems, removedItems);
             }
@@ -259,12 +259,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <inheritdoc />
         public void InsertNext(int index, IMediaSourceConfig sourceConfig)
         {
-            var addedItems = new List<CollectionChangedEventItem<IMediaSourceConfig>>()
+            var addedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
             {
-                new CollectionChangedEventItem<IMediaSourceConfig>(sourceConfig, index),
+                new CollectionChangedItem<IMediaSourceConfig>(sourceConfig, index),
             };
 
-            var removedItems = Array.Empty<CollectionChangedEventItem<IMediaSourceConfig>>();
+            var removedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
 
             _nextItems.Insert(index, sourceConfig);
             NextItemsChanged?.Invoke(this, addedItems, removedItems);
@@ -273,12 +273,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <inheritdoc />
         public void RemoveNext(int index)
         {
-            var removedItems = new List<CollectionChangedEventItem<IMediaSourceConfig>>()
+            var removedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
             {
-                new CollectionChangedEventItem<IMediaSourceConfig>(NextItems[index], index),
+                new CollectionChangedItem<IMediaSourceConfig>(NextItems[index], index),
             };
 
-            var addedItems = Array.Empty<CollectionChangedEventItem<IMediaSourceConfig>>();
+            var addedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
 
             _nextItems.RemoveAt(index);
 
@@ -291,12 +291,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <inheritdoc />
         public void PushPrevious(IMediaSourceConfig sourceConfig)
         {
-            var addedItems = new List<CollectionChangedEventItem<IMediaSourceConfig>>()
+            var addedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
             {
-                new CollectionChangedEventItem<IMediaSourceConfig>(sourceConfig, PreviousItems.Count),
+                new CollectionChangedItem<IMediaSourceConfig>(sourceConfig, PreviousItems.Count),
             };
 
-            var removedItems = Array.Empty<CollectionChangedEventItem<IMediaSourceConfig>>();
+            var removedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
 
             _prevItems.Push(sourceConfig);
 
@@ -308,12 +308,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         {
             var returnItem = _prevItems.Pop();
 
-            var addedItems = new List<CollectionChangedEventItem<IMediaSourceConfig>>()
+            var addedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
             {
-                new CollectionChangedEventItem<IMediaSourceConfig>(returnItem, PreviousItems.Count),
+                new CollectionChangedItem<IMediaSourceConfig>(returnItem, PreviousItems.Count),
             };
 
-            var removedItems = Array.Empty<CollectionChangedEventItem<IMediaSourceConfig>>();
+            var removedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
 
             PreviousItemsChanged?.Invoke(this, addedItems, removedItems);
 

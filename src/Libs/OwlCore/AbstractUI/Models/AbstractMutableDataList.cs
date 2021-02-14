@@ -11,7 +11,7 @@ namespace OwlCore.AbstractUI.Models
     /// </summary>
     public class AbstractMutableDataList : AbstractDataList
     {
-        private readonly CollectionChangedEventItem<AbstractUIMetadata>[] _emptyAbstractUIArray = Array.Empty<CollectionChangedEventItem<AbstractUIMetadata>>();
+        private readonly CollectionChangedItem<AbstractUIMetadata>[] _emptyAbstractUIArray = Array.Empty<CollectionChangedItem<AbstractUIMetadata>>();
 
         /// <summary>
         /// Creates a new instance of <see cref="AbstractMutableDataList"/>.
@@ -55,9 +55,9 @@ namespace OwlCore.AbstractUI.Models
         {
             Items.Add(item);
 
-            var addedItems = new List<CollectionChangedEventItem<AbstractUIMetadata>>
+            var addedItems = new List<CollectionChangedItem<AbstractUIMetadata>>
             {
-                new CollectionChangedEventItem<AbstractUIMetadata>(item, index)
+                new CollectionChangedItem<AbstractUIMetadata>(item, index)
             };
 
             ItemsChanged?.Invoke(this, addedItems, _emptyAbstractUIArray);
@@ -84,9 +84,9 @@ namespace OwlCore.AbstractUI.Models
             var item = Items.ElementAt(index);
             Items.RemoveAt(index);
 
-            var removedItems = new List<CollectionChangedEventItem<AbstractUIMetadata>>
+            var removedItems = new List<CollectionChangedItem<AbstractUIMetadata>>
             {
-                new CollectionChangedEventItem<AbstractUIMetadata>(item, index)
+                new CollectionChangedItem<AbstractUIMetadata>(item, index)
             };
 
             ItemsChanged?.Invoke(this, _emptyAbstractUIArray, removedItems);

@@ -27,14 +27,14 @@
 
     <DataTemplate x:Key="DefaultAbstractProgressUIElementTemplate" x:DataType="abstractUI:AbstractProgressUIElementViewModel">
         <StackPanel>
-            <TextBlock Text="{x:Bind Title}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+            <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" />
 
-            <TextBlock Text="{x:Bind Subtitle}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
+            <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
-                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle), Mode=OneWay}"/>
 
-            <ProgressBar Value="{x:Bind Value, Mode=Oneway}" Minimum="{x:Bind Minimum, Mode=OneWay}" Maximum="{x:Bind Maximum, Mode=OneWay}" IsIndeterminate="{x:Bind IsIndeterminate, Mode=OneWay}"/>
+            <ProgressBar Value="{x:Bind Value, Mode=OneWay}" Minimum="{x:Bind Minimum, Mode=OneWay}" Maximum="{x:Bind Maximum, Mode=OneWay}" IsIndeterminate="{x:Bind IsIndeterminate, Mode=OneWay}"/>
         </StackPanel>
     </DataTemplate>
 

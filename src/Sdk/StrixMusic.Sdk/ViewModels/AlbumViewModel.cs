@@ -79,6 +79,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             TrackItemsCountChanged += AlbumOnTrackItemsCountChanged;
             TrackItemsChanged += AlbumViewModel_TrackItemsChanged;
+            ArtistItemsCountChanged += OnArtistItemsCountChanged;
+            ArtistItemsChanged += OnArtistItemsChanged;
             ImagesCountChanged += AlbumViewModel_ImagesCountChanged;
             ImagesChanged += AlbumViewModel_ImagesChanged;
             LastPlayedChanged += OnLastPlayedChanged;
@@ -100,6 +102,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             TrackItemsCountChanged += AlbumOnTrackItemsCountChanged;
             TrackItemsChanged -= AlbumViewModel_TrackItemsChanged;
+            ArtistItemsCountChanged -= OnArtistItemsCountChanged;
+            ArtistItemsChanged -= OnArtistItemsChanged;
             ImagesCountChanged -= AlbumViewModel_ImagesCountChanged;
             ImagesChanged -= AlbumViewModel_ImagesChanged;
             LastPlayedChanged -= OnLastPlayedChanged;
@@ -250,6 +254,8 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void AlbumViewModel_ImagesCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalImageCount));
 
+        private void OnArtistItemsCountChanged(object sender, int e) => OnPropertyChanged(nameof(TotalArtistItemsCount));
+
         private void OnLastPlayedChanged(object sender, DateTime? e) => OnPropertyChanged(nameof(LastPlayed));
 
         private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable));
@@ -262,37 +268,32 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayAsyncAvailableChanged(object sender, bool e) => OnPropertyChanged(nameof(IsPlayAsyncAvailable));
 
-        private void AlbumViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ITrack>> removedItems)
+        private void AlbumViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
-                {
-                    Tracks.InsertOrAdd(item.Index, new TrackViewModel(item.Data));
-                }
-
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<ITrack>)Tracks, nameof(Tracks));
-                    Tracks.RemoveAt(item.Index);
-                }
+                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
             });
         }
 
-        private void AlbumViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<IImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<IImage>> removedItems)
+        private void OnArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                foreach (var item in addedItems)
+                Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                 {
-                    Images.InsertOrAdd(item.Index, item.Data);
-                }
+                    IArtist artist => new ArtistViewModel(artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
+            });
+        }
 
-                foreach (var item in removedItems)
-                {
-                    Guard.IsInRangeFor(item.Index, (IReadOnlyList<IImage>)Images, nameof(Images));
-                    Images.RemoveAt(item.Index);
-                }
+        private void AlbumViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        {
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                Images.ChangeCollection(addedItems, removedItems);
             });
         }
 

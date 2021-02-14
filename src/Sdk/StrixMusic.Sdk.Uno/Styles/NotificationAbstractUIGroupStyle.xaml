@@ -18,10 +18,10 @@
                                 <DataTemplate x:DataType="sdkvms:AbstractUINotificationViewModel">
                                     <Grid>
                                         <StackPanel Padding="12">
-                                            <TextBlock Text="{x:Bind Title}" FontSize="20" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+                                            <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="20" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" />
 
-                                            <TextBlock Text="{x:Bind Subtitle}" FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextWrapping="WrapWholeWords"
-                                                   Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+                                            <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextWrapping="WrapWholeWords"
+                                                   Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle), Mode=OneWay}"/>
                                             
                                             <ItemsControl ItemsSource="{x:Bind ButtonViewModels}">
                                                 <ItemsControl.ItemTemplate>

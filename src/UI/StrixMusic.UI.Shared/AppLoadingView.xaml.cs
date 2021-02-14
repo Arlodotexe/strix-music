@@ -30,6 +30,7 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using OwlCore.AbstractUI.Models;
 
 namespace StrixMusic.Shared
 {
@@ -104,7 +105,7 @@ namespace StrixMusic.Shared
             await InitializeServices();
             await InitializeAssemblies();
             await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("10ebf138-6a4f-4421-8fcb-c15f91fe0495");
-           // await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("15ebf138-6a4f-4421-8fcb-c15f91fe0495");
+            await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("15ebf138-6a4f-4421-8fcb-c15f91fe0495");
             //await ManuallyRegisterCore<Core.MusicBrainz.MusicBrainzCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0495");
             await InitializeCoreRanking();
             await InitializeOutOfBoxSetupIfNeeded();

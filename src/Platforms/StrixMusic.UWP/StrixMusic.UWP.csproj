@@ -256,10 +256,6 @@
       <Project>{38b5b005-64c0-4bce-a4b8-df7b8358182f}</Project>
       <Name>StrixMusic.Shells.Groove</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.Strix\StrixMusic.Shells.Strix.csproj">
-      <Project>{892f59a6-d988-4e50-a8b6-b5beb501d1d1}</Project>
-      <Name>StrixMusic.Shells.Strix</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj">
       <Project>{063715b5-1765-4269-8fb0-699fadc840e1}</Project>
       <Name>StrixMusic.Shells.ZuneDesktop</Name>

@@ -48,14 +48,14 @@
 
     <DataTemplate x:Key="DefaultAbstractButtonTemplate" x:DataType="abstractUI:AbstractButtonViewModel">
         <StackPanel>
-            <TextBlock Text="{x:Bind Title}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+            <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" />
 
-            <TextBlock Text="{x:Bind Subtitle}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
+            <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
-                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle), Mode=OneWay}"/>
 
-            <Button Style="{x:Bind Type, Converter={StaticResource ButtonStyleSelector}}" Command="{x:Bind ClickCommand}">
+            <Button Style="{x:Bind Type, Converter={StaticResource ButtonStyleSelector}, Mode=OneWay}" Command="{x:Bind ClickCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="{x:Bind IconCode}" FontFamily="Segoe MDL2 Assets" Grid.Column="0" FontSize="16"/>
                     <TextBlock Text="{x:Bind Text}" Grid.Column="1"/>

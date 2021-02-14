@@ -27,14 +27,14 @@
 
     <DataTemplate x:Key="DefaultAbstractBooleanUIElementTemplate" x:DataType="abstractUI:AbstractBooleanViewModel">
         <StackPanel>
-            <TextBlock Text="{x:Bind Title}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+            <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" />
 
-            <TextBlock Text="{x:Bind Subtitle}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
+            <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
-                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle), Mode=OneWay}"/>
 
-            <ToggleSwitch ToolTipService.ToolTip="{x:Bind TooltipText}" OffContent="{Binding Label}" OnContent="{Binding Label}" IsOn="{Binding IsToggled, Mode=TwoWay}">
+            <ToggleSwitch ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" OffContent="{Binding Label, Mode=OneWay}" OnContent="{Binding Label, Mode=OneWay}" IsOn="{Binding IsToggled, Mode=TwoWay}">
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="Toggled">
                         <core:InvokeCommandAction Command="{x:Bind ToggledCommand}" />

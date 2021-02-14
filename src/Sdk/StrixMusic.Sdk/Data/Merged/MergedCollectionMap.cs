@@ -278,51 +278,51 @@ namespace StrixMusic.Sdk.Data.Merged
             }
         }
 
-        private void MergedCollectionMap_ImagesChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreImage>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreImage>> removedItems)
+        private void MergedCollectionMap_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreImage>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreImage>> removedItems)
         {
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
-        private void MergedCollectionMap_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreTrack>> removedItems)
+        private void MergedCollectionMap_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreTrack>> removedItems)
         {
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
-        private void MergedCollectionMap_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreArtistCollectionItem>> removedItems)
+        private void MergedCollectionMap_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>> removedItems)
         {
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
-        private void MergedCollectionMap_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICoreAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICoreAlbumCollectionItem>> removedItems)
+        private void MergedCollectionMap_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreAlbumCollectionItem>> removedItems)
         {
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
-        private void MergedCollectionMap_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICorePlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICorePlayableCollectionGroup>> removedItems)
+        private void MergedCollectionMap_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICorePlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlayableCollectionGroup>> removedItems)
         {
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
-        private void MergedCollectionMap_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedEventItem<ICorePlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedEventItem<ICorePlaylistCollectionItem>> removedItems)
+        private void MergedCollectionMap_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> removedItems)
         {
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
-        private void MergedCollectionMap_ItemsChanged<T>(object sender, IReadOnlyList<CollectionChangedEventItem<T>> addedItems, IReadOnlyList<CollectionChangedEventItem<T>> removedItems)
+        private void MergedCollectionMap_ItemsChanged<T>(object sender, IReadOnlyList<CollectionChangedItem<T>> addedItems, IReadOnlyList<CollectionChangedItem<T>> removedItems)
             where T : class, ICollectionItemBase, ICoreMember
         {
             var addedMergedItems = CheckAddedItems();
             var removedMergedItems = CheckRemovedItems();
 
-            List<CollectionChangedEventItem<TCollectionItem>> CheckAddedItems()
+            List<CollectionChangedItem<TCollectionItem>> CheckAddedItems()
             {
-                var added = new List<CollectionChangedEventItem<TCollectionItem>>();
+                var added = new List<CollectionChangedItem<TCollectionItem>>();
                 var newItems = new List<IMergedMutable<TCoreCollectionItem>>();
 
                 foreach (var item in addedItems)
                 {
                     if (!(item.Data is TCoreCollectionItem collectionItemData))
-                        return ThrowHelper.ThrowInvalidOperationException<List<CollectionChangedEventItem<TCollectionItem>>>($"{nameof(item.Data)} couldn't be cast to {nameof(TCoreCollectionItem)}.");
+                        return ThrowHelper.ThrowInvalidOperationException<List<CollectionChangedItem<TCollectionItem>>>($"{nameof(item.Data)} couldn't be cast to {nameof(TCoreCollectionItem)}.");
 
                     // Check for an existing IMerged that matches this item
                     foreach (var mergedItem in _mergedMappedData)
@@ -348,16 +348,16 @@ namespace StrixMusic.Sdk.Data.Merged
                     // If the number of items in this list changes, the item was not merged and should be emitted on the ItemsChanged event.
                     if (newItemsCount != newItems.Count)
                     {
-                        added.Add(new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)mergedImpl, _mergedMappedData.Count + 1));
+                        added.Add(new CollectionChangedItem<TCollectionItem>((TCollectionItem)mergedImpl, _mergedMappedData.Count - 1));
                     }
                 }
 
                 return added;
             }
 
-            List<CollectionChangedEventItem<TCollectionItem>> CheckRemovedItems()
+            List<CollectionChangedItem<TCollectionItem>> CheckRemovedItems()
             {
-                var removed = new List<CollectionChangedEventItem<TCollectionItem>>();
+                var removed = new List<CollectionChangedItem<TCollectionItem>>();
 
                 foreach (var item in removedItems)
                 {
@@ -384,7 +384,7 @@ namespace StrixMusic.Sdk.Data.Merged
                                 _mergedMappedData.Remove(mergedData);
 
                                 var index = _mergedMappedData.IndexOf(mergedData);
-                                removed.Add(new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)mergedData.CollectionItem, index));
+                                removed.Add(new CollectionChangedItem<TCollectionItem>((TCollectionItem)mergedData.CollectionItem, index));
                             }
 
                             return removed;
@@ -819,7 +819,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 await GetItems(item.OriginalIndex, i);
             }
 
-            var addedItems = new List<CollectionChangedEventItem<TCollectionItem>>();
+            var addedItems = new List<CollectionChangedItem<TCollectionItem>>();
 
             // For each item that we just retrieved, find the index in the sorted map and assign the item.
             for (var o = 0; o < _mergedMappedData.Count; o++)
@@ -828,12 +828,12 @@ namespace StrixMusic.Sdk.Data.Merged
 
                 Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
 
-                var x = new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
+                var x = new CollectionChangedItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
                 addedItems.Add(x);
             }
 
             // logic for removed was copy-pasted and tweaked from the added logic. Not checked or tested.
-            var removedItems = new List<CollectionChangedEventItem<TCollectionItem>>();
+            var removedItems = new List<CollectionChangedItem<TCollectionItem>>();
 
             for (var o = 0; o < previousMergedMap.Count; o++)
             {
@@ -841,7 +841,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
                 Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
 
-                var x = new CollectionChangedEventItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
+                var x = new CollectionChangedItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
                 removedItems.Add(x);
             }
 

@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Data;
 namespace OwlCore.Uno.AbstractUI.Themes
 {
     /// <summary>
-    /// Selects the template that is used for an <see cref="AbstractButton"/> based on the <see cref="AbstractButton.ButtonType"/>.
+    /// Selects the template that is used for an <see cref="AbstractButton"/> based on the <see cref="AbstractButton.Type"/>.
     /// </summary>
     public class AbstractButtonTemplateSelector : IValueConverter
     {
@@ -34,9 +34,9 @@ namespace OwlCore.Uno.AbstractUI.Themes
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            AbstractButton.ButtonType type = AbstractButton.ButtonType.Generic;
+            var type = AbstractButtonType.Generic;
 
-            if (value is AbstractButton.ButtonType vType)
+            if (value is AbstractButtonType vType)
             {
                 type = vType;
             }
@@ -51,13 +51,14 @@ namespace OwlCore.Uno.AbstractUI.Themes
 
             return type switch
             {
-                AbstractButton.ButtonType.Generic => GenericStyle ?? ThrowHelper.ThrowArgumentNullException<Style>(),
-                AbstractButton.ButtonType.Confirm => ConfirmStyle ?? GenericStyle ?? ThrowHelper.ThrowArgumentNullException<Style>(),
-                AbstractButton.ButtonType.Delete => DeleteStyle ?? GenericStyle ?? ThrowHelper.ThrowArgumentNullException<Style>(),
+                AbstractButtonType.Generic => GenericStyle ?? ThrowHelper.ThrowArgumentNullException<Style>(),
+                AbstractButtonType.Confirm => ConfirmStyle ?? GenericStyle ?? ThrowHelper.ThrowArgumentNullException<Style>(),
+                AbstractButtonType.Delete => DeleteStyle ?? GenericStyle ?? ThrowHelper.ThrowArgumentNullException<Style>(),
                 _ => throw new NotImplementedException(),
             };
         }
 
+        /// <inheritdoc/>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
