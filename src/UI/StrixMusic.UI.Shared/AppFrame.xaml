@@ -19,11 +19,11 @@
 
         <controls:ContentOverlay x:Name="OverlayPresenter"/>
 
-        <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}"
+        <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}" Margin="25,30" HorizontalAlignment="Right" VerticalAlignment="Top" 
                       Visibility="{x:Bind owlcoreuno:Converters.NotBoolToVisibility(NotificationsViewModel.IsHandled), Mode=OneWay}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:NotificationViewModel">
-                    <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="40" Width="300"
+                    <Grid Margin="15" Width="300"
                           Background="{ThemeResource SystemChromeMediumHighColor}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>

@@ -128,17 +128,16 @@ namespace StrixMusic.Sdk
             // Then wait for the core state to change to Configured.
             core.CoreStateChanged += OnCoreStateChanged_HandleConfigRequest;
 
+            // Handle additional actions needed for core state changes (unloaded, etc)
+            core.CoreStateChanged += Core_CoreStateChanged;
+
             try
             {
                 await Task.Run(() => core.InitAsync(services), cancellationToken.Token);
             }
             catch (TaskCanceledException)
             {
-            }
-
-            // TODO: if one core a already requested config, have a queue in case another tries.
-            if (cancellationToken.IsCancellationRequested)
-            {
+                // TODO: if one core a already requested config, have a queue in case another tries.
                 AppNavigationRequested?.Invoke(core, AppNavigationTarget.Settings);
 
                 var timeAllowedForUISetup = TimeSpan.FromMinutes(10);
@@ -178,7 +177,13 @@ namespace StrixMusic.Sdk
             });
 
             core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
+
             cancellationToken.Dispose();
+        }
+
+        private void Core_CoreStateChanged(object sender, CoreState e)
+        {
+            OnCoreStateChanged_HandleCoreUnloaded(sender, e);
         }
 
         private void OnCoreStateChanged_HandleConfigRequest(object sender, CoreState e)
@@ -193,6 +198,21 @@ namespace StrixMusic.Sdk
                 cancellationToken.Cancel();
 
                 core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
+            }
+        }
+
+        private async void OnCoreStateChanged_HandleCoreUnloaded(object sender, CoreState e)
+        {
+            if (!(sender is ICore core))
+                return;
+
+            if (e == CoreState.Unloaded)
+            {
+                var relevantVm = Cores.FirstOrDefault(x => x.InstanceId == core.InstanceId);
+                await Threading.OnPrimaryThread(() => Cores.Remove(relevantVm));
+
+                core.CoreStateChanged -= Core_CoreStateChanged;
+                await relevantVm.DisposeAsync();
             }
         }
 
