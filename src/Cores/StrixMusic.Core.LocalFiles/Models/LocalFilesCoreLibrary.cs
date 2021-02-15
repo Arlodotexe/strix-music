@@ -136,7 +136,10 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             foreach (var artist in artistMetadata)
             {
-                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0);
+                if (artist.ImagePath != null)
+                    yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, new LocalFilesCoreImage(SourceCore, artist.ImagePath));
+
+                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, null);
             }
         }
 
@@ -254,8 +257,11 @@ namespace StrixMusic.Core.LocalFiles.Models
                       false))
                     return;
 
-                var filesCoreArtist =
-                    new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, e.ArtistMetadata.TrackIds?.Count ?? 0);
+                LocalFilesCoreArtist filesCoreArtist;
+
+                if (e.ArtistMetadata.ImagePath != null)
+                    filesCoreArtist = new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, e.ArtistMetadata.TrackIds?.Count ?? 0, new LocalFilesCoreImage(SourceCore, e.ArtistMetadata.ImagePath));
+                else filesCoreArtist = new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, e.ArtistMetadata.TrackIds?.Count ?? 0, null);
 
                 var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>
                 {

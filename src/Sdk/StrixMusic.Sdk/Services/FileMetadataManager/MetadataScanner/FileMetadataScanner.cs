@@ -132,6 +132,42 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             return null;
         }
 
+        private static IPicture? GetArtistArt(IPicture[] pics)
+        {
+            var artistPictureTypesRanking = new[]
+            {
+                PictureType.Artist,
+                PictureType.LeadArtist,
+                PictureType.FrontCover,
+                PictureType.Illustration,
+                PictureType.Other,
+                PictureType.Media,
+                PictureType.MovieScreenCapture,
+                PictureType.DuringPerformance,
+                PictureType.DuringRecording,
+                PictureType.DuringPerformance,
+                PictureType.DuringRecording,
+                PictureType.Band,
+                PictureType.BandLogo,
+                PictureType.Composer,
+                PictureType.Conductor,
+                PictureType.RecordingLocation,
+                PictureType.FileIcon,
+                PictureType.OtherFileIcon,
+            };
+
+            foreach (var type in artistPictureTypesRanking)
+            {
+                foreach (var sourcePic in pics)
+                {
+                    if (sourcePic.Type == type)
+                        return sourcePic;
+                }
+            }
+
+            return null;
+        }
+
         private async Task<FileMetadata?> ScanFileMetadata(IFileData fileData)
         {
             var id3Metadata = await GetID3Metadata(fileData);
@@ -260,6 +296,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     return null;
 
                 Uri? imagePath = null;
+                Uri? artistImagePath = null;
 
                 if (tags.Pictures != null)
                 {
@@ -273,6 +310,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         await imageFile.WriteAllBytesAsync(imageData);
 
                         imagePath = new Uri(imageFile.Path);
+                    }
+
+                    var artistPic = GetArtistArt(tags.Pictures);
+
+                    if (artistPic != null)
+                    {
+                        byte[] imageData = artistPic.Data.Data;
+
+                        var imageFile = await CacheFolder.CreateFileAsync($"{fileData.DisplayName}_artist.thumb", CreationCollisionOption.ReplaceExisting);
+                        await imageFile.WriteAllBytesAsync(imageData);
+
+                        artistImagePath = new Uri(imageFile.Path);
                     }
                 }
 
@@ -303,6 +352,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     ArtistMetadata = new ArtistMetadata
                     {
                         Name = tags.FirstAlbumArtist,
+                        ImagePath = artistImagePath,
                     },
                 };
             }

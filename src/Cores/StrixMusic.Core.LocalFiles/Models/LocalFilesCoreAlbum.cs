@@ -343,7 +343,10 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             foreach (var artist in artists)
             {
-                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0);
+                if (artist.ImagePath != null)
+                    yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, new LocalFilesCoreImage(SourceCore, artist.ImagePath));
+
+                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, null);
             }
         }
 

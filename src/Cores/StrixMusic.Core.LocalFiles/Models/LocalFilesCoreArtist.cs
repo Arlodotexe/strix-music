@@ -18,6 +18,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     {
         private readonly ArtistMetadata _artistMetadata;
         private readonly IFileMetadataManager _fileMetadataManager;
+        private readonly LocalFilesCoreImage? _image;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreArtist"/> class.
@@ -25,10 +26,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <param name="sourceCore">The source core.</param>
         /// <param name="artistMetadata">The artist metadata to wrap around.</param>
         /// <param name="totalTracksCount">The total number of track for this artist.</param>
-        public LocalFilesCoreArtist(ICore sourceCore, ArtistMetadata artistMetadata, int totalTracksCount)
+        public LocalFilesCoreArtist(ICore sourceCore, ArtistMetadata artistMetadata, int totalTracksCount, LocalFilesCoreImage? image)
         {
             SourceCore = sourceCore;
             _artistMetadata = artistMetadata;
+            _image = image;
+
+            TotalImageCount = image == null ? 0 : 1;
             TotalTracksCount = totalTracksCount;
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
         }
@@ -321,8 +325,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
+            if (_image != null)
+                yield return _image;
+
             await Task.CompletedTask;
-            yield break;
         }
     }
 }

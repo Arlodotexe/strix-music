@@ -160,7 +160,12 @@ namespace StrixMusic.Core.LocalFiles
             var artist = await fileMetadataManager.Artists.GetArtistMetadataById(id);
 
             if (artist != null)
-                return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0);
+            {
+                if (artist.ImagePath != null)
+                    return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, new LocalFilesCoreImage(SourceCore, artist.ImagePath));
+
+                return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, null);
+            }
 
             var album = await fileMetadataManager.Albums.GetAlbumMetadataById(id);
 

@@ -8,6 +8,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
     /// </summary>
     public class ArtistMetadata
     {
+
         /// <summary>
         /// The unique identifier for the <see cref="ArtistMetadata"/>.
         /// </summary>
@@ -47,5 +48,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// The external link associated with the artist.
         /// </summary>
         public Uri? Url { get; set; }
+
+        /// <summary>
+        /// The picture of the artist.
+        /// </summary>
+        public Uri? ImagePath { get; set; }
     }
 }
