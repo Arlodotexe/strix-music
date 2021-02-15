@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
@@ -12,10 +15,8 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
+using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace StrixMusic.Core.LocalFiles
 {
@@ -142,7 +143,7 @@ namespace StrixMusic.Core.LocalFiles
             // If they don't pick a folder, unload the core.
             if (pickedFolder is null)
             {
-                // todo: show notification with "A folder must be picked"
+                this.GetService<INotificationService>().RaiseNotification("No folder selected", "Unloading file core.");
                 ChangeCoreState(CoreState.Unloaded);
                 return;
             }
