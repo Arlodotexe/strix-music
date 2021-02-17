@@ -84,7 +84,7 @@
                                             <StackPanel Orientation="Horizontal" Grid.Column="2">
                                                 <!--Skip and Prev buttons shouldn't flip with Bi-directional languages-->
                                                 <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
-                                                    <Button Style="{StaticResource MediaButton}">
+                                                    <Button Style="{StaticResource MediaButton}"  Command="{Binding ActiveDevice.PreviousAsyncCommand, Mode=OneWay}">
                                                         <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                                     </Button>
                                                     <owlcoreuno:ToggleContentButton Style="{StaticResource MediaToggleContentButton}">
@@ -93,7 +93,7 @@
                                                         </owlcoreuno:ToggleContentButton.CheckedContent>
                                                         <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                                     </owlcoreuno:ToggleContentButton>
-                                                    <Button Style="{StaticResource MediaButton}">
+                                                    <Button Style="{StaticResource MediaButton}" Command="{Binding ActiveDevice.NextAsyncCommand, Mode=OneWay}">
                                                         <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                                                     </Button>
                                                 </StackPanel>
