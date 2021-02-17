@@ -39,12 +39,12 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
 
         private void DetachEvents()
         {
-            _playbackHandler.RepeatStateChanged += RepeatStateChanged;
-            _playbackHandler.ShuffleStateChanged += ShuffleStateChanged;
-            _playbackHandler.PlaybackSpeedChanged += PlaybackSpeedChanged;
-            _playbackHandler.PlaybackStateChanged += PlaybackStateChanged;
-            _playbackHandler.PositionChanged += PositionChanged;
-            _playbackHandler.VolumeChanged += VolumeChanged;
+            _playbackHandler.RepeatStateChanged -= RepeatStateChanged;
+            _playbackHandler.ShuffleStateChanged -= ShuffleStateChanged;
+            _playbackHandler.PlaybackSpeedChanged -= PlaybackSpeedChanged;
+            _playbackHandler.PlaybackStateChanged -= PlaybackStateChanged;
+            _playbackHandler.PositionChanged -= PositionChanged;
+            _playbackHandler.VolumeChanged -= VolumeChanged;
         }
 
         /// <inheritdoc />
