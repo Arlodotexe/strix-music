@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Uno.Controls.Shells;
+using StrixMusic.Sdk.Uno.Controls.Views;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno;
-using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace StrixMusic.Shells.Default
 {

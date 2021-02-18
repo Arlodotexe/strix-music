@@ -79,37 +79,37 @@
     <ProjectReference Include="..\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Styles\PlaylistViewStyle.xaml.cs">
+    <Compile Update="Styles\Views\Secondary\PlaylistViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\PlaylistItemStyle.xaml.cs">
+    <Compile Update="Styles\Items\PlaylistItemStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\PlaylistCollectionStyle.xaml.cs">
+    <Compile Update="Styles\Collections\PlaylistCollectionStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\AlbumViewStyle.xaml.cs">
+    <Compile Update="Styles\Views\Secondary\AlbumViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\ArtistCollectionStyle.xaml.cs">
+    <Compile Update="Styles\Collections\ArtistCollectionStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\ArtistItemStyle.xaml.cs">
+    <Compile Update="Styles\Items\ArtistItemStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\ArtistViewStyle.xaml.cs">
+    <Compile Update="Styles\Views\Secondary\ArtistViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\HomeViewStyle.xaml.cs">
+    <Compile Update="Styles\Views\HomeViewStyle.xaml.cs">
       <DependentUpon>HomeViewStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Styles\NowPlayingViewStyle.xaml.cs">
+    <Compile Update="Styles\Views\NowPlayingViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Styles\SafeImageStyle.xaml.cs">
       <DependentUpon>SafeImageStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Styles\SettingsViewStyle.xaml.cs">
+    <Compile Update="Styles\Views\SettingsViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>

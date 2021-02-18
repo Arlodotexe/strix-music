@@ -1,8 +1,8 @@
 ﻿using StrixMusic.Sdk;
-using StrixMusic.Sdk.Uno.Controls.Events;
+using StrixMusic.Sdk.Uno.Controls.Collections.Events;
+using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls
 {

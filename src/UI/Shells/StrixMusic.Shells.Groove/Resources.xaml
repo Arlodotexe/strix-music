@@ -3,7 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:styles="using:StrixMusic.Shells.Groove.Styles"
-    xmlns:dstyles="using:StrixMusic.Sdk.Uno.Styles">
+    xmlns:dcollectionstyles="using:StrixMusic.Sdk.Uno.Styles.Collections"
+    xmlns:ditemstyles="using:StrixMusic.Sdk.Uno.Styles.Items"
+    xmlns:dviewstyles="using:StrixMusic.Sdk.Uno.Styles.Views"
+    xmlns:dsecondaryviewstyles="using:StrixMusic.Sdk.Uno.Styles.Views.Secondary">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Resources/Brushes.xaml"/>
         <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
@@ -11,21 +14,28 @@
         <ResourceDictionary Source="Styles/MediaSlider.xaml"/>
         <ResourceDictionary Source="Styles/PivotStyle.xaml" />
 
+
+
+        <dcollectionstyles:ArtistCollectionStyle/>
+
+        <ditemstyles:AlbumItemStyle/>
+        <ditemstyles:ArtistItemStyle/>
+        <ditemstyles:TrackItemStyle/>
+
+        <dviewstyles:SettingsViewStyle/>
+
+        <dsecondaryviewstyles:ArtistViewStyle/>
+
+        
         <styles:AlbumCollectionStyle/>
-        <dstyles:AlbumItemStyle/>
         <styles:AlbumViewStyle/>
-        <dstyles:ArtistCollectionStyle/>
-        <dstyles:ArtistItemStyle/>
-        <dstyles:ArtistViewStyle/>
         <styles:NotificationAbstractUIGroupStyle/>
         <styles:NowPlayingBarStyle/>
         <styles:HomeStyle/>
         <styles:PlaylistCollectionStyle/>
         <styles:PanePlaylistCollectionStyle/>
         <styles:PlayableCollectionGroupPivotStyle/>
-        <dstyles:SettingsViewStyle/>
         <styles:TrackCollectionStyle/>
-        <dstyles:TrackItemStyle/>
     </ResourceDictionary.MergedDictionaries>
     
 </ResourceDictionary>

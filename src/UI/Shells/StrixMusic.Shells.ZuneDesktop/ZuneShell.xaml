@@ -1,17 +1,18 @@
-﻿<defaultcontrols:Shell
+﻿<shells:Shell
     x:Class="StrixMusic.Shells.ZuneDesktop.ZuneShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
+    xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
     x:Name="RootControl" RequestedTheme="Dark">
 
-    <defaultcontrols:Shell.Resources>
+    <shells:Shell.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources.xaml" />
@@ -40,7 +41,7 @@
                 <sdkstyles:TrackItemStyle/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </defaultcontrols:Shell.Resources>
+    </shells:Shell.Resources>
 
     <Grid Background="{ThemeResource ZuneLightBackground}">
         <Grid.Resources>
@@ -133,7 +134,7 @@
         </Grid>
 
         <!--SettingsOverlay-->
-        <defaultcontrols:SettingsView x:Name="SettingsOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <views:SettingsView x:Name="SettingsOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
         <!--Back Button-->
         <Button Style="{StaticResource ZuneButton}" Width="24" Margin="40,12,-32,0"
@@ -153,8 +154,8 @@
         </Rectangle>
 
         <!--NowPlayingOverlay-->
-        <defaultcontrols:NowPlayingView x:Name="NowPlayingOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        <views:NowPlayingView x:Name="NowPlayingOverlay" Visibility="Collapsed" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
-        <defaultcontrols:NowPlayingBar Grid.Row="1" x:Name="NowPlayingBar"/>
+        <shells:NowPlayingBar Grid.Row="1" x:Name="NowPlayingBar"/>
     </Grid>
-</defaultcontrols:Shell>
+</shells:Shell>

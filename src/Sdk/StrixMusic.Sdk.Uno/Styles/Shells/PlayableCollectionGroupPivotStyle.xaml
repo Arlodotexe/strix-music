@@ -1,0 +1,45 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
+    xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
+    x:Class="StrixMusic.Sdk.Uno.Styles.Shells.PlayableCollectionGroupPivotStyle">
+
+    <Style x:Key="DefaultPlayableCollectionGroupPivotStyle" TargetType="shells:PlayableCollectionGroupPivot">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="shells:PlayableCollectionGroupPivot">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}">
+                            <Grid>
+                                <Pivot x:Name="PART_Pivot">
+                                    <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs">
+                                        <collections:TrackCollection x:Uid="NothingToShowCOLC"/>
+                                    </PivotItem>
+                                    <PivotItem x:Uid="/Music/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums">
+                                        <collections:AlbumCollection x:Uid="NothingToShowCOLC"/>
+                                    </PivotItem>
+                                    <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists">
+                                        <collections:ArtistCollection x:Uid="NothingToShowCOLC"/>
+                                    </PivotItem>
+                                    <PivotItem x:Uid="/Music/PlaylistsPVI" x:Name="PART_PlaylistsPivotItem" Header="Playlists">
+                                        <collections:PlaylistCollection x:Uid="NothingToShowCOLC"/>
+                                    </PivotItem>
+                                </Pivot>
+
+                                <ContentPresenter x:Name="PART_AllEmptyContentPresenter" Visibility="Collapsed" />
+
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultPlayableCollectionGroupPivotStyle}" TargetType="shells:PlayableCollectionGroupPivot"/>
+
+</ResourceDictionary>

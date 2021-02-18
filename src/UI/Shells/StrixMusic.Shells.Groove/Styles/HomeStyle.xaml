@@ -1,24 +1,25 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
+    xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
     x:Class="StrixMusic.Shells.Groove.Styles.HomeStyle">
 
     <DataTemplate x:Key="GrooveHomeViewTemplate" x:DataType="sdk:MainViewModel">
-        <defaultcontrols:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True">
-            <defaultcontrols:PlayableCollectionGroupPivot.AllEmptyContent>
+        <shells:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True">
+            <shells:PlayableCollectionGroupPivot.AllEmptyContent>
                 <TextBlock Text="Nothing to show!" />
-            </defaultcontrols:PlayableCollectionGroupPivot.AllEmptyContent>
-        </defaultcontrols:PlayableCollectionGroupPivot>
+            </shells:PlayableCollectionGroupPivot.AllEmptyContent>
+        </shells:PlayableCollectionGroupPivot>
     </DataTemplate>
 
-    <Style x:Key="GrooveHomeViewStyle" TargetType="defaultcontrols:HomeView">
+    <Style x:Key="GrooveHomeViewStyle" TargetType="views:HomeView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="defaultcontrols:HomeView">
+                    <ControlTemplate TargetType="views:HomeView">
                         <ContentControl ContentTemplate="{StaticResource GrooveHomeViewTemplate}"/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -26,6 +27,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource GrooveHomeViewStyle}" TargetType="defaultcontrols:HomeView"/>
+    <Style BasedOn="{StaticResource GrooveHomeViewStyle}" TargetType="views:HomeView"/>
 
 </ResourceDictionary>

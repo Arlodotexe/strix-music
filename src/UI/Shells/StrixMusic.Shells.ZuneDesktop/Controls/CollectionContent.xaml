@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
-    xmlns:controls="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
@@ -122,13 +122,13 @@
                 <ColumnDefinition x:Name="TertiaryColumn" MinWidth="200"/>
             </Grid.ColumnDefinitions>
 
-            <controls:ArtistCollection x:Name="ArtistCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="0"
+            <collections:ArtistCollection x:Name="ArtistCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="0"
                                        SelectionChanged="ArtistSelected"/>
 
-            <controls:AlbumCollection x:Name="AlbumCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="1"
+            <collections:AlbumCollection x:Name="AlbumCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="1"
                                       SelectionChanged="AlbumSelected"/>
 
-            <controls:TrackCollection x:Name="TrackCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="2"/>
+            <collections:TrackCollection x:Name="TrackCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="2"/>
 
             <tkcontrols:GridSplitter HorizontalAlignment="Left" Grid.Column="1" Margin="0,24,0,12"
                                      Style="{StaticResource ThinGridSplitterStyle}"/>

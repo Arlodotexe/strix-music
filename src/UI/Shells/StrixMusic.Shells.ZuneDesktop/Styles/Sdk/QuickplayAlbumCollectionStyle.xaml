@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
@@ -17,7 +18,7 @@
 
     <DataTemplate x:Key="QuickplayAlbumCollectionItemStyle" x:DataType="viewModels:IImageCollectionViewModel">
         <!--<Rectangle Fill="#353535"/>-->
-        <defaultcontrols:SafeImage/>
+        <strix:SafeImage/>
     </DataTemplate>
 
     <DataTemplate x:Key="QuickplayAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
@@ -32,11 +33,11 @@
         </ItemsControl>
     </DataTemplate>
 
-    <Style x:Key="QuickplayAlbumCollectionStyle" TargetType="defaultcontrols:AlbumCollection">
+    <Style x:Key="QuickplayAlbumCollectionStyle" TargetType="collections:AlbumCollection">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="defaultcontrols:AlbumCollection">
+                    <ControlTemplate TargetType="collections:AlbumCollection">
                         <ContentControl ContentTemplate="{StaticResource QuickplayAlbumCollectionDataTemplate}"
                                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                     </ControlTemplate>
