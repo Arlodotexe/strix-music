@@ -2,7 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:secondaryviews="using:StrixMusic.Sdk.Uno.Controls.Views.Secondary"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.Strix.Styles.AlbumViewStyle">
@@ -55,7 +57,7 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
-                        <defaultcontrols:SafeImage Grid.RowSpan="2" Margin="32"/>
+                        <strix:SafeImage Grid.RowSpan="2" Margin="32"/>
 
                         <StackPanel Grid.Column="1" Margin="0,32,0,0">
                             <TextBlock Text="{x:Bind Name}" FontSize="32" FontWeight="SemiBold" TextWrapping="WrapWholeWords"
@@ -94,17 +96,17 @@
                         </CommandBar>
                     </Grid>
 
-                    <defaultcontrols:TrackCollection Grid.Row="1"/>
+                    <collections:TrackCollection Grid.Row="1"/>
                 </Grid>
             </UserControl>
         </ScrollViewer>
     </DataTemplate>
 
-    <Style x:Key="StrixAlbumViewControlStyle" TargetType="defaultcontrols:AlbumView">
+    <Style x:Key="StrixAlbumViewControlStyle" TargetType="secondaryviews:AlbumView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="defaultcontrols:AlbumView">
+                    <ControlTemplate TargetType="secondaryviews:AlbumView">
                         <ContentControl ContentTemplate="{StaticResource StrixAlbumViewTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -113,6 +115,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixAlbumViewControlStyle}" TargetType="defaultcontrols:AlbumView"/>
+    <Style BasedOn="{StaticResource StrixAlbumViewControlStyle}" TargetType="secondaryviews:AlbumView"/>
 
 </ResourceDictionary>

@@ -4,7 +4,8 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:styles="using:StrixMusic.Sdk.Uno.Styles"
     x:Class="StrixMusic.Shells.Strix.Styles.ArtistItemStyle">
@@ -70,22 +71,22 @@
                 </Grid.RowDefinitions>
                 <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" HorizontalAlignment="Center"
                            Grid.Row="1" Margin="0,16,0,0" TextTrimming="CharacterEllipsis"/>
-                <defaultcontrols:SafeImage x:Name="ArtistCover" Width="128" Height="128"
+                <strix:SafeImage x:Name="ArtistCover" Width="128" Height="128"
                            Style="{StaticResource DefaultRoundSafeImageStyle}"
                            RenderTransformOrigin=".5,.5">
-                    <defaultcontrols:SafeImage.RenderTransform>
+                    <strix:SafeImage.RenderTransform>
                         <ScaleTransform x:Name="ArtistCoverScale"/>
-                    </defaultcontrols:SafeImage.RenderTransform>
-                </defaultcontrols:SafeImage>
+                    </strix:SafeImage.RenderTransform>
+                </strix:SafeImage>
             </Grid>
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="StrixArtistItemStyle" TargetType="defaultcontrols:ArtistItem">
+    <Style x:Key="StrixArtistItemStyle" TargetType="items:ArtistItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="defaultcontrols:ArtistItem">
+                    <ControlTemplate TargetType="items:ArtistItem">
                         <ContentControl ContentTemplate="{StaticResource StrixArtistItemDataTemplate}"/>
                     </ControlTemplate>
                 </Setter.Value>
@@ -93,6 +94,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixArtistItemStyle}" TargetType="defaultcontrols:ArtistItem"/>
+    <Style BasedOn="{StaticResource StrixArtistItemStyle}" TargetType="items:ArtistItem"/>
 
 </ResourceDictionary>

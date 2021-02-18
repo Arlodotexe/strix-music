@@ -3,11 +3,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:styles="using:StrixMusic.Shells.Strix.Styles"
-    xmlns:dstyles="using:StrixMusic.Sdk.Uno.Styles">
+    xmlns:ditemstyles="using:StrixMusic.Sdk.Uno.Styles.Items"
+    xmlns:dcollectionstyles="using:StrixMusic.Sdk.Uno.Styles.Collections">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Resources/Brushes.xaml"/>
         <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
         <ResourceDictionary Source="Styles/MediaSlider.xaml"/>
+
+        <dcollectionstyles:TrackCollectionStyle/>
+        <ditemstyles:TrackItemStyle/>
 
         <styles:AlbumCollectionStyle/>
         <styles:AlbumItemStyle/>
@@ -20,8 +24,7 @@
         <styles:SettingsViewStyle/>
         <!--<ResourceDictionary Source="Styles/TrackListStyle.xaml"/>-->
         <!--<ResourceDictionary Source="Styles/TrackStyle.xaml"/>-->
-        <dstyles:TrackCollectionStyle/>
-        <dstyles:TrackItemStyle/>
+        
         <ResourceDictionary Source="Styles/NowPlayingBarStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     

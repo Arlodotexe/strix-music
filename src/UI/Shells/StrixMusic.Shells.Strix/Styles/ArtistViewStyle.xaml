@@ -3,7 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:secondaryviews="using:StrixMusic.Sdk.Uno.Controls.Views.Secondary"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.Strix.Styles.ArtistViewStyle">
 
@@ -54,7 +56,7 @@
                             </Grid.RowDefinitions>
 
                             <!--Consider removing Artist image-->
-                            <defaultcontrols:SafeImage Width="48" Height="48"
+                            <strix:SafeImage Width="48" Height="48"
                                                        Style="{StaticResource DefaultRoundSafeImageStyle}"/>
                             
                             <TextBlock Grid.Column="1" Text="{x:Bind Name}" FontSize="30" VerticalAlignment="Center" Margin="16,0"/>
@@ -76,10 +78,10 @@
                     <PivotItem Header="Overview">
                     </PivotItem>
                     <PivotItem Header="Albums">
-                        <defaultcontrols:AlbumCollection/>
+                        <collections:AlbumCollection/>
                     </PivotItem>
                     <PivotItem Header="Songs">
-                        <defaultcontrols:TrackCollection/>
+                        <collections:TrackCollection/>
                     </PivotItem>
                     <PivotItem Header="Similar Artists">
                     </PivotItem>
@@ -88,11 +90,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="StrixArtistViewStyle" TargetType="defaultcontrols:ArtistView">
+    <Style x:Key="StrixArtistViewStyle" TargetType="secondaryviews:ArtistView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="defaultcontrols:ArtistView">
+                    <ControlTemplate TargetType="secondaryviews:ArtistView">
                         <ContentControl ContentTemplate="{StaticResource StrixArtistViewTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -101,6 +103,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixArtistViewStyle}" TargetType="defaultcontrols:ArtistView"/>
+    <Style BasedOn="{StaticResource StrixArtistViewStyle}" TargetType="secondaryviews:ArtistView"/>
 
 </ResourceDictionary>

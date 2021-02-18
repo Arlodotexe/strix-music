@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.Strix.Styles.AlbumItemStyle">
@@ -67,21 +68,21 @@
                     <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                     <TextBlock Opacity=".5" HorizontalAlignment="Center"/>
                 </StackPanel>
-                <defaultcontrols:SafeImage x:Name="AlbumCover" Width="128" Height="128"
+                <strix:SafeImage x:Name="AlbumCover" Width="128" Height="128"
                                            RenderTransformOrigin=".5,.5">
-                    <defaultcontrols:SafeImage.RenderTransform>
+                    <strix:SafeImage.RenderTransform>
                         <ScaleTransform x:Name="AlbumCoverScale"/>
-                    </defaultcontrols:SafeImage.RenderTransform>
-                </defaultcontrols:SafeImage>
+                    </strix:SafeImage.RenderTransform>
+                </strix:SafeImage>
             </Grid>
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="StrixAlbumItemStyle" TargetType="defaultcontrols:AlbumItem">
+    <Style x:Key="StrixAlbumItemStyle" TargetType="items:AlbumItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="defaultcontrols:AlbumItem">
+                    <ControlTemplate TargetType="items:AlbumItem">
                         <ContentControl ContentTemplate="{StaticResource StrixAlbumItemTemplate}"
                                         HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -90,6 +91,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixAlbumItemStyle}" TargetType="defaultcontrols:AlbumItem"/>
+    <Style BasedOn="{StaticResource StrixAlbumItemStyle}" TargetType="items:AlbumItem"/>
 
 </ResourceDictionary>
