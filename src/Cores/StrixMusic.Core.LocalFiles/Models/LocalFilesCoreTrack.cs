@@ -29,6 +29,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             SourceCore = sourceCore;
             _trackMetadata = trackMetadata;
+            Genres = new SynchronizedObservableCollection<string>(trackMetadata.Genres);
         }
 
         /// <inheritdoc/>
@@ -107,7 +108,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICoreAlbum? Album { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres => new SynchronizedObservableCollection<string>();
+        public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
 
         /// <inheritdoc/>
         /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>

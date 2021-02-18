@@ -37,6 +37,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             TotalImageCount = image == null ? 0 : 1;
             TotalArtistItemsCount = _albumMetadata.TotalTracksCount ?? 0;
             TotalTracksCount = totalTracksCount;
+            Genres = new SynchronizedObservableCollection<string>(albumMetadata.Genres);
         }
 
         /// <inheritdoc/>
