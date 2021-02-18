@@ -7,7 +7,7 @@
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:sys="using:System"
     xmlns:a="using:OwlCore.Uno.Attached"
-    xmlns:controls="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:sdkstyle="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
     x:Name="RootControl"
     mc:Ignorable="d">
@@ -560,7 +560,7 @@
                         </TextBlock.RenderTransform>
                     </TextBlock>
 
-                    <controls:AlbumCollection DataContext="{x:Bind ViewModel.Library}" Style="{StaticResource QuickplayAlbumCollectionStyle}"/>
+                    <collections:AlbumCollection DataContext="{x:Bind ViewModel.Library}" Style="{StaticResource QuickplayAlbumCollectionStyle}"/>
                 </Grid>
 
                 <Grid Width="500" Height="300" Grid.Column="1" Margin="20,0"

@@ -2,13 +2,14 @@
     x:Class="StrixMusic.Shells.Strix.Styles.PlayableCollectionGroupPivotStyle"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls">
+    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
+    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells">
 
-    <Style BasedOn="{StaticResource DefaultPlayableCollectionGroupPivotStyle}" TargetType="defaultcontrols:PlayableCollectionGroupPivot">
+    <Style BasedOn="{StaticResource DefaultPlayableCollectionGroupPivotStyle}" TargetType="shells:PlayableCollectionGroupPivot">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="defaultcontrols:PlayableCollectionGroupPivot">
+                    <ControlTemplate TargetType="shells:PlayableCollectionGroupPivot">
                         <Border BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Background="{TemplateBinding Background}">
@@ -20,13 +21,13 @@
                                     <PivotItem x:Uid="/Common/OverviewPVI" x:Name="PART_OverviewPivotItem" Header="Overview">
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/SongsPVI" x:Name="PART_SongsPivotItem" Header="Songs">
-                                        <defaultcontrols:TrackCollection x:Uid="NothingToShowCOLC"/>
+                                        <collections:TrackCollection x:Uid="NothingToShowCOLC"/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/AlbumsPVI" x:Name="PART_AlbumsPivotItem" Header="Albums">
-                                        <defaultcontrols:AlbumCollection x:Uid="NothingToShowCOLC"/>
+                                        <collections:AlbumCollection x:Uid="NothingToShowCOLC"/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/ArtistsPVI" x:Name="PART_ArtistsPivotItem" Header="Artists">
-                                        <defaultcontrols:ArtistCollection x:Uid="NothingToShowCOLC"/>
+                                        <collections:ArtistCollection x:Uid="NothingToShowCOLC"/>
                                     </PivotItem>
                                     <PivotItem x:Uid="/Music/PlaylistsPVI" x:Name="PART_PlaylistsPivotItem" Header="Playlists">
                                     </PivotItem>

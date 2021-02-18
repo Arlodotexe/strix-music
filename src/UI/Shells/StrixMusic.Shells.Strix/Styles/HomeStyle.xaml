@@ -3,13 +3,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:shell="using:StrixMusic.Sdk.Uno.Controls.Shells"
+    xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
     x:Class="StrixMusic.Shells.Strix.Styles.HomeStyle">
 
     <DataTemplate x:Key="StrixHomeTemplate" x:DataType="sdk:MainViewModel">
         <UserControl>
 
-            <defaultcontrols:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True" />
+            <shell:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True" />
 
             <!-- 
             
@@ -35,11 +36,11 @@
         </UserControl>
     </DataTemplate>
 
-    <Style x:Key="StrixHomeViewControlStyle" TargetType="defaultcontrols:HomeView">
+    <Style x:Key="StrixHomeViewControlStyle" TargetType="views:HomeView">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="defaultcontrols:HomeView">
+                    <ControlTemplate TargetType="views:HomeView">
                         <ContentControl ContentTemplate="{StaticResource StrixHomeTemplate}"
                                         VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -48,6 +49,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource StrixHomeViewControlStyle}" TargetType="defaultcontrols:HomeView"/>
+    <Style BasedOn="{StaticResource StrixHomeViewControlStyle}" TargetType="views:HomeView"/>
 
 </ResourceDictionary>

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using OwlCore.Extensions;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Uno.Controls;
+using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Services.Localization;
 
 namespace StrixMusic.Shells.ZuneDesktop.Settings

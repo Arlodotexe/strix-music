@@ -5,12 +5,12 @@
     xmlns:local="using:StrixMusic.Shells.Groove.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
     <Grid>
-        <defaultcontrols:PlaylistCollection DataContext="{x:Bind ViewModel.Library}"/>
+        <collections:PlaylistCollection DataContext="{x:Bind ViewModel.Library}"/>
     </Grid>
 </UserControl>

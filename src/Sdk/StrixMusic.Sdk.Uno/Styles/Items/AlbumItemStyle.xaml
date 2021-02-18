@@ -1,0 +1,53 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
+    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:owlcoreuno="using:OwlCore.Uno"
+    x:Class="StrixMusic.Sdk.Uno.Styles.Items.AlbumItemStyle">
+
+    <DataTemplate x:Key="DefaultAlbumItemDataTemplate" x:DataType="viewModels:AlbumViewModel">
+        <Grid MaxWidth="128">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <strix:SafeImage Height="128" Width="128"/>
+
+            <StackPanel Grid.Row="1" Margin="0,8,0,0">
+                <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+
+                <ItemsControl ItemsSource="{x:Bind Artists}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:ArtistViewModel">
+                            <TextBlock Text="{x:Bind Name}" Opacity=".5"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="DefaultAlbumItemStyle" TargetType="items:AlbumItem">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="items:AlbumItem">
+                        <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemDataTemplate}"
+                                        HorizontalContentAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultAlbumItemStyle}" TargetType="items:AlbumItem"/>
+
+</ResourceDictionary>

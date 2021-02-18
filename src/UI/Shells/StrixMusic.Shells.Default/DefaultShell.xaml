@@ -1,8 +1,8 @@
-﻿<defaultcontrols:Shell
+﻿<shells:Shell
     x:Class="StrixMusic.Shells.Default.DefaultShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -51,10 +51,10 @@
                             HorizontalContentAlignment="Stretch"/>
         </NavigationView>
 
-        <defaultcontrols:NowPlayingBar Grid.Row="1"/>
+        <shells:NowPlayingBar Grid.Row="1"/>
 
         <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                         Visibility="Collapsed" Grid.RowSpan="2"/>
     </Grid>
-</defaultcontrols:Shell>
+</shells:Shell>

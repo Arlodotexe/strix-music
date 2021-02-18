@@ -1,5 +1,5 @@
 ﻿using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno.Controls;
+using StrixMusic.Sdk.Uno.Controls.Shells;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

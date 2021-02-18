@@ -1,0 +1,44 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
+    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    x:Class="StrixMusic.Sdk.Uno.Styles.Items.ArtistItemStyle"
+    xmlns:styles="using:StrixMusic.Sdk.Uno.Styles">
+
+    <ResourceDictionary.MergedDictionaries>
+        <styles:SafeImageStyle />
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate x:Key="DefaultArtistItemDataTemplate" x:DataType="viewModels:ArtistViewModel">
+        <Grid Padding="12,8" Background="Transparent">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <strix:SafeImage Height="128" Width="128"
+                                       Style="{StaticResource DefaultRoundSafeImageStyle}"/>
+
+            <TextBlock  Grid.Row="1" Text="{x:Bind Name}" FontWeight="SemiBold" Margin="0,20,0,0"
+                        HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="DefaultArtistItemStyle" TargetType="items:ArtistItem">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="items:ArtistItem">
+                        <ContentControl ContentTemplate="{StaticResource DefaultArtistItemDataTemplate}"
+                                        HorizontalContentAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultArtistItemStyle}" TargetType="items:ArtistItem"/>
+
+</ResourceDictionary>

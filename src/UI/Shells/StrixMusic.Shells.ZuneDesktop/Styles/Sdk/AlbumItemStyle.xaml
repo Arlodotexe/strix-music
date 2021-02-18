@@ -3,13 +3,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.AlbumItemStyle">
 
     <DataTemplate x:Key="DefaultAlbumItemImageDataTemplate" x:DataType="viewModels:AlbumViewModel">
-        <defaultcontrols:SafeImage Width="86" Height="86"/>
+        <strix:SafeImage Width="86" Height="86"/>
     </DataTemplate>
 
     <DataTemplate x:Key="DefaultAlbumItemTextDataTemplate" x:DataType="viewModels:AlbumViewModel">
@@ -19,11 +20,11 @@
         </StackPanel>
     </DataTemplate>
 
-    <Style x:Key="DefaultAlbumItemStyle" TargetType="defaultcontrols:AlbumItem">
+    <Style x:Key="DefaultAlbumItemStyle" TargetType="items:AlbumItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="defaultcontrols:AlbumItem">
+                    <ControlTemplate TargetType="items:AlbumItem">
                         <Grid Width="94" Background="Transparent">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="PointerEntered">
@@ -104,6 +105,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultAlbumItemStyle}" TargetType="defaultcontrols:AlbumItem"/>
+    <Style BasedOn="{StaticResource DefaultAlbumItemStyle}" TargetType="items:AlbumItem"/>
 
 </ResourceDictionary>
