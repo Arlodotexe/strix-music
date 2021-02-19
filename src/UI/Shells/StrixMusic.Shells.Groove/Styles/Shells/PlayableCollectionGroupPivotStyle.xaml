@@ -4,10 +4,10 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
-    x:Class="StrixMusic.Shells.Groove.Styles.PlayableCollectionGroupPivotStyle">
+    x:Class="StrixMusic.Shells.Groove.Styles.Shells.PlayableCollectionGroupPivotStyle">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="PivotStyle.xaml"/>
+        <ResourceDictionary Source="../PivotStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="GroovePlayableCollectionGroupPivotStyle" TargetType="shells:PlayableCollectionGroupPivot">

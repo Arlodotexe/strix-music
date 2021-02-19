@@ -4,7 +4,7 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    x:Class="StrixMusic.Shells.Groove.Styles.AlbumCollectionStyle">
+    x:Class="StrixMusic.Shells.Groove.Styles.Collections.AlbumCollectionStyle">
 
     <DataTemplate x:Key="DefaultAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
         <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource DefaultAlbumCollectionItemStyle}"

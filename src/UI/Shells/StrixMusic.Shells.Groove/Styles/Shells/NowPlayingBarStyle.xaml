@@ -4,11 +4,11 @@
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
-    x:Class="StrixMusic.Shells.Groove.Styles.NowPlayingBarStyle">
+    x:Class="StrixMusic.Shells.Groove.Styles.Shells.NowPlayingBarStyle">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="MediaSlider.xaml" />
-        <ResourceDictionary Source="../Resources/ButtonStyles.xaml" />
+        <ResourceDictionary Source="../MediaSlider.xaml" />
+        <ResourceDictionary Source="../../Resources/ButtonStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <AcrylicBrush x:Key="NowPlayingBackgroundBrush" TintColor="{ThemeResource SystemAccentColorDark3}"

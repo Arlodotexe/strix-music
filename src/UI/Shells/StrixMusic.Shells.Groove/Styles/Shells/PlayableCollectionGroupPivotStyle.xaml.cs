@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml;
 
-namespace StrixMusic.Shells.Groove.Styles
+namespace StrixMusic.Shells.Groove.Styles.Shells
 {
     public sealed partial class PlayableCollectionGroupPivotStyle : ResourceDictionary
     {

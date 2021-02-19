@@ -3,7 +3,7 @@ using OwlCore.Uno.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 
-namespace StrixMusic.Shells.Groove.Styles
+namespace StrixMusic.Shells.Groove.Styles.Shells
 {
     /// <summary>
     /// A <see cref="ResourceDictionary"/> containing the default style for the <see cref="AbstractUIGroupPresenter"/>.

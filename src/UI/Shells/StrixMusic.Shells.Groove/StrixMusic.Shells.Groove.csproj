@@ -76,19 +76,19 @@
     <Compile Update="GrooveShell.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\NotificationAbstractUIGroupStyle.xaml.cs">
+    <Compile Update="Styles\Shells\NotificationAbstractUIGroupStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\PanePlaylistCollectionStyle.xaml.cs">
+    <Compile Update="Styles\Collections\PanePlaylistCollectionStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\AlbumCollectionStyle.xaml.cs">
+    <Compile Update="Styles\Collections\AlbumCollectionStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\PlaylistCollectionStyle.xaml.cs">
+    <Compile Update="Styles\Collections\PlaylistCollectionStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\TrackCollectionStyle.xaml.cs">
+    <Compile Update="Styles\Collections\TrackCollectionStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Style\AlbumViewStyle.xaml.cs">
@@ -108,5 +108,8 @@
     <PackageReference Include="WindowsStateTriggers">
       <Version>1.1.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Styles\Items\" />
   </ItemGroup>
 </Project>

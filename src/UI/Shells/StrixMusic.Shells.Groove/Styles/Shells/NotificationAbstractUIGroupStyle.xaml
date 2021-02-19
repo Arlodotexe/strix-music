@@ -7,7 +7,7 @@
     xmlns:abstractcontrols="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:abstractUIVm="using:OwlCore.Uno.AbstractUI.ViewModels"
     xmlns:sdkvms="using:StrixMusic.Sdk.Uno.ViewModels"
-    x:Class="StrixMusic.Shells.Groove.Styles.NotificationAbstractUIGroupStyle">
+    x:Class="StrixMusic.Shells.Groove.Styles.Shells.NotificationAbstractUIGroupStyle">
 
     <Style x:Key="GrooveNotificationAbstractUIGroupStyle" TargetType="abstractcontrols:AbstractUIGroupPresenter">
         <Style.Setters>

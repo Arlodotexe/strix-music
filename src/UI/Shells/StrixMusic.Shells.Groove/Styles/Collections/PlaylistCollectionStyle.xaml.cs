@@ -5,7 +5,7 @@ using StrixMusic.Sdk.Uno.Controls.Views.Secondary;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shells.Groove.Styles
+namespace StrixMusic.Shells.Groove.Styles.Collections
 {
     /// <summary>
     /// A <see cref="ResourceDictionary"/> containing the default style for the <see cref="PlaylistCollection"/>.

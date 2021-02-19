@@ -1,7 +1,7 @@
 ﻿using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Xaml;
 
-namespace StrixMusic.Shells.Groove.Styles
+namespace StrixMusic.Shells.Groove.Styles.Collections
 {
     /// <summary>
     /// A <see cref="ResourceDictionary"/> containing the default style for the <see cref="TrackCollection"/>.

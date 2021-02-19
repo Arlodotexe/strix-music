@@ -24,7 +24,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Color = Windows.UI.Color;
 using ClusterNet.KMeans;
 
-namespace StrixMusic.Shells.Groove.Styles
+namespace StrixMusic.Shells.Groove.Styles.Views.Secondary
 {
     /// <summary>
     /// A <see cref="ResourceDictionary"/> containing the style and template for the <see cref="AlbumView"/> in the Strix Shell.

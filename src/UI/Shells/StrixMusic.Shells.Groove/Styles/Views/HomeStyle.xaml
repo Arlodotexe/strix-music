@@ -5,7 +5,7 @@
     xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
-    x:Class="StrixMusic.Shells.Groove.Styles.HomeStyle">
+    x:Class="StrixMusic.Shells.Groove.Styles.Views.HomeStyle">
 
     <DataTemplate x:Key="GrooveHomeViewTemplate" x:DataType="sdk:MainViewModel">
         <shells:PlayableCollectionGroupPivot DataContext="{x:Bind Library}" RestoreSelectedPivot="True">

@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml;
 
-namespace StrixMusic.Shells.Groove.Styles
+namespace StrixMusic.Shells.Groove.Styles.Views
 {
     public sealed partial class HomeStyle : ResourceDictionary
     {

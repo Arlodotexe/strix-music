@@ -3,6 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:styles="using:StrixMusic.Shells.Groove.Styles"
+    xmlns:collectionstyles="using:StrixMusic.Shells.Groove.Styles.Collections"
+    xmlns:shellstyles="using:StrixMusic.Shells.Groove.Styles.Shells"
+    xmlns:viewstyles="using:StrixMusic.Shells.Groove.Styles.Views"
+    xmlns:secondaryviewstyles="using:StrixMusic.Shells.Groove.Styles.Views.Secondary"
     xmlns:dcollectionstyles="using:StrixMusic.Sdk.Uno.Styles.Collections"
     xmlns:ditemstyles="using:StrixMusic.Sdk.Uno.Styles.Items"
     xmlns:dviewstyles="using:StrixMusic.Sdk.Uno.Styles.Views"
@@ -15,27 +19,34 @@
         <ResourceDictionary Source="Styles/PivotStyle.xaml" />
 
 
-
+        <!--Collection related styles-->
+        <collectionstyles:AlbumCollectionStyle/>
+        <collectionstyles:PanePlaylistCollectionStyle/>
+        <collectionstyles:PlaylistCollectionStyle/>
+        <collectionstyles:TrackCollectionStyle/>
         <dcollectionstyles:ArtistCollectionStyle/>
 
+
+        <!--Item related styles-->
         <ditemstyles:AlbumItemStyle/>
         <ditemstyles:ArtistItemStyle/>
         <ditemstyles:TrackItemStyle/>
 
+
+        <!--Shell related styles-->
+        <shellstyles:NotificationAbstractUIGroupStyle/>
+        <shellstyles:NowPlayingBarStyle/>
+        <shellstyles:PlayableCollectionGroupPivotStyle/>
+
+        <!--View related styles-->
+        <viewstyles:HomeStyle/>
         <dviewstyles:SettingsViewStyle/>
 
+
+        <!--Secondary view related styles-->
+        <secondaryviewstyles:AlbumViewStyle/>
         <dsecondaryviewstyles:ArtistViewStyle/>
 
-        
-        <styles:AlbumCollectionStyle/>
-        <styles:AlbumViewStyle/>
-        <styles:NotificationAbstractUIGroupStyle/>
-        <styles:NowPlayingBarStyle/>
-        <styles:HomeStyle/>
-        <styles:PlaylistCollectionStyle/>
-        <styles:PanePlaylistCollectionStyle/>
-        <styles:PlayableCollectionGroupPivotStyle/>
-        <styles:TrackCollectionStyle/>
     </ResourceDictionary.MergedDictionaries>
     
 </ResourceDictionary>

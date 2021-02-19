@@ -4,7 +4,7 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    x:Class="StrixMusic.Shells.Groove.Styles.PlaylistCollectionStyle">
+    x:Class="StrixMusic.Shells.Groove.Styles.Collections.PlaylistCollectionStyle">
 
     <DataTemplate x:Key="GroovePlaylistCollectionDataTemplate" x:DataType="viewModels:IPlaylistCollectionViewModel">
         <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Playlists}" ItemTemplate="{StaticResource GroovePlaylistCollectionItemStyle}"
