@@ -5,15 +5,15 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:OwlCore.Uno.Attached"
-    xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
+    xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
     xmlns:controls="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.QuickplayAlbumCollectionStyle">
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.QuickplayAlbumCollectionStyle">
 
     <ResourceDictionary.MergedDictionaries>
-        <sdkstyles:AlbumItemStyle/>
-        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
+        <itemstyles:AlbumItemStyle/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="QuickplayAlbumCollectionItemStyle" x:DataType="viewModels:IImageCollectionViewModel">

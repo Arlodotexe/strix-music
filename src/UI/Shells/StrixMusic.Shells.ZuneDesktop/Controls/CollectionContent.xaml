@@ -8,7 +8,10 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:a="using:OwlCore.Uno.Attached"
-    xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
+    xmlns:collectionstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
+    xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
+    xmlns:shellstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Shells"
+    xmlns:viewstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Views"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -16,19 +19,30 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
                 <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneDesktopSearchTextBoxStyle.xaml"/>
-                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ThinGridSplitterStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ZuneDesktopSearchTextBoxStyle.xaml"/>
+                <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ThinGridSplitterStyle.xaml"/>
 
-                <sdkstyles:ArtistCollectionStyle/>
-                <sdkstyles:ArtistItemStyle/>
-                <sdkstyles:AlbumCollectionStyle/>
-                <sdkstyles:AlbumItemStyle/>
-                <sdkstyles:ArtistItemStyle/>
-                <sdkstyles:NowPlayingBarStyle/>
-                <sdkstyles:NowPlayingViewStyle/>
-                <sdkstyles:SettingsViewStyle/>
-                <sdkstyles:TrackCollectionStyle/>
-                <sdkstyles:TrackItemStyle/>
+
+                <!--Collection related style-->
+                <collectionstyles:AlbumCollectionStyle/>
+                <collectionstyles:ArtistCollectionStyle/>
+                <collectionstyles:TrackCollectionStyle/>
+
+
+                <!--Item related style-->
+                <itemstyles:AlbumItemStyle/>
+                <itemstyles:ArtistItemStyle/>
+                <itemstyles:TrackItemStyle/>
+
+
+                <!--Shell related style-->
+                <shellstyles:NowPlayingBarStyle/>
+
+
+                <!--View related style-->
+                <viewstyles:NowPlayingViewStyle/>
+                <viewstyles:SettingsViewStyle/>
+                
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

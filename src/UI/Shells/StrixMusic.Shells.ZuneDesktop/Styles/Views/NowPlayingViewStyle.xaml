@@ -1,11 +1,11 @@
 ﻿<ResourceDictionary
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.NowPlayingViewStyle"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:owlcoreuno="using:OwlCore.Uno.Controls">
+    xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Views.NowPlayingViewStyle">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>

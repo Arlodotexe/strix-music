@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml;
 
-namespace StrixMusic.Shells.ZuneDesktop.Styles.Sdk
+namespace StrixMusic.Shells.ZuneDesktop.Styles.Views
 {
     /// <summary>
     /// A <see cref="ResourceDictionary"/> containing the style and template for the <see cref="Sdk.Uno.Controls.SettingsView"/> in the ZuneDesktop Shell.

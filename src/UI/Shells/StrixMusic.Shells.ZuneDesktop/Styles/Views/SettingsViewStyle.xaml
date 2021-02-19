@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.SettingsViewStyle">
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Views.SettingsViewStyle">
 
     <Style x:Key="ZuneDesktopSettingsViewStyle" TargetType="views:SettingsView">
         <Style.Setters>

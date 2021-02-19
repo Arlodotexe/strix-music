@@ -8,14 +8,14 @@
     xmlns:sys="using:System"
     xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
-    xmlns:sdkstyle="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk"
+    xmlns:collectionstyle="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
     x:Name="RootControl"
     mc:Ignorable="d">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <sdkstyle:QuickplayAlbumCollectionStyle/>
+                <collectionstyle:QuickplayAlbumCollectionStyle/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

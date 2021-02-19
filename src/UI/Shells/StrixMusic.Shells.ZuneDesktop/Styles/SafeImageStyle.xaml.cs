@@ -1,7 +1,7 @@
 ﻿using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Xaml;
 
-namespace StrixMusic.Shells.ZuneDesktop.Styles.Sdk
+namespace StrixMusic.Shells.ZuneDesktop.Styles
 {
     /// <summary>
     /// A <see cref="ResourceDictionary"/> containing the default style for the <see cref="SafeImage"/>.

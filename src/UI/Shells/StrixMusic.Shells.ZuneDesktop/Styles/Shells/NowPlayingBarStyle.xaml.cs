@@ -4,7 +4,7 @@ using StrixMusic.Sdk.Uno.Controls.Views;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shells.ZuneDesktop.Styles.Sdk
+namespace StrixMusic.Shells.ZuneDesktop.Styles.Shells
 {
     /// <summary>
     /// A <see cref="ResourceDictionary"/> containing the style and template for the <see cref="NowPlayingBar"/> in the ZuneDesktop Shell.

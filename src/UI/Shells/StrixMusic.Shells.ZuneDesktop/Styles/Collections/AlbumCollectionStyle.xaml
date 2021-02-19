@@ -5,12 +5,12 @@
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:OwlCore.Uno.Attached"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Sdk.AlbumCollectionStyle"
-    xmlns:sdkstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Sdk">
+    xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.AlbumCollectionStyle">
 
     <ResourceDictionary.MergedDictionaries>
-        <sdkstyles:AlbumItemStyle/>
-        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Styles/Other/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
+        <itemstyles:AlbumItemStyle/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle">
