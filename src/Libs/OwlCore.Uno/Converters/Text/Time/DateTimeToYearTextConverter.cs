@@ -13,29 +13,20 @@ namespace StrixMusic.Sdk.Uno.Converters
         /// </summary>
         /// <param name="value">The <see cref="TimeSpan"/> to convert.</param>
         /// <returns>A formatted string of the <see cref="TimeSpan"/>.</returns>
-        public static string Convert(object value)
+        public static string Convert(DateTime value)
         {
-            DateTime dateTime;
-            if (value is long dValue)
-            {
-                dateTime = DateTime.FromBinary(dValue);
-            } 
-            else if (value is DateTime dtValue)
-            {
-                dateTime = dtValue;
-            }
-            else
-            {
-                return string.Empty;
-            }
-
-            return dateTime.Year.ToString();
+            return value.ToString("yyyy");
         }
 
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return Convert(value);
+            if (value is DateTime dateTime)
+            {
+                return Convert(dateTime);
+            }
+
+            return Convert(DateTime.MinValue);
         }
 
         /// <inheritdoc/>
