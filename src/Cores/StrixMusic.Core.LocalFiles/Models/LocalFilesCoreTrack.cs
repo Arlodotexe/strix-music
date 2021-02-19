@@ -29,6 +29,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             SourceCore = sourceCore;
             _trackMetadata = trackMetadata;
+            Genres = new SynchronizedObservableCollection<string>(trackMetadata.Genres);
         }
 
         /// <inheritdoc/>
@@ -107,7 +108,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICoreAlbum? Album { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres => new SynchronizedObservableCollection<string>();
+        public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
 
         /// <inheritdoc/>
         /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>
@@ -326,14 +327,17 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             var artistRepo = _fileMetadataManager?.Artists;
 
-            var artists = await artistRepo?.GetArtistsByTrackId(Id, offset, limit);
-
-            foreach (var artist in artists)
+            if (artistRepo != null)
             {
-                if (artist.ImagePath != null)
-                    yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, new LocalFilesCoreImage(SourceCore, artist.ImagePath));
+                var artists = await artistRepo.GetArtistsByTrackId(Id, offset, limit);
 
-                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, null);
+                foreach (var artist in artists)
+                {
+                    if (artist.ImagePath != null)
+                        yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, new LocalFilesCoreImage(SourceCore, artist.ImagePath));
+
+                    yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, null);
+                }
             }
         }
 

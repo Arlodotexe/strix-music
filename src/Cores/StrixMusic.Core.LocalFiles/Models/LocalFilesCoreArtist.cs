@@ -35,6 +35,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             TotalImageCount = image == null ? 0 : 1;
             TotalTracksCount = totalTracksCount;
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
+            Genres = new SynchronizedObservableCollection<string>(artistMetadata.Genres);
         }
 
         /// <inheritdoc/>

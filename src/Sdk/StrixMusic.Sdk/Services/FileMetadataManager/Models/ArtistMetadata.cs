@@ -53,5 +53,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// The picture of the artist.
         /// </summary>
         public Uri? ImagePath { get; set; }
+
+        /// <summary>
+        /// The genres of this track.
+        /// </summary>
+        public List<string>? Genres { get; set; }
     }
 }
