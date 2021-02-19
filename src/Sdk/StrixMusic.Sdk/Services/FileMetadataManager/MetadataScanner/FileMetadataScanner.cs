@@ -353,7 +353,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     {
                         Name = tags.FirstAlbumArtist,
                         ImagePath = artistImagePath,
-                        Genres = tags.Genres,
+                        Genres = new List<string>(tags.Genres),
                     },
                 };
             }
