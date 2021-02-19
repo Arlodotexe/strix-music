@@ -1,8 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters">
-
+        xmlns:converters="using:OwlCore.Uno.Converters.Time.Numerical">
+    <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter" />
+    
+    
     <Style x:Key="MediaSlider" TargetType="Slider">
         <Setter Property="Background" Value="#cccccc" />
         <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}" />
@@ -13,11 +15,8 @@
         <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
         <Setter Property="FocusVisualMargin" Value="-7,0,-7,0" />
         <Setter Property="IsFocusEngagementEnabled" Value="True" />
-        <Setter Property="ThumbToolTipValueConverter">
-            <Setter.Value>
-                <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="ThumbToolTipValueConverter"
+                Value="{StaticResource LongToTimeSpanTextConverter}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Slider">
