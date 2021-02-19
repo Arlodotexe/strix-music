@@ -8,7 +8,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:zunecontrols="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
-    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters">
+    xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
@@ -29,7 +29,7 @@
                 <ControlTemplate TargetType="strix:SliderEx">
                     <Grid Margin="{TemplateBinding Padding}">
                         <Grid.Resources>
-                            <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
+                            <convertnumtime:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
 
                             <Style x:Key="SliderThumbStyle" TargetType="Thumb">
                                 <Setter Property="BorderThickness" Value="0" />

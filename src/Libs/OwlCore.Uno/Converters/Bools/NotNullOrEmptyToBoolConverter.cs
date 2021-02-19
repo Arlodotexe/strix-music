@@ -7,23 +7,28 @@ using Windows.UI.Xaml.Data;
 namespace OwlCore.Uno.Converters.Bools.Visible
 {
     /// <summary>
-    /// A converter that converts checks null checks an object and returns a <see cref="Visibility"/>.
+    /// A converter that converts checks if a string is null or empty and returns a <see cref="Visibility"/>.
     /// </summary>
-    public sealed class NotNullToVisibilityConverter : IValueConverter
+    public sealed class NotNullOrEmptyToBoolConverter : IValueConverter
     {
         /// <summary>
-        /// Checks if an object is null, and returns a <see cref="Visibility"/>.
+        /// Checks if a string is null or empty, and returns a <see cref="Visibility"/>.
         /// </summary>
-        /// <param name="obj">The object to null check.</param>
-        /// <returns><see cref="Visibility.Visible"/> if not null, <see cref="Visibility.Collapsed"/> if null.</returns>
+        /// <param name="str">The string to null or empty check.</param>
+        /// <returns><see cref="Visibility.Visible"/> if not null or empty, <see cref="Visibility.Collapsed"/> if null or empty.</returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Visibility Convert(object? obj) => BoolToVisibilityConverter.Convert(obj != null);
+        public static bool Convert(string? str) => !string.IsNullOrEmpty(str);
 
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return Convert(value);
+            if (value is string str)
+            {
+                return Convert(str);
+            }
+
+            return false;
         }
 
         /// <inheritdoc/>

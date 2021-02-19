@@ -1,34 +1,33 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Data;
 
-namespace StrixMusic.Sdk.Uno.Converters
+namespace OwlCore.Uno.Converters.Time.Numerical
 {
     /// <summary>
-    /// A converter that converts a given <see cref="long"/> to a <see cref="TimeSpan"/> then to a natural time format string.
+    /// A converter that converts a given <see cref="long"/> to a <see cref="TimeSpan"/>.
     /// </summary>
-    public class LongToTimeSpanTextConverter : IValueConverter
+    public sealed class LongToTimeSpanConverter : IValueConverter
     {
         /// <summary>
-        /// Converts a <see cref="TimeSpan"/> to a formatted string.
+        /// Converts a <see cref="long"/> to a <see cref="TimeSpan"/>.
         /// </summary>
         /// <param name="value">The <see cref="TimeSpan"/> to convert.</param>
         /// <returns>A formatted string of the <see cref="TimeSpan"/>.</returns>
-        public static string Convert(TimeSpan value)
-        {
-            // TODO: Make more rigorous cases
-            if (value.Hours > 0) return value.ToString("h:mm:ss");
-            else return value.ToString("m:ss");
-        }
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TimeSpan Convert(long value) => TimeSpan.FromMilliseconds(value);
 
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is TimeSpan timeSpan)
+            if (value is long timeSpan)
             {
                 return Convert(timeSpan);
             }
 
-            return Convert(TimeSpan.Zero);
+            return Convert(0);
         }
 
         /// <inheritdoc/>

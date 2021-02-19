@@ -5,7 +5,7 @@
     xmlns:local="using:StrixMusic"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:owlcoreuno="using:OwlCore.Uno"
+    xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:controls="using:OwlCore.Uno.Controls"
     xmlns:abstractUIControls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:notificationModels="using:StrixMusic.Sdk.Services.Notifications"
@@ -20,7 +20,7 @@
         <controls:ContentOverlay x:Name="OverlayPresenter"/>
 
         <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}" Margin="25,30" HorizontalAlignment="Right" VerticalAlignment="Top" 
-                      Visibility="{x:Bind owlcoreuno:Converters.NotBoolToVisibility(NotificationsViewModel.IsHandled), Mode=OneWay}">
+                      Visibility="{x:Bind convertvis:NotBoolToVisibilityConverter.Convert(NotificationsViewModel.IsHandled), Mode=OneWay}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:NotificationViewModel">
                     <Grid Margin="15" Width="300"

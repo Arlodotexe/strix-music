@@ -5,7 +5,6 @@
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:owlcoreuno="using:OwlCore.Uno"
     x:Class="StrixMusic.Sdk.Uno.Styles.Items.PlaylistItemStyle">
 
     <DataTemplate x:Key="DefaultPlaylistItemDataTemplate" x:DataType="viewModels:PlaylistViewModel">

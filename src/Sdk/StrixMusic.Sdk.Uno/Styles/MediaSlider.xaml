@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:StrixMusic.Sdk.Uno.Converters">
+    xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical">
 
     <Style x:Key="MediaSlider" TargetType="Slider">
         <Setter Property="Background" Value="#cccccc" />
@@ -14,7 +14,7 @@
         <Setter Property="IsFocusEngagementEnabled" Value="True" />
         <Setter Property="ThumbToolTipValueConverter">
             <Setter.Value>
-                <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
+                <convertnumtime:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
             </Setter.Value>
         </Setter>
         <Setter Property="Template">
@@ -22,7 +22,7 @@
                 <ControlTemplate TargetType="Slider">
                     <Grid Margin="{TemplateBinding Padding}">
                         <Grid.Resources>
-                            <converters:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
+                            <convertnumtime:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
 
                             <Style x:Key="SliderThumbStyle" TargetType="Thumb">
                                 <Setter Property="BorderThickness" Value="0" />

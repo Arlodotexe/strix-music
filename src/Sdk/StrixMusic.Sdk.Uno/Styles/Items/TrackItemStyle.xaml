@@ -4,7 +4,7 @@
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:owlcoreuno="using:OwlCore.Uno"
+    xmlns:converttime="using:OwlCore.Uno.Converters.Time"
     x:Class="StrixMusic.Sdk.Uno.Styles.Items.TrackItemStyle">
 
     <DataTemplate x:Key="DefaultTrackTemplate" x:DataType="viewModels:TrackViewModel">
@@ -23,8 +23,9 @@
 
             <TextBlock Text="{x:Bind Album.Artists[0].Name}" Margin="16,0" Grid.Column="2"/>
             <TextBlock Text="{x:Bind Album.Name}" Margin="16,0" Grid.Column="3"/>
-            <TextBlock Text="{x:Bind converters:DateTimeToYearTextConverter.Convert(Album.DatePublished)}" Margin="16,0" Grid.Column="4"/> <!--Year-->
-            <TextBlock Text="{x:Bind converters:LongToTimeSpanTextConverter.Convert(Duration)}" Margin="16,0" Grid.Column="5"/> <!--Duration-->
+            <!--TODO: Investigate error binding DatePublished-->
+            <!--<TextBlock Text="{x:Bind converttime:DateTimeToYearTextConverter.Convert(Album.DatePublished)}" Margin="16,0" Grid.Column="4"/> --><!--Year-->
+            <TextBlock Text="{x:Bind converttime:TimeSpanToTextConverter.Convert(Duration)}" Margin="16,0" Grid.Column="5"/> <!--Duration-->
         </Grid>
     </DataTemplate>
 

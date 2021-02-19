@@ -4,15 +4,12 @@
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:shell="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
-    xmlns:owlcoreunobase="using:OwlCore.Uno"
+    xmlns:conveternum="using:OwlCore.Uno.Converters.Numerical"
     xmlns:sdk="using:StrixMusic.Sdk"
     x:Class="StrixMusic.Sdk.Uno.Styles.Shells.NowPlayingBarStyle">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.Uno/Styles/MediaSlider.xaml" />
-        <ResourceDictionary>
-            <owlcoreunobase:LongToDoubleConverter x:Name="LongToDoubleConverter" />
-        </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="DefaultNowPlayingBarStyle" TargetType="shell:NowPlayingBar">

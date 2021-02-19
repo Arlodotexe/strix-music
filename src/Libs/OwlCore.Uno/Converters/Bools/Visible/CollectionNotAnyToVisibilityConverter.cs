@@ -1,5 +1,4 @@
-﻿using OwlCore.Uno.Converters.Bools;
-using System;
+﻿using System;
 using System.Collections;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
@@ -20,10 +19,7 @@ namespace OwlCore.Uno.Converters.Bools.Visible
         /// <returns>A <see cref="Visibility"/>.</returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Visibility Convert(ICollection value)
-        {
-            return BoolToVisibilityConverter.Convert(CollectionNotAnyToBoolConverter.Convert(value));
-        }
+        public static Visibility Convert(ICollection value) => BoolToVisibilityConverter.Convert(CollectionNotAnyToBoolConverter.Convert(value));
 
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, string language)

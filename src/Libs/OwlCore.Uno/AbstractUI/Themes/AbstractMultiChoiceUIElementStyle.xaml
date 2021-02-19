@@ -4,7 +4,7 @@
     x:Class="OwlCore.Uno.AbstractUI.Themes.AbstractMultiChoiceUIElementStyle"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:abstractUI="using:OwlCore.Uno.AbstractUI.ViewModels"
-    xmlns:owlCoreUno="using:OwlCore.Uno"
+    xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:themes="using:OwlCore.Uno.AbstractUI.Themes">
@@ -63,7 +63,7 @@
             <TextBlock Text="{x:Bind Subtitle}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
-                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle)}"/>
 
             <ContentControl Content="{x:Bind}" Margin="0,5,0,0">
                 <ContentControl.ContentTemplateSelector>

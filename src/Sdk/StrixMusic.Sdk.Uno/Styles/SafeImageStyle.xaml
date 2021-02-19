@@ -1,36 +1,38 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:defaultcontrols="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:controls="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
+    xmlns:owlconverts="using:OwlCore.Uno.Converters"
+    xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     x:Class="StrixMusic.Sdk.Uno.Styles.SafeImageStyle">
 
     <DataTemplate x:Key="DefaultSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
         <Grid FlowDirection="LeftToRight">
             <!--Fallback SVG-->
-            <Image x:Name="PART_Fallback" Opacity=".3" Visibility="{x:Bind converters:CollectionNotAnyToVisibilityConverter.Convert(Images), Mode=OneWay}">
+            <Image x:Name="PART_Fallback" Opacity=".3" Visibility="{x:Bind convertvis:CollectionNotAnyToVisibilityConverter.Convert(Images), Mode=OneWay}">
                 <Image.Source>
                     <SvgImageSource UriSource="{x:Bind converters:SourceCoreLogoFromIndexConverter.Convert(SourceCores, 0)}"
                                     RasterizePixelHeight="150" RasterizePixelWidth="150"/>
                 </Image.Source>
             </Image>
 
-            <Rectangle x:Name="PART_ImageRectangle" Visibility="{x:Bind converters:CollectionAnyToVisibilityConverter.Convert(Images), Mode=OneWay}">
+            <Rectangle x:Name="PART_ImageRectangle" Visibility="{x:Bind convertvis:CollectionAnyToVisibilityConverter.Convert(Images), Mode=OneWay}">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images, 0), Mode=OneWay}"
+                    <ImageBrush ImageSource="{x:Bind owlconverts:UriToImageSourceConverter.Convert(Images[0].Uri), Mode=OneWay}"
                                 Stretch="UniformToFill"/>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
     </DataTemplate>
 
-    <Style x:Key="DefaultSafeImageStyle" TargetType="defaultcontrols:SafeImage">
+    <Style x:Key="DefaultSafeImageStyle" TargetType="controls:SafeImage">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="defaultcontrols:SafeImage">
+                    <ControlTemplate TargetType="controls:SafeImage">
                         <ContentControl ContentTemplate="{StaticResource DefaultSafeImageTemplate}"
                                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -51,18 +53,18 @@
 
             <Rectangle x:Name="PART_ImageRectangle" RadiusX="10000" RadiusY="10000">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{x:Bind converters:UriToImageSourceConverter.Convert(Images, 0), Mode=OneWay}"
+                    <ImageBrush ImageSource="{x:Bind owlconverts:UriToImageSourceConverter.Convert(Images[0].Uri), Mode=OneWay}"
                                 Stretch="UniformToFill"/>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
     </DataTemplate>
 
-    <Style x:Key="DefaultRoundSafeImageStyle" TargetType="defaultcontrols:SafeImage">
+    <Style x:Key="DefaultRoundSafeImageStyle" TargetType="controls:SafeImage">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="defaultcontrols:SafeImage">
+                    <ControlTemplate TargetType="controls:SafeImage">
                         <ContentControl ContentTemplate="{StaticResource DefaultRoundSafeImageTemplate}"
                                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                     </ControlTemplate>
@@ -71,6 +73,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultSafeImageStyle}" TargetType="defaultcontrols:SafeImage"/>
+    <Style BasedOn="{StaticResource DefaultSafeImageStyle}" TargetType="controls:SafeImage"/>
     
 </ResourceDictionary>

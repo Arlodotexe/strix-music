@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="OwlCore.Uno.AbstractUI.Themes.AbstractDataListStyle"
     xmlns:abstractUI="using:OwlCore.Uno.AbstractUI.ViewModels"
-    xmlns:owlCoreUno="using:OwlCore.Uno"
+    xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:themes="using:OwlCore.Uno.AbstractUI.Themes">
 
@@ -31,7 +31,7 @@
             <TextBlock Text="{x:Bind Subtitle}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
-                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"/>
+                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle)}"/>
 
             <ListView x:Name="PrimaryListView" Visibility="{x:Bind IsDisplayMode('List')}"  ItemsSource="{x:Bind Items}" SelectionMode="None" Margin="10">
                 <ListView.ItemContainerStyle>
@@ -68,11 +68,11 @@
                                    Source="{x:Bind ImageSource, Mode=OneWay}" />
 
                             <TextBlock Grid.Column="1" Text="{x:Bind Title}" FontSize="22" VerticalAlignment="Center"
-                                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Title)}"/>
+                                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Title)}"/>
 
                             <TextBlock x:Name="SubtitleTextBlock" Grid.Column="1" Grid.Row="1"
                                        VerticalAlignment="Center"
-                                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle)}"
+                                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle)}"
                                        Text="{x:Bind Subtitle}"
                                        FontSize="16" FontWeight="SemiLight" Opacity="0.75" />
                         </Grid>

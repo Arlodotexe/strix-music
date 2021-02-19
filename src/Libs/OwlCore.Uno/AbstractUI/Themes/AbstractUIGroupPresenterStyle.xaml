@@ -4,7 +4,7 @@
     x:Class="OwlCore.Uno.AbstractUI.Themes.AbstractUIGroupPresenterStyle"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:abstractUI="using:OwlCore.Uno.AbstractUI.ViewModels"
-    xmlns:owlCoreUno="using:OwlCore.Uno"
+    xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:automation="using:Windows.UI.Xaml.Automation"
@@ -80,7 +80,7 @@
                                         <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="30" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" />
 
                                         <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="18" FontWeight="SemiLight" Opacity="0.5"
-                                                   Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle), Mode=OneWay}"/>
+                                                   Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
                                         <ItemsControl ItemsSource="{x:Bind Items}"
                                                       Margin="0,20,0,0"

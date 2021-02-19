@@ -4,7 +4,7 @@
     x:Class="OwlCore.Uno.AbstractUI.Themes.AbstractTextBoxStyle"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:abstractUI="using:OwlCore.Uno.AbstractUI.ViewModels"
-    xmlns:owlCoreUno="using:OwlCore.Uno"
+    xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:automation="using:Windows.UI.Xaml.Automation">
@@ -33,7 +33,7 @@
             <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
-                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle), Mode=OneWay}"/>
+                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
             <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="0,5,0,0"

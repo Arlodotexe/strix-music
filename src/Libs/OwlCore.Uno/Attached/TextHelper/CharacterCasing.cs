@@ -1,6 +1,6 @@
 ﻿/// https://stackoverflow.com/a/15615736/
 
-using OwlCore.Uno.Converters;
+using OwlCore.Uno.Converters.Text;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

@@ -8,7 +8,7 @@ namespace OwlCore.Uno.Converters.Bools
     /// <summary>
     /// A converter that converts checks null checks an object.
     /// </summary>
-    public sealed class NotNullConverter : IValueConverter
+    public sealed class NotNullToBoolConverter : IValueConverter
     {
         /// <summary>
         /// Checks if an object is null.

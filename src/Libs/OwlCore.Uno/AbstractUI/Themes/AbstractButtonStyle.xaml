@@ -4,7 +4,7 @@
     x:Class="OwlCore.Uno.AbstractUI.Themes.AbstractButtonStyle"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:abstractUI="using:OwlCore.Uno.AbstractUI.ViewModels"
-    xmlns:owlCoreUno="using:OwlCore.Uno"
+    xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:OwlCore.Uno.AbstractUI.Themes">
@@ -53,7 +53,7 @@
             <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
-                       Visibility="{x:Bind owlCoreUno:Converters.VisibleIfNotNullOrEmpty(Subtitle), Mode=OneWay}"/>
+                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
             <Button Style="{x:Bind Type, Converter={StaticResource ButtonStyleSelector}, Mode=OneWay}" Command="{x:Bind ClickCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
