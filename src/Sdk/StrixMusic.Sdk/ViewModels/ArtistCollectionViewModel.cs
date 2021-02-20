@@ -341,6 +341,11 @@ namespace StrixMusic.Sdk.ViewModels
             return _collection.PauseArtistCollectionAsync();
         }
 
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(IArtist artist)
+        {
+            return _collection.PlayArtistCollectionAsync(artist);
+        }
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _collection.GetArtistItemsAsync(limit, offset);

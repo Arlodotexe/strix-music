@@ -280,13 +280,19 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task PauseArtistCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PlayArtistCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(ICoreArtist artist)
+        {
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />

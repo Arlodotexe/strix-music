@@ -54,6 +54,7 @@ namespace OwlCore.Extensions
                 }
             }
         }
+
         /// <summary>
         /// Handles properly inserting and removing items from a collection, given a list of <see cref="CollectionChangedItem{TSourceItem}"/>s.
         /// </summary>

@@ -14,6 +14,12 @@ namespace StrixMusic.Sdk.Data
     public interface ITrackCollection : ITrackCollectionBase, IImageCollection, ISdkMember, IMerged<ICoreTrackCollection>
     {
         /// <summary>
+        /// Attempts to play a specific item in the track collection. Restarts playback if already playing.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayTrackCollectionAsync(ITrack track);
+
+        /// <summary>
         /// Gets a requested number of <see cref="ITrack"/>s starting at the given offset in the backend.
         /// </summary>
         /// <param name="limit">The max number of items to return.</param>

@@ -10,6 +10,12 @@ namespace StrixMusic.Sdk.Data.Core
     public interface ICorePlayableCollectionGroupChildren : IPlayableCollectionGroupChildrenBase, ICoreMember
     {
         /// <summary>
+        /// Attempts to play a specific item in the playable collection group. Restarts playback if already playing.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup);
+
+        /// <summary>
         /// Gets a requested number of <see cref="ICorePlayableCollectionGroup"/>s starting at the given offset in the backend.
         /// </summary>
         /// <param name="limit">The max number of items to return.</param>

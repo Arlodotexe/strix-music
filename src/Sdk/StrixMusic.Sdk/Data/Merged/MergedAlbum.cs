@@ -8,6 +8,7 @@ using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -29,7 +30,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         public MergedAlbum(IEnumerable<ICoreAlbum> sources)
         {
-            _sources = sources?.ToList() ?? ThrowHelper.ThrowArgumentNullException<List<ICoreAlbum>>(nameof(sources));
+            _sources = sources.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             var relatedItemsSources = _sources.Select(x => x.RelatedItems).PruneNull().ToList();
@@ -391,6 +392,28 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc/>
         public Task PlayArtistCollectionAsync() => _preferredSource.PlayArtistCollectionAsync();
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ITrack track)
+        {
+            var targetCore = _preferredSource.SourceCore;
+            var source = track.GetSources<ICoreTrack>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            Guard.IsNotNull(source, nameof(source));
+
+            return _preferredSource.PlayTrackCollectionAsync(source);
+        }
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(IArtist artist)
+        {
+            var targetCore = _preferredSource.SourceCore;
+            var source = artist.GetSources<ICoreArtist>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            Guard.IsNotNull(source, nameof(source));
+
+            return _preferredSource.PlayArtistCollectionAsync(source);
+        }
 
         /// <inheritdoc/>
         void IMergedMutable<ICoreAlbum>.AddSource(ICoreAlbum itemToMerge)
