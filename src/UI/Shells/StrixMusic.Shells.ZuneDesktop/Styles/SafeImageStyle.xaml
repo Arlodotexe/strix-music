@@ -1,0 +1,50 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:selectors="using:StrixMusic.Sdk.Uno.TemplateSelectors"
+    xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
+    xmlns:owlconverts="using:OwlCore.Uno.Converters"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.SafeImageStyle">
+
+    <DataTemplate x:Key="ZuneDesktopSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
+        <Grid FlowDirection="LeftToRight">
+            <!--Fallback SVG-->
+            <Rectangle x:Name="PART_Fallback" Visibility="{x:Bind convertvis:CollectionNotAnyToVisibilityConverter.Convert(Images), Mode=OneWay}"
+                   Margin="8">
+                <Rectangle.Fill>
+                    <ImageBrush Stretch="UniformToFill">
+                        <ImageBrush.ImageSource>
+                            <SvgImageSource UriSource="ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/ZuneStrixLogo-gray.svg"
+                                    RasterizePixelHeight="150" RasterizePixelWidth="150"/>
+                        </ImageBrush.ImageSource>
+                    </ImageBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+
+            <Rectangle x:Name="PART_ImageRectangle" Visibility="{x:Bind convertvis:CollectionAnyToVisibilityConverter.Convert(Images), Mode=OneWay}">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{x:Bind owlconverts:UriToImageSourceConverter.Convert(Images[0].Uri), Mode=OneWay}"
+                                Stretch="UniformToFill"/>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="ZuneDesktopSafeImageStyle" TargetType="controls:SafeImage">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="controls:SafeImage">
+                        <ContentControl ContentTemplate="{StaticResource ZuneDesktopSafeImageTemplate}"
+                                        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource ZuneDesktopSafeImageStyle}" TargetType="controls:SafeImage"/>
+    
+</ResourceDictionary>

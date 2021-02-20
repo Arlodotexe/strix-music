@@ -60,8 +60,8 @@
 		<None Remove="Controls\AlbumWall.xaml" />
 		<None Remove="Controls\NowPlayingButtonContent.xaml" />
 		<None Remove="Controls\QuickplayContent.xaml" />
-		<None Remove="Controls\SettingsPages\SettingsBackgrounds.xaml" />
 		<None Remove="Controls\SettingsView.xaml" />
+		<None Remove="Controls\Views\Settings\BackgroundSettings.xaml" />
 		<None Remove="Controls\ZuneShell.xaml" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Resources.xaml" />
@@ -74,8 +74,6 @@
 		<None Remove="Styles\NowPlayingBarStyle.xaml" />
 		<None Remove="Styles\NowPlayingViewStyle.xaml" />
 		<None Remove="Styles\PrimaryPivotItemStyle.xaml" />
-		<None Remove="Styles\SafeImageStyle.xaml" />
-		<None Remove="Styles\Sdk\QuickplayAlbumCollectionStyle.xaml" />
 		<None Remove="Styles\SettingsViewStyle.xaml" />
 		<None Remove="Styles\SmallPivotItemStyle.xaml" />
 		<None Remove="Styles\ThinGridSplitterStyle.xaml" />
@@ -96,8 +94,8 @@
 		<UpToDateCheckInput Remove="Controls\AlbumWall.xaml" />
 		<UpToDateCheckInput Remove="Controls\NowPlayingButtonContent.xaml" />
 		<UpToDateCheckInput Remove="Controls\QuickplayContent.xaml" />
-		<UpToDateCheckInput Remove="Controls\SettingsPages\SettingsBackgrounds.xaml" />
 		<UpToDateCheckInput Remove="Controls\SettingsView.xaml" />
+		<UpToDateCheckInput Remove="Controls\Views\Settings\BackgroundSettings.xaml" />
 		<UpToDateCheckInput Remove="Controls\ZuneShell.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
 		<UpToDateCheckInput Remove="Resources.xaml" />
@@ -111,7 +109,6 @@
 		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\PrimaryPivotItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SafeImageStyle.xaml" />
-		<UpToDateCheckInput Remove="Styles\Sdk\QuickplayAlbumCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SmallPivotItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\ThinGridSplitterStyle.xaml" />
@@ -155,42 +152,42 @@
 		<PRIResource Include="Strings\he\ZuneUI.resw" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Update="Controls\NowPlayingButtonContent.xaml.cs">
+		<Compile Update="Controls\Shells\NowPlayingButtonContent.xaml.cs">
 		  <DependentUpon>NowPlayingButtonContent.xaml</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\Sdk\QuickplayAlbumCollectionStyle.xaml.cs">
+		<Compile Update="Styles\Collections\QuickplayAlbumCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\Sdk\AlbumCollectionStyle.xaml.cs">
+		<Compile Update="Styles\Collections\AlbumCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\Sdk\AlbumItemStyle.xaml.cs">
+		<Compile Update="Styles\Items\AlbumItemStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\Sdk\ArtistCollectionStyle.xaml.cs">
+		<Compile Update="Styles\Collections\ArtistCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\Sdk\ArtistItemStyle.xaml.cs">
+		<Compile Update="Styles\Items\ArtistItemStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\Sdk\NowPlayingViewStyle.xaml.cs">
+		<Compile Update="Styles\Views\NowPlayingViewStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\Sdk\NowPlayingBarStyle.xaml.cs">
+		<Compile Update="Styles\Shells\NowPlayingBarStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\Sdk\SettingsViewStyle.xaml.cs">
+		<Compile Update="Styles\Views\SettingsViewStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\Sdk\TrackCollectionStyle.xaml.cs">
+		<Compile Update="Styles\Collections\TrackCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
-		<Compile Update="Styles\Sdk\TrackItemStyle.xaml.cs">
+		<Compile Update="Styles\Items\TrackItemStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 	</ItemGroup>
 	<ItemGroup>
-	  <Page Update="Controls\QuickplayContent.xaml">
+	  <Page Update="Controls\Views\Quickplay\QuickplayContent.xaml">
 	    <SubType>Designer</SubType>
 	  </Page>
 	</ItemGroup>
