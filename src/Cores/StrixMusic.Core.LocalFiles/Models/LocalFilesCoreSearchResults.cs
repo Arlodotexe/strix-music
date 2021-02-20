@@ -1,11 +1,9 @@
-﻿using StrixMusic.Core.LocalFiles.Models;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 

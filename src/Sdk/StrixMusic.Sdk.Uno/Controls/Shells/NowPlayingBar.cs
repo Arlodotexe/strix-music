@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
         }
 
         /// <summary>
-        /// The ViewModel for this page item
+        /// The ViewModel for this control.
         /// </summary>
         public MainViewModel ViewModel => (MainViewModel)DataContext;
     }

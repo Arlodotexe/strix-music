@@ -1,9 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical">
 
-    <Style x:Key="MediaSlider" TargetType="Slider">
+    <Style x:Key="DefaultMediaSliderStyle" TargetType="Slider">
         <Setter Property="Background" Value="#cccccc" />
         <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}" />
         <Setter Property="Foreground" Value="{ThemeResource SliderTrackValueFill}" />
@@ -19,7 +20,7 @@
         </Setter>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="Slider">
+                <ControlTemplate TargetType="nowplaying:MediaSlider">
                     <Grid Margin="{TemplateBinding Padding}">
                         <Grid.Resources>
                             <convertnumtime:LongToTimeSpanTextConverter x:Key="LongToTimeSpanTextConverter"/>
@@ -349,4 +350,6 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="nowplaying:MediaSlider" BasedOn="{StaticResource DefaultMediaSliderStyle}"/>
 </ResourceDictionary>

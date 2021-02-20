@@ -30,10 +30,10 @@ namespace StrixMusic.Sdk.Uno.Controls.Views.Secondary
         private async Task LoadAsync()
         {
             if (!ViewModel.PopulateMoreArtistsCommand.IsRunning)
-                await ViewModel.PopulateMoreArtistsCommand.ExecuteAsync(5);
+                await ViewModel.PopulateMoreArtistsCommand.ExecuteAsync(25);
 
             if (!ViewModel.PopulateMoreTracksCommand.IsRunning)
-                await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(5);
+                await ViewModel.PopulateMoreTracksCommand.ExecuteAsync(25);
         }
     }
 }
