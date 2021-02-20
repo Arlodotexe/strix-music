@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.Uno.Controls
             DependencyProperty.Register(
                 nameof(Remaining),
                 typeof(bool),
-                typeof(ProgressSlider),
+                typeof(SliderEx),
                 new PropertyMetadata(true));
 
         /// <summary>

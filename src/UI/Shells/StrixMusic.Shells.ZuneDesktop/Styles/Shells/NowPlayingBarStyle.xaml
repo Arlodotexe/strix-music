@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:shellcontrols="using:StrixMusic.Shells.ZuneDesktop.Controls.Shells"
@@ -214,8 +215,8 @@
                                     <Rectangle x:Name="AlbumCover" Width="64" Height="64" Fill="#FF00FF" Grid.RowSpan="3" VerticalAlignment="Center"/>
                                     <TextBlock Text="Diplomat's Son" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5"/>
                                     <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5"/>
-                                    <strix:ProgressSlider Maximum="280000"  Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
-                                                                    FlowDirection="LeftToRight"/>
+                                    <nowplaying:MediaSlider Maximum="280000"  Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
+                                                            FlowDirection="LeftToRight"/>
                                 </Grid>
 
                                 <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom">
