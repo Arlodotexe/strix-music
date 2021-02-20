@@ -6,36 +6,32 @@
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
-    x:Class="StrixMusic.Sdk.Uno.Styles.NowPlaying.MediaInfoStyle">
+    x:Class="StrixMusic.Shells.Groove.Styles.NowPlaying.MediaInfoStyle">
 
-    <DataTemplate x:Key="DefaultMediaInfoDataTemplate" x:DataType="sdk:MainViewModel">
+    <DataTemplate x:Key="GrooveMediaInfoDataTemplate" x:DataType="sdk:MainViewModel">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="{Binding ActiveDevice.NowPlaying.Name, Mode=OneWay}"/>
-                <!--<TextBlock Text="{x:Bind ActiveDevice.NowPlaying.Name, Mode=OneWay}" Opacity=".5"/>-->
-                <!--TODO: Artist-->
+                <TextBlock Text="Diplomat's Son" FontSize="18" FontWeight="SemiLight"/>
+                <TextBlock Text="Vampire Weekend" FontSize="15" FontWeight="Bold"/>
             </StackPanel>
-
-            <strix:SafeImage x:Name="PART_AlbumImage" DataContext="{Binding ActiveDevice.NowPlaying, Mode=OneWay}"/>
-
-            <!--<Rectangle Fill="#FF00FF" Width="96" Height="96"/>-->
+            <Rectangle x:Name="PART_AlbumImage" Fill="#FF00FF" Width="96" Height="96"/>
         </Grid>
     </DataTemplate>
 
-    <Style x:Key="DefaultMediaInfoStyle" TargetType="nowplaying:MediaInfo">
+    <Style x:Key="GrooveMediaInfoStyle" TargetType="nowplaying:MediaInfo">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="nowplaying:MediaInfo">
-                    <ContentControl ContentTemplate="{StaticResource DefaultMediaInfoDataTemplate}"
+                    <ContentControl ContentTemplate="{StaticResource GrooveMediaInfoDataTemplate}"
                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style TargetType="nowplaying:MediaInfo" BasedOn="{StaticResource DefaultMediaInfoStyle}"/>
+    <Style TargetType="nowplaying:MediaInfo" BasedOn="{StaticResource GrooveMediaInfoStyle}"/>
 </ResourceDictionary>

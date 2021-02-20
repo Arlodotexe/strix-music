@@ -35,6 +35,8 @@
     <None Remove="Resources\TextBoxStyles.xaml" />
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
     <None Remove="Styles\NotificationAbstractUIGroupStyle.xaml" />
+    <None Remove="Styles\NowPlaying\MediaInfoStyle.xaml" />
+    <None Remove="Styles\NowPlaying\MediaTransportStyle.xaml" />
     <None Remove="Styles\PanePlaylistCollectionStyle.xaml" />
     <None Remove="Styles\PlaylistCollectionStyle.xaml" />
     <None Remove="Styles\TrackCollectionStyle.xaml" />
@@ -53,6 +55,9 @@
     <UpToDateCheckInput Remove="Resources\TextBoxStyles.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NotificationAbstractUIGroupStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\NowPlaying\MediaInfoStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\NowPlaying\MediaSliderStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\NowPlaying\MediaTransportStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PanePlaylistCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PivotStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\PlaylistCollectionStyle.xaml" />
@@ -74,6 +79,12 @@
       <DependentUpon>PlaylistsPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="GrooveShell.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\NowPlaying\MediaTransportStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\NowPlaying\MediaInfoStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Styles\Shells\NotificationAbstractUIGroupStyle.xaml.cs">

@@ -4,6 +4,7 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:styles="using:StrixMusic.Shells.Groove.Styles"
     xmlns:collectionstyles="using:StrixMusic.Shells.Groove.Styles.Collections"
+    xmlns:nowplayingstyles="using:StrixMusic.Shells.Groove.Styles.NowPlaying"
     xmlns:shellstyles="using:StrixMusic.Shells.Groove.Styles.Shells"
     xmlns:viewstyles="using:StrixMusic.Shells.Groove.Styles.Views"
     xmlns:secondaryviewstyles="using:StrixMusic.Shells.Groove.Styles.Views.Secondary"
@@ -15,7 +16,7 @@
         <ResourceDictionary Source="Resources/Brushes.xaml"/>
         <ResourceDictionary Source="Resources/ButtonStyles.xaml"/>
         <ResourceDictionary Source="Resources/TextBoxStyles.xaml"/>
-        <ResourceDictionary Source="Styles/MediaSlider.xaml"/>
+        <ResourceDictionary Source="Styles/NowPlaying/MediaSliderStyle.xaml"/>
         <ResourceDictionary Source="Styles/PivotStyle.xaml" />
 
 
@@ -32,12 +33,17 @@
         <ditemstyles:ArtistItemStyle/>
         <ditemstyles:TrackItemStyle/>
 
+        
+        <!--NowPlaying related style-->
+        <nowplayingstyles:MediaInfoStyle/>
+        <nowplayingstyles:MediaTransportStyle/>
 
         <!--Shell related styles-->
         <shellstyles:NotificationAbstractUIGroupStyle/>
         <shellstyles:NowPlayingBarStyle/>
         <shellstyles:PlayableCollectionGroupPivotStyle/>
 
+        
         <!--View related styles-->
         <viewstyles:HomeStyle/>
         <dviewstyles:SettingsViewStyle/>

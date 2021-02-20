@@ -66,7 +66,7 @@
                                             <!--Media info-->
                                             <nowplaying:MediaInfo MaxWidth="300"/>
 
-                                            <!--Media slider controls-->
+                                            <!--Media slider control-->
                                             <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
                                                                     Maximum="{Binding ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}" 
                                                                     FlowDirection="LeftToRight"/>
