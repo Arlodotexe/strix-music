@@ -13,6 +13,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -411,5 +412,19 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreTrackCollection other) => _collection.Equals(other);
+
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            if (IsInitialized)
+                return;
+
+            IsInitialized = true;
+
+            await CollectionInit.TrackCollection(this);
+        }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
     }
 }
