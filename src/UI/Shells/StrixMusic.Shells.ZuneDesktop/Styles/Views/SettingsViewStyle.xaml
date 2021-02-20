@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
+    xmlns:settingsviews="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Settings"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Views.SettingsViewStyle">
 
     <Style x:Key="ZuneDesktopSettingsViewStyle" TargetType="views:SettingsView">
@@ -10,7 +10,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="views:SettingsView">
-                        <local:SettingsView/>
+                        <settingsviews:SettingsView/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

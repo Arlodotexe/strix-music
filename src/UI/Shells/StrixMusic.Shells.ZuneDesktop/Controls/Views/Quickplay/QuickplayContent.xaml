@@ -1,5 +1,4 @@
 ﻿<UserControl
-    x:Class="StrixMusic.Shells.ZuneDesktop.Controls.QuickplayContent"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,6 +8,7 @@
     xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:collectionstyle="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay.QuickplayContent"
     x:Name="RootControl"
     mc:Ignorable="d">
 

@@ -7,7 +7,7 @@ using StrixMusic.Shells.ZuneDesktop.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shells.ZuneDesktop.Controls
+namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Settings
 {
     /// <summary>
     /// The Settings page in the ZuneDesktop shell.

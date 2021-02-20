@@ -5,7 +5,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shells.ZuneDesktop.Controls
+namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
 {
     /// <summary>
     /// A panel that arranges objects in a very **very** visualy striking way.

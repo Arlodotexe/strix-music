@@ -6,7 +6,7 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
-    xmlns:controls="using:StrixMusic.Shells.ZuneDesktop.Controls"
+    xmlns:quickplay="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.QuickplayAlbumCollectionStyle">
@@ -27,7 +27,7 @@
                       ItemsSource="{x:Bind Albums}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <controls:QuickplayPanel BaseTileHeight="48" VerticalAlignment="Top"/>
+                    <quickplay:QuickplayPanel BaseTileHeight="48" VerticalAlignment="Top"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>

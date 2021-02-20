@@ -4,7 +4,7 @@ using StrixMusic.Sdk.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shells.ZuneDesktop.Controls
+namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Shapes;
 
-namespace StrixMusic.Shells.ZuneDesktop.Controls
+namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
 {
     /// <summary>
     /// A Control to display bars dancing as if music were playing.

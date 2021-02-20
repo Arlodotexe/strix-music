@@ -5,7 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
-namespace StrixMusic.Shells.ZuneDesktop.Controls
+namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.NowPlayingView
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

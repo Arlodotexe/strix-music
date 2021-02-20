@@ -1,17 +1,17 @@
 ﻿using StrixMusic.Shells.ZuneDesktop.Settings;
 using Windows.UI.Xaml.Controls;
 
-namespace StrixMusic.Shells.ZuneDesktop.Controls.SettingsPages
+namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Settings
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// The content for the Background page of settings.
     /// </summary>
-    public sealed partial class SettingsBackgrounds : UserControl
+    public sealed partial class BackgroundSettings : UserControl
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SettingsBackgrounds"/> class.
+        /// Initializes a new instance of the <see cref="BackgroundSettings"/> class.
         /// </summary>
-        public SettingsBackgrounds()
+        public BackgroundSettings()
         {
             this.InitializeComponent();
         }

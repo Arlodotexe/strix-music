@@ -67,7 +67,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj" />
     <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
-    <ProjectReference Include="..\..\Libs\LaunchPad\LaunchPad.csproj" />
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
     <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.Default\StrixMusic.Shells.Default.csproj" />

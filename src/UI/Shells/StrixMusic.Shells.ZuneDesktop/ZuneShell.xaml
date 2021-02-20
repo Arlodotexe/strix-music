@@ -7,7 +7,8 @@
     mc:Ignorable="d"
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
-    xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
+    xmlns:quickplay="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay"
+    xmlns:collection="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections"
     xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:styles="using:StrixMusic.Shells.ZuneDesktop.Styles"
     xmlns:collectionstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
@@ -138,11 +139,11 @@
                 </Pivot.LeftHeader>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/QuickplayPVI" Header="quickplay"
                            a:TextHelpers.CharacterCasing="Lower">
-                    <local:QuickplayContent x:Name="QuickplayPage"/>
+                    <quickplay:QuickplayContent x:Name="QuickplayPage"/>
                 </PivotItem>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/CollectionPVI" Header="collection"
                            a:TextHelpers.CharacterCasing="Lower">
-                    <local:CollectionContent />
+                    <collection:CollectionContent />
                 </PivotItem>
                 <PivotItem x:Uid="ms-resource:///StrixMusic.Shells.ZuneDesktop/ZuneUI/BrowsePVI" Header="browse"
                            a:TextHelpers.CharacterCasing="Lower">
