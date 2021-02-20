@@ -30,7 +30,7 @@ namespace StrixMusic.Sdk.Uno.Assembly
             double minWidth = 0,
             double minHeight = 0)
         {
-            ShellSubType = shellClass;
+            ShellType = shellClass;
             DisplayName = displayName;
             DeviceFamily = deviceFamily;
             InputMethod = inputMethod;
@@ -41,7 +41,7 @@ namespace StrixMusic.Sdk.Uno.Assembly
         /// <summary>
         /// The ShellBase child Type of the shell in the assembly.
         /// </summary>
-        public Type ShellSubType { get; }
+        public Type ShellType { get; }
 
         /// <summary>
         /// The DisplayName of the shell in the assembly.

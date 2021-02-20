@@ -105,7 +105,7 @@ namespace StrixMusic.Shared
             await InitializeServices();
             await InitializeAssemblies();
             await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("10ebf138-6a4f-4421-8fcb-c15f91fe0495");
-            //await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("15ebf138-6a4f-4421-8fcb-c15f91fe0495");
+            await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("15ebf138-6a4f-4421-8fcb-c15f91fe0495");
             //await ManuallyRegisterCore<Core.MusicBrainz.MusicBrainzCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0495");
             await InitializeCoreRanking();
             await InitializeOutOfBoxSetupIfNeeded();
@@ -147,25 +147,27 @@ namespace StrixMusic.Shared
         {
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
-            const string shellAssemblyRegex = @"^(?:StrixMusic\.Shells\.)(\w{3,})[^.]";
+            const string shellAssemblyRegex = @"^(?:StrixMusic\.Shells\.)(\w{3,})(?!.)";
             var shellRegistryData = new List<ShellAssemblyInfo>();
 
             foreach (Assembly assembly in assemblies)
             {
-                // Check if the assembly name is shell.
-                var match = Regex.Match(assembly.FullName, shellAssemblyRegex);
+                // Find the shell attribute
+                var shellAttribute = assembly.GetCustomAttribute<ShellAttribute>();
 
+                if (shellAttribute is null)
+                    continue;
+
+                // Check if the namespace is for a shell.
+                var match = Regex.Match(shellAttribute.ShellType.Namespace, shellAssemblyRegex);
                 if (!match.Success)
                     continue;
 
                 // Gets the AssemblyName of the shell from the Regex.
                 string assemblyName = match.Groups[1].Value;
 
-                // Find the shell attribute
-                var shellAttribute = assembly.GetCustomAttribute<ShellAttribute>();
-
                 var attributeData = new ShellAttributeData(
-                    shellAttribute.ShellSubType.AssemblyQualifiedName,
+                    shellAttribute.ShellType.AssemblyQualifiedName,
                     shellAttribute.DisplayName,
                     shellAttribute.DeviceFamily,
                     shellAttribute.InputMethod,
@@ -191,7 +193,7 @@ namespace StrixMusic.Shared
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
             // TODO: IMPORTANT
-            // Need to rename all core namespaces to StrixMusic.Cores.Something, and change the below when done.
+            // Need to rename all core namespaces to StrixMusic.Cores.Something, and change the below when done. #723
 
             const string shellAssemblyRegex = @"^(?:StrixMusic\.Core\.)(\w{3,})[^.]";
             var coreRegistryData = new List<CoreAssemblyInfo>();
@@ -204,7 +206,7 @@ namespace StrixMusic.Shared
                 if (coreAttribute is null)
                     continue;
 
-                // Check if the namespace is for a shell.
+                // Check if the namespace is for a core.
                 var match = Regex.Match(coreAttribute.CoreType.Namespace, shellAssemblyRegex);
                 if (!match.Success)
                     continue;
