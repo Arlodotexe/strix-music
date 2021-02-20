@@ -20,7 +20,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         private readonly AlbumMetadata _albumMetadata;
         private readonly LocalFilesCoreImage? _image;
         private readonly IFileMetadataManager _fileMetadataManager;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreAlbum"/> class.
         /// </summary>
