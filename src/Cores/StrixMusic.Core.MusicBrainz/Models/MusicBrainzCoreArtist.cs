@@ -248,6 +248,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc />
+        public Task PlayAlbumCollectionAsync(ICoreAlbum album)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
@@ -259,6 +265,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
             {
                 yield return new MusicBrainzCoreAlbum(SourceCore, release);
             }
+        }
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ICoreTrack track)
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>

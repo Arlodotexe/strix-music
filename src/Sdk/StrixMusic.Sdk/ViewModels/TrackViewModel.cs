@@ -476,12 +476,6 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeIsExplicitAsync(bool isExplicit) => Model.ChangeIsExplicitAsync(isExplicit);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
         public Task PauseArtistCollectionAsync() => Model.PauseArtistCollectionAsync();
 
         /// <inheritdoc />
@@ -510,6 +504,18 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index) => Model.RemoveArtistItemAsync(index);
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(IArtist artist)
+        {
+            return Model.PlayArtistCollectionAsync(artist);
+        }
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)

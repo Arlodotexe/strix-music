@@ -260,6 +260,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ICoreTrack track)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
@@ -320,6 +326,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
 
             await Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(ICoreArtist artist)
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />

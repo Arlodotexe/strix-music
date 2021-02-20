@@ -6,8 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Core.MusicBrainz.Models;
-using StrixMusic.Core.MusicBrainz.Services;
-using StrixMusic.Core.MusicBrainz.Statics;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -24,7 +22,6 @@ namespace StrixMusic.Core.MusicBrainz
     public class MusicBrainzCore : ICore
     {
         private MusicBrainzClient? _musicBrainzClient;
-        private MusicBrainzArtistHelpersService? _artistHelperService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MusicBrainzCore"/> class.
@@ -109,8 +106,9 @@ namespace StrixMusic.Core.MusicBrainz
         }
 
         /// <inheritdoc/>
-        public async Task<ICoreMember?> GetContextById(string id)
+        public Task<ICoreMember?> GetContextById(string id)
         {
+            throw new NotImplementedException();
             /*if (_musicBrainzClient != null && _artistHelperService != null)
             {
                 // Check if the ID is an artist
@@ -153,8 +151,6 @@ namespace StrixMusic.Core.MusicBrainz
                     }
                 }
             }*/
-
-            throw new NotImplementedException();
         }
 
         private async Task<ICoreSearchResults> GetSearchResultsAsync(string query)
@@ -196,7 +192,7 @@ namespace StrixMusic.Core.MusicBrainz
             if (!_configured)
             {
                 await coreConfig.SetupConfigurationServices(services);
-                // _configured = true;
+                _configured = true;
 
                 ChangeCoreState(CoreState.Configuring);
                 return;
@@ -205,12 +201,10 @@ namespace StrixMusic.Core.MusicBrainz
             await coreConfig.ConfigureServices(services);
 
             _musicBrainzClient = this.GetService<MusicBrainzClient>();
-            _artistHelperService = this.GetService<MusicBrainzArtistHelpersService>();
 
             //var recordings = await _musicBrainzClient.Recordings.SearchAsync($"*", 1);
             //var releases = await _musicBrainzClient.Releases.SearchAsync("*", 1);
             //var artists = await _musicBrainzClient.Artists.SearchAsync("*", 1);
-
             Library = new MusicBrainzCoreLibrary(this)
             {
                 // Temporarily limited to reduce memory usage in merged collection map.

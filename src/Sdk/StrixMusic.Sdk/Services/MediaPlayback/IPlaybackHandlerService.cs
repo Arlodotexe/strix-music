@@ -52,7 +52,32 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <param name="context">The playback context.</param>
         /// <param name="trackCollection">The tracks to use in the queue.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAsync(ITrack track, IPlayableBase context, ITrackCollectionViewModel trackCollection);
+        Task PlayAsync(ITrack track, ITrackCollectionViewModel trackCollection, IPlayableBase context);
+
+        /// <summary>
+        /// Loads the given track collection into the play queue and plays the first track.
+        /// </summary>
+        /// <param name="context">The playback context.</param>
+        /// <param name="trackCollection">The tracks to use in the queue.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayAsync(ITrackCollectionViewModel trackCollection, IPlayableBase context);
+
+        /// <summary>
+        /// Loads the given track collection into the play queue and plays the given track.
+        /// </summary>
+        /// <param name="track">The track to play.</param>
+        /// <param name="context">The playback context.</param>
+        /// <param name="albumCollection">The albums to use in the queue.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayAsync(IAlbum track, IAlbumCollectionViewModel albumCollection, IPlayableBase context);
+
+        /// <summary>
+        /// Loads the given track collection into the play queue and plays the first track.
+        /// </summary>
+        /// <param name="context">The playback context.</param>
+        /// <param name="albumCollection">The albums to use in the queue.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayAsync(IAlbumCollectionViewModel albumCollection, IPlayableBase context);
 
         /// <summary>
         /// Plays a specific media from <see cref="NextItems"/>.

@@ -9,6 +9,18 @@ namespace StrixMusic.Sdk.Data.Base
     public interface IPlayableCollectionGroupChildrenBase : IPlayableCollectionBase
     {
         /// <summary>
+        /// Attempts to play the playable collection. Resumes if paused.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayPlayableCollectionGroupAsync();
+
+        /// <summary>
+        /// Attempts to play the playable collection. Resumes if paused.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PausePlayableCollectionGroupAsync();
+
+        /// <summary>
         /// The total number of available Children.
         /// </summary>
         int TotalChildrenCount { get; }

@@ -149,6 +149,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public abstract int TotalPlaylistItemsCount { get; internal set; }
 
         /// <inheritdoc />
+        public Task PlayPlayableCollectionGroupAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task PausePlayableCollectionGroupAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public abstract int TotalChildrenCount { get; internal set; }
 
         /// <inheritdoc />
@@ -326,16 +338,46 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
+        public Task PlayAlbumCollectionAsync(ICoreAlbum album)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public abstract IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset);
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(ICoreArtist artist)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public abstract IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset);
 
         /// <inheritdoc />
+        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public abstract IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
+        public Task PlayPlaylistCollectionAsync(ICorePlaylist playlist)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public abstract IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset);
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ICoreTrack track)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public abstract IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0);
