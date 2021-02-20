@@ -1,9 +1,7 @@
-﻿using StrixMusic.Core.LocalFiles.Models;
-using StrixMusic.Sdk.Data.Core;
+﻿using StrixMusic.Sdk.Data.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {

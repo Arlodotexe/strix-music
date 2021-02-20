@@ -8,7 +8,7 @@ namespace StrixMusic.Core.LocalFiles
     /// <summary>
     /// Manages multiple instances of <see cref="LocalFilesCore"/>.
     /// </summary>
-    public static class LocalFileCoreManager
+    public static class LocalFilesCoreManager
     {
         /// <summary>
         /// Holds the instances of all constructed file cores.

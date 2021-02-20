@@ -37,10 +37,10 @@ namespace StrixMusic.Core.LocalFiles
             Devices = new SynchronizedObservableCollection<ICoreDevice>();
             RecentlyPlayed = new LocalFilesCoreRecentlyPlayed(this);
             Discoverables = new LocalFilesCoreDiscoverables(this);
-            CoreConfig = new LocalFileCoreConfig(this);
+            CoreConfig = new LocalFilesCoreConfig(this);
             _coreLibrary = new LocalFilesCoreLibrary(this);
 
-            LocalFileCoreManager.Instances?.Add(this);
+            LocalFilesCoreManager.Instances?.Add(this);
         }
 
         /// <inheritdoc/>
@@ -108,7 +108,7 @@ namespace StrixMusic.Core.LocalFiles
 
             ChangeCoreState(CoreState.Loading);
 
-            if (!(CoreConfig is LocalFileCoreConfig coreConfig))
+            if (!(CoreConfig is LocalFilesCoreConfig coreConfig))
                 return;
 
             await coreConfig.SetupConfigurationServices(services);
@@ -131,8 +131,8 @@ namespace StrixMusic.Core.LocalFiles
 
             _coreCount++;
 
-            if (_coreCount == LocalFileCoreManager.Instances?.Count)
-                LocalFileCoreManager.InitializeDataForAllCores().FireAndForget();
+            if (_coreCount == LocalFilesCoreManager.Instances?.Count)
+                LocalFilesCoreManager.InitializeDataForAllCores().FireAndForget();
         }
 
         private async Task PickAndSetupFolder()

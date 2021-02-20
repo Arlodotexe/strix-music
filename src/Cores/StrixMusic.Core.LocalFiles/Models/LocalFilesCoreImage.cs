@@ -1,5 +1,6 @@
-﻿using StrixMusic.Sdk.Data.Core;
-using System;
+﻿using System;
+using StrixMusic.Sdk.Data.Core;
+
 
 namespace StrixMusic.Core.LocalFiles.Models
 {

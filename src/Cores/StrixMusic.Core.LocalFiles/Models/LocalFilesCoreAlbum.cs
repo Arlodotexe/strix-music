@@ -1,11 +1,12 @@
-﻿using OwlCore.Collections;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
@@ -19,7 +20,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         private readonly AlbumMetadata _albumMetadata;
         private readonly LocalFilesCoreImage? _image;
         private readonly IFileMetadataManager _fileMetadataManager;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreAlbum"/> class.
         /// </summary>
@@ -278,7 +279,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             var tracks = await tracksList.GetTracksByAlbumId(Id, offset, limit);
 
-            foreach (var track in tracks)
+            foreach (var track in tracks.OrderBy(c => c.TrackNumber))
             {
                 yield return new LocalFilesCoreTrack(SourceCore, track);
             }

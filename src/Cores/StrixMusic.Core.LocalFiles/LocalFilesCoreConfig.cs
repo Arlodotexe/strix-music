@@ -17,7 +17,7 @@ using StrixMusic.Sdk.Services.Settings;
 namespace StrixMusic.Core.LocalFiles
 {
     ///  <inheritdoc/>
-    public class LocalFileCoreConfig : ICoreConfig
+    public class LocalFilesCoreConfig : ICoreConfig
     {
         private IFileSystemService? _fileSystemService;
         private ISettingsService? _settingsService;
@@ -25,9 +25,9 @@ namespace StrixMusic.Core.LocalFiles
         private FileMetadataManager? _fileMetadataManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFileCoreConfig"/> class.
+        /// Initializes a new instance of the <see cref="LocalFilesCoreConfig"/> class.
         /// </summary>
-        public LocalFileCoreConfig(ICore sourceCore)
+        public LocalFilesCoreConfig(ICore sourceCore)
         {
             SourceCore = sourceCore;
             AbstractUIElements = new List<AbstractUIElementGroup>();
