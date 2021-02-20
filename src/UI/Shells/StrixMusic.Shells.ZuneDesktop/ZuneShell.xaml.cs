@@ -9,6 +9,7 @@ using StrixMusic.Sdk.Uno.Controls.Views;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Shells.ZuneDesktop.Settings;
+using StrixMusic.Shells.ZuneDesktop.Settings.Models;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;

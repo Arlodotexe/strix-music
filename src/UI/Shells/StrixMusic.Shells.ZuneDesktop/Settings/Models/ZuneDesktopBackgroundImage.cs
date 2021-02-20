@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml.Media;
 
-namespace StrixMusic.Shells.ZuneDesktop.Settings
+namespace StrixMusic.Shells.ZuneDesktop.Settings.Models
 {
     /// <summary>
     /// Represents a Background image
