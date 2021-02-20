@@ -13,6 +13,7 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {
@@ -80,7 +81,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             {
                 case RepeatState.All when NextItems.Count == 0:
                     // Move all items from previous back into Next
-                    _nextItems.AddRange(PreviousItems);
+                    _nextItems.AddRange(_prevItems);
                     _prevItems.Clear();
 
                     await PlayFromNext(0);
@@ -173,7 +174,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public Task ChangeVolumeAsync(double volume) => _currentPlayerService?.ResumeAsync() ?? Task.CompletedTask;
 
         /// <inheritdoc />
-        public async Task PlayAsync(ITrack track, IPlayableBase context, IReadOnlyList<ITrack> completeTrackQueue)
+        public async Task PlayAsync(ITrack track, IPlayableBase context, ITrackCollectionViewModel trackCollection)
         {
             var mainViewModel = MainViewModel.Singleton;
 
@@ -200,7 +201,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             Guard.IsNotNull(activeDevice, nameof(activeDevice));
 
-            // Don't continue if playing this track isn't supported by the core.
+            // Don't continue if playback isn't supported by the core.
             if (activeDevice.SourceCore?.CoreConfig.PlaybackType == MediaPlayerType.None)
                 return;
 
@@ -212,12 +213,14 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 return;
             }
 
+            await trackCollection.InitAsync();
+
             // Setup for local playback
             var trackPlaybackIndex = 0;
 
-            for (var i = 0; i < completeTrackQueue.Count; i++)
+            for (var i = 0; i < trackCollection.Tracks.Count; i++)
             {
-                var item = completeTrackQueue[i];
+                var item = trackCollection.Tracks[i];
                 var coreTrack = item.GetSources<ICoreTrack>().First(x => x.Id == item.Id);
 
                 var mediaSource = await core.GetMediaSource(coreTrack);

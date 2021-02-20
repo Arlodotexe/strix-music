@@ -16,6 +16,7 @@ using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.MediaPlayback;
+using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -369,7 +370,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PlayTrack(ITrack track)
         {
-            return _playbackHandler.PlayAsync(track, _playlist, Tracks);
+            return _playbackHandler.PlayAsync(track, _playlist, this);
         }
 
         /// <inheritdoc />
@@ -473,5 +474,19 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICorePlaylist other) => _playlist.Equals(other);
+
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            if (IsInitialized)
+                return;
+
+            IsInitialized = true;
+
+            await CollectionInit.TrackCollection(this);
+        }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
     }
 }

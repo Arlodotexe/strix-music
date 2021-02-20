@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 
@@ -9,7 +10,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// An interfaced ViewModel for <see cref="ITrackCollection" />. This is needed so because multiple view models implement <see cref="ITrackCollection"/>, and the UI needs to create controls that handle only the ViewModels properties for an <see cref="ITrackCollection"/>.
     /// </summary>
-    public interface ITrackCollectionViewModel : ITrackCollection
+    public interface ITrackCollectionViewModel : ITrackCollection, IAsyncInit
     {
         /// <summary>
         /// The tracks in this collection.
