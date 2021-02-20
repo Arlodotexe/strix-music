@@ -6,6 +6,7 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Services.Localization;
+using StrixMusic.Shells.ZuneDesktop.Settings.Models;
 
 namespace StrixMusic.Shells.ZuneDesktop.Settings
 {

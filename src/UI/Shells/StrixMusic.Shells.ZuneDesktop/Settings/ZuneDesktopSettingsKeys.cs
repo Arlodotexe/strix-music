@@ -1,4 +1,6 @@
-﻿namespace StrixMusic.Shells.ZuneDesktop.Settings
+﻿using StrixMusic.Shells.ZuneDesktop.Settings.Models;
+
+namespace StrixMusic.Shells.ZuneDesktop.Settings
 {
     /// <summary>
     /// A <see langword="class"/> containing keys for all settings throughout the zune shell.
