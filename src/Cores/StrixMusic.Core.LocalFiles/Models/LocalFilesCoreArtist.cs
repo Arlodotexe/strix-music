@@ -36,6 +36,29 @@ namespace StrixMusic.Core.LocalFiles.Models
             TotalTracksCount = totalTracksCount;
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
             Genres = new SynchronizedObservableCollection<string>(artistMetadata.Genres);
+
+            _fileMetadataManager.FileMetadataUpdated += FileMetadataManager_FileMetadataUpdated;
+        }
+
+        private void FileMetadataManager_FileMetadataUpdated(object sender, FileMetadata e)
+        {
+            if (e.ArtistMetadata != null)
+            {
+                if(e.ArtistMetadata.Id != Id)
+                    return;
+
+                if (e.TrackMetadata == null) return;
+                TotalTracksCount++;
+
+                var fileCoreTrack = new LocalFilesCoreTrack(SourceCore, e.TrackMetadata);
+
+                var addedItems = new List<CollectionChangedItem<ICoreTrack>>
+                {
+                    new CollectionChangedItem<ICoreTrack>(fileCoreTrack, TotalTracksCount - 1),
+                };
+
+                TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreTrack>>());
+            }
         }
 
         /// <inheritdoc/>
