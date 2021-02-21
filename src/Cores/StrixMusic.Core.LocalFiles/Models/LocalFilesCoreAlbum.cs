@@ -36,7 +36,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             _albumMetadata = albumMetadata;
             _image = image;
             TotalImageCount = image == null ? 0 : 1;
-            TotalArtistItemsCount = _albumMetadata.TotalTracksCount ?? 0;
+            TotalArtistItemsCount = _albumMetadata.TotalArtistsCount ?? 0;
             TotalTracksCount = totalTracksCount;
             Genres = new SynchronizedObservableCollection<string>(albumMetadata.Genres);
         }
@@ -141,7 +141,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICorePlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
+        public SynchronizedObservableCollection<string>? Genres { get; }
 
         /// <inheritdoc/>
         public bool IsPlayTrackCollectionAsyncAvailable => false;
@@ -273,6 +273,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public void ChangeTotalTrackCount(int newTrackCount)
         {
             TotalTracksCount = newTrackCount;
+            TrackItemsCountChanged?.Invoke(this, newTrackCount);
         }
 
         /// <summary>
@@ -282,6 +283,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public void ChangeTotalArtistCount(int newArtistCount)
         {
             TotalArtistItemsCount = newArtistCount;
+            ArtistItemsCountChanged?.Invoke(this, newArtistCount);
         }
 
         /// <inheritdoc/>

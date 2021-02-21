@@ -254,11 +254,14 @@ namespace StrixMusic.Core.LocalFiles.Models
                       false))
                     return;
 
-                LocalFilesCoreArtist filesCoreArtist;
+                LocalFilesCoreArtist? filesCoreArtist;
 
                 if (e.ArtistMetadata.ImagePath != null)
                     filesCoreArtist = new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, e.ArtistMetadata.TrackIds?.Count ?? 0, new LocalFilesCoreImage(SourceCore, e.ArtistMetadata.ImagePath));
-                else filesCoreArtist = new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, e.ArtistMetadata.TrackIds?.Count ?? 0, null);
+                else
+                    filesCoreArtist = new LocalFilesCoreArtist(SourceCore, e.ArtistMetadata, e.ArtistMetadata.TrackIds?.Count ?? 0, null);
+
+                Guard.IsNotNull(filesCoreArtist, nameof(filesCoreArtist));
 
                 var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>
                 {
@@ -267,6 +270,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
                 if (_artistMetadatas == null)
                     return;
+
                 _artistMetadatas?.Add(e.ArtistMetadata);
                 _metadataCoreArtistDictionary.Add(e.ArtistMetadata, filesCoreArtist);
                 ArtistItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreArtistCollectionItem>>());
@@ -295,6 +299,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 {
                     new CollectionChangedItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
                 };
+
                 _albumMetadatas.Add(e.AlbumMetadata);
                 _metadataCoreAlbumDictionary.Add(e.AlbumMetadata, fileCoreAlbum);
 

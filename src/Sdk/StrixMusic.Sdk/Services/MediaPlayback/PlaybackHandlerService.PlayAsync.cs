@@ -36,8 +36,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (!playerEntry)
                 return;
 
-            await AddTrackCollectionToQueue(track, trackCollection);
+            ClearPrevious();
+            ClearNext();
 
+            await AddTrackCollectionToQueue(track, trackCollection);
             await PlayFromNext(0);
         }
 
@@ -70,13 +72,15 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 return;
             }
 
-            await AddAlbumCollectionToQueue(albumCollectionItem, albumCollection);
+            ClearPrevious();
+            ClearNext();
 
+            await AddAlbumCollectionToQueue(albumCollectionItem, albumCollection);
             await PlayFromNext(0);
         }
 
         /// <summary>
-        /// Common tasks done by all "Play" methods.
+        /// Common tasks done by all "Play" methods when playback is requested.
         /// </summary>
         /// <returns>True if playback should continue locally, false if playback should continue remotely.</returns>
         private async Task<bool> PlayCollectionEntry()
@@ -182,11 +186,14 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     if (albumItem.Id == albumCollectionItem?.Id)
                     {
                         // Tracks are added to the queue of previous items until we reach the item the user wants to play.
-                        itemIndex = _prevItems.Count + 1;
+                        itemIndex = _prevItems.Count;
                         foundItemTarget = true;
                     }
 
                     await albumVm.InitAsync();
+                    if (albumVm.TotalTracksCount < 1)
+                        continue;
+
                     _ = await AddTrackCollectionToQueue(albumVm.Tracks.First(), albumVm, foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
                 }
 
