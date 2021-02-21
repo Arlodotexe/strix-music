@@ -12,6 +12,12 @@ namespace StrixMusic.Sdk.Data
     public interface IPlayableCollectionGroupChildren : IPlayableCollectionGroupChildrenBase, ISdkMember, IMerged<ICorePlayableCollectionGroupChildren>
     {
         /// <summary>
+        /// Attempts to play a specific item in the playable collection group. Restarts playback if already playing.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayPlayableCollectionGroupAsync(IPlayableCollectionGroup collectionGroup);
+
+        /// <summary>
         /// Gets a requested number of <see cref="IPlayableCollectionGroupBase"/>s starting at the given offset in the backend.
         /// </summary>
         /// <param name="limit">The max number of items to return.</param>

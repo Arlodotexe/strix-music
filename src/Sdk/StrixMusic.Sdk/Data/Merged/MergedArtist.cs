@@ -8,6 +8,7 @@ using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -30,7 +31,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="sources">The sources used</param>
         public MergedArtist(IEnumerable<ICoreArtist> sources)
         {
-            _sources = sources?.ToList() ?? throw new ArgumentNullException();
+            _sources = sources.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             // TODO: Get the actual preferred source.
@@ -348,6 +349,36 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public Task PauseAlbumCollectionAsync() => _preferredSource.PauseAlbumCollectionAsync();
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ITrack track)
+        {
+            var targetCore = _preferredSource.SourceCore;
+            var source = track.GetSources<ICoreTrack>()
+                .FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            Guard.IsNotNull(source, nameof(source));
+
+            return _preferredSource.PlayTrackCollectionAsync(source);
+        }
+
+        /// <inheritdoc />
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem)
+        {
+            var targetCore = _preferredSource.SourceCore;
+
+            ICoreAlbumCollectionItem? source = null;
+
+            if (albumItem is IAlbum album)
+                source = album.GetSources<ICoreAlbum>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            if (albumItem is IAlbumCollection collection)
+                source = collection.GetSources<ICoreAlbumCollection>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            Guard.IsNotNull(source, nameof(source));
+
+            return _preferredSource.PlayAlbumCollectionAsync(source);
+        }
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => _preferredSource.ChangeNameAsync(name);

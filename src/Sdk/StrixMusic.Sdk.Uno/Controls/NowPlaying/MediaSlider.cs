@@ -1,12 +1,12 @@
 ﻿using System;
 using Windows.UI.Xaml;
 
-namespace StrixMusic.Sdk.Uno.Controls
+namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
 {
     /// <summary>
     /// A slider that can automatically update the tick position.
     /// </summary>
-    public partial class ProgressSlider : SliderEx
+    public partial class MediaSlider : SliderEx
     {
         /// <summary>
         /// <see cref="DependencyProperty"/> for the <see cref="UpdateFrequency"/> property.
@@ -15,7 +15,7 @@ namespace StrixMusic.Sdk.Uno.Controls
             DependencyProperty.Register(
                 nameof(UpdateFrequency),
                 typeof(long),
-                typeof(ProgressSlider),
+                typeof(MediaSlider),
                 new PropertyMetadata(50L)); // 100 milliseconds
 
         /// <summary>
@@ -25,18 +25,20 @@ namespace StrixMusic.Sdk.Uno.Controls
             DependencyProperty.Register(
                 nameof(IsAdvancing),
                 typeof(bool),
-                typeof(ProgressSlider),
+                typeof(MediaSlider),
                 new PropertyMetadata(true));
 
         private DispatcherTimer _updateIntervalTimer = new DispatcherTimer();
         private DateTime _startTime = DateTime.Now;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProgressSlider"/> class.
+        /// Initializes a new instance of the <see cref="MediaSlider"/> class.
         /// </summary>
-        public ProgressSlider()
+        public MediaSlider()
             : base()
         {
+            this.DefaultStyleKey = typeof(MediaSlider);
+
             Loaded += OnLoaded;
         }
 

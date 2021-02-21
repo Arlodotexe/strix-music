@@ -7,6 +7,7 @@ using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -222,6 +223,24 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc/>
         public Task PlayArtistCollectionAsync() => _preferredSource.PlayArtistCollectionAsync();
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem)
+        {
+            var targetCore = _preferredSource.SourceCore;
+
+            ICoreArtistCollectionItem? source = null;
+
+            if (artistItem is IArtist artist)
+                source = artist.GetSources<ICoreArtist>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            if (artistItem is IArtistCollection collection)
+                source = collection.GetSources<ICoreArtistCollection>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            Guard.IsNotNull(source, nameof(source));
+
+            return _preferredSource.PlayArtistCollectionAsync(source);
+        }
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name)

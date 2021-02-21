@@ -50,7 +50,8 @@ namespace StrixMusic.Sdk.ViewModels
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
 
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrack);
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackCollectionAsync);
+            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbum>(album => PlayAlbumCollectionAsync(album));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -802,6 +803,48 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem)
+        {
+            return _collectionGroup.PlayPlaylistCollectionAsync(playlistItem);
+        }
+
+        /// <inheritdoc />
+        public Task PlayPlayableCollectionGroupAsync()
+        {
+            return _collectionGroup.PlayPlayableCollectionGroupAsync();
+        }
+
+        /// <inheritdoc />
+        public Task PlayPlayableCollectionGroupAsync(IPlayableCollectionGroup collectionGroup)
+        {
+            return _collectionGroup.PlayPlayableCollectionGroupAsync(collectionGroup);
+        }
+
+        /// <inheritdoc />
+        public Task PausePlayableCollectionGroupAsync()
+        {
+            return _collectionGroup.PausePlayableCollectionGroupAsync();
+        }
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ITrack track)
+        {
+            return _playbackHandler.PlayAsync(track, this, _collectionGroup);
+        }
+
+        /// <inheritdoc />
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem)
+        {
+            return _playbackHandler.PlayAsync(albumItem, this, _collectionGroup);
+        }
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem)
+        {
+            return _collectionGroup.PlayArtistCollectionAsync(artistItem);
+        }
+
+        /// <inheritdoc />
         public Task PlayPlaylistCollectionAsync()
         {
             return _collectionGroup.PlayPlaylistCollectionAsync();
@@ -850,16 +893,6 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <summary>
-        /// Plays a single track from this collection.
-        /// </summary>
-        /// <param name="track"></param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task PlayTrack(ITrack track)
-        {
-            return _playbackHandler.PlayAsync(track, _collectionGroup, this);
-        }
-
-        /// <summary>
         /// Attempts to change the name of the album, if supported.
         /// </summary>
         public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
@@ -900,6 +933,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand PlayAlbumCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<IAlbum> PlayAlbumAsyncCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }

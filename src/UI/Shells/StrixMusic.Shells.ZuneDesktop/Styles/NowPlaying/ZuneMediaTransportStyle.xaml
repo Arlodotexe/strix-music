@@ -1,0 +1,76 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:shellcontrols="using:StrixMusic.Shells.ZuneDesktop.Controls.Shells"
+    xmlns:zunenowplaying="using:StrixMusic.Shells.ZuneDesktop.Controls.NowPlaying"
+    xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
+    xmlns:sdk="using:StrixMusic.Sdk"
+    xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying.ZuneMediaTransportStyle">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate x:Key="ZuneMediaTransparentDataTemplate" x:DataType="sdk:MainViewModel">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <owlcoreuno:ToggleContentButton x:Name="RepeatButton" Style="{StaticResource ZuneSmallToggleContentButton}" VerticalAlignment="Center" IsThreeState="True" FontSize="20">
+                    <FontIcon Glyph="&#xE1CD;"/>
+                    <owlcoreuno:ToggleContentButton.CheckedContent>
+                        <FontIcon Glyph="&#xE1CD;"/>
+                    </owlcoreuno:ToggleContentButton.CheckedContent>
+                    <owlcoreuno:ToggleContentButton.IndeterminateContent>
+                        <FontIcon Glyph="&#xE1CC;"/>
+                    </owlcoreuno:ToggleContentButton.IndeterminateContent>
+                </owlcoreuno:ToggleContentButton>
+                <ToggleButton x:Name="ShuffleButton" Style="{StaticResource ZuneSmallToggleButton}" Margin="-8,0,8,0" VerticalAlignment="Center" FontSize="20">
+                    <FontIcon Glyph="&#xE8B1;"/>
+                </ToggleButton>
+
+                <!--Skip and Prev buttons shouldn't flip with Bi-directional languages-->
+                <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
+                    <Button x:Name="PreviousButton" Style="{StaticResource ZuneButton}" Width="32">
+                        <PathIcon Data="M 0 4.2357127 6.3582224 8.4666673 V 0.0047581 Z M 6.3417776 4.2309543 12.7 8.4619093 V 0 Z" Margin="-2,0,0,0"/>
+                        <!--<FontIcon Glyph="&#xE100;" FontSize="12"/>-->
+                    </Button>
+                    <owlcoreuno:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42">
+                        <owlcoreuno:ToggleContentButton.CheckedContent>
+                            <FontIcon Glyph="&#xE103;" FontSize="20"/>
+                        </owlcoreuno:ToggleContentButton.CheckedContent>
+                        <PathIcon Data="M 11.1125 6.4158049 2.3841858e-7 12.83161 l 0 -12.831609975863432 z"/>
+                        <!--<FontIcon Glyph="&#xE102;" FontSize="20"/>-->
+                    </owlcoreuno:ToggleContentButton>
+                    <Button x:Name="SkipButton" Style="{StaticResource ZuneButton}" Width="32">
+                        <PathIcon Data="M 12.7 4.2357127 6.3417776 8.4666673 V 0.0047581 Z M 6.3582224 4.2309543 0 8.4619093 V 0 Z" Margin="2,0,0,0"/>
+                        <!--<FontIcon Glyph="&#xE101;" FontSize="12"/>-->
+                    </Button>
+                </StackPanel>
+
+                <Button Style="{StaticResource ZuneSmallButton}" VerticalAlignment="Center" Margin="12,0" Click="NavigateToNowPlaying">
+                    <!--<FontIcon Glyph="&#xF61F;" FontSize="20" FontWeight="Bold" Foreground="#DB0D94"/>-->
+                    <shellcontrols:NowPlayingButtonContent Foreground="#DB0D94" Height="12" Width="20"/>
+                </Button>
+            </StackPanel>
+            <TextBlock Text="VOLUME 50" Grid.Row="1" FontSize="10" FontWeight="Bold" Opacity=".5" HorizontalAlignment="Center" Margin="36,4,0,-8"/>
+        </Grid>
+    </DataTemplate>
+
+    <Style x:Key="ZuneMediaTransportStyle" TargetType="zunenowplaying:ZuneMediaTransports">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="zunenowplaying:ZuneMediaTransports">
+                    <ContentControl ContentTemplate="{StaticResource ZuneMediaTransparentDataTemplate}"
+                                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="zunenowplaying:ZuneMediaTransports" BasedOn="{StaticResource ZuneMediaTransportStyle}"/>
+</ResourceDictionary>

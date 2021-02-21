@@ -225,6 +225,12 @@ namespace StrixMusic.Sdk.Data
         }
 
         /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ICoreTrack track)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
         public IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
             throw new NotSupportedException();

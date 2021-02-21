@@ -233,25 +233,37 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task PauseArtistCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PlayArtistCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PauseTrackCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PlayTrackCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ICoreTrack track)
+        {
+            throw new NotSupportedException();
         }
 
         /// <summary>

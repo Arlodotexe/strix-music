@@ -326,6 +326,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {

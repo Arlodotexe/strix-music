@@ -253,6 +253,12 @@ namespace StrixMusic.Sdk.Data
         }
 
         /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ITrack track)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset)
         {
             return Task.FromResult<IReadOnlyList<ITrack>>(Tracks.Skip(offset).Take(limit).ToList());

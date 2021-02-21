@@ -10,6 +10,12 @@ namespace StrixMusic.Sdk.Data.Core
     public interface ICoreAlbumCollection : ICorePlayableCollection, IAlbumCollectionBase, ICoreAlbumCollectionItem, ICoreImageCollection, ICoreMember
     {
         /// <summary>
+        /// Attempts to play a specific item in the album collection. Restarts playback if already playing.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem);
+
+        /// <summary>
         /// Gets a requested number of <see cref="IAlbumCollectionItemBase"/>s starting at the given offset in the backend.
         /// </summary>
         /// <param name="limit">The max number of items to return.</param>

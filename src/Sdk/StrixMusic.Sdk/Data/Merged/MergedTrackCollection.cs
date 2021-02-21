@@ -7,6 +7,7 @@ using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -28,7 +29,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="collections">The collections to merge in.</param>
         public MergedTrackCollection(IEnumerable<ICoreTrackCollection> collections)
         {
-            _sources = collections?.ToList() ?? ThrowHelper.ThrowArgumentNullException<List<ICoreTrackCollection>>(nameof(collections));
+            _sources = collections.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _preferredSource = _sources[0];
@@ -214,6 +215,17 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public Task PauseTrackCollectionAsync() => _preferredSource.PauseTrackCollectionAsync();
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ITrack track)
+        {
+            var targetCore = _preferredSource.SourceCore;
+            var source = track.GetSources<ICoreTrack>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            Guard.IsNotNull(source, nameof(source));
+
+            return _preferredSource.PlayTrackCollectionAsync(source);
+        }
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => _preferredSource.ChangeNameAsync(name);

@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IPlaylist _playlist;
         private readonly IUserProfile? _owner;
-        private IPlaybackHandlerService _playbackHandler;
+        private readonly IPlaybackHandlerService _playbackHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.
@@ -370,7 +370,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PlayTrack(ITrack track)
         {
-            return _playbackHandler.PlayAsync(track, _playlist, this);
+            return _playbackHandler.PlayAsync(track, this, _playlist);
         }
 
         /// <inheritdoc />
@@ -381,6 +381,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task ChangeDurationAsync(TimeSpan duration) => _playlist.ChangeDurationAsync(duration);
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ITrack track)
+        {
+            return _playlist.PlayTrackCollectionAsync(track);
+        }
 
         /// <inheritdoc />
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset = 0) => _playlist.GetTracksAsync(limit, offset);

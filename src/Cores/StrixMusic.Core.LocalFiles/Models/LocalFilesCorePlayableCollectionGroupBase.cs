@@ -185,9 +185,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncAvailable => true;
 
-        /// <summary>
-        /// Determines if collection base is initialized or not.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual bool IsInitialized { get; protected set; }
 
         /// <inheritdoc/>
@@ -283,49 +281,91 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task PauseAlbumCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task PlayAlbumCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task PauseArtistCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task PlayArtistCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task PausePlaylistCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task PlayPlaylistCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task PauseTrackCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync()
         {
-            return Task.CompletedTask;
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task PlayPlayableCollectionGroupAsync()
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task PausePlayableCollectionGroupAsync()
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ICoreTrack track)
+        {
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />

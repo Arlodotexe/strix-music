@@ -6,16 +6,14 @@
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
-    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.AlbumCollectionStyle">
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.AlbumCollectionStyle"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core">
 
     <ResourceDictionary.MergedDictionaries>
         <itemstyles:AlbumItemStyle/>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneDesktopAlbumGridViewItemStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-
-    <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle">
-        <items:AlbumItem />
-    </DataTemplate>
 
     <DataTemplate x:Key="ZuneDesktopAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
         <Grid>
@@ -34,9 +32,21 @@
                 <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}"/>
             </StackPanel>
 
-            <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource ZuneDesktopAlbumCollectionItemStyle}"
+            <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}"
                   ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}" Grid.Row="1"
                   Padding="16" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
+                <GridView.ItemTemplate>
+
+                    <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle">
+                        <items:AlbumItem>
+                            <interactivity:Interaction.Behaviors>
+                                <core:EventTriggerBehavior EventName="DoubleTapped">
+                                    <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                                </core:EventTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+                        </items:AlbumItem>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
             </GridView>
         </Grid>
     </DataTemplate>

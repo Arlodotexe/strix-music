@@ -14,6 +14,12 @@ namespace StrixMusic.Sdk.Data
     public interface IArtistCollection : IArtistCollectionBase, IArtistCollectionItem, IImageCollection, ISdkMember, IMerged<ICoreArtistCollection>
     {
         /// <summary>
+        /// Attempts to play a specific item in the artist collection. Restarts playback if already playing.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem);
+
+        /// <summary>
         /// Gets a requested number of <see cref="IArtist"/>s starting at the given offset in the backend.
         /// </summary>
         /// <param name="limit">The max number of items to return.</param>

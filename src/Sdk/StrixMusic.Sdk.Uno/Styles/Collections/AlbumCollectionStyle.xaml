@@ -4,12 +4,26 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    x:Class="StrixMusic.Sdk.Uno.Styles.Collections.AlbumCollectionStyle">
+    xmlns:data="using:StrixMusic.Sdk.Data"
+    x:Class="StrixMusic.Sdk.Uno.Styles.Collections.AlbumCollectionStyle"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core">
 
     <DataTemplate x:Key="DefaultAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
-        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}" ItemTemplate="{StaticResource DefaultAlbumCollectionItemStyle}"
+        <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}"
                   Padding="16" HorizontalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True"
                   ItemClick="OpenAlbum">
+            <GridView.ItemTemplate>
+                <DataTemplate x:Key="DefaultAlbumCollectionItemStyle">
+                    <items:AlbumItem>
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="DoubleTapped">
+                                <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+                    </items:AlbumItem>
+                </DataTemplate>
+            </GridView.ItemTemplate>
             <GridView.Header>
                 <Grid>
                     <ProgressRing IsActive="{x:Bind PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}"/>
@@ -17,10 +31,6 @@
                 </Grid>
             </GridView.Header>
         </GridView>
-    </DataTemplate>
-
-    <DataTemplate x:Key="DefaultAlbumCollectionItemStyle">
-        <items:AlbumItem />
     </DataTemplate>
 
     <Style x:Key="DefaultAlbumCollectionStyle" TargetType="collections:AlbumCollection">

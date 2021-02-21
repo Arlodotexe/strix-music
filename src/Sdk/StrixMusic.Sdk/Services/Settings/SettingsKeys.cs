@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
+using StrixMusic.Sdk.Services.Settings.Containers;
 
 namespace StrixMusic.Sdk.Services.Settings
 {
@@ -36,5 +37,8 @@ namespace StrixMusic.Sdk.Services.Settings
         /// The user's preference for how items in a collection from multiple sources are sorted. 
         /// </summary>
         public static readonly MergedCollectionSorting MergedCollectionSorting = MergedCollectionSorting.Ranked;
+
+        /// <inheritdoc cref="SiblingCollectionPlaybackPreferences"/>
+        public static readonly SiblingCollectionPlaybackPreferences PlayCollectionBehavior = new SiblingCollectionPlaybackPreferences();
     }
 }

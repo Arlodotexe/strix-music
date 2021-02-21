@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:StrixMusic.Shells.Strix.Controls"
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls">
 
@@ -69,8 +70,8 @@
                                     <Rectangle Fill="#FF00FF" Width="80" Height="80" Margin="8"/>
                                 </Grid>
 
-                                <strix:ProgressSlider x:Name="slider" VerticalAlignment="Center" Grid.Column="1" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"
-                                                                FlowDirection="LeftToRight"/>
+                                <nowplaying:ProgressSlider x:Name="slider" VerticalAlignment="Center" Grid.Column="1" Minimum="0" Maximum="280000" Style="{StaticResource MediaSlider}"
+                                                           FlowDirection="LeftToRight"/>
 
                                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                                     <!--Skip and Prev buttons shouldn't flip with Bi-directional languages-->

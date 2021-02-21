@@ -67,12 +67,15 @@
 		<None Remove="Resources.xaml" />
 		<None Remove="Resources\Brushes.xaml" />
 		<None Remove="Resources\ButtonStyles.xaml" />
+		<None Remove="Resources\ZuneSlider.xaml" />
 		<None Remove="Styles\AlbumCollectionStyle.xaml" />
 		<None Remove="Styles\AlbumItemStyle.xaml" />
 		<None Remove="Styles\ArtistCollectionStyle.xaml" />
 		<None Remove="Styles\ArtistItemStyle.xaml" />
 		<None Remove="Styles\NowPlayingBarStyle.xaml" />
 		<None Remove="Styles\NowPlayingViewStyle.xaml" />
+		<None Remove="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml" />
+		<None Remove="Styles\NowPlaying\ZuneMediaTransportStyle.xaml" />
 		<None Remove="Styles\PrimaryPivotItemStyle.xaml" />
 		<None Remove="Styles\SettingsViewStyle.xaml" />
 		<None Remove="Styles\SmallPivotItemStyle.xaml" />
@@ -101,12 +104,15 @@
 		<UpToDateCheckInput Remove="Resources.xaml" />
 		<UpToDateCheckInput Remove="Resources\Brushes.xaml" />
 		<UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
+		<UpToDateCheckInput Remove="Resources\ZuneSlider.xaml" />
 		<UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\NowPlaying\ZuneMediaTransportStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\PrimaryPivotItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SafeImageStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
@@ -168,6 +174,12 @@
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 		<Compile Update="Styles\Items\ArtistItemStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\NowPlaying\ZuneMediaTransportStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 		<Compile Update="Styles\Views\NowPlayingViewStyle.xaml.cs">

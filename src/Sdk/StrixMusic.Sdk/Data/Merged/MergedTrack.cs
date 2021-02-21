@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="tracks">The <see cref="ICoreTrack"/>s to merge together.</param>
         public MergedTrack(IEnumerable<ICoreTrack> tracks)
         {
-            _sources = tracks?.ToList() ?? ThrowHelper.ThrowArgumentNullException<List<ICoreTrack>>(nameof(tracks));
+            _sources = tracks.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             // TODO: Use top Preferred core.
@@ -343,6 +343,24 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public Task PlayArtistCollectionAsync() => _preferredSource.PlayArtistCollectionAsync();
 
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem)
+        {
+            var targetCore = _preferredSource.SourceCore;
+
+            ICoreArtistCollectionItem? source = null;
+
+            if (artistItem is IArtist artist)
+                source = artist.GetSources<ICoreArtist>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            if (artistItem is IArtistCollection collection)
+                source = collection.GetSources<ICoreArtistCollection>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            Guard.IsNotNull(source, nameof(source));
+
+            return _preferredSource.PlayArtistCollectionAsync(source);
+        }
+
         /// <inheritdoc/>
         public Task ChangeAlbumAsync(IAlbum? album)
         {
@@ -462,13 +480,14 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public bool Equals(ICoreTrack? other)
         {
-            return other?.Name == Name &&
-                   other?.TrackNumber == TrackNumber &&
-                   other?.Type == Type &&
-                   other?.DiscNumber == DiscNumber &&
-                   other?.Duration == Duration &&
+            return other != null &&
+                   other.Name == Name &&
+                   other.TrackNumber == TrackNumber &&
+                   other.Type == Type &&
+                   other.DiscNumber == DiscNumber &&
+                   other.Duration == Duration &&
                    Album is MergedAlbum album &&
-                   !(other?.Album is null) &&
+                   !(other.Album is null) &&
                    album.Equals(other.Album);
         }
     }

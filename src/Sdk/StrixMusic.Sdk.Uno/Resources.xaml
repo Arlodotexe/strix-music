@@ -7,6 +7,7 @@
     xmlns:styles="using:StrixMusic.Sdk.Uno.Styles"
     xmlns:collectionstyles="using:StrixMusic.Sdk.Uno.Styles.Collections"
     xmlns:itemstyles="using:StrixMusic.Sdk.Uno.Styles.Items"
+    xmlns:nowplayingstyles="using:StrixMusic.Sdk.Uno.Styles.NowPlaying"
     xmlns:shellstyles="using:StrixMusic.Sdk.Uno.Styles.Shells"
     xmlns:viewstyles="using:StrixMusic.Sdk.Uno.Styles.Views"
     xmlns:secondaryviewstyles="using:StrixMusic.Sdk.Uno.Styles.Views.Secondary"
@@ -25,6 +26,10 @@
         <itemstyles:ArtistItemStyle/>
         <itemstyles:PlaylistItemStyle/>
         <itemstyles:TrackItemStyle/>
+
+        <!--Styles for shell related controls-->
+        <nowplayingstyles:MediaInfoStyle/>
+        <nowplayingstyles:MediaTransportStyle/>
 
         <!--Styles for shell related controls-->
         <shellstyles:NotificationAbstractUIGroupStyle/>

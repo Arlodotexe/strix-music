@@ -57,6 +57,7 @@ namespace StrixMusic.Sdk.ViewModels
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
             PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrack);
+            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbum>(album => PlayAlbumCollectionAsync(album));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -430,7 +431,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PlayTrack(ITrack track)
         {
-            return _playbackHandler.PlayAsync(track, _artist, this);
+            return _playbackHandler.PlayAsync(track, this, _artist);
         }
 
         /// <inheritdoc />
@@ -467,7 +468,19 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveGenreAvailable(int index) => _artist.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc />
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem)
+        {
+            return _artist.PlayAlbumCollectionAsync(albumItem);
+        }
+
+        /// <inheritdoc />
         public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => _artist.GetAlbumItemsAsync(limit, offset);
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ITrack track)
+        {
+            return _artist.PlayTrackCollectionAsync(track);
+        }
 
         /// <inheritdoc />
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _artist.GetTracksAsync(limit, offset);
@@ -543,6 +556,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand PlayAlbumCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<IAlbum> PlayAlbumAsyncCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }
