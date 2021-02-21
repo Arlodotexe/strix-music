@@ -327,7 +327,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(ICoreAlbum album)
+        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem)
         {
             throw new NotSupportedException();
         }
@@ -345,13 +345,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync(ICorePlaylist playlist)
+        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(ICoreArtist artist)
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
         {
             throw new NotSupportedException();
         }

@@ -30,7 +30,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="sources"></param>
         public MergedPlaylist(IEnumerable<ICorePlaylist> sources)
         {
-            _sources = sources?.ToList() ?? throw new ArgumentNullException();
+            _sources = sources.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);

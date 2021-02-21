@@ -255,7 +255,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(ICoreArtist artist)
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
         {
             throw new NotSupportedException();
         }

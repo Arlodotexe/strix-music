@@ -342,9 +342,9 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtist artist)
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem)
         {
-            return _collection.PlayArtistCollectionAsync(artist);
+            return _collection.PlayArtistCollectionAsync(artistItem);
         }
 
         /// <inheritdoc />

@@ -255,7 +255,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(ICoreAlbum album)
+        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem)
         {
             throw new NotImplementedException();
         }
