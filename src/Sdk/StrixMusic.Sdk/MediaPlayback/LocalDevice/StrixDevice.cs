@@ -13,13 +13,14 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
     /// </summary>
     public class StrixDevice : IDevice
     {
-        private readonly IPlaybackHandlerService _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
+        private readonly IPlaybackHandlerService _playbackHandler;
 
         /// <summary>
         /// Creates a new instance of <see cref="StrixDevice"/>.
         /// </summary>
-        public StrixDevice()
+        public StrixDevice(IPlaybackHandlerService playbackHandler)
         {
+            _playbackHandler = playbackHandler;
             PlaybackContext = null;
 
             // TODO: Implement StrixPlaybackQueueCollection

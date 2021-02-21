@@ -1,12 +1,14 @@
-﻿using OwlCore.Collections;
-using OwlCore.Events;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.MediaPlayback;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using MessagePack.ImmutableCollection;
+using OwlCore.Collections;
+using OwlCore.Events;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
@@ -16,7 +18,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc />
     public class LocalFilesCoreTrack : ICoreTrack
     {
-        private TrackMetadata? _trackMetadata;
+        private readonly TrackMetadata? _trackMetadata;
         private IFileMetadataManager? _fileMetadataManager;
 
         /// <summary>
@@ -28,6 +30,54 @@ namespace StrixMusic.Core.LocalFiles.Models
             SourceCore = sourceCore;
             _trackMetadata = trackMetadata;
             Genres = new SynchronizedObservableCollection<string>(trackMetadata.Genres);
+
+            _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
+            _fileMetadataManager.FileMetadataUpdated += FileMetadataManager_FileMetadataUpdated;
+        }
+
+        private void FileMetadataManager_FileMetadataUpdated(object sender, FileMetadata e)
+        {
+            if (e.TrackMetadata != null)
+            {
+                if (e.TrackMetadata.Id != Id)
+                    return;
+
+                if (e.ArtistMetadata != null)
+                {
+                    TotalArtistItemsCount++;
+
+                    LocalFilesCoreArtist localFilesCoreArtist;
+
+                    if (e.ArtistMetadata.ImagePath != null)
+                    {
+                        localFilesCoreArtist = new LocalFilesCoreArtist(
+                            SourceCore,
+                            e.ArtistMetadata,
+                            e.ArtistMetadata.TrackIds?.Count ?? 0,
+                            new LocalFilesCoreImage(SourceCore, e.ArtistMetadata.ImagePath));
+                    }
+                    else
+                    {
+                        localFilesCoreArtist = new LocalFilesCoreArtist(
+                            SourceCore,
+                            e.ArtistMetadata,
+                            e.ArtistMetadata.TrackIds?.Count ?? 0, 
+                            null);
+                    }
+
+                    var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>
+                    {
+                        new CollectionChangedItem<ICoreArtistCollectionItem>(
+                            localFilesCoreArtist,
+                            TotalArtistItemsCount - 1),
+                    };
+
+                    ArtistItemsChanged?.Invoke(
+                        this,
+                        addedItems,
+                        new List<CollectionChangedItem<ICoreArtistCollectionItem>>());
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -324,6 +374,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         public void ChangeTotalArtistCount(int newArtistCount)
         {
             TotalArtistItemsCount = newArtistCount;
+
+            ArtistItemsCountChanged?.Invoke(this, TotalArtistItemsCount);
         }
 
         /// <inheritdoc/>

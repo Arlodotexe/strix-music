@@ -3,17 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
-using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {
@@ -24,6 +18,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         private readonly List<IMediaSourceConfig> _nextItems;
         private readonly Stack<IMediaSourceConfig> _prevItems;
 
+        private StrixDevice? _strixDevice;
         private IAudioPlayerService? _currentPlayerService;
         private RepeatState _repeatState;
         private bool _shuffleState;
@@ -41,22 +36,13 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _nextItems = new List<IMediaSourceConfig>();
         }
 
-        private static async Task<ICore> GetPlaybackCore(ITrack track)
+        /// <summary>
+        /// Sets the local playback device for this playback handler.
+        /// </summary>
+        /// <param name="strixDevice"></param>
+        public void SetStrixDevice(StrixDevice strixDevice)
         {
-            var settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
-            var coreRanking = await settingsService.GetValue<IReadOnlyList<string>>(nameof(SettingsKeys.CoreRanking));
-
-            // Find highest ranking core from the items merged into the track being played.
-            foreach (var instanceId in coreRanking)
-            {
-                var sourceCores = track.GetSourceCores<ICoreTrack>();
-                var core = sourceCores.FirstOrDefault(x => x.InstanceId == instanceId);
-
-                if (core != default)
-                    return core;
-            }
-
-            return ThrowHelper.ThrowInvalidOperationException<ICore>($"None of the source cores from the given {nameof(track)} are registered in {nameof(coreRanking)}");
+            _strixDevice = strixDevice;
         }
 
         private void AttachEvents()
@@ -291,7 +277,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             var removedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
 
-            _nextItems.Insert(index, sourceConfig);
+            _nextItems.InsertOrAdd(index, sourceConfig);
             NextItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 

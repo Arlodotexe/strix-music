@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -21,7 +20,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="cores">The cores to merge together into this object.</param>
         public MergedCore(IEnumerable<ICore> cores)
         {
-            _sources = cores?.ToList() ?? ThrowHelper.ThrowArgumentNullException<List<ICore>>(nameof(cores));
+            _sources = cores.ToList();
             SourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             Library = new MergedLibrary(_sources.Select(x => x.Library));

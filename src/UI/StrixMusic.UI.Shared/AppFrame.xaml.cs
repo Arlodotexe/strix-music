@@ -12,9 +12,14 @@ using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Sdk.Uno.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Shared
 {
+    /// <summary>
+    /// A top-level frame that holds all other app content.
+    /// </summary>
     public sealed partial class AppFrame : UserControl
     {
         /// <summary>
@@ -37,7 +42,12 @@ namespace StrixMusic.Shared
         /// <summary>
         /// The <see cref="MainViewModel"/> for the app.
         /// </summary>
-        public MainViewModel MainViewModel { get; private set; }
+        public MainViewModel MainViewModel { get; }
+
+        /// <summary>
+        /// The app-wide playback handler.
+        /// </summary>
+        public PlaybackHandlerService PlaybackHandler { get; }
 
         /// <summary>
         /// The <see cref="Shared.MainPage"/> displayed in the app.
@@ -69,7 +79,12 @@ namespace StrixMusic.Shared
 
             NotificationsViewModel = new NotificationsViewModel(NotificationService);
 
-            MainViewModel = new MainViewModel();
+            // These are needed to construct MainViewModel and not disturb nullability through the project.
+            PlaybackHandler = new PlaybackHandlerService();
+            var strixDevice = new StrixDevice(PlaybackHandler);
+            PlaybackHandler.SetStrixDevice(strixDevice);
+
+            MainViewModel = new MainViewModel(strixDevice);
 
             MainPage = new MainPage();
 
@@ -81,7 +96,12 @@ namespace StrixMusic.Shared
         private void AttachEvents()
         {
             Unloaded += AppFrame_Unloaded;
-            MainViewModel.AppNavigationRequested += MainViewModel_AppNavigationRequested;
+            CurrentWindow.MainViewModel.AppNavigationRequested += MainViewModel_AppNavigationRequested;
+        }
+
+        private void DetachEvents()
+        {
+            Unloaded -= AppFrame_Unloaded;
         }
 
         private void MainViewModel_AppNavigationRequested(object sender, AppNavigationTarget e)
@@ -99,11 +119,6 @@ namespace StrixMusic.Shared
                     NavigationService.NavigateTo(typeof(SuperShell), false, core);
                 }
             }
-        }
-
-        private void DetachEvents()
-        {
-            Unloaded -= AppFrame_Unloaded;
         }
 
         private void AppFrame_Unloaded(object sender, RoutedEventArgs e) => DetachEvents();
