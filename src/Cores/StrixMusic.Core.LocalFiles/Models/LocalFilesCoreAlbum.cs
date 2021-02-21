@@ -68,14 +68,34 @@ namespace StrixMusic.Core.LocalFiles.Models
                 {
                     TotalArtistItemsCount++;
 
-                    var fileCoreTrack = new LocalFilesCoreTrack(SourceCore, e.TrackMetadata);
+                    LocalFilesCoreArtist? filesCoreArtist;
 
-                    var addedItems = new List<CollectionChangedItem<ICoreTrack>>
+                    if (e.ArtistMetadata.ImagePath != null)
                     {
-                        new CollectionChangedItem<ICoreTrack>(fileCoreTrack, 0),
+                        filesCoreArtist = new LocalFilesCoreArtist(
+                            SourceCore,
+                            e.ArtistMetadata,
+                            e.ArtistMetadata.TrackIds?.Count ?? 0,
+                            new LocalFilesCoreImage(SourceCore, e.ArtistMetadata.ImagePath));
+                    }
+                    else
+                    {
+                        filesCoreArtist = new LocalFilesCoreArtist(
+                            SourceCore,
+                            e.ArtistMetadata,
+                            e.ArtistMetadata.TrackIds?.Count ?? 0,
+                            null);
+                    }
+
+                    var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>
+                    {
+                        new CollectionChangedItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
                     };
 
-                    TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreTrack>>());
+                    ArtistItemsChanged?.Invoke(
+                        this,
+                        addedItems,
+                        new List<CollectionChangedItem<ICoreArtistCollectionItem>>());
                 }
             }
         }

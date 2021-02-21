@@ -18,6 +18,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
     {
         private const string ALBUM_DATA_FILENAME = "AlbumData.bin";
 
+        private readonly IList<AlbumMetadata> _albumMetadatas;
         private readonly FileMetadataScanner _fileMetadataScanner;
         private IFolderData? _folderData;
         private IFileSystemService? _fileSystemService;
@@ -34,6 +35,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             _fileMetadataScanner = fileMetadataScanner;
             _fileSystemService = Ioc.Default.GetService<IFileSystemService>();
+            _albumMetadatas = new List<AlbumMetadata>();
 
             AttachEvents();
         }
@@ -58,6 +60,31 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private void FileMetadataRemoved(object sender, FileMetadata e)
         {
             // todo
+        }
+
+        /// <summary>
+        /// Add a new <see cref="AlbumMetadata"/>. It helps to filter out the duplicates while adding.
+        /// </summary>
+        /// <param name="albumMetadata"></param>
+        /// <returns>If true, track is added otherwise false.</returns>
+        public bool AddOrSkipAlbumMetadata(AlbumMetadata? albumMetadata)
+        {
+            lock (_albumMetadatas)
+            {
+                if (albumMetadata == null)
+                    return false;
+
+                if (!_albumMetadatas?.Any(c =>
+                    c.Title?.Equals(albumMetadata.Title ?? string.Empty, StringComparison.OrdinalIgnoreCase) ??
+                    false) ?? false)
+                {
+                    _albumMetadatas?.Add(albumMetadata);
+
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         /// <summary>

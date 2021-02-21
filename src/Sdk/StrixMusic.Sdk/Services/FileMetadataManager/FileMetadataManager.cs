@@ -69,7 +69,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private void FileMetadataScanner_FileMetadataAdded(object sender, FileMetadata e)
         {
-            FileMetadataAdded?.Invoke(sender, e);
+            var fileMetadata = new FileMetadata();
+
+            if (Tracks.AddOrSkipTrackMetadata(e.TrackMetadata))
+                fileMetadata.TrackMetadata = e.TrackMetadata;
+
+            if (Albums.AddOrSkipAlbumMetadata(e.AlbumMetadata))
+                fileMetadata.AlbumMetadata = e.AlbumMetadata;
+
+            if (Artists.AddOrSkipArtistMetadata(e.ArtistMetadata))
+                fileMetadata.ArtistMetadata = e.ArtistMetadata;
+
+            FileMetadataAdded?.Invoke(sender, fileMetadata);
         }
 
         private void DetachEvents()

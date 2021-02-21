@@ -389,6 +389,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 if (_fileMetadata.Count == 0)
                 {
                     var albumId = (fileData.Path + ".album").HashMD5Fast();
+
                     albumMetadata.Id = albumId;
 
                     var artistId = (fileData.Path + ".artist").HashMD5Fast();
@@ -418,6 +419,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 albumMetadata = ApplyRelatedAlbumMetadata(albumMetadata, trackMetadata, artistMetadata, fileData);
 
+                relatedMetadata.AlbumMetadata = albumMetadata;
+                relatedMetadata.ArtistMetadata = artistMetadata;
+
                 if (trackMetadata == null)
                     return relatedMetadata;
 
@@ -445,7 +449,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 artistMetadata = existingArtist;
 
-                FileMetadataUpdated?.Invoke(this, new FileMetadata() { ArtistMetadata = existingArtist,TrackMetadata = trackMetadata});
+                FileMetadataUpdated?.Invoke(this, new FileMetadata() { ArtistMetadata = existingArtist, TrackMetadata = trackMetadata });
             }
             else
             {
@@ -693,11 +697,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     _fileMetadata.Add(metadata);
 
                 FilesProcessed++;
-            }
 
-            // todo If any related metadata is updated but already emitted, we need to update the data externally as well.
-            if (metadata != null)
-                FileMetadataAdded?.Invoke(this, metadata);
+                if (metadata != null)
+                {
+
+                    FileMetadataAdded?.Invoke(this, metadata);
+                }
+            }
 
             return metadata;
         }

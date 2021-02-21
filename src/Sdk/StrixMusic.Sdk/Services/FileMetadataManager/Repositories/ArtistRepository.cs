@@ -17,6 +17,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
     public class ArtistRepository : IMetadataRepository
     {
         private const string ARTIST_DATA_FILENAME = "ArtistMeta.bin";
+        private readonly IList<ArtistMetadata> _artistMetadatas;
         private readonly IFileSystemService? _fileSystemService;
         private readonly FileMetadataScanner _fileMetadataScanner;
         private string? _pathToMetadataFile;
@@ -33,6 +34,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             _fileMetadataScanner = fileMetadataScanner;
             _fileSystemService = Ioc.Default.GetService<IFileSystemService>();
+
+            _artistMetadatas = new List<ArtistMetadata>();
         }
 
         private void AttachEvents()
@@ -55,6 +58,31 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private void FileMetadataRemoved(object sender, FileMetadata e)
         {
             // todo
+        }
+
+        /// <summary>
+        /// Add a new <see cref="ArtistMetadata"/>. It helps to filter out the duplicates while adding.
+        /// </summary>
+        /// <param name="artistMetadata">The metadata to be added.</param>
+        /// <returns>If true, track is added otherwise false.</returns>
+        public bool AddOrSkipArtistMetadata(ArtistMetadata? artistMetadata)
+        {
+            lock (_artistMetadatas)
+            {
+                if (artistMetadata == null)
+                    return false;
+
+                if (!_artistMetadatas?.Any(c =>
+                    c.Name?.Equals(artistMetadata.Name ?? string.Empty, StringComparison.OrdinalIgnoreCase) ??
+                    false) ?? false)
+                {
+                    _artistMetadatas?.Add(artistMetadata);
+
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         /// <summary>
