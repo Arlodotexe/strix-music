@@ -1,4 +1,5 @@
-﻿using StrixMusic.Sdk;
+﻿using System;
+using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
 using Windows.UI.Xaml.Controls;
 
@@ -22,6 +23,7 @@ namespace StrixMusic.Shared
         public static INavigationService<Control> NavigationService => AppFrame.NavigationService;
 
         /// <inheritdoc cref="MainViewModel"/>
-        public static MainViewModel MainViewModel => AppFrame.MainViewModel;
+        /// TODO fix me and remove the singleton
+        public static MainViewModel MainViewModel => MainViewModel.Singleton ?? throw new NullReferenceException();
     }
 }

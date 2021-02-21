@@ -30,7 +30,6 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OwlCore.AbstractUI.Models;
 
 namespace StrixMusic.Shared
 {
@@ -39,7 +38,7 @@ namespace StrixMusic.Shared
     /// </summary>
     public sealed partial class AppLoadingView : UserControl
     {
-        private bool _showingQuip = false;
+        private bool _showingQuip;
         private DefaultSettingsService? _settingsService;
         private LocalizationResourceLoader? _localizationService;
         private IPlaybackHandlerService? _playbackHandlerService;
@@ -74,7 +73,7 @@ namespace StrixMusic.Shared
                 return;
             }
 
-            (string, int) quip = new QuipLoader(Language).GetGroupIndexQuip();
+            var quip = new QuipLoader(Language).GetGroupIndexQuip();
 
             PART_Status.Text = _localizationService[Constants.Localization.QuipsResource, $"{quip.Item1}{quip.Item2}"];
             _showingQuip = true;
@@ -112,7 +111,7 @@ namespace StrixMusic.Shared
             await InitializeConfiguredCores();
 
             UpdateStatusRaw($"Done loading, navigating to {nameof(MainPage)}");
-            CurrentWindow.NavigationService?.NavigateTo(typeof(MainPage));
+            CurrentWindow.NavigationService.NavigateTo(CurrentWindow.AppFrame.MainPage);
         }
 
         /// <summary>
@@ -157,6 +156,9 @@ namespace StrixMusic.Shared
 
                 if (shellAttribute is null)
                     continue;
+
+                Guard.IsNotNullOrWhiteSpace(shellAttribute.ShellType.Namespace, nameof(shellAttribute.ShellType.Namespace));
+                Guard.IsNotNullOrWhiteSpace(shellAttribute.ShellType.AssemblyQualifiedName, nameof(shellAttribute.ShellType.AssemblyQualifiedName));
 
                 // Check if the namespace is for a shell.
                 var match = Regex.Match(shellAttribute.ShellType.Namespace, shellAssemblyRegex);
@@ -206,6 +208,9 @@ namespace StrixMusic.Shared
                 if (coreAttribute is null)
                     continue;
 
+                Guard.IsNotNullOrWhiteSpace(coreAttribute.CoreType.Namespace, nameof(coreAttribute.CoreType.Namespace));
+                Guard.IsNotNullOrWhiteSpace(coreAttribute.CoreType.AssemblyQualifiedName, nameof(coreAttribute.CoreType.AssemblyQualifiedName));
+
                 // Check if the namespace is for a core.
                 var match = Regex.Match(coreAttribute.CoreType.Namespace, shellAssemblyRegex);
                 if (!match.Success)
@@ -237,8 +242,7 @@ namespace StrixMusic.Shared
 
             Guard.HasSizeGreaterThan(_coreRegistry, 0, nameof(_coreRegistry));
 
-            _configuredCoreRegistry ??= new Dictionary<string, CoreAssemblyInfo>()
-                                        ?? await Task.Run(() => _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores)));
+            _configuredCoreRegistry ??= new Dictionary<string, CoreAssemblyInfo>();
 
             foreach (var coreData in _coreRegistry)
             {
@@ -322,7 +326,9 @@ namespace StrixMusic.Shared
             services.AddSingleton<IFileSystemService>(fileSystemService);
             services.AddSingleton<INotificationService>(CurrentWindow.AppFrame.NotificationService);
 
-            _playbackHandlerService = new PlaybackHandlerService();
+            // Initialized in AppFrame to supplement the default playback device / MainViewModel.
+            _playbackHandlerService = CurrentWindow.AppFrame.PlaybackHandler;
+
             services.AddSingleton(_playbackHandlerService);
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
@@ -366,6 +372,8 @@ namespace StrixMusic.Shared
             {
                 var (instanceId, coreAssemblyInfo) = x;
                 var coreDataType = Type.GetType(coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName);
+
+                Guard.IsNotNull(coreDataType, nameof(coreDataType));
 
                 return (ICore)Activator.CreateInstance(coreDataType, instanceId);
             }).ToList());
