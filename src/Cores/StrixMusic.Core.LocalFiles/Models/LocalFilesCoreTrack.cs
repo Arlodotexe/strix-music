@@ -16,7 +16,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc />
     public class LocalFilesCoreTrack : ICoreTrack
     {
-        private TrackMetadata? _trackMetadata;
+        private readonly TrackMetadata? _trackMetadata;
         private IFileMetadataManager? _fileMetadataManager;
 
         /// <summary>
@@ -324,6 +324,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         public void ChangeTotalArtistCount(int newArtistCount)
         {
             TotalArtistItemsCount = newArtistCount;
+
+            ArtistItemsCountChanged?.Invoke(this,TotalArtistItemsCount);
         }
 
         /// <inheritdoc/>
