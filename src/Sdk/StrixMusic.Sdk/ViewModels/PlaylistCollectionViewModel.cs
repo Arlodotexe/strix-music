@@ -286,9 +286,9 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync(IPlaylist playlist)
+        public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem)
         {
-            return _collection.PlayPlaylistCollectionAsync(playlist);
+            return _collection.PlayPlaylistCollectionAsync(playlistItem);
         }
 
         /// <inheritdoc />

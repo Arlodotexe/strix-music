@@ -95,13 +95,24 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         }
 
         /// <inheritdoc />
-        public Task PlayAsync(IAlbum track, IAlbumCollectionViewModel albumCollection, IPlayableBase context)
+        public async Task PlayAsync(IAlbumCollectionViewModel albumCollection, IPlayableBase context)
         {
-            throw new NotImplementedException();
+            await albumCollection.InitAsync();
+
+            var firstTrack = albumCollection.Albums.FirstOrDefault();
+            {
+                var apiItems = await albumCollection.GetAlbumItemsAsync(1, 0);
+                Guard.HasSizeGreaterThan(apiItems, 0, nameof(apiItems));
+                
+                //firstTrack = new AlbumViewModel(apiItems[0]);
+            }
+
+            await PlayAsync(firstTrack, albumCollection, context);
         }
 
         /// <inheritdoc />
-        public Task PlayAsync(IAlbumCollectionViewModel albumCollection, IPlayableBase context)
+        public Task PlayAsync(IAlbumCollectionItem albumCollectionItem, IAlbumCollectionViewModel albumCollection,
+            IPlayableBase context)
         {
             throw new NotImplementedException();
         }

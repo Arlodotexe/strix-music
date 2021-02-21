@@ -225,10 +225,17 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task PlayArtistCollectionAsync() => _preferredSource.PlayArtistCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtist artist)
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem)
         {
             var targetCore = _preferredSource.SourceCore;
-            var source = artist.GetSources<ICoreArtist>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            ICoreArtistCollectionItem? source = null;
+
+            if (artistItem is IArtist artist)
+                source = artist.GetSources<ICoreArtist>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            if (artistItem is IArtistCollection collection)
+                source = collection.GetSources<ICoreArtistCollection>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
 
             Guard.IsNotNull(source, nameof(source));
 

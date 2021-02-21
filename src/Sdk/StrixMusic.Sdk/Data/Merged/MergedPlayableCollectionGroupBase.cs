@@ -507,10 +507,17 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtist artist)
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem)
         {
             var targetCore = PreferredSource.SourceCore;
-            var source = artist.GetSources<ICoreArtist>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            ICoreArtistCollectionItem? source = null;
+
+            if (artistItem is IArtist artist)
+                source = artist.GetSources<ICoreArtist>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            if (artistItem is IArtistCollection collection)
+                source = collection.GetSources<ICoreArtistCollection>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
 
             Guard.IsNotNull(source, nameof(source));
 
@@ -518,14 +525,39 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(IAlbum album)
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem)
         {
             var targetCore = PreferredSource.SourceCore;
-            var source = album.GetSources<ICoreAlbum>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            ICoreAlbumCollectionItem? source = null;
+
+            if (albumItem is IAlbum album)
+                source = album.GetSources<ICoreAlbum>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            if (albumItem is IAlbumCollection collection)
+                source = collection.GetSources<ICoreAlbumCollection>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
 
             Guard.IsNotNull(source, nameof(source));
 
             return PreferredSource.PlayAlbumCollectionAsync(source);
+        }
+
+        /// <inheritdoc />
+        public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem)
+        {
+            var targetCore = PreferredSource.SourceCore;
+
+            ICorePlaylistCollectionItem? source = null;
+
+            if (playlistItem is IPlaylist playlist)
+                source = playlist.GetSources<ICorePlaylist>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            if (playlistItem is IPlaylistCollection collection)
+                source = collection.GetSources<ICorePlaylistCollection>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            Guard.IsNotNull(source, nameof(source));
+
+            return PreferredSource.PlayPlaylistCollectionAsync(source);
         }
 
         /// <inheritdoc />
@@ -537,17 +569,6 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsNotNull(source, nameof(source));
 
             return PreferredSource.PlayPlayableCollectionGroupAsync(source);
-        }
-
-        /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync(IPlaylist playlist)
-        {
-            var targetCore = PreferredSource.SourceCore;
-            var source = playlist.GetSources<ICorePlaylist>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
-
-            Guard.IsNotNull(source, nameof(source));
-
-            return PreferredSource.PlayPlaylistCollectionAsync(source);
         }
 
         /// <inheritdoc/>

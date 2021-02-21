@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Data
         /// Attempts to play a specific item in the album collection. Restarts playback if already playing.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAlbumCollectionAsync(IAlbum album);
+        Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem);
 
         /// <summary>
         /// Gets a requested number of <see cref="IAlbumCollectionItemBase"/>s starting at the given offset in the backend.

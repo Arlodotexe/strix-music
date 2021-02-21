@@ -57,7 +57,7 @@ namespace StrixMusic.Sdk.ViewModels
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
             PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrack);
-            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbum>(PlayAlbumCollectionAsync);
+            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbum>(album => PlayAlbumCollectionAsync(album));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -468,9 +468,9 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveGenreAvailable(int index) => _artist.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(IAlbum album)
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem)
         {
-            return _artist.PlayAlbumCollectionAsync(album);
+            return _artist.PlayAlbumCollectionAsync(albumItem);
         }
 
         /// <inheritdoc />

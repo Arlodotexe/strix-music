@@ -45,7 +45,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
-            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbum>(PlayAlbumCollectionAsync);
+            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbum>(album => PlayAlbumCollectionAsync(album));
 
             AttachEvents();
         }
@@ -375,9 +375,9 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(IAlbum album)
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem)
         {
-            return _collection.PlayAlbumCollectionAsync(album);
+            return _collection.PlayAlbumCollectionAsync(albumItem);
         }
 
         /// <inheritdoc />
@@ -424,5 +424,14 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreAlbumCollection other) => _collection.Equals(other);
+
+        /// <inheritdoc />
+        public Task InitAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; }
     }
 }

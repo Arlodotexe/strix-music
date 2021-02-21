@@ -247,10 +247,17 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task PlayAlbumCollectionAsync() => _preferredSource.PlayAlbumCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(IAlbum album)
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem)
         {
             var targetCore = _preferredSource.SourceCore;
-            var source = album.GetSources<ICoreAlbum>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            ICoreAlbumCollectionItem? source = null;
+
+            if (albumItem is IAlbum album)
+                source = album.GetSources<ICoreAlbum>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
+
+            if (albumItem is IAlbumCollection collection)
+                source = collection.GetSources<ICoreAlbumCollection>().FirstOrDefault(x => x.SourceCore.InstanceId == targetCore.InstanceId);
 
             Guard.IsNotNull(source, nameof(source));
 

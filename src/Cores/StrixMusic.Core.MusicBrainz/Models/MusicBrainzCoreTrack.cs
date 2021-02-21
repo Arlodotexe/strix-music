@@ -327,7 +327,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(ICoreArtist artist)
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
         {
             throw new NotImplementedException();
         }

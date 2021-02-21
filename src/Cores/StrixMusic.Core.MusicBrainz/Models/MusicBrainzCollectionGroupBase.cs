@@ -338,7 +338,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(ICoreAlbum album)
+        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem)
         {
             throw new NotImplementedException();
         }
@@ -347,7 +347,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public abstract IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(ICoreArtist artist)
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
         {
             throw new NotImplementedException();
         }
@@ -365,7 +365,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public abstract IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync(ICorePlaylist playlist)
+        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem)
         {
             throw new NotImplementedException();
         }

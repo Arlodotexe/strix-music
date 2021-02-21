@@ -29,7 +29,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="collections">The collections to merge in.</param>
         public MergedTrackCollection(IEnumerable<ICoreTrackCollection> collections)
         {
-            _sources = collections?.ToList() ?? ThrowHelper.ThrowArgumentNullException<List<ICoreTrackCollection>>(nameof(collections));
+            _sources = collections.ToList();
             _sourceCores = _sources.Select(x => x.SourceCore).ToList();
 
             _preferredSource = _sources[0];
