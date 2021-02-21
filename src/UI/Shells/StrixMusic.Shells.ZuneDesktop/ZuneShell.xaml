@@ -13,6 +13,7 @@
     xmlns:styles="using:StrixMusic.Shells.ZuneDesktop.Styles"
     xmlns:collectionstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Collections"
     xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
+    xmlns:nowplayingstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying"
     xmlns:shellstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Shells"
     xmlns:viewstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Views"
     x:Name="RootControl" RequestedTheme="Dark">
@@ -44,6 +45,9 @@
                 <itemstyles:AlbumItemStyle/>
                 <itemstyles:TrackItemStyle/>
 
+                <!--NowPlaying related styles-->
+                <nowplayingstyles:DefaultZuneMediaInfoStyle/>
+                <nowplayingstyles:ZuneMediaTransportStyle/>
 
                 <!--Shell related styles-->
                 <shellstyles:NowPlayingBarStyle/>

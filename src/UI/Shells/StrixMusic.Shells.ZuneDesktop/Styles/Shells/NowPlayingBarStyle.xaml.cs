@@ -12,17 +12,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles.Shells
     public sealed partial class NowPlayingBarStyle : ResourceDictionary
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SettingsViewStyle"/> class.
+        /// Initializes a new instance of the <see cref="NowPlayingBarStyle"/> class.
         /// </summary>
         public NowPlayingBarStyle()
         {
             this.InitializeComponent();
-        }
-
-        private void NavigateToNowPlaying(object sender, RoutedEventArgs e)
-        {
-            // TODO: Save settings changes
-            Shell.Ioc.GetService<INavigationService<Control>>()!.NavigateTo(typeof(NowPlayingView));
         }
     }
 }
