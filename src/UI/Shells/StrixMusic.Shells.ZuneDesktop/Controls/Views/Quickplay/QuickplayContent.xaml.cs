@@ -72,5 +72,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
                 VisualStateManager.GoToState(RootControl, "MainNoHover", true);
             }
         }
+
+        private void MainWrapper_SizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            double center = MainScroller.ScrollableWidth / 2;
+            MainScroller.ScrollToHorizontalOffset(center);
+        }
     }
 }
