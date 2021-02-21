@@ -1,9 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:nowplaying="using:StrixMusic.Sdk.Uno.Controls.NowPlaying"
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical">
 
-    <Style x:Key="MediaSlider" TargetType="Slider">
+    <Style x:Key="GrooveMediaSliderStyle" TargetType="Slider">
         <Setter Property="Background" Value="#cccccc" />
         <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}" />
         <Setter Property="Foreground" Value="{ThemeResource SliderTrackValueFill}" />
@@ -329,4 +330,6 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="nowplaying:MediaSlider" BasedOn="{StaticResource GrooveMediaSliderStyle}"/>
 </ResourceDictionary>

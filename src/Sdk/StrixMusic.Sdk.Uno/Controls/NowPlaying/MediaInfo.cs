@@ -5,6 +5,9 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
     /// <summary>
     /// Media info for the currently playing track.
     /// </summary>
+    /// <remarks>
+    /// TODO: Allow hiding AlbumImage with property
+    /// </remarks>
     public partial class MediaInfo : Control
     {
         /// <summary>
