@@ -261,6 +261,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         public void ChangeTotalTrackCount(int newTrackCount)
         {
             TotalTracksCount = newTrackCount;
+
+            TrackItemsCountChanged?.Invoke(this,TotalTracksCount);
         }
 
         /// <summary>
@@ -270,6 +272,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         public void ChangeTotalArtistCount(int newArtistCount)
         {
             TotalArtistItemsCount = newArtistCount;
+
+            ArtistItemsCountChanged?.Invoke(this,TotalArtistItemsCount);
         }
 
         /// <inheritdoc/>
