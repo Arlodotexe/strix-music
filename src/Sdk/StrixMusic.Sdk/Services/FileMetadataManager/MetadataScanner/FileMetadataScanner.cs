@@ -422,9 +422,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 relatedMetadata.AlbumMetadata = albumMetadata;
                 relatedMetadata.ArtistMetadata = artistMetadata;
 
-                if (trackMetadata == null)
-                    return relatedMetadata;
-
                 trackMetadata.AlbumId = albumMetadata.Id;
                 trackMetadata.ArtistIds ??= new List<string>();
 
@@ -444,7 +441,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (existingArtist != null)
             {
                 existingArtist.TrackIds ??= new List<string>();
-
                 existingArtist.TrackIds.Add(trackMetadata.Id);
 
                 artistMetadata = existingArtist;

@@ -48,55 +48,59 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         private void FileMetadataManager_FileMetadataUpdated(object sender, FileMetadata e)
         {
-            if (e.AlbumMetadata != null)
+            if (e.AlbumMetadata?.Id != Id)
+                return;
+
+            TracksUpdated(e);
+            ArtistsUpdated(e);
+        }
+
+        private void TracksUpdated(FileMetadata e)
+        {
+            if (e.TrackMetadata?.Id != null)
             {
-                if (e.AlbumMetadata.Id != Id)
-                    return;
+                TotalTracksCount++;
 
-                if (e.TrackMetadata?.Id != null)
+                var fileCoreTrack =
+                    InstanceCache.Tracks.GetOrCreate(e.TrackMetadata.Id, SourceCore, e.TrackMetadata);
+
+                var addedItems = new List<CollectionChangedItem<ICoreTrack>>
                 {
-                    TotalTracksCount++;
+                    new CollectionChangedItem<ICoreTrack>(fileCoreTrack, 0),
+                };
 
-                    var fileCoreTrack =
-                        InstanceCache.Tracks.GetOrCreate(e.TrackMetadata.Id, SourceCore, e.TrackMetadata);
+                TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreTrack>>());
+            }
+        }
 
-                    var addedItems = new List<CollectionChangedItem<ICoreTrack>>
-                    {
-                        new CollectionChangedItem<ICoreTrack>(fileCoreTrack, 0),
-                    };
+        private void ArtistsUpdated(FileMetadata e)
+        {
+            TotalArtistItemsCount++;
 
-                    TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreTrack>>());
-                }
+            if (e.ArtistMetadata?.Id == null)
+                return;
 
-                if (e.ArtistMetadata == null) return;
-                {
-                    TotalArtistItemsCount++;
-
-                    if (e.ArtistMetadata.Id == null) return;
-                    var filesCoreArtist = InstanceCache.Artists.GetOrCreate(
+            var filesCoreArtist = InstanceCache.Artists.GetOrCreate(
+                e.ArtistMetadata.Id,
+                SourceCore,
+                e.ArtistMetadata,
+                e.ArtistMetadata.TrackIds?.Count ?? 0,
+                e.ArtistMetadata.ImagePath == null
+                    ? null
+                    : InstanceCache.Images.GetOrCreate(
                         e.ArtistMetadata.Id,
                         SourceCore,
-                        e.ArtistMetadata,
-                        e.ArtistMetadata.TrackIds?.Count ?? 0,
-                        e.ArtistMetadata.ImagePath == null
-                            ? null
-                            : InstanceCache.Images.GetOrCreate(
-                                e.ArtistMetadata.Id,
-                                SourceCore,
-                                e.ArtistMetadata.ImagePath));
+                        e.ArtistMetadata.ImagePath));
 
+            var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>
+            {
+                new CollectionChangedItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
+            };
 
-                    var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>
-                    {
-                        new CollectionChangedItem<ICoreArtistCollectionItem>(filesCoreArtist, 0),
-                    };
-
-                    ArtistItemsChanged?.Invoke(
-                        this,
-                        addedItems,
-                        new List<CollectionChangedItem<ICoreArtistCollectionItem>>());
-                }
-            }
+            ArtistItemsChanged?.Invoke(
+                this,
+                addedItems,
+                new List<CollectionChangedItem<ICoreArtistCollectionItem>>());
         }
 
         /// <inheritdoc/>
@@ -157,12 +161,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc/>
-        public int TotalTracksCount {
+        public int TotalTracksCount
+        {
             get => _totalTracksCount;
             set
             {
                 _totalTracksCount = value;
-                TrackItemsCountChanged?.Invoke(this,_totalTracksCount);
+                TrackItemsCountChanged?.Invoke(this, _totalTracksCount);
             }
         }
 
@@ -200,7 +205,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public int TotalImageCount { get; }
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount 
+        public int TotalArtistItemsCount
         {
             get => _totalArtistCount;
             set
