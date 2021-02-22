@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Events;
+using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
@@ -19,6 +20,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         private readonly ArtistMetadata _artistMetadata;
         private readonly IFileMetadataManager _fileMetadataManager;
         private readonly LocalFilesCoreImage? _image;
+        private int _totalTracksCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreArtist"/> class.
@@ -43,49 +45,49 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         private void FileMetadataManager_FileMetadataUpdated(object sender, FileMetadata e)
         {
-            if (e.ArtistMetadata != null)
+            if (e.ArtistMetadata?.Id != Id)
+                return;
+
+            if (e.TrackMetadata != null)
             {
-                if (e.ArtistMetadata.Id != Id)
+                Guard.IsNotNullOrWhiteSpace(e.TrackMetadata?.Id, nameof(e.TrackMetadata.Id));
+
+                TotalTracksCount++;
+
+                var fileCoreTrack = InstanceCache.Tracks.GetOrCreate(e.TrackMetadata.Id, SourceCore, e.TrackMetadata);
+
+                var removedItems = Array.Empty<CollectionChangedItem<ICoreTrack>>();
+                var addedArtists = new List<CollectionChangedItem<ICoreTrack>>
+                {
+                    new CollectionChangedItem<ICoreTrack>(fileCoreTrack, TotalTracksCount - 1),
+                };
+
+                TrackItemsChanged?.Invoke(this, addedArtists, removedItems);
+                TrackItemsCountChanged?.Invoke(this, TotalTracksCount);
+            }
+
+            if (e.AlbumMetadata != null)
+            {
+                if (e.AlbumMetadata.Id != Id)
                     return;
 
-                if (e.TrackMetadata != null)
+                if (e.AlbumMetadata == null) return;
+                TotalAlbumItemsCount++;
+
+                var fileCoreAlbum = new LocalFilesCoreAlbum(
+                    SourceCore,
+                    e.AlbumMetadata,
+                    e.AlbumMetadata.TrackIds?.Count ?? 0,
+                    e.TrackMetadata?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, e.TrackMetadata.ImagePath) : null);
+
+                var removedItems = Array.Empty<CollectionChangedItem<ICoreAlbumCollectionItem>>();
+                var addedAlbums = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>
                 {
-                    TotalTracksCount++;
+                    new CollectionChangedItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
+                };
 
-                    var fileCoreTrack = new LocalFilesCoreTrack(SourceCore, e.TrackMetadata);
-
-                    var addedArtists = new List<CollectionChangedItem<ICoreTrack>>
-                    {
-                        new CollectionChangedItem<ICoreTrack>(fileCoreTrack, TotalTracksCount - 1),
-                    };
-
-                    TrackItemsChanged?.Invoke(this, addedArtists, new List<CollectionChangedItem<ICoreTrack>>());
-                }
-
-                if (e.AlbumMetadata != null)
-                {
-                    if (e.AlbumMetadata.Id != Id)
-                        return;
-
-                    if (e.AlbumMetadata == null) return;
-                    TotalAlbumItemsCount++;
-
-                    var fileCoreAlbum = new LocalFilesCoreAlbum(
-                        SourceCore,
-                        e.AlbumMetadata,
-                        e.AlbumMetadata.TrackIds?.Count ?? 0,
-                        e.TrackMetadata?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, e.TrackMetadata.ImagePath) : null);
-
-                    var addedAlbums = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>
-                    {
-                        new CollectionChangedItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
-                    };
-
-                    AlbumItemsChanged?.Invoke(
-                        this,
-                        addedAlbums,
-                        new List<CollectionChangedItem<ICoreAlbumCollectionItem>>());
-                }
+                AlbumItemsCountChanged?.Invoke(this, TotalAlbumItemsCount);
+                AlbumItemsChanged?.Invoke(this, addedAlbums, removedItems);
             }
         }
 
@@ -147,16 +149,24 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc/>
-        public string Id => _artistMetadata?.Id ?? string.Empty;
+        public string Id => _artistMetadata.Id ?? string.Empty;
 
         /// <inheritdoc/>
         public int TotalAlbumItemsCount { get; private set; }
 
         /// <inheritdoc />
-        public int TotalImageCount { get; } = 0;
+        public int TotalImageCount { get; }
 
         /// <inheritdoc/>
-        public int TotalTracksCount { get; private set; }
+        public int TotalTracksCount
+        {
+            get => _totalTracksCount;
+            private set
+            {
+                _totalTracksCount = value;
+                TrackItemsCountChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
@@ -165,10 +175,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public Uri? Url => null;
 
         /// <inheritdoc/>
-        public string Name => _artistMetadata?.Name ?? string.Empty;
+        public string Name => _artistMetadata.Name ?? string.Empty;
 
         /// <inheritdoc/>
-        public string Description => _artistMetadata?.Description ?? string.Empty;
+        public string Description => _artistMetadata.Description ?? string.Empty;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState => PlaybackState.None;
@@ -278,48 +288,37 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public Task PauseTrackCollectionAsync()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PlayTrackCollectionAsync()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PauseAlbumCollectionAsync()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public Task PlayAlbumCollectionAsync()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync(ICoreTrack track)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Updates the number of tracks for <see cref="LocalFilesCoreArtist"/>.
-        /// </summary>
-        /// <param name="newTrackCount">The new count.</param>
-        public void ChangeTotalTrackCount(int newTrackCount)
-        {
-            TotalTracksCount = newTrackCount;
-
-            TrackItemsCountChanged?.Invoke(this, TotalTracksCount);
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
@@ -336,7 +335,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 var tracks = await _fileMetadataManager.Tracks.GetTracksByAlbumId(album.Id, 0, 1);
                 var track = tracks.FirstOrDefault();
 
-                yield return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0, track?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, track.ImagePath) : null);
+                yield return InstanceCache.Albums.GetOrCreate(album.Id, SourceCore, album, album.TrackIds?.Count ?? 0, track?.ImagePath != null ? InstanceCache.Images.GetOrCreate(album.Id, SourceCore, track.ImagePath) : null);
             }
         }
 
@@ -346,9 +345,10 @@ namespace StrixMusic.Core.LocalFiles.Models
             var trackService = _fileMetadataManager.Tracks;
             var tracks = await trackService.GetTracksByArtistId(Id, offset, limit);
 
-            foreach (var album in tracks)
+            foreach (var track in tracks)
             {
-                yield return new LocalFilesCoreTrack(SourceCore, album);
+                Guard.IsNotNullOrWhiteSpace(track?.Id, nameof(track.Id));
+                yield return InstanceCache.Tracks.GetOrCreate(track.Id, SourceCore, track);
             }
         }
 
