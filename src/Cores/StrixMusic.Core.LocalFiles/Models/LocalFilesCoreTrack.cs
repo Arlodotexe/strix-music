@@ -20,6 +20,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     {
         private readonly TrackMetadata _trackMetadata;
         private readonly IFileMetadataManager _fileMetadataManager;
+        private int _totalArtistItemsCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreTrack"/> class.
@@ -140,7 +141,15 @@ namespace StrixMusic.Core.LocalFiles.Models
         public TrackType Type => TrackType.Song;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount { get; private set; }
+        public int TotalArtistItemsCount
+        {
+            get => _totalArtistItemsCount;
+            private set
+            {
+                _totalArtistItemsCount = value;
+                ArtistItemsCountChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 0;
@@ -360,23 +369,10 @@ namespace StrixMusic.Core.LocalFiles.Models
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// Updates the number of artists for <see cref="LocalFilesCoreTrack"/>.
-        /// </summary>
-        /// <param name="newArtistCount"></param>
-        public void ChangeTotalArtistCount(int newArtistCount)
-        {
-            TotalArtistItemsCount = newArtistCount;
-
-            ArtistItemsCountChanged?.Invoke(this, TotalArtistItemsCount);
-        }
-
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            var artistRepo = _fileMetadataManager?.Artists;
-            if (artistRepo == null)
-                yield break;
+            var artistRepo = _fileMetadataManager.Artists;
 
             var artists = await artistRepo.GetArtistsByTrackId(Id, offset, limit);
 
