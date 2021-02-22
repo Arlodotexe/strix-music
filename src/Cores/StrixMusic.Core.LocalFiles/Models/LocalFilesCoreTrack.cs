@@ -56,11 +56,12 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             Guard.IsNotNullOrWhiteSpace(e.ArtistMetadata.Id, nameof(e.ArtistMetadata.Id));
 
-            var localFilesCoreArtist = InstanceCacheRepo.ArtistCache.GetOrCreate(e.ArtistMetadata.Id, () => new LocalFilesCoreArtist(
+            var localFilesCoreArtist = InstanceCache.Artists.GetOrCreate(
+                e.ArtistMetadata.Id, 
                 SourceCore,
                 e.ArtistMetadata,
                 e.ArtistMetadata.TrackIds?.Count ?? 0,
-                e.ArtistMetadata.ImagePath == null ? null : InstanceCacheRepo.ImageCache.GetOrCreate(e.ArtistMetadata.Id, () => new LocalFilesCoreImage(SourceCore, e.ArtistMetadata.ImagePath))));
+                e.ArtistMetadata.ImagePath == null ? null : InstanceCache.Images.GetOrCreate(e.ArtistMetadata.Id, SourceCore, e.ArtistMetadata.ImagePath));
 
             var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>
             {
@@ -385,11 +386,10 @@ namespace StrixMusic.Core.LocalFiles.Models
 
                 if (artist.ImagePath != null)
                 {
-                    yield return InstanceCacheRepo.ArtistCache.GetOrCreate(artist.Id, () =>
-                        new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, InstanceCacheRepo.ImageCache.GetOrCreate(artist.Id, () => new LocalFilesCoreImage(SourceCore, artist.ImagePath))));
+                    yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist, artist.TrackIds?.Count ?? 0, InstanceCache.Images.GetOrCreate(artist.Id, SourceCore, artist.ImagePath));
                 }
 
-                yield return InstanceCacheRepo.ArtistCache.GetOrCreate(artist.Id, () => new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0));
+                yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist, artist.TrackIds?.Count ?? 0);
             }
         }
 
@@ -397,7 +397,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
             if (ImageUri != null)
-                yield return InstanceCacheRepo.ImageCache.GetOrCreate(Id, () => new LocalFilesCoreImage(SourceCore, ImageUri, 250, 250));
+                yield return InstanceCache.Images.GetOrCreate(Id, SourceCore, ImageUri, 250, 250);
 
             await Task.CompletedTask;
         }

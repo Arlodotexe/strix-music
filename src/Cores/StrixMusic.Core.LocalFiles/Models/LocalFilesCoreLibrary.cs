@@ -159,7 +159,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             Guard.IsNotNullOrWhiteSpace(e.TrackMetadata?.Id, nameof(e.TrackMetadata.Id));
 
-            var filesCoreTrack = InstanceCacheRepo.TrackCache.GetOrCreate(e.TrackMetadata.Id, () => new LocalFilesCoreTrack(SourceCore, e.TrackMetadata));
+            var filesCoreTrack = InstanceCache.Tracks.GetOrCreate(e.TrackMetadata.Id, SourceCore, e.TrackMetadata);
 
             var addedItems = new List<CollectionChangedItem<ICoreTrack>>
                 {
@@ -178,11 +178,12 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             Guard.IsNotNullOrWhiteSpace(e.ArtistMetadata?.Id, nameof(e.ArtistMetadata.Id));
 
-            var filesCoreArtist = InstanceCacheRepo.ArtistCache.GetOrCreate(e.ArtistMetadata.Id, () => new LocalFilesCoreArtist(
+            var filesCoreArtist = InstanceCache.Artists.GetOrCreate(
+                    e.ArtistMetadata.Id,
                     SourceCore,
                     e.ArtistMetadata,
                     e.ArtistMetadata.TrackIds?.Count ?? 0,
-                    e.ArtistMetadata.ImagePath == null ? null : new LocalFilesCoreImage(SourceCore, e.ArtistMetadata.ImagePath)));
+                    e.ArtistMetadata.ImagePath == null ? null : new LocalFilesCoreImage(SourceCore, e.ArtistMetadata.ImagePath));
 
             var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>
                 {
@@ -203,11 +204,12 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             Guard.IsNotNullOrWhiteSpace(e.AlbumMetadata.Id, nameof(e.AlbumMetadata.Id));
 
-            var fileCoreAlbum = InstanceCacheRepo.AlbumCache.GetOrCreate(e.AlbumMetadata.Id, () => new LocalFilesCoreAlbum(
+            var fileCoreAlbum = InstanceCache.Albums.GetOrCreate(
+                e.AlbumMetadata.Id,
                 SourceCore,
                 e.AlbumMetadata,
                 e.AlbumMetadata.TrackIds?.Count ?? 0,
-                track?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, track.ImagePath) : null));
+                track?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, track.ImagePath) : null);
 
             var addedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>
                 {
