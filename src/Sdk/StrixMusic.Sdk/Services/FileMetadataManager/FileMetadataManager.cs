@@ -57,9 +57,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private void AttachEvents()
         {
-            // todo, attach changed events?
             _fileMetadataScanner.FileMetadataAdded += FileMetadataScanner_FileMetadataAdded;
             _fileMetadataScanner.FileMetadataUpdated += FileMetadataScanner_FileMetadataUpdated;
+        }
+
+        private void DetachEvents()
+        {
+            _fileMetadataScanner.FileMetadataAdded -= FileMetadataScanner_FileMetadataAdded;
+            _fileMetadataScanner.FileMetadataUpdated -= FileMetadataScanner_FileMetadataUpdated;
         }
 
         private void FileMetadataScanner_FileMetadataUpdated(object sender, FileMetadata e)
@@ -81,11 +86,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 fileMetadata.ArtistMetadata = e.ArtistMetadata;
 
             FileMetadataAdded?.Invoke(sender, fileMetadata);
-        }
-
-        private void DetachEvents()
-        {
-            _fileMetadataScanner.FileMetadataAdded -= FileMetadataScanner_FileMetadataAdded;
         }
 
         ///<inheritdoc />

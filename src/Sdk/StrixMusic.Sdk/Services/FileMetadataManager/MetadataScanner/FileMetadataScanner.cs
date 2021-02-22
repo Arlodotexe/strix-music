@@ -445,7 +445,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 artistMetadata = existingArtist;
 
-                FileMetadataUpdated?.Invoke(this, new FileMetadata() { ArtistMetadata = existingArtist, TrackMetadata = trackMetadata });
+                _ = Task.Run(() => FileMetadataUpdated?.Invoke(this, new FileMetadata() { ArtistMetadata = existingArtist, TrackMetadata = trackMetadata }));
             }
             else
             {
@@ -696,8 +696,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 if (metadata != null)
                 {
-
-                    FileMetadataAdded?.Invoke(this, metadata);
+                    _ = Task.Run(() => FileMetadataAdded?.Invoke(this, metadata));
                 }
             }
 
