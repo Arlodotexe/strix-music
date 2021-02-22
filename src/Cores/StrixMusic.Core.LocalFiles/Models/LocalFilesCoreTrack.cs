@@ -19,12 +19,13 @@ namespace StrixMusic.Core.LocalFiles.Models
     public class LocalFilesCoreTrack : ICoreTrack
     {
         private readonly TrackMetadata? _trackMetadata;
-        private IFileMetadataManager? _fileMetadataManager;
+        private readonly IFileMetadataManager? _fileMetadataManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreTrack"/> class.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
+        /// <param name="trackMetadata">The track metadata to wrap around</param>
         public LocalFilesCoreTrack(ICore sourceCore, TrackMetadata trackMetadata)
         {
             SourceCore = sourceCore;
