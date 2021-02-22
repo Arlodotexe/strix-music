@@ -21,8 +21,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         private readonly AlbumMetadata _albumMetadata;
         private readonly LocalFilesCoreImage? _image;
         private readonly IFileMetadataManager _fileMetadataManager;
-        private int _totalTracksCount = 0;
-        private int _totalArtistCount = 0;
+        private int _totalTracksCount;
+        private int _totalArtistCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreAlbum"/> class.
