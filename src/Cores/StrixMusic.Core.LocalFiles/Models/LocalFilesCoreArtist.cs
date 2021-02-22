@@ -26,7 +26,8 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <param name="sourceCore">The source core.</param>
         /// <param name="artistMetadata">The artist metadata to wrap around.</param>
         /// <param name="totalTracksCount">The total number of track for this artist.</param>
-        public LocalFilesCoreArtist(ICore sourceCore, ArtistMetadata artistMetadata, int totalTracksCount, LocalFilesCoreImage? image)
+        /// <param name="image">An image for this artist.</param>
+        public LocalFilesCoreArtist(ICore sourceCore, ArtistMetadata artistMetadata, int totalTracksCount, LocalFilesCoreImage? image = null)
         {
             SourceCore = sourceCore;
             _artistMetadata = artistMetadata;
