@@ -64,8 +64,6 @@ namespace StrixMusic.Core.LocalFiles.Models
             if (e.AlbumMetadata == null)
                 return;
 
-            TotalAlbumItemsCount++;
-
             var fileCoreAlbum = new LocalFilesCoreAlbum(
                 SourceCore,
                 e.AlbumMetadata,
@@ -78,8 +76,8 @@ namespace StrixMusic.Core.LocalFiles.Models
                 new CollectionChangedItem<ICoreAlbumCollectionItem>(fileCoreAlbum, 0),
             };
 
-            AlbumItemsCountChanged?.Invoke(this, TotalAlbumItemsCount);
             AlbumItemsChanged?.Invoke(this, addedAlbums, removedItems);
+            TotalAlbumItemsCount++;
         }
 
         private void TracksUpdated(FileMetadata e)
@@ -88,8 +86,6 @@ namespace StrixMusic.Core.LocalFiles.Models
                 return;
 
             Guard.IsNotNullOrWhiteSpace(e.TrackMetadata?.Id, nameof(e.TrackMetadata.Id));
-
-            TotalTracksCount++;
 
             var fileCoreTrack = InstanceCache.Tracks.GetOrCreate(e.TrackMetadata.Id, SourceCore, e.TrackMetadata);
 
@@ -100,7 +96,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             };
 
             TrackItemsChanged?.Invoke(this, addedArtists, removedItems);
-            TrackItemsCountChanged?.Invoke(this, TotalTracksCount);
+            TotalTracksCount++;
         }
 
         /// <inheritdoc/>
