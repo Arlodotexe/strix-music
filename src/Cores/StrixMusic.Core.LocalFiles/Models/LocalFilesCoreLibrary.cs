@@ -97,7 +97,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-
             var albumMetadata = await _fileMetadataManager.Albums.GetAlbumMetadata(offset, limit);
 
             foreach (var album in albumMetadata)
@@ -107,7 +106,9 @@ namespace StrixMusic.Core.LocalFiles.Models
                 var tracks = await _fileMetadataManager.Tracks.GetTracksByAlbumId(album.Id, 0, 1);
                 var track = tracks.FirstOrDefault();
 
-                yield return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0, track?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, track.ImagePath) : null);
+                Guard.IsNotNullOrWhiteSpace(track?.Id, nameof(track.Id));
+
+                yield return InstanceCache.Albums.GetOrCreate(album.Id, SourceCore, album, album.TrackIds?.Count ?? 0, track?.ImagePath != null ? InstanceCache.Images.GetOrCreate(track.Id, SourceCore, track.ImagePath) : null);
             }
         }
 
@@ -115,15 +116,16 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-
             var artistMetadata = await _fileMetadataManager.Artists.GetArtistMetadata(offset, limit);
 
             foreach (var artist in artistMetadata)
             {
-                if (artist.ImagePath != null)
-                    yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, new LocalFilesCoreImage(SourceCore, artist.ImagePath));
+                Guard.IsNotNullOrWhiteSpace(artist.Id, nameof(artist.Id));
 
-                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, null);
+                if (artist.ImagePath != null)
+                    yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist, artist.TrackIds?.Count ?? 0, InstanceCache.Images.GetOrCreate(artist.Id, SourceCore, artist.ImagePath));
+
+                yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist, artist.TrackIds?.Count ?? 0);
             }
         }
 
@@ -131,12 +133,12 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-
             var artistMetadata = await _fileMetadataManager.Tracks.GetTrackMetadata(offset, limit);
 
             foreach (var track in artistMetadata)
             {
-                yield return new LocalFilesCoreTrack(SourceCore, track);
+                Guard.IsNotNullOrWhiteSpace(track.Id, nameof(track.Id));
+                yield return InstanceCache.Tracks.GetOrCreate(track.Id, SourceCore, track);
             }
         }
 
@@ -183,7 +185,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                     SourceCore,
                     e.ArtistMetadata,
                     e.ArtistMetadata.TrackIds?.Count ?? 0,
-                    e.ArtistMetadata.ImagePath == null ? null : new LocalFilesCoreImage(SourceCore, e.ArtistMetadata.ImagePath));
+                    e.ArtistMetadata.ImagePath == null ? null : InstanceCache.Images.GetOrCreate(e.ArtistMetadata.Id, SourceCore, e.ArtistMetadata.ImagePath));
 
             var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>
                 {
@@ -209,7 +211,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 SourceCore,
                 e.AlbumMetadata,
                 e.AlbumMetadata.TrackIds?.Count ?? 0,
-                track?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, track.ImagePath) : null);
+                track?.ImagePath != null ? InstanceCache.Images.GetOrCreate(e.AlbumMetadata.Id, SourceCore, track.ImagePath) : null);
 
             var addedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>
                 {
