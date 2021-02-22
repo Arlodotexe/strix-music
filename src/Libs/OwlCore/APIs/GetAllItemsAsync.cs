@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OwlCore
@@ -30,11 +31,13 @@ namespace OwlCore
             while (list.Count < total)
             {
                 var page = await endpoint(list.Count);
+                // ReSharper disable once ConstantConditionalAccessQualifier
+                var results = page as TResult[] ?? page?.ToArray();
 
-                if (page is null)
+                if (results == null || !results.Any())
                     return list;
 
-                list.AddRange(page);
+                list.AddRange(results);
             }
 
             return list;
@@ -55,11 +58,13 @@ namespace OwlCore
             while (list.Count < total)
             {
                 var page = await endpoint(list.Count + startingOffset);
+                // ReSharper disable once ConstantConditionalAccessQualifier
+                var results = page as TResult[] ?? page?.ToArray();
 
-                if (page is null)
+                if (results == null || !results.Any())
                     return list;
 
-                list.AddRange(page);
+                list.AddRange(results);
             }
 
             return list;
@@ -80,11 +85,13 @@ namespace OwlCore
             while (true)
             {
                 var page = await endpoint(list.Count);
+                // ReSharper disable once ConstantConditionalAccessQualifier
+                var results = page as TResult[] ?? page?.ToArray();
 
-                if (page is null)
+                if (results == null || !results.Any())
                     return list;
 
-                list.AddRange(page);
+                list.AddRange(results);
 
                 if (list.Count >= total)
                     break;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Core.LocalFiles.Services;
@@ -57,20 +58,17 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         private void TracksUpdated(FileMetadata e)
         {
-            if (e.TrackMetadata?.Id != null)
-            {
-                TotalTracksCount++;
+            Guard.IsNotNullOrWhiteSpace(e.TrackMetadata?.Id, nameof(Id));
 
-                var fileCoreTrack =
-                    InstanceCache.Tracks.GetOrCreate(e.TrackMetadata.Id, SourceCore, e.TrackMetadata);
+            var fileCoreTrack = InstanceCache.Tracks.GetOrCreate(e.TrackMetadata.Id, SourceCore, e.TrackMetadata);
 
-                var addedItems = new List<CollectionChangedItem<ICoreTrack>>
+            var addedItems = new List<CollectionChangedItem<ICoreTrack>>
                 {
                     new CollectionChangedItem<ICoreTrack>(fileCoreTrack, 0),
                 };
 
-                TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreTrack>>());
-            }
+            TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreTrack>>());
+            TotalTracksCount++;
         }
 
         private void ArtistsUpdated(FileMetadata e)

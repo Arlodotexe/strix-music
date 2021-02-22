@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -8,7 +7,6 @@ using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
-using StrixMusic.Sdk.Services.StorageService;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
@@ -16,7 +14,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
     public class FileMetadataManager : IFileMetadataManager
     {
         private readonly string _instanceId;
-        private readonly IFolderData _rootFolder;
         private readonly FileMetadataScanner _fileMetadataScanner;
 
         /// <summary>
@@ -27,9 +24,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public FileMetadataManager(string instanceId, IFolderData rootFolder)
         {
             _instanceId = instanceId;
-            _rootFolder = rootFolder;
 
-            _fileMetadataScanner = new FileMetadataScanner(_rootFolder);
+            _fileMetadataScanner = new FileMetadataScanner(rootFolder);
 
             Albums = new AlbumRepository(_fileMetadataScanner);
             Artists = new ArtistRepository(_fileMetadataScanner);
@@ -158,7 +154,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Artists.Dispose();
             Playlists.Dispose();
             Tracks.Dispose();
-            _fileMetadataScanner?.Dispose();
+            _fileMetadataScanner.Dispose();
 
             return default;
         }
