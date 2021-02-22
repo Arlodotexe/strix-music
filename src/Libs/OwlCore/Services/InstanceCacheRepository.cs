@@ -13,14 +13,17 @@ namespace OwlCore.Services
         /// <inheritdoc />
         public T GetOrCreate(string id, Func<T> creationHandler)
         {
-            if (_instanceCache.TryGetValue(id, out var value))
-                return value;
+            lock (_instanceCache)
+            {
+                if (_instanceCache.TryGetValue(id, out var value))
+                    return value;
 
-            var newItem = creationHandler();
+                var newItem = creationHandler();
 
-            _instanceCache.Add(id, newItem);
+                _instanceCache.Add(id, newItem);
 
-            return newItem;
+                return newItem;
+            }
         }
     }
 }
