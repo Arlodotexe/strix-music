@@ -39,8 +39,6 @@ namespace StrixMusic.Core.LocalFiles
             Discoverables = new LocalFilesCoreDiscoverables(this);
             CoreConfig = new LocalFilesCoreConfig(this);
             _coreLibrary = new LocalFilesCoreLibrary(this);
-
-            LocalFilesCoreManager.Instances?.Add(this);
         }
 
         /// <inheritdoc/>
@@ -117,22 +115,18 @@ namespace StrixMusic.Core.LocalFiles
             if (configuredFolder is null)
             {
                 PickAndSetupFolder().FireAndForget();
-
                 ChangeCoreState(CoreState.Configuring);
-
                 return;
             }
 
-            await coreConfig.ConfigureServices(services);
+            await coreConfig.SetupServices(services);
+            _ = coreConfig.ScanFileMetadata();
 
             ChangeCoreState(CoreState.Loaded);
 
-            coreConfig.ScanFileMetadata().FireAndForget();
-
             _coreCount++;
 
-            if (_coreCount == LocalFilesCoreManager.Instances?.Count)
-                LocalFilesCoreManager.InitializeDataForAllCores().FireAndForget();
+            await Library.Cast<LocalFilesCoreLibrary>().InitAsync();
         }
 
         private async Task PickAndSetupFolder()

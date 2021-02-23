@@ -41,7 +41,7 @@
                         <items:AlbumItem>
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="DoubleTapped">
-                                    <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                                    <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayAlbumAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </items:AlbumItem>

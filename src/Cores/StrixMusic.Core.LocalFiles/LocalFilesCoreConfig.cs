@@ -6,12 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Extensions;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.FileMetadataManager;
-using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Core.LocalFiles
@@ -44,7 +42,6 @@ namespace StrixMusic.Core.LocalFiles
 
         /// <inheritdoc/>
         public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/Strix/logo.svg");
-
         /// <inheritdoc />
         public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
 
@@ -52,7 +49,7 @@ namespace StrixMusic.Core.LocalFiles
         /// Configures services for this instance of the core.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task ConfigureServices(IServiceCollection services)
+        public async Task SetupServices(IServiceCollection services)
         {
             await SetupConfigurationServices(services);
             Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
@@ -64,8 +61,6 @@ namespace StrixMusic.Core.LocalFiles
             _fileMetadataManager = new FileMetadataManager(SourceCore.InstanceId, folderData);
 
             services.AddSingleton<IFileMetadataManager>(_fileMetadataManager);
-
-            _fileMetadataManager.InitAsync().FireAndForget();
 
             Services = null;
             Services = services.BuildServiceProvider();

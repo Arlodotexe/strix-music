@@ -57,7 +57,7 @@ namespace StrixMusic.Sdk.ViewModels
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
             PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrack);
-            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbum>(album => PlayAlbumCollectionAsync(album));
+            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionAsync);
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
@@ -558,7 +558,7 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PlayAlbumCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public IAsyncRelayCommand<IAlbum> PlayAlbumAsyncCommand { get; }
+        public IAsyncRelayCommand<IAlbumCollectionItem> PlayAlbumAsyncCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }

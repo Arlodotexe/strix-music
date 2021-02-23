@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
@@ -26,13 +25,16 @@ namespace StrixMusic.Sdk
     {
         private readonly List<ICore> _sources = new List<ICore>();
         private readonly List<(ICore core, CancellationTokenSource cancellationToken)> _coreInitData = new List<(ICore, CancellationTokenSource)>();
+        private readonly StrixDevice _strixDevice;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
-        public MainViewModel()
+        public MainViewModel(StrixDevice strixDevice)
         {
             Singleton = this;
+            _strixDevice = strixDevice;
+            LocalDevice = new DeviceViewModel(_strixDevice);
 
             Devices = new ObservableCollection<DeviceViewModel>();
 
@@ -113,7 +115,7 @@ namespace StrixMusic.Sdk
 
             Devices = new ObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new CoreDeviceProxy(device))))
             {
-                new DeviceViewModel(new StrixDevice()),
+                LocalDevice,
             };
 
             AttachEvents();
@@ -209,6 +211,8 @@ namespace StrixMusic.Sdk
             if (e == CoreState.Unloaded)
             {
                 var relevantVm = Cores.FirstOrDefault(x => x.InstanceId == core.InstanceId);
+                Guard.IsNotNull(relevantVm, nameof(relevantVm));
+
                 await Threading.OnPrimaryThread(() => Cores.Remove(relevantVm));
 
                 core.CoreStateChanged -= Core_CoreStateChanged;
@@ -285,7 +289,7 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// Gets the active device in <see cref="Devices"/>.
         /// </summary>
-        public DeviceViewModel? LocalDevice => Devices.FirstOrDefault(x => x.Type == DeviceType.Local && x.Model is StrixDevice);
+        public DeviceViewModel LocalDevice { get; }
 
         /// <summary>
         /// The consolidated music library across all cores.

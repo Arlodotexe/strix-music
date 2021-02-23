@@ -311,92 +311,94 @@ namespace StrixMusic.Sdk.Data.Merged
         private void MergedCollectionMap_ItemsChanged<T>(object sender, IReadOnlyList<CollectionChangedItem<T>> addedItems, IReadOnlyList<CollectionChangedItem<T>> removedItems)
             where T : class, ICollectionItemBase, ICoreMember
         {
-            var addedMergedItems = CheckAddedItems();
-            var removedMergedItems = CheckRemovedItems();
-
-            List<CollectionChangedItem<TCollectionItem>> CheckAddedItems()
+            lock (_mergedMappedData)
             {
-                var added = new List<CollectionChangedItem<TCollectionItem>>();
-                var newItems = new List<IMergedMutable<TCoreCollectionItem>>();
+                var addedMergedItems = ItemsAdded_CheckAddedItems(addedItems, sender);
+                var removedMergedItems = ItemsChanged_CheckRemovedItems(removedItems);
 
-                foreach (var item in addedItems)
+                ItemsChanged?.Invoke(this, addedMergedItems, removedMergedItems);
+                ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
+            }
+        }
+
+        private List<CollectionChangedItem<TCollectionItem>> ItemsAdded_CheckAddedItems<T>(IReadOnlyList<CollectionChangedItem<T>> addedItems, object sender)
+            where T : class, ICollectionItemBase, ICoreMember
+        {
+            var added = new List<CollectionChangedItem<TCollectionItem>>();
+            var newItems = new List<IMergedMutable<TCoreCollectionItem>>();
+
+            foreach (var item in addedItems)
+            {
+                if (!(item.Data is TCoreCollectionItem collectionItemData)) return ThrowHelper.ThrowInvalidOperationException<List<CollectionChangedItem<TCollectionItem>>>($"{nameof(item.Data)} couldn't be cast to {nameof(TCoreCollectionItem)}.");
+
+                // Check for an existing IMerged that matches this item
+                foreach (var mergedItem in _mergedMappedData)
                 {
-                    if (!(item.Data is TCoreCollectionItem collectionItemData))
-                        return ThrowHelper.ThrowInvalidOperationException<List<CollectionChangedItem<TCollectionItem>>>($"{nameof(item.Data)} couldn't be cast to {nameof(TCoreCollectionItem)}.");
-
-                    // Check for an existing IMerged that matches this item
-                    foreach (var mergedItem in _mergedMappedData)
+                    // Using "?? false" breaks nullable assertion?
+                    if (mergedItem?.CollectionItem.Equals(collectionItemData) == true)
                     {
-                        // Using "?? false" breaks nullable assertion?
-                        if (mergedItem?.CollectionItem.Equals(collectionItemData) == true)
-                        {
-                            mergedItem.CollectionItem.AddSource(collectionItemData);
-                            return added;
-                        }
-                    }
-
-                    var newItemsCount = newItems.Count;
-
-                    // TODO: Sorting is not handled.
-                    var mergedImpl = MergeOrAdd(newItems, collectionItemData);
-
-                    var mappedData = new MappedData(item.Index, (TCoreCollection)sender, collectionItemData);
-
-                    _sortedMap.Add(mappedData);
-                    _mergedMappedData.Add(new MergedMappedData(mergedImpl, new[] { mappedData }));
-
-                    // If the number of items in this list changes, the item was not merged and should be emitted on the ItemsChanged event.
-                    if (newItemsCount != newItems.Count)
-                    {
-                        added.Add(new CollectionChangedItem<TCollectionItem>((TCollectionItem)mergedImpl, _mergedMappedData.Count - 1));
+                        mergedItem.CollectionItem.AddSource(collectionItemData);
+                        return added;
                     }
                 }
 
-                return added;
+                var newItemsCount = newItems.Count;
+
+                // TODO: Sorting is not handled.
+                var mergedImpl = MergeOrAdd(newItems, collectionItemData);
+
+                var mappedData = new MappedData(item.Index, (TCoreCollection)sender, collectionItemData);
+
+                _sortedMap.Add(mappedData);
+                _mergedMappedData.Add(new MergedMappedData(mergedImpl, new[] { mappedData }));
+
+                // If the number of items in this list changes, the item was not merged and should be emitted on the ItemsChanged event.
+                if (newItemsCount != newItems.Count)
+                {
+                    added.Add(new CollectionChangedItem<TCollectionItem>((TCollectionItem)mergedImpl, _mergedMappedData.Count - 1));
+                }
             }
 
-            List<CollectionChangedItem<TCollectionItem>> CheckRemovedItems()
+            return added;
+        }
+
+        private List<CollectionChangedItem<TCollectionItem>> ItemsChanged_CheckRemovedItems<T>(IReadOnlyList<CollectionChangedItem<T>> removedItems)
+            where T : class, ICollectionItemBase, ICoreMember
+        {
+            var removed = new List<CollectionChangedItem<TCollectionItem>>();
+
+            foreach (var item in removedItems)
             {
-                var removed = new List<CollectionChangedItem<TCollectionItem>>();
+                var mappedData = _sortedMap.FirstOrDefault(x => x.OriginalIndex == item.Index && item.Data.SourceCore == x.SourceCollection.SourceCore);
 
-                foreach (var item in removedItems)
+                if (mappedData == null) continue;
+
+                foreach (var mergedData in _mergedMappedData)
                 {
-                    var mappedData = _sortedMap.FirstOrDefault(x => x.OriginalIndex == item.Index && item.Data.SourceCore == x.SourceCollection.SourceCore);
-
-                    if (mappedData == null)
-                        continue;
-
-                    foreach (var mergedData in _mergedMappedData)
+                    foreach (var mergedSource in mergedData.CollectionItem.Cast<IMerged<TCoreCollectionItem>>().Sources)
                     {
-                        foreach (var mergedSource in mergedData.CollectionItem.Cast<IMerged<TCoreCollectionItem>>().Sources)
+                        if (mappedData.CollectionItem != mergedSource) continue;
+
+                        _sortedMap.Remove(mappedData);
+
+                        mergedData.CollectionItem.RemoveSource(mergedSource);
+
+                        mergedData.MergedMapData.RemoveAll(x => x.OriginalIndex == item.Index && item.Data.SourceCore == x.SourceCollection.SourceCore);
+
+                        if (mergedData.CollectionItem.Cast<IMerged<TCoreCollectionItem>>().Sources.Count == 0)
                         {
-                            if (mappedData.CollectionItem != mergedSource)
-                                continue;
+                            _mergedMappedData.Remove(mergedData);
 
-                            _sortedMap.Remove(mappedData);
-
-                            mergedData.CollectionItem.RemoveSource(mergedSource);
-
-                            mergedData.MergedMapData.RemoveAll(x => x.OriginalIndex == item.Index && item.Data.SourceCore == x.SourceCollection.SourceCore);
-
-                            if (mergedData.CollectionItem.Cast<IMerged<TCoreCollectionItem>>().Sources.Count == 0)
-                            {
-                                _mergedMappedData.Remove(mergedData);
-
-                                var index = _mergedMappedData.IndexOf(mergedData);
-                                removed.Add(new CollectionChangedItem<TCollectionItem>((TCollectionItem)mergedData.CollectionItem, index));
-                            }
-
-                            return removed;
+                            var index = _mergedMappedData.IndexOf(mergedData);
+                            removed.Add(new CollectionChangedItem<TCollectionItem>((TCollectionItem)mergedData.CollectionItem, index));
                         }
+
+                        return removed;
                     }
                 }
-
-                return removed;
             }
 
-            ItemsChanged?.Invoke(this, addedMergedItems, removedMergedItems);
-            ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
+            return removed;
         }
 
         private void MergedCollectionMap_CountChanged(object sender, int e)

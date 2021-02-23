@@ -1,33 +1,77 @@
-﻿using OwlCore.Collections;
-using OwlCore.Events;
-using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.MediaPlayback;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Collections;
+using OwlCore.Events;
+using StrixMusic.Core.LocalFiles.Services;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
-    ///NOTE: There are some methods set to NotAvailabletemporarily although they are supported, so the playback can be implemented.
     /// <inheritdoc />
     public class LocalFilesCoreTrack : ICoreTrack
     {
-        private readonly TrackMetadata? _trackMetadata;
-        private IFileMetadataManager? _fileMetadataManager;
+        private readonly TrackMetadata _trackMetadata;
+        private readonly IFileMetadataManager _fileMetadataManager;
+        private int _totalArtistItemsCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreTrack"/> class.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
+        /// <param name="trackMetadata">The track metadata to wrap around</param>
         public LocalFilesCoreTrack(ICore sourceCore, TrackMetadata trackMetadata)
         {
             SourceCore = sourceCore;
             _trackMetadata = trackMetadata;
             Genres = new SynchronizedObservableCollection<string>(trackMetadata.Genres);
+
+            _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
+            AttachEvents();
+        }
+
+        private void AttachEvents()
+        {
+            _fileMetadataManager.FileMetadataUpdated += FileMetadataManager_FileMetadataUpdated;
+        }
+
+        private void FileMetadataManager_FileMetadataUpdated(object sender, FileMetadata e)
+        {
+            if (e.TrackMetadata == null)
+                return;
+
+            if (e.TrackMetadata.Id != Id)
+                return;
+
+            if (e.ArtistMetadata == null)
+                return;
+
+            TotalArtistItemsCount++;
+
+            Guard.IsNotNullOrWhiteSpace(e.ArtistMetadata.Id, nameof(e.ArtistMetadata.Id));
+
+            var localFilesCoreArtist = InstanceCache.Artists.GetOrCreate(
+                e.ArtistMetadata.Id, 
+                SourceCore,
+                e.ArtistMetadata,
+                e.ArtistMetadata.TrackIds?.Count ?? 0,
+                e.ArtistMetadata.ImagePath == null ? null : InstanceCache.Images.GetOrCreate(e.ArtistMetadata.Id, SourceCore, e.ArtistMetadata.ImagePath));
+
+            var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>
+            {
+                new CollectionChangedItem<ICoreArtistCollectionItem>(localFilesCoreArtist, TotalArtistItemsCount - 1),
+            };
+
+            var removedItems = Array.Empty<CollectionChangedItem<ICoreArtistCollectionItem>>();
+
+            ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
         /// <inheritdoc/>
@@ -91,13 +135,21 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc/>
-        public string Id => _trackMetadata?.Id ?? string.Empty;
+        public string Id => _trackMetadata.Id ?? string.Empty;
 
         /// <inheritdoc/>
         public TrackType Type => TrackType.Song;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount { get; private set; }
+        public int TotalArtistItemsCount
+        {
+            get => _totalArtistItemsCount;
+            private set
+            {
+                _totalArtistItemsCount = value;
+                ArtistItemsCountChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 0;
@@ -106,11 +158,11 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICoreAlbum? Album { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
+        public SynchronizedObservableCollection<string>? Genres { get; }
 
         /// <inheritdoc/>
         /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>
-        public int? TrackNumber => Convert.ToInt32(_trackMetadata?.TrackNumber);
+        public int? TrackNumber => Convert.ToInt32(_trackMetadata.TrackNumber);
 
         /// <inheritdoc />
         public int? DiscNumber { get; }
@@ -130,27 +182,27 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <summary>
         /// Image uri for <see cref="LocalFilesCoreTrack"/>
         /// </summary>
-        public Uri? ImageUri => _trackMetadata?.ImagePath;
+        public Uri? ImageUri => _trackMetadata.ImagePath;
 
         /// <summary>
         /// The path to the playable music file on disk.
         /// </summary>
-        public Uri? LocalTrackPath => _trackMetadata?.Source;
+        public Uri? LocalTrackPath => _trackMetadata.Source;
 
         /// <inheritdoc/>
         public Uri? Url => null;
 
         /// <inheritdoc/>
-        public string Name => _trackMetadata?.Title ?? string.Empty;
+        public string Name => _trackMetadata.Title ?? string.Empty;
 
         /// <inheritdoc/>
-        public string? Description => _trackMetadata?.Description;
+        public string? Description => _trackMetadata.Description;
 
         /// <inheritdoc/>
         public PlaybackState PlaybackState { get; }
 
         /// <inheritdoc/>
-        public TimeSpan Duration => _trackMetadata?.Duration ?? new TimeSpan(0, 0, 0);
+        public TimeSpan Duration => _trackMetadata.Duration ?? new TimeSpan(0, 0, 0);
 
         /// <inheritdoc />
         public DateTime? LastPlayed { get; }
@@ -317,33 +369,23 @@ namespace StrixMusic.Core.LocalFiles.Models
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// Updates the number of artists for <see cref="LocalFilesCoreTrack"/>.
-        /// </summary>
-        /// <param name="newArtistCount"></param>
-        public void ChangeTotalArtistCount(int newArtistCount)
-        {
-            TotalArtistItemsCount = newArtistCount;
-
-            ArtistItemsCountChanged?.Invoke(this,TotalArtistItemsCount);
-        }
-
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            var artistRepo = _fileMetadataManager?.Artists;
+            var artistRepo = _fileMetadataManager.Artists;
 
-            if (artistRepo != null)
+            var artists = await artistRepo.GetArtistsByTrackId(Id, offset, limit);
+
+            foreach (var artist in artists)
             {
-                var artists = await artistRepo.GetArtistsByTrackId(Id, offset, limit);
+                Guard.IsNotNullOrWhiteSpace(artist.Id, nameof(artist.Id));
 
-                foreach (var artist in artists)
+                if (artist.ImagePath != null)
                 {
-                    if (artist.ImagePath != null)
-                        yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, new LocalFilesCoreImage(SourceCore, artist.ImagePath));
-
-                    yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, null);
+                    yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist, artist.TrackIds?.Count ?? 0, InstanceCache.Images.GetOrCreate(artist.Id, SourceCore, artist.ImagePath));
                 }
+
+                yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist, artist.TrackIds?.Count ?? 0);
             }
         }
 
@@ -351,7 +393,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
             if (ImageUri != null)
-                yield return new LocalFilesCoreImage(SourceCore, ImageUri, 250, 250);
+                yield return InstanceCache.Images.GetOrCreate(Id, SourceCore, ImageUri, 250, 250);
 
             await Task.CompletedTask;
         }

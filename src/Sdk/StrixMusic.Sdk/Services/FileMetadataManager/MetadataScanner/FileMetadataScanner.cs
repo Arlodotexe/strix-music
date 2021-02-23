@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
@@ -386,9 +387,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 trackMetadata.Id = (fileData.Path + ".track").HashMD5Fast();
 
+                Guard.IsNotNullOrWhiteSpace(trackMetadata.Id, nameof(trackMetadata.Id));
+
                 if (_fileMetadata.Count == 0)
                 {
                     var albumId = (fileData.Path + ".album").HashMD5Fast();
+
                     albumMetadata.Id = albumId;
 
                     var artistId = (fileData.Path + ".artist").HashMD5Fast();
@@ -401,25 +405,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     return relatedMetadata;
                 }
 
-                // Checking for existing tracks. If found, the no new ids are created.
-                var existingTrack = _fileMetadata.FirstOrDefault(c => c.TrackMetadata?.Title?.Equals(trackMetadata.Title, StringComparison.OrdinalIgnoreCase) ?? false)?.TrackMetadata;
-
-                // Suppress any track with the same Title.
-                if (existingTrack != null)
-                    return null;
-
-                if (existingTrack != null)
-                {
-                    trackMetadata = existingTrack;
-                    trackMetadata.Id ??= (fileData.Path + ".track").HashMD5Fast();
-                }
-
                 artistMetadata = ApplyRelatedArtistMetadata(artistMetadata, trackMetadata, fileData);
-
                 albumMetadata = ApplyRelatedAlbumMetadata(albumMetadata, trackMetadata, artistMetadata, fileData);
 
-                if (trackMetadata == null)
-                    return relatedMetadata;
+                relatedMetadata.AlbumMetadata = albumMetadata;
+                relatedMetadata.ArtistMetadata = artistMetadata;
+                relatedMetadata.TrackMetadata = trackMetadata;
 
                 trackMetadata.AlbumId = albumMetadata.Id;
                 trackMetadata.ArtistIds ??= new List<string>();
@@ -440,12 +431,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (existingArtist != null)
             {
                 existingArtist.TrackIds ??= new List<string>();
-
                 existingArtist.TrackIds.Add(trackMetadata.Id);
 
                 artistMetadata = existingArtist;
 
-                FileMetadataUpdated?.Invoke(this, new FileMetadata() { ArtistMetadata = existingArtist });
+                _ = Task.Run(() => FileMetadataUpdated?.Invoke(this, new FileMetadata() { ArtistMetadata = existingArtist, TrackMetadata = trackMetadata }));
             }
             else
             {
@@ -472,11 +462,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (existingAlbum != null)
             {
                 existingAlbum.TrackIds ??= new List<string>();
-
                 existingAlbum.TrackIds.Add(trackMetadata.Id);
 
                 albumMetadata = existingAlbum;
-
                 albumMetadata.ArtistIds ??= new List<string>();
 
                 if (artistMetadata?.Id != null)
@@ -487,7 +475,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     }
                 }
 
-                FileMetadataUpdated?.Invoke(this, new FileMetadata { AlbumMetadata = existingAlbum });
+                FileMetadataUpdated?.Invoke(this, new FileMetadata { AlbumMetadata = existingAlbum, TrackMetadata = trackMetadata, ArtistMetadata = artistMetadata });
             }
             else
             {
@@ -512,7 +500,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <returns>A list of unique <see cref="AlbumMetadata"/></returns>
         public async Task<IReadOnlyList<AlbumMetadata>> GetUniqueAlbumMetadata()
         {
-            if (_folderScanningTaskCompletion != null)
+            if (_folderScanningTaskCompletion != null && _folderScanningTaskCompletion.Task.Status != TaskStatus.RanToCompletion)
                 await _folderScanningTaskCompletion.Task;
 
             lock (_fileMetadata)
@@ -529,7 +517,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
         public async Task<IReadOnlyList<ArtistMetadata>> GetUniqueArtistMetadata()
         {
-            if (_folderScanningTaskCompletion != null)
+            if (_folderScanningTaskCompletion != null && _folderScanningTaskCompletion.Task.Status != TaskStatus.RanToCompletion)
                 await _folderScanningTaskCompletion.Task;
 
             lock (_fileMetadata)
@@ -546,7 +534,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
         public async Task<IReadOnlyList<TrackMetadata>> GetUniqueTrackMetadata()
         {
-            if (_folderScanningTaskCompletion != null)
+            if (_folderScanningTaskCompletion != null && _folderScanningTaskCompletion.Task.Status != TaskStatus.RanToCompletion)
                 await _folderScanningTaskCompletion.Task;
 
             lock (_fileMetadata)
@@ -640,7 +628,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 var result = _fileMetadata.ToList();
 
                 _folderScanningTaskCompletion?.SetResult(result);
-                _folderScanningTaskCompletion = null;
             }
         }
 
@@ -693,11 +680,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     _fileMetadata.Add(metadata);
 
                 FilesProcessed++;
-            }
 
-            // todo If any related metadata is updated but already emitted, we need to update the data externally as well.
-            if (metadata != null)
-                FileMetadataAdded?.Invoke(this, metadata);
+                if (metadata != null)
+                {
+                    _ = Task.Run(() => FileMetadataAdded?.Invoke(this, metadata));
+                }
+            }
 
             return metadata;
         }
@@ -722,7 +710,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             _progressUIElement = new AbstractProgressUIElement(NewGuid(), FilesProcessed, FilesFound);
 
-            var elementGroup = new AbstractUIElementGroup(NewGuid(), PreferredOrientation.Vertical)
+            var elementGroup = new AbstractUIElementGroup(NewGuid())
             {
                 Title = "Scanning folder contents",
                 Subtitle = $"Processing {FilesFound} files in {_folderData.Path}",

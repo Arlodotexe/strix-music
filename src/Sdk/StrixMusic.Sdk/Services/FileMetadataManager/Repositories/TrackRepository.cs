@@ -18,6 +18,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
     {
         private const string TRACK_DATA_FILENAME = "TrackData.bin";
 
+        private readonly IList<TrackMetadata> _trackMetadatas;
         private readonly FileMetadataScanner _fileMetadataScanner;
         private IFolderData? _folderData;
         private IFileSystemService? _fileSystemService;
@@ -34,6 +35,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             Guard.IsNotNull(fileMetadataScanner, nameof(fileMetadataScanner));
 
+            _trackMetadatas = new List<TrackMetadata>();
             _fileSystemService = Ioc.Default.GetService<IFileSystemService>();
             _fileMetadataScanner = fileMetadataScanner;
             _pathToMetadataFile = string.Empty;
@@ -59,6 +61,31 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private void FileMetadataRemoved(object sender, FileMetadata e)
         {
             // todo
+        }
+
+        /// <summary>
+        /// Add a new <see cref="TrackMetadata"/>. It helps to filter out the duplicates while adding.
+        /// </summary>
+        /// <param name="trackMetadata">The metadata to be added.</param>
+        /// <returns>If true, track is added otherwise false.</returns>
+        public bool AddOrSkipTrackMetadata(TrackMetadata? trackMetadata)
+        {
+            lock (_trackMetadatas)
+            {
+                if (trackMetadata == null)
+                    return false;
+
+                if (!_trackMetadatas?.Any(c =>
+                    c.Title?.Equals(trackMetadata.Title ?? string.Empty, StringComparison.OrdinalIgnoreCase) ??
+                    false) ?? false)
+                {
+                    _trackMetadatas?.Add(trackMetadata);
+
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         /// <summary>
