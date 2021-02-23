@@ -183,7 +183,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 {
                     var albumVm = new AlbumViewModel(album);
 
-                    if (albumItem.Id == albumCollectionItem?.Id)
+                    if (albumItem.Id == albumCollectionItem?.Id && !foundItemTarget)
                     {
                         // Tracks are added to the queue of previous items until we reach the item the user wants to play.
                         itemIndex = _prevItems.Count;
@@ -195,6 +195,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                         continue;
 
                     _ = await AddTrackCollectionToQueue(albumVm.Tracks.First(), albumVm, foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                    var nxt = _nextItems;
+                    var prev = _prevItems;
                 }
 
                 if (albumItem is IAlbumCollection albumCol)

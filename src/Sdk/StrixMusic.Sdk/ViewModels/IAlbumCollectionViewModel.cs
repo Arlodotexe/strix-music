@@ -35,9 +35,9 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PlayAlbumCollectionAsyncCommand { get; }
 
         /// <summary>
-        /// Plays a single track from this track collection.
+        /// Plays a single album from this album collection.
         /// </summary>
-        public IAsyncRelayCommand<IAlbum> PlayAlbumAsyncCommand { get; }
+        public IAsyncRelayCommand<IAlbumCollectionItem> PlayAlbumAsyncCommand { get; }
 
         /// <summary>
         /// <inheritdoc cref="IAlbumCollectionBase.PauseAlbumCollectionAsync"/>

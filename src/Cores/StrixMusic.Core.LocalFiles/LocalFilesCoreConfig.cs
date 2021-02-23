@@ -6,8 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Services;
-using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
@@ -44,7 +42,6 @@ namespace StrixMusic.Core.LocalFiles
 
         /// <inheritdoc/>
         public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/Strix/logo.svg");
-
         /// <inheritdoc />
         public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
 
