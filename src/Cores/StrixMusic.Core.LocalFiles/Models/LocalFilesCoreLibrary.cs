@@ -1,13 +1,13 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Events;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Events;
 using StrixMusic.Core.LocalFiles.Services;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 

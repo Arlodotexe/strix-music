@@ -5,10 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models.Playlist.Smil;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
@@ -179,43 +182,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <remarks>Recognizes Zune's ZPL and WMP's WPL.</remarks>
         private async Task<PlaylistMetadata?> GetSmilMetadata(IFileData fileData)
         {
-            try
-            {
-                using var stream = await fileData.GetStreamAsync();
-
-                var doc = XDocument.Load(stream);
-                var smil = doc.Root;
-                var seq = smil.Element("body").Element("seq");
-                var head = smil.Element("head");
-
-                var metadata = new PlaylistMetadata()
-                {
-                    Title = head.Element("title").Value,
-                    TotalTracksCount = int.Parse(head.Elements()
-                        .First(e => e.Name == "meta" && e.Attribute("name").Value == "itemCount").Attribute("content").Value),
-                };
-
-                // This is only temporary until we work out how to get track IDs
-                var trackMetadata = new List<TrackMetadata>(seq.Elements().Count());
-                foreach (var media in seq.Elements("media"))
-                {
-                    // TODO: Where does the track ID come from?
-                    var track = new TrackMetadata
-                    {
-                        Title = media.Attribute("trackTitle")?.Value,
-                        Url = new Uri(media.Attribute("src")?.Value),
-                        Duration = new TimeSpan(0, 0, 0, 0, int.Parse(media.Attribute("duration")?.Value)),
-                    };
-
-                    trackMetadata.Add(track);
-                }
-
-                return metadata;
-            }
-            catch
-            {
-                return null;
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -448,8 +415,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                             break;
 
                         case "type":
-                            // TODO: No idea what this is supposed to mean.
-                            // It's not documented anywhere. Probably supposed to be an enum.
+                        // TODO: No idea what this is supposed to mean.
+                        // It's not documented anywhere. Probably supposed to be an enum.
                         default:
                             // Unsupported attribute
                             break;
@@ -772,71 +739,71 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     switch (mode)
                     {
                         case AimpplPlaylistMode.Summary:
-                        {
-                            var split = line.IndexOf('=');
-                            var variable = line.Substring(0, split);
-                            var value = line.Substring(split + 1);
-                            summary.Add(variable, value);
-                            if (variable == "Name")
-                                metadata.Title = value;
-                            break;
-                        }
+                            {
+                                var split = line.IndexOf('=');
+                                var variable = line.Substring(0, split);
+                                var value = line.Substring(split + 1);
+                                summary.Add(variable, value);
+                                if (variable == "Name")
+                                    metadata.Title = value;
+                                break;
+                            }
 
                         case AimpplPlaylistMode.Settings:
-                        {
-                            var split = line.IndexOf('=');
-                            var variable = line.Substring(0, split);
-                            var value = line.Substring(split + 1);
-                            settings.Add(variable, value);
-                            break;
-                        }
+                            {
+                                var split = line.IndexOf('=');
+                                var variable = line.Substring(0, split);
+                                var value = line.Substring(split + 1);
+                                settings.Add(variable, value);
+                                break;
+                            }
 
                         case AimpplPlaylistMode.Content:
-                        {
-                            string groupPath;
+                            {
+                                string groupPath;
 
-                            if (string.IsNullOrWhiteSpace(line))
-                                continue;
-                            if (line.StartsWith("-"))
-                                groupPath = line.Substring(1);
+                                if (string.IsNullOrWhiteSpace(line))
+                                    continue;
+                                if (line.StartsWith("-"))
+                                    groupPath = line.Substring(1);
 
-                            var posGroup = stream.Position;
+                                var posGroup = stream.Position;
 
-                            if (line.StartsWith("-"))
+                                if (line.StartsWith("-"))
+                                    break;
+
+                                var track = new TrackMetadata();
+                                var trackComponents = line.Split('|');
+
+                                track.Source = new Uri(ResolveFilePath(trackComponents[0], fileData));
+                                track.Title = trackComponents.ElementAtOrDefault(1);
+                                //track.Artist = trackComponents.ElementAtOrDefault(2);
+                                //track.Album = trackComponents.ElementAtOrDefault(3);
+                                //track.AlbumArtist = trackComponents.ElementAtOrDefault(4);
+                                var genreStr = trackComponents.ElementAtOrDefault(5);
+                                if (!string.IsNullOrEmpty(genreStr))
+                                    track.Genres = genreStr.IntoList();
+                                if (uint.TryParse(trackComponents.ElementAtOrDefault(6), out var year))
+                                    track.Year = year;
+                                if (uint.TryParse(trackComponents.ElementAtOrDefault(7), out var trackNum))
+                                    track.TrackNumber = trackNum;
+                                if (uint.TryParse(trackComponents.ElementAtOrDefault(8), out var trackDisc))
+                                    track.DiscNumber = trackDisc;
+                                //track.Composer = trackComponents.ElementAtOrDefault(9);
+                                //track.Publisher = trackComponents.ElementAtOrDefault(10);
+                                //track.BitrateKbps = trackComponents.ElementAtOrDefault(11);
+                                //track.Channels = trackComponents.ElementAtOrDefault(12);
+                                //track.SampleRateHz = trackComponents.ElementAtOrDefault(13);
+                                if (int.TryParse(trackComponents.ElementAtOrDefault(14), out var trackDuration))
+                                    track.Duration = new TimeSpan(0, 0, 0, 0, trackDuration);
+                                //track.SizeBytes = trackComponents.ElementAtOrDefault(15);
+                                //track.Bpm = trackComponents.ElementAtOrDefault(16);
+                                //track.IsActive = trackComponents.ElementAtOrDefault(17);
+                                //track.Index = trackComponents.ElementAtOrDefault(18);
+
+                                tracks.Add(track);
                                 break;
-
-                            var track = new TrackMetadata();
-                            var trackComponents = line.Split('|');
-
-                            track.Source = new Uri(ResolveFilePath(trackComponents[0], fileData));
-                            track.Title = trackComponents.ElementAtOrDefault(1);
-                            //track.Artist = trackComponents.ElementAtOrDefault(2);
-                            //track.Album = trackComponents.ElementAtOrDefault(3);
-                            //track.AlbumArtist = trackComponents.ElementAtOrDefault(4);
-                            var genreStr = trackComponents.ElementAtOrDefault(5);
-                            if (!string.IsNullOrEmpty(genreStr))
-                                track.Genres = genreStr.IntoList();
-                            if (uint.TryParse(trackComponents.ElementAtOrDefault(6), out var year))
-                                track.Year = year;
-                            if (uint.TryParse(trackComponents.ElementAtOrDefault(7), out var trackNum))
-                                track.TrackNumber = trackNum;
-                            if (uint.TryParse(trackComponents.ElementAtOrDefault(8), out var trackDisc))
-                                track.DiscNumber = trackDisc;
-                            //track.Composer = trackComponents.ElementAtOrDefault(9);
-                            //track.Publisher = trackComponents.ElementAtOrDefault(10);
-                            //track.BitrateKbps = trackComponents.ElementAtOrDefault(11);
-                            //track.Channels = trackComponents.ElementAtOrDefault(12);
-                            //track.SampleRateHz = trackComponents.ElementAtOrDefault(13);
-                            if (int.TryParse(trackComponents.ElementAtOrDefault(14), out var trackDuration))
-                                track.Duration = new TimeSpan(0, 0, 0, 0, trackDuration);
-                            //track.SizeBytes = trackComponents.ElementAtOrDefault(15);
-                            //track.Bpm = trackComponents.ElementAtOrDefault(16);
-                            //track.IsActive = trackComponents.ElementAtOrDefault(17);
-                            //track.Index = trackComponents.ElementAtOrDefault(18);
-
-                            tracks.Add(track);
-                            break;
-                        }
+                            }
                     }
                 }
 
