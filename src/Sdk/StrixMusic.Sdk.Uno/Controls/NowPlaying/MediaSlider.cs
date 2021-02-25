@@ -77,6 +77,11 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
             }
         }
 
+        /// <summary>
+        /// The current value as a <see cref="TimeSpan"/>.
+        /// </summary>
+        public TimeSpan TimeValue => TimeSpan.FromMilliseconds(Value);
+
         private void AttachEvents()
         {
             Unloaded += MediaSlider_Unloaded;

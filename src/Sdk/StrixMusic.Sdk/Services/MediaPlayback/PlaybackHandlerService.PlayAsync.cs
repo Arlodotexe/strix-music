@@ -188,23 +188,23 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 if (albumItem is IAlbum album)
                 {
                     var albumVm = new AlbumViewModel(album);
+                    await albumVm.InitAsync();
+
+                    // We expect an album to have at least 1 track.
+                    Guard.IsGreaterThan(album.TotalTracksCount, 0, nameof(album.TotalTracksCount));
+
+                    var firstTrack = albumVm.Tracks[0].Model;
 
                     if (albumItem.Id == albumCollectionItem?.Id && !foundItemTarget)
                     {
                         // Tracks are added to the queue of previous items until we reach the item the user wants to play.
                         itemIndex = _prevItems.Count;
                         foundItemTarget = true;
+
+                        playbackTrack = firstTrack;
                     }
 
-                    await albumVm.InitAsync();
-                    if (albumVm.TotalTracksCount < 1)
-                        continue;
-
-                    playbackTrack = albumVm.Tracks[0].Model;
-
-                    _ = await AddTrackCollectionToQueue(playbackTrack, albumVm, foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
-                    var nxt = _nextItems;
-                    var prev = _prevItems;
+                    _ = await AddTrackCollectionToQueue(firstTrack, albumVm, foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
                 }
 
                 if (albumItem is IAlbumCollection albumCol)

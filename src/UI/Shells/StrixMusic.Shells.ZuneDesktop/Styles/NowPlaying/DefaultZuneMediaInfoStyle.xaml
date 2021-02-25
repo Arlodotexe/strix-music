@@ -9,6 +9,8 @@
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying.DefaultZuneMediaInfoStyle">
 
     <ResourceDictionary.MergedDictionaries>
@@ -37,11 +39,18 @@
 
             <TextBlock Text="{x:Bind ActiveDevice.NowPlaying.Name, Mode=OneWay}" FontSize="16" FontWeight="Bold" Grid.Column="1" Margin="12,0,0,0" Opacity=".5"/>
             <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5"/>
-            <nowplaying:MediaSlider Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
+
+            <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
                                     IsAdvancing="{Binding ActiveDevice.IsPlaying}"
                                     Value="{Binding ActiveDevice.Position.TotalMilliseconds}"
                                     Maximum="{Binding ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}"
-                                    FlowDirection="LeftToRight"/>
+                                    FlowDirection="LeftToRight">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="PointerReleased">
+                        <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding ElementName=PART_MediaSlider, Path=TimeValue}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </nowplaying:MediaSlider>
         </Grid>
     </DataTemplate>
 
