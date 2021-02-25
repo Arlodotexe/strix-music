@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
+
 using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data;
@@ -182,10 +185,11 @@ namespace StrixMusic.Core.LocalFiles
                     }
                 }
 
-                if (trackWithImage == null)
-                    return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0, trackWithImage?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, trackWithImage.ImagePath) : null);
-
-                return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0, null);
+                return new LocalFilesCoreAlbum(
+                    SourceCore,
+                    album,
+                    album.TrackIds?.Count ?? 0,
+                    trackWithImage?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, trackWithImage.ImagePath) : null);
             }
 
             var track = await fileMetadataManager.Tracks.GetTrackMetadataById(id);
