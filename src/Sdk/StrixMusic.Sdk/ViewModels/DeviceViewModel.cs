@@ -94,14 +94,15 @@ namespace StrixMusic.Sdk.ViewModels
             OnPropertyChanged(nameof(IsPlaying));
         });
 
-        private void Device_NowPlayingChanged(object sender, ITrack e)
+        private void Device_NowPlayingChanged(object sender, ITrack e) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                _nowPlaying = new TrackViewModel(e);
-                OnPropertyChanged(nameof(NowPlaying));
-            });
-        }
+            _nowPlaying = new TrackViewModel(e);
+
+            if (_nowPlaying.PopulateMoreArtistsCommand?.CanExecute(1) ?? false)
+                _ = _nowPlaying.PopulateMoreArtistsCommand?.ExecuteAsync(1);
+
+            OnPropertyChanged(nameof(NowPlaying));
+        });
 
         /// <summary>
         /// The wrapped model for this <see cref="DeviceViewModel"/>.

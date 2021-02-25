@@ -10,7 +10,7 @@
     x:Class="StrixMusic.Sdk.Uno.Styles.SafeImageStyle">
 
     <DataTemplate x:Key="DefaultSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
-        <Grid FlowDirection="LeftToRight">
+        <Grid FlowDirection="LeftToRight" HorizontalAlignment="Stretch">
             <!--Fallback SVG-->
             <Image x:Name="PART_Fallback" Opacity=".3" Visibility="{x:Bind convertvis:CollectionNotAnyToVisibilityConverter.Convert(Images), Mode=OneWay}">
                 <Image.Source>
@@ -19,7 +19,7 @@
                 </Image.Source>
             </Image>
 
-            <Rectangle x:Name="PART_ImageRectangle" Visibility="{x:Bind convertvis:CollectionAnyToVisibilityConverter.Convert(Images), Mode=OneWay}">
+            <Rectangle x:Name="PART_ImageRectangle" Visibility="{x:Bind convertvis:CollectionAnyToVisibilityConverter.Convert(Images), Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{x:Bind owlconverts:UriToImageSourceConverter.Convert(Images[0].Uri), Mode=OneWay}"
                                 Stretch="UniformToFill"/>
@@ -44,14 +44,14 @@
     <DataTemplate x:Key="DefaultRoundSafeImageTemplate" x:DataType="viewModels:IImageCollectionViewModel">
         <Grid FlowDirection="LeftToRight">
             <!--Fallback SVG-->
-            <Image x:Name="PART_Fallback" Opacity=".3">
+            <Image x:Name="PART_Fallback" Opacity=".3"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Image.Source>
                     <SvgImageSource UriSource="{x:Bind converters:SourceCoreLogoFromIndexConverter.Convert(SourceCores, 0)}"
                                     RasterizePixelHeight="150" RasterizePixelWidth="150"/>
                 </Image.Source>
             </Image>
 
-            <Rectangle x:Name="PART_ImageRectangle" RadiusX="10000" RadiusY="10000">
+            <Rectangle x:Name="PART_ImageRectangle" RadiusX="10000" RadiusY="10000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{x:Bind owlconverts:UriToImageSourceConverter.Convert(Images[0].Uri), Mode=OneWay}"
                                 Stretch="UniformToFill"/>

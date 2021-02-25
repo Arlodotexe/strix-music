@@ -36,6 +36,8 @@ namespace StrixMusic.Core.LocalFiles.Models
             if (trackMetadata.ImagePath != null)
                 TotalImageCount = 1;
 
+            _totalArtistItemsCount = trackMetadata.ArtistIds?.Count ?? 0;
+
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
             AttachEvents();
         }
@@ -47,10 +49,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         private void FileMetadataManager_FileMetadataUpdated(object sender, FileMetadata e)
         {
-            if (e.TrackMetadata == null)
-                return;
-
-            if (e.TrackMetadata.Id != Id)
+            if (e.TrackMetadata?.Id == Id)
                 return;
 
             if (e.ArtistMetadata == null)

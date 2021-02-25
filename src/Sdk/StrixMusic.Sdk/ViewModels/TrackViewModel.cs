@@ -67,28 +67,28 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void AttachEvents()
         {
-            AlbumChanged -= Track_AlbumChanged;
-            DescriptionChanged -= Track_DescriptionChanged;
-            IsExplicitChanged -= Track_IsExplicitChanged;
-            LanguageChanged -= Track_LanguageChanged;
-            LyricsChanged -= Track_LyricsChanged;
-            NameChanged -= Track_NameChanged;
-            PlaybackStateChanged -= Track_PlaybackStateChanged;
-            TrackNumberChanged -= Track_TrackNumberChanged;
-            UrlChanged -= Track_UrlChanged;
-            LastPlayedChanged -= OnLastPlayedChanged;
+            AlbumChanged += Track_AlbumChanged;
+            DescriptionChanged += Track_DescriptionChanged;
+            IsExplicitChanged += Track_IsExplicitChanged;
+            LanguageChanged += Track_LanguageChanged;
+            LyricsChanged += Track_LyricsChanged;
+            NameChanged += Track_NameChanged;
+            PlaybackStateChanged += Track_PlaybackStateChanged;
+            TrackNumberChanged += Track_TrackNumberChanged;
+            UrlChanged += Track_UrlChanged;
+            LastPlayedChanged += OnLastPlayedChanged;
 
-            IsPlayArtistCollectionAsyncAvailableChanged -= OnIsPlayArtistCollectionAsyncAvailableChanged;
-            IsPauseArtistCollectionAsyncAvailableChanged -= OnIsPauseArtistCollectionAsyncAvailableChanged;
+            IsPlayArtistCollectionAsyncAvailableChanged += OnIsPlayArtistCollectionAsyncAvailableChanged;
+            IsPauseArtistCollectionAsyncAvailableChanged += OnIsPauseArtistCollectionAsyncAvailableChanged;
 
-            IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
-            IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
-            IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
+            IsChangeNameAsyncAvailableChanged += OnIsChangeNameAsyncAvailableChanged;
+            IsChangeDurationAsyncAvailableChanged += OnIsChangeDurationAsyncAvailableChanged;
+            IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
 
-            ArtistItemsCountChanged -= ModelOnArtistItemsCountChanged;
-            ArtistItemsChanged -= TrackViewModel_ArtistItemsChanged;
-            ImagesCountChanged -= TrackViewModel_ImagesCountChanged;
-            ImagesChanged -= TrackViewModel_ImagesChanged;
+            ArtistItemsCountChanged += ModelOnArtistItemsCountChanged;
+            ArtistItemsChanged += TrackViewModel_ArtistItemsChanged;
+            ImagesCountChanged += TrackViewModel_ImagesCountChanged;
+            ImagesChanged += TrackViewModel_ImagesChanged;
         }
 
         private void DetachEvents()

@@ -8,6 +8,19 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
     /// </summary>
     public partial class MediaSlider : SliderEx
     {
+        private readonly DispatcherTimer _updateIntervalTimer = new DispatcherTimer();
+        private DateTime _startTime = DateTime.Now;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MediaSlider"/> class.
+        /// </summary>
+        public MediaSlider()
+        {
+            DefaultStyleKey = typeof(MediaSlider);
+
+            Loaded += OnLoaded;
+        }
+
         /// <summary>
         /// <see cref="DependencyProperty"/> for the <see cref="UpdateFrequency"/> property.
         /// </summary>
@@ -28,34 +41,6 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
                 typeof(MediaSlider),
                 new PropertyMetadata(true));
 
-        private DispatcherTimer _updateIntervalTimer = new DispatcherTimer();
-        private DateTime _startTime = DateTime.Now;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MediaSlider"/> class.
-        /// </summary>
-        public MediaSlider()
-            : base()
-        {
-            this.DefaultStyleKey = typeof(MediaSlider);
-
-            Loaded += OnLoaded;
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-
-            // Pause the Timer while manipulating
-            SliderManipulationStarted += (s, e) => PauseTimer();
-            SliderManipulationCompleted += (s, e) => ResumeTimer();
-
-            // Update the timer position when released
-            ValueChanged += (s, e) => _startTime = DateTime.Now - TimeSpan.FromMilliseconds(Value);
-            _updateIntervalTimer.Tick += (s, e) => UpdateSliderValue();
-            UpdateTimer();
-        }
-
         /// <summary>
         /// Gets or sets the whether or not the slider is self advancing.
         /// </summary>
@@ -65,14 +50,11 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
             set
             {
                 SetValue(IsAdvancingProperty, value);
+
                 if (value)
-                {
                     ResumeTimer();
-                }
                 else
-                {
                     PauseTimer();
-                }
             }
         }
 
@@ -88,14 +70,59 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
             set
             {
                 if (value <= 0)
-                {
                     throw new ArgumentOutOfRangeException(nameof(value), value, "UpdateFrequency must be greater than 0");
-                }
 
                 SetValue(UpdateFrequencyProperty, value);
                 UpdateTimer();
             }
         }
+
+        private void AttachEvents()
+        {
+            Unloaded += MediaSlider_Unloaded;
+
+            // Pause the Timer while manipulating
+            SliderManipulationStarted += MediaSlider_SliderManipulationStarted;
+            SliderManipulationCompleted += MediaSlider_SliderManipulationCompleted;
+
+            // Update the timer position when released
+            ValueChanged += MediaSlider_ValueChanged;
+            _updateIntervalTimer.Tick += UpdateIntervalTimer_Tick;
+        }
+
+        private void DetachEvents()
+        {
+            SliderManipulationStarted -= MediaSlider_SliderManipulationStarted;
+            SliderManipulationCompleted -= MediaSlider_SliderManipulationCompleted;
+
+            ValueChanged -= MediaSlider_ValueChanged;
+            _updateIntervalTimer.Tick -= UpdateIntervalTimer_Tick;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            AttachEvents();
+        }
+
+        private void MediaSlider_Unloaded(object sender, RoutedEventArgs e)
+        {
+            DetachEvents();
+        }
+
+        private void UpdateIntervalTimer_Tick(object sender, object e)
+        {
+            UpdateSliderValue();
+        }
+
+        private void MediaSlider_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            _startTime = DateTime.Now - TimeSpan.FromMilliseconds(Value);
+        }
+
+        private void MediaSlider_SliderManipulationCompleted(object sender, EventArgs e) => ResumeTimer();
+
+        private void MediaSlider_SliderManipulationStarted(object sender, EventArgs e) => PauseTimer();
 
         private void UpdateTimer()
         {

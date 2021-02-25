@@ -55,8 +55,14 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService.PositionChanged += PositionChanged;
             _currentPlayerService.PlaybackSpeedChanged += PlaybackSpeedChanged;
             _currentPlayerService.PlaybackStateChanged += PlaybackStateChanged;
+            _currentPlayerService.PlaybackStateChanged += CurrentPlayerService_PlaybackStateChanged;
             _currentPlayerService.VolumeChanged += VolumeChanged;
             _currentPlayerService.QuantumProcessed += QuantumProcessed;
+        }
+
+        private void CurrentPlayerService_PlaybackStateChanged(object sender, PlaybackState e)
+        {
+
         }
 
         private void DetachEvents()

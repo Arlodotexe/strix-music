@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
@@ -31,23 +29,35 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
 
         private void AttachEvents()
         {
-            _playbackHandler.RepeatStateChanged += RepeatStateChanged;
-            _playbackHandler.ShuffleStateChanged += ShuffleStateChanged;
-            _playbackHandler.PlaybackSpeedChanged += PlaybackSpeedChanged;
-            _playbackHandler.PlaybackStateChanged += PlaybackStateChanged;
-            _playbackHandler.PositionChanged += PositionChanged;
-            _playbackHandler.VolumeChanged += VolumeChanged;
+            _playbackHandler.RepeatStateChanged += PlaybackHandler_RepeatStateChanged;
+            _playbackHandler.ShuffleStateChanged += PlaybackHandler_ShuffleStateChanged;
+            _playbackHandler.PlaybackSpeedChanged += PlaybackHandler_PlaybackSpeedChanged;
+            _playbackHandler.PlaybackStateChanged += PlaybackHandler_PlaybackStateChanged;
+            _playbackHandler.PositionChanged += PlaybackHandler_PositionChanged;
+            _playbackHandler.VolumeChanged += PlaybackHandler_VolumeChanged;
         }
 
         private void DetachEvents()
         {
-            _playbackHandler.RepeatStateChanged -= RepeatStateChanged;
-            _playbackHandler.ShuffleStateChanged -= ShuffleStateChanged;
-            _playbackHandler.PlaybackSpeedChanged -= PlaybackSpeedChanged;
-            _playbackHandler.PlaybackStateChanged -= PlaybackStateChanged;
-            _playbackHandler.PositionChanged -= PositionChanged;
-            _playbackHandler.VolumeChanged -= VolumeChanged;
+            _playbackHandler.RepeatStateChanged -= PlaybackHandler_RepeatStateChanged;
+            _playbackHandler.ShuffleStateChanged -= PlaybackHandler_ShuffleStateChanged;
+            _playbackHandler.PlaybackSpeedChanged -= PlaybackHandler_PlaybackSpeedChanged;
+            _playbackHandler.PlaybackStateChanged -= PlaybackHandler_PlaybackStateChanged;
+            _playbackHandler.PositionChanged -= PlaybackHandler_PositionChanged;
+            _playbackHandler.VolumeChanged -= PlaybackHandler_VolumeChanged;
         }
+
+        private void PlaybackHandler_PlaybackStateChanged(object sender, PlaybackState e) => PlaybackStateChanged?.Invoke(sender, e);
+
+        private void PlaybackHandler_PositionChanged(object sender, TimeSpan e) => PositionChanged?.Invoke(sender, e);
+
+        private void PlaybackHandler_VolumeChanged(object sender, double e) => VolumeChanged?.Invoke(this, e);
+
+        private void PlaybackHandler_PlaybackSpeedChanged(object sender, double e) => PlaybackSpeedChanged?.Invoke(sender, e);
+
+        private void PlaybackHandler_RepeatStateChanged(object sender, RepeatState e) => RepeatStateChanged?.Invoke(sender, e);
+
+        private void PlaybackHandler_ShuffleStateChanged(object sender, bool e) => ShuffleStateChanged?.Invoke(sender, e);
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsActiveChanged;

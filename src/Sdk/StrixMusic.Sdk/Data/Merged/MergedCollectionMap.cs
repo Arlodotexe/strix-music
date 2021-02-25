@@ -673,11 +673,14 @@ namespace StrixMusic.Sdk.Data.Merged
                 }
             }
 
-            var relevantMergedMappedData = MergeMappedData(_sortedMap).Skip(offset).Take(limit);
+            lock (_sortedMap)
+            {
+                var relevantMergedMappedData = MergeMappedData(_sortedMap.ToArray()).Skip(offset).Take(limit);
 
-            var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
+                var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
 
-            return merged;
+                return merged;
+            }
         }
 
         private List<IMergedMutable<TCoreCollectionItem>> MergeMappedData(IList<MappedData> sortedData)

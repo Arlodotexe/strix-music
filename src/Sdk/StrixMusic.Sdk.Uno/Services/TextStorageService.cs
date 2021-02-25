@@ -84,8 +84,12 @@ namespace StrixMusic.Sdk.Uno.Services
 
             StorageFile fileHandle = await pathHandle.CreateFileAsync(filename, CreationCollisionOption.OpenIfExists);
 
-            using (await _keyedMutex.GetOrAdd(filename + path, new AsyncLock()).LockAsync())
-                return await FileIO.ReadTextAsync(fileHandle);
+            AsyncLock? mutex;
+            lock (_keyedMutex)
+                mutex = _keyedMutex.GetOrAdd(filename + path, new AsyncLock());
+
+            using (await mutex.LockAsync())
+                    return await FileIO.ReadTextAsync(fileHandle);
         }
 
         /// <inheritdoc />
