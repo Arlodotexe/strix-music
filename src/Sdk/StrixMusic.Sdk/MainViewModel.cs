@@ -25,7 +25,6 @@ namespace StrixMusic.Sdk
     {
         private readonly List<ICore> _sources = new List<ICore>();
         private readonly List<(ICore core, CancellationTokenSource cancellationToken)> _coreInitData = new List<(ICore, CancellationTokenSource)>();
-        private readonly StrixDevice _strixDevice;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
@@ -33,8 +32,7 @@ namespace StrixMusic.Sdk
         public MainViewModel(StrixDevice strixDevice)
         {
             Singleton = this;
-            _strixDevice = strixDevice;
-            LocalDevice = new DeviceViewModel(_strixDevice);
+            LocalDevice = new DeviceViewModel(strixDevice);
 
             Devices = new ObservableCollection<DeviceViewModel>();
 
@@ -117,6 +115,8 @@ namespace StrixMusic.Sdk
             {
                 LocalDevice,
             };
+
+            OnPropertyChanged(nameof(Devices));
 
             AttachEvents();
         }

@@ -48,7 +48,6 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void AttachHandlers()
         {
-            Loaded -= SafeImage_Loaded;
             Unloaded += SafeImage_Unloaded;
             DataContextChanged += SafeImage_DataContextChanged;
 
@@ -67,6 +66,8 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void SafeImage_Loaded(object sender, RoutedEventArgs e)
         {
+            Loaded -= SafeImage_Loaded;
+
             // Find Parts
             PART_ImageRectangle = VisualTreeHelpers.GetDataTemplateChild<Rectangle>(this, nameof(PART_ImageRectangle));
             PART_Fallback = VisualTreeHelpers.GetDataTemplateChild<FrameworkElement>(this, nameof(PART_Fallback));

@@ -76,8 +76,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Device_VolumeChanged(object sender, double e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Volume)));
 
-        private void Device_StateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
-
         private void Device_ShuffleStateChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(ShuffleState)));
 
         private void Device_RepeatStateChanged(object sender, RepeatState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(RepeatState)));
@@ -89,6 +87,12 @@ namespace StrixMusic.Sdk.ViewModels
         private void Device_PlaybackContextChanged(object sender, IPlayableBase e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackContext)));
 
         private void Device_IsActiveChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsActive)));
+
+        private void Device_StateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() =>
+        {
+            OnPropertyChanged(nameof(PlaybackState));
+            OnPropertyChanged(nameof(IsPlaying));
+        });
 
         private void Device_NowPlayingChanged(object sender, ITrack e)
         {
@@ -139,6 +143,11 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public PlaybackState PlaybackState => Model.PlaybackState;
+
+        /// <summary>
+        /// Indicates if the device is currently playing.
+        /// </summary>
+        public bool IsPlaying => PlaybackState == PlaybackState.Playing;
 
         /// <inheritdoc />
         public bool ShuffleState => Model.ShuffleState;

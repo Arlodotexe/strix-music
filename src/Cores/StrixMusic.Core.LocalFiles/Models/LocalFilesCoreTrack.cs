@@ -33,6 +33,9 @@ namespace StrixMusic.Core.LocalFiles.Models
             _trackMetadata = trackMetadata;
             Genres = new SynchronizedObservableCollection<string>(trackMetadata.Genres);
 
+            if (trackMetadata.ImagePath != null)
+                TotalImageCount = 1;
+
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
             AttachEvents();
         }
@@ -152,7 +155,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public int TotalImageCount { get; } = 0;
+        public int TotalImageCount { get; }
 
         /// <inheritdoc/>
         public ICoreAlbum? Album { get; }

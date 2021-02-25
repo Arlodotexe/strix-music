@@ -14,10 +14,5 @@ namespace StrixMusic.Sdk.Uno.Controls.Shells
         {
             this.DefaultStyleKey = typeof(NowPlayingBar);
         }
-
-        /// <summary>
-        /// The ViewModel for this control.
-        /// </summary>
-        public MainViewModel ViewModel => (MainViewModel)DataContext;
     }
 }

@@ -183,16 +183,13 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (_shuffleState && _shuffledNextItemsIndices != null)
                 queueIndex = _shuffledNextItemsIndices[queueIndex];
 
-            var mediaSource = NextItems.ElementAtOrDefault(queueIndex);
-
-            if (mediaSource is null)
-                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(queueIndex));
-
             if (_currentPlayerService != null)
             {
                 await _currentPlayerService.PauseAsync();
                 DetachEvents();
             }
+
+            var mediaSource = NextItems.ElementAt(queueIndex);
 
             _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore];
             AttachEvents();

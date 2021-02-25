@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
