@@ -130,6 +130,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IDevice.NowPlaying"/>
         public TrackViewModel? NowPlaying => _nowPlaying;
 
+        // TODO: Change this to ICoreTrack and create CoreTrackViewModel. A device only plays a track from one source at a time.
         /// <inheritdoc />
         ITrack? IDevice.NowPlaying => _nowPlaying;
 

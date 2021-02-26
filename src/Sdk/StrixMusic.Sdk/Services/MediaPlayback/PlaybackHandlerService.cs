@@ -6,8 +6,10 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {
@@ -262,6 +264,13 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService = _audioPlayerRegistry[nextItem.Track.SourceCore];
             AttachEvents();
 
+            // TODO See DeviceViewModel.NowPlaying.
+            var track = new TrackViewModel(new MergedTrack(nextItem.Track.IntoList()));
+
+            Guard.IsNotNull(_strixDevice?.PlaybackContext, nameof(_strixDevice.PlaybackContext));
+
+            _strixDevice.SetPlaybackData(_strixDevice.PlaybackContext, track);
+
             await _currentPlayerService.Play(nextItem);
             CurrentItem = nextItem;
             CurrentItemChanged?.Invoke(this, nextItem);
@@ -353,7 +362,15 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService = _audioPlayerRegistry[newItem.Track.SourceCore];
             AttachEvents();
 
+            // TODO See DeviceViewModel.NowPlaying.
+            var track = new TrackViewModel(new MergedTrack(newItem.Track.IntoList()));
+
+            Guard.IsNotNull(_strixDevice?.PlaybackContext, nameof(_strixDevice.PlaybackContext));
+
+            _strixDevice.SetPlaybackData(_strixDevice.PlaybackContext, track);
             await _currentPlayerService.Play(newItem);
+            CurrentItem = newItem;
+            CurrentItemChanged?.Invoke(this, newItem);
         }
 
         /// <inheritdoc />
