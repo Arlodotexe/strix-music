@@ -4,12 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.MediaPlayback;
+using OwlCore;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
-using OwlCore;
 
 // ReSharper disable once CheckNamespace
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
@@ -45,6 +45,13 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             _player.MediaPlayer.PlaybackSession.PlaybackStateChanged += PlaybackSessionOnPlaybackStateChanged;
             _player.MediaPlayer.VolumeChanged += MediaPlayerOnVolumeChanged;
             _player.MediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
+            _player.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
+        }
+
+        private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
+        {
+            // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
+            PlaybackStateChanged?.Invoke(this, PlaybackState.Queued);
         }
 
         private void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
@@ -134,31 +141,30 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         {
             await _leech.InitAsync();
 
-            if (sourceConfig.MediaSourceUri != null)
+            await Threading.OnPrimaryThread(async () =>
             {
-                if (sourceConfig.MediaSourceUri.IsFile)
+                if (sourceConfig.MediaSourceUri != null)
                 {
-                    var file = await StorageFile.GetFileFromPathAsync(sourceConfig.MediaSourceUri.LocalPath);
+                    if (sourceConfig.MediaSourceUri.IsFile)
+                    {
+                        var file = await StorageFile.GetFileFromPathAsync(sourceConfig.MediaSourceUri.LocalPath);
 
-                    var source = MediaSource.CreateFromStorageFile(file);
+                        var source = MediaSource.CreateFromStorageFile(file);
+                        _player.MediaPlayer.Source = source;
+                    }
+                    else
+                    {
+                        var source = MediaSource.CreateFromUri(sourceConfig.MediaSourceUri);
+                        _player.MediaPlayer.Source = source;
+                    }
+                }
+                else if (sourceConfig.FileStreamSource != null)
+                {
+                    var source = MediaSource.CreateFromStream(sourceConfig.FileStreamSource.AsRandomAccessStream(), sourceConfig.FileStreamContentType);
                     _player.MediaPlayer.Source = source;
                 }
-                else
-                {
-                    var source = MediaSource.CreateFromUri(sourceConfig.MediaSourceUri);
-                    _player.MediaPlayer.Source = source;
-                }
-            }
-            else if (sourceConfig.FileStreamSource != null)
-            {
-                var source = MediaSource.CreateFromStream(sourceConfig.FileStreamSource.AsRandomAccessStream(), sourceConfig.FileStreamContentType);
-                _player.MediaPlayer.Source = source;
-            }
 
-            CurrentSource = sourceConfig;
-
-            await Threading.OnPrimaryThread(() =>
-            {
+                CurrentSource = sourceConfig;
                 _player.MediaPlayer.Play();
                 _leech.Begin();
             });

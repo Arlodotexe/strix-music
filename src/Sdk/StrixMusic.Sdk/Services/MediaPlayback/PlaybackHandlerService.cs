@@ -62,9 +62,13 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService.QuantumProcessed += QuantumProcessed;
         }
 
-        private void CurrentPlayerService_PlaybackStateChanged(object sender, PlaybackState e)
+        private async void CurrentPlayerService_PlaybackStateChanged(object sender, PlaybackState e)
         {
-
+            // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
+            if (e == PlaybackState.Queued)
+            {
+                await AutoAdvanceQueue();
+            }
         }
 
         private void DetachEvents()
@@ -81,14 +85,19 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService.QuantumProcessed -= QuantumProcessed;
         }
 
-        private async void PlayerService_PositionChanged(object sender, TimeSpan e)
+        private async void PlayerService_PositionChanged(object sender, TimeSpan currentPosition)
         {
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
 
             // If the song is not over
-            if (_currentPlayerService.CurrentSource.Track.Duration > e)
+            if (currentPosition < _currentPlayerService.CurrentSource.Track.Duration)
                 return;
 
+            await AutoAdvanceQueue();
+        }
+
+        private async Task AutoAdvanceQueue()
+        {
             switch (_repeatState)
             {
                 case RepeatState.All when NextItems.Count == 0:
