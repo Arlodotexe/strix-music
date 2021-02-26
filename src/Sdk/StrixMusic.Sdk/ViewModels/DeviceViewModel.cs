@@ -344,7 +344,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Attempts to seek the currently playing track on the device. Does not alter playback state.
         /// </summary>
-        public IAsyncRelayCommand SeekAsyncCommand { get; }
+        public IAsyncRelayCommand<TimeSpan> SeekAsyncCommand { get; }
 
         /// <summary>
         /// Attempts to pause the device.

@@ -42,6 +42,16 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
                 new PropertyMetadata(true));
 
         /// <summary>
+        /// <see cref="DependencyProperty"/> for the <see cref="TimeValue"/> property.
+        /// </summary>
+        public static readonly DependencyProperty TimeValueProperty =
+            DependencyProperty.Register(
+                nameof(TimeValue),
+                typeof(TimeSpan),
+                typeof(MediaSlider),
+                new PropertyMetadata(null));
+
+        /// <summary>
         /// Gets or sets the whether or not the slider is self advancing.
         /// </summary>
         public bool IsAdvancing
@@ -80,7 +90,15 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
         /// <summary>
         /// The current value as a <see cref="TimeSpan"/>.
         /// </summary>
-        public TimeSpan TimeValue => TimeSpan.FromMilliseconds(Value);
+        public TimeSpan TimeValue
+        {
+            get => TimeSpan.FromMilliseconds(Value);
+            set
+            {
+                Value = value.TotalMilliseconds;
+                SetValue(UpdateFrequencyProperty, value);
+            }
+        }
 
         private void AttachEvents()
         {
@@ -125,7 +143,10 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
             _startTime = DateTime.Now - TimeSpan.FromMilliseconds(Value);
         }
 
-        private void MediaSlider_SliderManipulationCompleted(object sender, EventArgs e) => ResumeTimer();
+        private void MediaSlider_SliderManipulationCompleted(object sender, EventArgs e)
+        {
+            ResumeTimer();
+        }
 
         private void MediaSlider_SliderManipulationStarted(object sender, EventArgs e) => PauseTimer();
 

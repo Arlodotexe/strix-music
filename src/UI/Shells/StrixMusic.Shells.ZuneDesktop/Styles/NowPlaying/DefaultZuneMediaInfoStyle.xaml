@@ -17,6 +17,9 @@
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ZuneSlider.xaml"/>
+        <ResourceDictionary>
+            <convertnumtime:DoubleToTimeSpanConverter x:Key="DoubleToTimeSpanConverter" />
+        </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="DefaultZuneMediaInfoDataTemplate" x:DataType="sdk:MainViewModel">
@@ -46,8 +49,8 @@
                                     Maximum="{Binding ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}"
                                     FlowDirection="LeftToRight">
                 <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="PointerReleased">
-                        <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding ElementName=PART_MediaSlider, Path=TimeValue}" />
+                    <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
+                        <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
             </nowplaying:MediaSlider>
