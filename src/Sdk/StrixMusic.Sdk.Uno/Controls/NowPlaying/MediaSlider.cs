@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Windows.System.Threading;
 using Windows.UI.Xaml;
 
 namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
@@ -8,8 +10,9 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
     /// </summary>
     public partial class MediaSlider : SliderEx
     {
-        private readonly DispatcherTimer _updateIntervalTimer = new DispatcherTimer();
+        private ThreadPoolTimer _updateIntervalTimer;
         private DateTime _startTime = DateTime.Now;
+        private bool _isManipulating;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MediaSlider"/> class.
@@ -17,6 +20,8 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
         public MediaSlider()
         {
             DefaultStyleKey = typeof(MediaSlider);
+
+            _updateIntervalTimer = ThreadPoolTimer.CreatePeriodicTimer(UpdateIntervalTimer_Tick, TimeSpan.FromMilliseconds(UpdateFrequency));
 
             Loaded += OnLoaded;
         }
@@ -69,6 +74,19 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
         }
 
         /// <summary>
+        /// The value of the slider. Contains a guard for manipulation events.
+        /// </summary>
+        public new double Value
+        {
+            get => base.Value;
+            set 
+            {
+                if (!_isManipulating)
+                    base.Value = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the frequency with which the slider should move forward.
         /// </summary>
         /// <remarks>
@@ -83,7 +101,7 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
                     throw new ArgumentOutOfRangeException(nameof(value), value, "UpdateFrequency must be greater than 0");
 
                 SetValue(UpdateFrequencyProperty, value);
-                UpdateTimer();
+                ResumeTimer();
             }
         }
 
@@ -110,7 +128,6 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
 
             // Update the timer position when released
             ValueChanged += MediaSlider_ValueChanged;
-            _updateIntervalTimer.Tick += UpdateIntervalTimer_Tick;
         }
 
         private void DetachEvents()
@@ -119,7 +136,6 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
             SliderManipulationCompleted -= MediaSlider_SliderManipulationCompleted;
 
             ValueChanged -= MediaSlider_ValueChanged;
-            _updateIntervalTimer.Tick -= UpdateIntervalTimer_Tick;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -133,9 +149,9 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
             DetachEvents();
         }
 
-        private void UpdateIntervalTimer_Tick(object sender, object e)
+        private async void UpdateIntervalTimer_Tick(ThreadPoolTimer timer)
         {
-            UpdateSliderValue();
+            await UpdateSliderValue();
         }
 
         private void MediaSlider_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
@@ -145,32 +161,31 @@ namespace StrixMusic.Sdk.Uno.Controls.NowPlaying
 
         private void MediaSlider_SliderManipulationCompleted(object sender, EventArgs e)
         {
+            _isManipulating = false;
             ResumeTimer();
         }
 
-        private void MediaSlider_SliderManipulationStarted(object sender, EventArgs e) => PauseTimer();
-
-        private void UpdateTimer()
+        private void MediaSlider_SliderManipulationStarted(object sender, EventArgs e)
         {
-            _updateIntervalTimer.Stop();
-            _updateIntervalTimer.Interval = TimeSpan.FromMilliseconds(UpdateFrequency);
-            ResumeTimer();
+            _isManipulating = true;
+            PauseTimer();
         }
 
         private void ResumeTimer()
         {
+            _updateIntervalTimer?.Cancel();
             _startTime = DateTime.Now - TimeSpan.FromMilliseconds(Value);
-            _updateIntervalTimer.Start();
+            _updateIntervalTimer = ThreadPoolTimer.CreatePeriodicTimer(UpdateIntervalTimer_Tick, TimeSpan.FromMilliseconds(UpdateFrequency));
         }
 
         private void PauseTimer()
         {
-            _updateIntervalTimer.Stop();
+            _updateIntervalTimer?.Cancel();
         }
 
-        private void UpdateSliderValue()
+        private async Task UpdateSliderValue()
         {
-            Value = (DateTime.Now - _startTime).TotalMilliseconds;
+            await OwlCore.Threading.OnPrimaryThread(() => Value = (DateTime.Now - _startTime).TotalMilliseconds);
         }
     }
 }
