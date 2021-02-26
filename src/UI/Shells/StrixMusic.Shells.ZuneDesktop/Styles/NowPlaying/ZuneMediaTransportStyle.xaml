@@ -6,6 +6,8 @@
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying.ZuneMediaTransportStyle">
 
     <ResourceDictionary.MergedDictionaries>
@@ -36,24 +38,44 @@
                 <!--Skip and Prev buttons shouldn't flip with Bi-directional languages-->
                 <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
                     <Button x:Name="PreviousButton" Style="{StaticResource ZuneButton}" Width="32">
-                        <PathIcon Data="M 0 4.2357127 6.3582224 8.4666673 V 0.0047581 Z M 6.3417776 4.2309543 12.7 8.4619093 V 0 Z" Margin="-2,0,0,0"/>
-                        <!--<FontIcon Glyph="&#xE100;" FontSize="12"/>-->
+                        <PathIcon Data="M 0 4.2357127 6.3582224 8.4666673 V 0.0047581 Z M 6.3417776 4.2309543 12.7 8.4619093 V 0 Z" Margin="-2,0,0,0">
+                            <interactivity:Interaction.Behaviors>
+                                <core:EventTriggerBehavior EventName="Tapped">
+                                    <core:InvokeCommandAction Command="{x:Bind ActiveDevice.PreviousAsyncCommand, Mode=OneWay}" />
+                                </core:EventTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+                        </PathIcon>
                     </Button>
-                    <owlcoreuno:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42">
+                    <owlcoreuno:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42" IsChecked="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}">
                         <owlcoreuno:ToggleContentButton.CheckedContent>
-                            <FontIcon Glyph="&#xE103;" FontSize="20"/>
+                            <FontIcon Glyph="&#xE103;" FontSize="20">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:EventTriggerBehavior EventName="Tapped">
+                                        <core:InvokeCommandAction Command="{x:Bind ActiveDevice.PauseAsyncCommand, Mode=OneWay}" />
+                                    </core:EventTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+                            </FontIcon>
                         </owlcoreuno:ToggleContentButton.CheckedContent>
-                        <PathIcon Data="M 11.1125 6.4158049 2.3841858e-7 12.83161 l 0 -12.831609975863432 z"/>
-                        <!--<FontIcon Glyph="&#xE102;" FontSize="20"/>-->
+                        <PathIcon Data="M 11.1125 6.4158049 2.3841858e-7 12.83161 l 0 -12.831609975863432 z">
+                            <interactivity:Interaction.Behaviors>
+                                <core:EventTriggerBehavior EventName="Tapped">
+                                    <core:InvokeCommandAction Command="{x:Bind ActiveDevice.ResumeAsyncCommand, Mode=OneWay}" />
+                                </core:EventTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+                        </PathIcon>
                     </owlcoreuno:ToggleContentButton>
                     <Button x:Name="SkipButton" Style="{StaticResource ZuneButton}" Width="32">
-                        <PathIcon Data="M 12.7 4.2357127 6.3417776 8.4666673 V 0.0047581 Z M 6.3582224 4.2309543 0 8.4619093 V 0 Z" Margin="2,0,0,0"/>
-                        <!--<FontIcon Glyph="&#xE101;" FontSize="12"/>-->
+                        <PathIcon Data="M 12.7 4.2357127 6.3417776 8.4666673 V 0.0047581 Z M 6.3582224 4.2309543 0 8.4619093 V 0 Z" Margin="2,0,0,0">
+                            <interactivity:Interaction.Behaviors>
+                                <core:EventTriggerBehavior EventName="Tapped">
+                                    <core:InvokeCommandAction Command="{x:Bind ActiveDevice.NextAsyncCommand, Mode=OneWay}" />
+                                </core:EventTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+                        </PathIcon>
                     </Button>
                 </StackPanel>
 
                 <Button Style="{StaticResource ZuneSmallButton}" VerticalAlignment="Center" Margin="12,0" Click="NavigateToNowPlaying">
-                    <!--<FontIcon Glyph="&#xF61F;" FontSize="20" FontWeight="Bold" Foreground="#DB0D94"/>-->
                     <shellcontrols:NowPlayingButtonContent Foreground="#DB0D94" Height="12" Width="20"/>
                 </Button>
             </StackPanel>

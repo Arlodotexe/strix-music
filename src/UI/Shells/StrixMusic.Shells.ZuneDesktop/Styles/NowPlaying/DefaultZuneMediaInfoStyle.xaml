@@ -44,9 +44,9 @@
             <FontIcon Glyph="&#xE006;" FontSize="16" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Right" Opacity=".5"/>
 
             <nowplaying:MediaSlider x:Name="PART_MediaSlider" Grid.Row="1" Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource ZuneSlider}"
-                                    IsAdvancing="{Binding ActiveDevice.IsPlaying}"
-                                    Value="{Binding ActiveDevice.Position.TotalMilliseconds}"
-                                    Maximum="{Binding ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}"
+                                    IsAdvancing="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}"
+                                    Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
+                                    Maximum="{x:Bind ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}"
                                     FlowDirection="LeftToRight">
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
