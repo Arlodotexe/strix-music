@@ -22,6 +22,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     public class FileMetadataScanner : IAsyncInit, IDisposable
     {
         private readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a" };
+        private readonly string[] _supportedPlaylistFileFormats = { ".zpl" };
+
         private readonly List<FileMetadata> _fileMetadata = new List<FileMetadata>();
         private readonly IFolderData _folderData;
         private readonly INotificationService _notificationService;
@@ -29,6 +31,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private int _filesFound;
         private int _filesProcessed;
         private AbstractProgressUIElement? _progressUIElement;
+        private PlaylistMetadataScanner _playlistMetadataScanner;
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
@@ -47,6 +50,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             _folderData = rootFolder;
 
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
+            _playlistMetadataScanner = new PlaylistMetadataScanner(_folderData);
 
             AttachEvents();
         }
@@ -661,12 +665,39 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task<FileMetadata?> ProcessFile(IFileData file)
         {
-            if (!_supportedMusicFileFormats.Contains(file.FileExtension))
+            if (!_supportedMusicFileFormats.Contains(file.FileExtension) && !_supportedPlaylistFileFormats.Contains(file.FileExtension))
             {
                 FilesFound--;
                 return null;
             }
 
+            if (_supportedMusicFileFormats.Contains(file.FileExtension))
+            {
+                return await ProcessMusicFile(file);
+            }
+
+            if (_supportedPlaylistFileFormats.Contains(file.FileExtension))
+            {
+                return await ProcessPlaylistMetadata(file);
+            }
+
+            return null;
+        }
+
+        private async Task<FileMetadata?> ProcessPlaylistMetadata(IFileData file)
+        {
+            var playlistMetadata = await _playlistMetadataScanner.ScanPlaylistMetadata(file);
+
+            if (playlistMetadata == null)
+                return null;
+
+            var fileMetadata = new FileMetadata {PlaylistMetadata = playlistMetadata};
+
+            return fileMetadata;
+        }
+
+        private async Task<FileMetadata?> ProcessMusicFile(IFileData file)
+        {
             var metadata = await ScanFileMetadata(file);
 
             if (metadata == null)

@@ -22,7 +22,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private const string PLAYLIST_DATA_FILENAME = "PlaylistData.bin";
 
         private readonly List<PlaylistMetadata> _allPlaylistMetadata = new List<PlaylistMetadata>();
-        private readonly PlaylistMetadataScanner _playlistMetadataScanner;
         private IFolderData? _folderData;
         private IFileSystemService? _fileSystemService;
         private string? _pathToMetadataFile;
@@ -35,8 +34,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// </summary>
         public PlaylistRepository()
         {
-            _playlistMetadataScanner = new PlaylistMetadataScanner();
-
             _fileSystemService = Ioc.Default.GetService<IFileSystemService>();
         }
 

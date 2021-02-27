@@ -24,5 +24,10 @@
         /// Artist information for this file.
         /// </summary>
         public ArtistMetadata? ArtistMetadata { get; set; }
+
+        /// <summary>
+        /// The metadata for the playlist.
+        /// </summary>
+        public PlaylistMetadata? PlaylistMetadata { get; set; }
     }
 }

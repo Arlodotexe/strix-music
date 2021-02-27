@@ -15,11 +15,23 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models.Playlist.Smil;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
+    // TODO: This class needs cleanup.
+
     /// <summary>
     /// Handles scanning playlists for all supported metadata.
     /// </summary>
     public class PlaylistMetadataScanner
     {
+        private readonly IFolderData _rootFolder;
+
+        /// <summary>
+        /// Creates a new instance of <see cref="PlaylistMetadataScanner"/>.
+        /// </summary>
+        public PlaylistMetadataScanner(IFolderData fileCoreRootFolder)
+        {
+            _rootFolder = fileCoreRootFolder;
+        }
+
         /// <summary>
         /// Scans playlist file for metadata.
         /// </summary>
@@ -38,32 +50,32 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 case ".m3u":
                 case ".m3u8":
-                case ".vlc":    // TODO: Make sure this actually works with VLC files
-                    playlistMetadata = await GetM3UMetadata(fileData);
+                case ".vlc":
+                    playlistMetadata = await GetM3UMetadata(fileData); // NOT TESTED
                     break;
 
                 case ".xspf":
-                    playlistMetadata = await GetXspfMetadata(fileData);
+                    playlistMetadata = await GetXspfMetadata(fileData); // NOT TESTED
                     break;
 
                 case ".asx":
-                    playlistMetadata = await GetAsxMetadata(fileData);
+                    playlistMetadata = await GetAsxMetadata(fileData); // NOT TESTED
                     break;
 
                 case ".mpcpl":
-                    playlistMetadata = await GetMpcplMetadata(fileData);
+                    playlistMetadata = await GetMpcplMetadata(fileData); // NOT TESTED
                     break;
 
                 case ".fpl":
-                    playlistMetadata = await GetFplMetadata(fileData);
+                    playlistMetadata = await GetFplMetadata(fileData); // NOT TESTED
                     break;
 
                 case ".pls":
-                    playlistMetadata = await GetPlsMetadata(fileData);
+                    playlistMetadata = await GetPlsMetadata(fileData); // NOT TESTED
                     break;
 
                 case ".aimppl4":
-                    playlistMetadata = await GetAimpplMetadata(fileData);
+                    playlistMetadata = await GetAimpplMetadata(fileData); // NOT TESTED
                     break;
 
                 default:
@@ -71,39 +83,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     return null;
             }
 
-            // disabled for now, scanning non-songs returns valid data
-            // var propertyMetadata = await GetMusicFilesProperties(fileData);
-            var foundMetadata = new[] { playlistMetadata };
-
-            var validMetadatas = foundMetadata.PruneNull().ToArray();
-
-            if (validMetadatas.Length == 0)
-                return null;
-
-            var mergedTrackMetada = MergePlaylistMetadata(validMetadatas);
-            mergedTrackMetada.Id = Guid.NewGuid().ToString();
-
-            return mergedTrackMetada;
-        }
-
-        private PlaylistMetadata MergePlaylistMetadata(PlaylistMetadata[] metadatas)
-        {
-            if (metadatas.Length == 1)
-                return metadatas[0];
-
-            var mergedMetaData = metadatas[0];
-            for (var i = 1; i < metadatas.Length; i++)
-            {
-                var item = metadatas[i];
-
-                mergedMetaData.Url ??= item.Url;
-                mergedMetaData.TrackIds ??= item.TrackIds;
-                mergedMetaData.Duration ??= item.Duration;
-                mergedMetaData.Description ??= item.Description;
-                mergedMetaData.Title ??= item.Title;
-            }
-
-            return mergedMetaData;
+            return playlistMetadata;
         }
 
         /// <summary>
@@ -182,7 +162,35 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <remarks>Recognizes Zune's ZPL and WMP's WPL.</remarks>
         private async Task<PlaylistMetadata?> GetSmilMetadata(IFileData fileData)
         {
-            throw new NotImplementedException();
+            var ser = new XmlSerializer(typeof(Smil));
+
+            using var stream = await fileData.GetStreamAsync();
+            using var xmlReader = new XmlTextReader(stream);
+
+            var smil = ser.Deserialize(xmlReader) as Smil;
+            var playlist = new PlaylistMetadata();
+
+            var mediaList = smil?.Body?.Seq?.Media?.ToList();
+
+            playlist.Title = smil?.Head?.Title;
+
+            if (mediaList == null)
+                return null;
+
+            playlist.TrackIds = new List<string>();
+
+            foreach (var media in mediaList)
+            {
+                if (media.Src != null)
+                {
+                    if (media.Src.Contains(_rootFolder.Path)) // checks if the track path is access-able. This is the fastest way. Not sure if its future proof.
+                        playlist.TrackIds.Add((media.Src + ".track").HashMD5Fast());
+                }
+
+                playlist.TotalTracksCount++;
+            }
+
+            return playlist;
         }
 
         /// <summary>
@@ -194,15 +202,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             try
             {
                 using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
-                StreamReader content;
-                if (fileData.FileExtension == ".m3u8")
-                    content = new StreamReader(stream, Encoding.UTF8);
-                else
-                    content = new StreamReader(stream);
+
+                using var content = fileData.FileExtension == ".m3u8" ? new StreamReader(stream, Encoding.UTF8) : new StreamReader(stream);
 
                 var metadata = new PlaylistMetadata();
                 var trackMetadataTemp = new TrackMetadata();
                 var tracks = new List<TrackMetadata>();
+                if (tracks == null) throw new ArgumentNullException(nameof(tracks));
 
                 // Make sure the file is either a "pointer" to a folder
                 // or an M3U playlist
