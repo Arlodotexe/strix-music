@@ -497,7 +497,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Gets all unique albums. Make sure file metadata is already scanned.
         /// </summary>
-        /// <returns>A list of unique <see cref="AlbumMetadata"/></returns>
+        /// <returns>A list of unique <see cref="AlbumMetadata"/>s.</returns>
         public async Task<IReadOnlyList<AlbumMetadata>> GetUniqueAlbumMetadata()
         {
             if (_folderScanningTaskCompletion != null && _folderScanningTaskCompletion.Task.Status != TaskStatus.RanToCompletion)
@@ -514,7 +514,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Gets all unique artist.
         /// </summary>
-        /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
+        /// <returns>A list of unique <see cref="ArtistMetadata"/>s.</returns>
         public async Task<IReadOnlyList<ArtistMetadata>> GetUniqueArtistMetadata()
         {
             if (_folderScanningTaskCompletion != null && _folderScanningTaskCompletion.Task.Status != TaskStatus.RanToCompletion)
@@ -531,7 +531,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Gets all unique tracks. Make sure file meta is already scanned.
         /// </summary>
-        /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
+        /// <returns>A list of unique <see cref="TrackMetadata"/>s.</returns>
         public async Task<IReadOnlyList<TrackMetadata>> GetUniqueTrackMetadata()
         {
             if (_folderScanningTaskCompletion != null && _folderScanningTaskCompletion.Task.Status != TaskStatus.RanToCompletion)
