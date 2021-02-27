@@ -117,7 +117,7 @@ namespace StrixMusic.Core.LocalFiles
 
             if (configuredFolder is null)
             {
-                PickAndSetupFolder().FireAndForget();
+                PickAndSaveFolder().FireAndForget();
                 ChangeCoreState(CoreState.Configuring);
                 return;
             }
@@ -132,7 +132,7 @@ namespace StrixMusic.Core.LocalFiles
             await Library.Cast<LocalFilesCoreLibrary>().InitAsync();
         }
 
-        private async Task PickAndSetupFolder()
+        private async Task PickAndSaveFolder()
         {
             var fileSystem = this.GetService<IFileSystemService>();
             var pickedFolder = await fileSystem.PickFolder();
@@ -156,7 +156,6 @@ namespace StrixMusic.Core.LocalFiles
             var fileMetadataManager = this.GetService<FileMetadataManager>();
 
             var artist = await fileMetadataManager.Artists.GetArtistMetadataById(id);
-
             if (artist != null)
             {
                 if (artist.ImagePath != null)
@@ -166,7 +165,6 @@ namespace StrixMusic.Core.LocalFiles
             }
 
             var album = await fileMetadataManager.Albums.GetAlbumMetadataById(id);
-
             if (album != null)
             {
                 TrackMetadata? trackWithImage = null;
@@ -193,7 +191,6 @@ namespace StrixMusic.Core.LocalFiles
             }
 
             var track = await fileMetadataManager.Tracks.GetTrackMetadataById(id);
-
             if (track != null)
                 return new LocalFilesCoreTrack(SourceCore, track);
 

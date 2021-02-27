@@ -139,6 +139,10 @@ namespace StrixMusic.Sdk
             }
             catch (TaskCanceledException)
             {
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
                 // TODO: if one core a already requested config, have a queue in case another tries.
                 AppNavigationRequested?.Invoke(core, AppNavigationTarget.Settings);
 
@@ -191,7 +195,10 @@ namespace StrixMusic.Sdk
         private void OnCoreStateChanged_HandleConfigRequest(object sender, CoreState e)
         {
             if (!(sender is ICore core))
+            {
+                ThrowHelper.ThrowInvalidOperationException();
                 return;
+            }
 
             if (e == CoreState.Configuring)
             {

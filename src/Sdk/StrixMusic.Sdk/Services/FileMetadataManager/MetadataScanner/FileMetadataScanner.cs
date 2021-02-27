@@ -475,7 +475,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     }
                 }
 
-                FileMetadataUpdated?.Invoke(this, new FileMetadata { AlbumMetadata = existingAlbum, TrackMetadata = trackMetadata, ArtistMetadata = artistMetadata });
+                _ = Task.Run(() => FileMetadataUpdated?.Invoke(this, new FileMetadata { AlbumMetadata = existingAlbum, TrackMetadata = trackMetadata, ArtistMetadata = artistMetadata }));
             }
             else
             {

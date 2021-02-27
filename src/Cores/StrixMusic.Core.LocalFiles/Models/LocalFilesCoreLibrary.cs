@@ -1,13 +1,12 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Events;
-using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Events;
 using StrixMusic.Core.LocalFiles.Services;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
@@ -16,8 +15,8 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc cref="ICoreLibrary"/>
     public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary
     {
-        private IFileMetadataManager? _fileMetadataManager;
         private readonly object _lockObj = new object();
+        private IFileMetadataManager? _fileMetadataManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreLibrary"/> class.
@@ -32,7 +31,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override async Task InitAsync()
         {
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
-
             _fileMetadataManager.FileMetadataAdded += MetadataScannerFileMetadataAdded;
 
             IsInitialized = true;
