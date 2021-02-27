@@ -668,9 +668,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             }
 
             var metadata = await ScanFileMetadata(file);
-
             if (metadata == null)
+            {
+                FilesFound--;
                 return null;
+            }
 
             lock (_fileMetadata)
             {

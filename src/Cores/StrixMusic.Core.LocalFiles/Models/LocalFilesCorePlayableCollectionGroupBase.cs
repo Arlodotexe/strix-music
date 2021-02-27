@@ -11,6 +11,12 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc cref="ICorePlayableCollectionGroup"/>
     public abstract class LocalFilesCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup, IAsyncInit
     {
+        private int _totalAlbumItemsCount;
+        private int _totalArtistItemsCount;
+        private int _totalTracksCount;
+        private int _totalPlaylistItemsCount;
+        private int _totalChildrenCount;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCorePlayableCollectionGroupBase"/> class.
         /// </summary>
@@ -135,19 +141,59 @@ namespace StrixMusic.Core.LocalFiles.Models
         public DateTime? AddedAt { get; }
 
         /// <inheritdoc />
-        public abstract int TotalAlbumItemsCount { get; internal set; }
+        public virtual int TotalAlbumItemsCount
+        {
+            get => _totalAlbumItemsCount;
+            internal set
+            {
+                _totalAlbumItemsCount = value;
+                AlbumItemsCountChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
-        public abstract int TotalArtistItemsCount { get; internal set; }
+        public virtual int TotalArtistItemsCount
+        {
+            get => _totalArtistItemsCount;
+            internal set
+            {
+                _totalArtistItemsCount = value;
+                ArtistItemsCountChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
-        public abstract int TotalTracksCount { get; internal set; }
+        public virtual int TotalTracksCount
+        {
+            get => _totalTracksCount;
+            internal set
+            {
+                _totalTracksCount = value;
+                TrackItemsCountChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
-        public abstract int TotalPlaylistItemsCount { get; internal set; }
+        public virtual int TotalPlaylistItemsCount
+        {
+            get => _totalPlaylistItemsCount;
+            internal set
+            {
+                _totalPlaylistItemsCount = value;
+                PlaylistItemsCountChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
-        public abstract int TotalChildrenCount { get; internal set; }
+        public virtual int TotalChildrenCount
+        {
+            get => _totalChildrenCount;
+            internal set
+            {
+                _totalChildrenCount = value;
+                TotalChildrenCountChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 0;

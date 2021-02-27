@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Nito.AsyncEx;
+using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
@@ -15,6 +18,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
     {
         private readonly string _instanceId;
         private readonly FileMetadataScanner _fileMetadataScanner;
+        private readonly Queue<FileMetadata> _batchAddedMetadataToEmit = new Queue<FileMetadata>();
+        private readonly Queue<FileMetadata> _batchUpdatedMetadataToEmit = new Queue<FileMetadata>();
 
         /// <summary>
         /// Creates a new instance of <see cref="FileMetadataManager"/>.
@@ -65,10 +70,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private void FileMetadataScanner_FileMetadataUpdated(object sender, FileMetadata e)
         {
-            FileMetadataUpdated?.Invoke(this, e);
+            lock (_batchUpdatedMetadataToEmit)
+            {
+                if (_batchUpdatedMetadataToEmit.Count >= 25)
+                    BatchEmitUpdatedMetadata();
+                else
+                    _batchUpdatedMetadataToEmit.Enqueue(e);
+            }
         }
 
-        private void FileMetadataScanner_FileMetadataAdded(object sender, FileMetadata e)
+        private async void FileMetadataScanner_FileMetadataAdded(object sender, FileMetadata e)
         {
             var fileMetadata = new FileMetadata();
 
@@ -81,7 +92,31 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (Artists.AddOrSkipArtistMetadata(e.ArtistMetadata))
                 fileMetadata.ArtistMetadata = e.ArtistMetadata;
 
-            FileMetadataAdded?.Invoke(sender, fileMetadata);
+            lock (_batchAddedMetadataToEmit)
+            {
+                if (_batchAddedMetadataToEmit.Count >= 25)
+                    BatchEmitAddedMetadata();
+                else
+                    _batchAddedMetadataToEmit.Enqueue(fileMetadata);
+            }
+        }
+
+        private void BatchEmitAddedMetadata()
+        {
+            while (_batchAddedMetadataToEmit.Count > 0)
+            {
+                var item = _batchAddedMetadataToEmit.Dequeue();
+                FileMetadataAdded?.Invoke(this, item);
+            }
+        }
+
+        private void BatchEmitUpdatedMetadata()
+        {
+            while (_batchUpdatedMetadataToEmit.Count > 0)
+            {
+                var item = _batchUpdatedMetadataToEmit.Dequeue();
+                FileMetadataUpdated?.Invoke(this, item);
+            }
         }
 
         ///<inheritdoc />
