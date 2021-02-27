@@ -253,27 +253,27 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (details is null)
                 return null;
 
-            var relatedMetadata = new FileMetadata();
-            relatedMetadata.AlbumMetadata = new AlbumMetadata()
+            var relatedMetadata = new FileMetadata
             {
-                Title = details.Album,
-                Duration = details.Duration,
-                Genres = new List<string>(details.Genre),
-            };
-
-            relatedMetadata.TrackMetadata = new TrackMetadata()
-            {
-                TrackNumber = details.TrackNumber,
-                Title = details.Title,
-                Genres = details.Genre?.ToList(),
-                Duration = details.Duration,
-                Source = new Uri(fileData.Path),
-                Year = details.Year,
-            };
-
-            relatedMetadata.ArtistMetadata = new ArtistMetadata()
-            {
-                Name = details.Artist,
+                AlbumMetadata = new AlbumMetadata
+                {
+                    Title = details.Album,
+                    Duration = details.Duration,
+                    Genres = new List<string>(details.Genre),
+                },
+                TrackMetadata = new TrackMetadata
+                {
+                    TrackNumber = details.TrackNumber,
+                    Title = details.Title,
+                    Genres = details.Genre?.ToList(),
+                    Duration = details.Duration,
+                    Source = new Uri(fileData.Path),
+                    Year = details.Year,
+                },
+                ArtistMetadata = new ArtistMetadata
+                {
+                    Name = details.Artist,
+                },
             };
 
             return relatedMetadata;
