@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Uno.Controls
         /// </summary>
         public SafeImage()
         {
-            this.DefaultStyleKey = typeof(SafeImage);
+            DefaultStyleKey = typeof(SafeImage);
         }
 
         /// <inheritdoc/>
@@ -48,7 +48,6 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void AttachHandlers()
         {
-            Loaded -= SafeImage_Loaded;
             Unloaded += SafeImage_Unloaded;
             DataContextChanged += SafeImage_DataContextChanged;
 
@@ -62,27 +61,23 @@ namespace StrixMusic.Sdk.Uno.Controls
             DataContextChanged -= SafeImage_DataContextChanged;
 
             Guard.IsNotNull(PART_ImageBrush, nameof(PART_ImageBrush));
-            PART_ImageBrush!.ImageFailed -= SafeImage_ImageFailed;
+            PART_ImageBrush.ImageFailed -= SafeImage_ImageFailed;
         }
 
         private void SafeImage_Loaded(object sender, RoutedEventArgs e)
         {
+            Loaded -= SafeImage_Loaded;
+
             // Find Parts
             PART_ImageRectangle = VisualTreeHelpers.GetDataTemplateChild<Rectangle>(this, nameof(PART_ImageRectangle));
             PART_Fallback = VisualTreeHelpers.GetDataTemplateChild<FrameworkElement>(this, nameof(PART_Fallback));
 
-            Brush brush = PART_ImageRectangle!.Fill;
-            if (brush is ImageBrush imgBrush)
-            {
+            if (PART_ImageRectangle?.Fill is ImageBrush imgBrush)
                 PART_ImageBrush = imgBrush;
-            }
             else
-            {
-                ThrowHelper.ThrowInvalidDataException(string.Format("{0}'s fill must an ImageBrush.", nameof(PART_ImageRectangle)));
-            }
+                ThrowHelper.ThrowInvalidDataException($"{nameof(PART_ImageRectangle)}'s fill must an ImageBrush.");
 
             RequestImages();
-
             AttachHandlers();
         }
 

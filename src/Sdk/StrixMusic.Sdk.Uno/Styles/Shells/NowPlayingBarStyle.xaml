@@ -7,11 +7,17 @@
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
     xmlns:conveternum="using:OwlCore.Uno.Converters.Numerical"
     xmlns:sdk="using:StrixMusic.Sdk"
+    xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Sdk.Uno.Styles.Shells.NowPlayingBarStyle">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.Uno/Styles/NowPlaying/MediaSliderStyle.xaml" />
         <ResourceDictionary Source="ms-appx:///StrixMusic.Sdk.Uno/Styles/NowPlaying/MediaTransportStyle.xaml" />
+        <ResourceDictionary>
+            <convertnumtime:DoubleToTimeSpanConverter x:Key="DoubleToTimeSpanConverter" />
+        </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="DefaultNowPlayingBarStyle" TargetType="shell:NowPlayingBar">
@@ -68,9 +74,16 @@
 
                                             <!--Media slider control-->
                                             <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
-                                                                    Maximum="{Binding ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}" 
-                                                                    FlowDirection="LeftToRight"/>
-
+                                                                    IsAdvancing="{Binding ActiveDevice.IsPlaying}"
+                                                                    Value="{Binding ActiveDevice.Position.TotalMilliseconds}"
+                                                                    Maximum="{Binding ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}"
+                                                                    FlowDirection="LeftToRight">
+                                                <interactivity:Interaction.Behaviors>
+                                                    <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
+                                                        <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                                                    </core:EventTriggerBehavior>
+                                                </interactivity:Interaction.Behaviors>
+                                            </nowplaying:MediaSlider>
                                             <!--Media transport controls-->
                                             <nowplaying:MediaTransports Grid.Column="2"/>
                                         </Grid>

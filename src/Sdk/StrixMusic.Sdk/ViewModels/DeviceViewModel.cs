@@ -76,8 +76,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Device_VolumeChanged(object sender, double e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Volume)));
 
-        private void Device_StateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(PlaybackState)));
-
         private void Device_ShuffleStateChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(ShuffleState)));
 
         private void Device_RepeatStateChanged(object sender, RepeatState e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(RepeatState)));
@@ -90,14 +88,21 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Device_IsActiveChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsActive)));
 
-        private void Device_NowPlayingChanged(object sender, ITrack e)
+        private void Device_StateChanged(object sender, PlaybackState e) => _ = Threading.OnPrimaryThread(() =>
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                _nowPlaying = new TrackViewModel(e);
-                OnPropertyChanged(nameof(NowPlaying));
-            });
-        }
+            OnPropertyChanged(nameof(PlaybackState));
+            OnPropertyChanged(nameof(IsPlaying));
+        });
+
+        private void Device_NowPlayingChanged(object sender, ITrack e) => _ = Threading.OnPrimaryThread(() =>
+        {
+            _nowPlaying = new TrackViewModel(e);
+
+            if (_nowPlaying.PopulateMoreArtistsCommand?.CanExecute(1) ?? false)
+                _ = _nowPlaying.PopulateMoreArtistsCommand?.ExecuteAsync(1);
+
+            OnPropertyChanged(nameof(NowPlaying));
+        });
 
         /// <summary>
         /// The wrapped model for this <see cref="DeviceViewModel"/>.
@@ -125,6 +130,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IDevice.NowPlaying"/>
         public TrackViewModel? NowPlaying => _nowPlaying;
 
+        // TODO: Change this to ICoreTrack and create CoreTrackViewModel. A device only plays a track from one source at a time.
         /// <inheritdoc />
         ITrack? IDevice.NowPlaying => _nowPlaying;
 
@@ -139,6 +145,11 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public PlaybackState PlaybackState => Model.PlaybackState;
+
+        /// <summary>
+        /// Indicates if the device is currently playing.
+        /// </summary>
+        public bool IsPlaying => PlaybackState == PlaybackState.Playing;
 
         /// <inheritdoc />
         public bool ShuffleState => Model.ShuffleState;
@@ -334,7 +345,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Attempts to seek the currently playing track on the device. Does not alter playback state.
         /// </summary>
-        public IAsyncRelayCommand SeekAsyncCommand { get; }
+        public IAsyncRelayCommand<TimeSpan> SeekAsyncCommand { get; }
 
         /// <summary>
         /// Attempts to pause the device.

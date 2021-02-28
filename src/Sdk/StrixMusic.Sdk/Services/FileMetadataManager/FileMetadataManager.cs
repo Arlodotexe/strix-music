@@ -39,7 +39,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             var primaryFileSystemService = Ioc.Default.GetRequiredService<IFileSystemService>();
 
-            var path = Path.Combine(primaryFileSystemService.RootFolder.Path, nameof(FileMetadataManager), instanceId);
+            var path = Path.Combine(primaryFileSystemService.RootFolder.Path, instanceId, nameof(FileMetadataManager));
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
@@ -81,7 +81,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (Artists.AddOrSkipArtistMetadata(e.ArtistMetadata))
                 fileMetadata.ArtistMetadata = e.ArtistMetadata;
 
-            FileMetadataAdded?.Invoke(sender, fileMetadata);
+            FileMetadataAdded?.Invoke(this, fileMetadata);
         }
 
         ///<inheritdoc />

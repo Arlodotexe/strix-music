@@ -257,27 +257,27 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (details is null)
                 return null;
 
-            var relatedMetadata = new FileMetadata();
-            relatedMetadata.AlbumMetadata = new AlbumMetadata()
+            var relatedMetadata = new FileMetadata
             {
-                Title = details.Album,
-                Duration = details.Duration,
-                Genres = new List<string>(details.Genre),
-            };
-
-            relatedMetadata.TrackMetadata = new TrackMetadata()
-            {
-                TrackNumber = details.TrackNumber,
-                Title = details.Title,
-                Genres = details.Genre?.ToList(),
-                Duration = details.Duration,
-                Source = new Uri(fileData.Path),
-                Year = details.Year,
-            };
-
-            relatedMetadata.ArtistMetadata = new ArtistMetadata()
-            {
-                Name = details.Artist,
+                AlbumMetadata = new AlbumMetadata
+                {
+                    Title = details.Album,
+                    Duration = details.Duration,
+                    Genres = new List<string>(details.Genre),
+                },
+                TrackMetadata = new TrackMetadata
+                {
+                    TrackNumber = details.TrackNumber,
+                    Title = details.Title,
+                    Genres = details.Genre?.ToList(),
+                    Duration = details.Duration,
+                    Source = new Uri(fileData.Path),
+                    Year = details.Year,
+                },
+                ArtistMetadata = new ArtistMetadata
+                {
+                    Name = details.Artist,
+                },
             };
 
             return relatedMetadata;
@@ -479,7 +479,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     }
                 }
 
-                FileMetadataUpdated?.Invoke(this, new FileMetadata { AlbumMetadata = existingAlbum, TrackMetadata = trackMetadata, ArtistMetadata = artistMetadata });
+                _ = Task.Run(() => FileMetadataUpdated?.Invoke(this, new FileMetadata { AlbumMetadata = existingAlbum, TrackMetadata = trackMetadata, ArtistMetadata = artistMetadata }));
             }
             else
             {
@@ -501,7 +501,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Gets all unique albums. Make sure file metadata is already scanned.
         /// </summary>
-        /// <returns>A list of unique <see cref="AlbumMetadata"/></returns>
+        /// <returns>A list of unique <see cref="AlbumMetadata"/>s.</returns>
         public async Task<IReadOnlyList<AlbumMetadata>> GetUniqueAlbumMetadata()
         {
             if (_folderScanningTaskCompletion != null && _folderScanningTaskCompletion.Task.Status != TaskStatus.RanToCompletion)
@@ -518,7 +518,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Gets all unique artist.
         /// </summary>
-        /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
+        /// <returns>A list of unique <see cref="ArtistMetadata"/>s.</returns>
         public async Task<IReadOnlyList<ArtistMetadata>> GetUniqueArtistMetadata()
         {
             if (_folderScanningTaskCompletion != null && _folderScanningTaskCompletion.Task.Status != TaskStatus.RanToCompletion)
@@ -535,7 +535,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Gets all unique tracks. Make sure file meta is already scanned.
         /// </summary>
-        /// <returns>A list of unique <see cref="ArtistMetadata"/></returns>
+        /// <returns>A list of unique <see cref="TrackMetadata"/>s.</returns>
         public async Task<IReadOnlyList<TrackMetadata>> GetUniqueTrackMetadata()
         {
             if (_folderScanningTaskCompletion != null && _folderScanningTaskCompletion.Task.Status != TaskStatus.RanToCompletion)
@@ -699,9 +699,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private async Task<FileMetadata?> ProcessMusicFile(IFileData file)
         {
             var metadata = await ScanFileMetadata(file);
-
             if (metadata == null)
+            {
+                FilesFound--;
                 return null;
+            }
 
             lock (_fileMetadata)
             {

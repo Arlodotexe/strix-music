@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 using StrixMusic.Sdk.Uno.Controls.Items.Abstract;
 using StrixMusic.Sdk.ViewModels;
-using Windows.UI.Xaml.Controls;
-using OwlCore.Extensions;
 
 namespace StrixMusic.Sdk.Uno.Controls.Items
 {
@@ -17,8 +16,30 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
         public AlbumItem()
         {
             this.DefaultStyleKey = typeof(AlbumItem);
+            AttachEvents();
+        }
 
-            InitAsync().FireAndForget();
+        private void AttachEvents()
+        {
+            Loaded += AlbumItem_Loaded;
+            Unloaded += AlbumItem_Unloaded;
+        }
+
+        private void DetachEvents()
+        {
+            Unloaded -= AlbumItem_Unloaded;
+        }
+
+        private void AlbumItem_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            DetachEvents();
+        }
+
+        private async void AlbumItem_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            Loaded -= AlbumItem_Loaded;
+
+            await InitAsync();
         }
 
         private async Task InitAsync()

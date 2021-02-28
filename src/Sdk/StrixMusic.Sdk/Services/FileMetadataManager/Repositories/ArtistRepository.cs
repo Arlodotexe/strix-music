@@ -120,8 +120,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<IReadOnlyList<ArtistMetadata>> GetArtistMetadata(int offset, int limit)
         {
-            Guard.IsNotNullOrWhiteSpace(_pathToMetadataFile, nameof(_pathToMetadataFile));
-
             var allArtists = await _fileMetadataScanner.GetUniqueArtistMetadata();
 
             if (limit == -1)
@@ -162,7 +160,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <summary>
-        /// Gets the filtered artist by album ids.
+        /// Gets the artists by track Id.
         /// </summary>
         /// <param name="trackId">The artist Id.</param>
         /// <param name="offset">The starting index for retrieving items.</param>
@@ -176,7 +174,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             foreach (var item in artists)
             {
-                if (item?.AlbumIds != null && item.AlbumIds.Contains(trackId))
+                if (item.TrackIds?.Contains(trackId) ?? false)
                 {
                     filteredArtists.Add(item);
                 }

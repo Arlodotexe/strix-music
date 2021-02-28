@@ -67,28 +67,28 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void AttachEvents()
         {
-            AlbumChanged -= Track_AlbumChanged;
-            DescriptionChanged -= Track_DescriptionChanged;
-            IsExplicitChanged -= Track_IsExplicitChanged;
-            LanguageChanged -= Track_LanguageChanged;
-            LyricsChanged -= Track_LyricsChanged;
-            NameChanged -= Track_NameChanged;
-            PlaybackStateChanged -= Track_PlaybackStateChanged;
-            TrackNumberChanged -= Track_TrackNumberChanged;
-            UrlChanged -= Track_UrlChanged;
-            LastPlayedChanged -= OnLastPlayedChanged;
+            AlbumChanged += Track_AlbumChanged;
+            DescriptionChanged += Track_DescriptionChanged;
+            IsExplicitChanged += Track_IsExplicitChanged;
+            LanguageChanged += Track_LanguageChanged;
+            LyricsChanged += Track_LyricsChanged;
+            NameChanged += Track_NameChanged;
+            PlaybackStateChanged += Track_PlaybackStateChanged;
+            TrackNumberChanged += Track_TrackNumberChanged;
+            UrlChanged += Track_UrlChanged;
+            LastPlayedChanged += OnLastPlayedChanged;
 
-            IsPlayArtistCollectionAsyncAvailableChanged -= OnIsPlayArtistCollectionAsyncAvailableChanged;
-            IsPauseArtistCollectionAsyncAvailableChanged -= OnIsPauseArtistCollectionAsyncAvailableChanged;
+            IsPlayArtistCollectionAsyncAvailableChanged += OnIsPlayArtistCollectionAsyncAvailableChanged;
+            IsPauseArtistCollectionAsyncAvailableChanged += OnIsPauseArtistCollectionAsyncAvailableChanged;
 
-            IsChangeNameAsyncAvailableChanged -= OnIsChangeNameAsyncAvailableChanged;
-            IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
-            IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
+            IsChangeNameAsyncAvailableChanged += OnIsChangeNameAsyncAvailableChanged;
+            IsChangeDurationAsyncAvailableChanged += OnIsChangeDurationAsyncAvailableChanged;
+            IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
 
-            ArtistItemsCountChanged -= ModelOnArtistItemsCountChanged;
-            ArtistItemsChanged -= TrackViewModel_ArtistItemsChanged;
-            ImagesCountChanged -= TrackViewModel_ImagesCountChanged;
-            ImagesChanged -= TrackViewModel_ImagesChanged;
+            ArtistItemsCountChanged += ModelOnArtistItemsCountChanged;
+            ArtistItemsChanged += TrackViewModel_ArtistItemsChanged;
+            ImagesCountChanged += TrackViewModel_ImagesCountChanged;
+            ImagesChanged += TrackViewModel_ImagesChanged;
         }
 
         private void DetachEvents()
@@ -120,140 +120,140 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged
         {
-            add => Model.PlaybackStateChanged -= value;
+            add => Model.PlaybackStateChanged += value;
             remove => Model.PlaybackStateChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<IAlbum?>? AlbumChanged
         {
-            add => Model.AlbumChanged -= value;
+            add => Model.AlbumChanged += value;
             remove => Model.AlbumChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int?>? TrackNumberChanged
         {
-            add => Model.TrackNumberChanged -= value;
+            add => Model.TrackNumberChanged += value;
             remove => Model.TrackNumberChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<CultureInfo?>? LanguageChanged
         {
-            add => Model.LanguageChanged -= value;
+            add => Model.LanguageChanged += value;
             remove => Model.LanguageChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<ILyrics?>? LyricsChanged
         {
-            add => Model.LyricsChanged -= value;
+            add => Model.LyricsChanged += value;
             remove => Model.LyricsChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsExplicitChanged
         {
-            add => Model.IsExplicitChanged -= value;
+            add => Model.IsExplicitChanged += value;
             remove => Model.IsExplicitChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string>? NameChanged
         {
-            add => Model.NameChanged -= value;
+            add => Model.NameChanged += value;
             remove => Model.NameChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<string?>? DescriptionChanged
         {
-            add => Model.DescriptionChanged -= value;
+            add => Model.DescriptionChanged += value;
             remove => Model.DescriptionChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<Uri?>? UrlChanged
         {
-            add => Model.UrlChanged -= value;
+            add => Model.UrlChanged += value;
             remove => Model.UrlChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged
         {
-            add => Model.DurationChanged -= value;
+            add => Model.DurationChanged += value;
             remove => Model.DurationChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<DateTime?>? LastPlayedChanged
         {
-            add => Model.LastPlayedChanged -= value;
+            add => Model.LastPlayedChanged += value;
             remove => Model.LastPlayedChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged
         {
-            add => Model.IsPlayArtistCollectionAsyncAvailableChanged -= value;
+            add => Model.IsPlayArtistCollectionAsyncAvailableChanged += value;
             remove => Model.IsPlayArtistCollectionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsPauseArtistCollectionAsyncAvailableChanged
         {
-            add => Model.IsPauseArtistCollectionAsyncAvailableChanged -= value;
+            add => Model.IsPauseArtistCollectionAsyncAvailableChanged += value;
             remove => Model.IsPauseArtistCollectionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeNameAsyncAvailableChanged
         {
-            add => Model.IsChangeNameAsyncAvailableChanged -= value;
+            add => Model.IsChangeNameAsyncAvailableChanged += value;
             remove => Model.IsChangeNameAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeDescriptionAsyncAvailableChanged
         {
-            add => Model.IsChangeDescriptionAsyncAvailableChanged -= value;
+            add => Model.IsChangeDescriptionAsyncAvailableChanged += value;
             remove => Model.IsChangeDescriptionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged
         {
-            add => Model.IsChangeDurationAsyncAvailableChanged -= value;
+            add => Model.IsChangeDurationAsyncAvailableChanged += value;
             remove => Model.IsChangeDurationAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int>? ArtistItemsCountChanged
         {
-            add => Model.ArtistItemsCountChanged -= value;
+            add => Model.ArtistItemsCountChanged += value;
             remove => Model.ArtistItemsCountChanged -= value;
         }
 
         /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged
         {
-            add => Model.ImagesCountChanged -= value;
+            add => Model.ImagesCountChanged += value;
             remove => Model.ImagesCountChanged -= value;
         }
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
-            add => Model.ImagesChanged -= value;
+            add => Model.ImagesChanged += value;
             remove => Model.ImagesChanged -= value;
         }
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged
         {
-            add => Model.ArtistItemsChanged -= value;
+            add => Model.ArtistItemsChanged += value;
             remove => Model.ArtistItemsChanged -= value;
         }
 

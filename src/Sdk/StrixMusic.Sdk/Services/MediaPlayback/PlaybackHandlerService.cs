@@ -6,8 +6,10 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Sdk.Services.MediaPlayback
 {
@@ -55,8 +57,18 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService.PositionChanged += PositionChanged;
             _currentPlayerService.PlaybackSpeedChanged += PlaybackSpeedChanged;
             _currentPlayerService.PlaybackStateChanged += PlaybackStateChanged;
+            _currentPlayerService.PlaybackStateChanged += CurrentPlayerService_PlaybackStateChanged;
             _currentPlayerService.VolumeChanged += VolumeChanged;
             _currentPlayerService.QuantumProcessed += QuantumProcessed;
+        }
+
+        private async void CurrentPlayerService_PlaybackStateChanged(object sender, PlaybackState e)
+        {
+            // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
+            if (e == PlaybackState.Queued)
+            {
+                await AutoAdvanceQueue();
+            }
         }
 
         private void DetachEvents()
@@ -73,14 +85,19 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService.QuantumProcessed -= QuantumProcessed;
         }
 
-        private async void PlayerService_PositionChanged(object sender, TimeSpan e)
+        private async void PlayerService_PositionChanged(object sender, TimeSpan currentPosition)
         {
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
 
             // If the song is not over
-            if (_currentPlayerService.CurrentSource.Track.Duration > e)
+            if (currentPosition < _currentPlayerService.CurrentSource.Track.Duration)
                 return;
 
+            await AutoAdvanceQueue();
+        }
+
+        private async Task AutoAdvanceQueue()
+        {
             switch (_repeatState)
             {
                 case RepeatState.All when NextItems.Count == 0:
@@ -183,16 +200,13 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (_shuffleState && _shuffledNextItemsIndices != null)
                 queueIndex = _shuffledNextItemsIndices[queueIndex];
 
-            var mediaSource = NextItems.ElementAtOrDefault(queueIndex);
-
-            if (mediaSource is null)
-                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(queueIndex));
-
             if (_currentPlayerService != null)
             {
                 await _currentPlayerService.PauseAsync();
                 DetachEvents();
             }
+
+            var mediaSource = NextItems.ElementAt(queueIndex);
 
             _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore];
             AttachEvents();
@@ -258,6 +272,13 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             _currentPlayerService = _audioPlayerRegistry[nextItem.Track.SourceCore];
             AttachEvents();
+
+            // TODO See DeviceViewModel.NowPlaying.
+            var track = new TrackViewModel(new MergedTrack(nextItem.Track.IntoList()));
+
+            Guard.IsNotNull(_strixDevice?.PlaybackContext, nameof(_strixDevice.PlaybackContext));
+
+            _strixDevice.SetPlaybackData(_strixDevice.PlaybackContext, track);
 
             await _currentPlayerService.Play(nextItem);
             CurrentItem = nextItem;
@@ -350,7 +371,15 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             _currentPlayerService = _audioPlayerRegistry[newItem.Track.SourceCore];
             AttachEvents();
 
+            // TODO See DeviceViewModel.NowPlaying.
+            var track = new TrackViewModel(new MergedTrack(newItem.Track.IntoList()));
+
+            Guard.IsNotNull(_strixDevice?.PlaybackContext, nameof(_strixDevice.PlaybackContext));
+
+            _strixDevice.SetPlaybackData(_strixDevice.PlaybackContext, track);
             await _currentPlayerService.Play(newItem);
+            CurrentItem = newItem;
+            CurrentItemChanged?.Invoke(this, newItem);
         }
 
         /// <inheritdoc />

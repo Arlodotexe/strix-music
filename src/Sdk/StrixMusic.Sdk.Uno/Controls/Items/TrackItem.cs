@@ -20,6 +20,6 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
         /// <summary>
         /// The <see cref="TrackViewModel"/> for the control.
         /// </summary>
-        public TrackViewModel ViewModel => (DataContext as TrackViewModel)!;
+        public TrackViewModel ViewModel => (TrackViewModel)DataContext;
     }
 }

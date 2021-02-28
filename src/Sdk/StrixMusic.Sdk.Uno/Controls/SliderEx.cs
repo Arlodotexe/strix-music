@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Input;
 namespace StrixMusic.Sdk.Uno.Controls
 {
     /// <summary>
-    /// An extended <see cref="Slider"/> that has events for the Slider is modifed by the user.
+    /// An extended <see cref="Slider"/> that has events for the Slider is modified by the user.
     /// </summary>
     /// <remarks>
     /// Partially stolen from StackOverflow:
@@ -15,6 +15,11 @@ namespace StrixMusic.Sdk.Uno.Controls
     /// </remarks>
     public partial class SliderEx : Slider
     {
+        private bool IsSliderBeingManipulated => _isContainerHeld || _isThumbHeld;
+
+        private bool _isThumbHeld;
+        private bool _isContainerHeld;
+
         /// <summary>
         /// <see cref="DependencyProperty"/> for the <see cref="Remaining"/> property.
         /// </summary>
@@ -49,28 +54,13 @@ namespace StrixMusic.Sdk.Uno.Controls
             private set => SetValue(RemainingProperty, value);
         }
 
-        private bool IsSliderBeingManpulated
-        {
-            get
-            {
-                return _isContainerHeld || _isThumbHeld;
-            }
-        }
-
-        private bool _isThumbHeld = false;
-        private bool _isContainerHeld = false;
-
         /// <inheritdoc/>
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
             // Find thumb PART
-            var thumb = GetTemplateChild("HorizontalThumb") as Thumb;
-            if (thumb == null)
-            {
-                thumb = GetTemplateChild("VerticalThumb") as Thumb;
-            }
+            var thumb = GetTemplateChild("HorizontalThumb") as Thumb ?? GetTemplateChild("VerticalThumb") as Thumb;
 
             // Setup events on Thumb
             if (thumb != null)
@@ -81,23 +71,13 @@ namespace StrixMusic.Sdk.Uno.Controls
             }
 
             // Find SliderContainer
+            // ReSharper disable once UsePatternMatching
             var sliderContainer = GetTemplateChild("SliderContainer") as Grid;
             if (sliderContainer != null)
             {
-                sliderContainer.AddHandler(
-                    PointerPressedEvent,
-                    new PointerEventHandler(SliderContainer_PointerPressed),
-                    true);
-
-                sliderContainer.AddHandler(
-                    PointerReleasedEvent,
-                    new PointerEventHandler(SliderContainer_PointerReleased),
-                    true);
-
-                sliderContainer.AddHandler(
-                    PointerMovedEvent,
-                    new PointerEventHandler(SliderContainer_PointerMoved),
-                    true);
+                sliderContainer.AddHandler(PointerPressedEvent, new PointerEventHandler(SliderContainer_PointerPressed), true);
+                sliderContainer.AddHandler(PointerReleasedEvent, new PointerEventHandler(SliderContainer_PointerReleased), true);
+                sliderContainer.AddHandler(PointerMovedEvent, new PointerEventHandler(SliderContainer_PointerMoved), true);
             }
         }
 
@@ -108,23 +88,17 @@ namespace StrixMusic.Sdk.Uno.Controls
             Remaining = Maximum - newValue;
         }
 
-        private void SliderContainer_PointerMoved(
-            object sender,
-            PointerRoutedEventArgs e)
+        private void SliderContainer_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             InvokeMove();
         }
 
-        private void SliderContainer_PointerReleased(
-            object sender,
-            PointerRoutedEventArgs e)
+        private void SliderContainer_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             SetContainerHeld(false);
         }
 
-        private void SliderContainer_PointerPressed(
-            object sender,
-            PointerRoutedEventArgs e)
+        private void SliderContainer_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             SetContainerHeld(true);
         }
@@ -146,14 +120,14 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void SetThumbHeld(bool held)
         {
-            bool wasManipulated = IsSliderBeingManpulated;
+            var wasManipulated = IsSliderBeingManipulated;
             _isThumbHeld = held;
             InvokeStateChange(wasManipulated);
         }
 
         private void SetContainerHeld(bool held)
         {
-            bool wasManipulated = IsSliderBeingManpulated;
+            var wasManipulated = IsSliderBeingManipulated;
             _isContainerHeld = held;
             InvokeStateChange(wasManipulated);
         }
@@ -165,9 +139,9 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private void InvokeStateChange(bool wasBeingManipulated)
         {
-            if (wasBeingManipulated != IsSliderBeingManpulated)
+            if (wasBeingManipulated != IsSliderBeingManipulated)
             {
-                if (IsSliderBeingManpulated)
+                if (IsSliderBeingManipulated)
                 {
                     SliderManipulationStarted?.Invoke(this, EventArgs.Empty);
                 }

@@ -23,7 +23,6 @@
 
     <DataTemplate x:Key="QuickplayAlbumCollectionDataTemplate" x:DataType="viewModels:IAlbumCollectionViewModel">
         <ItemsControl ItemTemplate="{StaticResource QuickplayAlbumCollectionItemStyle}"
-                      ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}"
                       ItemsSource="{x:Bind Albums}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

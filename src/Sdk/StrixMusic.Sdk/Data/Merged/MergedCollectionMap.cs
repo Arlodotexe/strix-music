@@ -27,6 +27,13 @@ namespace StrixMusic.Sdk.Data.Merged
         where TCollectionItem : class, ICollectionItemBase, IMerged<TCoreCollectionItem>
         where TCoreCollectionItem : class, ICollectionItemBase, ICoreMember
     {
+        // ReSharper disable StaticMemberInGenericType
+        private static bool _isInitialized;
+        private static TaskCompletionSource<bool>? _initCompletionSource;
+        private static List<string>? _coreRanking;
+        private static Dictionary<string, CoreAssemblyInfo>? _configuredCoreRegistry;
+        private static MergedCollectionSorting? _sortingMethod;
+
         private readonly TCollection _collection;
         private readonly ISettingsService _settingsService;
 
@@ -34,12 +41,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// A map where each index contains the representation of an item returned from a source collection, where the value is that source collection.
         /// </summary>
         private readonly List<MappedData> _sortedMap = new List<MappedData>();
-
         private readonly List<MergedMappedData> _mergedMappedData = new List<MergedMappedData>();
-
-        private List<string>? _coreRanking;
-        private Dictionary<string, CoreAssemblyInfo>? _configuredCoreRegistry;
-        private MergedCollectionSorting? _sortingMethod;
 
         /// <inheritdoc />
         public IReadOnlyList<TCoreCollection> Sources => _collection.Sources;
@@ -118,7 +120,6 @@ namespace StrixMusic.Sdk.Data.Merged
                 var originalIndex = mappedData.OriginalIndex;
 
                 await InsertItemIntoCollection(sourceCollection, source, originalIndex);
-
             }
         }
 
@@ -153,6 +154,14 @@ namespace StrixMusic.Sdk.Data.Merged
             if (IsInitialized)
                 return;
 
+            if (_initCompletionSource?.Task.Status == TaskStatus.Running || _initCompletionSource?.Task.Status == TaskStatus.WaitingForActivation)
+            {
+                await _initCompletionSource.Task;
+                return;
+            }
+
+            _initCompletionSource = new TaskCompletionSource<bool>();
+
             _coreRanking = await GetCoreRankings();
 
             _configuredCoreRegistry = await GetConfiguredCoreRegistry();
@@ -166,11 +175,17 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
             Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
 
+            _initCompletionSource.SetResult(true);
+            _initCompletionSource = null;
             IsInitialized = true;
         }
 
         /// <inheritdoc />
-        public bool IsInitialized { get; set; }
+        public bool IsInitialized
+        {
+            get => _isInitialized;
+            set => _isInitialized = value;
+        }
 
         private Task TryInitAsync() => InitAsync();
 
@@ -673,11 +688,14 @@ namespace StrixMusic.Sdk.Data.Merged
                 }
             }
 
-            var relevantMergedMappedData = MergeMappedData(_sortedMap).Skip(offset).Take(limit);
+            lock (_sortedMap)
+            {
+                var relevantMergedMappedData = MergeMappedData(_sortedMap.ToArray()).Skip(offset).Take(limit);
 
-            var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
+                var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
 
-            return merged;
+                return merged;
+            }
         }
 
         private List<IMergedMutable<TCoreCollectionItem>> MergeMappedData(IList<MappedData> sortedData)
@@ -778,8 +796,9 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private Task<MergedCollectionSorting> GetSortingMethod()
         {
-            return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
-        }
+            return Task.FromResult(MergedCollectionSorting.Ranked);
+/*            return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
+*/        }
 
         private void SettingsServiceOnSettingChanged(object sender, SettingChangedEventArgs e)
         {

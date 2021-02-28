@@ -11,18 +11,16 @@
     <DataTemplate x:Key="DefaultMediaInfoDataTemplate" x:DataType="sdk:MainViewModel">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
                 <TextBlock Text="{Binding ActiveDevice.NowPlaying.Name, Mode=OneWay}"/>
-                <!--<TextBlock Text="{x:Bind ActiveDevice.NowPlaying.Name, Mode=OneWay}" Opacity=".5"/>-->
-                <!--TODO: Artist-->
+                <TextBlock Text="{Binding ActiveDevice.NowPlaying.Artists[0].Name, Mode=OneWay}" Opacity=".5"/>
             </StackPanel>
 
-            <strix:SafeImage x:Name="PART_AlbumImage" DataContext="{Binding ActiveDevice.NowPlaying, Mode=OneWay}"/>
-
-            <!--<Rectangle Fill="#FF00FF" Width="96" Height="96"/>-->
+            <strix:SafeImage x:Name="PART_TrackCover" Grid.RowSpan="3" Height="100" Width="100"
+                             DataContext="{Binding ActiveDevice.NowPlaying, Mode=OneWay}"/>
         </Grid>
     </DataTemplate>
 

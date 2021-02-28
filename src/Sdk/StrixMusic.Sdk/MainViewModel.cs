@@ -25,7 +25,6 @@ namespace StrixMusic.Sdk
     {
         private readonly List<ICore> _sources = new List<ICore>();
         private readonly List<(ICore core, CancellationTokenSource cancellationToken)> _coreInitData = new List<(ICore, CancellationTokenSource)>();
-        private readonly StrixDevice _strixDevice;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
@@ -33,8 +32,7 @@ namespace StrixMusic.Sdk
         public MainViewModel(StrixDevice strixDevice)
         {
             Singleton = this;
-            _strixDevice = strixDevice;
-            LocalDevice = new DeviceViewModel(_strixDevice);
+            LocalDevice = new DeviceViewModel(strixDevice);
 
             Devices = new ObservableCollection<DeviceViewModel>();
 
@@ -118,6 +116,8 @@ namespace StrixMusic.Sdk
                 LocalDevice,
             };
 
+            OnPropertyChanged(nameof(Devices));
+
             AttachEvents();
         }
 
@@ -138,6 +138,10 @@ namespace StrixMusic.Sdk
                 await Task.Run(() => core.InitAsync(services), cancellationToken.Token);
             }
             catch (TaskCanceledException)
+            {
+            }
+
+            if (cancellationToken.IsCancellationRequested)
             {
                 // TODO: if one core a already requested config, have a queue in case another tries.
                 AppNavigationRequested?.Invoke(core, AppNavigationTarget.Settings);
@@ -191,7 +195,10 @@ namespace StrixMusic.Sdk
         private void OnCoreStateChanged_HandleConfigRequest(object sender, CoreState e)
         {
             if (!(sender is ICore core))
+            {
+                ThrowHelper.ThrowInvalidOperationException();
                 return;
+            }
 
             if (e == CoreState.Configuring)
             {
