@@ -33,8 +33,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
             await trackCollection.InitAsync();
 
-            var playerEntry = await PlayCollectionEntry();
-            if (!playerEntry)
+            var canPlay = await PrepareToPlayCollection();
+            if (!canPlay)
                 return;
 
             ClearPrevious();
@@ -69,8 +69,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             await albumCollection.InitAsync();
 
-            var playerEntry = await PlayCollectionEntry();
-            if (!playerEntry)
+            var canPlay = await PrepareToPlayCollection();
+            if (!canPlay)
             {
                 await albumCollection.PlayAlbumCollectionAsync(albumCollectionItem);
                 return;
@@ -88,7 +88,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// Common tasks done by all "Play" methods when playback is requested.
         /// </summary>
         /// <returns>True if playback should continue locally, false if playback should continue remotely.</returns>
-        private async Task<bool> PlayCollectionEntry()
+        private async Task<bool> PrepareToPlayCollection()
         {
             var mainViewModel = MainViewModel.Singleton;
 
