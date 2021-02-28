@@ -32,6 +32,11 @@ namespace StrixMusic.Core.LocalFiles.Services
         /// A cache of all images across all core instances.
         /// </summary>
         public static ImageCacheRepo Images { get; set; } = new ImageCacheRepo();
+
+        /// <summary>
+        /// A cache of all playLists across all core instances.
+        /// </summary>
+        public static PlaylistCacheRepo PlayLists { get; set; } = new PlaylistCacheRepo();
     }
 
     /// <summary>
@@ -79,6 +84,18 @@ namespace StrixMusic.Core.LocalFiles.Services
         public LocalFilesCoreImage GetOrCreate(string id, ICore sourceCore, Uri uri, double? width = null, double? height = null)
         {
             return GetOrCreate(id, () => new LocalFilesCoreImage(sourceCore, uri, width, height));
+        }
+    }
+
+    /// <summary>
+    /// A cache of all playLists across all core instances.
+    /// </summary>
+    public class PlaylistCacheRepo : InstanceCacheRepository<LocalFileCorePlaylist>
+    {
+        /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, System.Func{T})"/>
+        public LocalFileCorePlaylist GetOrCreate(string id, ICore sourceCore, PlaylistMetadata playlistMetadata)
+        {
+            return GetOrCreate(id, () => new LocalFileCorePlaylist(sourceCore,playlistMetadata));
         }
     }
 }

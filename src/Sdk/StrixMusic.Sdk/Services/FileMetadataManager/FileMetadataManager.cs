@@ -81,6 +81,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (Artists.AddOrSkipArtistMetadata(e.ArtistMetadata))
                 fileMetadata.ArtistMetadata = e.ArtistMetadata;
 
+            fileMetadata.PlaylistMetadata = e.PlaylistMetadata;
             FileMetadataAdded?.Invoke(this, fileMetadata);
         }
 

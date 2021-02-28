@@ -698,7 +698,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             FilesProcessed++;
 
-            _ = Task.Run(() => FileMetadataAdded?.Invoke(this, fileMetadata));
+            _ = Task.Run(
+                () => 
+                FileMetadataAdded?.Invoke(this, fileMetadata)
+                );
 
             return fileMetadata;
         }

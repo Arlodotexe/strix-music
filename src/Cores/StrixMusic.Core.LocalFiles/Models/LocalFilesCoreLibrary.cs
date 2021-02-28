@@ -58,6 +58,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public override string? Description { get; protected set; } = null;
 
+        /// <inheritdoc />?
+        public virtual event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
+
         /// <inheritdoc />
         public override event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
 
@@ -143,13 +146,36 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             HandleAlbumMetadataAdded();
             HandleArtistMetadataAdded();
-            HandleAddedTrackMetadata();
+            HandleTrackMetadataAdded();
+            HandlePlaylistMetadataAdded();
 
             _batchItemsToEmit.Clear();
             _batchItemsLock.Release();
         }
 
-        private void HandleAddedTrackMetadata()
+        private void HandlePlaylistMetadataAdded()
+        {
+            var addedItems = new List<CollectionChangedItem<ICorePlaylistCollectionItem>>();
+
+            foreach (var e in _batchItemsToEmit)
+            {
+                if (e.PlaylistMetadata == null)
+                    continue;
+
+                Guard.IsNotNullOrWhiteSpace(e.TrackMetadata?.Id, nameof(e.PlaylistMetadata.Id));
+
+                var filesCoreTrack = InstanceCache.PlayLists.GetOrCreate(e.TrackMetadata.Id, SourceCore, e.PlaylistMetadata);
+
+                addedItems.Add(new CollectionChangedItem<ICorePlaylistCollectionItem>(filesCoreTrack, addedItems.Count));
+            }
+
+            var removedItems = Array.Empty<CollectionChangedItem<ICorePlaylistCollectionItem>>();
+
+            TotalPlaylistItemsCount += addedItems.Count;
+            PlaylistItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        private void HandleTrackMetadataAdded()
         {
             var addedItems = new List<CollectionChangedItem<ICoreTrack>>();
 
