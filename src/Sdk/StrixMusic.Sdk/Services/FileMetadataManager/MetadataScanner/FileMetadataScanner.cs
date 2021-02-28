@@ -689,9 +689,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var playlistMetadata = await _playlistMetadataScanner.ScanPlaylistMetadata(file);
 
             if (playlistMetadata == null)
+            {
+                FilesFound--;
                 return null;
+            }
 
-            var fileMetadata = new FileMetadata {PlaylistMetadata = playlistMetadata};
+            var fileMetadata = new FileMetadata { PlaylistMetadata = playlistMetadata };
+
+            FilesProcessed++;
+
+            _ = Task.Run(() => FileMetadataAdded?.Invoke(this, fileMetadata));
 
             return fileMetadata;
         }
