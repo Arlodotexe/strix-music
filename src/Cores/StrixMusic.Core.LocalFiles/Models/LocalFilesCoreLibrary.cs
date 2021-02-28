@@ -162,11 +162,11 @@ namespace StrixMusic.Core.LocalFiles.Models
                 if (e.PlaylistMetadata == null)
                     continue;
 
-                Guard.IsNotNullOrWhiteSpace(e.TrackMetadata?.Id, nameof(e.PlaylistMetadata.Id));
+                Guard.IsNotNullOrWhiteSpace(e.PlaylistMetadata?.Id, nameof(e.PlaylistMetadata.Id));
 
-                var filesCoreTrack = InstanceCache.PlayLists.GetOrCreate(e.TrackMetadata.Id, SourceCore, e.PlaylistMetadata);
+                var fileCorePlaylist = InstanceCache.PlayLists.GetOrCreate(e.PlaylistMetadata.Id, SourceCore, e.PlaylistMetadata);
 
-                addedItems.Add(new CollectionChangedItem<ICorePlaylistCollectionItem>(filesCoreTrack, addedItems.Count));
+                addedItems.Add(new CollectionChangedItem<ICorePlaylistCollectionItem>(fileCorePlaylist, addedItems.Count));
             }
 
             var removedItems = Array.Empty<CollectionChangedItem<ICorePlaylistCollectionItem>>();

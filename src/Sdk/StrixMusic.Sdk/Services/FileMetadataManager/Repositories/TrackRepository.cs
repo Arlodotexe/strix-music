@@ -76,7 +76,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     return false;
 
                 if (!_trackMetadatas?.Any(c =>
-                    c.Title?.Equals(trackMetadata.Title ?? string.Empty, StringComparison.OrdinalIgnoreCase) ??
+                    c.Id?.Equals(trackMetadata.Id ?? string.Empty, StringComparison.OrdinalIgnoreCase) ??
                     false) ?? false)
                 {
                     _trackMetadatas?.Add(trackMetadata);

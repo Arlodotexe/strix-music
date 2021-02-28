@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Sdk.Data;
@@ -28,19 +29,19 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task<bool> IsAddImageAvailable(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task<bool> IsRemoveImageAvailable(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
@@ -50,16 +51,16 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
-        public string Id { get; }
+        public string Id => _playlistMetadata?.Id ?? throw new InvalidOperationException("Missing playlist id");
 
         /// <inheritdoc />
-        public Uri? Url { get; }
+        public Uri? Url => _playlistMetadata?.Url ?? null;
 
         /// <inheritdoc />
-        public string Name { get; }
+        public string Name => _playlistMetadata?.Title ?? null;
 
         /// <inheritdoc />
-        public string? Description { get; }
+        public string? Description => _playlistMetadata.Description;
 
         /// <inheritdoc />
         public DateTime? LastPlayed { get; }
@@ -88,13 +89,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task ChangeDurationAsync(TimeSpan duration)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
@@ -157,13 +158,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public Task<bool> IsAddTrackAvailable(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
         public Task<bool> IsRemoveTrackAvailable(int index)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />

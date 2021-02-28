@@ -549,6 +549,23 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             }
         }
 
+        /// <summary>
+        /// Gets all unique tracks. Make sure file meta is already scanned.
+        /// </summary>
+        /// <returns>A list of the <see cref="PlaylistMetadata"/>.</returns>
+        public async Task<IReadOnlyList<PlaylistMetadata>> GetUniquePlaylistsMetadata()
+        {
+            if (_folderScanningTaskCompletion != null && _folderScanningTaskCompletion.Task.Status != TaskStatus.RanToCompletion)
+                await _folderScanningTaskCompletion.Task;
+
+            lock (_fileMetadata)
+            {
+                var playLists = _fileMetadata.Select(c => c.PlaylistMetadata).PruneNull();
+
+                return playLists.DistinctBy(c => c?.Id).ToList();
+            }
+        }
+
         private void ReleaseUnmanagedResources()
         {
             DetachEvents();
@@ -696,14 +713,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var fileMetadata = new FileMetadata { PlaylistMetadata = playlistMetadata };
 
-            FilesProcessed++;
+            lock (_fileMetadata)
+            {
+                _fileMetadata.Add(fileMetadata);
 
-            _ = Task.Run(
-                () => 
-                FileMetadataAdded?.Invoke(this, fileMetadata)
-                );
+                FilesProcessed++;
 
-            return fileMetadata;
+                _ = Task.Run(() => FileMetadataAdded?.Invoke(this, fileMetadata));
+
+                return fileMetadata;
+            }
         }
 
         private async Task<FileMetadata?> ProcessMusicFile(IFileData file)

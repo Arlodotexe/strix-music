@@ -30,7 +30,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Albums = new AlbumRepository(_fileMetadataScanner);
             Artists = new ArtistRepository(_fileMetadataScanner);
             Tracks = new TrackRepository(_fileMetadataScanner);
-            Playlists = new PlaylistRepository();
+            Playlists = new PlaylistRepository(_fileMetadataScanner);
 
             AttachEvents();
         }
@@ -81,7 +81,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (Artists.AddOrSkipArtistMetadata(e.ArtistMetadata))
                 fileMetadata.ArtistMetadata = e.ArtistMetadata;
 
-            fileMetadata.PlaylistMetadata = e.PlaylistMetadata;
+            if(Playlists.AddOrSkipPlayListsMetadata(e.PlaylistMetadata))
+                fileMetadata.PlaylistMetadata = e.PlaylistMetadata;
+
             FileMetadataAdded?.Invoke(this, fileMetadata);
         }
 
