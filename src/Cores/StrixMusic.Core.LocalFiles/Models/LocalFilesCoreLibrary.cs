@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
@@ -17,6 +18,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary
     {
         private readonly List<FileMetadata> _batchItemsToEmit = new List<FileMetadata>();
+        private readonly SemaphoreSlim _batchItemsLock = new SemaphoreSlim(1, 1);
         private IFileMetadataManager? _fileMetadataManager;
 
         /// <summary>
@@ -128,22 +130,23 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         private async void MetadataScannerFileMetadataAdded(object sender, FileMetadata e)
         {
-            lock (_batchItemsToEmit)
-                _batchItemsToEmit.Add(e);
+            // Emitting the data in batches was required for performance reasons.
+            // The MergedCollectionMap was not optimized very well for many quick collection changes, so we need to emit many items at once.
+            await _batchItemsLock.WaitAsync();
+            _batchItemsToEmit.Add(e);
+            _batchItemsLock.Release();
 
-            if (!await Threading.Debounce($"{nameof(LocalFilesCoreLibrary)}.{SourceCore.InstanceId}", TimeSpan.FromSeconds(0.5)))
+            if (!await Threading.Debounce($"{nameof(LocalFilesCoreLibrary)}.{SourceCore.InstanceId}", TimeSpan.FromSeconds(2)) || _batchItemsToEmit.Count == 0)
                 return;
 
-            lock (_batchItemsToEmit)
-            {
-                HandleAlbumMetadataAdded();
+            await _batchItemsLock.WaitAsync();
 
-                HandleArtistMetadataAdded();
+            HandleAlbumMetadataAdded();
+            HandleArtistMetadataAdded();
+            HandleAddedTrackMetadata();
 
-                HandleAddedTrackMetadata();
-
-                _batchItemsToEmit.Clear();
-            }
+            _batchItemsToEmit.Clear();
+            _batchItemsLock.Release();
         }
 
         private void HandleAddedTrackMetadata()

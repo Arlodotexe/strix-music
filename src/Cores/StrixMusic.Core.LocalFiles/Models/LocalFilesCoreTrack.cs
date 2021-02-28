@@ -62,7 +62,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             lock (_batchItemsToEmit)
                 _batchItemsToEmit.Add(e);
 
-            if (!await Threading.Debounce($"{nameof(LocalFilesCoreLibrary)}.{SourceCore.InstanceId}", TimeSpan.FromSeconds(0.5)))
+            if (!await Threading.Debounce($"{nameof(LocalFilesCoreLibrary)}.{SourceCore.InstanceId}", TimeSpan.FromSeconds(2)))
                 return;
 
             HandleUpdatedArtistData();
