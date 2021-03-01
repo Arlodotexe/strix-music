@@ -74,16 +74,17 @@
 
                                             <!--Media slider control-->
                                             <nowplaying:MediaSlider x:Name="slider" Grid.Column="1" VerticalAlignment="Center" Minimum="0"
-                                                                    IsAdvancing="{Binding ActiveDevice.IsPlaying}"
-                                                                    Value="{Binding ActiveDevice.Position.TotalMilliseconds}"
-                                                                    Maximum="{Binding ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}"
+                                                                    IsAdvancing="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}"
+                                                                    Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
+                                                                    Maximum="{x:Bind ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}"
                                                                     FlowDirection="LeftToRight">
                                                 <interactivity:Interaction.Behaviors>
                                                     <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
-                                                        <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
+                                                        <core:InvokeCommandAction Command="{x:Bind ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=slider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
                                                     </core:EventTriggerBehavior>
                                                 </interactivity:Interaction.Behaviors>
                                             </nowplaying:MediaSlider>
+
                                             <!--Media transport controls-->
                                             <nowplaying:MediaTransports Grid.Column="2"/>
                                         </Grid>
