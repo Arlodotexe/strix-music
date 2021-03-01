@@ -5,9 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Events;
+using OwlCore.Extensions;
+using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Core.LocalFiles.Models
@@ -16,6 +20,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     public class LocalFileCorePlaylist : ICorePlaylist
     {
         private readonly PlaylistMetadata _playlistMetadata;
+        private readonly IFileMetadataManager _fileMetadataManager;
 
         /// <summary>
         /// Creates a new instance of <see cref="LocalFileCorePlaylist"/>
@@ -24,6 +29,36 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             SourceCore = sourceCore;
             _playlistMetadata = playlistMetadata;
+
+            Guard.IsNotNull(playlistMetadata, nameof(playlistMetadata));
+            Guard.IsNotNull(playlistMetadata.Id, nameof(playlistMetadata.Id));
+
+            Id = playlistMetadata.Id;
+            _fileMetadataManager = sourceCore.GetService<IFileMetadataManager>();
+
+            CalculatePlaylistDuration().FireAndForget();
+        }
+
+        private async Task CalculatePlaylistDuration()
+        {
+            if (_playlistMetadata.TrackIds != null)
+            {
+                var allTracks = await _fileMetadataManager.Tracks.GetTrackMetadataByIds(_playlistMetadata.TrackIds);
+
+                if (allTracks != null)
+                {
+                    var durationMilliseconds = 0;
+
+                    foreach (var item in allTracks)
+                    {
+                        durationMilliseconds += item?.Duration?.Milliseconds ?? 0;
+                    }
+
+                    Duration = TimeSpan.FromMilliseconds(durationMilliseconds);
+
+                    TotalTracksCount = allTracks.Count;
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -51,13 +86,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
-        public string Id => _playlistMetadata?.Id ?? throw new InvalidOperationException("Missing playlist id");
+        public string Id { get; set; }
 
         /// <inheritdoc />
         public Uri? Url => _playlistMetadata?.Url ?? null;
 
         /// <inheritdoc />
-        public string Name => _playlistMetadata?.Title ?? null;
+        public string Name => _playlistMetadata?.Title ?? "No Title";
 
         /// <inheritdoc />
         public string? Description => _playlistMetadata.Description;
@@ -69,16 +104,16 @@ namespace StrixMusic.Core.LocalFiles.Models
         public PlaybackState PlaybackState { get; }
 
         /// <inheritdoc />
-        public TimeSpan Duration { get; }
+        public TimeSpan Duration { get;private  set; }
 
         /// <inheritdoc />
-        public bool IsChangeNameAsyncAvailable { get; }
+        public bool IsChangeNameAsyncAvailable => false;
 
         /// <inheritdoc />
-        public bool IsChangeDescriptionAsyncAvailable { get; }
+        public bool IsChangeDescriptionAsyncAvailable => false;
 
         /// <inheritdoc />
-        public bool IsChangeDurationAsyncAvailable { get; }
+        public bool IsChangeDurationAsyncAvailable => false;
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name)
@@ -129,7 +164,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public DateTime? AddedAt { get; }
 
         /// <inheritdoc />
-        public int TotalTracksCount { get; }
+        public int TotalTracksCount { get; private set; }
 
         /// <inheritdoc />
         public bool IsPlayTrackCollectionAsyncAvailable => false;
@@ -200,7 +235,6 @@ namespace StrixMusic.Core.LocalFiles.Models
             throw new NotImplementedException();
         }
 
-
         /// <inheritdoc />
         public Task AddImageAsync(ICoreImage image, int index)
         {
@@ -211,9 +245,20 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            var trackIds = _playlistMetadata.TrackIds;
+
+            if (trackIds == null) yield break;
+
+            var tracks = await _fileMetadataManager.Tracks.GetTrackMetadataByIds(trackIds);
+
+            if (tracks == null) yield break;
+
+            foreach (var item in tracks)
+            {
+                yield return new LocalFilesCoreTrack(SourceCore, item);
+            }
         }
 
         /// <inheritdoc />

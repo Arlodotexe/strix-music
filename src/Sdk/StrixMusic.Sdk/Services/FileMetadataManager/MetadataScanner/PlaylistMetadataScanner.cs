@@ -171,9 +171,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             using var xmlReader = new XmlTextReader(stream);
 
             var smil = ser.Deserialize(xmlReader) as Smil;
-            var playlist = new PlaylistMetadata();
-
-            playlist.Id = (fileData.Path + ".track").HashMD5Fast();
+            var playlist = new PlaylistMetadata
+            {
+                Id = (fileData.Path + ".track").HashMD5Fast(),
+            };
 
             var mediaList = smil?.Body?.Seq?.Media?.ToList();
 
