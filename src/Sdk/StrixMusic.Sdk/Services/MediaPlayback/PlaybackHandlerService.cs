@@ -206,7 +206,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 DetachEvents();
             }
 
-            var mediaSource = NextItems.ElementAt(queueIndex);
+            var mediaSource = NextItems.ElementAtOrDefault(queueIndex);
+            if (mediaSource is null)
+                return;
 
             _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore];
             AttachEvents();
@@ -254,6 +256,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             await _currentPlayerService.PauseAsync();
             DetachEvents();
+
+            if (NextItems.Count == 0)
+                return;
 
             var nextItem = NextItems[nextIndex];
 

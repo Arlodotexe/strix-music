@@ -32,6 +32,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         TrackRepository Tracks { get; }
 
         /// <summary>
+        /// Starts scanning the given folder.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        Task StartScan();
+
+        /// <summary>
         /// Raised when metadata scanning has started.
         /// </summary>
         event EventHandler? ScanningStarted;

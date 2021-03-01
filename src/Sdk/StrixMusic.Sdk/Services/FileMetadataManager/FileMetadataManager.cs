@@ -117,32 +117,32 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <inheritdoc />
         public async Task InitAsync()
         {
-            if (IsInitialized)
-                return;
-
+            Guard.IsFalse(IsInitialized, nameof(IsInitialized));
             IsInitialized = true;
 
             var dataFolder = await GetDataStorageFolder(_instanceId);
 
             _fileMetadataScanner.CacheFolder = dataFolder;
+
+            Albums.SetDataFolder(dataFolder);
+            Artists.SetDataFolder(dataFolder);
+            Tracks.SetDataFolder(dataFolder);
+            Playlists.SetDataFolder(dataFolder);
+        }
+
+        /// <inheritdoc />
+        public async Task StartScan()
+        {
+            ScanningStarted?.Invoke(this, EventArgs.Empty);
+
+            await Albums.InitAsync();
+            await Artists.InitAsync();
+            await Tracks.InitAsync();
+            await Playlists.InitAsync();
+
             await _fileMetadataScanner.InitAsync();
 
-            // Perform initialization tasks for all repos in parallel.
-            var repositories = new IMetadataRepository[]
-            {
-                Albums,
-                Artists,
-                Tracks,
-                Playlists,
-            };
-
-            await repositories.InParallel(x =>
-            {
-                x.SetDataFolder(dataFolder);
-                return x.InitAsync();
-            });
-
-            ScanningCompleted?.Invoke(this, new EventArgs());
+            ScanningCompleted?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />

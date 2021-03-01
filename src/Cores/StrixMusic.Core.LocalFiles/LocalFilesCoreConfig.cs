@@ -59,6 +59,7 @@ namespace StrixMusic.Core.LocalFiles
             Guard.IsNotNull(folderData, nameof(folderData));
 
             _fileMetadataManager = new FileMetadataManager(SourceCore.InstanceId, folderData);
+            await _fileMetadataManager.InitAsync();
 
             services.AddSingleton<IFileMetadataManager>(_fileMetadataManager);
 
@@ -104,7 +105,7 @@ namespace StrixMusic.Core.LocalFiles
 
             Guard.IsNotNull(folderData, nameof(folderData));
 
-            await _fileMetadataManager.InitAsync();
+            await _fileMetadataManager.StartScan();
         }
 
         /// <summary>

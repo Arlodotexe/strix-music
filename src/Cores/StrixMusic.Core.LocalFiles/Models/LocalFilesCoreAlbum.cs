@@ -64,7 +64,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             var addedItems = new List<CollectionChangedItem<ICoreTrack>>
                 {
-                    new CollectionChangedItem<ICoreTrack>(fileCoreTrack, 0),
+                    new CollectionChangedItem<ICoreTrack>(fileCoreTrack, e.TrackMetadata.TrackNumber != null ? (int)e.TrackMetadata.TrackNumber - 1 : 0),
                 };
 
             TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreTrack>>());

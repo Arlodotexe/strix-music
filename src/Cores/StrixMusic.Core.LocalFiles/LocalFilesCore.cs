@@ -113,8 +113,8 @@ namespace StrixMusic.Core.LocalFiles
                 return;
 
             await coreConfig.SetupConfigurationServices(services);
-            var configuredFolder = await coreConfig.GetConfiguredFolder();
 
+            var configuredFolder = await coreConfig.GetConfiguredFolder();
             if (configuredFolder is null)
             {
                 PickAndSaveFolder().FireAndForget();
