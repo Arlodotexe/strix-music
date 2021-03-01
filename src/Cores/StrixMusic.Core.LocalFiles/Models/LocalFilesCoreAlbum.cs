@@ -360,7 +360,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             var tracks = await tracksList.GetTracksByAlbumId(Id, offset, limit);
 
-            foreach (var track in tracks.OrderBy(c => c.TrackNumber))
+            foreach (var track in tracks)
             {
                 if (track.Id != null)
                     yield return InstanceCache.Tracks.GetOrCreate(track.Id, SourceCore, track);

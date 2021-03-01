@@ -182,7 +182,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 }
             }
 
-            return filteredTracks.Skip(offset).Take(limit).ToList();
+            return filteredTracks.OrderBy(c => c.TrackNumber).Skip(offset).Take(limit).ToList();
         }
 
         /// <inheritdoc />

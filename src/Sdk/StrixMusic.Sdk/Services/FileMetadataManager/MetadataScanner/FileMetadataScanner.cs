@@ -173,8 +173,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             var id3Metadata = await GetID3Metadata(fileData);
 
-            // disabled for now, scanning non-songs returns valid data
-            // var propertyMetadata = await GetMusicFilesProperties(fileData);
+            // Disabled for now, UI is getting duplicate info (also may not use)
+            //var propertyMetadata = await GetMusicFilesProperties(fileData);
             var foundMetadata = new[] { id3Metadata };
 
             var validMetadata = foundMetadata.PruneNull().ToArray();
