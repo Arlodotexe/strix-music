@@ -52,8 +52,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (_currentPlayerService is null)
                 throw new InvalidOperationException();
 
-            _currentPlayerService.PositionChanged += PlayerService_PositionChanged;
-
             _currentPlayerService.PositionChanged += PositionChanged;
             _currentPlayerService.PlaybackSpeedChanged += PlaybackSpeedChanged;
             _currentPlayerService.PlaybackStateChanged += PlaybackStateChanged;
@@ -76,24 +74,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (_currentPlayerService is null)
                 throw new InvalidOperationException();
 
-            _currentPlayerService.PositionChanged -= PlayerService_PositionChanged;
-
             _currentPlayerService.PositionChanged -= PositionChanged;
             _currentPlayerService.PlaybackSpeedChanged -= PlaybackSpeedChanged;
             _currentPlayerService.PlaybackStateChanged -= PlaybackStateChanged;
+            _currentPlayerService.PlaybackStateChanged -= CurrentPlayerService_PlaybackStateChanged;
             _currentPlayerService.VolumeChanged -= VolumeChanged;
             _currentPlayerService.QuantumProcessed -= QuantumProcessed;
-        }
-
-        private async void PlayerService_PositionChanged(object sender, TimeSpan currentPosition)
-        {
-            Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
-
-            // If the song is not over
-            if (currentPosition < _currentPlayerService.CurrentSource.Track.Duration)
-                return;
-
-            await AutoAdvanceQueue();
         }
 
         private async Task AutoAdvanceQueue()
@@ -264,7 +250,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             if (shouldRemoveFromQueue)
             {
+                // Move NowPlaying into previous
                 _prevItems.Push(_currentPlayerService.CurrentSource);
+                
+                // Take the next item out of the queue (becomes NowPlaying)
                 _nextItems.Remove(nextItem);
 
                 var removedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
