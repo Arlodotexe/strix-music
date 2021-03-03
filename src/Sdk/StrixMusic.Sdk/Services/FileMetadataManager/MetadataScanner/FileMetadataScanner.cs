@@ -177,8 +177,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             var id3Metadata = await GetID3Metadata(fileData);
 
-            // disabled for now, scanning non-songs returns valid data
-            // var propertyMetadata = await GetMusicFilesProperties(fileData);
+            // Disabled for now, UI is getting duplicate info (also may not use)
+            //var propertyMetadata = await GetMusicFilesProperties(fileData);
             var foundMetadata = new[] { id3Metadata };
 
             var validMetadata = foundMetadata.PruneNull().ToArray();
@@ -294,7 +294,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
                 // Read the raw tags
-                var tags = tagFile.GetTag(TagTypes.Id3v2);
+                var tags = tagFile.GetTag(TagTypes.Id3v2) ??
+                           tagFile.GetTag(TagTypes.Id3v1) ??
+                           tagFile.GetTag(TagTypes.Asf) ??
+                           tagFile.GetTag(TagTypes.FlacMetadata) ??
+                           tagFile.GetTag(TagTypes.RiffInfo) ??
+                           tagFile.GetTag(TagTypes.Ape) ??
+                           tagFile.GetTag(TagTypes.DivX) ??
+                           tagFile.GetTag(TagTypes.Apple);
 
                 // If there's no metadata to read, return null
                 if (tags == null)

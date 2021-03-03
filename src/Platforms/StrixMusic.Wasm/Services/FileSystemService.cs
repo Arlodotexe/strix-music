@@ -87,6 +87,12 @@ namespace OwlCore.AbstractStorage
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
+        public Task<IFileData?> GetFileFromPathAsync(string path)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public async Task<IFolderData> CreateDirectoryAsync(string folderName)
         {
@@ -99,5 +105,8 @@ namespace OwlCore.AbstractStorage
         {
             await RootFolder.EnsureExists();
         }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; }
     }
 }

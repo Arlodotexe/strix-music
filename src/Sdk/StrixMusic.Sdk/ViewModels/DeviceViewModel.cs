@@ -37,6 +37,7 @@ namespace StrixMusic.Sdk.ViewModels
             ChangePlaybackSpeedAsyncCommand = new AsyncRelayCommand<double>(ChangePlaybackSpeedAsync);
             ResumeAsyncCommand = new AsyncRelayCommand(ResumeAsync);
             PauseAsyncCommand = new AsyncRelayCommand(PauseAsync);
+            TogglePauseResumeCommand = new AsyncRelayCommand(TogglePauseResume);
             NextAsyncCommand = new AsyncRelayCommand(NextAsync);
             PreviousAsyncCommand = new AsyncRelayCommand(PreviousAsync);
             SeekAsyncCommand = new AsyncRelayCommand<TimeSpan>(SeekAsync);
@@ -322,6 +323,11 @@ namespace StrixMusic.Sdk.ViewModels
             return Model.ToggleShuffleAsync();
         }
 
+        private Task TogglePauseResume()
+        {
+            return IsPlaying ? PauseAsync() : ResumeAsync();
+        }
+
         /// <summary>
         /// Attempts to change playback speed.
         /// </summary>
@@ -353,14 +359,19 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand ResumeAsyncCommand { get; }
 
         /// <summary>
-        /// Attempts to move back to the previous track in the queue.
-        /// </summary>
-        public IAsyncRelayCommand PreviousAsyncCommand { get; }
-
-        /// <summary>
         /// Attempts to pause the device.
         /// </summary>
         public IAsyncRelayCommand PauseAsyncCommand { get; }
+
+        /// <summary>
+        /// <see cref="PauseAsyncCommand"/> runs if playing, otherwise runs <see cref="ResumeAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand TogglePauseResumeCommand { get; }
+
+        /// <summary>
+        /// Attempts to move back to the previous track in the queue.
+        /// </summary>
+        public IAsyncRelayCommand PreviousAsyncCommand { get; }
 
         /// <summary>
         /// Attempts to skip to the next track in the queue.

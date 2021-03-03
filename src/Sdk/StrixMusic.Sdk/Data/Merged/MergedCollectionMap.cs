@@ -176,7 +176,6 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
 
             _initCompletionSource.SetResult(true);
-            _initCompletionSource = null;
             IsInitialized = true;
         }
 

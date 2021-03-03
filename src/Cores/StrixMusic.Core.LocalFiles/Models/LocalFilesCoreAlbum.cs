@@ -64,7 +64,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             var addedItems = new List<CollectionChangedItem<ICoreTrack>>
                 {
-                    new CollectionChangedItem<ICoreTrack>(fileCoreTrack, 0),
+                    new CollectionChangedItem<ICoreTrack>(fileCoreTrack, e.TrackMetadata.TrackNumber != null ? (int)e.TrackMetadata.TrackNumber - 1 : 0),
                 };
 
             TrackItemsChanged?.Invoke(this, addedItems, new List<CollectionChangedItem<ICoreTrack>>());
@@ -360,7 +360,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             var tracks = await tracksList.GetTracksByAlbumId(Id, offset, limit);
 
-            foreach (var track in tracks.OrderBy(c => c.TrackNumber))
+            foreach (var track in tracks)
             {
                 if (track.Id != null)
                     yield return InstanceCache.Tracks.GetOrCreate(track.Id, SourceCore, track);

@@ -52,8 +52,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (_currentPlayerService is null)
                 throw new InvalidOperationException();
 
-            _currentPlayerService.PositionChanged += PlayerService_PositionChanged;
-
             _currentPlayerService.PositionChanged += PositionChanged;
             _currentPlayerService.PlaybackSpeedChanged += PlaybackSpeedChanged;
             _currentPlayerService.PlaybackStateChanged += PlaybackStateChanged;
@@ -76,24 +74,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             if (_currentPlayerService is null)
                 throw new InvalidOperationException();
 
-            _currentPlayerService.PositionChanged -= PlayerService_PositionChanged;
-
             _currentPlayerService.PositionChanged -= PositionChanged;
             _currentPlayerService.PlaybackSpeedChanged -= PlaybackSpeedChanged;
             _currentPlayerService.PlaybackStateChanged -= PlaybackStateChanged;
+            _currentPlayerService.PlaybackStateChanged -= CurrentPlayerService_PlaybackStateChanged;
             _currentPlayerService.VolumeChanged -= VolumeChanged;
             _currentPlayerService.QuantumProcessed -= QuantumProcessed;
-        }
-
-        private async void PlayerService_PositionChanged(object sender, TimeSpan currentPosition)
-        {
-            Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
-
-            // If the song is not over
-            if (currentPosition < _currentPlayerService.CurrentSource.Track.Duration)
-                return;
-
-            await AutoAdvanceQueue();
         }
 
         private async Task AutoAdvanceQueue()
@@ -206,12 +192,16 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 DetachEvents();
             }
 
-            var mediaSource = NextItems.ElementAt(queueIndex);
+            var mediaSource = NextItems.ElementAtOrDefault(queueIndex);
+            if (mediaSource is null)
+                return;
 
             _currentPlayerService = _audioPlayerRegistry[mediaSource.Track.SourceCore];
             AttachEvents();
 
-            // TODO shift queue, move tracks before the played item into previous
+            // TODO shift queue, move tracks before the played index into previous
+            // also account for shuffle
+            _nextItems.Remove(mediaSource);
             await _currentPlayerService.Play(mediaSource);
             CurrentItem = mediaSource;
             CurrentItemChanged?.Invoke(this, mediaSource);
@@ -253,11 +243,17 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             await _currentPlayerService.PauseAsync();
             DetachEvents();
 
+            if (NextItems.Count == 0)
+                return;
+
             var nextItem = NextItems[nextIndex];
 
             if (shouldRemoveFromQueue)
             {
+                // Move NowPlaying into previous
                 _prevItems.Push(_currentPlayerService.CurrentSource);
+                
+                // Take the next item out of the queue (becomes NowPlaying)
                 _nextItems.Remove(nextItem);
 
                 var removedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
