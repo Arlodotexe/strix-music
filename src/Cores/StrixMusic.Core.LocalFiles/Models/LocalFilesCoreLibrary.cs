@@ -77,9 +77,17 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
+        public override async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+            var playListsMetadata = await _fileMetadataManager.Playlists.GetPlaylistsMetadata(offset, limit);
+
+            foreach (var playList in playListsMetadata)
+            {
+                Guard.IsNotNullOrWhiteSpace(playList.Id, nameof(playList.Id));
+
+                yield return InstanceCache.PlayLists.GetOrCreate(playList.Id, SourceCore, playList);
+            }
         }
 
         /// <inheritdoc/>

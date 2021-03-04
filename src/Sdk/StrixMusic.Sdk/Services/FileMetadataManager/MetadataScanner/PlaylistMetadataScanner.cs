@@ -190,7 +190,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 if (media.Src != null)
                 {
                     if (media.Src.Contains(_rootFolder.Path)) // checks if the track path is access-able. This is the fastest way. Not sure if its future proof.
+                    {
+                        playlist.Duration ??= default;
+
+                        playlist.Duration = playlist.Duration?.Add(TimeSpan.FromMilliseconds(media.Duration));
                         playlist.TrackIds.Add((media.Src + ".track").HashMD5Fast());
+                    }
                 }
 
                 playlist.TotalTracksCount++;

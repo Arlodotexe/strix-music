@@ -95,7 +95,7 @@ namespace StrixMusic.Core.LocalFiles.Services
         /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, System.Func{T})"/>
         public LocalFileCorePlaylist GetOrCreate(string id, ICore sourceCore, PlaylistMetadata playlistMetadata)
         {
-            return GetOrCreate(id, () => new LocalFileCorePlaylist(sourceCore,playlistMetadata));
+            return GetOrCreate(id, () => new LocalFileCorePlaylist(sourceCore, playlistMetadata));
         }
     }
 }
