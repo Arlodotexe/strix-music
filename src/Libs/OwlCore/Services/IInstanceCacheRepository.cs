@@ -14,5 +14,19 @@ namespace OwlCore.Services
         /// <param name="creationHandler">A callback that creates</param>
         /// <returns>A new or existing instance.</returns>
         T GetOrCreate(string id, Func<T> creationHandler);
+
+        /// <summary>
+        /// Overwrite an item that already exists in the cache.
+        /// </summary>
+        /// <param name="id">The ID of the item to replace.</param>
+        /// <param name="newValue">The new value.</param>
+        void Replace(string id, T newValue);
+
+        /// <summary>
+        /// Removes an item from the cache repo.
+        /// </summary>
+        /// <param name="id">The ID of the item to remove.</param>
+        /// <returns>The removed item.</returns>
+        public T Remove(string id);
     }
 }

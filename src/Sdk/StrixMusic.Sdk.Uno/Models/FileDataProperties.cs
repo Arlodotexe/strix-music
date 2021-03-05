@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.Uno.Models
                 Composers = storageFileMusicProps.Composers.ToArray(),
                 Conductors = storageFileMusicProps.Conductors.ToArray(),
                 Duration = storageFileMusicProps.Duration,
-                Genre = storageFileMusicProps.Genre.ToArray(),
+                Genres = storageFileMusicProps.Genre.ToArray(),
                 Producers = storageFileMusicProps.Producers.ToArray(),
                 Publisher = storageFileMusicProps.Publisher,
                 Rating = storageFileMusicProps.Rating,

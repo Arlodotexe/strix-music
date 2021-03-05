@@ -61,7 +61,9 @@ namespace StrixMusic.Sdk.Uno.Models
         /// <inheritdoc/>
         public async Task<IFolderData> CreateFolderAsync(string desiredName, CreationCollisionOption options)
         {
-            var storageFolder = await StorageFolder.CreateFolderAsync(desiredName, (Windows.Storage.CreationCollisionOption)options);
+            var collisionOptions = (Windows.Storage.CreationCollisionOption)Enum.Parse(typeof(Windows.Storage.CreationCollisionOption), options.ToString());
+
+            var storageFolder = await StorageFolder.CreateFolderAsync(desiredName, collisionOptions);
 
             return new FolderData(storageFolder);
         }
@@ -77,7 +79,8 @@ namespace StrixMusic.Sdk.Uno.Models
         /// <inheritdoc/>
         public async Task<IFileData> CreateFileAsync(string desiredName, CreationCollisionOption options)
         {
-            var storageFile = await StorageFolder.CreateFileAsync(desiredName, (Windows.Storage.CreationCollisionOption)options);
+            var collisionOptions = (Windows.Storage.CreationCollisionOption)Enum.Parse(typeof(Windows.Storage.CreationCollisionOption), options.ToString());
+            var storageFile = await StorageFolder.CreateFileAsync(desiredName, collisionOptions);
 
             return new FileData(storageFile);
         }

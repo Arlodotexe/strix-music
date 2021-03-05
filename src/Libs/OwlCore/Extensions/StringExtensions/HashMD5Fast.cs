@@ -9,10 +9,10 @@ namespace OwlCore.Extensions
     public static partial class StringExtensions
     {
         /// <summary>
-        /// Returns hash of a string (based on MD5, but only 16 instead of 32 bytes).
+        /// Hash a string with MD5, using 16 bytes instead of 32 for speed. Collisions are more likely.
         /// </summary>
         /// <param name="seed">Input string.</param>
-        /// <returns>MD5 hash.</returns>
+        /// <returns>A 16-bit MD5 hash.</returns>
         public static string HashMD5Fast(this string seed)
         {
             unchecked

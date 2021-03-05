@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
-
 using OwlCore.AbstractStorage;
 using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
-
 using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data;
@@ -17,7 +14,6 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.FileMetadataManager;
-using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 
@@ -26,9 +22,6 @@ namespace StrixMusic.Core.LocalFiles
     /// <inheritdoc />
     public class LocalFilesCore : ICore
     {
-        private static int _coreCount;
-        private readonly ICoreLibrary _coreLibrary;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCore"/> class.
         /// </summary>
@@ -41,7 +34,7 @@ namespace StrixMusic.Core.LocalFiles
             RecentlyPlayed = new LocalFilesCoreRecentlyPlayed(this);
             Discoverables = new LocalFilesCoreDiscoverables(this);
             CoreConfig = new LocalFilesCoreConfig(this);
-            _coreLibrary = new LocalFilesCoreLibrary(this);
+            Library = new LocalFilesCoreLibrary(this);
         }
 
         /// <inheritdoc/>
@@ -63,7 +56,7 @@ namespace StrixMusic.Core.LocalFiles
         public IReadOnlyList<ICoreDevice> Devices { get; }
 
         /// <inheritdoc/>
-        public ICoreLibrary Library => _coreLibrary;
+        public ICoreLibrary Library { get; }
 
         /// <inheritdoc />
         public ICoreSearch? Search { get; }
@@ -117,7 +110,7 @@ namespace StrixMusic.Core.LocalFiles
             var configuredFolder = await coreConfig.GetConfiguredFolder();
             if (configuredFolder is null)
             {
-                PickAndSaveFolder().FireAndForget();
+                _ = PickAndSaveFolder();
                 ChangeCoreState(CoreState.Configuring);
                 return;
             }
@@ -126,8 +119,6 @@ namespace StrixMusic.Core.LocalFiles
             _ = coreConfig.ScanFileMetadata();
 
             ChangeCoreState(CoreState.Loaded);
-
-            _coreCount++;
 
             await Library.Cast<LocalFilesCoreLibrary>().InitAsync();
         }
@@ -155,42 +146,15 @@ namespace StrixMusic.Core.LocalFiles
         {
             var fileMetadataManager = this.GetService<FileMetadataManager>();
 
-            var artist = await fileMetadataManager.Artists.GetArtistMetadataById(id);
+            var artist = await fileMetadataManager.Artists.GetArtistById(id);
             if (artist != null)
-            {
-                if (artist.ImagePath != null)
-                    return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, new LocalFilesCoreImage(SourceCore, artist.ImagePath));
+                return InstanceCache.Artists.GetOrCreate(id, SourceCore, artist);
 
-                return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, null);
-            }
-
-            var album = await fileMetadataManager.Albums.GetAlbumMetadataById(id);
+            var album = await fileMetadataManager.Albums.GetAlbumById(id);
             if (album != null)
-            {
-                TrackMetadata? trackWithImage = null;
+                return InstanceCache.Albums.GetOrCreate(id, SourceCore, album);
 
-                if (album.TrackIds != null)
-                {
-                    foreach (var item in album.TrackIds)
-                    {
-                        var relatedTrack = await fileMetadataManager.Tracks.GetTrackMetadataById(item);
-
-                        if (relatedTrack == null)
-                            continue;
-
-                        if (relatedTrack.ImagePath != null)
-                            trackWithImage = relatedTrack;
-                    }
-                }
-
-                return new LocalFilesCoreAlbum(
-                    SourceCore,
-                    album,
-                    album.TrackIds?.Count ?? 0,
-                    trackWithImage?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, trackWithImage.ImagePath) : null);
-            }
-
-            var track = await fileMetadataManager.Tracks.GetTrackMetadataById(id);
+            var track = await fileMetadataManager.Tracks.GetTrackById(id);
             if (track != null)
                 return new LocalFilesCoreTrack(SourceCore, track);
 

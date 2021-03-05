@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
-using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Core.LocalFiles.Services;
@@ -16,13 +15,14 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
-    /// <inheritdoc />
-    public class LocalFilesCoreTrack : ICoreTrack
+    /// <summary>
+    /// Wraps around <see cref="TrackMetadata"/> to provide track information from a local file to the Strix SDK.
+    /// </summary>
+    public class LocalFilesCoreTrack : ICoreTrack, IDisposable
     {
-        private readonly List<FileMetadata> _batchItemsToEmit = new List<FileMetadata>();
-        private readonly TrackMetadata _trackMetadata;
         private readonly IFileMetadataManager _fileMetadataManager;
-        private int _totalArtistItemsCount;
+        private TrackMetadata _trackMetadata;
+        private LocalFilesCoreImage? _image;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreTrack"/> class.
@@ -36,9 +36,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             Genres = new SynchronizedObservableCollection<string>(trackMetadata.Genres);
 
             if (trackMetadata.ImagePath != null)
-                TotalImageCount = 1;
-
-            _totalArtistItemsCount = trackMetadata.ArtistIds?.Count ?? 0;
+                _image = InstanceCache.Images.GetOrCreate(Id, SourceCore, new Uri(trackMetadata.ImagePath));
 
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
             AttachEvents();
@@ -46,58 +44,105 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         private void AttachEvents()
         {
-            _fileMetadataManager.FileMetadataUpdated += FileMetadataManager_FileMetadataUpdated;
+            _fileMetadataManager.Tracks.MetadataUpdated += Tracks_MetadataUpdated;
+            _fileMetadataManager.Tracks.ArtistItemsChanged += Tracks_ArtistItemsChanged;
         }
 
-        private async void FileMetadataManager_FileMetadataUpdated(object sender, FileMetadata e)
+        private void DetachEvents()
         {
-            if (e.TrackMetadata?.Id == Id)
-                return;
-
-            if (e.ArtistMetadata == null)
-                return;
-
-            Guard.IsNotNullOrWhiteSpace(e.ArtistMetadata.Id, nameof(e.ArtistMetadata.Id));
-
-            lock (_batchItemsToEmit)
-                _batchItemsToEmit.Add(e);
-
-            if (!await Threading.Debounce($"{nameof(LocalFilesCoreLibrary)}.{SourceCore.InstanceId}", TimeSpan.FromSeconds(2)))
-                return;
-
-            HandleUpdatedArtistData();
+            _fileMetadataManager.Tracks.MetadataUpdated -= Tracks_MetadataUpdated;
+            _fileMetadataManager.Tracks.ArtistItemsChanged -= Tracks_ArtistItemsChanged;
         }
 
-        private void HandleUpdatedArtistData()
+        private void Tracks_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<(TrackMetadata Track, ArtistMetadata Artist)>> addedItems, IReadOnlyList<CollectionChangedItem<(TrackMetadata Track, ArtistMetadata Artist)>> removedItems)
         {
-            lock (_batchItemsToEmit)
+            var coreAddedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
+            var coreRemovedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
+
+            foreach (var item in addedItems)
             {
-                var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
-                var removedItems = Array.Empty<CollectionChangedItem<ICoreArtistCollectionItem>>();
-
-                for (var i = 0; i < _batchItemsToEmit.Count; i++)
+                if (item.Data.Track.Id == Id)
                 {
-                    var e = _batchItemsToEmit[i];
-                    Guard.IsNotNullOrWhiteSpace(e.ArtistMetadata?.Id, nameof(e.ArtistMetadata.Id));
-
-                    var localFilesCoreArtist = InstanceCache.Artists.GetOrCreate(
-                        e.ArtistMetadata.Id,
-                        SourceCore,
-                        e.ArtistMetadata,
-                        e.ArtistMetadata.TrackIds?.Count ?? 0,
-                        e.ArtistMetadata.ImagePath == null
-                            ? null
-                            : InstanceCache.Images.GetOrCreate(e.ArtistMetadata.Id, SourceCore, e.ArtistMetadata.ImagePath));
-
-                    addedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(localFilesCoreArtist, i));
+                    Guard.IsNotNullOrWhiteSpace(item.Data.Artist.Id, nameof(item.Data.Artist.Id));
+                    var coreArtist = InstanceCache.Artists.GetOrCreate(item.Data.Artist.Id, SourceCore, item.Data.Artist);
+                    coreAddedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(coreArtist, item.Index));
                 }
-
-                TotalArtistItemsCount += _batchItemsToEmit.Count;
-
-                ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
-
-                _batchItemsToEmit.Clear();
             }
+
+            foreach (var item in removedItems)
+            {
+                if (item.Data.Track.Id == Id)
+                {
+                    Guard.IsNotNullOrWhiteSpace(item.Data.Artist.Id, nameof(item.Data.Artist.Id));
+                    var coreArtist = InstanceCache.Artists.GetOrCreate(item.Data.Artist.Id, SourceCore, item.Data.Artist);
+                    coreRemovedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(coreArtist, item.Index));
+                }
+            }
+
+            ArtistItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
+        }
+
+        private void Tracks_MetadataUpdated(object sender, TrackMetadata e)
+        {
+            Guard.IsNotNull(e.ArtistIds, nameof(e.ArtistIds));
+
+            if (e.Id != Id)
+                return;
+
+            var previousData = _trackMetadata;
+            _trackMetadata = e;
+
+            if (e.Title != previousData.Title)
+                NameChanged?.Invoke(this, Name);
+
+            if (e.ImagePath != previousData.ImagePath)
+                HandleImageChanged(e);
+
+            if (e.Description != previousData.Description)
+                DescriptionChanged?.Invoke(this, Description);
+
+            if (e.DiscNumber != previousData.DiscNumber)
+                TrackNumberChanged?.Invoke(this, TrackNumber);
+
+            if (!Equals(e.Language, previousData.Language))
+                LanguageChanged?.Invoke(this, Language);
+
+            if (!ReferenceEquals(e.Lyrics, previousData.Lyrics))
+                LyricsChanged?.Invoke(this, Lyrics);
+
+            if (e.TrackNumber != previousData.TrackNumber)
+                TrackNumberChanged?.Invoke(this, TrackNumber);
+
+            if (e.Duration != previousData.Duration)
+                DurationChanged?.Invoke(this, Duration);
+
+            // TODO genres, post genres do-over
+
+            if (e.ArtistIds.Count != (previousData.ArtistIds?.Count ?? 0))
+                ArtistItemsCountChanged?.Invoke(this, e.ArtistIds.Count);
+        }
+
+        private void HandleImageChanged(TrackMetadata e)
+        {
+            var previousImage = _image;
+
+            var removed = new List<CollectionChangedItem<ICoreImage>>();
+            var added = new List<CollectionChangedItem<ICoreImage>>();
+
+            if (previousImage != null)
+                removed.Add(new CollectionChangedItem<ICoreImage>(previousImage, 0));
+
+            // ReSharper disable once ReplaceWithStringIsNullOrEmpty (breaks nullability check)
+            if (e.ImagePath != null && e.ImagePath.Length > 0)
+            {
+                var newImage = new LocalFilesCoreImage(SourceCore, new Uri(e.ImagePath));
+                InstanceCache.Images.Replace(Id, newImage);
+                added.Add(new CollectionChangedItem<ICoreImage>(newImage, 0));
+                _image = newImage;
+            }
+
+            if (added.Count > 0 || removed.Count > 0)
+                ImagesChanged?.Invoke(this, added, removed);
         }
 
         /// <inheritdoc/>
@@ -167,18 +212,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public TrackType Type => TrackType.Song;
 
         /// <inheritdoc />
-        public int TotalArtistItemsCount
-        {
-            get => _totalArtistItemsCount;
-            private set
-            {
-                _totalArtistItemsCount = value;
-                ArtistItemsCountChanged?.Invoke(this, value);
-            }
-        }
+        public int TotalArtistItemsCount => _trackMetadata.ArtistIds?.Count ?? 0;
 
         /// <inheritdoc />
-        public int TotalImageCount { get; }
+        public int TotalImageCount => _image != null ? 1 : 0;
 
         /// <inheritdoc/>
         public ICoreAlbum? Album { get; }
@@ -204,11 +241,6 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
-
-        /// <summary>
-        /// Image uri for <see cref="LocalFilesCoreTrack"/>
-        /// </summary>
-        public Uri? ImageUri => _trackMetadata.ImagePath;
 
         /// <summary>
         /// The path to the playable music file on disk.
@@ -399,29 +431,50 @@ namespace StrixMusic.Core.LocalFiles.Models
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
             var artistRepo = _fileMetadataManager.Artists;
-
             var artists = await artistRepo.GetArtistsByTrackId(Id, offset, limit);
 
             foreach (var artist in artists)
             {
                 Guard.IsNotNullOrWhiteSpace(artist.Id, nameof(artist.Id));
 
-                if (artist.ImagePath != null)
-                {
-                    yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist, artist.TrackIds?.Count ?? 0, InstanceCache.Images.GetOrCreate(artist.Id, SourceCore, artist.ImagePath));
-                }
-
-                yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist, artist.TrackIds?.Count ?? 0);
+                yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist);
             }
         }
 
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            if (ImageUri != null)
-                yield return InstanceCache.Images.GetOrCreate(Id, SourceCore, ImageUri, 250, 250);
+            if (_image != null)
+                yield return _image;
 
             await Task.CompletedTask;
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            DetachEvents();
+        }
+
+        private void Dispose(bool disposing)
+        {
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+                Genres?.Dispose();
+            }
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        ~LocalFilesCoreTrack()
+        {
+            Dispose(false);
         }
     }
 }

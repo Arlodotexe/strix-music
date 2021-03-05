@@ -52,7 +52,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         /// </summary>
         public async Task SaveValue()
         {
-            if (await OwlCore.Threading.Debounce(_id, TimeSpan.FromSeconds(2)))
+            if (await Flow.Debounce(_id, TimeSpan.FromSeconds(2)))
             {
                 _model.SaveValue(Value);
             }

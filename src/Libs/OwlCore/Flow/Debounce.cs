@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace OwlCore
 {
-    public static partial class Threading
+    public static partial class Flow
     {
         private static readonly ConcurrentDictionary<string, DebouncerData> _inUseDebouncers = new ConcurrentDictionary<string, DebouncerData>();
 

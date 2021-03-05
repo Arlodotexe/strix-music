@@ -154,7 +154,7 @@ namespace StrixMusic.Sdk.Data.Merged
             if (IsInitialized)
                 return;
 
-            if (_initCompletionSource?.Task.Status == TaskStatus.Running || _initCompletionSource?.Task.Status == TaskStatus.WaitingForActivation)
+            if (_initCompletionSource?.Task.Status == TaskStatus.Running || _initCompletionSource?.Task.Status == TaskStatus.WaitingForActivation || _initCompletionSource?.Task.Status == TaskStatus.RanToCompletion)
             {
                 await _initCompletionSource.Task;
                 return;
@@ -343,25 +343,14 @@ namespace StrixMusic.Sdk.Data.Merged
 
             foreach (var item in addedItems)
             {
-                if (!(item.Data is TCoreCollectionItem collectionItemData)) return ThrowHelper.ThrowInvalidOperationException<List<CollectionChangedItem<TCollectionItem>>>($"{nameof(item.Data)} couldn't be cast to {nameof(TCoreCollectionItem)}.");
-
-                // Check for an existing IMerged that matches this item
-                foreach (var mergedItem in _mergedMappedData)
-                {
-                    // Using "?? false" breaks nullable assertion?
-                    if (mergedItem?.CollectionItem.Equals(collectionItemData) == true)
-                    {
-                        mergedItem.CollectionItem.AddSource(collectionItemData);
-                        return added;
-                    }
-                }
-
                 var newItemsCount = newItems.Count;
 
-                // TODO: Sorting is not handled.
-                var mergedImpl = MergeOrAdd(newItems, collectionItemData);
+                if (!(item.Data is TCoreCollectionItem collectionItemData))
+                    return ThrowHelper.ThrowInvalidOperationException<List<CollectionChangedItem<TCollectionItem>>>($"{nameof(item.Data)} couldn't be cast to {nameof(TCoreCollectionItem)}.");
 
+                // TODO: Sorting is not handled.
                 var mappedData = new MappedData(item.Index, (TCoreCollection)sender, collectionItemData);
+                var mergedImpl = MergeOrAdd(newItems, collectionItemData);
 
                 _sortedMap.Add(mappedData);
                 _mergedMappedData.Add(new MergedMappedData(mergedImpl, new[] { mappedData }));
@@ -391,7 +380,8 @@ namespace StrixMusic.Sdk.Data.Merged
                 {
                     foreach (var mergedSource in mergedData.CollectionItem.Cast<IMerged<TCoreCollectionItem>>().Sources)
                     {
-                        if (mappedData.CollectionItem != mergedSource) continue;
+                        if (mappedData.CollectionItem != mergedSource)
+                            continue;
 
                         _sortedMap.Remove(mappedData);
 
@@ -796,8 +786,8 @@ namespace StrixMusic.Sdk.Data.Merged
         private Task<MergedCollectionSorting> GetSortingMethod()
         {
             return Task.FromResult(MergedCollectionSorting.Ranked);
-/*            return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
-*/        }
+            //return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
+        }
 
         private void SettingsServiceOnSettingChanged(object sender, SettingChangedEventArgs e)
         {

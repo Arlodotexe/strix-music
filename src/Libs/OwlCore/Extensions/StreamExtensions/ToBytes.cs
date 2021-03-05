@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 // ReSharper disable once CheckNamespace
 namespace OwlCore.Extensions
@@ -14,19 +15,24 @@ namespace OwlCore.Extensions
         /// <remarks>
         /// The method will keep reading (and copying into a MemoryStream) until it runs out of data. It then asks the MemoryStream to return a copy of the data in an array.
         /// </remarks>
-        /// <seealso href="https://stackoverflow.com/a/221941"/>
         public static byte[] ToBytes(this Stream input)
         {
-            byte[] buffer = new byte[16 * 1024];
-            using MemoryStream ms = new MemoryStream();
+            using var memStream = new MemoryStream();
+            input.CopyTo(memStream);
+            return memStream.ToArray();
+        }
 
-            int read;
-            while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                ms.Write(buffer, 0, read);
-            }
-
-            return ms.ToArray();
+        /// <summary>
+        /// Converts the <paramref name="input"/> <see cref="Stream"/> to a byte array.
+        /// </summary>
+        /// <remarks>
+        /// The method will keep reading (and copying into a MemoryStream) until it runs out of data. It then asks the MemoryStream to return a copy of the data in an array.
+        /// </remarks>
+        public static async Task<byte[]> ToBytesAsync(this Stream input)
+        {
+            using var memStream = new MemoryStream();
+            await input.CopyToAsync(memStream);
+            return memStream.ToArray();
         }
     }
 }

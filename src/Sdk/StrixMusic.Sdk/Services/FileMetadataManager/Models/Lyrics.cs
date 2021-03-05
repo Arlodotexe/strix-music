@@ -10,9 +10,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
     public class Lyrics : ILyricsBase
     {
         ///<inheritdoc />
-        public Dictionary<TimeSpan, string>? TimedLyrics { get; set; }
+        public Dictionary<TimeSpan, string>? TimedLyrics { get; }
 
         ///<inheritdoc />
-        public string? TextLyrics { get; set; }
+        public string? TextLyrics { get; }
     }
 }

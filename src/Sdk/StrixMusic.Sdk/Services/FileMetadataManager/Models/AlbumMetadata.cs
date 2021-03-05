@@ -4,13 +4,11 @@ using System.Collections.Generic;
 namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
 {
     /// <summary>
-    /// The metadata associated with an album.
+    /// Contains information that describes an album, scanned from one or more files.
     /// </summary>
-    public class AlbumMetadata
+    public class AlbumMetadata : IFileMetadata
     {
-        /// <summary>
-        /// The unique identifier for this album.
-        /// </summary>
+        /// <inheritdoc />
         public string? Id { get; set; }
 
         /// <summary>
@@ -24,7 +22,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         public string? Description { get; set; }
 
         /// <summary>
-        /// The unique identifier(s) for this albums's track(s).
+        /// The path to the cover art for this album.
+        /// </summary>
+        public string? ImagePath { get; set; }
+
+        /// <summary>
+        /// The unique identifier(s) for this album's track(s).
         /// </summary>
         public List<string>? TrackIds { get; set; }
 
@@ -37,16 +40,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// The total duration of this album.
         /// </summary>
         public TimeSpan? Duration { get; set; }
-
-        /// <summary>
-        /// The total number of tracks in this album.
-        /// </summary>
-        public int? TotalTracksCount { get; set; }
-
-        /// <summary>
-        /// The total number of artists of this album.
-        /// </summary>
-        public int? TotalArtistsCount { get; set; }
 
         /// <summary>
         /// The release date of this album.

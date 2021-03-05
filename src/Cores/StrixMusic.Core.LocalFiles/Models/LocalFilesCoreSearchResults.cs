@@ -14,25 +14,24 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// </summary>
     public class LocalFilesCoreSearchResults : LocalFilesCorePlayableCollectionGroupBase, ICoreSearchResults
     {
-        private readonly string _query = string.Empty;
+        private readonly string _query;
+        private readonly IFileMetadataManager _fileMetadataManager;
 
-        private IEnumerable<TrackMetadata> _trackMetadatas;
-        private IEnumerable<AlbumMetadata> _albumMetadatas;
-        private IEnumerable<ArtistMetadata> _artistMetadatas;
-
-        private IFileMetadataManager _fileMetadataManager;
+        private IEnumerable<TrackMetadata> _trackMetadata;
+        private IEnumerable<AlbumMetadata> _albumMetadata;
+        private IEnumerable<ArtistMetadata> _artistMetadata;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreSearchResults"/> class.
         /// </summary>
         /// <param name="sourceCore">The core that created this object.</param>
-        /// <param name="sourceCore">The core that created this object.</param>
+        /// <param name="query">The query that was given to produce these results.</param>
         public LocalFilesCoreSearchResults(ICore sourceCore, string query)
             : base(sourceCore)
         {
-            _albumMetadatas = new List<AlbumMetadata>();
-            _trackMetadatas = new List<TrackMetadata>();
-            _artistMetadatas = new List<ArtistMetadata>();
+            _albumMetadata = new List<AlbumMetadata>();
+            _trackMetadata = new List<TrackMetadata>();
+            _artistMetadata = new List<ArtistMetadata>();
 
             _query = query;
 
@@ -81,45 +80,39 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            _albumMetadatas = await _fileMetadataManager.Albums.GetAlbumMetadata(0, int.MaxValue);
+            _albumMetadata = await _fileMetadataManager.Albums.GetAlbums(0, int.MaxValue);
 
-            _albumMetadatas = _albumMetadatas.Where(c => c.Title?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
+            _albumMetadata = _albumMetadata.Where(c => c.Title?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
 
-            foreach (var album in _albumMetadatas)
+            foreach (var album in _albumMetadata)
             {
                 Guard.IsNotNull(album.Id, nameof(album.Id));
 
-                var tracks = await _fileMetadataManager.Tracks.GetTracksByAlbumId(album.Id, 0, 1);
-                var track = tracks.FirstOrDefault();
-
-                yield return new LocalFilesCoreAlbum(SourceCore, album, album.TrackIds?.Count ?? 0, track?.ImagePath != null ? new LocalFilesCoreImage(SourceCore, track.ImagePath) : null);
+                yield return new LocalFilesCoreAlbum(SourceCore, album);
             }
         }
 
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            _artistMetadatas = await _fileMetadataManager.Artists.GetArtistMetadata(0, int.MaxValue);
+            _artistMetadata = await _fileMetadataManager.Artists.GetArtists(0, int.MaxValue);
 
-            _artistMetadatas = _artistMetadatas.Where(c => c.Name?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
+            _artistMetadata = _artistMetadata.Where(c => c.Name?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
 
-            foreach (var artist in _artistMetadatas)
+            foreach (var artist in _artistMetadata)
             {
-                if (artist.ImagePath != null)
-                    yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, new LocalFilesCoreImage(SourceCore, artist.ImagePath));
-
-                yield return new LocalFilesCoreArtist(SourceCore, artist, artist.TrackIds?.Count ?? 0, null);
+                yield return new LocalFilesCoreArtist(SourceCore, artist);
             }
         }
 
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
-            _trackMetadatas = await _fileMetadataManager.Tracks.GetTrackMetadata(0, int.MaxValue);
+            _trackMetadata = await _fileMetadataManager.Tracks.GetTracks(0, int.MaxValue);
 
-            _trackMetadatas = _trackMetadatas.Where(c => c.Title?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
+            _trackMetadata = _trackMetadata.Where(c => c.Title?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
 
-            foreach (var track in _trackMetadatas)
+            foreach (var track in _trackMetadata)
             {
                 yield return new LocalFilesCoreTrack(SourceCore, track);
             }

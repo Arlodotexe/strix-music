@@ -25,5 +25,25 @@ namespace OwlCore.Services
                 return newItem;
             }
         }
+
+        /// <inheritdoc />
+        public void Replace(string id, T newValue)
+        {
+            lock (_instanceCache)
+            {
+                _instanceCache[id] = newValue;
+            }
+        }
+
+        /// <inheritdoc />
+        public T Remove(string id)
+        {
+            lock(_instanceCache)
+            {
+                var val = _instanceCache[id];
+                _instanceCache.Remove(id);
+                return val;
+            }
+        }
     }
 }

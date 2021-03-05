@@ -4,14 +4,11 @@ using System.Collections.Generic;
 namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
 {
     /// <summary>
-    /// Holds the information of artist metadata.
+    /// Contains information that describes an artist, scanned from one or more files.
     /// </summary>
-    public class ArtistMetadata
+    public class ArtistMetadata : IFileMetadata
     {
-
-        /// <summary>
-        /// The unique identifier for the <see cref="ArtistMetadata"/>.
-        /// </summary>
+        /// <inheritdoc />
         public string? Id { get; set; }
 
         /// <summary>
@@ -30,16 +27,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         public string? Name { get; set; }
 
         /// <summary>
-        /// The total number of images related to the artist.
-        /// </summary>
-        public int TotalImageCount { get; set; }
-
-        /// <summary>
-        /// The total number of tracks for the artist.
-        /// </summary>
-        public int TotalTracksCount { get; set; }
-
-        /// <summary>
         /// Probably bio of the artist.
         /// </summary>
         public string? Description { get; set; }
@@ -52,7 +39,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The picture of the artist.
         /// </summary>
-        public Uri? ImagePath { get; set; }
+        public string? ImagePath { get; set; }
 
         /// <summary>
         /// The genres of this track.
