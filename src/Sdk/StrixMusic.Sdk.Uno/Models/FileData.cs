@@ -59,7 +59,7 @@ namespace StrixMusic.Sdk.Uno.Models
         {
             var stream = await StorageFile.OpenAsync((Windows.Storage.FileAccessMode)accessMode);
 
-            return stream.AsStream(0);
+            return stream.AsStream();
         }
 
         /// <inheritdoc />

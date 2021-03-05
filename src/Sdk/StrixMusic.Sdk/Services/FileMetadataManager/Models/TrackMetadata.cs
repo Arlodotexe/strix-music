@@ -5,9 +5,9 @@ using System.Globalization;
 namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
 {
     /// <summary>
-    /// The metadata associated with a track.
+    /// Contains information that describes track, scanned from a single file.
     /// </summary>
-    public class TrackMetadata
+    public class TrackMetadata : IFileMetadata
     {
         /// <summary>
         /// The unique identifier for this track.
@@ -67,7 +67,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The path to the album artwork for this track.
         /// </summary>
-        public Uri? ImagePath { get; set; }
+        public string? ImagePath { get; set; }
 
         /// <summary>
         /// The description of this track.

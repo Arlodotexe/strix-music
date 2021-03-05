@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
     /// <summary>
     /// The service that helps in interacting with the saved file core track information.
     /// </summary>
-    public class PlaylistRepository : IMetadataRepository
+    public class PlaylistRepository
     {
         private const string PLAYLIST_DATA_FILENAME = "Playlists.bin";
         private readonly IList<PlaylistMetadata> _playListMetadatas;
@@ -177,17 +177,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
             Guard.IsNotNull(_pathToMetadataFile, nameof(_pathToMetadataFile));
             Guard.IsNotNull(_folderData, nameof(_folderData));
-
-            IFileData? fileData;
-
-            if (!await _fileSystemService.FileExistsAsync(_pathToMetadataFile))
-                fileData = await _folderData.CreateFileAsync(PLAYLIST_DATA_FILENAME); // creates the file and closes the file stream.
-            else fileData = await _folderData.GetFileAsync(PLAYLIST_DATA_FILENAME);
-
-            Guard.IsNotNull(fileData, nameof(fileData));
-
-            // NOTE: Make sure you have already scanned the file metadata.
-            var metadata = await _fileMetadataScanner.GetUniquePlaylistsMetadata();
+            
+            var fileData = await _folderData.CreateFileAsync(PLAYLIST_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
+        }
 
             if (metadata != null && metadata.Count > 0)
             {

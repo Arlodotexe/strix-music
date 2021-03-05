@@ -27,12 +27,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             _fileMetadataScanner = new FileMetadataScanner(rootFolder);
 
-            Albums = new AlbumRepository(_fileMetadataScanner);
-            Artists = new ArtistRepository(_fileMetadataScanner);
             Tracks = new TrackRepository(_fileMetadataScanner);
             Playlists = new PlaylistRepository(_fileMetadataScanner);
-
-            AttachEvents();
+            Albums = new AlbumRepository(_fileMetadataScanner, Tracks);
+            Artists = new ArtistRepository(_fileMetadataScanner, Tracks);
         }
 
         private static async Task<IFolderData> GetDataStorageFolder(string instanceId)
@@ -50,51 +48,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             return folderData;
         }
-
-        private void AttachEvents()
-        {
-            _fileMetadataScanner.FileMetadataAdded += FileMetadataScanner_FileMetadataAdded;
-            _fileMetadataScanner.FileMetadataUpdated += FileMetadataScanner_FileMetadataUpdated;
-        }
-
-        private void DetachEvents()
-        {
-            _fileMetadataScanner.FileMetadataAdded -= FileMetadataScanner_FileMetadataAdded;
-            _fileMetadataScanner.FileMetadataUpdated -= FileMetadataScanner_FileMetadataUpdated;
-        }
-
-        private void FileMetadataScanner_FileMetadataUpdated(object sender, FileMetadata e)
-        {
-            FileMetadataUpdated?.Invoke(this, e);
-        }
-
-        private void FileMetadataScanner_FileMetadataAdded(object sender, FileMetadata e)
-        {
-            var fileMetadata = new FileMetadata();
-
-            if (Tracks.AddOrSkipTrackMetadata(e.TrackMetadata))
-                fileMetadata.TrackMetadata = e.TrackMetadata;
-
-            if (Albums.AddOrSkipAlbumMetadata(e.AlbumMetadata))
-                fileMetadata.AlbumMetadata = e.AlbumMetadata;
-
-            if (Artists.AddOrSkipArtistMetadata(e.ArtistMetadata))
-                fileMetadata.ArtistMetadata = e.ArtistMetadata;
-
-            if(Playlists.AddOrSkipPlayListsMetadata(e.PlaylistMetadata))
-                fileMetadata.PlaylistMetadata = e.PlaylistMetadata;
-
-            FileMetadataAdded?.Invoke(this, fileMetadata);
-        }
-
-        ///<inheritdoc />
-        public event EventHandler<FileMetadata>? FileMetadataAdded;
-
-        ///<inheritdoc />
-        public event EventHandler<FileMetadata>? FileMetadataUpdated;
-
-        ///<inheritdoc />
-        public event EventHandler<FileMetadata>? FileMetadataRemoved;
 
         /// <inheritdoc />
         public event EventHandler? ScanningStarted;
@@ -151,8 +104,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <inheritdoc />
         public ValueTask DisposeAsync()
         {
-            DetachEvents();
-
             Albums.Dispose();
             Artists.Dispose();
             Playlists.Dispose();

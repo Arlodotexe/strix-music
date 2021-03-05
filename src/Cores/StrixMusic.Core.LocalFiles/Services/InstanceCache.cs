@@ -45,9 +45,9 @@ namespace StrixMusic.Core.LocalFiles.Services
     public class AlbumCacheRepo : InstanceCacheRepository<LocalFilesCoreAlbum>
     {
         /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, Func{T})"/>
-        public LocalFilesCoreAlbum GetOrCreate(string id, ICore sourceCore, AlbumMetadata albumMetadata, int totalTracksCount, LocalFilesCoreImage? image)
+        public LocalFilesCoreAlbum GetOrCreate(string id, ICore sourceCore, AlbumMetadata albumMetadata)
         {
-            return GetOrCreate(id, () => new LocalFilesCoreAlbum(sourceCore, albumMetadata, totalTracksCount, image));
+            return GetOrCreate(id, () => new LocalFilesCoreAlbum(sourceCore, albumMetadata));
         }
     }
 
@@ -57,9 +57,9 @@ namespace StrixMusic.Core.LocalFiles.Services
     public class ArtistCacheRepo : InstanceCacheRepository<LocalFilesCoreArtist>
     {
         /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, Func{T})"/>
-        public LocalFilesCoreArtist GetOrCreate(string id, ICore sourceCore, ArtistMetadata artistMetadata, int totalTracksCount, LocalFilesCoreImage? image = null)
+        public LocalFilesCoreArtist GetOrCreate(string id, ICore sourceCore, ArtistMetadata artistMetadata)
         {
-            return GetOrCreate(id, () => new LocalFilesCoreArtist(sourceCore, artistMetadata, totalTracksCount, image));
+            return GetOrCreate(id, () => new LocalFilesCoreArtist(sourceCore, artistMetadata));
         }
     }
 

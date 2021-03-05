@@ -1,91 +1,191 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore;
 using OwlCore.AbstractStorage;
+using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
-    /// <summary>
-    /// Album service for creating or getting the album metadata.
-    /// </summary>
-    public class AlbumRepository : IMetadataRepository
+    /// <inheritdoc />
+    public class AlbumRepository : IAlbumRepository
     {
         private const string ALBUM_DATA_FILENAME = "AlbumData.bin";
 
-        private readonly IList<AlbumMetadata> _albumMetadatas;
+        private readonly ConcurrentDictionary<string, AlbumMetadata> _inMemoryMetadata;
+        private readonly List<(bool IsAdded, (AlbumMetadata Album, TrackMetadata Track) Data)> _batchTracksToUpdate;
+        private readonly List<(bool IsAdded, (AlbumMetadata Album, ArtistMetadata Artist) Data)> _batchArtistsToUpdate;
+        private readonly SemaphoreSlim _storageMutex;
         private readonly FileMetadataScanner _fileMetadataScanner;
+        private readonly TrackRepository _trackRepository;
+        private readonly string _debouncerId;
         private IFolderData? _folderData;
-        private IFileSystemService? _fileSystemService;
-        private string? _pathToMetadataFile;
-
-        /// <inheritdoc />
-        public bool IsInitialized { get; private set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AlbumRepository"/>.
         /// </summary>
-        /// <param name="fileMetadataScanner">The file scanner instance to use when </param>
-        public AlbumRepository(FileMetadataScanner fileMetadataScanner)
+        ///  <param name="fileMetadataScanner">The file scanner instance to source metadata from.</param>
+        /// <param name="trackRepository">A <see cref="TrackRepository"/> that references the same set of data as this <see cref="AlbumMetadata"/>.</param>
+        internal AlbumRepository(FileMetadataScanner fileMetadataScanner, TrackRepository trackRepository)
         {
+            Guard.IsNotNull(fileMetadataScanner, nameof(fileMetadataScanner));
+
             _fileMetadataScanner = fileMetadataScanner;
-            _fileSystemService = Ioc.Default.GetService<IFileSystemService>();
-            _albumMetadatas = new List<AlbumMetadata>();
+            _trackRepository = trackRepository;
+
+            _inMemoryMetadata = new ConcurrentDictionary<string, AlbumMetadata>();
+            _batchTracksToUpdate = new List<(bool IsAdded, (AlbumMetadata Album, TrackMetadata Track) Data)>();
+            _batchArtistsToUpdate = new List<(bool IsAdded, (AlbumMetadata Album, ArtistMetadata Artist) Data)>();
+            _fileMetadataScanner = fileMetadataScanner;
+            _storageMutex = new SemaphoreSlim(1, 1);
+            _debouncerId = Guid.NewGuid().ToString();
 
             AttachEvents();
         }
 
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            Guard.IsFalse(IsInitialized, nameof(IsInitialized));
+            IsInitialized = true;
+
+            //await LoadDataFromDisk();
+        }
+
         private void AttachEvents()
         {
-            _fileMetadataScanner.FileMetadataAdded += FileMetadataAdded;
-            _fileMetadataScanner.FileMetadataRemoved += FileMetadataRemoved;
+            _fileMetadataScanner.FileMetadataAdded += FileMetadataScanner_FileMetadataAdded;
+            _fileMetadataScanner.FileMetadataRemoved += FileMetadataScanner_FileMetadataRemoved;
         }
 
         private void DetachEvents()
         {
-            _fileMetadataScanner.FileMetadataAdded -= FileMetadataAdded;
-            _fileMetadataScanner.FileMetadataRemoved -= FileMetadataRemoved;
+            _fileMetadataScanner.FileMetadataAdded -= FileMetadataScanner_FileMetadataAdded;
+            _fileMetadataScanner.FileMetadataRemoved -= FileMetadataScanner_FileMetadataRemoved;
         }
 
-        private void FileMetadataAdded(object sender, FileMetadata e)
+        private async void FileMetadataScanner_FileMetadataRemoved(object sender, FileMetadata e)
         {
-            // todo
-        }
-
-        private void FileMetadataRemoved(object sender, FileMetadata e)
-        {
-            // todo
-        }
-
-        /// <summary>
-        /// Add a new <see cref="AlbumMetadata"/>. It helps to filter out the duplicates while adding.
-        /// </summary>
-        /// <param name="albumMetadata"></param>
-        /// <returns>If true, track is added otherwise false.</returns>
-        public bool AddOrSkipAlbumMetadata(AlbumMetadata? albumMetadata)
-        {
-            lock (_albumMetadatas)
+            // Remove album
+            if (e.AlbumMetadata != null)
             {
-                if (albumMetadata == null)
-                    return false;
+                Guard.IsNotNullOrWhiteSpace(e.AlbumMetadata.Id, nameof(e.AlbumMetadata.Id));
 
-                if (!_albumMetadatas?.Any(c =>
-                    c.Title?.Equals(albumMetadata.Title ?? string.Empty, StringComparison.OrdinalIgnoreCase) ??
-                    false) ?? false)
+                // If all tracks with this artist have been removed, we can safely remove this artist.
+                var tracksWithAlbum = await _trackRepository.GetTracksByAlbumId(e.AlbumMetadata.Id, 0, -1);
+                if (tracksWithAlbum.Count == 0)
                 {
-                    _albumMetadatas?.Add(albumMetadata);
+                    await _storageMutex.WaitAsync();
+                    var removed = _inMemoryMetadata.TryRemove(e.AlbumMetadata.Id, out _);
+                    _storageMutex.Release();
 
-                    return true;
+                    if (!removed)
+                        ThrowHelper.ThrowInvalidOperationException($"Unable to remove metadata from {nameof(_inMemoryMetadata)}");
+
+                    MetadataRemoved?.Invoke(this, e.AlbumMetadata);
+                    _ = CommitChangesAsync();
                 }
-
-                return false;
             }
         }
+
+        private async void FileMetadataScanner_FileMetadataAdded(object sender, FileMetadata e)
+        {
+            // Add new or update existing album, with the given artist and track ID.
+            if (e.AlbumMetadata != null)
+            {
+                Guard.IsNotNullOrWhiteSpace(e.AlbumMetadata.Id, nameof(e.AlbumMetadata.Id));
+                Guard.IsNotNullOrWhiteSpace(e.TrackMetadata?.Id, nameof(e.TrackMetadata.Id));
+                Guard.IsNotNullOrWhiteSpace(e.ArtistMetadata?.Id, nameof(e.ArtistMetadata.Id));
+
+                var exists = true;
+                await _storageMutex.WaitAsync();
+
+                var workingMetadata = _inMemoryMetadata.GetOrAdd(e.AlbumMetadata.Id, (key) =>
+                {
+                    exists = false;
+                    return e.AlbumMetadata;
+                });
+
+                _storageMutex.Release();
+
+                workingMetadata.ArtistIds ??= new List<string>();
+                workingMetadata.TrackIds ??= new List<string>();
+
+                workingMetadata.ArtistIds.Add(e.ArtistMetadata.Id);
+                workingMetadata.TrackIds.Add(e.TrackMetadata.Id);
+
+                if (exists)
+                    MetadataUpdated?.Invoke(this, workingMetadata);
+                else
+                    MetadataAdded?.Invoke(this, workingMetadata);
+
+                _ = HandleChanged();
+            }
+        }
+
+        private async Task HandleChanged()
+        {
+            if (_batchTracksToUpdate.Count < 50 && !await Flow.Debounce(_debouncerId, TimeSpan.FromSeconds(2)))
+                return;
+
+            var addedArtistItems = new List<CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>>();
+            var removedArtistItems = new List<CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>>();
+
+            var addedTrackItems = new List<CollectionChangedItem<(AlbumMetadata Album, TrackMetadata Track)>>();
+            var removedTrackItems = new List<CollectionChangedItem<(AlbumMetadata Album, TrackMetadata Track)>>();
+
+            foreach (var item in _batchTracksToUpdate)
+            {
+                if (item.IsAdded)
+                    addedTrackItems.Add(new CollectionChangedItem<(AlbumMetadata Album, TrackMetadata Track)>(item.Data, addedTrackItems.Count));
+                else
+                    removedTrackItems.Add(new CollectionChangedItem<(AlbumMetadata Album, TrackMetadata Track)>(item.Data, addedTrackItems.Count));
+            }
+
+            foreach (var item in _batchArtistsToUpdate)
+            {
+                if (item.IsAdded)
+                    addedArtistItems.Add(new CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>(item.Data, addedTrackItems.Count));
+                else
+                    removedArtistItems.Add(new CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>(item.Data, addedTrackItems.Count));
+            }
+
+            // If the album already exists, modify the artists / tracks for this album.
+
+            if (addedArtistItems.Count + removedArtistItems.Count > 0)
+                ArtistItemsChanged?.Invoke(this, addedArtistItems, removedArtistItems);
+
+            if (addedTrackItems.Count + removedTrackItems.Count > 0)
+                TracksChanged?.Invoke(this, addedTrackItems, removedTrackItems);
+
+            await CommitChangesAsync();
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<AlbumMetadata>? MetadataUpdated;
+
+        /// <inheritdoc />
+        public event EventHandler<AlbumMetadata>? MetadataAdded;
+
+        /// <inheritdoc />
+        public event EventHandler<AlbumMetadata>? MetadataRemoved;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<(AlbumMetadata Album, ArtistMetadata Artist)>? ArtistItemsChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<(AlbumMetadata Album, TrackMetadata Track)>? TracksChanged;
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
 
         /// <summary>
         /// Sets the root folder to operate in when saving data.
@@ -93,107 +193,133 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <param name="rootFolder">The root folder to save data in.</param>
         public void SetDataFolder(IFolderData rootFolder)
         {
-            _pathToMetadataFile = $"{rootFolder.Path}\\{ALBUM_DATA_FILENAME}";
             _folderData = rootFolder;
         }
 
-        /// <summary>
-        /// Gets the <see cref="AlbumMetadata"/> by specific <see cref="AlbumMetadata"/> id. 
-        /// </summary>
-        /// <param name="id">The id of the corresponding <see cref="AlbumMetadata"/></param>
-        /// <returns>If found return <see cref="AlbumMetadata"/> otherwise returns null.</returns>
-        public async Task<AlbumMetadata?> GetAlbumMetadataById(string id)
+        /// <inheritdoc />
+        public async Task AddOrUpdateAlbum(AlbumMetadata albumMetadata)
         {
-            var allAlbums = await GetAlbumMetadata(0, -1);
+            Guard.IsNotNullOrWhiteSpace(albumMetadata.Id, nameof(albumMetadata.Id));
 
-            if (allAlbums.Count > 0)
-            {
-                return allAlbums.FirstOrDefault(c => c.Id == id);
-            }
+            var isUpdate = false;
+            await _storageMutex.WaitAsync();
 
-            return null;
-        }
-
-        /// <summary>
-        /// Gets all <see cref="TrackMetadata"/> over the file system.
-        /// </summary>
-        /// <param name="offset">The starting index for retrieving items.</param>
-        /// <param name="limit">The maximum number of items to return.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task<IReadOnlyList<AlbumMetadata>> GetAlbumMetadata(int offset, int limit)
-        {
-            Guard.IsNotNullOrWhiteSpace(_pathToMetadataFile, nameof(_pathToMetadataFile));
-
-            var allAlbums = await _fileMetadataScanner.GetUniqueAlbumMetadata();
-
-            if (limit == -1)
-            {
-                return allAlbums;
-            }
-            else
-            {
-                var filteredAlbums = allAlbums.Skip(offset).Take(limit).ToList();
-
-                return filteredAlbums;
-            }
-        }
-
-        /// <summary>
-        /// Gets the filtered albums by artists ids.
-        /// </summary>
-        /// <param name="artistId">The artist Id.</param>
-        /// <param name="offset">The starting index for retrieving items.</param>
-        /// <param name="limit">The maximum number of items to return.</param>
-        /// <returns>The filtered <see cref="IReadOnlyList{AlbumMetadata}"/>></returns>
-        public async Task<IReadOnlyList<AlbumMetadata>> GetAlbumsByArtistId(string artistId, int offset, int limit)
-        {
-            var filteredAlbums = new List<AlbumMetadata>();
-
-            var albums = await GetAlbumMetadata(offset, limit);
-
-            foreach (var item in albums)
-            {
-                if (item?.ArtistIds != null && item.ArtistIds.Contains(artistId))
+            _inMemoryMetadata.AddOrUpdate(
+                albumMetadata.Id,
+                addValueFactory: id =>
                 {
-                    filteredAlbums.Add(item);
-                }
-            }
+                    isUpdate = false;
+                    return albumMetadata;
+                },
+                updateValueFactory: (id, existing) =>
+                {
+                    isUpdate = true;
+                    return albumMetadata;
+                });
 
-            return filteredAlbums.Skip(offset).Take(limit).ToList();
+            _storageMutex.Release();
+
+            _ = CommitChangesAsync();
+
+            if (isUpdate)
+                MetadataUpdated?.Invoke(this, albumMetadata);
+            else
+                MetadataAdded?.Invoke(this, albumMetadata);
+
         }
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public async Task RemoveAlbum(AlbumMetadata albumMetadata)
         {
-            await Task.Run(ScanForAlbums);
-            IsInitialized = true;
+            Guard.IsNotNullOrWhiteSpace(albumMetadata.Id, nameof(albumMetadata.Id));
+
+            await _storageMutex.WaitAsync();
+            var removed = _inMemoryMetadata.TryRemove(albumMetadata.Id, out _);
+            _storageMutex.Release();
+
+            if (removed)
+                _ = CommitChangesAsync();
+        }
+
+        /// <inheritdoc />
+        public Task<AlbumMetadata?> GetAlbumById(string id)
+        {
+            _inMemoryMetadata.TryGetValue(id, out var metadata);
+            return Task.FromResult<AlbumMetadata?>(metadata);
+        }
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<AlbumMetadata>> GetAlbums(int offset, int limit)
+        {
+            var allAlbums = _inMemoryMetadata.Values.ToList();
+
+            if (limit == -1)
+                return Task.FromResult<IReadOnlyList<AlbumMetadata>>(allAlbums.GetRange(offset, allAlbums.Count - offset));
+
+            return Task.FromResult<IReadOnlyList<AlbumMetadata>>(allAlbums.GetRange(offset, limit));
+        }
+
+        /// <inheritdoc />
+        public async Task<IReadOnlyList<AlbumMetadata>> GetAlbumsByArtistId(string artistId, int offset, int limit)
+        {
+            var allArtists = await GetAlbums(offset, -1);
+            var results = new List<AlbumMetadata>();
+
+            foreach (var item in allArtists)
+            {
+                Guard.IsNotNull(item.ArtistIds, nameof(item.ArtistIds));
+                Guard.HasSizeGreaterThan(item.ArtistIds, 0, nameof(AlbumMetadata.ArtistIds));
+
+                if (item.ArtistIds.Contains(artistId))
+                    results.Add(item);
+            }
+
+            return results.GetRange(offset, limit).ToList();
         }
 
         /// <summary>
-        /// Create or Update <see cref="AlbumMetadata"/> information in files.
+        /// Gets the existing repo data stored on disk.
         /// </summary>
-        /// <returns>The <see cref="AlbumMetadata"/> collection.</returns>
-        private async Task ScanForAlbums()
+        /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
+        private async Task LoadDataFromDisk()
         {
-            Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
-            Guard.IsNotNull(_pathToMetadataFile, nameof(_pathToMetadataFile));
             Guard.IsNotNull(_folderData, nameof(_folderData));
 
-            IFileData? fileData;
-
-            if (!await _fileSystemService.FileExistsAsync(_pathToMetadataFile))
-                fileData = await _folderData.CreateFileAsync(ALBUM_DATA_FILENAME); // creates the file and closes the file stream.
-            else fileData = await _folderData.GetFileAsync(ALBUM_DATA_FILENAME);
+            var fileData = await _folderData.CreateFileAsync(ALBUM_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
 
             Guard.IsNotNull(fileData, nameof(fileData));
 
-            var metadata = await _fileMetadataScanner.GetUniqueAlbumMetadata();
+            using var stream = await fileData.GetStreamAsync(FileAccessMode.ReadWrite);
+            var bytes = await stream.ToBytesAsync();
 
-            if (metadata != null && metadata.Count > 0)
+            if (bytes.Length == 0)
+                return;
+
+            var data = MessagePackSerializer.Deserialize<List<AlbumMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+
+            foreach (var item in data)
             {
-                var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
-                await fileData.WriteAllBytesAsync(bytes);
+                Guard.IsNotNullOrWhiteSpace(item?.Id, nameof(item.Id));
+
+                if (!_inMemoryMetadata.TryAdd(item.Id, item))
+                    ThrowHelper.ThrowInvalidOperationException($"Item already added to {nameof(_inMemoryMetadata)}");
             }
+        }
+
+        private async Task CommitChangesAsync()
+        {
+            if (!await Flow.Debounce(_debouncerId, TimeSpan.FromSeconds(5)) || _inMemoryMetadata.IsEmpty)
+                return;
+
+            await _storageMutex.WaitAsync();
+
+            Guard.IsNotNull(_folderData, nameof(_folderData));
+            var bytes = MessagePackSerializer.Serialize(_inMemoryMetadata.ToList(), MessagePack.Resolvers.ContractlessStandardResolver.Options);
+
+            var fileData = await _folderData.CreateFileAsync(ALBUM_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
+            await fileData.WriteAllBytesAsync(bytes);
+
+            _storageMutex.Release();
         }
 
         private void ReleaseUnmanagedResources()
@@ -211,6 +337,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (disposing)
             {
                 // dispose any objects you created here
+                _inMemoryMetadata.Clear();
+                _storageMutex.Dispose();
             }
 
             IsInitialized = false;

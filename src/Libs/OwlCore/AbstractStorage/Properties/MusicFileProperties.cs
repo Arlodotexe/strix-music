@@ -47,7 +47,7 @@ namespace OwlCore.AbstractStorage
         /// <summary>
         /// Gets the names of music genres that the song belongs to.
         /// </summary>
-        public IReadOnlyList<string>? Genre { get; set; }
+        public IReadOnlyList<string>? Genres { get; set; }
 
         /// <summary>
         /// Gets the producers of the song.

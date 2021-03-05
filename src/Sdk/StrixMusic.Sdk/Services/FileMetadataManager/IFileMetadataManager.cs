@@ -46,20 +46,5 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// Raised when metadata scanning has completed.
         /// </summary>
         event EventHandler? ScanningCompleted;
-
-        /// <summary>
-        /// Raised when a new file with metadata is discovered.
-        /// </summary>
-        event EventHandler<FileMetadata>? FileMetadataAdded;
-
-        /// <summary>
-        /// Raised when a previously scanned file has been removed from the file system.
-        /// </summary>
-        event EventHandler<FileMetadata>? FileMetadataRemoved;
-
-        /// <summary>
-        /// Raised when a previously scanned file with metadata is updated.
-        /// </summary>
-        public event EventHandler<FileMetadata>? FileMetadataUpdated;
     }
 }
