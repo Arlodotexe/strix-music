@@ -237,12 +237,17 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             var trackIds = _playlistMetadata.TrackIds;
 
-            if (trackIds == null) yield break;
+            Guard.IsNotNull(trackIds, nameof(trackIds));
 
-            var tracks = await _fileMetadataManager.Tracks.GetTrackMetadataByIds(trackIds);
+            var tracks = new List<TrackMetadata>();
+            foreach (var id in trackIds)
+            {
+                var track = await _fileMetadataManager.Tracks.GetTrackById(id);
 
-            if (tracks == null) yield break;
-
+                Guard.IsNotNull(track, nameof(track));
+                tracks.Add(track);
+            }
+          
             foreach (var item in tracks)
             {
                 yield return new LocalFilesCoreTrack(SourceCore, item);

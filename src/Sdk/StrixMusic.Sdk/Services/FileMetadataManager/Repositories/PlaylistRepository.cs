@@ -123,7 +123,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<IReadOnlyList<PlaylistMetadata>> GetPlaylistsMetadata(int offset, int limit)
         {
-            var allPlaylists = await _fileMetadataScanner.GetUniquePlaylistsMetadata();
+            var allPlaylists = await _fileMetadataScanner.GetUniquePlaylistMetadata();
 
             if (limit == -1)
             {
@@ -179,13 +179,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Guard.IsNotNull(_folderData, nameof(_folderData));
             
             var fileData = await _folderData.CreateFileAsync(PLAYLIST_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
-        }
-
-            if (metadata != null && metadata.Count > 0)
-            {
-                var bytes = MessagePackSerializer.Serialize(metadata, MessagePack.Resolvers.ContractlessStandardResolver.Options);
-                await fileData.WriteAllBytesAsync(bytes);
-            }
         }
 
         private void ReleaseUnmanagedResources()
