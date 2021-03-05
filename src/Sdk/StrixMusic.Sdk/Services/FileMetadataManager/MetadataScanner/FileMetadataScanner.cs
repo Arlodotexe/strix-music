@@ -29,6 +29,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private int _filesFound;
         private int _filesProcessed;
         private AbstractProgressUIElement? _progressUIElement;
+        private Notification? _filesScannedNotification;
+        private Notification? _filesFoundNotification;
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
@@ -76,9 +78,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             set
             {
                 _filesFound = value;
-
                 if (_progressUIElement != null)
                     _progressUIElement.Maximum = value;
+
+                UpdateFilesFoundNotification();
             }
         }
 
@@ -91,6 +94,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 if (_progressUIElement != null)
                     _progressUIElement.Value = value;
+
+                UpdateFilesScanNotification();
             }
         }
 
@@ -508,7 +513,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             // DFS search on a single thread
             // Parallel.ForEach on resulting collection (system manages resources)
             // Batch the scanned metadata at the end (in the event)
-            var dfsNotification = RaiseStructureNotification();
+            _filesFoundNotification = RaiseStructureNotification();
 
             var allDiscoveredFiles = new Queue<IFileData>();
             var foldersToScan = new Stack<IFolderData>();
@@ -516,9 +521,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             await DFSFolderContentScan(foldersToScan, allDiscoveredFiles);
 
-            dfsNotification.Dismiss();
+            _filesFoundNotification.Dismiss();
 
-            var contentScanNotification = RaiseProcessingNotification();
+            _filesScannedNotification = RaiseProcessingNotification();
 
             // Parallel scanning is disabled due to excessive GC's freezing the UI thread after moving relational code into Repositories.
             // await allDiscoveredFiles.InParallel(ProcessFile);
@@ -528,21 +533,24 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 await ProcessFile(file);
             }
 
-            contentScanNotification.Dismiss();
+            _filesScannedNotification.Dismiss();
         }
 
         private async Task DFSFolderContentScan(Stack<IFolderData> foldersToCrawl, Queue<IFileData> filesToScan)
         {
             while (foldersToCrawl.Count > 0)
             {
-                IFolderData folderData = foldersToCrawl.Pop();
+                var folderData = foldersToCrawl.Pop();
 
                 var files = await folderData.GetFilesAsync();
                 var filesList = files.ToList();
 
                 foreach (var file in filesList)
                 {
-                    filesToScan.Enqueue(file);
+                    if (_supportedMusicFileFormats.Contains(file.FileExtension))
+                    {
+                        filesToScan.Enqueue(file);
+                    }
                 }
 
                 FilesFound += filesList.Count;
@@ -558,16 +566,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task ProcessFile(IFileData file)
         {
-            if (!_supportedMusicFileFormats.Contains(file.FileExtension))
-            {
-                FilesFound--;
-                return;
-            }
-
             var metadata = await ScanFileMetadata(file);
             if (metadata == null)
             {
-                FilesFound--;
+                FilesProcessed++;
                 return;
             }
 
@@ -587,8 +589,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var elementGroup = new AbstractUIElementGroup(NewGuid())
             {
-                Title = "Scanning folder structure",
-                Subtitle = $"Scanning folder tree at {_folderData.Path}",
+                Title = "Looking for files",
+                Subtitle = $"Found {FilesFound} in {_folderData.Path}",
                 Items = { new AbstractProgressUIElement(NewGuid(), null) },
             };
 
@@ -603,12 +605,26 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var elementGroup = new AbstractUIElementGroup(NewGuid())
             {
-                Title = "Scanning folder contents",
-                Subtitle = $"Processing {FilesFound} files in {_folderData.Path}",
+                Title = "Scanning files",
+                Subtitle = $"Scanned {FilesProcessed}/{FilesFound} files in {_folderData.Path}",
                 Items = { _progressUIElement },
             };
 
             return _notificationService.RaiseNotification(elementGroup);
+        }
+
+        private void UpdateFilesScanNotification()
+        {
+            Guard.IsNotNull(_filesScannedNotification, nameof(_filesScannedNotification));
+
+            _filesScannedNotification.AbstractUIElementGroup.Subtitle = $"Processing {FilesProcessed}/{FilesFound} files in {_folderData.Path}";
+        }
+
+        private void UpdateFilesFoundNotification()
+        {
+            Guard.IsNotNull(_filesFoundNotification, nameof(_filesFoundNotification));
+
+            _filesFoundNotification.AbstractUIElementGroup.Subtitle = $"Found {FilesFound} in {_folderData.Path}";
         }
     }
 }
