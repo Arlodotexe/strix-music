@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace StrixMusic.Sdk.Services.FileMetadataManager.Models.Playlist.Smil
 {
     /// <summary>
-    /// Represents smil playLists model used for deserialize the xml.
+    /// Represents smil playlists model used for deserialize the xml.
     /// </summary>
     [XmlRoot("smil")]
     public class Smil

@@ -269,9 +269,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            var playListsMetadata = await _fileMetadataManager.Playlists.GetPlaylistsMetadata(offset, limit);
+            var playlistsMetadata = await _fileMetadataManager.Playlists.GetPlaylistsMetadata(offset, limit);
 
-            foreach (var playList in playListsMetadata)
+            foreach (var playList in playlistsMetadata)
             {
                 Guard.IsNotNullOrWhiteSpace(playList.Id, nameof(playList.Id));
 

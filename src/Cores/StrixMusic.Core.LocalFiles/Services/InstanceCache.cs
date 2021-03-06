@@ -34,7 +34,7 @@ namespace StrixMusic.Core.LocalFiles.Services
         public static ImageCacheRepo Images { get; set; } = new ImageCacheRepo();
 
         /// <summary>
-        /// A cache of all playLists across all core instances.
+        /// A cache of all playlists across all core instances.
         /// </summary>
         public static PlaylistCacheRepo PlayLists { get; set; } = new PlaylistCacheRepo();
     }
@@ -88,7 +88,7 @@ namespace StrixMusic.Core.LocalFiles.Services
     }
 
     /// <summary>
-    /// A cache of all playLists across all core instances.
+    /// A cache of all playlists across all core instances.
     /// </summary>
     public class PlaylistCacheRepo : InstanceCacheRepository<LocalFileCorePlaylist>
     {

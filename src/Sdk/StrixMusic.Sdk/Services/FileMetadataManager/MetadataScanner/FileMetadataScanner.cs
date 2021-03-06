@@ -467,9 +467,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <returns>A list of the <see cref="PlaylistMetadata"/>.</returns>
         public Task<IReadOnlyList<PlaylistMetadata>> GetUniquePlaylistMetadata()
         {
-            var playLists = _fileMetadata.Select(c => c.PlaylistMetadata).PruneNull();
+            var playlists = _fileMetadata.Select(c => c.PlaylistMetadata).PruneNull();
 
-            return Task.FromResult<IReadOnlyList<PlaylistMetadata>>(playLists.ToList());
+            return Task.FromResult<IReadOnlyList<PlaylistMetadata>>(playlists.ToList());
         }
 
         private void ReleaseUnmanagedResources()

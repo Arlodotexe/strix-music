@@ -148,9 +148,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             var filteredPlaylists = new List<PlaylistMetadata>();
 
-            var playLists = await GetPlaylistsMetadata(0, -1);
+            var playlists = await GetPlaylistsMetadata(0, -1);
 
-            foreach (var item in playLists)
+            foreach (var item in playlists)
             {
                 if (item.TrackIds?.Contains(playListId) ?? false)
                 {

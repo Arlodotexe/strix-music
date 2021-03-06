@@ -460,7 +460,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 if (!fileMagic.SequenceEqual(FplMagic))
                     return null;
 
-                // foobar2000 playLists don't have titles, so set it
+                // foobar2000 playlists don't have titles, so set it
                 // to the file name
                 metadata.Title = fileData.DisplayName;
 
