@@ -119,6 +119,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 workingMetadata.ArtistIds ??= new List<string>();
                 workingMetadata.TrackIds ??= new List<string>();
 
+                var newArtist = !workingMetadata.ArtistIds.Contains(e.ArtistMetadata.Id);
+
                 workingMetadata.ArtistIds.Add(e.ArtistMetadata.Id);
                 workingMetadata.TrackIds.Add(e.TrackMetadata.Id);
 
@@ -127,13 +129,19 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 else
                     MetadataAdded?.Invoke(this, workingMetadata);
 
+                if (newArtist)
+                    _batchArtistsToUpdate.Add((true, (workingMetadata, e.ArtistMetadata)));
+
+                _batchTracksToUpdate.Add((true, (workingMetadata, e.TrackMetadata)));
+
                 _ = HandleChanged();
             }
         }
 
         private async Task HandleChanged()
         {
-            if (_batchTracksToUpdate.Count < 50 && !await Flow.Debounce(_debouncerId, TimeSpan.FromSeconds(2)))
+            await _storageMutex.WaitAsync();
+            if (_batchTracksToUpdate.Count + _batchArtistsToUpdate.Count < 50 && !await Flow.Debounce(_debouncerId, TimeSpan.FromSeconds(2)))
                 return;
 
             var addedArtistItems = new List<CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>>();
@@ -166,6 +174,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (addedTrackItems.Count + removedTrackItems.Count > 0)
                 TracksChanged?.Invoke(this, addedTrackItems, removedTrackItems);
 
+            _storageMutex.Release();
             await CommitChangesAsync();
         }
 

@@ -115,18 +115,26 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 workingMetadata.AlbumIds ??= new List<string>();
                 workingMetadata.TrackIds ??= new List<string>();
 
-                workingMetadata.AlbumIds.Add(e.AlbumMetadata.Id);
-                workingMetadata.TrackIds.Add(e.TrackMetadata.Id);
+                var newAlbum = !workingMetadata.AlbumIds.Contains(e.AlbumMetadata.Id);
+
+                if (newAlbum)
+                    workingMetadata.AlbumIds.Add(e.AlbumMetadata.Id);
+
+                if (workingMetadata.TrackIds.Contains(e.TrackMetadata.Id))
+                    workingMetadata.TrackIds.Add(e.TrackMetadata.Id);
 
                 if (exists)
                 {
-                    var addedAlbumItem = new CollectionChangedItem<(ArtistMetadata Artist, AlbumMetadata Album)>((workingMetadata, e.AlbumMetadata), 0);
-                    var removedAlbumItems = Array.Empty<CollectionChangedItem<(ArtistMetadata Artist, AlbumMetadata Album)>>();
+                    if (newAlbum)
+                    {
+                        var addedAlbumItem = new CollectionChangedItem<(ArtistMetadata Artist, AlbumMetadata Album)>((workingMetadata, e.AlbumMetadata), 0);
+                        var removedAlbumItems = Array.Empty<CollectionChangedItem<(ArtistMetadata Artist, AlbumMetadata Album)>>();
+                        AlbumItemsChanged?.Invoke(this, addedAlbumItem.IntoList(), removedAlbumItems);
+                    }
 
                     var addedTrackItem = new CollectionChangedItem<(ArtistMetadata Artist, TrackMetadata Track)>((workingMetadata, e.TrackMetadata), 0);
                     var removedTrackItems = Array.Empty<CollectionChangedItem<(ArtistMetadata Artist, TrackMetadata Track)>>();
 
-                    AlbumItemsChanged?.Invoke(this, addedAlbumItem.IntoList(), removedAlbumItems);
                     TracksChanged?.Invoke(this, addedTrackItem.IntoList(), removedTrackItems);
                     MetadataUpdated?.Invoke(this, workingMetadata);
                 }
@@ -288,7 +296,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             var data = MessagePackSerializer.Deserialize<List<ArtistMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
             await _storageMutex.WaitAsync();
-            
+
             foreach (var item in data)
             {
                 Guard.IsNotNullOrWhiteSpace(item?.Id, nameof(item.Id));

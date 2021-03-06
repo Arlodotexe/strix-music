@@ -526,6 +526,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             _filesScannedNotification = RaiseProcessingNotification();
 
             // Parallel scanning is disabled due to excessive GC's freezing the UI thread after moving relational code into Repositories.
+            // Potential solution: batch emit the processed file metadata.
             // await allDiscoveredFiles.InParallel(ProcessFile);
             while (allDiscoveredFiles.Count > 0)
             {
@@ -605,7 +606,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var elementGroup = new AbstractUIElementGroup(NewGuid())
             {
-                Title = "Scanning files",
+                Title = "Scanning library",
                 Subtitle = $"Scanned {FilesProcessed}/{FilesFound} files in {_folderData.Path}",
                 Items = { _progressUIElement },
             };
@@ -617,7 +618,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             Guard.IsNotNull(_filesScannedNotification, nameof(_filesScannedNotification));
 
-            _filesScannedNotification.AbstractUIElementGroup.Subtitle = $"Processing {FilesProcessed}/{FilesFound} files in {_folderData.Path}";
+            _filesScannedNotification.AbstractUIElementGroup.Subtitle = $"Scanned {FilesProcessed}/{FilesFound} files in {_folderData.Path}";
         }
 
         private void UpdateFilesFoundNotification()
