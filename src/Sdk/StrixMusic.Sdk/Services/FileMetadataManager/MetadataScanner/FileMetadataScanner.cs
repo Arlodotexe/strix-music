@@ -536,11 +536,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private async Task ProcessFile(IFileData file)
         {
             var metadata = await ScanFileMetadata(file);
+            FilesProcessed++;
+
             if (metadata == null)
-            {
-                FilesProcessed++;
                 return;
-            }
 
             await _batchLock.WaitAsync();
 
@@ -548,15 +547,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             _batchLock.Release();
 
             _ = HandleChanged();
-
-            FilesProcessed++;
         }
 
         private async Task HandleChanged()
         {
             await _batchLock.WaitAsync();
 
-            if (_batchMetadataToEmit.Count < 100 && !await Flow.Debounce(_emitDebouncerId, TimeSpan.FromSeconds(5)))
+            if (FilesFound != FilesProcessed && _batchMetadataToEmit.Count < 100 && !await Flow.Debounce(_emitDebouncerId, TimeSpan.FromSeconds(5)))
                 return;
 
             FileMetadataAdded?.Invoke(this, _batchMetadataToEmit.ToArray());
