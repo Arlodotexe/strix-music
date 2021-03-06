@@ -116,7 +116,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     // Unix relative file path
                     fullPath = Path.GetFullPath(Path.GetDirectoryName(currentPath) + path.Substring(1));
-
                 }
                 else
                 {
@@ -143,7 +142,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Determines whether a given path is full or relative.
         /// </summary>
-        public bool IsFullPath(string path)
+        private bool IsFullPath(string path)
         {
             // FIXME: http:// paths are not recognized as absolute paths
             if (string.IsNullOrWhiteSpace(path) || path.IndexOfAny(Path.GetInvalidPathChars()) != -1 || !Path.IsPathRooted(path))
@@ -173,7 +172,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var smil = ser.Deserialize(xmlReader) as Smil;
             var playlist = new PlaylistMetadata
             {
-                Id = (fileData.Path + ".track").HashMD5Fast(),
+                Id = fileData.Path.HashMD5Fast(),
             };
 
             var mediaList = smil?.Body?.Seq?.Media?.ToList();
@@ -189,12 +188,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 if (media.Src != null)
                 {
-                    if (media.Src.Contains(_rootFolder.Path)) // checks if the track path is access-able. This is the fastest way. Not sure if its future proof.
+                    // checks if the track path is access-able. This is the fastest way. Not sure if its future proof.
+                    if (media.Src.Contains(_rootFolder.Path))
                     {
                         playlist.Duration ??= default;
 
                         playlist.Duration = playlist.Duration?.Add(TimeSpan.FromMilliseconds(media.Duration));
-                        playlist.TrackIds.Add((media.Src + ".track").HashMD5Fast());
+                        playlist.TrackIds.Add(media.Src.HashMD5Fast());
                     }
                 }
 

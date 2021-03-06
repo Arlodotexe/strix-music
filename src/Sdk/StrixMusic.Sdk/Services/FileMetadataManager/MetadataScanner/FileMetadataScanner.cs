@@ -55,6 +55,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _batchLock = new SemaphoreSlim(1, 1);
+            _playlistMetadataFileHelper = new PlaylistMetadataFileHelper(rootFolder);
 
             AttachEvents();
         }
@@ -518,7 +519,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 foreach (var file in filesList)
                 {
-                    if (_supportedMusicFileFormats.Contains(file.FileExtension))
+                    if (_supportedMusicFileFormats.Contains(file.FileExtension) || _supportedPlaylistFileFormats.Contains(file.FileExtension))
                     {
                         filesToScan.Enqueue(file);
                     }
@@ -543,67 +544,50 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 return null;
             }
 
+            var fileMetadata = new FileMetadata();
             if (_supportedMusicFileFormats.Contains(file.FileExtension))
             {
-                return await ProcessMusicFile(file);
+                fileMetadata = await ProcessMusicFile(file);
             }
 
             if (_supportedPlaylistFileFormats.Contains(file.FileExtension))
             {
-                return await ProcessPlaylistMetadata(file);
+                fileMetadata = await ProcessPlaylistMetadata(file);
             }
 
-            return null;
+            FilesProcessed++;
+
+            await _batchLock.WaitAsync();
+
+            if (fileMetadata != null)
+                _batchMetadataToEmit.Add(fileMetadata);
+
+            _batchLock.Release();
+
+            _ = HandleChanged();
+
+            return fileMetadata;
         }
 
         private async Task<FileMetadata?> ProcessPlaylistMetadata(IFileData file)
         {
             var playlistMetadata = await _playlistMetadataFileHelper.ScanPlaylistMetadata(file);
 
-            if (playlistMetadata == null)
-            {
-                FilesProcessed++;
-                return null;
-            }
-
-            var fileMetadata = new FileMetadata { PlaylistMetadata = playlistMetadata };
-
-            lock (_fileMetadata)
-            {
-                _fileMetadata.Add(fileMetadata);
-
-                FilesProcessed++;
-
-                _ = Task.Run(() => FileMetadataAdded?.Invoke(this, fileMetadata));
-
-                return fileMetadata;
-            }
+            return playlistMetadata == null ? null : new FileMetadata() { PlaylistMetadata = playlistMetadata };
         }
 
         private async Task<FileMetadata?> ProcessMusicFile(IFileData file)
         {
             var metadata = await ScanFileMetadata(file);
-            if (metadata == null)
-            {
-                FilesProcessed++;
-                return null;
-            }
 
-            await _batchLock.WaitAsync();
-
-            _batchMetadataToEmit.Add(metadata);
-            _batchLock.Release();
-
-            _ = HandleChanged();
-
-            FilesProcessed++;
+            return metadata ?? null;
         }
 
         private async Task HandleChanged()
         {
             await _batchLock.WaitAsync();
 
-            if (_batchMetadataToEmit.Count < 100 && !await Flow.Debounce(_emitDebouncerId, TimeSpan.FromSeconds(5)))
+            if (FilesFound != FilesProcessed && _batchMetadataToEmit.Count < 100 && !await Flow.Debounce(_emitDebouncerId, TimeSpan.FromSeconds(5)))
                 return;
 
             FileMetadataAdded?.Invoke(this, _batchMetadataToEmit.ToArray());

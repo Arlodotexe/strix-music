@@ -17,9 +17,9 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <inheritdoc />
-    public class LocalFileCorePlaylist : ICorePlaylist
+    public class LocalFileCorePlaylist : ICorePlaylist, IDisposable
     {
-        private readonly PlaylistMetadata _playlistMetadata;
+        private PlaylistMetadata _playlistMetadata;
         private readonly IFileMetadataManager _fileMetadataManager;
 
         /// <summary>
@@ -38,6 +38,46 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             Duration = playlistMetadata.Duration ?? default;
             TotalTracksCount = playlistMetadata.TrackIds?.Count ?? 0;
+
+            AttachEvents();
+        }
+
+        private void AttachEvents()
+        {
+            _fileMetadataManager.Playlists.MetadataUpdated += Albums_MetadataUpdated;
+        }
+
+        private void DetachEvents()
+        {
+            _fileMetadataManager.Playlists.MetadataUpdated -= Albums_MetadataUpdated;
+        }
+
+        private void Albums_MetadataUpdated(object sender, IEnumerable<PlaylistMetadata> e)
+        {
+            foreach (var metadata in e)
+            {
+                if (metadata.Id != Id)
+                    return;
+
+                Guard.IsNotNull(metadata.TrackIds, nameof(metadata.TrackIds));
+
+                var previousData = _playlistMetadata;
+                _playlistMetadata = metadata;
+
+                if (metadata.Title != previousData.Title)
+                    NameChanged?.Invoke(this, Name);
+
+                if (metadata.Description != previousData.Description)
+                    DescriptionChanged?.Invoke(this, Description);
+
+                if (metadata.Duration != previousData.Duration)
+                    DurationChanged?.Invoke(this, Duration);
+
+                // TODO genres, post genres do-over
+
+                if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
+                    TrackItemsCountChanged?.Invoke(this, metadata.TrackIds.Count);
+            }
         }
 
         /// <inheritdoc />
@@ -247,11 +287,25 @@ namespace StrixMusic.Core.LocalFiles.Models
                 Guard.IsNotNull(track, nameof(track));
                 tracks.Add(track);
             }
-          
+
             foreach (var item in tracks)
             {
                 yield return new LocalFilesCoreTrack(SourceCore, item);
             }
+        }
+
+        private void Dispose(bool disposing)
+        {
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+                Genres?.Dispose();
+            }
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            DetachEvents();
         }
 
         /// <inheritdoc />
@@ -264,6 +318,19 @@ namespace StrixMusic.Core.LocalFiles.Models
         public Task PlayTrackCollectionAsync(ICoreTrack track)
         {
             throw new NotSupportedException();
+        }
+       
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
+        ~LocalFileCorePlaylist()
+        {
+            Dispose(false);
         }
     }
 }

@@ -21,6 +21,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         private readonly List<(bool IsAdded, TrackMetadata Data)> _batchTracksToUpdate;
         private readonly List<(bool IsAdded, ArtistMetadata Data)> _batchArtistsToUpdate;
         private readonly List<(bool IsAdded, AlbumMetadata Data)> _batchAlbumsToUpdate;
+        private readonly List<(bool IsAdded, PlaylistMetadata Data)> _batchPlaylistToUpdate;
         private IFileMetadataManager? _fileMetadataManager;
 
         /// <summary>
@@ -33,6 +34,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             _batchTracksToUpdate = new List<(bool IsAdded, TrackMetadata Data)>();
             _batchArtistsToUpdate = new List<(bool IsAdded, ArtistMetadata Data)>();
             _batchAlbumsToUpdate = new List<(bool IsAdded, AlbumMetadata Data)>();
+            _batchPlaylistToUpdate = new List<(bool IsAdded, PlaylistMetadata Data)>();
 
             _batchMutex = new SemaphoreSlim(1, 1);
         }
@@ -56,10 +58,12 @@ namespace StrixMusic.Core.LocalFiles.Models
             _fileMetadataManager.Tracks.MetadataAdded += Tracks_MetadataAdded;
             _fileMetadataManager.Albums.MetadataAdded += Albums_MetadataAdded;
             _fileMetadataManager.Artists.MetadataAdded += Artists_MetadataAdded;
+            _fileMetadataManager.Playlists.MetadataAdded += Playlists_MetadataAdded;
 
             _fileMetadataManager.Tracks.MetadataRemoved += Tracks_MetadataRemoved;
             _fileMetadataManager.Albums.MetadataRemoved += Albums_MetadataRemoved;
             _fileMetadataManager.Artists.MetadataRemoved += Artists_MetadataRemoved;
+            _fileMetadataManager.Playlists.MetadataRemoved += Playlists_MetadataRemoved;
         }
 
         private void DetachEvents()
@@ -69,10 +73,23 @@ namespace StrixMusic.Core.LocalFiles.Models
             _fileMetadataManager.Tracks.MetadataAdded -= Tracks_MetadataAdded;
             _fileMetadataManager.Albums.MetadataAdded -= Albums_MetadataAdded;
             _fileMetadataManager.Artists.MetadataAdded -= Artists_MetadataAdded;
+            _fileMetadataManager.Playlists.MetadataAdded -= Playlists_MetadataAdded;
 
             _fileMetadataManager.Tracks.MetadataRemoved -= Tracks_MetadataRemoved;
             _fileMetadataManager.Albums.MetadataRemoved -= Albums_MetadataRemoved;
             _fileMetadataManager.Artists.MetadataRemoved -= Artists_MetadataRemoved;
+            _fileMetadataManager.Playlists.MetadataRemoved -= Playlists_MetadataAdded;
+        }
+
+        private async void Playlists_MetadataAdded(object sender, IEnumerable<PlaylistMetadata> e)
+        {
+            await _batchMutex.WaitAsync();
+            foreach (var metadata in e)
+                _batchPlaylistToUpdate.Add((true, metadata));
+
+            _batchMutex.Release();
+
+            await CommitItemsChanged();
         }
 
         private async void Tracks_MetadataAdded(object sender, IEnumerable<TrackMetadata> e)
@@ -140,6 +157,17 @@ namespace StrixMusic.Core.LocalFiles.Models
             await CommitItemsChanged();
         }
 
+        private async void Playlists_MetadataRemoved(object sender, IEnumerable<PlaylistMetadata> e)
+        {
+            await _batchMutex.WaitAsync();
+            foreach (var metadata in e)
+                _batchPlaylistToUpdate.Add((false, metadata));
+
+            _batchMutex.Release();
+
+            await CommitItemsChanged();
+        }
+
         private async Task CommitItemsChanged()
         {
             if (_batchAlbumsToUpdate.Count + _batchArtistsToUpdate.Count + _batchTracksToUpdate.Count < 100 && !await Flow.Debounce($"{SourceCore.InstanceId}.{Id}", TimeSpan.FromSeconds(2)))
@@ -150,6 +178,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             HandleChangedTracks();
             HandleChangedArtists();
             HandleChangedAlbums();
+            HandleChangedPlaylists();
 
             _batchMutex.Release();
         }
@@ -244,6 +273,36 @@ namespace StrixMusic.Core.LocalFiles.Models
             AlbumItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
+        private void HandleChangedPlaylists()
+        {
+            if (_batchPlaylistToUpdate.Count == 0)
+                return;
+
+            var addedItems = new List<CollectionChangedItem<ICorePlaylistCollectionItem>>();
+            // ReSharper disable once CollectionNeverUpdated.Local
+            var removedItems = new List<CollectionChangedItem<ICorePlaylistCollectionItem>>();
+
+            foreach (var item in _batchPlaylistToUpdate)
+            {
+                Guard.IsNotNullOrWhiteSpace(item.Data.Id, nameof(item.Data.Id));
+
+                if (item.IsAdded)
+                {
+                    addedItems.Add(new CollectionChangedItem<ICorePlaylistCollectionItem>(InstanceCache.PlayLists.GetOrCreate(item.Data.Id, SourceCore, item.Data), addedItems.Count));
+                }
+                else
+                {
+                    // TODO. Need to get the index of each item being removed.
+                    // Remember to remove from instance cache and dispose the objects being removed after emitted.
+                }
+            }
+
+            _batchPlaylistToUpdate.Clear();
+
+            TotalPlaylistItemsCount += addedItems.Count - removedItems.Count;
+            PlaylistItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
         /// <summary>
         /// Determines if collection base is initialized or not.
         /// </summary>
@@ -262,7 +321,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override string? Description { get; protected set; } = null;
 
         /// <inheritdoc />?
-        public virtual event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
+        public override event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
 
         /// <inheritdoc />
         public override event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
@@ -283,7 +342,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            var playlistsMetadata = await _fileMetadataManager.Playlists.GetPlaylistsMetadata(offset, limit);
+            var playlistsMetadata = await _fileMetadataManager.Playlists.GetPlaylists(offset, limit);
 
             foreach (var playList in playlistsMetadata)
             {
