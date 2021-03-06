@@ -40,10 +40,5 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         /// <exception cref="ArgumentException">The specified <paramref name="playlistMetadata"/> does not exist in the repository.</exception>
         Task RemovePlaylist(PlaylistMetadata playlistMetadata);
-
-        /// <summary>
-        /// Raised when a track is added or removed from an playlist.
-        /// </summary>
-        public event CollectionChangedEventHandler<(PlaylistMetadata Playlist, TrackMetadata Track)>? TracksChanged;
     }
 }

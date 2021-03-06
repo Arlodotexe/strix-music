@@ -134,9 +134,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataRemoved;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<(PlaylistMetadata Playlist, TrackMetadata Track)>? TracksChanged;
-
-        /// <inheritdoc />
         public bool IsInitialized { get; private set; }
 
         /// <summary>
