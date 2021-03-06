@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
-using OwlCore;
 using OwlCore.Events;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data.Core;
@@ -17,10 +15,6 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <inheritdoc cref="ICoreLibrary"/>
     public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary
     {
-        private readonly SemaphoreSlim _batchMutex;
-        private readonly List<(bool IsAdded, TrackMetadata Data)> _batchTracksToUpdate;
-        private readonly List<(bool IsAdded, ArtistMetadata Data)> _batchArtistsToUpdate;
-        private readonly List<(bool IsAdded, AlbumMetadata Data)> _batchAlbumsToUpdate;
         private IFileMetadataManager? _fileMetadataManager;
 
         /// <summary>
@@ -30,11 +24,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         public LocalFilesCoreLibrary(ICore sourceCore)
             : base(sourceCore)
         {
-            _batchTracksToUpdate = new List<(bool IsAdded, TrackMetadata Data)>();
-            _batchArtistsToUpdate = new List<(bool IsAdded, ArtistMetadata Data)>();
-            _batchAlbumsToUpdate = new List<(bool IsAdded, AlbumMetadata Data)>();
-
-            _batchMutex = new SemaphoreSlim(1, 1);
         }
 
         /// <inheritdoc/>
@@ -75,173 +64,72 @@ namespace StrixMusic.Core.LocalFiles.Models
             _fileMetadataManager.Artists.MetadataRemoved -= Artists_MetadataRemoved;
         }
 
-        private async void Tracks_MetadataAdded(object sender, IEnumerable<TrackMetadata> e)
+        private void Tracks_MetadataAdded(object sender, IEnumerable<TrackMetadata> e)
         {
-            await _batchMutex.WaitAsync();
-            foreach (var metadata in e)
-                _batchTracksToUpdate.Add((true, metadata));
-
-            _batchMutex.Release();
-
-            await CommitItemsChanged();
-        }
-
-        private async void Artists_MetadataAdded(object sender, IEnumerable<ArtistMetadata> e)
-        {
-            await _batchMutex.WaitAsync();
-            foreach (var metadata in e)
-                _batchArtistsToUpdate.Add((true, metadata));
-
-            _batchMutex.Release();
-
-            await CommitItemsChanged();
-        }
-
-        private async void Albums_MetadataAdded(object sender, IEnumerable<AlbumMetadata> e)
-        {
-            await _batchMutex.WaitAsync();
-            foreach (var metadata in e)
-                _batchAlbumsToUpdate.Add((true, metadata));
-
-            _batchMutex.Release();
-
-            await CommitItemsChanged();
-        }
-
-        private async void Tracks_MetadataRemoved(object sender, IEnumerable<TrackMetadata> e)
-        {
-            await _batchMutex.WaitAsync();
-            foreach (var metadata in e)
-                _batchTracksToUpdate.Add((false, metadata));
-
-            _batchMutex.Release();
-
-            await CommitItemsChanged();
-        }
-
-        private async void Artists_MetadataRemoved(object sender, IEnumerable<ArtistMetadata> e)
-        {
-            await _batchMutex.WaitAsync();
-            foreach (var metadata in e)
-                _batchArtistsToUpdate.Add((false, metadata));
-
-            _batchMutex.Release();
-            await CommitItemsChanged();
-        }
-
-        private async void Albums_MetadataRemoved(object sender, IEnumerable<AlbumMetadata> e)
-        {
-            await _batchMutex.WaitAsync();
-            foreach (var metadata in e)
-                _batchAlbumsToUpdate.Add((false, metadata));
-
-            _batchMutex.Release();
-
-            await CommitItemsChanged();
-        }
-
-        private async Task CommitItemsChanged()
-        {
-            if (_batchAlbumsToUpdate.Count + _batchArtistsToUpdate.Count + _batchTracksToUpdate.Count < 100 && !await Flow.Debounce($"{SourceCore.InstanceId}.{Id}", TimeSpan.FromSeconds(2)))
-                return;
-
-            await _batchMutex.WaitAsync();
-
-            HandleChangedTracks();
-            HandleChangedArtists();
-            HandleChangedAlbums();
-
-            _batchMutex.Release();
-        }
-
-        private void HandleChangedTracks()
-        {
-            if (_batchTracksToUpdate.Count == 0)
-                return;
-
-            var addedItems = new List<CollectionChangedItem<ICoreTrack>>();
             // ReSharper disable once CollectionNeverUpdated.Local
             var removedItems = new List<CollectionChangedItem<ICoreTrack>>();
+            var addedItems = new List<CollectionChangedItem<ICoreTrack>>();
 
-            foreach (var item in _batchTracksToUpdate)
+            foreach (var item in e)
             {
-                Guard.IsNotNullOrWhiteSpace(item.Data.Id, nameof(item.Data.Id));
+                Guard.IsNotNullOrWhiteSpace(item.Id, nameof(item.Id));
 
-                if (item.IsAdded)
-                {
-                    addedItems.Add(new CollectionChangedItem<ICoreTrack>(InstanceCache.Tracks.GetOrCreate(item.Data.Id, SourceCore, item.Data), addedItems.Count));
-                }
-                else
-                {
-                    // TODO. Need to get the index of each item being removed.
-                    // Remember to remove from instance cache and dispose the objects being removed after emitted.
-                }
+                addedItems.Add(new CollectionChangedItem<ICoreTrack>(InstanceCache.Tracks.GetOrCreate(item.Id, SourceCore, item), addedItems.Count));
             }
-
-            _batchTracksToUpdate.Clear();
 
             TotalTracksCount += addedItems.Count - removedItems.Count;
             TrackItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void HandleChangedArtists()
+        private void Artists_MetadataAdded(object sender, IEnumerable<ArtistMetadata> e)
         {
-            if (_batchArtistsToUpdate.Count == 0)
-                return;
-
-            var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
             // ReSharper disable once CollectionNeverUpdated.Local
             var removedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
+            var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
 
-            foreach (var item in _batchArtistsToUpdate)
+            foreach (var item in e)
             {
-                Guard.IsNotNullOrWhiteSpace(item.Data.Id, nameof(item.Data.Id));
+                Guard.IsNotNullOrWhiteSpace(item.Id, nameof(item.Id));
 
-                if (item.IsAdded)
-                {
-                    addedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(InstanceCache.Artists.GetOrCreate(item.Data.Id, SourceCore, item.Data), addedItems.Count));
-                }
-                else
-                {
-                    // TODO. Need to get the index of each item being removed.
-                    // Remember to remove from instance cache and dispose the objects being removed after emitted.
-                }
+                addedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(InstanceCache.Artists.GetOrCreate(item.Id, SourceCore, item), addedItems.Count));
             }
-
-            _batchArtistsToUpdate.Clear();
 
             TotalArtistItemsCount += addedItems.Count - removedItems.Count;
             ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void HandleChangedAlbums()
+        private void Albums_MetadataAdded(object sender, IEnumerable<AlbumMetadata> e)
         {
-            if (_batchAlbumsToUpdate.Count == 0)
-                return;
-
-            var addedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>();
             // ReSharper disable once CollectionNeverUpdated.Local
             var removedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>();
+            var addedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>();
 
-            foreach (var item in _batchAlbumsToUpdate)
+            foreach (var item in e)
             {
-                Guard.IsNotNullOrWhiteSpace(item.Data.Id, nameof(item.Data.Id));
-
-                if (item.IsAdded)
-                {
-                    addedItems.Add(new CollectionChangedItem<ICoreAlbumCollectionItem>(InstanceCache.Albums.GetOrCreate(item.Data.Id, SourceCore, item.Data), addedItems.Count));
-                }
-                else
-                {
-                    // TODO. Need to get the index of each item being removed.
-                    // Remember to remove from instance cache and dispose the objects being removed after emitted.
-                }
+                Guard.IsNotNullOrWhiteSpace(item.Id, nameof(item.Id));
+                addedItems.Add(new CollectionChangedItem<ICoreAlbumCollectionItem>(InstanceCache.Albums.GetOrCreate(item.Id, SourceCore, item), addedItems.Count));
             }
-
-            _batchAlbumsToUpdate.Clear();
 
             TotalAlbumItemsCount += addedItems.Count - removedItems.Count;
             AlbumItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        private void Tracks_MetadataRemoved(object sender, IEnumerable<TrackMetadata> e)
+        {
+            // TODO. Need to get the index of each item being removed.
+            // Remember to remove from instance cache and dispose the objects being removed after emitted.
+        }
+
+        private void Artists_MetadataRemoved(object sender, IEnumerable<ArtistMetadata> e)
+        {
+            // TODO. Need to get the index of each item being removed.
+            // Remember to remove from instance cache and dispose the objects being removed after emitted.
+        }
+
+        private void Albums_MetadataRemoved(object sender, IEnumerable<AlbumMetadata> e)
+        {
+            // TODO. Need to get the index of each item being removed.
+            // Remember to remove from instance cache and dispose the objects being removed after emitted.
         }
 
         /// <summary>
