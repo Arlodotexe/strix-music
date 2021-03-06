@@ -43,14 +43,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private void AttachEvents()
         {
-            _fileMetadataScanner.FileMetadataAdded += FileMetadataAdded;
-            _fileMetadataScanner.FileMetadataRemoved += FileMetadataRemoved;
         }
 
         private void DetachEvents()
         {
-            _fileMetadataScanner.FileMetadataAdded -= FileMetadataAdded;
-            _fileMetadataScanner.FileMetadataRemoved -= FileMetadataRemoved;
         }
 
         private void FileMetadataAdded(object sender, FileMetadata e)
@@ -123,18 +119,20 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task<IReadOnlyList<PlaylistMetadata>> GetPlaylistsMetadata(int offset, int limit)
         {
-            var allPlaylists = await _fileMetadataScanner.GetUniquePlaylistMetadata();
+            //var allPlaylists = await _fileMetadataScanner.GetUniquePlaylistMetadata();
 
-            if (limit == -1)
-            {
-                return allPlaylists;
-            }
-            else
-            {
-                var filteredPlaylists = allPlaylists.Skip(offset).Take(limit).ToList();
+            //if (limit == -1)
+            //{
+            //    return allPlaylists;
+            //}
+            //else
+            //{
+            //    var filteredPlaylists = allPlaylists.Skip(offset).Take(limit).ToList();
 
-                return filteredPlaylists;
-            }
+            //    return filteredPlaylists;
+            //}
+
+            return new List<PlaylistMetadata>();
         }
 
         /// <summary>

@@ -16,7 +16,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <summary>
-    /// Wraps around <see cref="TrackMetadata"/> to provide track information from a local file to the Strix SDK.
+    /// Wraps around <see cref="TrackMetadata"/> to provide track information extracted from a file to the Strix SDK.
     /// </summary>
     public class LocalFilesCoreTrack : ICoreTrack, IDisposable
     {
@@ -82,44 +82,47 @@ namespace StrixMusic.Core.LocalFiles.Models
             ArtistItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
         }
 
-        private void Tracks_MetadataUpdated(object sender, TrackMetadata e)
+        private void Tracks_MetadataUpdated(object sender, IEnumerable<TrackMetadata> e)
         {
-            Guard.IsNotNull(e.ArtistIds, nameof(e.ArtistIds));
+            foreach (var metadata in e)
+            {
+                if (metadata.Id != Id)
+                    return;
 
-            if (e.Id != Id)
-                return;
+                Guard.IsNotNull(metadata.ArtistIds, nameof(metadata.ArtistIds));
 
-            var previousData = _trackMetadata;
-            _trackMetadata = e;
+                var previousData = _trackMetadata;
+                _trackMetadata = metadata;
 
-            if (e.Title != previousData.Title)
-                NameChanged?.Invoke(this, Name);
+                if (metadata.Title != previousData.Title)
+                    NameChanged?.Invoke(this, Name);
 
-            if (e.ImagePath != previousData.ImagePath)
-                HandleImageChanged(e);
+                if (metadata.ImagePath != previousData.ImagePath)
+                    HandleImageChanged(metadata);
 
-            if (e.Description != previousData.Description)
-                DescriptionChanged?.Invoke(this, Description);
+                if (metadata.Description != previousData.Description)
+                    DescriptionChanged?.Invoke(this, Description);
 
-            if (e.DiscNumber != previousData.DiscNumber)
-                TrackNumberChanged?.Invoke(this, TrackNumber);
+                if (metadata.DiscNumber != previousData.DiscNumber)
+                    TrackNumberChanged?.Invoke(this, TrackNumber);
 
-            if (!Equals(e.Language, previousData.Language))
-                LanguageChanged?.Invoke(this, Language);
+                if (!Equals(metadata.Language, previousData.Language))
+                    LanguageChanged?.Invoke(this, Language);
 
-            if (!ReferenceEquals(e.Lyrics, previousData.Lyrics))
-                LyricsChanged?.Invoke(this, Lyrics);
+                if (!ReferenceEquals(metadata.Lyrics, previousData.Lyrics))
+                    LyricsChanged?.Invoke(this, Lyrics);
 
-            if (e.TrackNumber != previousData.TrackNumber)
-                TrackNumberChanged?.Invoke(this, TrackNumber);
+                if (metadata.TrackNumber != previousData.TrackNumber)
+                    TrackNumberChanged?.Invoke(this, TrackNumber);
 
-            if (e.Duration != previousData.Duration)
-                DurationChanged?.Invoke(this, Duration);
+                if (metadata.Duration != previousData.Duration)
+                    DurationChanged?.Invoke(this, Duration);
 
-            // TODO genres, post genres do-over
+                // TODO genres, post genres do-over
 
-            if (e.ArtistIds.Count != (previousData.ArtistIds?.Count ?? 0))
-                ArtistItemsCountChanged?.Invoke(this, e.ArtistIds.Count);
+                if (metadata.ArtistIds.Count != (previousData.ArtistIds?.Count ?? 0))
+                    ArtistItemsCountChanged?.Invoke(this, metadata.ArtistIds.Count);
+            }
         }
 
         private void HandleImageChanged(TrackMetadata e)
