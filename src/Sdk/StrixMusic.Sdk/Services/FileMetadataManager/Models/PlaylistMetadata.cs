@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
     /// <summary>
     /// The metadata associated with a playlist.
     /// </summary>
-    public class PlaylistMetadata
+    public class PlaylistMetadata : IFileMetadata
     {
         /// <summary>
         /// The unique identifier for this playlist.

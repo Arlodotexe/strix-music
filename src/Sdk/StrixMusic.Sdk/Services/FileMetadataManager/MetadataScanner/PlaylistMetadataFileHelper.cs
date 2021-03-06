@@ -23,14 +23,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     /// <summary>
     /// Handles scanning playlists for all supported metadata.
     /// </summary>
-    public class PlaylistMetadataScanner
+    internal class PlaylistMetadataFileHelper
     {
         private readonly IFolderData _rootFolder;
 
         /// <summary>
-        /// Creates a new instance of <see cref="PlaylistMetadataScanner"/>.
+        /// Creates a new instance of <see cref="PlaylistMetadataFileHelper"/>.
         /// </summary>
-        public PlaylistMetadataScanner(IFolderData fileCoreRootFolder)
+        public PlaylistMetadataFileHelper(IFolderData fileCoreRootFolder)
         {
             _rootFolder = fileCoreRootFolder;
         }

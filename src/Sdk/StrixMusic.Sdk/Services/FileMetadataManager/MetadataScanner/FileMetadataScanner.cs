@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private AbstractProgressUIElement? _progressUIElement;
         private Notification? _filesScannedNotification;
         private Notification? _filesFoundNotification;
-        private PlaylistMetadataScanner _playlistMetadataScanner;
+        private PlaylistMetadataFileHelper _playlistMetadataFileHelper;
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
@@ -51,7 +51,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             _folderData = rootFolder;
 
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-            _playlistMetadataScanner = new PlaylistMetadataScanner(_folderData);
+            _playlistMetadataFileHelper = new PlaylistMetadataFileHelper(_folderData);
 
             AttachEvents();
         }
@@ -601,7 +601,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task<FileMetadata?> ProcessPlaylistMetadata(IFileData file)
         {
-            var playlistMetadata = await _playlistMetadataScanner.ScanPlaylistMetadata(file);
+            var playlistMetadata = await _playlistMetadataFileHelper.ScanPlaylistMetadata(file);
 
             if (playlistMetadata == null)
             {
