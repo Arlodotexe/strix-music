@@ -75,55 +75,66 @@ namespace StrixMusic.Core.LocalFiles.Models
             _fileMetadataManager.Artists.MetadataRemoved -= Artists_MetadataRemoved;
         }
 
-        private async void Tracks_MetadataAdded(object sender, TrackMetadata e)
+        private async void Tracks_MetadataAdded(object sender, IEnumerable<TrackMetadata> e)
         {
             await _batchMutex.WaitAsync();
-            _batchTracksToUpdate.Add((true, e));
+            foreach (var metadata in e)
+                _batchTracksToUpdate.Add((true, metadata));
+
             _batchMutex.Release();
 
             await CommitItemsChanged();
         }
 
-        private async void Artists_MetadataAdded(object sender, ArtistMetadata e)
+        private async void Artists_MetadataAdded(object sender, IEnumerable<ArtistMetadata> e)
         {
             await _batchMutex.WaitAsync();
-            _batchArtistsToUpdate.Add((true, e));
+            foreach (var metadata in e)
+                _batchArtistsToUpdate.Add((true, metadata));
+
             _batchMutex.Release();
 
             await CommitItemsChanged();
         }
 
-        private async void Albums_MetadataAdded(object sender, AlbumMetadata e)
+        private async void Albums_MetadataAdded(object sender, IEnumerable<AlbumMetadata> e)
         {
             await _batchMutex.WaitAsync();
-            _batchAlbumsToUpdate.Add((true, e));
+            foreach (var metadata in e)
+                _batchAlbumsToUpdate.Add((true, metadata));
+
             _batchMutex.Release();
 
             await CommitItemsChanged();
         }
 
-        private async void Tracks_MetadataRemoved(object sender, TrackMetadata e)
+        private async void Tracks_MetadataRemoved(object sender, IEnumerable<TrackMetadata> e)
         {
             await _batchMutex.WaitAsync();
-            _batchTracksToUpdate.Add((false, e));
+            foreach (var metadata in e)
+                _batchTracksToUpdate.Add((false, metadata));
+
             _batchMutex.Release();
 
             await CommitItemsChanged();
         }
 
-        private async void Artists_MetadataRemoved(object sender, ArtistMetadata e)
+        private async void Artists_MetadataRemoved(object sender, IEnumerable<ArtistMetadata> e)
         {
             await _batchMutex.WaitAsync();
-            _batchArtistsToUpdate.Add((false, e));
-            _batchMutex.Release();
+            foreach (var metadata in e)
+                _batchArtistsToUpdate.Add((false, metadata));
 
+            _batchMutex.Release();
             await CommitItemsChanged();
         }
 
-        private async void Albums_MetadataRemoved(object sender, AlbumMetadata e)
+        private async void Albums_MetadataRemoved(object sender, IEnumerable<AlbumMetadata> e)
         {
             await _batchMutex.WaitAsync();
-            _batchAlbumsToUpdate.Add((false, e));
+            foreach (var metadata in e)
+                _batchAlbumsToUpdate.Add((false, metadata));
+
             _batchMutex.Release();
 
             await CommitItemsChanged();
@@ -149,6 +160,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 return;
 
             var addedItems = new List<CollectionChangedItem<ICoreTrack>>();
+            // ReSharper disable once CollectionNeverUpdated.Local
             var removedItems = new List<CollectionChangedItem<ICoreTrack>>();
 
             foreach (var item in _batchTracksToUpdate)
@@ -169,7 +181,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             _batchTracksToUpdate.Clear();
 
             TotalTracksCount += addedItems.Count - removedItems.Count;
-            Task.Run(() => TrackItemsChanged?.Invoke(this, addedItems, removedItems));
+            TrackItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
         private void HandleChangedArtists()
@@ -178,6 +190,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 return;
 
             var addedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
+            // ReSharper disable once CollectionNeverUpdated.Local
             var removedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
 
             foreach (var item in _batchArtistsToUpdate)
@@ -198,7 +211,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             _batchArtistsToUpdate.Clear();
 
             TotalArtistItemsCount += addedItems.Count - removedItems.Count;
-            Task.Run(() => ArtistItemsChanged?.Invoke(this, addedItems, removedItems));
+            ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
         private void HandleChangedAlbums()
@@ -207,6 +220,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 return;
 
             var addedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>();
+            // ReSharper disable once CollectionNeverUpdated.Local
             var removedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>();
 
             foreach (var item in _batchAlbumsToUpdate)
@@ -227,7 +241,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             _batchAlbumsToUpdate.Clear();
 
             TotalAlbumItemsCount += addedItems.Count - removedItems.Count;
-            Task.Run(() => AlbumItemsChanged?.Invoke(this, addedItems, removedItems));
+            AlbumItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
         /// <summary>

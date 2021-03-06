@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OwlCore.AbstractStorage;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
@@ -20,16 +21,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <summary>
         /// Raised when metadata is updated.
         /// </summary>
-        public event EventHandler<TFileMetadata>? MetadataUpdated;
+        public event EventHandler<IEnumerable<TFileMetadata>>? MetadataUpdated;
 
         /// <summary>
         /// Raised metadata is removed.
         /// </summary>
-        public event EventHandler<TFileMetadata>? MetadataRemoved;
+        public event EventHandler<IEnumerable<TFileMetadata>>? MetadataRemoved;
 
         /// <summary>
         /// Raised when new metadata is added.
         /// </summary>
-        public event EventHandler<TFileMetadata>? MetadataAdded;
+        public event EventHandler<IEnumerable<TFileMetadata>>? MetadataAdded;
     }
 }

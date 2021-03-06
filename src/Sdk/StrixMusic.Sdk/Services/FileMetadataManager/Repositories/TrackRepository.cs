@@ -65,78 +65,90 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _fileMetadataScanner.FileMetadataRemoved -= FileMetadataScanner_FileMetadataRemoved;
         }
 
-        private async void FileMetadataScanner_FileMetadataRemoved(object sender, FileMetadata e)
+        private async void FileMetadataScanner_FileMetadataRemoved(object sender, IEnumerable<FileMetadata> e)
         {
+            var removedTracks = new List<TrackMetadata>();
+
             // Remove tracks
-            if (e.TrackMetadata != null)
+            foreach (var metadata in e)
             {
-                Guard.IsNotNullOrWhiteSpace(e.TrackMetadata.Id, nameof(e.TrackMetadata.Id));
-
-                await _storageMutex.WaitAsync();
-                var removed = _inMemoryMetadata.TryRemove(e.TrackMetadata.Id, out _);
-                _storageMutex.Release();
-
-                if (removed)
+                if (metadata.TrackMetadata != null)
                 {
-                    MetadataRemoved?.Invoke(this, e.TrackMetadata);
-                    _ = CommitChangesAsync();
+                    Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
+
+                    await _storageMutex.WaitAsync();
+                    var removed = _inMemoryMetadata.TryRemove(metadata.TrackMetadata.Id, out _);
+                    _storageMutex.Release();
+
+                    if (removed)
+                        removedTracks.Add(metadata.TrackMetadata);
                 }
-            }
 
-            // No need to update tracks with removed album IDs.
-            // The album exists as long as any tracks from the album still exist, so it's handled in the AlbumRepository.
+                // No need to update tracks with removed album IDs.
+                // The album exists as long as any tracks from the album still exist, so it's handled in the AlbumRepository.
 
-            // Update tracks with removed artist IDs 
-            foreach (var data in _inMemoryMetadata.Values)
-            {
-                if (e.ArtistMetadata != null)
+                // Update tracks with removed artist IDs 
+                foreach (var data in _inMemoryMetadata.Values)
                 {
-                    Guard.IsNotNullOrWhiteSpace(e.ArtistMetadata.Id, nameof(e.ArtistMetadata.Id));
-
-                    if (data?.ArtistIds?.Contains(e.ArtistMetadata.Id) ?? false)
+                    if (metadata.ArtistMetadata != null)
                     {
-                        data.ArtistIds.Remove(e.ArtistMetadata.Id);
+                        Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata.Id, nameof(metadata.ArtistMetadata.Id));
 
-                        MetadataUpdated?.Invoke(this, data);
-                        _ = CommitChangesAsync();
+                        if (data?.ArtistIds?.Contains(metadata.ArtistMetadata.Id) ?? false)
+                        {
+                            // TODO: emit artist items changed for this track.
+                            data.ArtistIds.Remove(metadata.ArtistMetadata.Id);
+                        }
                     }
                 }
             }
-        }
 
-        private async void FileMetadataScanner_FileMetadataAdded(object sender, FileMetadata e)
-        {
-            // Add track metadata
-            if (e.TrackMetadata != null)
-            {
-                Guard.IsNotNullOrWhiteSpace(e.TrackMetadata.Id, nameof(e.TrackMetadata.Id));
-                Guard.IsNotNullOrWhiteSpace(e.AlbumMetadata?.Id, nameof(e.AlbumMetadata.Id));
-                Guard.IsNotNullOrWhiteSpace(e.ArtistMetadata?.Id, nameof(e.ArtistMetadata.Id));
-
-                e.TrackMetadata.AlbumId = e.AlbumMetadata.Id;
-                e.TrackMetadata.ArtistIds = e.ArtistMetadata.Id.IntoList();
-
-                await _storageMutex.WaitAsync();
-
-                if (!_inMemoryMetadata.TryAdd(e.TrackMetadata.Id, e.TrackMetadata))
-                    ThrowHelper.ThrowInvalidOperationException($"Tried adding an item that already exists in {nameof(_inMemoryMetadata)}");
-
-                _storageMutex.Release();
-
-                MetadataAdded?.Invoke(this, e.TrackMetadata);
-            }
-
+            MetadataRemoved?.Invoke(this, removedTracks);
             _ = CommitChangesAsync();
         }
 
-        /// <inheritdoc />
-        public event EventHandler<TrackMetadata>? MetadataUpdated;
+        private async void FileMetadataScanner_FileMetadataAdded(object sender, IEnumerable<FileMetadata> e)
+        {
+            var addedTracks = new List<TrackMetadata>();
+
+            // Add track metadata
+            // When tracks are added, artist and album IDs are created with it. No need to emit changed.
+            foreach (var metadata in e)
+            {
+                if (metadata.TrackMetadata != null)
+                {
+                    Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
+                    Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
+                    Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
+
+                    metadata.TrackMetadata.AlbumId = metadata.AlbumMetadata.Id;
+                    metadata.TrackMetadata.ArtistIds = metadata.ArtistMetadata.Id.IntoList();
+
+                    await _storageMutex.WaitAsync();
+
+                    if (!_inMemoryMetadata.TryAdd(metadata.TrackMetadata.Id, metadata.TrackMetadata))
+                        ThrowHelper.ThrowInvalidOperationException($"Tried adding an item that already exists in {nameof(_inMemoryMetadata)}");
+
+                    _storageMutex.Release();
+                    addedTracks.Add(metadata.TrackMetadata);
+                }
+            }
+
+            if (addedTracks.Count > 0)
+            {
+                _ = CommitChangesAsync();
+                MetadataAdded?.Invoke(this, addedTracks);
+            }
+        }
 
         /// <inheritdoc />
-        public event EventHandler<TrackMetadata>? MetadataAdded;
+        public event EventHandler<IEnumerable<TrackMetadata>>? MetadataUpdated;
 
         /// <inheritdoc />
-        public event EventHandler<TrackMetadata>? MetadataRemoved;
+        public event EventHandler<IEnumerable<TrackMetadata>>? MetadataAdded;
+
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<TrackMetadata>>? MetadataRemoved;
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<(TrackMetadata Track, ArtistMetadata Artist)>? ArtistItemsChanged;
@@ -180,9 +192,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             await CommitChangesAsync();
 
             if (isUpdate)
-                MetadataUpdated?.Invoke(this, trackMetadata);
+                MetadataUpdated?.Invoke(this, trackMetadata.IntoList());
             else
-                MetadataAdded?.Invoke(this, trackMetadata);
+                MetadataAdded?.Invoke(this, trackMetadata.IntoList());
         }
 
         /// <inheritdoc />
@@ -197,7 +209,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (removed)
             {
                 await CommitChangesAsync();
-                MetadataRemoved?.Invoke(this, trackMetadata);
+                MetadataRemoved?.Invoke(this, trackMetadata.IntoList());
             }
         }
 

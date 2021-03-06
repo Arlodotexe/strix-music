@@ -47,7 +47,7 @@ namespace StrixMusic.Core.LocalFiles
         public CoreState CoreState { get; internal set; } = CoreState.Unloaded;
 
         /// <inheritdoc/>
-        public string Name => "LocalFileCore";
+        public string Name => "LocalFilesCore";
 
         /// <inheritdoc/>
         public ICoreUser? User { get; }

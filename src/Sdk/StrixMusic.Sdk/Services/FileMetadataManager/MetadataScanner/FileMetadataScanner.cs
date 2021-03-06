@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
@@ -23,9 +24,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     public class FileMetadataScanner : IAsyncInit, IDisposable
     {
         private readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
-        private readonly ConcurrentBag<FileMetadata> _fileMetadata = new ConcurrentBag<FileMetadata>();
-        private readonly IFolderData _folderData;
+        private readonly string _emitDebouncerId = Guid.NewGuid().ToString();
+        private readonly List<FileMetadata> _batchMetadataToEmit = new List<FileMetadata>();
         private readonly INotificationService _notificationService;
+        private readonly SemaphoreSlim _batchLock;
+        private readonly IFolderData _folderData;
         private int _filesFound;
         private int _filesProcessed;
         private AbstractProgressUIElement? _progressUIElement;
@@ -49,6 +52,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             _folderData = rootFolder;
 
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
+            _batchLock = new SemaphoreSlim(1, 1);
 
             AttachEvents();
         }
@@ -60,17 +64,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private void DetachEvents()
         {
+            // todo unsubscribe to file system changes.
         }
 
         /// <summary>
         /// Raised when a new file with metadata is discovered.
         /// </summary>
-        public event EventHandler<FileMetadata>? FileMetadataAdded;
+        public event EventHandler<IEnumerable<FileMetadata>>? FileMetadataAdded;
 
         /// <summary>
         /// Raised when a previously scanned file has been removed from the file system.
         /// </summary>
-        public event EventHandler<FileMetadata>? FileMetadataRemoved;
+        public event EventHandler<IEnumerable<FileMetadata>>? FileMetadataRemoved;
 
         private int FilesFound
         {
@@ -428,36 +433,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             }
         }
 
-        /// <summary>
-        /// Gets all albums that have been found so far.
-        /// </summary>
-        /// <returns>A list of unique <see cref="AlbumMetadata"/>s.</returns>
-        public Task<IReadOnlyList<AlbumMetadata>> GetAlbumMetadata()
-        {
-            var albums = _fileMetadata.Select(c => c.AlbumMetadata).PruneNull();
-            return Task.FromResult<IReadOnlyList<AlbumMetadata>>(albums.ToList());
-        }
-
-        /// <summary>
-        /// Gets all artist that have been found so far.
-        /// </summary>
-        /// <returns>A list of unique <see cref="ArtistMetadata"/>s.</returns>
-        public Task<IReadOnlyList<ArtistMetadata>> GetArtistMetadata()
-        {
-            var artists = _fileMetadata.Select(c => c.ArtistMetadata).PruneNull();
-            return Task.FromResult<IReadOnlyList<ArtistMetadata>>(artists.ToList());
-        }
-
-        /// <summary>
-        /// Gets all tracks that have been found so far.
-        /// </summary>
-        /// <returns>A list of unique <see cref="TrackMetadata"/>s.</returns>
-        public Task<IReadOnlyList<TrackMetadata>> GetTrackMetadata()
-        {
-            var tracks = _fileMetadata.Select(c => c.TrackMetadata).PruneNull();
-            return Task.FromResult<IReadOnlyList<TrackMetadata>>(tracks.ToList());
-        }
-
         private void ReleaseUnmanagedResources()
         {
             DetachEvents();
@@ -525,14 +500,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             _filesScannedNotification = RaiseProcessingNotification();
 
-            // Parallel scanning is disabled due to excessive GC's freezing the UI thread after moving relational code into Repositories.
-            // Potential solution: batch emit the processed file metadata.
-            // await allDiscoveredFiles.InParallel(ProcessFile);
-            while (allDiscoveredFiles.Count > 0)
-            {
-                var file = allDiscoveredFiles.Dequeue();
-                await ProcessFile(file);
-            }
+            await allDiscoveredFiles.InParallel(ProcessFile);
 
             _filesScannedNotification.Dismiss();
         }
@@ -574,14 +542,28 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 return;
             }
 
-            lock (_fileMetadata)
-            {
-                _fileMetadata.Add(metadata);
-            }
+            await _batchLock.WaitAsync();
+
+            _batchMetadataToEmit.Add(metadata);
+            _batchLock.Release();
+
+            _ = HandleChanged();
 
             FilesProcessed++;
+        }
 
-            FileMetadataAdded?.Invoke(this, metadata);
+        private async Task HandleChanged()
+        {
+            await _batchLock.WaitAsync();
+
+            if (_batchMetadataToEmit.Count < 100 && !await Flow.Debounce(_emitDebouncerId, TimeSpan.FromSeconds(5)))
+                return;
+
+            FileMetadataAdded?.Invoke(this, _batchMetadataToEmit.ToArray());
+
+            _batchMetadataToEmit.Clear();
+
+            _batchLock.Release();
         }
 
         private Notification RaiseStructureNotification()

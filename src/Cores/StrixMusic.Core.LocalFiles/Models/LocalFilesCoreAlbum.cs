@@ -14,7 +14,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <summary>
-    /// A LocalFileCore implementation of <see cref="ICoreAlbum"/>.
+    /// Wraps around <see cref="ArtistMetadata"/> to provide album information extracted from a file to the Strix SDK.
     /// </summary>
     public class LocalFilesCoreAlbum : ICoreAlbum, IDisposable
     {
@@ -117,39 +117,42 @@ namespace StrixMusic.Core.LocalFiles.Models
             ArtistItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
         }
 
-        private void Albums_MetadataUpdated(object sender, AlbumMetadata e)
+        private void Albums_MetadataUpdated(object sender, IEnumerable<AlbumMetadata> e)
         {
-            Guard.IsNotNull(e.ArtistIds, nameof(e.ArtistIds));
-            Guard.IsNotNull(e.TrackIds, nameof(e.TrackIds));
+            foreach (var metadata in e)
+            {
+                if (metadata.Id != Id)
+                    return;
 
-            if (e.Id != Id)
-                return;
+                Guard.IsNotNull(metadata.ArtistIds, nameof(metadata.ArtistIds));
+                Guard.IsNotNull(metadata.TrackIds, nameof(metadata.TrackIds));
 
-            var previousData = _albumMetadata;
-            _albumMetadata = e;
+                var previousData = _albumMetadata;
+                _albumMetadata = metadata;
 
-            if (e.Title != previousData.Title)
-                NameChanged?.Invoke(this, Name);
+                if (metadata.Title != previousData.Title)
+                    NameChanged?.Invoke(this, Name);
 
-            if (e.ImagePath != previousData.ImagePath)
-                HandleImageChanged(e);
+                if (metadata.ImagePath != previousData.ImagePath)
+                    HandleImageChanged(metadata);
 
-            if (e.DatePublished != previousData.DatePublished)
-                DatePublishedChanged?.Invoke(this, DatePublished);
+                if (metadata.DatePublished != previousData.DatePublished)
+                    DatePublishedChanged?.Invoke(this, DatePublished);
 
-            if (e.Description != previousData.Description)
-                DescriptionChanged?.Invoke(this, Description);
+                if (metadata.Description != previousData.Description)
+                    DescriptionChanged?.Invoke(this, Description);
 
-            if (e.Duration != previousData.Duration)
-                DurationChanged?.Invoke(this, Duration);
+                if (metadata.Duration != previousData.Duration)
+                    DurationChanged?.Invoke(this, Duration);
 
-            // TODO genres, post genres do-over
+                // TODO genres, post genres do-over
 
-            if (e.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
-                TrackItemsCountChanged?.Invoke(this, e.TrackIds.Count);
+                if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
+                    TrackItemsCountChanged?.Invoke(this, metadata.TrackIds.Count);
 
-            if (e.ArtistIds.Count != (previousData.ArtistIds?.Count ?? 0))
-                ArtistItemsCountChanged?.Invoke(this, e.ArtistIds.Count);
+                if (metadata.ArtistIds.Count != (previousData.ArtistIds?.Count ?? 0))
+                    ArtistItemsCountChanged?.Invoke(this, metadata.ArtistIds.Count);
+            }
         }
 
         private void HandleImageChanged(AlbumMetadata e)
