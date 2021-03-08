@@ -1,9 +1,8 @@
 ﻿using System;
-using Windows.UI.Xaml;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// A view model for items that are shown in a <see cref="AbstractMutableDataListViewModel"/>.
@@ -20,8 +19,8 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
             RequestRemoveCommand = new RelayCommand(RemoveSelf);
             RequestAddCommand = new RelayCommand(RequestAdd);
 
-            VisibleIfIsAddItem = Id == "requestAddItem" ? Visibility.Visible : Visibility.Collapsed;
-            CollapsedIfIsAddItem = Id == "requestAddItem" ? Visibility.Collapsed : Visibility.Visible;
+            VisibleIfIsAddItem = Id == "requestAddItem";
+            CollapsedIfIsAddItem = Id == "requestAddItem";
         }
 
         private void RemoveSelf() => ItemRemoved?.Invoke(this, EventArgs.Empty);
@@ -49,14 +48,13 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         public IRelayCommand RequestAddCommand { get; set; }
 
         /// <summary>
-        /// If the current data is for the item is used to request a new item, this returns <see cref="Visibility.Collapsed"/>.
+        /// If the current data is for the item is used to request a new item.
         /// </summary>
-        public Visibility CollapsedIfIsAddItem { get; }
-
+        public bool CollapsedIfIsAddItem { get; }
 
         /// <summary>
-        /// If the current data is for the item is used to request a new item, this returns <see cref="Visibility.Visible"/>.
+        /// If the current data is for the item is used to request a new item.
         /// </summary>
-        public Visibility VisibleIfIsAddItem { get; }
+        public bool VisibleIfIsAddItem { get; }
     }
 }

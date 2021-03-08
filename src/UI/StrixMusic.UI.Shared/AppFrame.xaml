@@ -8,9 +8,7 @@
     xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:controls="using:OwlCore.Uno.Controls"
     xmlns:abstractUIControls="using:OwlCore.Uno.AbstractUI.Controls"
-    xmlns:notificationModels="using:StrixMusic.Sdk.Services.Notifications"
-    xmlns:styles="using:StrixMusic.Sdk.Uno.Styles"
-    xmlns:viewModels="using:StrixMusic.Sdk.Uno.ViewModels"
+    xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
     mc:Ignorable="d"
     Loaded="AppFrame_OnLoaded">
 
@@ -19,10 +17,10 @@
 
         <controls:ContentOverlay x:Name="OverlayPresenter"/>
 
-        <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}" Margin="25,30" HorizontalAlignment="Right" VerticalAlignment="Top" 
-                      Visibility="{x:Bind convertvis:NotBoolToVisibilityConverter.Convert(NotificationsViewModel.IsHandled), Mode=OneWay}">
+        <ItemsControl ItemsSource="{x:Bind ViewModel.Notifications.Notifications, Mode=OneWay}" Margin="25,30" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                      Visibility="{x:Bind convertvis:NotBoolToVisibilityConverter.Convert(ViewModel.Notifications.IsHandled), Mode=OneWay}">
             <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:NotificationViewModel">
+                <DataTemplate x:DataType="notificationViewModels:NotificationViewModel">
                     <Grid Margin="15" Width="300"
                           Background="{ThemeResource SystemChromeMediumHighColor}">
                         <Grid.ColumnDefinitions>

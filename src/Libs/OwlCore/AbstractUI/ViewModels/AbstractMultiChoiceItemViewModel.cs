@@ -2,7 +2,7 @@
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// A view model for items that are shown in a <see cref="AbstractMutableDataListViewModel"/>.

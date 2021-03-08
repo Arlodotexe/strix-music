@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Windows.UI.Xaml;
 using OwlCore.AbstractUI.Models;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// A ViewModel for the <see cref="AbstractDataList"/>.
@@ -21,7 +20,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
             : base(model)
         {
             _model = model;
-            Items = new ObservableCollection<AbstractUIMetadataViewModel>(_model.Items.Select(x=> new AbstractUIMetadataViewModel(x)));
+            Items = new ObservableCollection<AbstractUIMetadataViewModel>(_model.Items.Select(x => new AbstractUIMetadataViewModel(x)));
         }
 
         /// <summary>
@@ -39,16 +38,13 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         public AbstractDataListPreferredDisplayMode PreferredDisplayMode => _model.PreferredDisplayMode;
 
         /// <summary>
-        /// Checks the current display mode by name.
+        /// If true, the <see cref="PreferredDisplayMode"/> is a list.
         /// </summary>
-        /// <param name="name">The string representation of the <see cref="AbstractDataListPreferredDisplayMode"/> value.</param>
-        /// <returns>A boolean indicating if the given string matches the current <see cref="PreferredDisplayMode"/>.</returns>
-        public Visibility IsDisplayMode(string name)
-        {
-            if (!Enum.TryParse<AbstractDataListPreferredDisplayMode>(name, out var result))
-                return Visibility.Collapsed;
+        public bool IsList => PreferredDisplayMode == AbstractDataListPreferredDisplayMode.List;
 
-            return result == PreferredDisplayMode ? Visibility.Visible : Visibility.Collapsed;
-        }
+        /// <summary>
+        /// If true, the <see cref="PreferredDisplayMode"/> is a grid.
+        /// </summary>
+        public bool IsGrid => PreferredDisplayMode == AbstractDataListPreferredDisplayMode.Grid;
     }
 }

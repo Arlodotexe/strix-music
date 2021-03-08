@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:abstractUIControls="using:OwlCore.Uno.AbstractUI.Controls"
-    xmlns:viewModels="using:StrixMusic.Sdk.Uno.ViewModels"
+    xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
     mc:Ignorable="d">
 
     <shells:Shell.Resources>
@@ -240,7 +240,7 @@
 
         <ItemsControl ItemsSource="{x:Bind NotificationsViewModel.Notifications, Mode=OneWay}">
             <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:NotificationViewModel">
+                <DataTemplate x:DataType="notificationViewModels:NotificationViewModel">
                     <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="40" Width="300"
                           Background="{ThemeResource SystemAccentColorDark1}">
                         <Grid.ColumnDefinitions>

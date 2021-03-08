@@ -23,7 +23,7 @@ namespace OwlCore.Uno.Converters.Bools.Visible
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return Convert(value is bool bValue ? bValue : false);
+            return Convert(value is bool bValue && bValue);
         }
 
         /// <inheritdoc/>

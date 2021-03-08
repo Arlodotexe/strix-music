@@ -2,13 +2,11 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// A ViewModel for the <see cref="AbstractDataList"/>.
@@ -26,9 +24,9 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         {
             _model = model;
 
-            using (OwlCore.Threading.PrimaryContext)
+            using (Threading.PrimaryContext)
             {
-                RequestNewItemCommand = new RelayCommand<ItemClickEventArgs>(RequestNewItem);
+                RequestNewItemCommand = new RelayCommand<AbstractMutableDataListItemViewModel>(RequestNewItem);
 
                 var itemViewModels = _model.Items.Select(item => new AbstractMutableDataListItemViewModel(item));
                 Items = new ObservableCollection<AbstractMutableDataListItemViewModel>(itemViewModels);
@@ -79,7 +77,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
 
         private void Model_ItemsChanged(object sender, System.Collections.Generic.IReadOnlyList<CollectionChangedItem<AbstractUIMetadata>> addedItems, System.Collections.Generic.IReadOnlyList<CollectionChangedItem<AbstractUIMetadata>> removedItems)
         {
-            using (OwlCore.Threading.PrimaryContext)
+            using (Threading.PrimaryContext)
             {
                 foreach (var item in addedItems)
                 {
@@ -119,30 +117,14 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         public AbstractDataListPreferredDisplayMode PreferredDisplayMode => _model.PreferredDisplayMode;
 
         /// <summary>
-        /// Checks the current display mode by name.
-        /// </summary>
-        /// <param name="name">The string representation of the <see cref="AbstractDataListPreferredDisplayMode"/> value.</param>
-        /// <returns>A boolean indicating if the given string matches the current <see cref="PreferredDisplayMode"/>.</returns>
-        public Visibility IsDisplayMode(string name)
-        {
-            if (!Enum.TryParse<AbstractDataListPreferredDisplayMode>(name, out var result))
-                return Visibility.Collapsed;
-
-            return result == PreferredDisplayMode ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        /// <summary>
         /// Called when the user wants to add a new item in the list.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the added item.</returns>
         public void RequestNewItem() => _model.RequestNewItem();
 
-        private void RequestNewItem(ItemClickEventArgs args)
+        private void RequestNewItem(AbstractMutableDataListItemViewModel selectedItem)
         {
-            if (!(args.ClickedItem is AbstractMutableDataListItemViewModel viewModel))
-                return;
-
-            var index = Items.IndexOf(viewModel);
+            var index = Items.IndexOf(selectedItem);
 
             if (index == Items.Count - 1)
                 RequestNewItem();
@@ -199,6 +181,6 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         }
 
         /// <inheritdoc cref="RequestNewItem" />
-        public IRelayCommand<ItemClickEventArgs> RequestNewItemCommand;
+        public IRelayCommand<AbstractMutableDataListItemViewModel> RequestNewItemCommand;
     }
 }

@@ -1,8 +1,8 @@
-﻿using OwlCore.Uno.AbstractUI.ViewModels;
-using OwlCore.AbstractUI.Models;
+﻿using OwlCore.AbstractUI.Models;
 using System.Collections.ObjectModel;
+using OwlCore.AbstractUI.ViewModels;
 
-namespace StrixMusic.Sdk.Uno.ViewModels
+namespace StrixMusic.Sdk.ViewModels.Notifications
 {
     /// <summary>
     /// A view model for <see cref="AbstractUIElementGroup"/> being used as a Notification.

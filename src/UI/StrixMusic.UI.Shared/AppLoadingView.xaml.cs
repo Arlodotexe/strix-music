@@ -30,6 +30,9 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Uno.Services.NotificationService;
 
 namespace StrixMusic.Shared
 {
@@ -41,14 +44,16 @@ namespace StrixMusic.Shared
         private bool _showingQuip;
         private DefaultSettingsService? _settingsService;
         private LocalizationResourceLoader? _localizationService;
-        private IPlaybackHandlerService? _playbackHandlerService;
+        private PlaybackHandlerService? _playbackHandlerService;
         private IReadOnlyList<CoreAssemblyInfo>? _coreRegistry;
         private Dictionary<string, CoreAssemblyInfo>? _configuredCoreRegistry;
+        private MainPage? _mainPage;
+        private INavigationService<Control>? _navService;
 
         /// <summary>
         /// The ViewModel for this page.
         /// </summary>
-        public MainViewModel ViewModel => CurrentWindow.MainViewModel;
+        public MainViewModel? ViewModel => DataContext as MainViewModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppLoadingView"/> class.
@@ -112,7 +117,10 @@ namespace StrixMusic.Shared
             await InitializeConfiguredCores();
 
             UpdateStatusRaw($"Done loading, navigating to {nameof(MainPage)}");
-            CurrentWindow.NavigationService.NavigateTo(CurrentWindow.AppFrame.MainPage);
+
+            Guard.IsNotNull(_mainPage, nameof(_mainPage));
+
+            CurrentWindow.NavigationService.NavigateTo(_mainPage);
         }
 
         /// <summary>
@@ -297,6 +305,20 @@ namespace StrixMusic.Shared
             UpdateStatus("...");
 
             IServiceCollection services = new ServiceCollection();
+
+            _playbackHandlerService = new PlaybackHandlerService();
+            _mainPage = new MainPage();
+
+            var strixDevice = new StrixDevice(_playbackHandlerService);
+            _playbackHandlerService.SetStrixDevice(strixDevice);
+
+            services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
+            services.AddSingleton<INotificationService, NotificationService>();
+            services.AddSingleton<IPlaybackHandlerService>(_playbackHandlerService);
+            services.AddSingleton(strixDevice);
+            services.AddSingleton<MainViewModel>();
+            services.AddSingleton(_mainPage);
+
             _localizationService = new LocalizationResourceLoader();
             _localizationService.RegisterProvider(Constants.Localization.StartupResource);
             _localizationService.RegisterProvider(Constants.Localization.QuipsResource);
@@ -325,20 +347,23 @@ namespace StrixMusic.Shared
             services.AddSingleton<CacheServiceBase>(cacheFileSystemService);
             services.AddSingleton<ISharedFactory, SharedFactory>();
             services.AddSingleton<IFileSystemService>(fileSystemService);
-            services.AddSingleton<INotificationService>(CurrentWindow.AppFrame.NotificationService);
-
-            // Initialized in AppFrame to supplement the default playback device / MainViewModel.
-            _playbackHandlerService = CurrentWindow.AppFrame.PlaybackHandler;
-
-            services.AddSingleton(_playbackHandlerService);
+            services.AddSingleton<INotificationService, NotificationService>();
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
-
-            // UpdateStatus("Initializing filesystem");
             UpdateStatus("InitFilesystem");
 
             await fileSystemService.InitAsync();
             await cacheFileSystemService.InitAsync();
+
+            var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
+            _navService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
+            _mainPage = Ioc.Default.GetRequiredService<MainPage>();
+
+            DataContext = mainViewModel;
+            Bindings.Update();
+
+            _navService.RegisterCommonPage(_mainPage);
+            App.AppFrame.SetupMainViewModel(mainViewModel);
         }
 
         private Task InitializeOutOfBoxSetupIfNeeded()
@@ -383,7 +408,8 @@ namespace StrixMusic.Shared
 
             UpdateStatus("InitCores");
 
-            await CurrentWindow.MainViewModel.InitializeCoresAsync(cores, CreateInitialCoreServices);
+            var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
+            await mainViewModel.InitializeCoresAsync(cores, CreateInitialCoreServices);
 
             // UpdateStatus("Setting up media players");
             UpdateStatus("SetupMedia");
@@ -407,10 +433,11 @@ namespace StrixMusic.Shared
         private void SetupMediaPlayer(ICore core)
         {
             Guard.IsNotNull(_playbackHandlerService, nameof(_playbackHandlerService));
+            Guard.IsNotNull(_mainPage, nameof(_mainPage));
 
             if (core.CoreConfig.PlaybackType == MediaPlayerType.Standard)
             {
-                var mediaPlayerElement = CurrentWindow.AppFrame.MainPage.CreateMediaPlayerElement();
+                var mediaPlayerElement = _mainPage.CreateMediaPlayerElement();
 
                 _playbackHandlerService.RegisterAudioPlayer(new AudioPlayerService(mediaPlayerElement), core);
             }

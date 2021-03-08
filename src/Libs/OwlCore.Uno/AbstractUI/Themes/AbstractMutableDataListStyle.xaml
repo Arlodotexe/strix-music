@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="OwlCore.Uno.AbstractUI.Themes.AbstractMutableDataListStyle"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:abstractUI="using:OwlCore.Uno.AbstractUI.ViewModels"
+    xmlns:abstractUI="using:OwlCore.AbstractUI.ViewModels"
     xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:themes="using:OwlCore.Uno.AbstractUI.Themes"
@@ -73,7 +73,7 @@
                                     Visibility="{Binding CollapsedIfIsAddItem}">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="Click">
-                                    <core:InvokeCommandAction Command="{Binding RequestRemoveCommand}" />
+                                    <core:InvokeCommandAction Command="{Binding RequestRemoveCommand}" CommandParameter="{Binding}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </Button>

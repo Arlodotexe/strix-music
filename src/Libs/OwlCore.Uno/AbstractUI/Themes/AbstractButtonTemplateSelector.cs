@@ -4,7 +4,7 @@ using System.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Uno.AbstractUI.ViewModels;
+using OwlCore.AbstractUI.ViewModels;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Uno.AbstractUI.Controls;
 using Windows.UI.Xaml.Data;

@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
-using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.AbstractUI.Models;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// Base view model for all AbstractUI elements.
     /// </summary>
     public class AbstractUIViewModelBase : ObservableObject, IDisposable
     {
-        private ImageSource _imageSource;
-
         /// <summary>
         /// Creates a new instance of <see cref="AbstractUIViewModelBase"/>.
         /// </summary>
@@ -24,7 +16,6 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         public AbstractUIViewModelBase(AbstractUIBase model)
         {
             Model = model;
-            _imageSource = SetupImageSource(model);
             AttachEvents();
         }
 
@@ -46,19 +37,15 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
             Model.TooltipTextChanged -= Model_TooltipTextChanged;
         }
 
-        private void Model_TooltipTextChanged(object sender, string? e) => _ = OwlCore.Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TooltipText)));
+        private void Model_TooltipTextChanged(object sender, string? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TooltipText)));
 
-        private void Model_TitleChanged(object sender, string? e) => _ = OwlCore.Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Title)));
+        private void Model_TitleChanged(object sender, string? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Title)));
 
-        private void Model_SubtitleChanged(object sender, string? e) => _ = OwlCore.Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Subtitle)));
+        private void Model_SubtitleChanged(object sender, string? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Subtitle)));
 
-        private void Model_IconCodeChanged(object sender, string? e) => _ = OwlCore.Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IconCode)));
+        private void Model_IconCodeChanged(object sender, string? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IconCode)));
 
-        private void Model_ImagePathChanged(object sender, string? e)
-        {
-            _imageSource = SetupImageSource(Model);
-            _ = OwlCore.Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(ImageSource)));
-        }
+        private void Model_ImagePathChanged(object sender, string? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(ImageSource)));
 
         /// <summary>
         /// The proxied model used by this class.
@@ -113,10 +100,10 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         /// <summary>
         /// An image associated with this item (optional)
         /// </summary>
-        public ImageSource ImageSource
+        public string? ImageSource
         {
-            get => _imageSource;
-            set => SetProperty(_imageSource, value, _imageSource, (u, n) => _imageSource = n);
+            get => Model.ImagePath;
+            set => SetProperty(Model.ImagePath, value, Model, (u, n) => Model.ImagePath = n);
         }
 
         /// <summary>
@@ -124,53 +111,9 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         /// </summary>
         public bool ImageSourceIsValid { get; set; }
 
-        private ImageSource SetupImageSource(AbstractUIBase model)
-        {
-            if (Uri.TryCreate(model.ImagePath ?? string.Empty, UriKind.RelativeOrAbsolute, out Uri uri) && string.IsNullOrWhiteSpace(model.ImagePath))
-            {
-                // If there's no image set, create a 1x1 transparent image as a placeholder.
-                // This ensures that bindings won't fail because of an unexpected null value.
-                ImageSourceIsValid = false;
-                return CreateEmptyImage();
-            }
-
-            ImageSourceIsValid = true;
-
-            var ext = Path.GetExtension(model.ImagePath);
-
-            if (ext == ".svg")
-            {
-                return new SvgImageSource(uri);
-            }
-
-            return new BitmapImage(uri)
-            {
-                DecodePixelType = DecodePixelType.Logical
-            };
-        }
-
-        /// <summary>
-        /// Creates an image with only a 1x1 transparent pixel.
-        /// </summary>
-        /// <returns>The <see cref="ImageSource"/> of the created image.</returns>
-        [Pure]
-        private ImageSource CreateEmptyImage()
-        {
-            var bytes = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=");
-            var buffer = bytes.AsBuffer();
-            var stream = buffer.AsStream();
-            var randomStream = stream.AsRandomAccessStream();
-            randomStream.Seek(0);
-
-            var image = new BitmapImage();
-            image.SetSourceAsync(randomStream).AsTask();
-
-            return image;
-        }
-
         private void ReleaseUnmanagedResources()
         {
-            // TODO release unmanaged resources here
+            // Release unmanaged resources here
             DetachEvents();
         }
 
@@ -180,9 +123,6 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
             ReleaseUnmanagedResources();
             if (disposing)
             {
-#if __ANDROID__ || __WASM__
-                _imageSource.Dispose();
-#endif
             }
         }
 

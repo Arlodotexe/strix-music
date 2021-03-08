@@ -4,7 +4,7 @@
     x:Class="OwlCore.Uno.AbstractUI.Themes.AbstractRichTextBlockStyle"
     xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:abstractUI="using:OwlCore.Uno.AbstractUI.ViewModels"
+    xmlns:abstractUI="using:OwlCore.AbstractUI.ViewModels"
     xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls">
 
     <ResourceDictionary.MergedDictionaries>

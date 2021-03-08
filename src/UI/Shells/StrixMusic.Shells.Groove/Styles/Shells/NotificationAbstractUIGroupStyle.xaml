@@ -5,8 +5,8 @@
     xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:controls="using:OwlCore.Uno.Controls"
     xmlns:abstractcontrols="using:OwlCore.Uno.AbstractUI.Controls"
-    xmlns:abstractUIVm="using:OwlCore.Uno.AbstractUI.ViewModels"
-    xmlns:sdkvms="using:StrixMusic.Sdk.Uno.ViewModels"
+    xmlns:abstractUIVm="using:OwlCore.AbstractUI.ViewModels"
+    xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
     x:Class="StrixMusic.Shells.Groove.Styles.Shells.NotificationAbstractUIGroupStyle">
 
     <Style x:Key="GrooveNotificationAbstractUIGroupStyle" TargetType="abstractcontrols:AbstractUIGroupPresenter">
@@ -16,7 +16,7 @@
                     <ControlTemplate TargetType="abstractcontrols:AbstractUIGroupPresenter">
                         <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                             <ContentControl.ContentTemplate>
-                                <DataTemplate x:DataType="sdkvms:AbstractUINotificationViewModel">
+                                <DataTemplate x:DataType="notificationViewModels:AbstractUINotificationViewModel">
                                     <Grid>
                                         <StackPanel Padding="12">
                                             <TextBlock Text="{x:Bind Title}" FontSize="20" ToolTipService.ToolTip="{x:Bind TooltipText}" />

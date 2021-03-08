@@ -1,6 +1,6 @@
 ﻿using OwlCore.AbstractUI.Models;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// Contains bindable information about an <see cref="AbstractProgressUIElement"/>.
@@ -36,7 +36,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
 
         private void Model_ValueChanged(object sender, double? e)
         {
-            _ = OwlCore.Threading.OnPrimaryThread(() =>
+            _ = Threading.OnPrimaryThread(() =>
             {
                 Value = e ?? 0;
                 IsIndeterminate = e == null;
@@ -45,12 +45,12 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
 
         private void Model_MinimumChanged(object sender, double e)
         {
-            _ = OwlCore.Threading.OnPrimaryThread(() => Minimum = e);
+            _ = Threading.OnPrimaryThread(() => Minimum = e);
         }
 
         private void Model_MaximumChanged(object sender, double e)
         {
-            _ = OwlCore.Threading.OnPrimaryThread(() => Maximum = e);
+            _ = Threading.OnPrimaryThread(() => Maximum = e);
         }
 
         /// <summary>

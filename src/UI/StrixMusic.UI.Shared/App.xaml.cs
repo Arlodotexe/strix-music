@@ -4,6 +4,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace StrixMusic
 {
@@ -13,7 +14,7 @@ namespace StrixMusic
     public sealed partial class App : Application
     {
         /// <summary>
-        /// The internal AppFrame used to host top level app content..
+        /// The internal AppFrame used to host top level app content.
         /// </summary>
         /// <remarks>If/when the app is made to handle multiple instances, this needs to be reworked.</remarks>
         public static AppFrame AppFrame { internal get; set; } = null!;
@@ -43,7 +44,6 @@ namespace StrixMusic
                 // this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-
             if (e.PrelaunchActivated == false)
             {
                 TryEnablePrelaunch();

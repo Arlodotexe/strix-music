@@ -15,15 +15,11 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         private readonly List<Notification> _notifications;
         private int _activeNotifications;
 
-        /// <summary>
-        /// Raised when a new notification needs to be displayed.
-        /// </summary>
-        public event EventHandler<Notification>? NotificationRaised;
+        /// <inheritdoc />
+        internal event EventHandler<Notification>? NotificationRaised;
 
-        /// <summary>
-        /// Raised when the user dismisses a notification.
-        /// </summary>
-        public event EventHandler<Notification>? NotificationDismissed;
+        /// <inheritdoc />
+        internal event EventHandler<Notification>? NotificationDismissed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationService"/> class.
@@ -33,9 +29,21 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
             _notifications = new List<Notification>();
         }
 
-        /// <summary>
-        /// The maximum number of notification that will be raised at once. Dismiss a notification to show remaining notifications in the queue.
-        /// </summary>
+        /// <inheritdoc cref="NotificationRaised"/>
+        event EventHandler<Notification>? INotificationService.NotificationRaised
+        {
+            add => NotificationRaised += value;
+            remove => NotificationRaised -= value;
+        }
+
+        /// <inheritdoc cref="NotificationDismissed"/>
+        event EventHandler<Notification>? INotificationService.NotificationDismissed
+        {
+            add => NotificationDismissed += value;
+            remove => NotificationDismissed -= value;
+        }
+
+        /// <inheritdoc/>
         public int MaxActiveNotifications { get; set; } = 1;
 
         /// <inheritdoc/>

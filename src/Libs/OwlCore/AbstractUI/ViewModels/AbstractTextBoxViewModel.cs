@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.Input;
-using OwlCore;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// A ViewModel for the <see cref="AbstractTextBox"/>.
@@ -26,7 +24,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
             _model = model;
             _id = model.Id + Guid.NewGuid();
 
-            ValueChangedCommand = new RelayCommand<TextBoxTextChangingEventArgs>(HandleValueChanged);
+            ValueChangedCommand = new RelayCommand(HandleValueChanged);
         }
 
         /// <summary>
@@ -58,7 +56,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
             }
         }
 
-        private void HandleValueChanged(TextBoxTextChangingEventArgs args)
+        private void HandleValueChanged()
         {
             SaveValue().FireAndForget();
         }
@@ -75,6 +73,6 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         /// <summary>
         /// Fire to notify that the value of the text box has been changed.
         /// </summary>
-        public IRelayCommand<TextBoxTextChangingEventArgs> ValueChangedCommand;
+        public IRelayCommand ValueChangedCommand;
     }
 }

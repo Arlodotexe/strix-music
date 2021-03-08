@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// Contains bindable information about an <see cref="AbstractBooleanUIElement"/>.

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// A view model for an <see cref="AbstractMultiChoiceUIElement"/>.
@@ -19,7 +18,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         public AbstractMultiChoiceUIElementViewModel(AbstractMultiChoiceUIElement model)
             : base(model)
         {
-            ItemSelectedCommand = new RelayCommand<SelectionChangedEventArgs>(OnItemSelected);
+            ItemSelectedCommand = new RelayCommand<AbstractUIMetadataViewModel>(OnItemSelected);
             Items = new ObservableCollection<AbstractMultiChoiceItemViewModel>(model.Items.Select(x => CreateItemViewModel(x, model)));
 
             SelectedIndex = model.Items.ToOrAsList().IndexOf(model.SelectedItem);
@@ -78,13 +77,11 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
             ItemSelected?.Invoke(this, selectedItem);
         }
 
-        private void OnItemSelected(SelectionChangedEventArgs args)
+        private void OnItemSelected(AbstractUIMetadataViewModel selectedItem)
         {
-            var selectedItem = (AbstractUIMetadataViewModel)args.AddedItems[0];
-
             ItemSelected?.Invoke(this, selectedItem);
 
-            ((AbstractMultiChoiceUIElement)Model).SelectItem((AbstractUIMetadata)selectedItem.Model);
+            Model.Cast<AbstractMultiChoiceUIElement>().SelectItem((AbstractUIMetadata)selectedItem.Model);
         }
 
         /// <summary>
@@ -113,6 +110,6 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         /// <summary>
         /// RelayCommand that raises when the user chooses an item.
         /// </summary>
-        public IRelayCommand<SelectionChangedEventArgs> ItemSelectedCommand;
+        public IRelayCommand<AbstractUIMetadataViewModel> ItemSelectedCommand;
     }
 }

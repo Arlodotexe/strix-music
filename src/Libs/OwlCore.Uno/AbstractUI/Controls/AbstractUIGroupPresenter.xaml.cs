@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using OwlCore.Uno.AbstractUI.ViewModels;
+using OwlCore.AbstractUI.ViewModels;
 using OwlCore.AbstractUI.Models;
 
 namespace OwlCore.Uno.AbstractUI.Controls

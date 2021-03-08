@@ -20,10 +20,6 @@ namespace StrixMusic.Shared
         /// Gets the app-level navigation service.
         /// </summary>
         /// <returns>A <see cref="NavigationService{Control}"/> if found, otherwise <see langword="null"/>.</returns>
-        public static INavigationService<Control> NavigationService => AppFrame.NavigationService;
-
-        /// <inheritdoc cref="MainViewModel"/>
-        /// TODO fix me and remove the singleton
-        public static MainViewModel MainViewModel => MainViewModel.Singleton ?? throw new NullReferenceException();
+        public static INavigationService<Control> NavigationService { get; } = new NavigationService<Control>();
     }
 }

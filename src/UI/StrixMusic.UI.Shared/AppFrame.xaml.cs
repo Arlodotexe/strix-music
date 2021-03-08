@@ -5,15 +5,10 @@ using OwlCore;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Services.Localization;
-using StrixMusic.Sdk.Uno.Services.NotificationService;
-using StrixMusic.Sdk.Uno.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.MediaPlayback.LocalDevice;
-using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Shared
 {
@@ -23,44 +18,14 @@ namespace StrixMusic.Shared
     public sealed partial class AppFrame : UserControl
     {
         /// <summary>
-        /// The navigation service used exclusively by the <see cref="AppFrame"/> to display various top-level app content.
-        /// </summary>
-        public INavigationService<Control> NavigationService { get; }
-
-        /// <summary>
-        /// The notification service used by all cores and shells.
-        /// </summary>
-        public NotificationService NotificationService { get; }
-
-        private LocalizationResourceLoader? _localizationService;
-
-        /// <summary>
-        /// A reference to the <see cref="ILocalizationService"/> used through out the app (except Cores).
-        /// </summary>
-        public LocalizationResourceLoader LocalizationService => _localizationService ??= Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
-
-        /// <summary>
-        /// The <see cref="MainViewModel"/> for the app.
-        /// </summary>
-        public MainViewModel MainViewModel { get; }
-
-        /// <summary>
-        /// The app-wide playback handler.
-        /// </summary>
-        public PlaybackHandlerService PlaybackHandler { get; }
-
-        /// <summary>
-        /// The <see cref="Shared.MainPage"/> displayed in the app.
-        /// </summary>
-        public MainPage MainPage { get; private set; }
-
-        /// <inheritdoc cref="NotificationsViewModel"/>
-        public NotificationsViewModel NotificationsViewModel { get; set; }
-
-        /// <summary>
         /// The Window handle this AppFrame was created on.
         /// </summary>
-        public Window Window { get; set; }
+        public Window Window { get; } = Window.Current;
+
+        /// <summary>
+        /// The root view model used throughout the app.
+        /// </summary>
+        public MainViewModel? ViewModel => DataContext as MainViewModel;
 
         /// <summary>
         /// Creates a new instance of <see cref="AppFrame"/>.
@@ -69,54 +34,51 @@ namespace StrixMusic.Shared
         {
             this.InitializeComponent();
 
-            Window = Window.Current;
-
             Threading.SetPrimarySynchronizationContext(SynchronizationContext.Current);
             Threading.SetPrimaryThreadInvokeHandler(a => Window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => a()).AsTask());
-
-            NavigationService = new NavigationService<Control>();
-            NotificationService = new NotificationService();
-
-            NotificationsViewModel = new NotificationsViewModel(NotificationService);
-
-            // These are needed to construct MainViewModel and not disturb nullability through the project.
-            PlaybackHandler = new PlaybackHandlerService();
-            var strixDevice = new StrixDevice(PlaybackHandler);
-            PlaybackHandler.SetStrixDevice(strixDevice);
-
-            MainViewModel = new MainViewModel(strixDevice);
-
-            MainPage = new MainPage();
-
-            NavigationService.RegisterCommonPage(MainPage);
 
             AttachEvents();
         }
 
+        /// <summary>
+        /// Setup handling of any app-level content that requires an instance of a <see cref="MainViewModel"/>..
+        /// </summary>
+        public void SetupMainViewModel(MainViewModel mainViewModel)
+        {
+            mainViewModel.AppNavigationRequested += MainViewModel_AppNavigationRequested;
+
+            DataContext = mainViewModel;
+            this.Bindings.Update();
+        }
+
         private void AttachEvents()
         {
+            CurrentWindow.NavigationService.NavigationRequested += NavServiceOnNavigationRequested;
             Unloaded += AppFrame_Unloaded;
-            CurrentWindow.MainViewModel.AppNavigationRequested += MainViewModel_AppNavigationRequested;
         }
 
         private void DetachEvents()
         {
             Unloaded -= AppFrame_Unloaded;
+            CurrentWindow.NavigationService.NavigationRequested -= NavServiceOnNavigationRequested;
         }
 
         private void MainViewModel_AppNavigationRequested(object sender, AppNavigationTarget e)
         {
             if (e == AppNavigationTarget.Settings && sender is ICore core)
             {
+                var navService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
+                var mainPage = Ioc.Default.GetRequiredService<MainPage>();
+
                 // Send the user to the shell settings if a shell is loaded.
-                if (MainPage.ActiveShellModel != null)
+                if (mainPage.ActiveShellModel != null)
                 {
                     // TODO post shell service refactor (need one common, injected ioc where we have access to the navigation service.
                     throw new NotImplementedException();
                 }
                 else
                 {
-                    NavigationService.NavigateTo(typeof(SuperShell), false, core);
+                    navService.NavigateTo(typeof(SuperShell), false, core);
                 }
             }
         }
@@ -125,29 +87,20 @@ namespace StrixMusic.Shared
 
         private void AppFrame_OnLoaded(object sender, RoutedEventArgs e)
         {
-            NavigationService.NavigationRequested += NavServiceOnNavigationRequested;
-
             PART_ContentPresenter.Content = new AppLoadingView();
         }
 
         private void NavServiceOnNavigationRequested(object sender, NavigateEventArgs<Control> e)
         {
+            var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
+
             switch (e.Page)
             {
                 case SuperShell superShell:
                     if (e.IsOverlay)
-                    {
-                        OverlayPresenter.Show(
-                            superShell,
-                            LocalizationService[
-                                Constants.Localization.CommonResource,
-                                "Settings"]);
-                    }
+                        OverlayPresenter.Show(superShell, localizationService[Constants.Localization.CommonResource, "Settings"]);
                     else
-                    {
                         PART_ContentPresenter.Content = superShell;
-                    }
-
                     break;
                 case MainPage mainPage:
                     PART_ContentPresenter.Content = mainPage;

@@ -11,12 +11,10 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
-using StrixMusic.Sdk.Uno.Controls;
 using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
-using StrixMusic.Sdk.Uno.ViewModels;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -65,16 +63,16 @@ namespace StrixMusic.Shared
         {
             var services = new ServiceCollection();
 
-            var notificationService = CurrentWindow.AppFrame.NotificationService;
-            var notificationsViewModel = CurrentWindow.AppFrame.NotificationsViewModel;
+            var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
+            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             var localizationService = new LocalizationResourceLoader();
             localizationService.RegisterProvider(Helpers.Constants.Localization.CommonResource);
             localizationService.RegisterProvider(Helpers.Constants.Localization.MusicResource);
 
             services.AddSingleton<INavigationService<Control>>(new NavigationService<Control>());
             services.AddSingleton(localizationService);
-            services.AddSingleton<INotificationService>(notificationService);
-            services.AddSingleton(notificationsViewModel);
+            services.AddSingleton(notificationService);
+            services.AddSingleton(mainViewModel);
 
             shell.InitServices(services);
         }
@@ -167,9 +165,13 @@ namespace StrixMusic.Shared
                 ActiveShellModel = shellAssemblyInfo;
 
                 var shellDataType = Type.GetType(shellAssemblyInfo.AttributeData.ShellTypeAssemblyQualifiedName);
+                Guard.IsNotNull(shellDataType, nameof(shellDataType));
+
                 var shell = CreateShellControl(shellDataType);
 
-                CurrentWindow.AppFrame.NotificationsViewModel.IsHandled = false;
+                var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
+
+                mainViewModel.Notifications.IsHandled = false;
                 InjectServices(shell);
 
                 shell.DataContext = MainViewModel.Singleton;

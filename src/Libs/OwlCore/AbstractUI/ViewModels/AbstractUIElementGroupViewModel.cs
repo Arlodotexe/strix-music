@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.UI.Xaml.Controls;
 using OwlCore.AbstractUI.Models;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// A view model for <see cref="AbstractUIElementGroup"/>.
@@ -48,7 +47,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         /// </summary>
         public IEnumerable<AbstractUIViewModelBase> Items { get; }
 
-        /// <inheritdoc cref="OwlCore.AbstractUI.Models.PreferredOrientation"/>
+        /// <inheritdoc cref="Models.PreferredOrientation"/>
         public PreferredOrientation PreferredOrientation => _model.PreferredOrientation;
     }
 }

@@ -113,7 +113,4 @@
       <Version>2.0.1</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <SourceGeneratorInput Remove="AbstractUI\ViewModels\AbstractMutableDataListItemViewModel.cs" />
-  </ItemGroup>
 </Project>

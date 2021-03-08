@@ -86,3 +86,6 @@ dotnet_diagnostic.CA1062.severity = suggestion
 
 # SA1118: Parameter should not span multiple lines
 dotnet_diagnostic.SA1118.severity = none
+
+# Default severity for analyzer diagnostics with category 'StyleCop.CSharp.ReadabilityRules'
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.ReadabilityRules.severity = none

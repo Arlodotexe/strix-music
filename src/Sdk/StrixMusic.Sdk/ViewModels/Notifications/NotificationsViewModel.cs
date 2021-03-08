@@ -4,23 +4,22 @@ using System.Linq;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore;
 using StrixMusic.Sdk.Services.Notifications;
-using StrixMusic.Sdk.Uno.Services.NotificationService;
 
-namespace StrixMusic.Sdk.Uno.ViewModels
+namespace StrixMusic.Sdk.ViewModels.Notifications
 {
     /// <summary>
-    /// Manages the notifications coming from the <see cref="NotificationService"/>.
+    /// Manages the notifications coming from the <see cref="INotificationService"/>.
     /// </summary>
-    public class NotificationsViewModel : ObservableObject, IDisposable
+    public sealed class NotificationsViewModel : ObservableObject, IDisposable
     {
-        private readonly NotificationService _notificationService;
+        private readonly INotificationService _notificationService;
         private bool _isHandled;
 
         /// <summary>
         /// Creates a new instance of <see cref="NotificationsViewModel"/>.
         /// </summary>
         /// <param name="notificationService"></param>
-        public NotificationsViewModel(NotificationService notificationService)
+        public NotificationsViewModel(INotificationService notificationService)
         {
             _notificationService = notificationService;
 

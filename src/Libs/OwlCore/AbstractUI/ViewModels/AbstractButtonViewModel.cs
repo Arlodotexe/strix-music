@@ -1,10 +1,9 @@
 ﻿using System;
-using Windows.UI.Xaml;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// Abstract button viewmodel.
@@ -22,7 +21,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         {
             _model = model;
 
-            ClickCommand = new RelayCommand<RoutedEventArgs>(ButtonClicked);
+            ClickCommand = new RelayCommand(ButtonClicked);
         }
 
         /// <summary>
@@ -55,13 +54,13 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         /// <summary>
         /// Command for <see cref="AbstractButton"/> click.
         /// </summary>
-        public IRelayCommand<RoutedEventArgs> ClickCommand;
+        public IRelayCommand ClickCommand;
 
         /// <summary>
         /// Button clicked command.
         /// </summary>
         /// <param name="e"></param>
-        private void ButtonClicked(RoutedEventArgs e)
+        private void ButtonClicked()
         {
             _model.Click().FireAndForget();
         }

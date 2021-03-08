@@ -14,7 +14,9 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.ViewModels.Notifications;
 
 namespace StrixMusic.Sdk
 {
@@ -29,12 +31,13 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
-        public MainViewModel(StrixDevice strixDevice)
+        public MainViewModel(StrixDevice strixDevice, INotificationService notificationsService)
         {
             Singleton = this;
             LocalDevice = new DeviceViewModel(strixDevice);
 
             Devices = new ObservableCollection<DeviceViewModel>();
+            Notifications = new NotificationsViewModel(notificationsService);
 
             Cores = new ObservableCollection<CoreViewModel>();
             Users = new ObservableCollection<UserProfileViewModel>();
@@ -259,6 +262,11 @@ namespace StrixMusic.Sdk
         /// Contains data about the cores that are loaded.
         /// </summary>
         public ObservableCollection<CoreViewModel> Cores { get; }
+
+        /// <summary>
+        /// The notifications displayed in the app.
+        /// </summary>
+        public NotificationsViewModel Notifications { get; }
 
         /// <summary>
         /// A consolidated list of all users in the app.

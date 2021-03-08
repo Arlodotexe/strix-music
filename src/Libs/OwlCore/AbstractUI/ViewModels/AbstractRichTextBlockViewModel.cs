@@ -1,20 +1,16 @@
 ﻿using OwlCore.AbstractUI.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Windows.UI.Xaml.Controls;
 
-namespace OwlCore.Uno.AbstractUI.ViewModels
+namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// Represents an abstract <see cref="RichTextBlock"/>.
+    /// ViewModel for <see cref="AbstractRichTextBlock"/>.
     /// </summary>
     public class AbstractRichTextBlockViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractRichTextBlock _model;
 
         /// <summary>
-        /// Creates a new instance of <see cref="RichTextBlock"/>.
+        /// Creates a new instance of <see cref="AbstractRichTextBlockViewModel"/>.
         /// </summary>
         /// <param name="model"></param>
         public AbstractRichTextBlockViewModel(AbstractRichTextBlock model) : base(model)
@@ -23,7 +19,7 @@ namespace OwlCore.Uno.AbstractUI.ViewModels
         }
 
         /// <summary>
-        /// Text to show when the <see cref="RichTextBlock"/>.
+        /// Rich text to display to the user.
         /// </summary>
         public string RichText
         {

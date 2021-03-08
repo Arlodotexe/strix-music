@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="OwlCore.Uno.AbstractUI.Themes.AbstractButtonStyle"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:abstractUI="using:OwlCore.Uno.AbstractUI.ViewModels"
+    xmlns:abstractUI="using:OwlCore.AbstractUI.ViewModels"
     xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
     xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
