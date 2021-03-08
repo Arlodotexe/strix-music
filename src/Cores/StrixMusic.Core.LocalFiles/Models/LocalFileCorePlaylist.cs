@@ -16,11 +16,13 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Core.LocalFiles.Models
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Wraps around <see cref="PlaylistMetadata"/> to provide album information extracted from a file to the Strix SDK.
+    /// </summary>
     public class LocalFileCorePlaylist : ICorePlaylist, IDisposable
     {
-        private PlaylistMetadata _playlistMetadata;
         private readonly IFileMetadataManager _fileMetadataManager;
+        private PlaylistMetadata _playlistMetadata;
 
         /// <summary>
         /// Creates a new instance of <see cref="LocalFileCorePlaylist"/>
@@ -37,7 +39,6 @@ namespace StrixMusic.Core.LocalFiles.Models
             _fileMetadataManager = sourceCore.GetService<IFileMetadataManager>();
 
             Duration = playlistMetadata.Duration ?? default;
-            TotalTracksCount = playlistMetadata.TrackIds?.Count ?? 0;
 
             AttachEvents();
         }
@@ -50,34 +51,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         private void DetachEvents()
         {
             _fileMetadataManager.Playlists.MetadataUpdated -= Albums_MetadataUpdated;
-        }
-
-        private void Albums_MetadataUpdated(object sender, IEnumerable<PlaylistMetadata> e)
-        {
-            foreach (var metadata in e)
-            {
-                if (metadata.Id != Id)
-                    return;
-
-                Guard.IsNotNull(metadata.TrackIds, nameof(metadata.TrackIds));
-
-                var previousData = _playlistMetadata;
-                _playlistMetadata = metadata;
-
-                if (metadata.Title != previousData.Title)
-                    NameChanged?.Invoke(this, Name);
-
-                if (metadata.Description != previousData.Description)
-                    DescriptionChanged?.Invoke(this, Description);
-
-                if (metadata.Duration != previousData.Duration)
-                    DurationChanged?.Invoke(this, Duration);
-
-                // TODO genres, post genres do-over
-
-                if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
-                    TrackItemsCountChanged?.Invoke(this, metadata.TrackIds.Count);
-            }
         }
 
         /// <inheritdoc />
@@ -121,6 +94,9 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
 
         /// <inheritdoc />
         public int TotalImageCount { get; }
@@ -168,7 +144,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public DateTime? AddedAt { get; }
 
         /// <inheritdoc />
-        public int TotalTracksCount { get; }
+        public int TotalTracksCount => _playlistMetadata.TrackIds?.Count ?? 0;
 
         /// <inheritdoc />
         public bool IsPlayTrackCollectionAsyncAvailable => false;
@@ -270,7 +246,16 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+        public Task AddTrackAsync(ICoreTrack track, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ICoreTrack track)
+        {
+            throw new NotSupportedException();
+        }
 
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
@@ -303,23 +288,39 @@ namespace StrixMusic.Core.LocalFiles.Models
             }
         }
 
+        private void Albums_MetadataUpdated(object sender, IEnumerable<PlaylistMetadata> e)
+        {
+            foreach (var metadata in e)
+            {
+                if (metadata.Id != Id)
+                    return;
+
+                Guard.IsNotNull(metadata.TrackIds, nameof(metadata.TrackIds));
+
+                var previousData = _playlistMetadata;
+                _playlistMetadata = metadata;
+
+                if (metadata.Title != previousData.Title)
+                    NameChanged?.Invoke(this, Name);
+
+                if (metadata.Description != previousData.Description)
+                    DescriptionChanged?.Invoke(this, Description);
+
+                if (metadata.Duration != previousData.Duration)
+                    DurationChanged?.Invoke(this, Duration);
+
+                // TODO genres, post genres do-over
+
+                if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
+                    TrackItemsCountChanged?.Invoke(this, metadata.TrackIds.Count);
+            }
+        }
+
         private void ReleaseUnmanagedResources()
         {
             DetachEvents();
         }
 
-        /// <inheritdoc />
-        public Task AddTrackAsync(ICoreTrack track, int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ICoreTrack track)
-        {
-            throw new NotSupportedException();
-        }
-       
         /// <inheritdoc />
         public void Dispose()
         {

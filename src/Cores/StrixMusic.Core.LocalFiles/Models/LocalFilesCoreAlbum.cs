@@ -14,7 +14,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Core.LocalFiles.Models
 {
     /// <summary>
-    /// Wraps around <see cref="ArtistMetadata"/> to provide album information extracted from a file to the Strix SDK.
+    /// Wraps around <see cref="AlbumMetadata"/> to provide album information extracted from a file to the Strix SDK.
     /// </summary>
     public class LocalFilesCoreAlbum : ICoreAlbum, IDisposable
     {
