@@ -45,10 +45,12 @@ namespace StrixMusic.Core.LocalFiles.Models
             _fileMetadataManager.Tracks.MetadataAdded += Tracks_MetadataAdded;
             _fileMetadataManager.Albums.MetadataAdded += Albums_MetadataAdded;
             _fileMetadataManager.Artists.MetadataAdded += Artists_MetadataAdded;
+            _fileMetadataManager.Playlists.MetadataAdded += Playlists_MetadataAdded;
 
             _fileMetadataManager.Tracks.MetadataRemoved += Tracks_MetadataRemoved;
             _fileMetadataManager.Albums.MetadataRemoved += Albums_MetadataRemoved;
             _fileMetadataManager.Artists.MetadataRemoved += Artists_MetadataRemoved;
+            _fileMetadataManager.Playlists.MetadataRemoved += Playlists_MetadataRemoved;
         }
 
         private void DetachEvents()
@@ -58,10 +60,29 @@ namespace StrixMusic.Core.LocalFiles.Models
             _fileMetadataManager.Tracks.MetadataAdded -= Tracks_MetadataAdded;
             _fileMetadataManager.Albums.MetadataAdded -= Albums_MetadataAdded;
             _fileMetadataManager.Artists.MetadataAdded -= Artists_MetadataAdded;
+            _fileMetadataManager.Playlists.MetadataAdded -= Playlists_MetadataAdded;
 
             _fileMetadataManager.Tracks.MetadataRemoved -= Tracks_MetadataRemoved;
             _fileMetadataManager.Albums.MetadataRemoved -= Albums_MetadataRemoved;
             _fileMetadataManager.Artists.MetadataRemoved -= Artists_MetadataRemoved;
+            _fileMetadataManager.Playlists.MetadataRemoved -= Playlists_MetadataRemoved;
+        }
+
+        private void Playlists_MetadataAdded(object sender, IEnumerable<PlaylistMetadata> e)
+        {
+            // ReSharper disable once CollectionNeverUpdated.Local
+            var removedItems = new List<CollectionChangedItem<ICorePlaylistCollectionItem>>();
+            var addedItems = new List<CollectionChangedItem<ICorePlaylistCollectionItem>>();
+
+            foreach (var item in e)
+            {
+                Guard.IsNotNullOrWhiteSpace(item.Id, nameof(item.Id));
+
+                addedItems.Add(new CollectionChangedItem<ICorePlaylistCollectionItem>(InstanceCache.PlayLists.GetOrCreate(item.Id, SourceCore, item), addedItems.Count));
+            }
+
+            TotalPlaylistItemsCount += addedItems.Count - removedItems.Count;
+            PlaylistItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
         private void Tracks_MetadataAdded(object sender, IEnumerable<TrackMetadata> e)
@@ -132,6 +153,12 @@ namespace StrixMusic.Core.LocalFiles.Models
             // Remember to remove from instance cache and dispose the objects being removed after emitted.
         }
 
+        private void Playlists_MetadataRemoved(object sender, IEnumerable<PlaylistMetadata> e)
+        {
+            // TODO. Need to get the index of each item being removed.
+            // Remember to remove from instance cache and dispose the objects being removed after emitted.
+        }
+
         /// <summary>
         /// Determines if collection base is initialized or not.
         /// </summary>
@@ -149,6 +176,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public override string? Description { get; protected set; } = null;
 
+        /// <inheritdoc />?
+        public override event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
+
         /// <inheritdoc />
         public override event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
 
@@ -165,9 +195,17 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public override IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
+        public override async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
-            throw new NotImplementedException();
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+            var playlistsMetadata = await _fileMetadataManager.Playlists.GetPlaylists(offset, limit);
+
+            foreach (var playList in playlistsMetadata)
+            {
+                Guard.IsNotNullOrWhiteSpace(playList.Id, nameof(playList.Id));
+
+                yield return InstanceCache.PlayLists.GetOrCreate(playList.Id, SourceCore, playList);
+            }
         }
 
         /// <inheritdoc/>

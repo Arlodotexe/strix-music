@@ -28,9 +28,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _fileMetadataScanner = new FileMetadataScanner(rootFolder);
 
             Tracks = new TrackRepository(_fileMetadataScanner);
+            Playlists = new PlaylistRepository(_fileMetadataScanner);
             Albums = new AlbumRepository(_fileMetadataScanner, Tracks);
             Artists = new ArtistRepository(_fileMetadataScanner, Tracks);
-            Playlists = new PlaylistRepository();
         }
 
         private static async Task<IFolderData> GetDataStorageFolder(string instanceId)
