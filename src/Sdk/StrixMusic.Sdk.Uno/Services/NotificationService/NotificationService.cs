@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Sdk.Services.Notifications;
+using Windows.UI.Xaml;
 
 namespace StrixMusic.Sdk.Uno.Services.NotificationService
 {
@@ -15,11 +16,21 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         private readonly List<Notification> _notifications;
         private int _activeNotifications;
 
-        /// <inheritdoc />
-        internal event EventHandler<Notification>? NotificationRaised;
+        /// <inheritdoc cref="INotificationService.NotificationRaised" />
+        public event EventHandler<Notification>? NotificationRaised;
 
-        /// <inheritdoc />
-        internal event EventHandler<Notification>? NotificationDismissed;
+        /// <inheritdoc cref="INotificationService.NotificationDismissed" />
+        public event EventHandler<Notification>? NotificationDismissed;
+
+        /// <summary>
+        /// Raised when the notification margins are requested to be changed.
+        /// </summary>
+        public event EventHandler<Thickness>? NotificationMarginChanged;
+
+        /// <summary>
+        /// Raised when the notification alignment is requested to be changed.
+        /// </summary>
+        public event EventHandler<(HorizontalAlignment, VerticalAlignment)>? NotificationAlignmentChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationService"/> class.
@@ -50,7 +61,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         public Notification RaiseNotification(string title, string message)
         {
             string NewGuid() => Guid.NewGuid().ToString();
-            var eg = new AbstractUIElementGroup(NewGuid(), PreferredOrientation.Vertical)
+            var eg = new AbstractUIElementGroup(NewGuid())
             {
                 Title = title,
                 Subtitle = message,
@@ -82,6 +93,25 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
 
                 DismissNotification(index);
             }
+        }
+
+        /// <summary>
+        /// Request that the notification margin be changed.
+        /// </summary>
+        /// <param name="thickness"></param>
+        public void ChangeNotificationMargins(Thickness thickness)
+        {
+            NotificationMarginChanged?.Invoke(this, thickness);
+        }
+
+        /// <summary>
+        /// Request that the notification alignment be changed.
+        /// </summary>
+        /// <param name="horizontalAlignment">The new horizontal alignment.</param>
+        /// <param name="verticalAlignment">The new verical alignment.</param>
+        public void ChangeNotificationAlignment(HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
+        {
+            NotificationAlignmentChanged?.Invoke(this, (horizontalAlignment, verticalAlignment));
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Services.Localization;
+using StrixMusic.Sdk.Uno.Services.NotificationService;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -45,16 +46,36 @@ namespace StrixMusic.Shared
         /// </summary>
         public void SetupMainViewModel(MainViewModel mainViewModel)
         {
-            mainViewModel.AppNavigationRequested += MainViewModel_AppNavigationRequested;
+            AttachEvents(mainViewModel);
 
             DataContext = mainViewModel;
             this.Bindings.Update();
+        }
+
+        /// <summary>
+        /// Setup handling of any app-level content that requires an instance of a <see cref="NotificationService"/>.
+        /// </summary>
+        /// <param name="notificationService"></param>
+        public void SetupNotificationService(NotificationService notificationService)
+        {
+            AttachEvents(notificationService);
         }
 
         private void AttachEvents()
         {
             CurrentWindow.NavigationService.NavigationRequested += NavServiceOnNavigationRequested;
             Unloaded += AppFrame_Unloaded;
+        }
+
+        private void AttachEvents(NotificationService notificationService)
+        {
+            notificationService.NotificationMarginChanged += NotificationService_NotificationMarginChanged;
+            notificationService.NotificationAlignmentChanged += NotificationService_NotificationAlignmentChanged;
+        }
+
+        private void AttachEvents(MainViewModel mainViewModel)
+        {
+            mainViewModel.AppNavigationRequested += MainViewModel_AppNavigationRequested;
         }
 
         private void DetachEvents()
@@ -81,6 +102,17 @@ namespace StrixMusic.Shared
                     navService.NavigateTo(typeof(SuperShell), false, core);
                 }
             }
+        }
+
+        private void NotificationService_NotificationMarginChanged(object sender, Thickness e)
+        {
+            NotificationItems.Margin = e;
+        }
+
+        private void NotificationService_NotificationAlignmentChanged(object sender, (HorizontalAlignment Horizontal, VerticalAlignment Vertical) e)
+        {
+            NotificationItems.HorizontalAlignment = e.Horizontal;
+            NotificationItems.VerticalAlignment = e.Vertical;
         }
 
         private void AppFrame_Unloaded(object sender, RoutedEventArgs e) => DetachEvents();

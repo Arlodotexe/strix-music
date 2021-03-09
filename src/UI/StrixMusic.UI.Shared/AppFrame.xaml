@@ -17,7 +17,7 @@
 
         <controls:ContentOverlay x:Name="OverlayPresenter"/>
 
-        <ItemsControl ItemsSource="{x:Bind ViewModel.Notifications.Notifications, Mode=OneWay}" Margin="25,30" HorizontalAlignment="Right" VerticalAlignment="Top" 
+        <ItemsControl x:Name="NotificationItems" ItemsSource="{x:Bind ViewModel.Notifications.Notifications, Mode=OneWay}" Margin="25,30" HorizontalAlignment="Right" VerticalAlignment="Top"
                       Visibility="{x:Bind convertvis:NotBoolToVisibilityConverter.Convert(ViewModel.Notifications.IsHandled), Mode=OneWay}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="notificationViewModels:NotificationViewModel">

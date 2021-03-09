@@ -18,6 +18,8 @@ using StrixMusic.Sdk.Uno.Services.Localization;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.Uno.Services.NotificationService;
 
 namespace StrixMusic.Shared
 {
@@ -159,6 +161,11 @@ namespace StrixMusic.Shared
         {
             using (Threading.PrimaryContext)
             {
+                var notificationService = Ioc.Default.GetRequiredService<INotificationService>().Cast<NotificationService>();
+
+                notificationService.ChangeNotificationMargins(new Thickness(25, 35, 25, 35));
+                notificationService.ChangeNotificationAlignment(HorizontalAlignment.Right, VerticalAlignment.Top);
+
                 // Removes the current shell.
                 ShellDisplay.Content = null;
 

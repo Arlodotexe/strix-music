@@ -313,7 +313,6 @@ namespace StrixMusic.Shared
             _playbackHandlerService.SetStrixDevice(strixDevice);
 
             services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
-            services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IPlaybackHandlerService>(_playbackHandlerService);
             services.AddSingleton(strixDevice);
             services.AddSingleton<MainViewModel>();
@@ -356,6 +355,7 @@ namespace StrixMusic.Shared
             await cacheFileSystemService.InitAsync();
 
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
+            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _navService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
             _mainPage = Ioc.Default.GetRequiredService<MainPage>();
 
@@ -364,6 +364,7 @@ namespace StrixMusic.Shared
 
             _navService.RegisterCommonPage(_mainPage);
             App.AppFrame.SetupMainViewModel(mainViewModel);
+            App.AppFrame.SetupNotificationService((NotificationService)notificationService);
         }
 
         private Task InitializeOutOfBoxSetupIfNeeded()
