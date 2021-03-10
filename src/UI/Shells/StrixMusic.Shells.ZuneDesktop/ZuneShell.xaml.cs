@@ -20,6 +20,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
+using StrixMusic.Sdk.Uno.Services.NotificationService;
 
 namespace StrixMusic.Shells.ZuneDesktop
 {
@@ -59,6 +60,10 @@ namespace StrixMusic.Shells.ZuneDesktop
 
                 if (service.ImplementationInstance is LocalizationResourceLoader localizationLoaderService)
                     SetupLocalizationService(localizationLoaderService);
+
+                if (service.ImplementationInstance is NotificationService notificationService)
+                    SetupNotificationService(notificationService);
+
             }
 
             return base.InitServices(services);
@@ -75,6 +80,12 @@ namespace StrixMusic.Shells.ZuneDesktop
         private void SetupLocalizationService(LocalizationResourceLoader localizationLoaderService)
         {
             localizationLoaderService.RegisterProvider("StrixMusic.Shells.ZuneDesktop/ZuneSettings");
+        }
+
+        private void SetupNotificationService(NotificationService notificationService)
+        {
+            notificationService.ChangeNotificationAlignment(HorizontalAlignment.Right, VerticalAlignment.Bottom);
+            notificationService.ChangeNotificationMargins(new Thickness(25, 100, 25, 100));
         }
 
         private void ZuneShell_Loaded(object sender, RoutedEventArgs e)
