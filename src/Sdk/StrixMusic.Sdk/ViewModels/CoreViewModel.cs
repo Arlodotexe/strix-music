@@ -60,12 +60,14 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _core.CoreStateChanged += Core_CoreStateChanged;
             _core.DevicesChanged += Core_DevicesChanged;
+            _core.InstanceDescriptorChanged += Core_InstanceDescriptorChanged;
         }
 
         private void DetachEvents()
         {
             _core.CoreStateChanged -= Core_CoreStateChanged;
             _core.DevicesChanged -= Core_DevicesChanged;
+            _core.InstanceDescriptorChanged -= Core_InstanceDescriptorChanged;
         }
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
@@ -76,12 +78,28 @@ namespace StrixMusic.Sdk.ViewModels
             });
         }
 
+        private void Core_InstanceDescriptorChanged(object sender, string e)
+        {
+            OnPropertyChanged(nameof(InstanceDescriptor));
+            InstanceDescriptorChanged?.Invoke(sender, e);
+        }
+
         /// <inheritdoc cref="ICore.CoreState" />
         private void Core_CoreStateChanged(object sender, CoreState e)
         {
             CoreState = e;
 
-            _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(CoreState)));
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                OnPropertyChanged(nameof(CoreState));
+
+                OnPropertyChanged(nameof(IsCoreStateUnloaded));
+                OnPropertyChanged(nameof(IsCoreStateConfiguring));
+                OnPropertyChanged(nameof(IsCoreStateConfigured));
+                OnPropertyChanged(nameof(IsCoreStateLoading));
+                OnPropertyChanged(nameof(IsCoreStateLoaded));
+                OnPropertyChanged(nameof(IsCoreStateFaulted));
+            });
         }
 
         /// <inheritdoc />
@@ -89,6 +107,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="ICore.Name" />
         public string Name => _core.Name;
+
+        /// <inheritdoc />
+        public string InstanceDescriptor => _core.InstanceDescriptor;
 
         /// <inheritdoc cref="ICore.User" />
         public ICoreUser? User => _core.User;
@@ -98,6 +119,36 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="ICore.CoreState" />
         public CoreState CoreState { get; internal set; }
+
+        /// <summary>
+        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Unloaded"/>.
+        /// </summary>
+        public bool IsCoreStateUnloaded => CoreState == CoreState.Unloaded;
+
+        /// <summary>
+        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Configuring"/>.
+        /// </summary>
+        public bool IsCoreStateConfiguring => CoreState == CoreState.Configuring;
+
+        /// <summary>
+        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Configured"/>.
+        /// </summary>
+        public bool IsCoreStateConfigured => CoreState == CoreState.Configured;
+
+        /// <summary>
+        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Loading"/>.
+        /// </summary>
+        public bool IsCoreStateLoading => CoreState == CoreState.Loading;
+
+        /// <summary>
+        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Loaded"/>.
+        /// </summary>
+        public bool IsCoreStateLoaded => CoreState == CoreState.Loaded;
+
+        /// <summary>
+        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Faulted"/>.
+        /// </summary>
+        public bool IsCoreStateFaulted => CoreState == CoreState.Faulted;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreDevice> ICore.Devices => _core.Devices;
@@ -161,6 +212,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<string>? InstanceDescriptorChanged;
 
         /// <inheritdoc />
         public ICore SourceCore => _core.SourceCore;

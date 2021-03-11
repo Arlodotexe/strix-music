@@ -41,7 +41,8 @@ namespace StrixMusic.Core.LocalFiles
         public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; private set; }
 
         /// <inheritdoc/>
-        public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/Strix/logo.svg");
+        public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/LocalFilesCore/Logo.svg");
+
         /// <inheritdoc />
         public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
 

@@ -129,6 +129,8 @@ namespace StrixMusic.Shared
             switch (e.Page)
             {
                 case SuperShell superShell:
+                    superShell.ViewModel = (MainViewModel)DataContext;
+
                     if (e.IsOverlay)
                         OverlayPresenter.Show(superShell, localizationService[Constants.Localization.CommonResource, "Settings"]);
                     else

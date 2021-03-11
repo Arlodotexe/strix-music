@@ -51,6 +51,7 @@
     <None Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
     <None Remove="Controls\ContentOverlay.xaml" />
     <None Remove="Controls\MarqueeTextBlock\MarqueeTextBlock.xaml" />
+    <None Remove="Themes\CenteredPivotHeadersStyle.xaml" />
     <None Remove="Themes\Generic.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +69,7 @@
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
     <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml" />
     <UpToDateCheckInput Remove="Controls\MarqueeTextBlock\MarqueeTextBlock.xaml" />
+    <UpToDateCheckInput Remove="Themes\CenteredPivotHeadersStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\Generic.xaml" />
   </ItemGroup>
   <ItemGroup>

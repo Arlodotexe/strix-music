@@ -14,16 +14,16 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// Abstract UI elements that will be presented to the user for Settings, About, Legal notices, Donation links, etc.
         /// </summary>
-        IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; }
+        public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; }
 
         /// <summary>
         /// A local path or url pointing to a SVG file containing the logo for this core.
         /// </summary>
-        Uri LogoSvgUrl { get; }
+        public Uri LogoSvgUrl { get; }
 
         /// <summary>
         /// The player type supported by this core. <see cref="MediaPlayerType"/> for information on the different types.
         /// </summary>
-        MediaPlayerType PlaybackType { get; }
+        public MediaPlayerType PlaybackType { get; }
     }
 }

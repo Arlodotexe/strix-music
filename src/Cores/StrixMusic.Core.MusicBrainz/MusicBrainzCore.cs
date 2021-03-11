@@ -41,6 +41,9 @@ namespace StrixMusic.Core.MusicBrainz
             User = new MusicBrainzCoreUser(this);
         }
 
+        /// <inheritdoc />
+        public string InstanceDescriptor => "Mock data library.";
+
         /// <inheritdoc/>
         public ICoreConfig CoreConfig { get; }
 
@@ -88,6 +91,9 @@ namespace StrixMusic.Core.MusicBrainz
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<string>? InstanceDescriptorChanged;
 
         /// <summary>
         /// Change the <see cref="CoreState"/>.

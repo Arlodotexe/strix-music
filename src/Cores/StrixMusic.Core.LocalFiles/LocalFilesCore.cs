@@ -38,6 +38,9 @@ namespace StrixMusic.Core.LocalFiles
         }
 
         /// <inheritdoc/>
+        public string InstanceId { get; }
+
+        /// <inheritdoc/>
         public ICoreConfig CoreConfig { get; }
 
         /// <inheritdoc />
@@ -47,7 +50,10 @@ namespace StrixMusic.Core.LocalFiles
         public CoreState CoreState { get; internal set; } = CoreState.Unloaded;
 
         /// <inheritdoc/>
-        public string Name => "LocalFilesCore";
+        public string Name => "Local Files";
+
+        /// <inheritdoc />
+        public string InstanceDescriptor { get; private set; } = string.Empty;
 
         /// <inheritdoc/>
         public ICoreUser? User { get; }
@@ -68,9 +74,6 @@ namespace StrixMusic.Core.LocalFiles
         public ICoreDiscoverables? Discoverables { get; }
 
         /// <inheritdoc/>
-        public string InstanceId { get; }
-
-        /// <inheritdoc/>
         public ICorePlayableCollectionGroup? Pins { get; }
 
         /// <inheritdoc/>
@@ -78,6 +81,9 @@ namespace StrixMusic.Core.LocalFiles
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<string>? InstanceDescriptorChanged;
 
         /// <summary>
         /// Change the <see cref="CoreState"/>.
@@ -117,6 +123,9 @@ namespace StrixMusic.Core.LocalFiles
 
             await coreConfig.SetupServices(services);
             _ = coreConfig.ScanFileMetadata();
+
+            InstanceDescriptor = configuredFolder.Path;
+            InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
 
             ChangeCoreState(CoreState.Loaded);
 

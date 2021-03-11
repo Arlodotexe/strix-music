@@ -35,6 +35,9 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Services\SharedFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\CoreItemStyle.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)SuperShell.xaml.cs">
       <DependentUpon>SuperShell.xaml</DependentUpon>
     </Compile>
@@ -51,6 +54,9 @@
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Styles\CoreItemStyle.xaml">
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)SuperShell.xaml">
       <SubType>Designer</SubType>
@@ -79,13 +85,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\he\Splash Screen.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\LocalFilesCore\Logo.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\en\Wide.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Strix\logo.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Strix\en\Splash Screen.svg" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\MusicBrainz\logo.svg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Assets\Strix\en\" />
   </ItemGroup>
 </Project>

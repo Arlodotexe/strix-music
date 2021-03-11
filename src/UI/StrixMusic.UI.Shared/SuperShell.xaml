@@ -5,41 +5,74 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:StrixMusic.Sdk.Uno.Models"
-    xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
-    xmlns:abstractUIModels="using:OwlCore.AbstractUI.Models"
+    xmlns:styles="using:StrixMusic.Shared.Styles"
     mc:Ignorable="d"
-    MinHeight="250"
-    MinWidth="400"
-    Margin="20,5">
+    MinWidth="500"
+    MinHeight="650"
+    Width="1000"
+    MaxWidth="800">
 
-    <Grid>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <styles:CoreItemStyle />
+                <ResourceDictionary Source="ms-appx:///OwlCore.Uno/Themes/CenteredPivotHeadersStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="SuperShellBackgroundBrush" Color="#E5E5E5"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="SuperShellBackgroundBrush" Color="#171717"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="SuperShellBackgroundBrush" Color="#171717"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+
+    <Grid Background="{ThemeResource SuperShellBackgroundBrush}" BorderBrush="{ThemeResource SystemControlBackgroundChromeBlackLowBrush}" BorderThickness="2">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <!-- TODO: Destroy and replace with the default settings control -->
 
-        <TextBlock x:Uid="/SuperShell/AppSkinTB" Text="App Skin" FontSize="16" Margin="0,0,0,7" />
+        <Image Height="135" Width="600" Margin="0, -15,0,-25">
+            <Image.Source>
+                <SvgImageSource UriSource="ms-appx:///Assets/Strix/en/Wide.svg"
+                                RasterizePixelHeight="135" RasterizePixelWidth="600"/>
+            </Image.Source>
+        </Image>
 
-        <ComboBox x:Name="ShellSelector" Grid.Row="1" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
-                  SelectionChanged="ComboBox_SelectionChanged">
-            <ComboBox.ItemTemplate>
-                <DataTemplate x:DataType="models:ShellAssemblyInfo">
-                    <TextBlock Text="{x:Bind DisplayName}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+        <Pivot Grid.Row="1" Style="{StaticResource CenteredPivotHeadersStyle}">
+            <PivotItem  x:Uid="/SuperShell/AppSkinTB" Header="Skins" Padding="30,20">
+                <StackPanel Spacing="10">
+                    <ComboBox x:Name="ShellSelector" Grid.Row="1" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
+                              SelectionChanged="ComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:ShellAssemblyInfo">
+                                <TextBlock Text="{x:Bind DisplayName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
 
-        <ScrollViewer VerticalScrollMode="Auto" Grid.Row="2">
-            <ItemsControl ItemsSource="{x:Bind AbstractUIGroups}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="abstractUIModels:AbstractUIElementGroup">
-                        <controls:AbstractUIGroupPresenter />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                    <TextBlock Text="(WIP)" FontSize="9" />
+                </StackPanel>
+            </PivotItem>
+            <PivotItem Header="Services">
+                <GridView ItemTemplate="{StaticResource CoreItemTemplate}" ItemsSource="{x:Bind ViewModel.Cores, Mode=OneWay}"
+                          HorizontalAlignment="Center"  Padding="20,30" SelectionMode="None"/>
+            </PivotItem>
+            <PivotItem Header="About">
+                <TextBlock Text="Todo" FontSize="18" />
+            </PivotItem>
+            <PivotItem Header="Advanced">
+                <TextBlock Text="Todo" FontSize="18" />
+            </PivotItem>
+        </Pivot>
 
     </Grid>
 </UserControl>

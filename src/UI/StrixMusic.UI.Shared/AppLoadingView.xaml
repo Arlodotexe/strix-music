@@ -30,8 +30,8 @@
                         <StackPanel>
                             <Image Height="50" Width="50">
                                 <Image.Source>
-                                    <SvgImageSource UriSource="{x:Bind CoreConfig.LogoSvgUrl}"
-                                                    RasterizePixelHeight="150" RasterizePixelWidth="150"/>
+                                    <SvgImageSource UriSource="{x:Bind CoreConfig.LogoSvgUrl, Mode=OneWay}"
+                                                    RasterizePixelHeight="50" RasterizePixelWidth="50"/>
                                 </Image.Source>
                             </Image>
 

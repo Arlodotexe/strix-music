@@ -22,6 +22,11 @@ namespace StrixMusic.Sdk.Data.Core
         /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// A string of text to display to the user to help identify which core instance this is, such as a username or the path to a file location. Longer strings will be truncated as needed.
+        /// </summary>
+        public string InstanceDescriptor { get; }
+
         /// <inheritdoc cref="ICoreConfigBase" />
         public ICoreConfig CoreConfig { get; }
 
@@ -126,5 +131,10 @@ namespace StrixMusic.Sdk.Data.Core
         /// Raised when the contents of <see cref="Devices"/> is changed.
         /// </summary>
         public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
+
+        /// <summary>
+        /// Raised when <see cref="InstanceDescriptor"/> is changed.
+        /// </summary>
+        public event EventHandler<string>? InstanceDescriptorChanged;
     }
 }

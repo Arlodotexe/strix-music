@@ -10,6 +10,7 @@ using StrixMusic.Sdk.Uno.Services;
 using Uno.Extensions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using StrixMusic.Sdk;
 
 namespace StrixMusic.Shared
 {
@@ -22,9 +23,24 @@ namespace StrixMusic.Shared
         private bool _loadingShells = true;
 
         /// <summary>
+        /// Dependency property for <see cref="ViewModel"/>.
+        /// </summary>
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(nameof(ViewModel), typeof(MainViewModel), typeof(SuperShell), new PropertyMetadata(0));
+
+        /// <summary>
         /// The labels for the skins that the user can choose from.
         /// </summary>
         public ObservableCollection<ShellAssemblyInfo> Skins { get; set; }
+
+        /// <summary>
+        /// ViewModel for this control.
+        /// </summary>
+        public MainViewModel ViewModel
+        {
+            get => (MainViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
+        }
 
         /// <summary>
         /// TEMPORARY. Allows binding to a group of <see cref="AbstractUIElementGroup"/>s.
