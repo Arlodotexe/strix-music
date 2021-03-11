@@ -27,7 +27,7 @@
             <GridView ItemsSource="{x:Bind ViewModel.Cores}" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:CoreViewModel">
-                        <StackPanel>
+                        <StackPanel Spacing="8" Width="65">
                             <Image Height="50" Width="50" HorizontalAlignment="Center">
                                 <Image.Source>
                                     <SvgImageSource UriSource="{x:Bind CoreConfig.LogoSvgUrl, Mode=OneWay}"/>
