@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     public class FileMetadataScanner : IAsyncInit, IDisposable
     {
         private readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
-        private readonly string[] _supportedPlaylistFileFormats = { ".zpl" };
+        private readonly string[] _supportedPlaylistFileFormats = { ".zpl", ".wpl", ".smil", ".m3u", ".m3u8", ".vlc", ".xspf", ".asx", ".mpcpl", ".fpl", ".pls", ".aimppl4" };
         private readonly string _emitDebouncerId = Guid.NewGuid().ToString();
         private readonly List<FileMetadata> _batchMetadataToEmit = new List<FileMetadata>();
         private readonly INotificationService _notificationService;
