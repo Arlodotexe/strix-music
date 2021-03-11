@@ -81,19 +81,19 @@
             </Grid.RowDefinitions>
 
             <TextBlock x:Name="HeaderText"
-                       Margin="5,0,0,5"
-                       FontSize="24" />
+                       Margin="5,0,0,0"
+                       FontSize="22" />
 
             <Button Click="CloseButton_OnClick"
                     Background="Transparent"
                     Grid.Row="0" Grid.Column="1"
-                    Margin="0,0,0,5"
+                    Margin="0,0,0,0"
                     Content="&#xE106;"
                     FontFamily="Segoe MDL2 Assets" FontSize="18"
                     Padding="7"
                     HorizontalAlignment="Right" />
 
-            <ContentPresenter x:Name="Presenter" CornerRadius="4" Margin="0,0,0,0" Padding="10,15,10,25"
+            <ContentPresenter x:Name="Presenter" CornerRadius="4" Margin="0,0,0,0" Padding="7,3,7,25"
                               Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
                               VerticalAlignment="Center" HorizontalAlignment="Center"
                               HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>

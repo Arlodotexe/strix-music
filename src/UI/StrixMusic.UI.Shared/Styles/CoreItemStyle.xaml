@@ -31,15 +31,15 @@
 
             <Border BorderBrush="{ThemeResource CoreItemBorderBrush}" BorderThickness="2,2,2,1" CornerRadius="3,3,0,0">
                 <Grid>
-                    <Image Height="100" Width="100" Margin="0,0,0,30" >
+                    <Image Height="85" Width="85" Margin="0,0,0,40">
                         <Image.Source>
                             <SvgImageSource UriSource="{x:Bind CoreConfig.LogoSvgUrl, Mode=OneWay}" />
                         </Image.Source>
                     </Image>
 
                     <StackPanel VerticalAlignment="Bottom" Margin="10,13" Spacing="2">
-                        <TextBlock Text="{x:Bind Name}" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" />
-                        <TextBlock Text="{x:Bind InstanceDescriptor, Mode=OneWay}" TextTrimming="CharacterEllipsis"
+                        <TextBlock Text="{x:Bind Name}" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                        <TextBlock Text="{x:Bind InstanceDescriptor, Mode=OneWay}" TextTrimming="CharacterEllipsis" FontSize="12"
                                    Opacity="0.55" FontWeight="SemiBold" HorizontalAlignment="Center"
                                    ToolTipService.ToolTip="{x:Bind InstanceDescriptor, Mode=OneWay}" ToolTipService.Placement="Mouse"/>
                     </StackPanel>
