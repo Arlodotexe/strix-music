@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -32,9 +33,8 @@ namespace StrixMusic.Sdk.ViewModels
         public CoreViewModel(ICore core)
         {
             _core = core;
+            Ioc.Default.GetRequiredService<MainViewModel>().Cores.Add(this);
 
-            MainViewModel.Singleton?.Cores.Add(this);
-            
             Library = new LibraryViewModel(new MergedLibrary(_core.Library.IntoList()));
 
             if (_core.RecentlyPlayed != null)

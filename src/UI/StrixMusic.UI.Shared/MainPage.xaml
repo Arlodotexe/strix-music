@@ -13,7 +13,7 @@
 
         <ContentPresenter x:Name="ShellDisplay"/>
 
-        <Button Click="Button_Click" Content="&#xF246;" FontFamily="Segoe MDL2 Assets" FontSize="22"
+        <Button Click="Button_Click" Content="&#xF246;" FontFamily="Segoe MDL2 Assets" FontSize="22" Background="Gray" Foreground="White"
                 HorizontalAlignment="Right" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

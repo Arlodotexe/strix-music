@@ -7,10 +7,8 @@
     xmlns:models="using:StrixMusic.Sdk.Uno.Models"
     xmlns:styles="using:StrixMusic.Shared.Styles"
     mc:Ignorable="d"
-    MinWidth="500"
     MinHeight="650"
-    Width="1000"
-    MaxWidth="800">
+    Width="1000">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -40,16 +38,16 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Image Height="135" Width="600" Margin="0, -15,0,-25">
+        <Image Height="135" Width="300" Margin="0, -15,0,-25">
             <Image.Source>
                 <SvgImageSource UriSource="ms-appx:///Assets/Strix/en/Wide.svg"
-                                RasterizePixelHeight="135" RasterizePixelWidth="600"/>
+                                RasterizePixelHeight="135" RasterizePixelWidth="300"/>
             </Image.Source>
         </Image>
 
         <Pivot Grid.Row="1" Style="{StaticResource CenteredPivotHeadersStyle}">
             <PivotItem  x:Uid="/SuperShell/AppSkinTB" Header="Skins" Padding="30,20">
-                <StackPanel Spacing="10">
+                <StackPanel Spacing="10" HorizontalAlignment="Center">
                     <ComboBox x:Name="ShellSelector" Grid.Row="1" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
                               SelectionChanged="ComboBox_SelectionChanged">
                         <ComboBox.ItemTemplate>
@@ -59,12 +57,18 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <TextBlock Text="(WIP)" FontSize="9" />
+                    <TextBlock Text="(WIP - Big plans for this page!)" FontSize="7" />
                 </StackPanel>
             </PivotItem>
             <PivotItem Header="Services">
                 <GridView ItemTemplate="{StaticResource CoreItemTemplate}" ItemsSource="{x:Bind ViewModel.Cores, Mode=OneWay}"
-                          HorizontalAlignment="Center"  Padding="20,30" SelectionMode="None"/>
+                          HorizontalAlignment="Center"  Padding="20,30" SelectionMode="None">
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="FrameworkElement">
+                            <Setter Property="Margin" Value="0 0 20 20"/>
+                        </Style>
+                    </GridView.ItemContainerStyle>
+                </GridView>
             </PivotItem>
             <PivotItem Header="About">
                 <TextBlock Text="Todo" FontSize="18" />

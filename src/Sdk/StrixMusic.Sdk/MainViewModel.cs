@@ -98,6 +98,15 @@ namespace StrixMusic.Sdk
 
             foreach (var core in cores)
             {
+#pragma warning disable CA2000 // Dispose objects before losing scope
+                // Adds itself into Cores.
+                // Library etc. need the CoreViewModel, but are created before CoreViewModel ctor is finished, before the below can be added to the list of MainViewModel.Cores.
+                _ = new CoreViewModel(core);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+            }
+
+            foreach (var core in cores)
+            {
                 await Task.Run(async () =>
                 {
                     var services = await getInjectedCoreServices(core);
@@ -174,10 +183,6 @@ namespace StrixMusic.Sdk
 
             await Threading.OnPrimaryThread(() =>
             {
-                // Registers itself into Cores
-#pragma warning disable CA2000 // Dispose objects before losing scope
-                _ = new CoreViewModel(core);
-#pragma warning restore CA2000 // Dispose objects before losing scope
                 if (core.User != null)
                     Users.Add(new UserViewModel(new CoreUserProxy(core.User)));
 

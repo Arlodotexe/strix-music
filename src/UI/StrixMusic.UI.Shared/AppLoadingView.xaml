@@ -21,21 +21,20 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <ProgressRing IsActive="True" Margin="15,0" />
-                <TextBlock x:Name="PART_Status" Text="Starting up..." FontSize="20" />
+                <TextBlock x:Name="PART_Status" Text="Starting up..." FontSize="20" Foreground="White" />
             </StackPanel>
 
             <GridView ItemsSource="{x:Bind ViewModel.Cores}" Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="viewModels:CoreViewModel">
-                        <StackPanel>
-                            <Image Height="50" Width="50">
+                        <StackPanel Spacing="8" Width="65">
+                            <Image Height="50" Width="50" HorizontalAlignment="Center">
                                 <Image.Source>
-                                    <SvgImageSource UriSource="{x:Bind CoreConfig.LogoSvgUrl, Mode=OneWay}"
-                                                    RasterizePixelHeight="50" RasterizePixelWidth="50"/>
+                                    <SvgImageSource UriSource="{x:Bind CoreConfig.LogoSvgUrl, Mode=OneWay}"/>
                                 </Image.Source>
                             </Image>
 
-                            <TextBlock Text="{x:Bind CoreState, Mode=OneWay}" HorizontalAlignment="Center" />
+                            <TextBlock Text="{x:Bind CoreState, Mode=OneWay}" HorizontalAlignment="Center" Foreground="White" />
                         </StackPanel>
                     </DataTemplate>
                 </GridView.ItemTemplate>
