@@ -212,11 +212,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             try
             {
-                using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
+                using var stream = await fileData.GetStreamAsync();
 
                 using var content = fileData.FileExtension == ".m3u8" ? new StreamReader(stream, Encoding.UTF8) : new StreamReader(stream);
 
-                var metadata = new PlaylistMetadata();
+                var metadata = new PlaylistMetadata()
+                {
+                    Id = fileData.Path.HashMD5Fast(),
+                };
+
                 var trackMetadataTemp = new TrackMetadata();
                 var tracks = new List<TrackMetadata>();
                 if (tracks == null) throw new ArgumentNullException(nameof(tracks));
@@ -291,7 +295,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <remarks>Does not support any application extensions.</remarks>
         private async Task<PlaylistMetadata?> GetXspfMetadata(IFileData fileData)
         {
-            using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
+            using var stream = await fileData.GetStreamAsync();
 
             var doc = XDocument.Load(stream);
             var playlist = doc.Root;
@@ -346,7 +350,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <remarks>Does not support ENTRYREF.</remarks>
         private async Task<PlaylistMetadata?> GetAsxMetadata(IFileData fileData)
         {
-            using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
+            using var stream = await fileData.GetStreamAsync();
 
             var doc = XDocument.Load(stream);
             var asx = doc.Root;
@@ -392,7 +396,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// </summary>
         private async Task<PlaylistMetadata?> GetMpcplMetadata(IFileData fileData)
         {
-            using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
+            using var stream = await fileData.GetStreamAsync();
             using var content = new StreamReader(stream);
 
             var metadata = new PlaylistMetadata();
@@ -449,7 +453,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             try
             {
-                using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
+                using var stream = await fileData.GetStreamAsync();
                 using var content = new BinaryReader(stream);
 
                 var metadata = new PlaylistMetadata();
@@ -637,7 +641,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// </summary>
         private async Task<PlaylistMetadata?> GetPlsMetadata(IFileData fileData)
         {
-            using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
+            using var stream = await fileData.GetStreamAsync();
             using var content = new StreamReader(stream);
 
             var metadata = new PlaylistMetadata();
@@ -710,25 +714,19 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private async Task<PlaylistMetadata?> GetAimpplMetadata(IFileData fileData)
         {
             // Adapted from https://github.com/ApexWeed/aimppl-copy/
-            using var stream = await fileData.GetStreamAsync(FileAccessMode.Read);
+            using var stream = await fileData.GetStreamAsync();
             using var content = new StreamReader(stream);
 
-            var metadata = new PlaylistMetadata();
-
-            var tracks = new List<TrackMetadata>();
-            if (tracks == null) return null;
-
-            var summary = new Dictionary<string, string>();
-            if (summary == null) return null;
-
-            var settings = new Dictionary<string, string>();
-            if (settings == null) return null;
+            var playlist = new PlaylistMetadata()
+            {
+                Id = fileData.Path.HashMD5Fast(),
+            };
 
             var mode = AimpplPlaylistMode.Summary;
             while (!content.EndOfStream)
             {
-                var pos = stream.Position;
-                var line = content.ReadLine();
+                var line = await content.ReadLineAsync();
+
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
 
@@ -751,55 +749,44 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                                     var split = line.IndexOf('=');
                                     var variable = line.Substring(0, split);
                                     var value = line.Substring(split + 1);
-                                    summary.Add(variable, value);
                                     if (variable == "Name")
-                                        metadata.Title = value;
+                                        playlist.Title = value;
+
                                     break;
                                 }
 
                             case AimpplPlaylistMode.Settings:
-                                {
-                                    var split = line.IndexOf('=');
-                                    var variable = line.Substring(0, split);
-                                    var value = line.Substring(split + 1);
-                                    settings.Add(variable, value);
-                                    break;
-                                }
+                                break;
 
                             case AimpplPlaylistMode.Content:
                                 {
-                                    string groupPath;
-
                                     if (string.IsNullOrWhiteSpace(line))
                                         continue;
-                                    if (line.StartsWith("-", StringComparison.InvariantCulture))
-                                        groupPath = line.Substring(1);
-
-                                    var posGroup = stream.Position;
 
                                     if (line.StartsWith("-", StringComparison.InvariantCulture))
                                         break;
 
-                                    var track = new TrackMetadata();
                                     var trackComponents = line.Split('|');
 
-                                    track.Source = new Uri(ResolveFilePath(trackComponents[0], fileData));
-                                    track.Title = trackComponents.ElementAtOrDefault(1);
+                                    // checks if the track path is access-able. This is the fastest way. Not sure if its future proof.
+                                    if (trackComponents.FirstOrDefault() != null && trackComponents[0].Contains(_rootFolder.Path))
+                                    {
+                                        playlist.Duration ??= default;
 
-                                    var genreStr = trackComponents.ElementAtOrDefault(5);
-                                    if (!string.IsNullOrEmpty(genreStr))
-                                        track.Genres = genreStr.IntoList();
-                                    if (uint.TryParse(trackComponents.ElementAtOrDefault(6), out var year))
-                                        track.Year = year;
-                                    if (uint.TryParse(trackComponents.ElementAtOrDefault(7), out var trackNum))
-                                        track.TrackNumber = trackNum;
-                                    if (uint.TryParse(trackComponents.ElementAtOrDefault(8), out var trackDisc))
-                                        track.DiscNumber = trackDisc;
+                                        if (int.TryParse(trackComponents.ElementAtOrDefault(14),
+                                            out var trackDuration))
+                                        {
+                                            playlist.Duration =
+                                                playlist.Duration?.Add(TimeSpan.FromMilliseconds(trackDuration));
+                                        }
 
-                                    if (int.TryParse(trackComponents.ElementAtOrDefault(14), out var trackDuration))
-                                        track.Duration = new TimeSpan(0, 0, 0, 0, trackDuration);
+                                        var trackId = trackComponents[0].HashMD5Fast();
 
-                                    tracks.Add(track);
+                                        playlist.TrackIds ??= new List<string>();
+
+                                        playlist.TrackIds.Add(trackId);
+                                    }
+
                                     break;
                                 }
                             default:
@@ -810,7 +797,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 }
             }
 
-            return metadata;
+            return playlist;
         }
     }
 }
