@@ -78,7 +78,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     break;
 
                 case ".aimppl4":
-                    playlistMetadata = await GetAimpplMetadata(fileData); // NOT TESTED
+                    playlistMetadata = await GetAimpplMetadata(fileData);
                     break;
 
                 default:
@@ -210,83 +210,46 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <remarks>Recognizes both M3U (default encoding) and M3U8 (UTF-8 encoding).</remarks>
         private async Task<PlaylistMetadata?> GetM3UMetadata(IFileData fileData)
         {
-            try
+            using var stream = await fileData.GetStreamAsync();
+
+            using var content = fileData.FileExtension == ".m3u8" ? new StreamReader(stream, Encoding.UTF8) : new StreamReader(stream);
+
+            var playlist = new PlaylistMetadata()
             {
-                using var stream = await fileData.GetStreamAsync();
+                Id = fileData.Path.HashMD5Fast(),
+            };
 
-                using var content = fileData.FileExtension == ".m3u8" ? new StreamReader(stream, Encoding.UTF8) : new StreamReader(stream);
+            while (!content.EndOfStream)
+            {
+                var line = await content.ReadLineAsync();
 
-                var metadata = new PlaylistMetadata()
+                // Handle M3U directives
+                if (line[0] == '#')
                 {
-                    Id = fileData.Path.HashMD5Fast(),
-                };
-
-                var trackMetadataTemp = new TrackMetadata();
-                var tracks = new List<TrackMetadata>();
-                if (tracks == null) throw new ArgumentNullException(nameof(tracks));
-
-                // Make sure the file is either a "pointer" to a folder
-                // or an M3U playlist
-                var firstLine = await content.ReadLineAsync();
-                if (firstLine != "#EXTM3U")
-                {
-                    if (Directory.Exists(firstLine))
+                    // --++ Extended M3U ++--
+                    // Playlist display title
+                    if (line.StartsWith("#PLAYLIST:", StringComparison.InvariantCulture))
                     {
-                        // TODO: Path exists, create a playlist with the tracks in that folder
-                        metadata.Title = Path.GetDirectoryName(firstLine);
-                        metadata.Url = new Uri(firstLine);
-                        return metadata;
-                    }
-                    else
-                    {
-                        // Not a valid M3U playlist
-                        return null;
+                        playlist.Title = line.Split(':')[1];
                     }
                 }
-
-                while (!content.EndOfStream)
+                else
                 {
-                    var line = await content.ReadLineAsync();
+                    // Assume the line is a path to a music file
+                    if (!line.Contains(_rootFolder.Path))
+                        continue;
 
-                    // Handle M3U directives
-                    if (line[0] == '#')
-                    {
-                        // --++ Extended M3U ++--
-                        // Playlist display title
-                        if (line.StartsWith("#PLAYLIST:", StringComparison.InvariantCulture))
-                        {
-                            metadata.Title = line.Split(':')[1];
-                        }
-                        else if (line.StartsWith("#EXTINF:", StringComparison.InvariantCulture))
-                        {
-                            var parameters = line.Split(':')[1].Split(',');
-                            var metaArtistAndTitle = parameters[1].Split('-');
+                    var hash = line.HashMD5Fast();
 
-                            trackMetadataTemp.Duration = new TimeSpan(0, 0, int.Parse(parameters[0]));
-                            trackMetadataTemp.Title = metaArtistAndTitle[1].Trim();
-                        }
-                        else
-                        {
-                            // Directive not recognized, might be a comment
-                        }
-                    }
-                    else
-                    {
-                        // Assume the line is a path to a music file
-                        var fullPath = ResolveFilePath(line, fileData);
-                        trackMetadataTemp.Url = new Uri(fullPath);
-                        tracks.Add(trackMetadataTemp);
+                    playlist.TrackIds ??= new List<string>();
 
-                        trackMetadataTemp = new TrackMetadata();
-                    }
+                    playlist.TrackIds.Add(hash);
                 }
+            }
 
-                return metadata;
-            }
-            catch
-            {
-                return null;
-            }
+            playlist.Title ??= fileData.Name; // If the title is null, filename is assigned because if a playlist has no title its not visible to the user on UI.
+
+            return playlist;
         }
 
         /// <summary>
