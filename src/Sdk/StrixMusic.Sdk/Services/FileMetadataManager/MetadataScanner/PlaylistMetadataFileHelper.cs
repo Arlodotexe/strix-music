@@ -54,11 +54,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 case ".m3u":
                 case ".m3u8":
                 case ".vlc":
-                    playlistMetadata = await GetM3UMetadata(fileData); // NOT TESTED
+                    playlistMetadata = await GetM3UMetadata(fileData);
                     break;
 
                 case ".xspf":
-                    playlistMetadata = await GetXspfMetadata(fileData); // NOT TESTED
+                    playlistMetadata = await GetXspfMetadata(fileData); 
                     break;
 
                 case ".asx":
@@ -256,55 +256,52 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Gets the XSPF metadata from the given file.
         /// </summary>
         /// <remarks>Does not support any application extensions.</remarks>
+        /// <summary>
+        /// Gets the XSPF metadata from the given file.
+        /// </summary>
+        /// <remarks>Does not support any application extensions.</remarks>
         private async Task<PlaylistMetadata?> GetXspfMetadata(IFileData fileData)
         {
             using var stream = await fileData.GetStreamAsync();
 
             var doc = XDocument.Load(stream);
-            var playlist = doc.Root;
-            var xmlns = playlist.GetDefaultNamespace().NamespaceName;
-            var trackList = playlist.Element(XName.Get("trackList", xmlns));
+            var xmlRoot = doc.Root;
+            var xmlns = xmlRoot.GetDefaultNamespace().NamespaceName;
+            var trackList = xmlRoot.Element(XName.Get("trackList", xmlns));
             var trackListElements = trackList.Elements(XName.Get("track", xmlns));
 
             var listElements = trackListElements as XElement[] ?? trackListElements.ToArray();
 
-            if (listElements == null) return null;
-
-            var metadata = new PlaylistMetadata()
+            var playlist = new PlaylistMetadata()
             {
-                Title = playlist.Element(XName.Get("title", xmlns))?.Value,
+                Id= fileData.Path.HashMD5Fast(),
+                Title = xmlRoot.Element(XName.Get("title", xmlns))?.Value,
                 TotalTracksCount = listElements.Length,
-                Description = playlist.Element(XName.Get("annotation", xmlns))?.Value,
+                Description = xmlRoot.Element(XName.Get("annotation", xmlns))?.Value,
             };
-            var url = playlist.Element(XName.Get("info", xmlns))?.Value;
+            var url = xmlRoot.Element(XName.Get("info", xmlns))?.Value;
             if (url != null)
-                metadata.Url = new Uri(url);
-
-            // This is only temporary until we work out how to get track IDs
-            var trackMetadata = new List<TrackMetadata>(metadata.TotalTracksCount);
-            if (trackMetadata == null) return null;
+                playlist.Url = new Uri(url);
 
             foreach (var media in listElements)
             {
-                var dur = int.Parse(media.Element(XName.Get("duration", xmlns))?.Value, CultureInfo.InvariantCulture);
+                var location = media.Element(XName.Get("location", xmlns))?.Value;
 
-                // TODO: Where does the track ID come from?
-                var track = new TrackMetadata
+                if (location != null)
                 {
-                    Title = media.Element(XName.Get("title", xmlns))?.Value,
-                    Url = new Uri(media.Element(XName.Get("location", xmlns))?.Value),
-                    Duration = new TimeSpan(0, 0, 0, 0, dur),
-                    Description = media.Element(XName.Get("annotation", xmlns))?.Value,
-                };
-                var trackNum = media.Element(XName.Get("trackNum", xmlns))?.Value;
-                if (trackNum != null)
-                    track.TrackNumber = uint.Parse(trackNum, CultureInfo.InvariantCulture);
+                    playlist.TrackIds ??= new List<string>();
+                    var localPath = new Uri(location).LocalPath;
 
-                trackMetadata.Add(track);
+                    if (localPath.Contains(_rootFolder.Path))
+                    {
+                        var hash = new Uri(location).LocalPath.HashMD5Fast();
+
+                        playlist.TrackIds.Add(hash);
+                    }
+                }
             }
 
-            return metadata;
-
+            return playlist;
         }
 
         /// <summary>
