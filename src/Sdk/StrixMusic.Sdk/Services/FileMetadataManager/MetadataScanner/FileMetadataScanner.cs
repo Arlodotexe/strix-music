@@ -503,7 +503,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             _filesScannedNotification = RaiseProcessingNotification();
 
-            await allDiscoveredFiles.InParallel(ProcessFile);
+            var playlists = allDiscoveredFiles.Where(c => _supportedPlaylistFileFormats.Contains(c.FileExtension));
+            var musicFiles = allDiscoveredFiles.Where(c => _supportedMusicFileFormats.Contains(c.FileExtension));
+
+            // Making sure the tracks are scanned first.
+            await musicFiles.InParallel(ProcessFile);
+
+            await playlists.InParallel(ProcessFile);
 
             _filesScannedNotification.Dismiss();
         }
