@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
@@ -26,6 +27,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     internal class PlaylistMetadataFileHelper
     {
         private readonly IFolderData _rootFolder;
+        private readonly ITrackRepository _trackRepository;
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistMetadataFileHelper"/>.
@@ -33,6 +35,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         public PlaylistMetadataFileHelper(IFolderData fileCoreRootFolder)
         {
             _rootFolder = fileCoreRootFolder;
+
+            _trackRepository = Ioc.Default.GetRequiredService<ITrackRepository>();
         }
 
         /// <summary>
@@ -58,7 +62,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     break;
 
                 case ".xspf":
-                    playlistMetadata = await GetXspfMetadata(fileData); 
+                    playlistMetadata = await GetXspfMetadata(fileData);
                     break;
 
                 case ".asx":
@@ -239,11 +243,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     if (!line.Contains(_rootFolder.Path))
                         continue;
 
-                    var hash = line.HashMD5Fast();
+                    var hash = await TryGetHashFromExistingTrackRepo(new Uri(line));
 
-                    playlist.TrackIds ??= new List<string>();
+                    if (hash != null)
+                    {
+                        playlist.TrackIds ??= new List<string>();
 
-                    playlist.TrackIds.Add(hash);
+                        playlist.TrackIds.Add(hash);
+                    }
                 }
             }
 
@@ -274,7 +281,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var playlist = new PlaylistMetadata()
             {
-                Id= fileData.Path.HashMD5Fast(),
+                Id = fileData.Path.HashMD5Fast(),
                 Title = xmlRoot.Element(XName.Get("title", xmlns))?.Value,
                 TotalTracksCount = listElements.Length,
                 Description = xmlRoot.Element(XName.Get("annotation", xmlns))?.Value,
@@ -740,11 +747,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                                                 playlist.Duration?.Add(TimeSpan.FromMilliseconds(trackDuration));
                                         }
 
-                                        var trackId = trackComponents[0].HashMD5Fast();
 
-                                        playlist.TrackIds ??= new List<string>();
+                                        var hash = await TryGetHashFromExistingTrackRepo(new Uri(trackComponents[0]));
 
-                                        playlist.TrackIds.Add(trackId);
+                                        if (hash != null)
+                                        {
+                                            playlist.TrackIds ??= new List<string>();
+
+                                            playlist.TrackIds.Add(hash);
+                                        }
                                     }
 
                                     break;
@@ -758,6 +769,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             }
 
             return playlist;
+        }
+
+        private async Task<string?> TryGetHashFromExistingTrackRepo(Uri path)
+        {
+            var tracks = await _trackRepository.GetTracks(0, -1);
+
+            var existingTrack = tracks.FirstOrDefault(c => c.Source?.AbsoluteUri == path.AbsoluteUri);
+
+            if (existingTrack != null)
+                return existingTrack.Id;
+
+            return null;
         }
     }
 }
