@@ -158,5 +158,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
             await Task.CompletedTask;
             yield break;
         }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            return default;
+        }
     }
 }

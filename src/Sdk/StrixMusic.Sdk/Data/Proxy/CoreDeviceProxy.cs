@@ -214,5 +214,8 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public ITrack? NowPlaying { get; private set; }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync() => _source.DisposeAsync();
     }
 }

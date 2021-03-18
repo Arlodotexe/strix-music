@@ -5,6 +5,7 @@ using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Collections;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Core.MusicBrainz.Models;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
@@ -52,9 +53,6 @@ namespace StrixMusic.Core.MusicBrainz
 
         /// <inheritdoc/>
         public CoreState CoreState { get; internal set; } = CoreState.Unloaded;
-
-        /// <inheritdoc/>
-        public string Name => "MusicBrainz";
 
         /// <inheritdoc/>
         public ICoreUser User { get; }
@@ -106,9 +104,23 @@ namespace StrixMusic.Core.MusicBrainz
         }
 
         /// <inheritdoc/>
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
-            return default;
+            if (RecentlyPlayed != null)
+                await RecentlyPlayed.DisposeAsync();
+
+            if (Pins != null)
+                await Pins.DisposeAsync();
+
+            if (Discoverables != null)
+                await Discoverables.DisposeAsync();
+
+            if (Search != null)
+                await Search.DisposeAsync();
+
+            await Devices.InParallel(x => x.DisposeAsync().AsTask());
+
+            await Library.DisposeAsync();
         }
 
         /// <inheritdoc/>
@@ -200,7 +212,7 @@ namespace StrixMusic.Core.MusicBrainz
                 await coreConfig.SetupConfigurationServices(services);
                 _configured = true;
 
-                ChangeCoreState(CoreState.Configuring);
+                ChangeCoreState(CoreState.NeedsSetup);
                 return;
             }
 

@@ -419,5 +419,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICorePlaylistCollection other) => _collection.Equals(other);
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return _collection.DisposeAsync();
+        }
     }
 }

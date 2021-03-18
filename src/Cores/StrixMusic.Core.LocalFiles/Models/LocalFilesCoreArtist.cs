@@ -16,7 +16,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <summary>
     /// Wraps around <see cref="ArtistMetadata"/> to provide artist information extracted from a file to the Strix SDK.
     /// </summary>
-    public class LocalFilesCoreArtist : ICoreArtist, IDisposable
+    public class LocalFilesCoreArtist : ICoreArtist
     {
         private readonly IFileMetadataManager _fileMetadataManager;
         private ArtistMetadata _artistMetadata;
@@ -481,16 +481,17 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
         ~LocalFilesCoreArtist()
         {
             Dispose(false);
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            return default;
         }
     }
 }

@@ -40,11 +40,11 @@ namespace StrixMusic.Core.LocalFiles
         /// <inheritdoc/>
         public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; private set; }
 
-        /// <inheritdoc/>
-        public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/LocalFilesCore/Logo.svg");
-
         /// <inheritdoc />
         public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
+
+        /// <inheritdoc/>
+        public event EventHandler? AbstractUIElementsChanged;
 
         /// <summary>
         /// Configures services for this instance of the core.
@@ -126,6 +126,13 @@ namespace StrixMusic.Core.LocalFiles
             var folderData = await _fileSystemService.GetFolderFromPathAsync(configuredPath);
 
             return folderData;
+        }
+
+        /// <inheritdoc />
+        public async ValueTask DisposeAsync()
+        {
+            if (_fileMetadataManager != null)
+                await _fileMetadataManager.DisposeAsync();
         }
     }
 }

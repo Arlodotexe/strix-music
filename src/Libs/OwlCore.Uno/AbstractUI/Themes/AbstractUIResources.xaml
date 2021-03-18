@@ -8,6 +8,4 @@
     <FontWeight x:Key="DefaultAbstractUISubtitleFontWeight">SemiLight</FontWeight>
     <x:Double x:Key="DefaultAbstractUISubtitleOpacity">0.5</x:Double>
 
-    
-
 </ResourceDictionary>

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -64,6 +66,12 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool Equals(ICoreImage other)
         {
             return other?.Uri == Uri;
+        }
+
+        /// <inheritdoc />
+        public async ValueTask DisposeAsync()
+        {
+            await _sources.InParallel(x => x.DisposeAsync().AsTask());
         }
     }
 }

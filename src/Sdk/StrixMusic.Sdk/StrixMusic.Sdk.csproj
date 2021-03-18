@@ -45,8 +45,4 @@
     <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Apollo\Helpers\**" />
-    <Folder Include="Apollo\**" />
-  </ItemGroup>
 </Project>

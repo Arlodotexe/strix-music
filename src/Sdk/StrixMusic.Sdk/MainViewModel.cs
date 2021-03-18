@@ -4,17 +4,20 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
+using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Notifications;
+using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Notifications;
 
@@ -23,17 +26,23 @@ namespace StrixMusic.Sdk
     /// <summary>
     /// The MainViewModel used throughout the app
     /// </summary>
-    public partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncDisposable
+    public partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
     {
+        private readonly Dictionary<string, CancellationTokenSource> _coreInitCancellationTokens = new Dictionary<string, CancellationTokenSource>();
         private readonly List<ICore> _sources = new List<ICore>();
-        private readonly List<(ICore core, CancellationTokenSource cancellationToken)> _coreInitData = new List<(ICore, CancellationTokenSource)>();
+        private readonly ICoreManagementService _coreManagementService;
+
+        private MergedLibrary? _mergedLibrary;
+        private MergedRecentlyPlayed? _mergedRecentlyPlayed;
+        private MergedDiscoverables? _mergedDiscoverables;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
-        public MainViewModel(StrixDevice strixDevice, INotificationService notificationsService)
+        public MainViewModel(StrixDevice strixDevice, INotificationService notificationsService, ICoreManagementService coreManagementService)
         {
             Singleton = this;
+            _coreManagementService = coreManagementService;
             LocalDevice = new DeviceViewModel(strixDevice);
 
             Devices = new ObservableCollection<DeviceViewModel>();
@@ -42,142 +51,249 @@ namespace StrixMusic.Sdk
             Cores = new ObservableCollection<CoreViewModel>();
             Users = new ObservableCollection<UserProfileViewModel>();
             PlaybackQueue = new ObservableCollection<TrackViewModel>();
-        }
 
-        /// <summary>
-        /// Raised when top-level navigation is needed.
-        /// </summary>
-        public event EventHandler<AppNavigationTarget>? AppNavigationRequested;
+            AttachEvents();
+        }
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IDevice>? DevicesChanged;
 
         private void AttachEvents()
         {
-            foreach (var source in _sources)
-            {
-                source.DevicesChanged += Core_DevicesChanged;
-            }
+            _coreManagementService.CoreInstanceRegistered += CoreManagementService_CoreInstanceRegistered;
+            _coreManagementService.CoreInstanceUnregistered += CoreManagementService_CoreInstanceUnregistered;
+        }
 
-            foreach (var device in Devices)
-            {
-                device.IsActiveChanged += Device_IsActiveChanged;
-            }
+        private void AttachEvents(IDevice device)
+        {
+            device.IsActiveChanged += Device_IsActiveChanged;
+        }
+
+        private void AttachEvents(ICore core)
+        {
+            core.DevicesChanged += Core_DevicesChanged;
         }
 
         private void DetachEvents()
         {
-            foreach (var source in _sources)
-            {
-                source.DevicesChanged -= Core_DevicesChanged;
-            }
+            _coreManagementService.CoreInstanceRegistered -= CoreManagementService_CoreInstanceRegistered;
+            _coreManagementService.CoreInstanceUnregistered -= CoreManagementService_CoreInstanceUnregistered;
+        }
 
-            foreach (var device in Devices)
+        private void DetachEvents(IDevice device)
+        {
+            device.IsActiveChanged += Device_IsActiveChanged;
+        }
+
+        private void DetachEvents(ICore core)
+        {
+            core.DevicesChanged += Core_DevicesChanged;
+        }
+
+        private async void CoreManagementService_CoreInstanceRegistered(object sender, CoreInstanceEventArgs e)
+        {
+            var core = await CreateCore(e.InstanceId, e.AssemblyInfo);
+            if (core is null)
+                return;
+
+            await InitCore(core);
+
+            // If added core after Initialized, we need to manually finish setting up the core.
+            // If adding core before Initialized, InitAsync will finish setup.
+            if (!IsInitialized)
+                return;
+
+            Guard.IsNotNull(_mergedLibrary, nameof(_mergedLibrary));
+            Guard.IsNotNull(_mergedDiscoverables, nameof(_mergedLibrary));
+            Guard.IsNotNull(_mergedRecentlyPlayed, nameof(_mergedRecentlyPlayed));
+
+            _mergedLibrary.Cast<IMergedMutable<ICoreLibrary>>().AddSource(core.Library);
+
+            if (core.Discoverables != null)
+                _mergedDiscoverables.Cast<IMergedMutable<ICoreDiscoverables>>().AddSource(core.Discoverables);
+
+            if (core.RecentlyPlayed != null)
+                _mergedRecentlyPlayed.Cast<IMergedMutable<ICoreRecentlyPlayed>>().AddSource(core.RecentlyPlayed);
+
+            await Threading.OnPrimaryThread(() =>
             {
-                device.IsActiveChanged -= Device_IsActiveChanged;
-            }
+                foreach (var device in core.Devices)
+                {
+                    var deviceVm = new DeviceViewModel(new CoreDeviceProxy(device));
+                    Devices.Add(deviceVm);
+                    AttachEvents(deviceVm);
+                }
+            });
+
+            AttachEvents(core);
+        }
+
+        private async void CoreManagementService_CoreInstanceUnregistered(object sender, CoreInstanceEventArgs e)
+        {
+            var relevantVm = Cores.First(x => x.InstanceId == e.InstanceId);
+            Cores.Remove(relevantVm);
+
+            var source = _sources.First(x => x.InstanceId == e.InstanceId);
+            _sources.Remove(source);
+
+            if (_mergedDiscoverables != null && source.Discoverables != null && _mergedDiscoverables.Sources.Contains(source.Discoverables))
+                _mergedDiscoverables.Cast<IMergedMutable<ICoreDiscoverables>>().RemoveSource(source.Discoverables);
+
+            if (_mergedRecentlyPlayed != null && source.RecentlyPlayed != null && _mergedRecentlyPlayed.Sources.Contains(source.RecentlyPlayed))
+                _mergedRecentlyPlayed.Cast<IMergedMutable<ICoreRecentlyPlayed>>().RemoveSource(source.RecentlyPlayed);
+
+            if (_mergedLibrary?.Sources.Contains(source.Library) ?? false)
+                _mergedLibrary.Cast<IMergedMutable<ICoreLibrary>>().RemoveSource(source.Library);
+
+            await relevantVm.DisposeAsync();
         }
 
         /// <summary>
-        /// Initializes and loads the cores given.
+        /// Initializes and loads the ViewModel, including initializing all cores in the <see cref="SettingsKeys.CoreInstanceRegistry"/>.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task InitializeCoresAsync(List<ICore> cores, Func<ICore, Task<IServiceCollection>> getInjectedCoreServices)
+        public async Task InitAsync()
         {
-            Guard.IsNotNull(cores, nameof(cores));
+            var coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
+            var coreInstanceRegistry = await coreManagementService.GetCoreInstanceRegistryAsync();
 
-            _sources.AddRange(cores);
+            Guard.IsNotNull(coreInstanceRegistry, nameof(coreInstanceRegistry));
+            Guard.IsGreaterThan(coreInstanceRegistry.Count, 0, nameof(coreInstanceRegistry));
 
-            await Cores.InParallel(x => x.DisposeAsync().AsTask());
-
-            // These collections should be empty, no matter how many times the method is called.
-            Devices.Clear();
-            Cores.Clear();
-            Users.Clear();
-            PlaybackQueue.Clear();
-
-            foreach (var core in cores)
+            foreach (var registeredCoreInstance in coreInstanceRegistry)
             {
-#pragma warning disable CA2000 // Dispose objects before losing scope
-                // Adds itself into Cores.
-                // Library etc. need the CoreViewModel, but are created before CoreViewModel ctor is finished, before the below can be added to the list of MainViewModel.Cores.
-                _ = new CoreViewModel(core);
-#pragma warning restore CA2000 // Dispose objects before losing scope
+                var instanceId = registeredCoreInstance.Key;
+                var coreAssemblyInfo = registeredCoreInstance.Value;
+                var coreDataType = Type.GetType(coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName);
+
+                Guard.IsNotNull(coreDataType, nameof(coreDataType));
+
+                // Any registered cores that have already been set up will be ignored.
+                await CreateCore(instanceId, coreAssemblyInfo);
             }
 
-            foreach (var core in cores)
-            {
-                await Task.Run(async () =>
-                {
-                    var services = await getInjectedCoreServices(core);
-                    await InitCore(core, services);
-                });
-            }
+            var unloadedSources = _sources.Where(x => x.CoreState == CoreState.Unloaded);
+            var enumerable = unloadedSources as ICore[] ?? unloadedSources.ToArray();
 
-            Library = new LibraryViewModel(new MergedLibrary(_sources.Select(x => x.Library)));
+            foreach (var core in enumerable)
+                await InitCore(core);
+
+            _mergedLibrary = new MergedLibrary(_sources.Select(x => x.Library));
+            Library = new LibraryViewModel(_mergedLibrary);
             await Library.InitAsync();
 
-            if (_sources.All(x => x.RecentlyPlayed == null))
-                RecentlyPlayed = new RecentlyPlayedViewModel(new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull()));
+            if (_sources.Any(x => x.RecentlyPlayed != null))
+            {
+                _mergedRecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull());
+                RecentlyPlayed = new RecentlyPlayedViewModel(_mergedRecentlyPlayed);
+            }
 
-            if (_sources.All(x => x.Discoverables == null))
-                Discoverables = new DiscoverablesViewModel(new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull()));
+            if (_sources.Any(x => x.Discoverables != null))
+            {
+                _mergedDiscoverables = new MergedDiscoverables(_sources.Select(x => x.Discoverables).PruneNull());
+                Discoverables = new DiscoverablesViewModel(_mergedDiscoverables);
+            }
 
-            Devices = new ObservableCollection<DeviceViewModel>(_sources.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new CoreDeviceProxy(device))))
+            Devices = new ObservableCollection<DeviceViewModel>(enumerable.SelectMany(x => x.Devices, (core, device) => new DeviceViewModel(new CoreDeviceProxy(device))))
             {
                 LocalDevice,
             };
 
             OnPropertyChanged(nameof(Devices));
 
-            AttachEvents();
+            foreach (var device in Devices)
+                AttachEvents(device);
+
+            _sources.ForEach(AttachEvents);
+
+            IsInitialized = true;
         }
 
-        private async Task InitCore(ICore core, IServiceCollection services)
+        private async Task<ICore?> CreateCore(string instanceId, CoreAssemblyInfo coreAssemblyInfo)
         {
-            var cancellationToken = new CancellationTokenSource();
-            _coreInitData.Add(new ValueTuple<ICore, CancellationTokenSource>(core, cancellationToken));
+            // Skip if registered but already set up.
+            if (_sources.Any(x => x.InstanceId == instanceId))
+                return null;
 
-            // If the core requests config, cancel the init task.
+            var coreDataType = Type.GetType(coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName);
+
+            Guard.IsNotNull(coreDataType, nameof(coreDataType));
+
+            var core = (ICore)Activator.CreateInstance(coreDataType, instanceId);
+            _sources.Add(core);
+
+            var assemblyInfo = _coreManagementService.GetCoreAssemblyInfoForCore(core);
+
+            // Adds itself into Cores.
+            // Library etc. need the CoreViewModel, but are created before CoreViewModel ctor is finished, before the below can be added to the list of MainViewModel.Cores.
+#pragma warning disable CA2000 // Dispose objects before losing scope
+            await Threading.OnPrimaryThread(() =>
+            {
+                _ = new CoreViewModel(core, assemblyInfo);
+            });
+#pragma warning restore CA2000 // Dispose objects before losing scope
+
+            return core;
+        }
+
+        private async Task InitCore(ICore core)
+        {
+            var setupCancellationTokenSource = new CancellationTokenSource();
+            _coreInitCancellationTokens.Add(core.InstanceId, setupCancellationTokenSource);
+
+            // If the core requests setup, cancel the init task.
             // Then wait for the core state to change to Configured.
             core.CoreStateChanged += OnCoreStateChanged_HandleConfigRequest;
 
-            // Handle additional actions needed for core state changes (unloaded, etc)
-            core.CoreStateChanged += Core_CoreStateChanged;
+            var coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
+            var services = await coreManagementService.CreateInitialCoreServicesAsync(core);
 
             try
             {
-                await Task.Run(() => core.InitAsync(services), cancellationToken.Token);
+                await Task.Run(() => core.InitAsync(services), setupCancellationTokenSource.Token);
             }
             catch (TaskCanceledException)
             {
             }
 
-            if (cancellationToken.IsCancellationRequested)
+            if (setupCancellationTokenSource.IsCancellationRequested)
             {
-                // TODO: if one core a already requested config, have a queue in case another tries.
-                AppNavigationRequested?.Invoke(core, AppNavigationTarget.Settings);
+                await HandleStateChanged(setupCancellationTokenSource);
 
-                var timeAllowedForUISetup = TimeSpan.FromMinutes(10);
-
-                var updatedState = await Threading.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, timeAllowedForUISetup);
-
-                if (updatedState is null)
+                async Task HandleStateChanged(CancellationTokenSource cancellationToken)
                 {
-                    // Timed out. Roll back changes? Unregister core? TODO.
-                }
-                else if (updatedState.Value.Result == CoreState.Configured)
-                {
-                    await InitCore(core, services);
-                }
-                else if (updatedState.Value.Result == CoreState.Unloaded)
-                {
-                    // User cancelled core loading.
-                    cancellationToken.Dispose();
-                    return;
+                    while (true)
+                    {
+                        // Wait for the configuration to complete.
+                        var timeAllowedForUISetup = TimeSpan.FromMinutes(10);
+                        var updatedState = await Threading.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, timeAllowedForUISetup);
+
+                        // Timed out or cancelled.
+                        if (updatedState is null || updatedState.Value.Result == CoreState.Unloaded)
+                        {
+                            cancellationToken.Dispose();
+                            await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);
+                            return;
+                        }
+
+                        if (updatedState.Value.Result == CoreState.NeedsSetup)
+                        {
+                            // If the user needs to set up the core, wait for another state change.
+                            // Displaying the config UI is handled in the relevant ViewModel.
+                            continue;
+                        }
+
+                        if (updatedState.Value.Result == CoreState.Configured)
+                        {
+                            _coreInitCancellationTokens.Remove(core.InstanceId);
+                            await InitCore(core);
+                        }
+
+                        break;
+                    }
                 }
 
-                cancellationToken.Dispose();
+                setupCancellationTokenSource.Dispose();
                 return;
             }
 
@@ -192,12 +308,7 @@ namespace StrixMusic.Sdk
 
             core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
 
-            cancellationToken.Dispose();
-        }
-
-        private void Core_CoreStateChanged(object sender, CoreState e)
-        {
-            OnCoreStateChanged_HandleCoreUnloaded(sender, e);
+            setupCancellationTokenSource.Dispose();
         }
 
         private void OnCoreStateChanged_HandleConfigRequest(object sender, CoreState e)
@@ -208,30 +319,13 @@ namespace StrixMusic.Sdk
                 return;
             }
 
-            if (e == CoreState.Configuring)
+            if (e == CoreState.NeedsSetup)
             {
-                var cancellationToken = _coreInitData.First(x => x.core == core).cancellationToken;
+                var cancellationToken = _coreInitCancellationTokens.First(x => x.Key == core.InstanceId).Value;
 
                 cancellationToken.Cancel();
 
                 core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
-            }
-        }
-
-        private async void OnCoreStateChanged_HandleCoreUnloaded(object sender, CoreState e)
-        {
-            if (!(sender is ICore core))
-                return;
-
-            if (e == CoreState.Unloaded)
-            {
-                var relevantVm = Cores.FirstOrDefault(x => x.InstanceId == core.InstanceId);
-                Guard.IsNotNull(relevantVm, nameof(relevantVm));
-
-                await Threading.OnPrimaryThread(() => Cores.Remove(relevantVm));
-
-                core.CoreStateChanged -= Core_CoreStateChanged;
-                await relevantVm.DisposeAsync();
             }
         }
 
@@ -262,6 +356,9 @@ namespace StrixMusic.Sdk
         /// MainViewModel with identical states and functionality. Therefore, a singleton is desired over multi-instance.
         /// </remarks>
         public static MainViewModel? Singleton { get; private set; }
+
+        /// <inheritdoc/>
+        public bool IsInitialized { get; private set; }
 
         /// <summary>
         /// Contains data about the cores that are loaded.
@@ -338,6 +435,12 @@ namespace StrixMusic.Sdk
         public async ValueTask DisposeAsync()
         {
             await Task.CompletedTask;
+
+            foreach (var device in Devices)
+                DetachEvents(device);
+
+            _sources.ForEach(DetachEvents);
+
             DetachEvents();
         }
 

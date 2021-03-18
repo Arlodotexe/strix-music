@@ -50,6 +50,13 @@ namespace StrixMusic.Shared.Services
             return new FileSystemService();
         }
 
+        /// <inheritdoc/>
+        public async Task<IFileSystemService> CreateFileSystemServiceAsync(string folderPath)
+        {
+            var folder = await StorageFolder.GetFolderFromPathAsync(folderPath);
+            return new FileSystemService(folder);
+        }
+
         /// <summary>
         /// Creates a <see cref="IFileSystemService"/> for caching.
         /// </summary>

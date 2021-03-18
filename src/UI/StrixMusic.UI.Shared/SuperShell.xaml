@@ -6,6 +6,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:StrixMusic.Sdk.Uno.Models"
     xmlns:styles="using:StrixMusic.Shared.Styles"
+    xmlns:templateSelectors="using:StrixMusic.Shared.TemplateSelectors"
+    xmlns:sharedVms="using:StrixMusic.Shared.ViewModels"
+    xmlns:visibilityConverters="using:OwlCore.Uno.Converters.Bools.Visible"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:views="using:StrixMusic.Sdk.Uno.Controls.Views"
+    xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
     mc:Ignorable="d"
     MinHeight="650"
     Width="1000">
@@ -28,8 +35,24 @@
                     <SolidColorBrush x:Key="SuperShellBackgroundBrush" Color="#171717"/>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-        </ResourceDictionary>
 
+            <templateSelectors:ServicesItemTemplateSelector x:Key="ServicesItemTemplateSelector">
+                <templateSelectors:ServicesItemTemplateSelector.CoreItemTemplate>
+                    <DataTemplate x:DataType="sharedVms:LoadedServicesItemViewModel">
+                        <ContentControl ContentTemplate="{StaticResource CoreItemTemplate}" />
+                    </DataTemplate>
+                </templateSelectors:ServicesItemTemplateSelector.CoreItemTemplate>
+                <templateSelectors:ServicesItemTemplateSelector.NewItemTemplate>
+                    <DataTemplate>
+                        <ContentControl ContentTemplate="{StaticResource AddNewCoreItemTemplate}" />
+                    </DataTemplate>
+                </templateSelectors:ServicesItemTemplateSelector.NewItemTemplate>
+            </templateSelectors:ServicesItemTemplateSelector>
+
+            <visibilityConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+            <visibilityConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
+            <visibilityConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid Background="{ThemeResource SuperShellBackgroundBrush}" BorderBrush="{ThemeResource SystemControlBackgroundChromeBlackLowBrush}" BorderThickness="2">
@@ -45,7 +68,8 @@
             </Image.Source>
         </Image>
 
-        <Pivot Grid.Row="1" Style="{StaticResource CenteredPivotHeadersStyle}">
+        <!-- Will be replaced with NavigationView eventually -->
+        <Pivot Grid.Row="1" Style="{StaticResource CenteredPivotHeadersStyle}" SelectedIndex="{x:Bind ViewModel.SelectedTabIndex, Mode=TwoWay}">
             <PivotItem  x:Uid="/SuperShell/AppSkinTB" Header="Skins" Padding="30,20">
                 <StackPanel Spacing="10" HorizontalAlignment="Center">
                     <ComboBox x:Name="ShellSelector" Grid.Row="1" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
@@ -61,14 +85,72 @@
                 </StackPanel>
             </PivotItem>
             <PivotItem Header="Services">
-                <GridView ItemTemplate="{StaticResource CoreItemTemplate}" ItemsSource="{x:Bind ViewModel.Cores, Mode=OneWay}"
-                          HorizontalAlignment="Center"  Padding="20,30" SelectionMode="None">
-                    <GridView.ItemContainerStyle>
-                        <Style TargetType="FrameworkElement">
-                            <Setter Property="Margin" Value="0 0 20 20"/>
-                        </Style>
-                    </GridView.ItemContainerStyle>
-                </GridView>
+                <Grid HorizontalAlignment="Center">
+                    <!-- TODO A bit messy, clean up or use a better approach -->
+                    <Grid x:Name="ExistingOrNewCoreGrid" Visibility="{x:Bind ViewModel.CurrentCoreConfig, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}">
+                        <GridView ItemTemplateSelector="{StaticResource ServicesItemTemplateSelector}" ItemsSource="{x:Bind ViewModel.Services}" SelectionMode="None"
+                                  Visibility="{x:Bind ViewModel.IsShowingAddNew, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}"
+                                  Padding="20,30">
+                            <GridView.ItemContainerStyle>
+                                <Style TargetType="FrameworkElement">
+                                    <Setter Property="Margin" Value="0 0 20 20"/>
+                                </Style>
+                            </GridView.ItemContainerStyle>
+                        </GridView>
+
+                        <StackPanel Visibility="{x:Bind ViewModel.IsShowingAddNew, Mode=OneWay}" Padding="20,30">
+
+                            <GridView ItemsSource="{x:Bind ViewModel.AvailableServices}" ItemTemplate="{StaticResource NewCoreItemTemplate}"
+                                  SelectionMode="None">
+                                <GridView.ItemContainerStyle>
+                                    <Style TargetType="FrameworkElement">
+                                        <Setter Property="Margin" Value="0 0 20 20"/>
+                                    </Style>
+                                </GridView.ItemContainerStyle>
+                            </GridView>
+
+                            <Grid VerticalAlignment="Stretch">
+                                <Button Command="{x:Bind ViewModel.CancelAddNewCommand}" HorizontalAlignment="Left" Opacity="0.7"
+                                        Background="Transparent" BorderBrush="{ThemeResource CoreItemBorderBrush}" BorderThickness="2" Width="38" Padding="8">
+                                    <Button.Content>
+                                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE112;" FontSize="16"/>
+                                    </Button.Content>
+                                </Button>
+
+                                <TextBlock Text="CONNECT A NEW SERVICE" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.5" FontWeight="SemiBold" CharacterSpacing="60"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Spacing="0" Visibility="{x:Bind ViewModel.CurrentCoreConfig, Mode=OneWay, Converter={StaticResource NotNullToVisibilityConverter}}">
+                        <!--<StackPanel Orientation="Horizontal" Spacing="15">
+                            <Button HorizontalAlignment="Left" Command="{x:Bind ViewModel.CancelConfigCoreCommand}">
+                                <Button.Content>
+                                    <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE112;" />
+                                </Button.Content>
+                            </Button>
+
+                            <Image Height="35" Width="35">
+                                <Image.Source>
+                                    <SvgImageSource UriSource="{x:Bind ViewModel.CurrentCoreConfig.LogoSvgUrl, Mode=OneWay}" />
+                                </Image.Source>
+                            </Image>
+
+                            <TextBlock FontSize="18" VerticalAlignment="Center">
+                                <Run Text="Configure" />
+                                <Run Text="{x:Bind ViewModel.CurrentCoreConfig.Name, Mode=OneWay}" />
+                            </TextBlock>
+                        </StackPanel>-->
+
+                        <ItemsControl ItemsSource="{x:Bind ViewModel.CurrentCoreConfig.CoreConfig.AbstractUIElements, Mode=OneWay}" Margin="0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <controls:AbstractUIGroupPresenter />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Grid>
             </PivotItem>
             <PivotItem Header="About">
                 <TextBlock Text="Todo" FontSize="18" />

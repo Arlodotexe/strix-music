@@ -594,5 +594,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreTrack other) => Model.Equals(other);
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return Model.DisposeAsync();
+        }
     }
 }

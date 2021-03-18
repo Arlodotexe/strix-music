@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Data;
 namespace OwlCore.Uno.Converters.Bools.Visible
 {
     /// <summary>
-    /// A converter that converts checks null checks an object and returns a <see cref="Visibility"/>.
+    /// A converter that checks if an object is not null and returns a <see cref="Visibility"/>.
     /// </summary>
     public sealed class NotNullToVisibilityConverter : IValueConverter
     {

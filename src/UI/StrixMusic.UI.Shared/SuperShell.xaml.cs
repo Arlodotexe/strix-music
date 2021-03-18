@@ -1,16 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore.AbstractUI.Models;
-using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
+using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Shared.ViewModels;
 using Uno.Extensions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk;
+using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Uno.Controls.Views;
 
 namespace StrixMusic.Shared
 {
@@ -26,7 +31,7 @@ namespace StrixMusic.Shared
         /// Dependency property for <see cref="ViewModel"/>.
         /// </summary>
         public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(nameof(ViewModel), typeof(MainViewModel), typeof(SuperShell), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(ViewModel), typeof(SuperShellViewModel), typeof(SuperShell), new PropertyMetadata(new SuperShellViewModel()));
 
         /// <summary>
         /// The labels for the skins that the user can choose from.
@@ -36,58 +41,54 @@ namespace StrixMusic.Shared
         /// <summary>
         /// ViewModel for this control.
         /// </summary>
-        public MainViewModel ViewModel
+        public SuperShellViewModel ViewModel
         {
-            get => (MainViewModel)GetValue(ViewModelProperty);
+            get => (SuperShellViewModel)GetValue(ViewModelProperty);
             set => SetValue(ViewModelProperty, value);
         }
-
-        /// <summary>
-        /// TEMPORARY. Allows binding to a group of <see cref="AbstractUIElementGroup"/>s.
-        /// </summary>
-        public ObservableCollection<AbstractUIElementGroup> AbstractUIGroups { get; set; } = new ObservableCollection<AbstractUIElementGroup>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperShell"/> class.
         /// </summary>
         public SuperShell()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             Skins = new ObservableCollection<ShellAssemblyInfo>();
+
             _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
 
-            Loaded += SuperShell_Loaded;
+            AttachEvents();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SuperShell"/> class, and displays a core's <see cref="AbstractUIElement"/>s.
-        /// </summary>
-        public SuperShell(ICore core)
-            : this()
+        private void AttachEvents()
         {
-            SetupAbstractUI(core);
+            Loaded += SuperShell_Loaded;
+            Unloaded += SuperShell_Unloaded;
+        }
+
+        private void DetachEvents()
+        {
+            Unloaded -= SuperShell_Unloaded;
+        }
+
+        private void SuperShell_Unloaded(object sender, RoutedEventArgs e)
+        {
+            DetachEvents();
         }
 
         private async void SuperShell_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= SuperShell_Loaded;
 
+            await ViewModel.InitAsync();
             await InitSkins();
-        }
-
-        // This is temporary, to test abstract UI.
-        private void SetupAbstractUI(ICore core)
-        {
-            AbstractUIGroups.Clear();
-            AbstractUIGroups.AddRange(core.CoreConfig.AbstractUIElements);
         }
 
         private async Task InitSkins()
         {
             // Gets the preferred shell's assembly name
             var preferredShell = await _settingsService.GetValue<string>(nameof(SettingsKeys.PreferredShell));
-
             var shellRegistry = await _settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry));
 
             // Gets the list of loaded shells.

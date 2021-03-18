@@ -22,18 +22,23 @@ namespace StrixMusic.Sdk.ViewModels
     public class CoreViewModel : ObservableObject, ICore
     {
         private readonly ICore _core;
+        private readonly CoreAssemblyInfo _coreAssemblyInfo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreViewModel"/> class.
         /// </summary>
         /// <param name="core">The base <see cref="ICore"/></param>
+        /// <param name="coreAssemblyInfo">The assembly info provided by the relevant core instance.</param>
         /// <remarks>
         /// Creating a new <see cref="CoreViewModel"/> will register itself into <see cref="MainViewModel.Cores"/>.
         /// </remarks>
-        public CoreViewModel(ICore core)
+        public CoreViewModel(ICore core, CoreAssemblyInfo coreAssemblyInfo)
         {
             _core = core;
-            Ioc.Default.GetRequiredService<MainViewModel>().Cores.Add(this);
+            _coreAssemblyInfo = coreAssemblyInfo;
+            var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
+
+            mainViewModel.Cores.Add(this);
 
             Library = new LibraryViewModel(new MergedLibrary(_core.Library.IntoList()));
 
@@ -50,6 +55,8 @@ namespace StrixMusic.Sdk.ViewModels
                 Search = new SearchViewModel(new MergedSearch(_core.Search.IntoList()));
 
             Devices = new ObservableCollection<DeviceViewModel>();
+
+            CoreConfig = new CoreConfigViewModel(core.CoreConfig);
 
             CoreState = _core.CoreState;
 
@@ -80,8 +87,11 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void Core_InstanceDescriptorChanged(object sender, string e)
         {
-            OnPropertyChanged(nameof(InstanceDescriptor));
-            InstanceDescriptorChanged?.Invoke(sender, e);
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                OnPropertyChanged(nameof(InstanceDescriptor));
+                InstanceDescriptorChanged?.Invoke(sender, e);
+            });
         }
 
         /// <inheritdoc cref="ICore.CoreState" />
@@ -105,20 +115,29 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public string InstanceId => _core.InstanceId;
 
-        /// <inheritdoc cref="ICore.Name" />
-        public string Name => _core.Name;
+        /// <inheritdoc cref="CoreAttribute.Name" />
+        public string Name => _coreAssemblyInfo.AttributeData.Name;
+
+        /// <inheritdoc cref="CoreAttribute.LogoSvgUrl"/>
+        public Uri LogoSvgUrl => _coreAssemblyInfo.AttributeData.LogoSvgUrl;
 
         /// <inheritdoc />
         public string InstanceDescriptor => _core.InstanceDescriptor;
+
+        /// <inheritdoc cref="CoreConfigViewModel"/>
+        public CoreConfigViewModel CoreConfig { get; }
 
         /// <inheritdoc cref="ICore.User" />
         public ICoreUser? User => _core.User;
 
         /// <inheritdoc cref="ICore.CoreConfig" />
-        public ICoreConfig CoreConfig => _core.CoreConfig;
+        ICoreConfig ICore.CoreConfig => _core.CoreConfig;
 
         /// <inheritdoc cref="ICore.CoreState" />
         public CoreState CoreState { get; internal set; }
+
+        /// <inheritdoc />
+        public ICore SourceCore => _core.SourceCore;
 
         /// <summary>
         /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Unloaded"/>.
@@ -126,9 +145,9 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsCoreStateUnloaded => CoreState == CoreState.Unloaded;
 
         /// <summary>
-        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Configuring"/>.
+        /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.NeedsSetup"/>.
         /// </summary>
-        public bool IsCoreStateConfiguring => CoreState == CoreState.Configuring;
+        public bool IsCoreStateConfiguring => CoreState == CoreState.NeedsSetup;
 
         /// <summary>
         /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Configured"/>.
@@ -149,6 +168,20 @@ namespace StrixMusic.Sdk.ViewModels
         /// True when <see cref="CoreState"/> is <see cref="Data.CoreState.Faulted"/>.
         /// </summary>
         public bool IsCoreStateFaulted => CoreState == CoreState.Faulted;
+
+        /// <inheritdoc cref="ICore.CoreStateChanged" />
+        public event EventHandler<CoreState>? CoreStateChanged
+        {
+            add => _core.CoreStateChanged += value;
+
+            remove => _core.CoreStateChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<string>? InstanceDescriptorChanged;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreDevice> ICore.Devices => _core.Devices;
@@ -192,8 +225,21 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IAsyncDisposable.DisposeAsync" />
         public async ValueTask DisposeAsync()
         {
-            await _core.DisposeAsync().ConfigureAwait(false);
             DetachEvents();
+
+            await Library.DisposeAsync();
+
+            if (RecentlyPlayed != null)
+                await RecentlyPlayed.DisposeAsync();
+
+            if (Discoverables != null)
+                await Discoverables.DisposeAsync();
+
+            if (Pins != null)
+                await Pins.DisposeAsync();
+
+            await CoreConfig.DisposeAsync();
+            await _core.DisposeAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -201,22 +247,5 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track) => _core.GetMediaSource(track);
-
-        /// <inheritdoc cref="ICore.CoreStateChanged" />
-        public event EventHandler<CoreState>? CoreStateChanged
-        {
-            add => _core.CoreStateChanged += value;
-
-            remove => _core.CoreStateChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreDevice>? DevicesChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<string>? InstanceDescriptorChanged;
-
-        /// <inheritdoc />
-        public ICore SourceCore => _core.SourceCore;
     }
 }

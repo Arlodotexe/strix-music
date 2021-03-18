@@ -8,7 +8,7 @@ namespace OwlCore.Uno.Converters.Bools
     /// <summary>
     /// A converter that converts a given <see cref="bool"/> to its inverse.
     /// </summary>
-    public sealed class NotBoolToBoolConverter : IValueConverter
+    public sealed class InverseBoolConverter : IValueConverter
     {
         /// <summary>
         /// Gets the inverse of a bool.

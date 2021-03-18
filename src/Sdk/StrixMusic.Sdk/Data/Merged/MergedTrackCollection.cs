@@ -307,5 +307,16 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public bool Equals(ICoreImageCollection other) => Equals(other as ICoreTrackCollection);
+
+        /// <inheritdoc />
+        public async ValueTask DisposeAsync()
+        {
+            DetachEvents(_preferredSource);
+
+            await _sources.InParallel(x => x.DisposeAsync().AsTask());
+
+            await _imageMap.DisposeAsync();
+            await _trackMap.DisposeAsync();
+        }
     }
 }

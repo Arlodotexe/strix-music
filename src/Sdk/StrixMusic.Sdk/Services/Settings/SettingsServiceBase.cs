@@ -114,7 +114,7 @@ namespace StrixMusic.Sdk.Services.Settings
             {
                 obj = JsonConvert.DeserializeObject<T>(result!);
             }
-            catch (JsonException)
+            catch (JsonException ex)
             {
                 return default!;
             }

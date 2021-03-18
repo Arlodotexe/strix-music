@@ -9,7 +9,7 @@ namespace OwlCore.Uno.Converters.Bools.Visible
     /// <summary>
     /// A converter that converts a the inverse of a given <see cref="bool"/> a <see cref="Visibility"/>.
     /// </summary>
-    public sealed class NotBoolToVisibilityConverter : IValueConverter
+    public sealed class InverseBoolToVisibilityConverter : IValueConverter
     {
         /// <summary>
         /// Gets a <see cref="Visibility"/> based on the opposite of a bool.

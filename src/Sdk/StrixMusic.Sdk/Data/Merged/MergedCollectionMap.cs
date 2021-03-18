@@ -21,7 +21,7 @@ namespace StrixMusic.Sdk.Data.Merged
     /// <typeparam name="TCoreCollection">The types of items that were merged to form <typeparamref name="TCollection"/>.</typeparam>
     /// <typeparam name="TCollectionItem">The type of the item returned from the merged collection.</typeparam>
     /// <typeparam name="TCoreCollectionItem">The type of the items returned from the original source collections.</typeparam>
-    internal class MergedCollectionMap<TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem> : IMerged<TCoreCollection>, IMergedMutable<TCoreCollection>, IAsyncInit
+    internal class MergedCollectionMap<TCollection, TCoreCollection, TCollectionItem, TCoreCollectionItem> : IMerged<TCoreCollection>, IMergedMutable<TCoreCollection>, IAsyncInit, IAsyncDisposable
         where TCollection : class, ICollectionBase, IMerged<TCoreCollection>
         where TCoreCollection : class, ICoreCollection
         where TCollectionItem : class, ICollectionItemBase, IMerged<TCoreCollectionItem>
@@ -30,8 +30,8 @@ namespace StrixMusic.Sdk.Data.Merged
         // ReSharper disable StaticMemberInGenericType
         private static bool _isInitialized;
         private static TaskCompletionSource<bool>? _initCompletionSource;
-        private static List<string>? _coreRanking;
-        private static Dictionary<string, CoreAssemblyInfo>? _configuredCoreRegistry;
+        private static IReadOnlyList<string>? _coreRanking;
+        private static Dictionary<string, CoreAssemblyInfo>? _coreInstanceRegistry;
         private static MergedCollectionSorting? _sortingMethod;
 
         private readonly TCollection _collection;
@@ -164,7 +164,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
             _coreRanking = await GetCoreRankings();
 
-            _configuredCoreRegistry = await GetConfiguredCoreRegistry();
+            _coreInstanceRegistry = await GetConfiguredCoreRegistry();
 
             _sortingMethod = await GetSortingMethod();
             _settingsService.SettingChanged += SettingsServiceOnSettingChanged;
@@ -172,8 +172,8 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
             Guard.HasSizeGreaterThan(_coreRanking, 0, nameof(_coreRanking));
 
-            Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
-            Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
+            Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
+            Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry.Count));
 
             _initCompletionSource.SetResult(true);
             IsInitialized = true;
@@ -539,6 +539,7 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             foreach (var item in collection)
             {
+                // ReSharper disable once SuspiciousTypeConversion.Global
                 if (item.Equals(itemToMerge))
                 {
                     item.AddSource(itemToMerge);
@@ -617,8 +618,8 @@ namespace StrixMusic.Sdk.Data.Merged
         private async Task<IReadOnlyList<TCollectionItem>> GetItemsByRank(int limit, int offset)
         {
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
-            Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
-            Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
+            Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
+            Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry.Count));
 
             // Rebuild the sorted map so we're sure it's sorted correctly.
             _sortedMap.Clear();
@@ -702,12 +703,11 @@ namespace StrixMusic.Sdk.Data.Merged
 
                 var mergedInto = MergeOrAdd(returnedData, item.CollectionItem);
 
-                List<MappedData> mergedMapItems = new List<MappedData>();
-                bool exists = mergedInto != null && mergedItemMaps.TryGetValue(mergedInto, out mergedMapItems);
+                bool exists = mergedItemMaps.TryGetValue(mergedInto, out List<MappedData> mergedMapItems);
                 mergedMapItems ??= new List<MappedData>();
 
                 mergedMapItems.Add(item);
-                if (!exists && mergedInto != null)
+                if (!exists)
                     mergedItemMaps.Add(mergedInto, mergedMapItems);
             }
 
@@ -735,14 +735,14 @@ namespace StrixMusic.Sdk.Data.Merged
         private List<MappedData> BuildSortedMapRanked()
         {
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
-            Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
-            Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
+            Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
+            Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry.Count));
 
             // Rank the sources by core
             var rankedSources = new List<TCoreCollection>();
             foreach (var instanceId in _coreRanking)
             {
-                var coreAssemblyInfo = _configuredCoreRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
+                var coreAssemblyInfo = _coreInstanceRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
                 if (coreAssemblyInfo is null)
                     continue;
 
@@ -780,7 +780,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private Task<Dictionary<string, CoreAssemblyInfo>> GetConfiguredCoreRegistry()
         {
-            return _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores));
+            return _settingsService.GetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.CoreInstanceRegistry));
         }
 
         private Task<MergedCollectionSorting> GetSortingMethod()
@@ -794,7 +794,8 @@ namespace StrixMusic.Sdk.Data.Merged
             switch (e.Key)
             {
                 case nameof(SettingsKeys.CoreRanking):
-                    _coreRanking = e.Value as List<string>;
+                    Guard.IsNotNull(e.Value, nameof(e.Value));
+                    _coreRanking = e.Value as IReadOnlyList<string>;
                     break;
                 case nameof(SettingsKeys.MergedCollectionSorting) when e.Value != null:
                     _sortingMethod = (MergedCollectionSorting)e.Value;
@@ -917,6 +918,16 @@ namespace StrixMusic.Sdk.Data.Merged
             public IMergedMutable<TCoreCollectionItem> CollectionItem { get; }
 
             public List<MappedData> MergedMapData { get; }
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            _mergedMappedData.Clear();
+            _sortedMap.Clear();
+
+            return default;
         }
     }
 }

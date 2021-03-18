@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
 using OwlCore.Events;
-using OwlCore.Extensions;
-using StrixMusic.Core.LocalFiles.Services;
-using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
@@ -19,7 +15,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <summary>
     /// Wraps around <see cref="PlaylistMetadata"/> to provide playlist information extracted from a file to the Strix SDK.
     /// </summary>
-    public class LocalFileCorePlaylist : ICorePlaylist, IDisposable
+    public class LocalFileCorePlaylist : ICorePlaylist
     {
         private readonly IFileMetadataManager _fileMetadataManager;
         private PlaylistMetadata _playlistMetadata;
@@ -105,10 +101,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         public string Id { get; set; }
 
         /// <inheritdoc />
-        public Uri? Url => _playlistMetadata?.Url ?? null;
+        public Uri? Url => _playlistMetadata.Url ?? null;
 
         /// <inheritdoc />
-        public string Name => _playlistMetadata?.Title ?? String.Empty;
+        public string Name => _playlistMetadata.Title ?? string.Empty;
 
         /// <inheritdoc />
         public string? Description => _playlistMetadata.Description;
@@ -279,15 +275,6 @@ namespace StrixMusic.Core.LocalFiles.Models
             }
         }
 
-        private void Dispose(bool disposing)
-        {
-            ReleaseUnmanagedResources();
-            if (disposing)
-            {
-                Genres?.Dispose();
-            }
-        }
-
         private void Albums_MetadataUpdated(object sender, IEnumerable<PlaylistMetadata> e)
         {
             foreach (var metadata in e)
@@ -316,22 +303,32 @@ namespace StrixMusic.Core.LocalFiles.Models
             }
         }
 
+        private void Dispose(bool disposing)
+        {
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+                Genres?.Dispose();
+            }
+        }
+
         private void ReleaseUnmanagedResources()
         {
             DetachEvents();
         }
 
         /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
         ~LocalFileCorePlaylist()
         {
             Dispose(false);
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            return default;
         }
     }
 }

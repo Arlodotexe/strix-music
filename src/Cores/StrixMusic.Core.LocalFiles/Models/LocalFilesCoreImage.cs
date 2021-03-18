@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using StrixMusic.Sdk.Data.Core;
 
 
@@ -33,5 +34,11 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc />
         public double Width { get; }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            return default;
+        }
     }
 }

@@ -235,5 +235,11 @@ namespace StrixMusic.Sdk.Data
         {
             throw new NotSupportedException();
         }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            return default;
+        }
     }
 }

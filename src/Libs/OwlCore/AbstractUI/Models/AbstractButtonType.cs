@@ -11,13 +11,13 @@
         Generic,
 
         /// <summary>
-        /// Some sort of confirmation button. Likely displayed with the accent color.
+        /// Indicates a confirmation action.
         /// </summary>
         Confirm,
 
         /// <summary>
-        /// Scary click. Likely displayed in Red.
+        /// Indicates that this button is a non-affirmative action, such as delete or cancel.
         /// </summary>
-        Delete,
+        Cancel,
     }
 }

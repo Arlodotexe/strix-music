@@ -1,14 +1,23 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using OwlCore;
 using OwlCore.AbstractStorage;
-using OwlCore.Services;
+using OwlCore.AbstractUI.Models;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.MediaPlayback;
+using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
@@ -17,22 +26,13 @@ using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.MediaPlayback;
+using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Shared.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
-using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using StrixMusic.Sdk.MediaPlayback.LocalDevice;
-using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno.Services.NotificationService;
 
 namespace StrixMusic.Shared
 {
@@ -41,12 +41,13 @@ namespace StrixMusic.Shared
     /// </summary>
     public sealed partial class AppLoadingView : UserControl
     {
+        private readonly DefaultSettingsService _settingsService;
+        private readonly TextStorageService _textStorageService;
         private bool _showingQuip;
-        private DefaultSettingsService? _settingsService;
         private LocalizationResourceLoader? _localizationService;
         private PlaybackHandlerService? _playbackHandlerService;
         private IReadOnlyList<CoreAssemblyInfo>? _coreRegistry;
-        private Dictionary<string, CoreAssemblyInfo>? _configuredCoreRegistry;
+        private Dictionary<string, CoreAssemblyInfo>? _coreInstanceRegistry;
         private MainPage? _mainPage;
         private INavigationService<Control>? _navService;
 
@@ -61,6 +62,8 @@ namespace StrixMusic.Shared
         public AppLoadingView()
         {
             this.InitializeComponent();
+            _textStorageService = new TextStorageService();
+            _settingsService = new DefaultSettingsService(_textStorageService);
 
 #if NETFX_CORE
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
@@ -87,14 +90,10 @@ namespace StrixMusic.Shared
         private void UpdateStatus(string text)
         {
             if (_showingQuip)
-            {
                 return;
-            }
 
             if (_localizationService != null)
-            {
                 text = _localizationService[Constants.Localization.StartupResource, text];
-            }
 
             PART_Status.Text = text;
         }
@@ -106,15 +105,11 @@ namespace StrixMusic.Shared
 
         private async void AppLoadingView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            await InitializeServices();
             await InitializeAssemblies();
-            await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("10ebf138-6a4f-4421-8fcb-c15f91fe0495");
-            await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("15ebf138-6a4f-4421-8fcb-c15f91fe0495");
-            await ManuallyRegisterCore<Core.LocalFiles.LocalFilesCore>("20ebf138-6a4f-4421-8fcb-c15f91fe0495");
-            //await ManuallyRegisterCore<Core.Apollo.ApolloCore>("20ebf138-6a4f-4421-8fcb-c15f02fe1490");
-            //await ManuallyRegisterCore<Core.MusicBrainz.MusicBrainzCore>("10ebf838-6a4e-4421-8fcb-c05f91fe0495");
-            await InitializeCoreRanking();
+            await InitializeServices();
+            await InitializeInstanceRegistry();
             await InitializeOutOfBoxSetupIfNeeded();
+            await InitializeCoreRanking();
             await InitializeConfiguredCores();
 
             UpdateStatusRaw($"Done loading, navigating to {nameof(MainPage)}");
@@ -134,7 +129,7 @@ namespace StrixMusic.Shared
             Assembly[]? assemblies = null;
 
             // Core registry
-            _coreRegistry = await Task.Run(() => _settingsService.GetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRegistry)));
+            _coreRegistry = await _settingsService.GetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRegistry));
 
             if (Equals(_coreRegistry, SettingsKeys.CoreRegistry))
             {
@@ -228,7 +223,7 @@ namespace StrixMusic.Shared
 
                 string assemblyName = match.Groups[1].Value;
 
-                var attributeData = new CoreAttributeData(coreAttribute.CoreType.AssemblyQualifiedName);
+                var attributeData = new CoreAttributeData(coreAttribute.Name, coreAttribute.LogoSvgUrl, coreAttribute.CoreType.AssemblyQualifiedName);
 
                 coreRegistryData.Add(new CoreAssemblyInfo(assemblyName, attributeData));
             }
@@ -244,32 +239,18 @@ namespace StrixMusic.Shared
             await _settingsService.SetValue<IReadOnlyList<CoreAssemblyInfo>>(nameof(SettingsKeys.CoreRegistry), coreRegistryData);
         }
 
-        private async Task ManuallyRegisterCore<T>(string id)
-            where T : ICore
+        private async Task InitializeInstanceRegistry()
         {
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-            Guard.IsNotNull(_coreRegistry, nameof(_coreRegistry));
+            UpdateStatus("InitCoreReg");
 
-            Guard.HasSizeGreaterThan(_coreRegistry, 0, nameof(_coreRegistry));
+            var coreManager = Ioc.Default.GetRequiredService<ICoreManagementService>();
 
-            _configuredCoreRegistry ??= new Dictionary<string, CoreAssemblyInfo>();
-
-            foreach (var coreData in _coreRegistry)
-            {
-                var coreDataType = Type.GetType(coreData.AttributeData.CoreTypeAssemblyQualifiedName);
-
-                if (coreDataType == typeof(T))
-                {
-                    _configuredCoreRegistry.Add($"{coreDataType}.{id}", coreData);
-                }
-            }
-
-            await Task.Run(() => _settingsService.SetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.ConfiguredCores), _configuredCoreRegistry));
+            _coreInstanceRegistry = await coreManager.GetCoreInstanceRegistryAsync();
         }
 
         private async Task InitializeCoreRanking()
         {
-            Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
+            Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
             Guard.IsNotNull(_coreRegistry, nameof(_coreRegistry));
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
@@ -279,23 +260,21 @@ namespace StrixMusic.Shared
 
             foreach (var instanceId in existingCoreRanking)
             {
-                var coreAssemblyInfo = _configuredCoreRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
+                var coreAssemblyInfo = _coreInstanceRegistry.FirstOrDefault(x => x.Key == instanceId).Value;
                 if (coreAssemblyInfo is null)
                     continue;
 
                 // If this core is still configured, add it to the ranking.
                 if (_coreRegistry.Any(x => x.AttributeData.CoreTypeAssemblyQualifiedName == coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName))
-                {
                     coreRanking.Add(instanceId);
-                }
             }
 
             // If no cores exist in ranking, initialize with all loaded cores.
             if (coreRanking.Count == 0)
             {
                 // TODO: Show abstractUI and let the user rank the cores manually.
-                foreach (var configuredCoreData in _configuredCoreRegistry)
-                    coreRanking.Add(configuredCoreData.Key);
+                foreach (var instance in _coreInstanceRegistry)
+                    coreRanking.Add(instance.Key);
             }
 
             await _settingsService.SetValue<List<string>>(nameof(SettingsKeys.CoreRanking), coreRanking);
@@ -332,28 +311,26 @@ namespace StrixMusic.Shared
 
             UpdateStatus("InitServices");
 
-            var contextualServiceLocator = new ContextualServiceLocator();
-
-            var textStorageService = new TextStorageService();
-            _settingsService = new DefaultSettingsService(textStorageService);
-
             var fileSystemService = new FileSystemService();
             var cacheFileSystemService = new DefaultCacheService();
 
             services.AddSingleton(_localizationService);
-            services.AddSingleton(contextualServiceLocator);
-            services.AddSingleton<ITextStorageService>(textStorageService);
+            services.AddSingleton<ITextStorageService>(_textStorageService);
             services.AddSingleton<ISettingsService>(_settingsService);
             services.AddSingleton<CacheServiceBase>(cacheFileSystemService);
             services.AddSingleton<ISharedFactory, SharedFactory>();
             services.AddSingleton<IFileSystemService>(fileSystemService);
             services.AddSingleton<INotificationService, NotificationService>();
+            services.AddSingleton<ICoreManagementService, CoreManagementService>();
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
             UpdateStatus("InitFilesystem");
 
+            var coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
+
             await fileSystemService.InitAsync();
             await cacheFileSystemService.InitAsync();
+            await coreManagementService.InitAsync();
 
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
             var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
@@ -368,68 +345,49 @@ namespace StrixMusic.Shared
             App.AppFrame.SetupNotificationService((NotificationService)notificationService);
         }
 
-        private Task InitializeOutOfBoxSetupIfNeeded()
+        private async Task InitializeOutOfBoxSetupIfNeeded()
         {
-            Guard.IsNotNull(_coreRegistry, nameof(_coreRegistry));
+            Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
+            Guard.IsNotNull(CurrentWindow.AppFrame.OverlayPresenter, nameof(CurrentWindow.AppFrame.OverlayPresenter));
 
             // Todo: If coreRegistry is empty, show out of box setup page.
-            if (_coreRegistry.Count == 0)
-            {
-                // TODO temp out of box setup
-                // show supershell
-                // wait for EventAsTask (supershell closed)
-            }
+            if (_coreInstanceRegistry.Count != 0)
+                return;
 
-            return Task.CompletedTask;
+            // Temp out of box setup
+            var notifService = Ioc.Default.GetRequiredService<INotificationService>();
+
+            var doneButton = new AbstractButton($"{nameof(AppLoadingView)}.OOBEFinishedButton", "Done", null, AbstractButtonType.Confirm);
+            var notification = notifService.RaiseNotification(new AbstractUIElementGroup($"{nameof(AppLoadingView)}.OOBEElementGroup", PreferredOrientation.Horizontal)
+            {
+                Title = "First time?",
+                Subtitle = "Set up some music services to get started.",
+                Items = new List<AbstractUIElement>() { doneButton }
+            });
+
+            // TODO Need a real OOBE instead of using SuperShell
+            CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell), true);
+
+            // TODO Temp, not great. Need a proper flow here.
+            await Threading.EventAsTask(x => doneButton.Clicked += x, x => doneButton.Clicked -= x, TimeSpan.FromDays(1));
+
+            notification.Dismiss();
         }
 
         private async Task InitializeConfiguredCores()
         {
-            Guard.IsNotNull(_configuredCoreRegistry, nameof(_configuredCoreRegistry));
             Guard.IsNotNull(_localizationService, nameof(_localizationService));
-            Guard.IsNotNull(_settingsService, nameof(_settingsService));
-
-            Guard.IsGreaterThan(_configuredCoreRegistry.Count, 0, nameof(_configuredCoreRegistry.Count));
-
-            UpdateStatus("InitCoreReg");
-
-            // UpdateStatus("Creating core instances");
-            UpdateStatus("CreatingCores");
-
-            var cores = await Task.Run(() => _configuredCoreRegistry.Select(x =>
-            {
-                var instanceId = x.Key;
-                var coreAssemblyInfo = x.Value;
-                
-                var coreDataType = Type.GetType(coreAssemblyInfo.AttributeData.CoreTypeAssemblyQualifiedName);
-
-                Guard.IsNotNull(coreDataType, nameof(coreDataType));
-
-                return (ICore)Activator.CreateInstance(coreDataType, instanceId);
-            }).ToList());
 
             UpdateStatus("InitCores");
 
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
-            await mainViewModel.InitializeCoresAsync(cores, CreateInitialCoreServices);
+            await mainViewModel.InitAsync();
 
-            // UpdateStatus("Setting up media players");
             UpdateStatus("SetupMedia");
-            cores.ForEach(SetupMediaPlayer);
-        }
-
-        private async Task<IServiceCollection> CreateInitialCoreServices(ICore core)
-        {
-            var services = new ServiceCollection();
-            StorageFolder rootStorageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(core.InstanceId, Windows.Storage.CreationCollisionOption.OpenIfExists);
-
-            // The same INotificationService instance should be used across all core instances.
-            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-
-            services.AddSingleton<IFileSystemService>(new FileSystemService(rootStorageFolder));
-            services.AddSingleton(notificationService);
-
-            return services;
+            foreach (var core in mainViewModel.Cores)
+            {
+                SetupMediaPlayer(core);
+            }
         }
 
         private void SetupMediaPlayer(ICore core)

@@ -219,6 +219,9 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             // User profiles are never merged.
             return false;
-        } 
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync() => _userProfile.DisposeAsync();
     }
 }

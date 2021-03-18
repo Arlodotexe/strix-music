@@ -52,10 +52,9 @@ namespace OwlCore.Extensions
         /// <param name="func">Returns the action to run in parallel, given <typeparamref name="T"/>.</param>
         /// <param name="cancellationToken">A <see cref="CancellationTokenSource"/> used to cancel the task.</param>
         /// <returns>A <see cref="Task"/> representing the completion of all tasks.</returns>
-        public static Task InParallel<T>(this IEnumerable<T> items, Func<T, Action> func, CancellationTokenSource? cancellationToken = null)
+        public static Task InParallel<T>(this IEnumerable<T> items, Func<T, Action> func, CancellationToken? cancellationToken = null)
         {
-            cancellationToken ??= new CancellationTokenSource();
-            return Task.Run(() => Parallel.ForEach(items, x => func(x)()), cancellationToken.Token);
+            return Task.Run(() => Parallel.ForEach(items, x => func(x)()), cancellationToken ?? CancellationToken.None);
         }
 
         /// <summary>
@@ -65,12 +64,10 @@ namespace OwlCore.Extensions
         /// <typeparam name="T2">The return type.</typeparam>
         /// <param name="items">The source items.</param>
         /// <param name="func">Returns the action to run in parallel, given <typeparamref name="T"/>.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationTokenSource"/> used to cancel the task.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the task.</param>
         /// <returns>A <see cref="Task"/> representing the completion of all tasks. The result is an array of all the returned values.</returns>
-        public static Task<T2[]> InParallel<T, T2>(this IEnumerable<T> items, Func<T, Func<T2>> func, CancellationTokenSource? cancellationToken = null)
+        public static Task<T2[]> InParallel<T, T2>(this IEnumerable<T> items, Func<T, Func<T2>> func, CancellationToken? cancellationToken = null)
         {
-            cancellationToken ??= new CancellationTokenSource();
-
             return Task.Run(() =>
             {
                 object localLockObject = new object();
@@ -80,7 +77,7 @@ namespace OwlCore.Extensions
 
                 Parallel.For(0, enumerable.Count, (i, x) =>
                 {
-                    cancellationToken.Token.Register(x.Stop);
+                    cancellationToken?.Register(x.Stop);
 
                     var results = func(enumerable.ElementAt(i))();
 
@@ -89,7 +86,7 @@ namespace OwlCore.Extensions
                 });
 
                 return resultCollection;
-            }, cancellationToken.Token);
+            }, cancellationToken ?? CancellationToken.None);
         }
     }
 }

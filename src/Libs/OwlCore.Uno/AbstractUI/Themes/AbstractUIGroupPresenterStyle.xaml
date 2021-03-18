@@ -77,7 +77,8 @@
                                 <DataTemplate x:DataType="abstractUIVm:AbstractUIElementGroupViewModel">
                                     <StackPanel Margin="10,20">
 
-                                        <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="30" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" />
+                                        <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="30" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" 
+                                                   Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Title), Mode=OneWay}"/>
 
                                         <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="18" FontWeight="SemiLight" Opacity="0.5"
                                                    Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
@@ -85,7 +86,6 @@
                                         <ItemsControl ItemsSource="{x:Bind Items}"
                                                       Margin="0,20,0,0"
                                                       ItemTemplateSelector="{StaticResource GroupTemplateSelector}" />
-
                                     </StackPanel>
                                 </DataTemplate>
                             </ContentControl.ContentTemplate>

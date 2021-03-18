@@ -382,5 +382,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// Attempts to change volume.
         /// </summary>
         public IAsyncRelayCommand<double> ChangeVolumeAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return Model.DisposeAsync();
+        }
     }
 }

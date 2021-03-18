@@ -122,7 +122,13 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool Equals(ICoreSearch other)
         {
             // We always merge together search sources.
-            return other != null;
+            return true;
+        }
+
+        /// <inheritdoc />
+        public async ValueTask DisposeAsync()
+        {
+            await _sources.InParallel(x => x.DisposeAsync().AsTask());
         }
     }
 }

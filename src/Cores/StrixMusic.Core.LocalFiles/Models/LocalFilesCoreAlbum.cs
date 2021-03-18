@@ -16,7 +16,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <summary>
     /// Wraps around <see cref="AlbumMetadata"/> to provide album information extracted from a file to the Strix SDK.
     /// </summary>
-    public class LocalFilesCoreAlbum : ICoreAlbum, IDisposable
+    public class LocalFilesCoreAlbum : ICoreAlbum
     {
         private readonly IFileMetadataManager _fileMetadataManager;
         private LocalFilesCoreImage? _image;
@@ -510,10 +510,12 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public void Dispose()
+        public ValueTask DisposeAsync()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+
+            return default;
         }
 
         /// <inheritdoc />

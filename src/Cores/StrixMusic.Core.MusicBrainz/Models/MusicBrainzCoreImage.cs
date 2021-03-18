@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Hqub.MusicBrainz.API.Entities;
 using StrixMusic.Core.MusicBrainz.Models.Enums;
 using StrixMusic.Sdk.Data.Core;
@@ -37,5 +38,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public double Width { get; }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            return default;
+        }
     }
 }

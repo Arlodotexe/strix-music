@@ -183,5 +183,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public event EventHandler<double>? PlaybackSpeedChanged;
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            return default;
+        }
     }
 }

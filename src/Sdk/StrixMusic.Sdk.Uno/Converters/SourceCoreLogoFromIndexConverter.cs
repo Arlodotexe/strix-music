@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Uno.Converters
@@ -16,7 +17,11 @@ namespace StrixMusic.Sdk.Uno.Converters
         {
             if (value is IEnumerable<ICore> cores)
             {
-                return cores.ElementAtOrDefault(index)?.CoreConfig.LogoSvgUrl;
+                var mainVieWModel = Ioc.Default.GetRequiredService<MainViewModel>();
+                var relevantCore = cores.ElementAt(index);
+                var coreVm = mainVieWModel.Cores.First(x => x.InstanceId == relevantCore.InstanceId);
+
+                return coreVm.LogoSvgUrl;
             }
 
             return ThrowHelper.ThrowInvalidOperationException<Uri>(nameof(value));
