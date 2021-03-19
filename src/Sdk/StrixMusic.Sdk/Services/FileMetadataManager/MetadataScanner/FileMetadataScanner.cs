@@ -57,7 +57,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _batchLock = new SemaphoreSlim(1, 1);
-            _playlistMetadataFileHelper = new PlaylistMetadataFileHelper(rootFolder);
             _scanningCancellationTokenSource = new CancellationTokenSource();
             _playlistMetadataFileHelper = new PlaylistMetadataFileHelper(rootFolder, this);
 
