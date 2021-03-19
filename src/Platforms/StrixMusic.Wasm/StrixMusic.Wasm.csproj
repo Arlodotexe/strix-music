@@ -59,11 +59,11 @@
     </PackageReference>
     <PackageReference Include="System.Text.Json" Version="5.0.0" />
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.5-dev.13" />
-    <PackageReference Include="Uno.UI" Version="3.6.0-dev.509" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.509" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.UI.WebAssembly" Version="3.6.0-dev.509" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0-dev.180" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0-dev.180" PrivateAssets="all" />
+    <PackageReference Include="Uno.UI" Version="3.6.0-dev.529" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.529" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.UI.WebAssembly" Version="3.6.0-dev.529" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0-dev.198" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0-dev.198" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Core.LocalFiles.csproj" />

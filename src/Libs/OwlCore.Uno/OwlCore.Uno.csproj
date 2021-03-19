@@ -24,9 +24,9 @@
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
-    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.0.2-uno.79" />
-    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.79" />
-    <PackageReference Include="Uno.UI" Version="3.6.0-dev.509" />
+    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.0.2-uno.81" />
+    <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.81" />
+    <PackageReference Include="Uno.UI" Version="3.6.0-dev.529" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -104,16 +104,5 @@
     <Compile Update="AbstractUI\Themes\AbstractTextBoxStyle.xaml.cs">
       <DependentUpon>AbstractTextBoxStyle.xaml</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.17763'">
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>7.0.0-preview4</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>7.0.0-preview4</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
-      <Version>2.0.1</Version>
-    </PackageReference>
   </ItemGroup>
 </Project>
