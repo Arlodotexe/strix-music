@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// A collection of images.
     /// </summary>
-    public interface IImageCollectionBase : ICollectionBase
+    public interface IImageCollectionBase : ICollectionBase, IAsyncDisposable
     {
         /// <summary>
         /// Checks if the backend supports adding an <see cref="IImageBase"/> at a specific position in the collection.

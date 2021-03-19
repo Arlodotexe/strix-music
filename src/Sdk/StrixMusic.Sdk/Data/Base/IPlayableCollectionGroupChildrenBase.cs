@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// A collection of <see cref="IPlayableCollectionGroupBase"/>s and the properties and methods for using and manipulating them.
     /// </summary>
-    public interface IPlayableCollectionGroupChildrenBase : IPlayableCollectionBase
+    public interface IPlayableCollectionGroupChildrenBase : IPlayableCollectionBase, IAsyncDisposable
     {
         /// <summary>
         /// Attempts to play the playable collection. Resumes if paused.

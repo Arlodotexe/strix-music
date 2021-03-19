@@ -41,6 +41,8 @@ namespace StrixMusic.Sdk.ViewModels
             PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
             PlayArtistCollectionAsyncCommand = new AsyncRelayCommand(PlayArtistCollectionAsync);
 
+            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistInternalAsync);
+
             using (Threading.PrimaryContext)
             {
                 Images = new SynchronizedObservableCollection<IImage>();
@@ -342,10 +344,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem)
-        {
-            return _collection.PlayArtistCollectionAsync(artistItem);
-        }
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => PlayArtistInternalAsync(artistItem);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _collection.GetArtistItemsAsync(limit, offset);
@@ -414,6 +413,9 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
 
         /// <inheritdoc />
+        public IAsyncRelayCommand<IArtistCollectionItem> PlayArtistAsyncCommand { get; }
+
+        /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => _collection.Equals(other);
 
         /// <inheritdoc />
@@ -421,5 +423,19 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollection other) => _collection.Equals(other);
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Temporary. Remove when playback is implemented.")]
+        private Task PlayArtistInternalAsync(IArtistCollectionItem? artistCollectionItem)
+        {
+            Guard.IsNotNull(artistCollectionItem, nameof(artistCollectionItem));
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return _collection.DisposeAsync();
+        }
     }
 }

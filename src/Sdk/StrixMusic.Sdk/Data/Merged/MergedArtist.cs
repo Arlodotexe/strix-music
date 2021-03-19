@@ -501,5 +501,17 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             return _preferredSource.GetHashCode();
         }
+
+        /// <inheritdoc />
+        public async ValueTask DisposeAsync()
+        {
+            DetachEvents(_preferredSource);
+
+            await _albumCollectionItemMap.DisposeAsync();
+            await _trackCollectionMap.DisposeAsync();
+            await _imageCollectionMap.DisposeAsync();
+
+            await Sources.InParallel(x => x.DisposeAsync().AsTask());
+        }
     }
 }

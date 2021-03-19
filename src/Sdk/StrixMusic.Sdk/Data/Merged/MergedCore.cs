@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -97,6 +98,29 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool Equals(ICore other)
         {
             return false;
+        }
+
+        /// <inheritdoc />
+        public async ValueTask DisposeAsync()
+        {
+            DetachEvents();
+
+            await Devices.InParallel(x => x.DisposeAsync().AsTask());
+            await Library.DisposeAsync();
+
+            if (Pins != null)
+                await Pins.DisposeAsync();
+
+            if (Search != null)
+                await Search.DisposeAsync();
+
+            if (RecentlyPlayed != null)
+                await RecentlyPlayed.DisposeAsync();
+
+            if (Discoverables != null)
+                await Discoverables.DisposeAsync();
+
+            await _sources.InParallel(x => x.DisposeAsync().AsTask());
         }
     }
 }

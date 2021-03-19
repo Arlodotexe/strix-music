@@ -40,6 +40,8 @@ namespace StrixMusic.Sdk.ViewModels
             PlayPlaylistCollectionAsyncCommand = new AsyncRelayCommand(PlayPlaylistCollectionAsync);
             PausePlaylistCollectionAsyncCommand = new AsyncRelayCommand(PausePlaylistCollectionAsync);
 
+            PlayPlaylistAsyncCommand = new AsyncRelayCommand<IPlaylistCollectionItem>(PlaylistPlaylistInternalAsync);
+
             PopulateMorePlaylistsCommand = new AsyncRelayCommand<int>(PopulateMorePlaylistsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
@@ -403,6 +405,9 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PlayPlaylistCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
+        public IAsyncRelayCommand<IPlaylistCollectionItem> PlayPlaylistAsyncCommand { get; }
+
+        /// <inheritdoc />
         public IAsyncRelayCommand PausePlaylistCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
@@ -419,5 +424,18 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICorePlaylistCollection other) => _collection.Equals(other);
+
+        private Task PlaylistPlaylistInternalAsync(IPlaylistCollectionItem? playlistCollectionItem)
+        {
+            Guard.IsNotNull(playlistCollectionItem, nameof(playlistCollectionItem));
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return _collection.DisposeAsync();
+        }
     }
 }

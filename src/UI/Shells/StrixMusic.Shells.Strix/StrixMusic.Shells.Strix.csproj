@@ -7,7 +7,7 @@
     <RootNamespace>StrixMusic.Shells.Strix</RootNamespace>
     <AssemblyName>StrixMusic.Shells.Strix</AssemblyName>
     <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
@@ -22,12 +22,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview4" />
+    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-	<PackageReference Include="Uno.UI" Version="3.5.0-dev.7" />
+	<PackageReference Include="Uno.UI" Version="3.6.0-dev.509" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -76,7 +77,7 @@
     <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.4" />
+    <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.5-dev.13" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="6.1.0-build.191.gc988bdd4ff" />
   </ItemGroup>
   <ItemGroup>

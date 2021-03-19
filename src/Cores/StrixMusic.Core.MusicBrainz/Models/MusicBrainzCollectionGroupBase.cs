@@ -460,5 +460,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
         {
             throw new NotSupportedException();
         }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            return default;
+        }
     }
 }

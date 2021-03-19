@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
@@ -44,7 +45,7 @@ namespace StrixMusic.Sdk.ViewModels
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
 
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrack);
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackCollectionInternalAsync);
 
             SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(MainViewModel.GetLoadedCore).ToList();
 
@@ -340,25 +341,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track)
-        {
-            return _collection.PlayTrackCollectionAsync(track);
-        }
+        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackCollectionInternalAsync(track);
 
         /// <inheritdoc />
         public Task PauseTrackCollectionAsync()
         {
             return _collection.PauseTrackCollectionAsync();
-        }
-
-        /// <summary>
-        /// Plays a single track from this collection.
-        /// </summary>
-        /// <param name="track"></param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task PlayTrack(ITrack track)
-        {
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -432,5 +420,19 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
+
+        /// <inheritdoc />
+        private Task PlayTrackCollectionInternalAsync(ITrack? track)
+        {
+            Guard.IsNotNull(track, nameof(track));
+            return _collection.PlayTrackCollectionAsync(track);
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return _collection.DisposeAsync();
+        }
     }
 }

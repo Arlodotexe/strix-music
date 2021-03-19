@@ -41,6 +41,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)SuperShell.xaml.cs">
       <DependentUpon>SuperShell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)TemplateSelectors\ServicesItemTemplateSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\AvailableServicesItemViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoadedServicesItemViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SuperShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)AppFrame.xaml">

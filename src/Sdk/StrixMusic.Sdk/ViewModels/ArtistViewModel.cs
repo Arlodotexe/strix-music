@@ -56,10 +56,11 @@ namespace StrixMusic.Sdk.ViewModels
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrack);
-            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionAsync);
 
-            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackCollectionInternalAsync);
+            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionInternalAsync);
+
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
@@ -424,18 +425,8 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PauseAlbumCollectionAsync() => _artist.PauseAlbumCollectionAsync();
 
-        /// <summary>
-        /// Plays a single track from this collection.
-        /// </summary>
-        /// <param name="track"></param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task PlayTrack(ITrack track)
-        {
-            return _playbackHandler.PlayAsync(track, this, _artist);
-        }
-
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => _artist.ChangeNameAsync(name);
+        public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
 
         /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description) => _artist.ChangeDescriptionAsync(description);
@@ -468,19 +459,13 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveGenreAvailable(int index) => _artist.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem)
-        {
-            return _artist.PlayAlbumCollectionAsync(albumItem);
-        }
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => PlayAlbumCollectionInternalAsync(albumItem);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => _artist.GetAlbumItemsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track)
-        {
-            return _artist.PlayTrackCollectionAsync(track);
-        }
+        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackCollectionInternalAsync(track);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _artist.GetTracksAsync(limit, offset);
@@ -627,5 +612,30 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
+
+        private Task ChangeNameInternalAsync(string? name)
+        {
+            Guard.IsNotNull(name, nameof(name));
+            return _artist.ChangeNameAsync(name);
+        }
+
+        private Task PlayTrackCollectionInternalAsync(ITrack? track)
+        {
+            Guard.IsNotNull(track, nameof(track));
+            return _playbackHandler.PlayAsync(track, this, _artist);
+        }
+
+        private Task PlayAlbumCollectionInternalAsync(IAlbumCollectionItem? albumItem)
+        {
+            Guard.IsNotNull(albumItem, nameof(albumItem));
+            return _artist.PlayAlbumCollectionAsync(albumItem);
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return _artist.DisposeAsync();
+        }
     }
 }

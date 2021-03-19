@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// A collection of tracks and the properties and methods for using and manipulating them.
     /// </summary>
-    public interface ITrackCollectionBase : IPlayableCollectionBase
+    public interface ITrackCollectionBase : IPlayableCollectionBase, IAsyncDisposable
     {
         /// <summary>
         /// The total number of available Tracks.

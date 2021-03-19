@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace StrixMusic.Sdk.Data.Base
 {
     /// <summary>
     /// Delegates search operations
     /// </summary>
-    public interface ISearchBase
+    public interface ISearchBase : IAsyncDisposable
     {
         /// <summary>
         /// Given a query, return suggested completed queries.

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -43,9 +44,9 @@ namespace StrixMusic.Sdk.ViewModels
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
 
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrack);
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackInternalAsync);
 
-            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
@@ -363,18 +364,8 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync() => _playlist.PlayTrackCollectionAsync();
 
-        /// <summary>
-        /// Plays a single track from this collection.
-        /// </summary>
-        /// <param name="track"></param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task PlayTrack(ITrack track)
-        {
-            return _playbackHandler.PlayAsync(track, this, _playlist);
-        }
-
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => _playlist.ChangeNameAsync(name);
+        public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
 
         /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description) => _playlist.ChangeDescriptionAsync(description);
@@ -383,10 +374,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration) => _playlist.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track)
-        {
-            return _playlist.PlayTrackCollectionAsync(track);
-        }
+        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackInternalAsync(track);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset = 0) => _playlist.GetTracksAsync(limit, offset);
@@ -494,5 +482,24 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; private set; }
+
+        private Task ChangeNameInternalAsync(string? name)
+        {
+            Guard.IsNotNull(name, nameof(name));
+            return _playlist.ChangeNameAsync(name);
+        }
+
+        private Task PlayTrackInternalAsync(ITrack? track)
+        {
+            Guard.IsNotNull(track, nameof(track));
+            return _playbackHandler.PlayAsync(track, this, _playlist);
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return _playlist.DisposeAsync();
+        }
     }
 }

@@ -1,9 +1,11 @@
-﻿namespace StrixMusic.Sdk.Data.Base
+﻿using System;
+
+namespace StrixMusic.Sdk.Data.Base
 {
     /// <summary>
     /// A base class for playable collections.
     /// </summary>
-    public interface IPlayableCollectionBase : ICollectionBase, IPlayableCollectionItem
+    public interface IPlayableCollectionBase : ICollectionBase, IPlayableCollectionItem, IAsyncDisposable
     {
     }
 }

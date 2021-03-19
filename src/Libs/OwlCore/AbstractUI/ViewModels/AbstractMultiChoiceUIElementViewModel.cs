@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
@@ -77,8 +78,10 @@ namespace OwlCore.AbstractUI.ViewModels
             ItemSelected?.Invoke(this, selectedItem);
         }
 
-        private void OnItemSelected(AbstractUIMetadataViewModel selectedItem)
+        private void OnItemSelected(AbstractUIMetadataViewModel? selectedItem)
         {
+            Guard.IsNotNull(selectedItem, nameof(selectedItem));
+
             ItemSelected?.Invoke(this, selectedItem);
 
             Model.Cast<AbstractMultiChoiceUIElement>().SelectItem((AbstractUIMetadata)selectedItem.Model);

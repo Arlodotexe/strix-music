@@ -863,7 +863,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <inheritdoc cref="Dispose()"/>
         protected virtual void Dispose(bool disposing)
         {
-            Guard.IsTrue(IsInitialized, nameof(IsInitialized));
+            var tracks = await _trackRepository.GetTracks(0, -1);
 
             ReleaseUnmanagedResources();
             if (disposing)

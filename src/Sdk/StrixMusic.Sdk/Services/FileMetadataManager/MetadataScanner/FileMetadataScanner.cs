@@ -23,15 +23,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     /// </summary>
     public class FileMetadataScanner : IAsyncInit, IDisposable
     {
-        private static readonly string[] SupportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
-        private static readonly string[] SupportedPlaylistFileFormats = { ".zpl", ".wpl", ".smil", ".m3u", ".m3u8", ".vlc", ".xspf", ".asx", ".mpcpl", ".fpl", ".pls", ".aimppl4" };
-
+        private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
+        private static readonly string[] _supportedPlaylistFileFormats = { ".zpl", ".wpl", ".smil", ".m3u", ".m3u8", ".vlc", ".xspf", ".asx", ".mpcpl", ".fpl", ".pls", ".aimppl4" };
+        
         private readonly string _emitDebouncerId = Guid.NewGuid().ToString();
         private readonly List<FileMetadata> _batchMetadataToEmit = new List<FileMetadata>();
         private readonly INotificationService _notificationService;
         private readonly SemaphoreSlim _batchLock;
         private readonly IFolderData _folderData;
-
+        private CancellationTokenSource _scanningCancellationTokenSource;
         private int _filesFound;
         private int _filesProcessed;
         private AbstractProgressUIElement? _progressUIElement;
@@ -57,6 +57,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _batchLock = new SemaphoreSlim(1, 1);
+            _playlistMetadataFileHelper = new PlaylistMetadataFileHelper(rootFolder);
+            _scanningCancellationTokenSource = new CancellationTokenSource();
             _playlistMetadataFileHelper = new PlaylistMetadataFileHelper(rootFolder, this);
 
             AttachEvents();
@@ -453,6 +455,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (disposing)
             {
                 // dispose any objects you created here
+                _scanningCancellationTokenSource.Cancel();
             }
 
             IsInitialized = false;
@@ -490,36 +493,67 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <returns>Fully scanned <see cref="IReadOnlyList{RelatedMetadata}"/>.</returns>
         private async Task ScanFolderForMetadata()
         {
-            // DFS search on a single thread
-            // Parallel.ForEach on resulting collection (system manages resources)
-            // Batch the scanned metadata at the end (in the event)
             _filesFoundNotification = RaiseStructureNotification();
 
             var allDiscoveredFiles = new Queue<IFileData>();
             var foldersToScan = new Stack<IFolderData>();
             foldersToScan.Push(_folderData);
 
-            await DfsFolderContentScan(foldersToScan, allDiscoveredFiles);
-
-            _filesFoundNotification.Dismiss();
+            try
+            {
+                await Task.Run(() => DFSFolderContentScan(foldersToScan, allDiscoveredFiles));
+            }
+            catch (OperationCanceledException)
+            {
+                _scanningCancellationTokenSource.Dispose();
+                return;
+            }
+            finally
+            {
+                _filesFoundNotification.Dismiss();
+            }
 
             _filesScannedNotification = RaiseProcessingNotification();
 
-            var playlists = allDiscoveredFiles.Where(c => SupportedPlaylistFileFormats.Contains(c.FileExtension));
-            var musicFiles = allDiscoveredFiles.Where(c => SupportedMusicFileFormats.Contains(c.FileExtension));
+            var playlists = allDiscoveredFiles.Where(c => _supportedPlaylistFileFormats.Contains(c.FileExtension));
+            var musicFiles = allDiscoveredFiles.Where(c => _supportedMusicFileFormats.Contains(c.FileExtension));
 
-            // Making sure the tracks are scanned first.
-            await musicFiles.InParallel(ProcessFile);
+            try
+            {
+                foreach (var file in musicFiles)
+                {
+                    if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                        _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
-            await playlists.InParallel(ProcessFile);
+                    await ProcessFile(file);
+                }
 
-            _filesScannedNotification.Dismiss();
+                // Tracks  must be scanned before scanning playlists.
+                foreach (var file in playlists)
+                {
+                    if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                        _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                    await ProcessFile(file);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                _scanningCancellationTokenSource.Dispose();
+            }
+            finally
+            {
+                _filesScannedNotification.Dismiss();
+            }
         }
 
-        private async Task DfsFolderContentScan(Stack<IFolderData> foldersToCrawl, Queue<IFileData> filesToScan)
+        private async Task DFSFolderContentScan(Stack<IFolderData> foldersToCrawl, Queue<IFileData> filesToScan)
         {
             while (foldersToCrawl.Count > 0)
             {
+                if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                    _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
                 var folderData = foldersToCrawl.Pop();
 
                 var files = await folderData.GetFilesAsync();
@@ -527,7 +561,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 foreach (var file in filesList)
                 {
-                    if (SupportedMusicFileFormats.Contains(file.FileExtension) || SupportedPlaylistFileFormats.Contains(file.FileExtension))
+                    if (_supportedMusicFileFormats.Contains(file.FileExtension) || _supportedPlaylistFileFormats.Contains(file.FileExtension))
                     {
                         filesToScan.Enqueue(file);
                     }
@@ -546,22 +580,19 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task<FileMetadata?> ProcessFile(IFileData file)
         {
-            if (!SupportedMusicFileFormats.Contains(file.FileExtension) && !SupportedPlaylistFileFormats.Contains(file.FileExtension))
-            {
-                FilesFound--;
-                return null;
-            }
-
             var fileMetadata = new FileMetadata();
-            if (SupportedMusicFileFormats.Contains(file.FileExtension))
-            {
-                fileMetadata = await ProcessMusicFile(file);
-            }
 
-            if (SupportedPlaylistFileFormats.Contains(file.FileExtension))
-            {
+            if (_supportedMusicFileFormats.Contains(file.FileExtension))
+                fileMetadata = await ProcessMusicFile(file);
+
+            if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+            if (_supportedPlaylistFileFormats.Contains(file.FileExtension))
                 fileMetadata = await ProcessPlaylistMetadata(file);
-            }
+
+            if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
             FilesProcessed++;
 

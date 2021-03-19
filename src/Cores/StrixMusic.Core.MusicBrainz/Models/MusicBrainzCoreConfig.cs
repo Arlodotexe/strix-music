@@ -251,11 +251,11 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; }
 
-        /// <inheritdoc/>
-        public Uri LogoSvgUrl => new Uri("ms-appx:///Assets/MusicBrainz/logo.svg");
-
         /// <inheritdoc />
         public MediaPlayerType PlaybackType => MediaPlayerType.None;
+
+        /// <inheritdoc />
+        public event EventHandler? AbstractUIElementsChanged;
 
         /// <summary>
         /// Configures services for this instance of the core.
@@ -291,6 +291,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             _fileSystemService = provider.GetRequiredService<IFileSystemService>();
             return _fileSystemService.InitAsync();
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            return default;
         }
     }
 }

@@ -10,7 +10,7 @@
 
     <Grid Background="#1E1E23">
 
-        <Image Stretch="UniformToFill" Height="315" Width="612">
+        <Image Stretch="UniformToFill" Height="315" MaxWidth="612">
             <Image.Source>
                 <SvgImageSource x:Uid="/Startup/SplashScreenImageSVGIS" UriSource="ms-appx:///Assets/Strix/en/Splash Screen.svg"
                                 RasterizePixelHeight="315" RasterizePixelWidth="612" />
@@ -30,7 +30,7 @@
                         <StackPanel Spacing="8" Width="65">
                             <Image Height="50" Width="50" HorizontalAlignment="Center">
                                 <Image.Source>
-                                    <SvgImageSource UriSource="{x:Bind CoreConfig.LogoSvgUrl, Mode=OneWay}"/>
+                                    <SvgImageSource UriSource="{x:Bind LogoSvgUrl, Mode=OneWay}"/>
                                 </Image.Source>
                             </Image>
 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using OwlCore.Collections;
 
 namespace StrixMusic.Sdk.Data.Base
@@ -6,7 +7,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// Metadata about genres.
     /// </summary>
-    public interface IGenreCollectionBase
+    public interface IGenreCollectionBase: IAsyncDisposable
     {
         /// <summary>
         /// A list of <see cref="string"/> describing the genres for this track.

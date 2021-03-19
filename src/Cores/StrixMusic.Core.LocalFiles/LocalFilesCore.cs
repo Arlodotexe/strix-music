@@ -49,9 +49,6 @@ namespace StrixMusic.Core.LocalFiles
         /// <inheritdoc/>
         public CoreState CoreState { get; internal set; } = CoreState.Unloaded;
 
-        /// <inheritdoc/>
-        public string Name => "Local Files";
-
         /// <inheritdoc />
         public string InstanceDescriptor { get; private set; } = string.Empty;
 
@@ -98,6 +95,8 @@ namespace StrixMusic.Core.LocalFiles
         /// <inheritdoc/>
         public ValueTask DisposeAsync()
         {
+            // Dispose any resources not known to the SDK.
+            // Do not dispose Library, Devices, etc. manually. The SDK will dispose these for you.
             return default;
         }
 
@@ -117,7 +116,7 @@ namespace StrixMusic.Core.LocalFiles
             if (configuredFolder is null)
             {
                 _ = PickAndSaveFolder();
-                ChangeCoreState(CoreState.Configuring);
+                ChangeCoreState(CoreState.NeedsSetup);
                 return;
             }
 

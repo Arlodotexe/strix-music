@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// A device that controls playback of an audio player.
     /// </summary>
-    public interface IDeviceBase : IAudioPlayerBase
+    public interface IDeviceBase : IAudioPlayerBase, IAsyncDisposable
     {
         /// <summary>
         /// A unique identifier for the player.

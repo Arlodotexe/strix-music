@@ -208,5 +208,12 @@ namespace StrixMusic.Sdk.MediaPlayback.LocalDevice
 
         /// <inheritdoc />
         public Task ToggleRepeatAsync() => _playbackHandler.ToggleRepeatAsync();
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return default;
+        }
     }
 }

@@ -8,14 +8,14 @@ namespace StrixMusic.Sdk.Data
     public enum CoreState
     {
         /// <summary>
-        /// The core constructed but not initialized.
+        /// The core is constructed but not initialized.
         /// </summary>
         Unloaded,
 
         /// <summary>
         /// The core need configuration data and has requested that the setup process be started.
         /// </summary>
-        Configuring,
+        NeedsSetup,
 
         /// <summary>
         /// The setup process has finished and the core can be initialized.

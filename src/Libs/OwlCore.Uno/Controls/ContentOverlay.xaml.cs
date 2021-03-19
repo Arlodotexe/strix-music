@@ -28,8 +28,12 @@ namespace OwlCore.Uno.Controls
         {
             HeaderText.Text = headerText;
             Presenter.Content = el;
-            Visibility = Visibility.Visible;
-            ShowAnimation.Begin();
+
+            if (Visibility == Visibility.Collapsed)
+            {
+                Visibility = Visibility.Visible;
+                ShowAnimation.Begin();
+            }
         }
 
         /// <summary>
@@ -48,7 +52,13 @@ namespace OwlCore.Uno.Controls
         {
             Visibility = Visibility.Collapsed;
             Presenter.Content = null;
+            Closed?.Invoke(this, EventArgs.Empty);
         }
+
+        /// <summary>
+        /// Raised when the content overlay is closed.
+        /// </summary>
+        public event EventHandler? Closed;
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e) => Hide();
 

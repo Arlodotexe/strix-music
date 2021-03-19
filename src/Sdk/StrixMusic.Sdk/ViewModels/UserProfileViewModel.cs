@@ -206,5 +206,11 @@ namespace StrixMusic.Sdk.ViewModels
         {
             return _userProfile.Equals(other);
         }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            return _userProfile.DisposeAsync();
+        }
     }
 }

@@ -1,3 +1,3 @@
 ﻿using StrixMusic.Sdk;
 
-[assembly: Core(typeof(StrixMusic.Core.MusicBrainz.MusicBrainzCore))]
+[assembly: Core(name: "MusicBrainz", coreType: typeof(StrixMusic.Core.MusicBrainz.MusicBrainzCore), logoSvgUrl: "ms-appx:///Assets/MusicBrainz/logo.svg")]

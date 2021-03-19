@@ -18,7 +18,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     /// <summary>
     /// Wraps around <see cref="TrackMetadata"/> to provide track information extracted from a file to the Strix SDK.
     /// </summary>
-    public class LocalFilesCoreTrack : ICoreTrack, IDisposable
+    public class LocalFilesCoreTrack : ICoreTrack
     {
         private readonly IFileMetadataManager _fileMetadataManager;
         private TrackMetadata _trackMetadata;
@@ -468,16 +468,17 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
         ~LocalFilesCoreTrack()
         {
             Dispose(false);
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            return default;
         }
     }
 }

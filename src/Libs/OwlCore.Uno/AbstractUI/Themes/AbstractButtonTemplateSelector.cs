@@ -53,7 +53,7 @@ namespace OwlCore.Uno.AbstractUI.Themes
             {
                 AbstractButtonType.Generic => GenericStyle ?? ThrowHelper.ThrowArgumentNullException<Style>(),
                 AbstractButtonType.Confirm => ConfirmStyle ?? GenericStyle ?? ThrowHelper.ThrowArgumentNullException<Style>(),
-                AbstractButtonType.Delete => DeleteStyle ?? GenericStyle ?? ThrowHelper.ThrowArgumentNullException<Style>(),
+                AbstractButtonType.Cancel => DeleteStyle ?? GenericStyle ?? ThrowHelper.ThrowArgumentNullException<Style>(),
                 _ => throw new NotImplementedException(),
             };
         }

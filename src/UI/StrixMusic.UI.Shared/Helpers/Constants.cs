@@ -23,7 +23,6 @@ namespace StrixMusic.Helpers
         /// </summary>
         public static class Localization
         {
-
             /// <summary>
             /// The PRI path of the Startup resource.
             /// </summary>

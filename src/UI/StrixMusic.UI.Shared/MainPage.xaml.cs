@@ -7,6 +7,7 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.AbstractStorage;
+using OwlCore.Extensions;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Notifications;
@@ -15,11 +16,10 @@ using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
+using StrixMusic.Sdk.Uno.Services.NotificationService;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using OwlCore.Extensions;
-using StrixMusic.Sdk.Uno.Services.NotificationService;
 
 namespace StrixMusic.Shared
 {

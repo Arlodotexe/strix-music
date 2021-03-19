@@ -18,11 +18,6 @@ namespace StrixMusic.Sdk.Data.Core
         public string InstanceId { get; }
 
         /// <summary>
-        /// The user-friendly name of the core.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
         /// A string of text to display to the user to help identify which core instance this is, such as a username or the path to a file location. Longer strings will be truncated as needed.
         /// </summary>
         public string InstanceDescriptor { get; }

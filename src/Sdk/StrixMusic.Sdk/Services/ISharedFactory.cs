@@ -66,6 +66,13 @@ namespace StrixMusic.Sdk.Services
         public IFileSystemService CreateFileSystemService();
 
         /// <summary>
+        /// Creates a new <see cref="IFileSystemService"/> with a specific root folder.
+        /// </summary>
+        /// <param name="folderPath">The path of the folder to use as root.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task<IFileSystemService> CreateFileSystemServiceAsync(string folderPath);
+
+        /// <summary>
         /// Creates a <see cref="IFileSystemService"/> for caching.
         /// </summary>
         /// <returns>The requested <see cref="IFileSystemService"/>.</returns>

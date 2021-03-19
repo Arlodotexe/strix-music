@@ -373,5 +373,16 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             return Equals(other as ICoreArtistCollection);
         }
+
+        /// <inheritdoc />
+        public async ValueTask DisposeAsync()
+        {
+            DetachEvents(_preferredSource);
+
+            await _artistMap.DisposeAsync();
+            await _imageMap.DisposeAsync();
+
+            await _sources.InParallel(x => x.DisposeAsync().AsTask());
+        }
     }
 }

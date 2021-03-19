@@ -30,7 +30,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// Initializes a new instance of the <see cref="MergedPlayableCollectionGroupBase{T}"/> class.
         /// </summary>
         /// <param name="sources">The search results to merge.</param>
-        protected MergedPlayableCollectionGroupBase(IEnumerable<TCoreBase> sources)
+        protected MergedPlayableCollectionGroupBase(IEnumerable<TCoreBase> sources) 
         {
             // TODO: Use top Preferred core.
             if (sources is null)
@@ -773,6 +773,22 @@ namespace StrixMusic.Sdk.Data.Merged
         public virtual bool Equals(TCoreBase? other)
         {
             return other != null && other.Name.Equals(Name, StringComparison.InvariantCulture);
+        }
+
+        /// <inheritdoc />
+        public async ValueTask DisposeAsync()
+        {
+            DetachCollectionChangedEvents();
+            DetachPropertyChangedEvents(PreferredSource);
+
+            await _albumCollectionMap.DisposeAsync();
+            await _artistCollectionMap.DisposeAsync();
+            await _imagesCollectionMap.DisposeAsync();
+            await _playableCollectionGroupMap.DisposeAsync();
+            await _playlistCollectionMap.DisposeAsync();
+            await _trackCollectionMap.DisposeAsync();
+
+            await Sources.InParallel(x => x.Cast<ICorePlayableCollectionGroup>().DisposeAsync().AsTask());
         }
     }
 }

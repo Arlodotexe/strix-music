@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
+using OwlCore.Uno.Controls;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
@@ -18,6 +20,9 @@ namespace StrixMusic.Shared
     /// </summary>
     public sealed partial class AppFrame : UserControl
     {
+        private NotificationService? _notificationService;
+        private SuperShell? _superShell;
+
         /// <summary>
         /// The Window handle this AppFrame was created on.
         /// </summary>
@@ -27,6 +32,11 @@ namespace StrixMusic.Shared
         /// The root view model used throughout the app.
         /// </summary>
         public MainViewModel? ViewModel => DataContext as MainViewModel;
+
+        /// <summary>
+        /// The content overlay used as a popup dialog for the entire app.
+        /// </summary>
+        public ContentOverlay? ContentOverlay { get; private set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AppFrame"/>.
@@ -46,10 +56,10 @@ namespace StrixMusic.Shared
         /// </summary>
         public void SetupMainViewModel(MainViewModel mainViewModel)
         {
-            AttachEvents(mainViewModel);
-
             DataContext = mainViewModel;
             this.Bindings.Update();
+
+            AttachEvents(mainViewModel);
         }
 
         /// <summary>
@@ -58,13 +68,21 @@ namespace StrixMusic.Shared
         /// <param name="notificationService"></param>
         public void SetupNotificationService(NotificationService notificationService)
         {
+            _notificationService = notificationService;
             AttachEvents(notificationService);
         }
 
         private void AttachEvents()
         {
             CurrentWindow.NavigationService.NavigationRequested += NavServiceOnNavigationRequested;
+            Loaded += AppFrame_Loaded;
             Unloaded += AppFrame_Unloaded;
+        }
+
+        private void AppFrame_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= AppFrame_Loaded;
+            ContentOverlay = OverlayPresenter;
         }
 
         private void AttachEvents(NotificationService notificationService)
@@ -73,34 +91,81 @@ namespace StrixMusic.Shared
             notificationService.NotificationAlignmentChanged += NotificationService_NotificationAlignmentChanged;
         }
 
+        private void DetachEvents(NotificationService notificationService)
+        {
+            notificationService.NotificationMarginChanged -= NotificationService_NotificationMarginChanged;
+            notificationService.NotificationAlignmentChanged -= NotificationService_NotificationAlignmentChanged;
+        }
+
         private void AttachEvents(MainViewModel mainViewModel)
         {
-            mainViewModel.AppNavigationRequested += MainViewModel_AppNavigationRequested;
+            mainViewModel.Cores.CollectionChanged += Cores_CollectionChanged;
+        }
+
+        private void DetachEvents(MainViewModel mainViewModel)
+        {
+            mainViewModel.Cores.CollectionChanged -= Cores_CollectionChanged;
         }
 
         private void DetachEvents()
         {
             Unloaded -= AppFrame_Unloaded;
             CurrentWindow.NavigationService.NavigationRequested -= NavServiceOnNavigationRequested;
+
+            if (DataContext is MainViewModel mainViewModel)
+                DetachEvents(mainViewModel);
+
+            if (!(_notificationService is null))
+                DetachEvents(_notificationService);
         }
 
-        private void MainViewModel_AppNavigationRequested(object sender, AppNavigationTarget e)
+        /// <summary>
+        /// For displaying the UI for a <see cref="Sdk.Data.CoreState.NeedsSetup"/> core state.
+        /// </summary>
+        private void Cores_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (e == AppNavigationTarget.Settings && sender is ICore core)
+            if (!(e.NewItems is null))
             {
-                var navService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
-                var mainPage = Ioc.Default.GetRequiredService<MainPage>();
+                foreach (var item in e.NewItems)
+                {
+                    if (!(item is ICore core))
+                        continue;
 
-                // Send the user to the shell settings if a shell is loaded.
-                if (mainPage.ActiveShellModel != null)
-                {
-                    // TODO post shell service refactor (need one common, injected ioc where we have access to the navigation service.
-                    throw new NotImplementedException();
+                    core.CoreStateChanged += Core_CoreStateChanged;
                 }
-                else
+            }
+
+            if (!(e.OldItems is null))
+            {
+                foreach (var item in e.OldItems)
                 {
-                    navService.NavigateTo(typeof(SuperShell), false, core);
+                    if (!(item is ICore core))
+                        continue;
+
+                    core.CoreStateChanged -= Core_CoreStateChanged;
                 }
+            }
+        }
+
+        private async void Core_CoreStateChanged(object sender, Sdk.Data.CoreState e)
+        {
+            var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
+
+            if (!(sender is ICore core))
+                return;
+
+            if (e == Sdk.Data.CoreState.NeedsSetup)
+            {
+                await Threading.OnPrimaryThread(() =>
+                {
+                    _superShell ??= new SuperShell();
+
+                    var relevantVm = Ioc.Default.GetRequiredService<MainViewModel>().Cores.First(x => x.InstanceId == core.InstanceId);
+                    _superShell.ViewModel.CurrentCoreConfig = relevantVm;
+                    _superShell.ViewModel.SelectedTabIndex = 1;
+
+                    OverlayPresenter.Show(_superShell, localizationService[Constants.Localization.CommonResource, "Settings"]);
+                });
             }
         }
 
@@ -129,16 +194,21 @@ namespace StrixMusic.Shared
             switch (e.Page)
             {
                 case SuperShell superShell:
-                    superShell.ViewModel = (MainViewModel)DataContext;
+                    {
+                        _superShell = superShell;
+                        if (e.IsOverlay)
+                            OverlayPresenter.Show(_superShell, localizationService[Constants.Localization.CommonResource, "Settings"]);
+                        else
+                            PART_ContentPresenter.Content = superShell;
+                        break;
+                    }
 
-                    if (e.IsOverlay)
-                        OverlayPresenter.Show(superShell, localizationService[Constants.Localization.CommonResource, "Settings"]);
-                    else
-                        PART_ContentPresenter.Content = superShell;
-                    break;
                 case MainPage mainPage:
-                    PART_ContentPresenter.Content = mainPage;
-                    break;
+                    {
+                        PART_ContentPresenter.Content = mainPage;
+                        break;
+                    }
+
                 default:
                     return;
             }

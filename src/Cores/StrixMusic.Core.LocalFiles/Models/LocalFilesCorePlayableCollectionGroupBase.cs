@@ -515,5 +515,11 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             return Task.CompletedTask;
         }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            return default;
+        }
     }
 }

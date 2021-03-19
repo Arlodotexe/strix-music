@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// Describes a generic profile.
     /// </summary>
-    public interface IUserProfileBase : IImageCollectionBase, IUrlCollection
+    public interface IUserProfileBase : IImageCollectionBase, IUrlCollection, IAsyncDisposable
     {
         /// <summary>
         /// Identifier for the user
