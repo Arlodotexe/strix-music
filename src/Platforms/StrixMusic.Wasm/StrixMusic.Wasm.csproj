@@ -9,7 +9,7 @@
     <RootNamespace>StrixMusic.Wasm</RootNamespace>
     <AssemblyName>StrixMusic.Wasm</AssemblyName>
     <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -49,8 +49,9 @@
     <!-- Note that for WebAssembly version 1.1.1 of the console logger required -->
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview4" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview4" />
+    <PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
     <PackageReference Include="Refit" Version="5.2.4" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
@@ -58,11 +59,11 @@
     </PackageReference>
     <PackageReference Include="System.Text.Json" Version="5.0.0" />
     <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.5-dev.13" />
-    <PackageReference Include="Uno.UI" Version="3.5.1" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.1" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.UI.WebAssembly" Version="3.5.1" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="1.3.6" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.3.6" PrivateAssets="all" />
+    <PackageReference Include="Uno.UI" Version="3.6.0-dev.509" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.6.0-dev.509" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.UI.WebAssembly" Version="3.6.0-dev.509" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0-dev.180" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0-dev.180" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Core.LocalFiles.csproj" />

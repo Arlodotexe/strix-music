@@ -348,7 +348,7 @@ namespace StrixMusic.Shared
         private async Task InitializeOutOfBoxSetupIfNeeded()
         {
             Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
-            Guard.IsNotNull(CurrentWindow.AppFrame.OverlayPresenter, nameof(CurrentWindow.AppFrame.OverlayPresenter));
+            Guard.IsNotNull(CurrentWindow.AppFrame.ContentOverlay, nameof(CurrentWindow.AppFrame.ContentOverlay));
 
             // Todo: If coreRegistry is empty, show out of box setup page.
             if (_coreInstanceRegistry.Count != 0)

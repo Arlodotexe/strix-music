@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Events;
@@ -122,8 +123,10 @@ namespace OwlCore.AbstractUI.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the added item.</returns>
         public void RequestNewItem() => _model.RequestNewItem();
 
-        private void RequestNewItem(AbstractMutableDataListItemViewModel selectedItem)
+        private void RequestNewItem(AbstractMutableDataListItemViewModel? selectedItem)
         {
+            Guard.IsNotNull(selectedItem, nameof(selectedItem));
+
             var index = Items.IndexOf(selectedItem);
 
             if (index == Items.Count - 1)

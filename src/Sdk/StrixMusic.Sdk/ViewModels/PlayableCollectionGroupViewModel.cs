@@ -50,10 +50,12 @@ namespace StrixMusic.Sdk.ViewModels
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
 
-            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackCollectionAsync);
-            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionAsync);
+            PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackCollectionInternalAsync);
+            PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionInternalAsync);
+            PlayPlaylistAsyncCommand = new AsyncRelayCommand<IPlaylistCollectionItem>(PlayPlaylistCollectionInternalAsync);
+            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistCollectionInternalAsync);
 
-            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
@@ -630,9 +632,8 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task<bool> IsRemoveChildAvailable(int index) => _collectionGroup.IsRemoveChildAvailable(index);
 
-
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => _collectionGroup.ChangeNameAsync(name);
+        public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
 
         /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description) => _collectionGroup.ChangeDescriptionAsync(description);
@@ -803,22 +804,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem)
-        {
-            return _collectionGroup.PlayPlaylistCollectionAsync(playlistItem);
-        }
-
-        /// <inheritdoc />
         public Task PlayPlayableCollectionGroupAsync()
         {
             return _collectionGroup.PlayPlayableCollectionGroupAsync();
         }
 
         /// <inheritdoc />
-        public Task PlayPlayableCollectionGroupAsync(IPlayableCollectionGroup collectionGroup)
-        {
-            return _collectionGroup.PlayPlayableCollectionGroupAsync(collectionGroup);
-        }
+        public Task PlayPlayableCollectionGroupAsync(IPlayableCollectionGroup collectionGroup) => PlayPlayableCollectionGroupInternalAsync(collectionGroup);
 
         /// <inheritdoc />
         public Task PausePlayableCollectionGroupAsync()
@@ -827,28 +819,19 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track)
-        {
-            return _playbackHandler.PlayAsync(track, this, _collectionGroup);
-        }
+        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackCollectionInternalAsync(track);
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem)
-        {
-            return _playbackHandler.PlayAsync(albumItem, this, _collectionGroup);
-        }
+        public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => PlayAlbumCollectionInternalAsync(albumItem);
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem)
-        {
-            return _collectionGroup.PlayArtistCollectionAsync(artistItem);
-        }
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => PlayArtistCollectionInternalAsync(artistItem);
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync()
-        {
-            return _collectionGroup.PlayPlaylistCollectionAsync();
-        }
+        public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem) => PlayPlaylistCollectionInternalAsync(playlistItem);
+
+        /// <inheritdoc />
+        public Task PlayPlaylistCollectionAsync() => _collectionGroup.PlayPlaylistCollectionAsync();
 
         /// <inheritdoc />
         public Task PausePlaylistCollectionAsync()
@@ -926,6 +909,9 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PlayPlaylistCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
+        public IAsyncRelayCommand<IPlaylistCollectionItem> PlayPlaylistAsyncCommand { get; }
+
+        /// <inheritdoc />
         public IAsyncRelayCommand PausePlaylistCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
@@ -945,6 +931,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand PlayArtistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<IArtistCollectionItem> PlayArtistAsyncCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand PauseArtistCollectionAsyncCommand { get; }
@@ -994,6 +983,42 @@ namespace StrixMusic.Sdk.ViewModels
             IsInitialized = true;
 
             await CollectionInit.TrackCollection(this);
+        }
+
+        private Task ChangeNameInternalAsync(string? name)
+        {
+            Guard.IsNotNull(name, nameof(name));
+            return _collectionGroup.ChangeNameAsync(name);
+        }
+
+        private Task PlayTrackCollectionInternalAsync(ITrack? track)
+        {
+            Guard.IsNotNull(track, nameof(track));
+            return _playbackHandler.PlayAsync(track, this, _collectionGroup);
+        }
+
+        private Task PlayAlbumCollectionInternalAsync(IAlbumCollectionItem? albumItem)
+        {
+            Guard.IsNotNull(albumItem, nameof(albumItem));
+            return _playbackHandler.PlayAsync(albumItem, this, _collectionGroup);
+        }
+
+        private Task PlayArtistCollectionInternalAsync(IArtistCollectionItem? artistItem)
+        {
+            Guard.IsNotNull(artistItem, nameof(artistItem));
+            return _collectionGroup.PlayArtistCollectionAsync(artistItem);
+        }
+
+        private Task PlayPlaylistCollectionInternalAsync(IPlaylistCollectionItem? playlistItem)
+        {
+            Guard.IsNotNull(playlistItem, nameof(playlistItem));
+            return _collectionGroup.PlayPlaylistCollectionAsync(playlistItem);
+        }
+
+        private Task PlayPlayableCollectionGroupInternalAsync(IPlayableCollectionGroup? collectionGroup)
+        {
+            Guard.IsNotNull(collectionGroup, nameof(collectionGroup));
+            return _collectionGroup.PlayPlayableCollectionGroupAsync(collectionGroup);
         }
 
         /// <inheritdoc />

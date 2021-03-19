@@ -6,7 +6,7 @@
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <UserSecretsId>6fa950de-976e-453b-bfcb-f0abe43fa342</UserSecretsId>
   </PropertyGroup>
@@ -21,11 +21,12 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CluterNet" Version="0.0.2-alpha" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0-preview4" />
+    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.0.2-uno.79" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.79" />
-    <PackageReference Include="Uno.UI" Version="3.5.0-dev.7" />
+    <PackageReference Include="Uno.UI" Version="3.6.0-dev.509" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

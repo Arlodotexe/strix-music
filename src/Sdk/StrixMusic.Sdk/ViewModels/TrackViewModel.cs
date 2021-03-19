@@ -55,7 +55,9 @@ namespace StrixMusic.Sdk.ViewModels
             PlayArtistCollectionAsyncCommand = new AsyncRelayCommand(PlayArtistCollectionAsync);
             PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
 
-            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameAsync);
+            PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistCollectionInternalAsync);
+
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
@@ -479,7 +481,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PauseArtistCollectionAsync() => Model.PauseArtistCollectionAsync();
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => Model.ChangeNameAsync(name);
+        public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
 
         /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description) => Model.ChangeDescriptionAsync(description);
@@ -512,10 +514,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem)
-        {
-            return Model.PlayArtistCollectionAsync(artistItem);
-        }
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => PlayArtistCollectionInternalAsync(artistItem);
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
@@ -560,6 +559,9 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PlayArtistCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
+        public IAsyncRelayCommand<IArtistCollectionItem> PlayArtistAsyncCommand { get; }
+
+        /// <inheritdoc />
         public IAsyncRelayCommand PauseArtistCollectionAsyncCommand { get; }
 
         /// <summary>
@@ -594,6 +596,18 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreTrack other) => Model.Equals(other);
+
+        private Task ChangeNameInternalAsync(string? name)
+        {
+            Guard.IsNotNull(name, nameof(name));
+            return Model.ChangeNameAsync(name);
+        }
+
+        private Task PlayArtistCollectionInternalAsync(IArtistCollectionItem? artistItem)
+        {
+            Guard.IsNotNull(artistItem, nameof(artistItem));
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()

@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     internal class PlaylistMetadataFileHelper
     {
         private readonly IFolderData _rootFolder;
-        private readonly ITrackRepository _trackRepository;
+        private readonly ITrackRepository? _trackRepository;
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistMetadataFileHelper"/>.
@@ -36,7 +36,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             _rootFolder = fileCoreRootFolder;
 
-            _trackRepository = Ioc.Default.GetRequiredService<ITrackRepository>();
+            //_trackRepository = Ioc.Default.GetRequiredService<ITrackRepository>();
         }
 
         /// <summary>
@@ -773,6 +773,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task<string?> TryGetHashFromExistingTrackRepo(Uri path)
         {
+            if (_trackRepository is null)
+                return null;
+
             var tracks = await _trackRepository.GetTracks(0, -1);
 
             var existingTrack = tracks.FirstOrDefault(c => c.Source?.AbsoluteUri == path.AbsoluteUri);
