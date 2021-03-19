@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -6,14 +7,17 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
+using OwlCore.Provisos;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models.Playlist.Smil;
 
@@ -24,20 +28,103 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     /// <summary>
     /// Handles scanning playlists for all supported metadata.
     /// </summary>
-    internal class PlaylistMetadataFileHelper
+    internal class PlaylistMetadataFileHelper : IAsyncInit, IDisposable
     {
         private readonly IFolderData _rootFolder;
-        private readonly ITrackRepository? _trackRepository;
+        private readonly FileMetadataScanner _fileMetadataManager;
+        private readonly ConcurrentDictionary<string, TrackMetadata> _inMemoryMetadata;
+        private readonly SemaphoreSlim _storageMutex;
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistMetadataFileHelper"/>.
         /// </summary>
-        public PlaylistMetadataFileHelper(IFolderData fileCoreRootFolder)
+        public PlaylistMetadataFileHelper(IFolderData fileCoreRootFolder, FileMetadataScanner fileMetadataManager)
         {
             _rootFolder = fileCoreRootFolder;
+            _fileMetadataManager = fileMetadataManager;
+            _storageMutex = new SemaphoreSlim(1, 1);
+            _inMemoryMetadata = new ConcurrentDictionary<string, TrackMetadata>();
 
-            //_trackRepository = Ioc.Default.GetRequiredService<ITrackRepository>();
+            _fileMetadataManager.FileMetadataAdded += FileMetadataManager_FileMetadataAdded;
+            _fileMetadataManager.FileMetadataRemoved += FileMetadataScanner_FileMetadataRemoved;
         }
+
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            Guard.IsFalse(IsInitialized, nameof(IsInitialized));
+            IsInitialized = true;
+        }
+
+        private async void FileMetadataManager_FileMetadataAdded(object sender, IEnumerable<FileMetadata> e)
+        {
+            var addedTracks = new List<TrackMetadata>();
+
+            // Add track metadata
+            // When tracks are added, artist and album IDs are created with it. No need to emit changed.
+            foreach (var metadata in e)
+            {
+                if (metadata.TrackMetadata != null)
+                {
+                    Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
+                    Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
+                    Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
+
+                    metadata.TrackMetadata.AlbumId = metadata.AlbumMetadata.Id;
+                    metadata.TrackMetadata.ArtistIds = metadata.ArtistMetadata.Id.IntoList();
+
+                    await _storageMutex.WaitAsync();
+
+                    if (!_inMemoryMetadata.TryAdd(metadata.TrackMetadata.Id, metadata.TrackMetadata))
+                        ThrowHelper.ThrowInvalidOperationException($"Tried adding an item that already exists in {nameof(_inMemoryMetadata)}");
+
+                    _storageMutex.Release();
+                    addedTracks.Add(metadata.TrackMetadata);
+                }
+            }
+        }
+
+        private async void FileMetadataScanner_FileMetadataRemoved(object sender, IEnumerable<FileMetadata> e)
+        {
+            var removedTracks = new List<TrackMetadata>();
+
+            // Remove tracks
+            foreach (var metadata in e)
+            {
+                if (metadata.TrackMetadata != null)
+                {
+                    Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
+
+                    await _storageMutex.WaitAsync();
+                    var removed = _inMemoryMetadata.TryRemove(metadata.TrackMetadata.Id, out _);
+                    _storageMutex.Release();
+
+                    if (removed)
+                        removedTracks.Add(metadata.TrackMetadata);
+                }
+
+                // No need to update tracks with removed album IDs.
+                // The album exists as long as any tracks from the album still exist, so it's handled in the AlbumRepository.
+
+                // Update tracks with removed artist IDs 
+                foreach (var data in _inMemoryMetadata.Values)
+                {
+                    if (metadata.ArtistMetadata != null)
+                    {
+                        Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata.Id, nameof(metadata.ArtistMetadata.Id));
+
+                        if (data?.ArtistIds?.Contains(metadata.ArtistMetadata.Id) ?? false)
+                        {
+                            // TODO: emit artist items changed for this track.
+                            data.ArtistIds.Remove(metadata.ArtistMetadata.Id);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
 
         /// <summary>
         /// Scans playlist file for metadata.
@@ -243,7 +330,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     if (!line.Contains(_rootFolder.Path))
                         continue;
 
-                    var hash = await TryGetHashFromExistingTrackRepo(new Uri(line));
+                    var hash = TryGetHashFromExistingTrackRepo(new Uri(line));
 
                     if (hash != null)
                     {
@@ -747,8 +834,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                                                 playlist.Duration?.Add(TimeSpan.FromMilliseconds(trackDuration));
                                         }
 
-
-                                        var hash = await TryGetHashFromExistingTrackRepo(new Uri(trackComponents[0]));
+                                        var hash = TryGetHashFromExistingTrackRepo(new Uri(trackComponents[0]));
 
                                         if (hash != null)
                                         {
@@ -760,6 +846,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                                     break;
                                 }
+
                             default:
                                 throw new ArgumentOutOfRangeException();
                         }
@@ -771,19 +858,32 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             return playlist;
         }
 
-        private async Task<string?> TryGetHashFromExistingTrackRepo(Uri path)
+        private string TryGetHashFromExistingTrackRepo(Uri path) => _inMemoryMetadata.FirstOrDefault(c => c.Value.Source?.AbsoluteUri == path.AbsoluteUri).Key;
+
+        /// <inheritdoc cref="Dispose()"/>
+        protected virtual void Dispose(bool disposing)
         {
-            if (_trackRepository is null)
-                return null;
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+                _inMemoryMetadata.Clear();
+                _storageMutex.Dispose();
+            }
 
-            var tracks = await _trackRepository.GetTracks(0, -1);
+            IsInitialized = false;
+        }
 
-            var existingTrack = tracks.FirstOrDefault(c => c.Source?.AbsoluteUri == path.AbsoluteUri);
+        private void ReleaseUnmanagedResources()
+        {
+            _fileMetadataManager.FileMetadataAdded -= FileMetadataManager_FileMetadataAdded;
+            _fileMetadataManager.FileMetadataRemoved -= FileMetadataScanner_FileMetadataRemoved;
+        }
 
-            if (existingTrack != null)
-                return existingTrack.Id;
-
-            return null;
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

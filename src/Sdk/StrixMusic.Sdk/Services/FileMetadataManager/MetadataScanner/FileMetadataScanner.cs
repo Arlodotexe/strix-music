@@ -25,7 +25,46 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     {
         private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
         private static readonly string[] _supportedPlaylistFileFormats = { ".zpl", ".wpl", ".smil", ".m3u", ".m3u8", ".vlc", ".xspf", ".asx", ".mpcpl", ".fpl", ".pls", ".aimppl4" };
-        
+        private static readonly PictureType[] _albumPictureTypesRanking =
+        {
+            PictureType.FrontCover,
+            PictureType.Illustration,
+            PictureType.Other,
+            PictureType.Media,
+            PictureType.MovieScreenCapture,
+            PictureType.DuringPerformance,
+            PictureType.DuringRecording,
+            PictureType.Artist,
+            PictureType.LeadArtist,
+            PictureType.Band,
+            PictureType.BandLogo,
+            PictureType.Composer,
+            PictureType.Conductor,
+            PictureType.RecordingLocation,
+            PictureType.FileIcon,
+            PictureType.OtherFileIcon,
+        };
+        private static readonly PictureType[] _artistPictureTypesRanking =
+        {
+            PictureType.Artist,
+            PictureType.LeadArtist,
+            PictureType.FrontCover,
+            PictureType.Illustration,
+            PictureType.Media,
+            PictureType.MovieScreenCapture,
+            PictureType.DuringPerformance,
+            PictureType.DuringRecording,
+            PictureType.DuringPerformance,
+            PictureType.DuringRecording,
+            PictureType.Band,
+            PictureType.BandLogo,
+            PictureType.Composer,
+            PictureType.Conductor,
+            PictureType.RecordingLocation,
+            PictureType.FileIcon,
+            PictureType.OtherFileIcon,
+        };
+
         private readonly string _emitDebouncerId = Guid.NewGuid().ToString();
         private readonly List<FileMetadata> _batchMetadataToEmit = new List<FileMetadata>();
         private readonly INotificationService _notificationService;
@@ -57,8 +96,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _batchLock = new SemaphoreSlim(1, 1);
-            _playlistMetadataFileHelper = new PlaylistMetadataFileHelper(rootFolder);
             _scanningCancellationTokenSource = new CancellationTokenSource();
+            _playlistMetadataFileHelper = new PlaylistMetadataFileHelper(rootFolder, this);
 
             AttachEvents();
         }
@@ -112,27 +151,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private static IPicture? GetAlbumArt(IPicture[] pics)
         {
-            var albumPictureTypesRanking = new[]
-            {
-                PictureType.FrontCover,
-                PictureType.Illustration,
-                PictureType.Other,
-                PictureType.Media,
-                PictureType.MovieScreenCapture,
-                PictureType.DuringPerformance,
-                PictureType.DuringRecording,
-                PictureType.Artist,
-                PictureType.LeadArtist,
-                PictureType.Band,
-                PictureType.BandLogo,
-                PictureType.Composer,
-                PictureType.Conductor,
-                PictureType.RecordingLocation,
-                PictureType.FileIcon,
-                PictureType.OtherFileIcon,
-            };
-
-            foreach (var type in albumPictureTypesRanking)
+            foreach (var type in _albumPictureTypesRanking)
             {
                 foreach (var sourcePic in pics)
                 {
@@ -146,28 +165,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private static IPicture? GetArtistArt(IPicture[] pics)
         {
-            var artistPictureTypesRanking = new[]
-            {
-                PictureType.Artist,
-                PictureType.LeadArtist,
-                PictureType.FrontCover,
-                PictureType.Illustration,
-                PictureType.Media,
-                PictureType.MovieScreenCapture,
-                PictureType.DuringPerformance,
-                PictureType.DuringRecording,
-                PictureType.DuringPerformance,
-                PictureType.DuringRecording,
-                PictureType.Band,
-                PictureType.BandLogo,
-                PictureType.Composer,
-                PictureType.Conductor,
-                PictureType.RecordingLocation,
-                PictureType.FileIcon,
-                PictureType.OtherFileIcon,
-            };
-
-            foreach (var type in artistPictureTypesRanking)
+            foreach (var type in _artistPictureTypesRanking)
             {
                 foreach (var sourcePic in pics)
                 {
