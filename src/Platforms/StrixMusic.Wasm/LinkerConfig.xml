@@ -11,6 +11,10 @@
     <type fullname="Microsoft.Toolkit.Diagnostics*" />
   </assembly>
 
+  <assembly fullname="Microsoft.Toolkit.Uwp.UI">
+    <type fullname="Microsoft.Toolkit.Uwp.UI*" />
+  </assembly>
+
   <assembly fullname="StrixMusic.Sdk">
     <type fullname="StrixMusic.Sdk*" />
   </assembly>
