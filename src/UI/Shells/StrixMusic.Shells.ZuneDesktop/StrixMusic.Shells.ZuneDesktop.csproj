@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;;monoandroid10.0;uap10.0.17763</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;;monoandroid10.0;uap10.0.18362</TargetFrameworks>
 		<!--<TargetFrameworks>uap10.0.16299</TargetFrameworks>-->
 		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
 		<GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -202,5 +202,10 @@
 	  <Page Update="Controls\Views\Quickplay\QuickplayContent.xaml">
 	    <SubType>Designer</SubType>
 	  </Page>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.18362'">
+	  <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
+	    <Version>7.0.0</Version>
+	  </PackageReference>
 	</ItemGroup>
 </Project>

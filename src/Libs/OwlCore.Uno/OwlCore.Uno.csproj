@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
   <PropertyGroup>
-	<!--<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.17763</TargetFrameworks>-->
-	<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.17763</TargetFrameworks>
+	<!--<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.18362</TargetFrameworks>-->
+	<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.18362</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Nullable>enable</Nullable>
@@ -24,6 +24,8 @@
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
+    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.0.0-build.2.g0136fc104d" />
+    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.0.0-build.2.g0136fc104d" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Interactivity" Version="2.0.2-uno.81" />
     <PackageReference Include="Uno.Microsoft.Xaml.Behaviors.Uwp.Managed" Version="2.0.2-uno.81" />
     <PackageReference Include="Uno.UI" Version="3.6.0-dev.529" />

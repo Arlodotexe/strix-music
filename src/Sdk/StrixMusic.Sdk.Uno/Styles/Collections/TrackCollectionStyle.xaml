@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
-    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Sdk.Uno.Styles.Collections.TrackCollectionStyle"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -11,7 +11,7 @@
 
     <DataTemplate x:Key="DefaultTrackListTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
         <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Tracks, Mode=OneWay}" ItemContainerStyle="{StaticResource TrackListItemStyle}"
-                  extensions:ListViewExtensions.AlternateColor="#1AFFFFFF"
+                  ui:ListViewExtensions.AlternateColor="#1AFFFFFF"
                   Padding="16" HorizontalAlignment="Stretch"
                   SelectionMode="None" IsItemClickEnabled="True">
             <ListView.Header>
