@@ -1,8 +1,8 @@
-﻿using OwlCore.Uno.ColorExtractor.ColorSpaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OwlCore.Uno.ColorExtractor.ColorSpaces;
 
 namespace OwlCore.Uno.ColorExtractor.Filters
 {

@@ -5,13 +5,13 @@
 	Please see https://github.com/unoplatform/uno/issues/3909 for more details.
 	-->
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.18362</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.19041</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <AssemblyName>StrixMusic.Shells.Groove</AssemblyName>
     <RootNamespace>StrixMusic.Shells.Groove</RootNamespace>
     <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
@@ -115,7 +115,7 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.18362'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'uap10.0.19041'">
     <PackageReference Include="WindowsStateTriggers">
       <Version>1.1.0</Version>
     </PackageReference>

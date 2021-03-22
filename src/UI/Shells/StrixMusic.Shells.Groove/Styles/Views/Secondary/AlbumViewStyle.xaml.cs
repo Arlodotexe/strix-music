@@ -5,7 +5,6 @@ using OwlCore.Uno.ColorExtractor;
 using OwlCore.Uno.ColorExtractor.ColorSpaces;
 using OwlCore.Uno.ColorExtractor.Shapes;
 using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Extensions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using StrixMusic.Sdk.Services.Navigation;
@@ -13,16 +12,11 @@ using StrixMusic.Sdk.Uno.Controls.Shells;
 using StrixMusic.Sdk.Uno.Controls.Views.Secondary;
 using StrixMusic.Sdk.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Color = Windows.UI.Color;
-using ClusterNet.KMeans;
 
 namespace StrixMusic.Shells.Groove.Styles.Views.Secondary
 {
@@ -44,7 +38,7 @@ namespace StrixMusic.Shells.Groove.Styles.Views.Secondary
             // TODO: Navigate to ArtistView
             if ((sender as Control)?.DataContext is ArtistViewModel viewModel)
             {
-                INavigationService<Control> navigationService = Shell.Ioc.GetService<INavigationService<Control>>() ?? ThrowHelper.ThrowInvalidOperationException<INavigationService<Control>>();
+                INavigationService<Control> navigationService = Shell.Ioc.GetRequiredService<INavigationService<Control>>();
                 navigationService.NavigateTo(typeof(ArtistView), false, viewModel);
             }
         }
