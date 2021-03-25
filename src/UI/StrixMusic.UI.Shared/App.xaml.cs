@@ -67,6 +67,8 @@ namespace StrixMusic
             }
 
             // Bi-directional language support
+#if NETFX_CORE
+// https://github.com/unoplatform/uno/issues/21
             var flowDirectionSetting = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
             if (flowDirectionSetting == "LTR")
             {
@@ -76,6 +78,7 @@ namespace StrixMusic
             {
                 AppFrame.FlowDirection = FlowDirection.RightToLeft;
             }
+#endif
         }
 
         /// <summary>

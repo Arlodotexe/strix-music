@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+﻿using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -11,6 +7,10 @@ using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Services.Settings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Data.Merged
 {
@@ -817,9 +817,9 @@ namespace StrixMusic.Sdk.Data.Merged
             var previousMergedMap = _mergedMappedData.ToList();
             _sortedMap.Clear();
 
-            foreach (var item in previouslySortedItems)
+            for (int i = 0; i < previouslySortedItems.Count; i++)
             {
-                var i = previouslySortedItems.IndexOf(item);
+                var item = previouslySortedItems[i];
 
                 // If the currentSource and the previous source are the same, skip this iteration
                 // because we get and re-emit the range of items for this source.
@@ -833,31 +833,34 @@ namespace StrixMusic.Sdk.Data.Merged
             var addedItems = new List<CollectionChangedItem<TCollectionItem>>();
 
             // For each item that we just retrieved, find the index in the sorted map and assign the item.
-            for (var o = 0; o < _mergedMappedData.Count; o++)
+            for (var i = 0; i < _mergedMappedData.Count; i++)
             {
-                var addedItem = _mergedMappedData[o];
+                var addedItem = _mergedMappedData[i];
 
                 Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
 
-                var x = new CollectionChangedItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
+                var x = new CollectionChangedItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, i);
                 addedItems.Add(x);
             }
 
             // logic for removed was copy-pasted and tweaked from the added logic. Not checked or tested.
             var removedItems = new List<CollectionChangedItem<TCollectionItem>>();
 
-            for (var o = 0; o < previousMergedMap.Count; o++)
+            for (var i = 0; i < previousMergedMap.Count; i++)
             {
-                var addedItem = previousMergedMap[o];
+                var removedItem = previousMergedMap[i];
 
-                Guard.IsNotNull(addedItem.CollectionItem, nameof(addedItem.CollectionItem));
+                Guard.IsNotNull(removedItem.CollectionItem, nameof(removedItem.CollectionItem));
 
-                var x = new CollectionChangedItem<TCollectionItem>((TCollectionItem)addedItem.CollectionItem, o);
+                var x = new CollectionChangedItem<TCollectionItem>((TCollectionItem)removedItem.CollectionItem, i);
                 removedItems.Add(x);
             }
 
-            ItemsChanged?.Invoke(this, addedItems, removedItems);
-            ItemsCountChanged?.Invoke(this, addedItems.Count);
+            if (addedItems.Count > 0 || removedItems.Count > 0)
+            {
+                ItemsChanged?.Invoke(this, addedItems, removedItems);
+                ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
+            }
         }
 
         /// <inheritdoc />

@@ -307,7 +307,10 @@ namespace StrixMusic.Shared
             _localizationService.RegisterProvider(Constants.Localization.MusicResource);
 
             // TODO: Add debug boot mode.
+#if NETFX_CORE
+// #741
             ShowQuip();
+#endif
 
             UpdateStatus("InitServices");
 
@@ -324,7 +327,7 @@ namespace StrixMusic.Shared
             services.AddSingleton<ICoreManagementService, CoreManagementService>();
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
-            UpdateStatus("InitFilesystem");
+            UpdateStatus("SetupServices");
 
             var coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
 

@@ -143,7 +143,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.5-dev.13" />
-		<PackageReference Include="Uno.UI" Version="3.5.1" />
+		<PackageReference Include="Uno.UI" Version="3.7.0-dev.36" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />

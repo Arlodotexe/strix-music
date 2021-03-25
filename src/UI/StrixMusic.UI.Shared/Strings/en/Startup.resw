@@ -129,8 +129,8 @@
   <data name="InitCores" xml:space="preserve">
     <value>Initializing cores</value>
   </data>
-  <data name="InitFilesystem" xml:space="preserve">
-    <value>Initializing filesystem</value>
+  <data name="SetupServices" xml:space="preserve">
+    <value>Setting up services</value>
   </data>
   <data name="InitServices" xml:space="preserve">
     <value>Initializing services</value>

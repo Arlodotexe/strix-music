@@ -129,7 +129,7 @@
   <data name="InitCores" xml:space="preserve">
     <value>אתחול ליבות</value>
   </data>
-  <data name="InitFilesystem" xml:space="preserve">
+  <data name="SetupServices" xml:space="preserve">
     <value>אתחול מערכת הקבצים</value>
   </data>
   <data name="InitServices" xml:space="preserve">
