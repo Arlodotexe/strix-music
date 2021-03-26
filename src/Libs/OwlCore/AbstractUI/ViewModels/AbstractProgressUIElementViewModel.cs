@@ -1,10 +1,12 @@
 ﻿using OwlCore.AbstractUI.Models;
+using System.ComponentModel;
 
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// Contains bindable information about an <see cref="AbstractProgressUIElement"/>.
     /// </summary>
+    [Bindable(true)]
     public class AbstractProgressUIElementViewModel : AbstractUIViewModelBase
     {
         private bool _isIndeterminate;

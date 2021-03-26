@@ -1,10 +1,12 @@
 ﻿using OwlCore.AbstractUI.Models;
+using System.ComponentModel;
 
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// ViewModel for <see cref="AbstractRichTextBlock"/>.
     /// </summary>
+    [Bindable(true)]
     public class AbstractRichTextBlockViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractRichTextBlock _model;

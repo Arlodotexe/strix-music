@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using OwlCore.AbstractUI.Models;
 
@@ -8,6 +9,7 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// A view model for <see cref="AbstractUIElementGroup"/>.
     /// </summary>
+    [Bindable(true)]
     public class AbstractUIElementGroupViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractUIElementGroup _model;

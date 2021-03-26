@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore;
@@ -10,6 +11,7 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
     /// <summary>
     /// Manages the notifications coming from the <see cref="INotificationService"/>.
     /// </summary>
+    [Bindable(true)]
     public sealed class NotificationsViewModel : ObservableObject, IDisposable
     {
         private readonly INotificationService _notificationService;

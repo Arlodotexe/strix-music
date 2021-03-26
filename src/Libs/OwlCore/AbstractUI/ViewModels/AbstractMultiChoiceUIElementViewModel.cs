@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -11,6 +12,7 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// A view model for an <see cref="AbstractMultiChoiceUIElement"/>.
     /// </summary>
+    [Bindable(true)]
     public class AbstractMultiChoiceUIElementViewModel : AbstractUIViewModelBase
     {
         private int _selectedIndex;

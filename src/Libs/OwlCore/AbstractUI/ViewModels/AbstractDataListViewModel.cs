@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using OwlCore.AbstractUI.Models;
 
@@ -8,6 +9,7 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// A ViewModel for the <see cref="AbstractDataList"/>.
     /// </summary>
+    [Bindable(true)]
     public class AbstractDataListViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractDataList _model;

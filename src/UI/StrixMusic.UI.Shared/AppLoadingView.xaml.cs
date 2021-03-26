@@ -317,28 +317,33 @@ namespace StrixMusic.Shared
             var fileSystemService = new FileSystemService();
             var cacheFileSystemService = new DefaultCacheService();
 
+            var coreManagementService = new CoreManagementService(_settingsService);
+
             services.AddSingleton(_localizationService);
             services.AddSingleton<ITextStorageService>(_textStorageService);
             services.AddSingleton<ISettingsService>(_settingsService);
             services.AddSingleton<CacheServiceBase>(cacheFileSystemService);
-            services.AddSingleton<ISharedFactory, SharedFactory>();
+            services.AddSingleton<ISharedFactory>(new SharedFactory());
             services.AddSingleton<IFileSystemService>(fileSystemService);
-            services.AddSingleton<INotificationService, NotificationService>();
-            services.AddSingleton<ICoreManagementService, CoreManagementService>();
+            services.AddSingleton<INotificationService>(new NotificationService());
+            services.AddSingleton<ICoreManagementService>(coreManagementService);
 
-            Ioc.Default.ConfigureServices(services.BuildServiceProvider());
+            var serviceProvider = services.BuildServiceProvider();
+            Ioc.Default.ConfigureServices(serviceProvider);
+            
             UpdateStatus("SetupServices");
 
-            var coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
+            // Hack. Ioc doesn't resolve services immediately after building the service provider.
+            // await Task.Delay(100);
 
             await fileSystemService.InitAsync();
             await cacheFileSystemService.InitAsync();
             await coreManagementService.InitAsync();
 
-            var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
-            var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-            _navService = Ioc.Default.GetRequiredService<INavigationService<Control>>();
-            _mainPage = Ioc.Default.GetRequiredService<MainPage>();
+            var mainViewModel = serviceProvider.GetRequiredService<MainViewModel>();
+            var notificationService = serviceProvider.GetRequiredService<INotificationService>();
+            _navService = serviceProvider.GetRequiredService<INavigationService<Control>>();
+            _mainPage = serviceProvider.GetRequiredService<MainPage>();
 
             DataContext = mainViewModel;
             Bindings.Update();

@@ -1,11 +1,13 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
+using System.ComponentModel;
 
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// Contains bindable information about an <see cref="AbstractBooleanUIElement"/>.
     /// </summary>
+    [Bindable(true)]
     public class AbstractBooleanViewModel : AbstractUIViewModelBase
     {
         private bool _isToggled;

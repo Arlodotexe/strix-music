@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
@@ -9,6 +10,7 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// A ViewModel for the <see cref="AbstractTextBox"/>.
     /// </summary>
+    [Bindable(true)]
     public class AbstractTextBoxViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractTextBox _model;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace StrixMusic.Sdk
     /// <summary>
     /// The MainViewModel used throughout the app
     /// </summary>
+    [Bindable(true)]
     public partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
     {
         private readonly Dictionary<string, CancellationTokenSource> _coreInitCancellationTokens = new Dictionary<string, CancellationTokenSource>();

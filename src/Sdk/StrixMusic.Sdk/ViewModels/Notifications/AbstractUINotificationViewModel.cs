@@ -1,12 +1,14 @@
 ﻿using OwlCore.AbstractUI.Models;
 using System.Collections.ObjectModel;
 using OwlCore.AbstractUI.ViewModels;
+using System.ComponentModel;
 
 namespace StrixMusic.Sdk.ViewModels.Notifications
 {
     /// <summary>
     /// A view model for <see cref="AbstractUIElementGroup"/> being used as a Notification.
     /// </summary>
+    [Bindable(true)]
     public class AbstractUINotificationViewModel : AbstractUIElementGroupViewModel
     {
         private const int MAX_BUTTONS = 3;

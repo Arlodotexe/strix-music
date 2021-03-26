@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.AbstractUI.Models;
 
@@ -7,6 +8,7 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// Base view model for all AbstractUI elements.
     /// </summary>
+    [Bindable(true)]
     public class AbstractUIViewModelBase : ObservableObject, IDisposable
     {
         /// <summary>
