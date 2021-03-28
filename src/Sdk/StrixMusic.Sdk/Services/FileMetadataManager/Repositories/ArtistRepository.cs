@@ -343,7 +343,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             await _storageMutex.WaitAsync();
 
             Guard.IsNotNull(_folderData, nameof(_folderData));
-            var bytes = MessagePackSerializer.Serialize(_inMemoryMetadata.ToList(), MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            var bytes = MessagePackSerializer.Serialize(_inMemoryMetadata.Values.ToList(), MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
             var fileData = await _folderData.CreateFileAsync(ARTIST_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
             await fileData.WriteAllBytesAsync(bytes);
