@@ -97,7 +97,10 @@ namespace OwlCore.Uno.AbstractUI.Controls
 
         /// <inheritdoc />
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
-            => item switch
+        {
+            System.Diagnostics.Debug.WriteLine($"{item.GetType()} template selecting for {nameof(AbstractUIGroupItemTemplateSelector)}");
+
+            return item switch
             {
                 AbstractTextBoxViewModel _ => TextBoxTemplate,
                 AbstractDataListViewModel _ => DataListTemplate,
@@ -108,5 +111,6 @@ namespace OwlCore.Uno.AbstractUI.Controls
                 AbstractProgressUIElement _ => ProgressTemplate,
                 _ => base.SelectTemplateCore(item, container)
             };
+        }
     }
 }

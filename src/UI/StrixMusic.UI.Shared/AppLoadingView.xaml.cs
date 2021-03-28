@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
@@ -28,6 +22,13 @@ using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.MediaPlayback;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Shared.Services;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.ViewManagement;
@@ -330,7 +331,7 @@ namespace StrixMusic.Shared
 
             var serviceProvider = services.BuildServiceProvider();
             Ioc.Default.ConfigureServices(serviceProvider);
-            
+
             UpdateStatus("SetupServices");
 
             // Hack. Ioc doesn't resolve services immediately after building the service provider.
@@ -370,7 +371,10 @@ namespace StrixMusic.Shared
             {
                 Title = "First time?",
                 Subtitle = "Set up some music services to get started.",
-                Items = new List<AbstractUIElement>() { doneButton }
+                Items = new List<AbstractUIElement>()
+                {
+                    doneButton,
+                },
             });
 
             // TODO Need a real OOBE instead of using SuperShell

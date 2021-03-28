@@ -32,7 +32,9 @@ namespace OwlCore.Uno.Controls
             if (Visibility == Visibility.Collapsed)
             {
                 Visibility = Visibility.Visible;
+#if NETFX_CORE
                 ShowAnimation.Begin();
+#endif
             }
         }
 
@@ -45,7 +47,11 @@ namespace OwlCore.Uno.Controls
         /// </remarks>
         public void Hide()
         {
+#if NETFX_CORE
             HideAnimation.Begin();
+#else
+            CompleteHide();
+#endif
         }
 
         private void CompleteHide()

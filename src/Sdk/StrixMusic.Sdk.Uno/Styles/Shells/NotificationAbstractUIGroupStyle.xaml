@@ -21,12 +21,12 @@
                                             <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="20" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" />
 
                                             <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextWrapping="WrapWholeWords"
-                                                   Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
-                                            
-                                            <ItemsControl ItemsSource="{x:Bind ButtonViewModels}">
+                                                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
+
+                                            <ItemsControl ItemsSource="{Binding ButtonViewModels}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate x:DataType="abstractUIVm:AbstractButtonViewModel">
-                                                        <controls:AbstractButtonPresenter Margin="8,0"/>
+                                                        <controls:AbstractButtonPresenter Margin="8,0"//>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                                 <ItemsControl.ItemsPanel>
@@ -37,7 +37,7 @@
                                             </ItemsControl>
                                         </StackPanel>
 
-                                        <ProgressBar Value="{x:Bind ProgressBarViewModel.Value, Mode=Oneway}"
+                                        <ProgressBar Value="{x:Bind ProgressBarViewModel.Value, Mode=OneWay}"
                                                      Minimum="{x:Bind ProgressBarViewModel.Minimum, Mode=OneWay}"
                                                      Maximum="{x:Bind ProgressBarViewModel.Maximum, Mode=OneWay}"
                                                      IsIndeterminate="{x:Bind ProgressBarViewModel.IsIndeterminate, Mode=OneWay}"

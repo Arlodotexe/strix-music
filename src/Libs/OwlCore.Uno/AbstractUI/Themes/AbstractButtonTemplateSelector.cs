@@ -37,17 +37,11 @@ namespace OwlCore.Uno.AbstractUI.Themes
             var type = AbstractButtonType.Generic;
 
             if (value is AbstractButtonType vType)
-            {
                 type = vType;
-            }
             if (value is AbstractButtonViewModel buttonViewModel)
-            {
                 type = buttonViewModel.Type;
-            }
             else if (value is AbstractButton button)
-            {
                 type = button.Type;
-            }
 
             return type switch
             {

@@ -8,5 +8,12 @@ namespace OwlCore.Uno.AbstractUI.Controls
     /// </summary>
     public partial class AbstractButtonPresenter : Control
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="AbstractButtonPresenter"/>.
+        /// </summary>
+        public AbstractButtonPresenter()
+        {
+            this.DefaultStyleKey = typeof(AbstractButtonPresenter);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿    <UserControl
     x:Class="StrixMusic.Shared.AppFrame"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,8 +9,17 @@
     xmlns:controls="using:OwlCore.Uno.Controls"
     xmlns:abstractUIControls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
+    xmlns:shells="using:StrixMusic.Sdk.Uno.Styles.Shells"
     mc:Ignorable="d"
     Loaded="AppFrame_OnLoaded">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <shells:NotificationAbstractUIGroupStyle/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <Grid>
         <ContentPresenter x:Name="PART_ContentPresenter" />
@@ -28,7 +37,7 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <abstractUIControls:AbstractUIGroupPresenter DataContext="{x:Bind AbstractUINotificationViewModel}" Style="{StaticResource DefaultNotificationAbstractUIGroupStyle}"/>
+                        <abstractUIControls:AbstractUIGroupPresenter DataContext="{x:Bind AbstractUINotificationViewModel, Mode=OneWay}" Style="{StaticResource DefaultNotificationAbstractUIGroupStyle}"/>
 
                         <Button CornerRadius="0" HorizontalAlignment="Right" VerticalAlignment="Stretch"
                                 Grid.Column="1" Width="48" Background="Transparent" Padding="0"
