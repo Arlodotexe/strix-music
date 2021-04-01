@@ -6,12 +6,12 @@ namespace OwlCore.Extensions
     public static partial class EnumerableExtensions
     {
         /// <summary>
-        /// Inserts an item into a collection, or adds if the index is out of bounds.
+        /// Inserts an item into a collection, or adds if the index is the size of the list.
         /// </summary>
         /// <param name="itemToAdd">The item to add to the collection.</param>
         /// <param name="source">The collection to modify.</param>
-        /// <param name="index"></param>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="index">The index to place the item.</param>
+        /// <typeparam name="T">The type of the item being added.</typeparam>
         public static void InsertOrAdd<T>(this IList<T> source, int index, T itemToAdd)
         {
             if (index < 0)
