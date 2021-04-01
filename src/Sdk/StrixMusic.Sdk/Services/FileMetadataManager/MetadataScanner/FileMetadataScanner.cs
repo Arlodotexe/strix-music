@@ -1,8 +1,6 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.AbstractStorage;
-using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
@@ -44,6 +42,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             PictureType.FileIcon,
             PictureType.OtherFileIcon,
         };
+
         private static readonly PictureType[] _artistPictureTypesRanking =
         {
             PictureType.Artist,
@@ -67,24 +66,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private readonly string _emitDebouncerId = Guid.NewGuid().ToString();
         private readonly List<FileMetadata> _batchMetadataToEmit = new List<FileMetadata>();
-        private readonly INotificationService _notificationService;
+        private readonly List<FileMetadata> _fileMetadatas = new List<FileMetadata>();
         private readonly SemaphoreSlim _batchLock;
         private readonly IFolderData _folderData;
-        private CancellationTokenSource _scanningCancellationTokenSource;
-        private int _filesFound;
+        private readonly CancellationTokenSource _scanningCancellationTokenSource;
+
+        private int _mediaFilesFound;
         private int _filesProcessed;
-        private AbstractProgressUIElement? _progressUIElement;
-        private Notification? _filesScannedNotification;
-        private Notification? _filesFoundNotification;
-        private PlaylistMetadataFileHelper _playlistMetadataFileHelper;
-
-        /// <inheritdoc />
-        public bool IsInitialized { get; private set; }
-
-        /// <summary>
-        /// The folder to use for storing file metadata.
-        /// </summary>
-        public IFolderData? CacheFolder { get; internal set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="FileMetadataScanner"/>.
@@ -94,12 +82,23 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             _folderData = rootFolder;
 
-            _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _batchLock = new SemaphoreSlim(1, 1);
             _scanningCancellationTokenSource = new CancellationTokenSource();
-            _playlistMetadataFileHelper = new PlaylistMetadataFileHelper(rootFolder, this);
 
             AttachEvents();
+        }
+
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            if (IsInitialized)
+                return;
+
+            IsInitialized = true;
+
+            Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
+
+            await Task.Run(ScanFolderForMetadata);
         }
 
         private void AttachEvents()
@@ -122,32 +121,39 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// </summary>
         public event EventHandler<IEnumerable<FileMetadata>>? FileMetadataRemoved;
 
-        private int FilesFound
-        {
-            get => _filesFound;
-            set
-            {
-                _filesFound = value;
-                if (_progressUIElement != null)
-                    _progressUIElement.Maximum = value;
+        /// <summary>
+        /// Raised when a new file is found.
+        /// </summary>
+        public event EventHandler? FilesFoundCountUpdated;
 
-                UpdateFilesFoundNotification();
-            }
-        }
+        /// <summary>
+        /// Raised when a new file is processed.
+        /// </summary>
+        public event EventHandler? FilesProcessedCountUpdated;
 
-        private int FilesProcessed
-        {
-            get => _filesProcessed;
-            set
-            {
-                _filesProcessed = value;
+        /// <summary>
+        /// Raised file discovery starts
+        /// </summary>
+        public event EventHandler? FileDiscoveryStarted;
 
-                if (_progressUIElement != null)
-                    _progressUIElement.Value = value;
+        /// <summary>
+        /// Raised when all files are found.
+        /// </summary>
+        public event EventHandler<IEnumerable<IFileData>>? FileDiscoveryCompleted;
 
-                UpdateFilesScanNotification();
-            }
-        }
+        /// <summary>
+        /// Raised when all file scanning is complete.
+        /// </summary>
+        public event EventHandler<IEnumerable<FileMetadata>>? FileScanCompleted;
+
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
+
+        /// <summary>
+        /// The folder to use for storing file metadata.
+        /// </summary>
+        public IFolderData? CacheFolder { get; internal set; }
 
         private static IPicture? GetAlbumArt(IPicture[] pics)
         {
@@ -203,14 +209,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 }
             }
 
-            if (metadata.ArtistMetadata != null)
-            {
-                if (string.IsNullOrWhiteSpace(metadata.ArtistMetadata.Name))
-                    metadata.ArtistMetadata.Name = string.Empty;
+            if (metadata.ArtistMetadata == null) 
+                return;
 
-                var artistId = (metadata.ArtistMetadata.Name ?? string.Empty + ".artist").HashMD5Fast();
-                metadata.ArtistMetadata.Id = artistId;
-            }
+            if (string.IsNullOrWhiteSpace(metadata.ArtistMetadata.Name))
+                metadata.ArtistMetadata.Name = string.Empty;
+
+            var artistId = (metadata.ArtistMetadata.Name ?? string.Empty + ".artist").HashMD5Fast();
+            metadata.ArtistMetadata.Id = artistId;
         }
 
         private static FileMetadata MergeMetadataFields(FileMetadata[] metadata)
@@ -437,82 +443,30 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             }
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!IsInitialized)
-                return;
-
-            ReleaseUnmanagedResources();
-            if (disposing)
-            {
-                // dispose any objects you created here
-                _scanningCancellationTokenSource.Cancel();
-            }
-
-            IsInitialized = false;
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
-        ~FileMetadataScanner()
-        {
-            Dispose(false);
-        }
-
-        /// <inheritdoc />
-        public async Task InitAsync()
-        {
-            if (IsInitialized)
-                return;
-
-            IsInitialized = true;
-
-            Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
-
-            await Task.Run(ScanFolderForMetadata);
-        }
-
         /// <summary>
         /// Scans a folder and all subfolders for music and music metadata.
         /// </summary>
         /// <returns>Fully scanned <see cref="IReadOnlyList{RelatedMetadata}"/>.</returns>
         private async Task ScanFolderForMetadata()
         {
-            _filesFoundNotification = RaiseStructureNotification();
-
             var allDiscoveredFiles = new Queue<IFileData>();
             var foldersToScan = new Stack<IFolderData>();
             foldersToScan.Push(_folderData);
 
             try
             {
+                FileDiscoveryStarted?.Invoke(this, EventArgs.Empty);
+
                 await Task.Run(() => DFSFolderContentScan(foldersToScan, allDiscoveredFiles));
+
+                FileDiscoveryCompleted?.Invoke(this, allDiscoveredFiles);
             }
             catch (OperationCanceledException)
             {
                 _scanningCancellationTokenSource.Dispose();
                 return;
             }
-            finally
-            {
-                _filesFoundNotification.Dismiss();
-            }
 
-            _filesScannedNotification = RaiseProcessingNotification();
-
-            var playlists = allDiscoveredFiles.Where(c => _supportedPlaylistFileFormats.Contains(c.FileExtension));
             var musicFiles = allDiscoveredFiles.Where(c => _supportedMusicFileFormats.Contains(c.FileExtension));
 
             try
@@ -524,23 +478,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                     await ProcessFile(file);
                 }
-
-                // Tracks  must be scanned before scanning playlists.
-                foreach (var file in playlists)
-                {
-                    if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
-                        _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                    await ProcessFile(file);
-                }
             }
             catch (OperationCanceledException)
             {
                 _scanningCancellationTokenSource.Dispose();
-            }
-            finally
-            {
-                _filesScannedNotification.Dismiss();
             }
         }
 
@@ -560,11 +501,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     if (_supportedMusicFileFormats.Contains(file.FileExtension) || _supportedPlaylistFileFormats.Contains(file.FileExtension))
                     {
+                        if (_supportedMusicFileFormats.Contains(file.FileExtension))
+                        {
+                            _mediaFilesFound++;
+                        }
+
+                        //considering playlists files too. Because we are all scannable files one time using FileMetadataScanner.
+                        FilesFoundCountUpdated?.Invoke(this, EventArgs.Empty);
                         filesToScan.Enqueue(file);
                     }
                 }
-
-                FilesFound += filesList.Count;
 
                 var folders = await folderData.GetFoldersAsync();
 
@@ -585,13 +531,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
                 _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
-            if (_supportedPlaylistFileFormats.Contains(file.FileExtension))
-                fileMetadata = await ProcessPlaylistMetadata(file);
-
             if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
                 _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
-            FilesProcessed++;
+            _filesProcessed++;
+
+            FilesProcessedCountUpdated?.Invoke(this, EventArgs.Empty);
 
             await _batchLock.WaitAsync();
 
@@ -605,13 +550,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             return fileMetadata;
         }
 
-        private async Task<FileMetadata?> ProcessPlaylistMetadata(IFileData file)
-        {
-            var playlistMetadata = await _playlistMetadataFileHelper.ScanPlaylistMetadata(file);
-
-            return playlistMetadata == null ? null : new FileMetadata() { PlaylistMetadata = playlistMetadata };
-        }
-
         private async Task<FileMetadata?> ProcessMusicFile(IFileData file)
         {
             var metadata = await ScanFileMetadata(file);
@@ -623,58 +561,53 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             await _batchLock.WaitAsync();
 
-            if (FilesFound != FilesProcessed && _batchMetadataToEmit.Count < 100 && !await Flow.Debounce(_emitDebouncerId, TimeSpan.FromSeconds(5)))
+            if (_filesProcessed != _mediaFilesFound && _batchMetadataToEmit.Count < 100 && !await Flow.Debounce(_emitDebouncerId, TimeSpan.FromSeconds(5)))
                 return;
 
             FileMetadataAdded?.Invoke(this, _batchMetadataToEmit.ToArray());
 
+            _fileMetadatas.AddRange(_batchMetadataToEmit);
+
             _batchMetadataToEmit.Clear();
 
             _batchLock.Release();
+
+            if (_filesProcessed == _mediaFilesFound)
+                FileScanCompleted?.Invoke(this, _fileMetadatas);
         }
 
-        private Notification RaiseStructureNotification()
+        private void ReleaseUnmanagedResources()
         {
-            static string NewGuid() => Guid.NewGuid().ToString();
+            DetachEvents();
+        }
 
-            var elementGroup = new AbstractUIElementGroup(NewGuid())
+        /// <inheritdoc cref="Dispose()"/>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!IsInitialized)
+                return;
+
+            if (disposing)
             {
-                Title = "Looking for files",
-                Subtitle = $"Found {FilesFound} in {_folderData.Path}",
-                Items = { new AbstractProgressUIElement(NewGuid(), null) },
-            };
+                // dispose any objects you created here
+                ReleaseUnmanagedResources();
+                _scanningCancellationTokenSource.Cancel();
+            }
 
-            return _notificationService.RaiseNotification(elementGroup);
+            IsInitialized = false;
         }
 
-        private Notification RaiseProcessingNotification()
+        /// <inheritdoc />
+        public void Dispose()
         {
-            static string NewGuid() => Guid.NewGuid().ToString();
-
-            _progressUIElement = new AbstractProgressUIElement(NewGuid(), FilesProcessed, FilesFound);
-
-            var elementGroup = new AbstractUIElementGroup(NewGuid())
-            {
-                Title = "Scanning library",
-                Subtitle = $"Scanned {FilesProcessed}/{FilesFound} files in {_folderData.Path}",
-                Items = { _progressUIElement },
-            };
-
-            return _notificationService.RaiseNotification(elementGroup);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        private void UpdateFilesScanNotification()
+        /// <inheritdoc />
+        ~FileMetadataScanner()
         {
-            Guard.IsNotNull(_filesScannedNotification, nameof(_filesScannedNotification));
-
-            _filesScannedNotification.AbstractUIElementGroup.Subtitle = $"Scanned {FilesProcessed}/{FilesFound} files in {_folderData.Path}";
-        }
-
-        private void UpdateFilesFoundNotification()
-        {
-            Guard.IsNotNull(_filesFoundNotification, nameof(_filesFoundNotification));
-
-            _filesFoundNotification.AbstractUIElementGroup.Subtitle = $"Found {FilesFound} in {_folderData.Path}";
+            Dispose(false);
         }
     }
 }
