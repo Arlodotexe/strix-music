@@ -15,116 +15,157 @@ using System.Xml.Serialization;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Newtonsoft.Json.Linq;
+using OwlCore;
 using OwlCore.AbstractStorage;
+using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models.Playlist.Smil;
+using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
-    // TODO: This class needs cleanup.
-
     /// <summary>
-    /// Handles scanning playlists for all supported metadata.
+    /// Scans all playlist files.
     /// </summary>
-    internal class PlaylistMetadataFileHelper : IAsyncInit, IDisposable
+    public class PlaylistMetadataScanner : IDisposable
     {
+        private static readonly string[] _supportedPlaylistFileFormats = { ".zpl", ".wpl", ".smil", ".m3u", ".m3u8", ".vlc", ".xspf", ".asx", ".mpcpl", ".fpl", ".pls", ".aimppl4" };
+        private readonly FileMetadataScanner _fileMetadataScanner;
+        private readonly SemaphoreSlim _batchLock;
         private readonly IFolderData _rootFolder;
-        private readonly FileMetadataScanner _fileMetadataManager;
-        private readonly ConcurrentDictionary<string, TrackMetadata> _inMemoryMetadata;
-        private readonly SemaphoreSlim _storageMutex;
+        private readonly string _emitDebouncerId = Guid.NewGuid().ToString();
+        private readonly CancellationTokenSource _scanningCancellationTokenSource;
+        private readonly List<FileMetadata> _batchMetadataToEmit = new List<FileMetadata>();
+
+        private IEnumerable<IFileData>? _discoveredFiles;
+        private IEnumerable<FileMetadata>? _scannedTracks;
+        private int _filesProcessed;
+        private int _totalFiles;
 
         /// <summary>
-        /// Creates a new instance of <see cref="PlaylistMetadataFileHelper"/>.
+        /// Creates a new isntance <see cref="PlaylistMetadataScanner"/>.
         /// </summary>
-        public PlaylistMetadataFileHelper(IFolderData fileCoreRootFolder, FileMetadataScanner fileMetadataManager)
+        /// <param name="fileCoreRootFolder"></param>
+        /// <param name="fileMetadataScanner"></param>
+        public PlaylistMetadataScanner(IFolderData fileCoreRootFolder, FileMetadataScanner fileMetadataScanner)
         {
+            _fileMetadataScanner = fileMetadataScanner;
             _rootFolder = fileCoreRootFolder;
-            _fileMetadataManager = fileMetadataManager;
-            _storageMutex = new SemaphoreSlim(1, 1);
-            _inMemoryMetadata = new ConcurrentDictionary<string, TrackMetadata>();
+            _batchLock = new SemaphoreSlim(1, 1);
+          
+            _scanningCancellationTokenSource = new CancellationTokenSource();
 
-            _fileMetadataManager.FileMetadataAdded += FileMetadataManager_FileMetadataAdded;
-            _fileMetadataManager.FileMetadataRemoved += FileMetadataScanner_FileMetadataRemoved;
+            AttachEvents();
         }
 
-        /// <inheritdoc />
-        public async Task InitAsync()
+        private void AttachEvents()
         {
-            Guard.IsFalse(IsInitialized, nameof(IsInitialized));
-            IsInitialized = true;
+            _fileMetadataScanner.FileDiscoveryCompleted += FileMetadataScanner_FileDiscoveryCompleted;
         }
 
-        private async void FileMetadataManager_FileMetadataAdded(object sender, IEnumerable<FileMetadata> e)
+        private void DetachEvents()
         {
-            var addedTracks = new List<TrackMetadata>();
-
-            // Add track metadata
-            // When tracks are added, artist and album IDs are created with it. No need to emit changed.
-            foreach (var metadata in e)
-            {
-                if (metadata.TrackMetadata != null)
-                {
-                    Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
-                    Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
-                    Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
-
-                    metadata.TrackMetadata.AlbumId = metadata.AlbumMetadata.Id;
-                    metadata.TrackMetadata.ArtistIds = metadata.ArtistMetadata.Id.IntoList();
-
-                    await _storageMutex.WaitAsync();
-
-                    if (!_inMemoryMetadata.TryAdd(metadata.TrackMetadata.Id, metadata.TrackMetadata))
-                        ThrowHelper.ThrowInvalidOperationException($"Tried adding an item that already exists in {nameof(_inMemoryMetadata)}");
-
-                    _storageMutex.Release();
-                    addedTracks.Add(metadata.TrackMetadata);
-                }
-            }
+            _fileMetadataScanner.FileDiscoveryCompleted -= FileMetadataScanner_FileDiscoveryCompleted;
         }
 
-        private async void FileMetadataScanner_FileMetadataRemoved(object sender, IEnumerable<FileMetadata> e)
-        {
-            var removedTracks = new List<TrackMetadata>();
-
-            // Remove tracks
-            foreach (var metadata in e)
-            {
-                if (metadata.TrackMetadata != null)
-                {
-                    Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
-
-                    await _storageMutex.WaitAsync();
-                    var removed = _inMemoryMetadata.TryRemove(metadata.TrackMetadata.Id, out _);
-                    _storageMutex.Release();
-
-                    if (removed)
-                        removedTracks.Add(metadata.TrackMetadata);
-                }
-
-                // No need to update tracks with removed album IDs.
-                // The album exists as long as any tracks from the album still exist, so it's handled in the AlbumRepository.
-
-                // Update tracks with removed artist IDs 
-                foreach (var data in _inMemoryMetadata.Values)
-                {
-                    if (metadata.ArtistMetadata != null)
-                    {
-                        Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata.Id, nameof(metadata.ArtistMetadata.Id));
-
-                        if (data?.ArtistIds?.Contains(metadata.ArtistMetadata.Id) ?? false)
-                        {
-                            // TODO: emit artist items changed for this track.
-                            data.ArtistIds.Remove(metadata.ArtistMetadata.Id);
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <inheritdoc />
+        /// <summary>
+        /// Flag that tells if the scanner is initialized or not.
+        /// </summary>
         public bool IsInitialized { get; private set; }
+
+        /// <summary>
+        /// Playlist metadata scanning completed.
+        /// </summary>
+        public event EventHandler? PlaylistMetadataScanCompleted;
+
+        /// <summary>
+        /// Processed file count updated.
+        /// </summary>
+        public event EventHandler? PlaylistMetadataProcessedFileCountUpdated;
+
+        /// <summary>
+        /// Raised when a new playlist with metadata is discovered.
+        /// </summary>
+        public event EventHandler<IEnumerable<FileMetadata>>? PlaylistMetadataAdded;
+
+        /// <summary>
+        /// Raised when a previously scanned file has been removed from the file system.
+        /// </summary>
+        public event EventHandler<IEnumerable<FileMetadata>>? PlaylistMetadataRemoved;
+
+        private void FileMetadataScanner_FileDiscoveryCompleted(object sender, IEnumerable<IFileData> e)
+        {
+            _fileMetadataScanner.FileDiscoveryCompleted -= FileMetadataScanner_FileDiscoveryCompleted;
+            _fileMetadataScanner.FileScanCompleted += FileMetadataScanner_FileScanCompleted;
+
+            _discoveredFiles = e;
+        }
+
+        private async void FileMetadataScanner_FileScanCompleted(object sender, IEnumerable<FileMetadata> e)
+        {
+            _fileMetadataScanner.FileScanCompleted -= FileMetadataScanner_FileScanCompleted;
+
+            _scannedTracks = e;
+
+            var playlists = _discoveredFiles.Where(c => _supportedPlaylistFileFormats.Contains(c.FileExtension));
+
+            _totalFiles = playlists.Count();
+
+            if (_totalFiles == 0)
+            {
+                PlaylistMetadataScanCompleted?.Invoke(this, EventArgs.Empty);
+            }
+
+            foreach (var item in playlists)
+            {
+                if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                    _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                await ProcessFile(item);
+            }
+        }
+
+        private async Task<FileMetadata?> ProcessFile(IFileData file)
+        {
+            var fileMetadata = new FileMetadata();
+
+            if (_supportedPlaylistFileFormats.Contains(file.FileExtension))
+                fileMetadata = await ProcessPlaylistMetadata(file);
+
+            _filesProcessed++;
+
+            await _batchLock.WaitAsync();
+
+            if (fileMetadata != null)
+                _batchMetadataToEmit.Add(fileMetadata);
+
+            PlaylistMetadataProcessedFileCountUpdated?.Invoke(this, EventArgs.Empty);
+
+            _batchLock.Release();
+
+            _ = HandleChanged();
+
+            return fileMetadata;
+        }
+
+        private async Task HandleChanged()
+        {
+            await _batchLock.WaitAsync();
+
+            if (_totalFiles != _filesProcessed && _batchMetadataToEmit.Count < 100 && !await Flow.Debounce(_emitDebouncerId, TimeSpan.FromSeconds(5)))
+                return;
+
+            PlaylistMetadataAdded?.Invoke(this, _batchMetadataToEmit.ToArray());
+
+            _batchMetadataToEmit.Clear();
+
+            _batchLock.Release();
+
+            if (_totalFiles == _filesProcessed)
+                PlaylistMetadataScanCompleted?.Invoke(this, EventArgs.Empty);
+        }
 
         /// <summary>
         /// Scans playlist file for metadata.
@@ -858,25 +899,34 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             return playlist;
         }
 
-        private string TryGetHashFromExistingTrackRepo(Uri path) => _inMemoryMetadata.FirstOrDefault(c => c.Value.Source?.AbsoluteUri == path.AbsoluteUri).Key;
+        private async Task<FileMetadata?> ProcessPlaylistMetadata(IFileData file)
+        {
+            var playlistMetadata = await ScanPlaylistMetadata(file);
+
+            return playlistMetadata == null ? null : new FileMetadata() { PlaylistMetadata = playlistMetadata };
+        }
+
+        private string? TryGetHashFromExistingTrackRepo(Uri path) => _scannedTracks.FirstOrDefault(c => c.TrackMetadata?.Source?.AbsoluteUri == path.AbsoluteUri)?.Id;
+
+        private void ReleaseUnmanagedResources()
+        {
+            DetachEvents();
+        }
 
         /// <inheritdoc cref="Dispose()"/>
         protected virtual void Dispose(bool disposing)
         {
-            ReleaseUnmanagedResources();
+            if (!IsInitialized)
+                return;
+
             if (disposing)
             {
-                _inMemoryMetadata.Clear();
-                _storageMutex.Dispose();
+                // dispose any objects you created here
+                ReleaseUnmanagedResources();
+                _scanningCancellationTokenSource.Cancel();
             }
 
             IsInitialized = false;
-        }
-
-        private void ReleaseUnmanagedResources()
-        {
-            _fileMetadataManager.FileMetadataAdded -= FileMetadataManager_FileMetadataAdded;
-            _fileMetadataManager.FileMetadataRemoved -= FileMetadataScanner_FileMetadataRemoved;
         }
 
         /// <inheritdoc />

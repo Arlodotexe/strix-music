@@ -27,22 +27,22 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private readonly ConcurrentDictionary<string, PlaylistMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;
-        private readonly FileMetadataScanner _fileMetadataScanner;
+        private readonly PlaylistMetadataScanner _playlistMetadataScanner;
         private readonly string _debouncerId;
         private IFolderData? _folderData;
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistRepository"/>.
         /// </summary>
-        ///  <param name="fileMetadataScanner">The file scanner instance to source metadata from.</param>
-        internal PlaylistRepository(FileMetadataScanner fileMetadataScanner)
+        ///  <param name="playlistMetadataScanner">The file scanner instance to source metadata from.</param>
+        internal PlaylistRepository(PlaylistMetadataScanner playlistMetadataScanner)
         {
-            Guard.IsNotNull(fileMetadataScanner, nameof(fileMetadataScanner));
+            _playlistMetadataScanner = playlistMetadataScanner;
 
-            _fileMetadataScanner = fileMetadataScanner;
+            Guard.IsNotNull(_playlistMetadataScanner, nameof(_playlistMetadataScanner));
 
             _inMemoryMetadata = new ConcurrentDictionary<string, PlaylistMetadata>();
-            _fileMetadataScanner = fileMetadataScanner;
+            _playlistMetadataScanner = playlistMetadataScanner;
             _storageMutex = new SemaphoreSlim(1, 1);
             _debouncerId = Guid.NewGuid().ToString();
 
@@ -60,17 +60,17 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private void AttachEvents()
         {
-            _fileMetadataScanner.FileMetadataAdded += FileMetadataScanner_FileMetadataAdded;
-            _fileMetadataScanner.FileMetadataRemoved += FileMetadataScanner_FileMetadataRemoved;
+            _playlistMetadataScanner.PlaylistMetadataAdded += PlaylistMetadataScanner_PlaylistMetadataAdded;
+            _playlistMetadataScanner.PlaylistMetadataRemoved += PlaylistMetadataScannerPlaylistMetadataRemoved;
         }
 
         private void DetachEvents()
         {
-            _fileMetadataScanner.FileMetadataAdded -= FileMetadataScanner_FileMetadataAdded;
-            _fileMetadataScanner.FileMetadataRemoved -= FileMetadataScanner_FileMetadataRemoved;
+            _playlistMetadataScanner.PlaylistMetadataAdded -= PlaylistMetadataScanner_PlaylistMetadataAdded;
+            _playlistMetadataScanner.PlaylistMetadataRemoved -= PlaylistMetadataScannerPlaylistMetadataRemoved;
         }
 
-        private async void FileMetadataScanner_FileMetadataRemoved(object sender, IEnumerable<FileMetadata> e)
+        private async void PlaylistMetadataScannerPlaylistMetadataRemoved(object sender, IEnumerable<FileMetadata> e)
         {
             var removedPlaylists = new List<PlaylistMetadata>();
 
@@ -97,7 +97,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             }
         }
 
-        private async void FileMetadataScanner_FileMetadataAdded(object sender, IEnumerable<FileMetadata> e)
+        private async void PlaylistMetadataScanner_PlaylistMetadataAdded(object sender, IEnumerable<FileMetadata> e)
         {
             var addedPlaylists = new List<PlaylistMetadata>();
 
