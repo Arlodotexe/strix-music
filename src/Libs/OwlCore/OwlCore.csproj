@@ -41,6 +41,10 @@ This project is a constant work in progress. Until a stable release, breaking ch
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+    <None Include="logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
