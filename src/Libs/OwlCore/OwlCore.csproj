@@ -37,6 +37,10 @@ This project is a constant work in progress. Until a stable release, breaking ch
 
   <ItemGroup>
     <None Remove="logo.png" />
+    <None Include="LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
