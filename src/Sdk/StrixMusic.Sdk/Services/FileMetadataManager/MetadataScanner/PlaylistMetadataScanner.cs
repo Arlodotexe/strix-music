@@ -63,10 +63,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private void AttachEvents()
         {
             _fileMetadataScanner.FileDiscoveryCompleted += FileMetadataScanner_FileDiscoveryCompleted;
+            _fileMetadataScanner.FileScanCompleted += FileMetadataScanner_FileScanCompleted;
         }
 
         private void DetachEvents()
         {
+            _fileMetadataScanner.FileDiscoveryCompleted -= FileMetadataScanner_FileDiscoveryCompleted;
             _fileMetadataScanner.FileDiscoveryCompleted -= FileMetadataScanner_FileDiscoveryCompleted;
         }
 
@@ -97,9 +99,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private void FileMetadataScanner_FileDiscoveryCompleted(object sender, IEnumerable<IFileData> e)
         {
-            _fileMetadataScanner.FileDiscoveryCompleted -= FileMetadataScanner_FileDiscoveryCompleted;
-            _fileMetadataScanner.FileScanCompleted += FileMetadataScanner_FileScanCompleted;
-
             _discoveredFiles = e;
         }
 

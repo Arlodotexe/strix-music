@@ -128,10 +128,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Guard.IsNotNull(_filesScannedNotification, nameof(_filesScannedNotification));
 
             _filesScannedNotification.Dismiss();
-
-            _fileMetadataScanner.FilesProcessedCountUpdated -= FileMetadataScanner_FilesProcessedCountUpdated;
-            _playlistMetadataScanner.PlaylistMetadataScanCompleted -= PlaylistMetadataScanner_PlaylistMetadataScanCompleted;
-            _playlistMetadataScanner.PlaylistMetadataProcessedFileCountUpdated -= PlaylistMetadataScanner_PlaylistMetadataProcessedFileCountUpdated;
         }
 
         private void FileMetadataScanner_FilesProcessedCountUpdated(object sender, EventArgs e) => FilesProcessed++;
