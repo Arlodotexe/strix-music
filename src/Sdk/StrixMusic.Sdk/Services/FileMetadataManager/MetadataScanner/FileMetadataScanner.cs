@@ -21,6 +21,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     /// </summary>
     public class FileMetadataScanner : IAsyncInit, IDisposable
     {
+        private const int BUCKET_SIZE = 20;
         private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
         private static readonly string[] _supportedPlaylistFileFormats = { ".zpl", ".wpl", ".smil", ".m3u", ".m3u8", ".vlc", ".xspf", ".asx", ".mpcpl", ".fpl", ".pls", ".aimppl4" };
         private static readonly PictureType[] _albumPictureTypesRanking =
@@ -209,7 +210,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 }
             }
 
-            if (metadata.ArtistMetadata == null) 
+            if (metadata.ArtistMetadata == null)
                 return;
 
             if (string.IsNullOrWhiteSpace(metadata.ArtistMetadata.Name))
@@ -471,12 +472,24 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             try
             {
-                foreach (var file in musicFiles)
+                if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                    _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                var fileDatas = musicFiles.ToList();
+
+                var bucketCount = Math.Ceiling((double)fileDatas.Count / BUCKET_SIZE);
+
+                var offset = 0;
+                for (var i = 0; i < bucketCount; i++)
                 {
                     if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
                         _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                  
+                    var files = fileDatas.GetRange(offset, BUCKET_SIZE);
 
-                    await ProcessFile(file);
+                    await files.InParallel(ProcessFile);
+
+                    offset += BUCKET_SIZE;
                 }
             }
             catch (OperationCanceledException)
@@ -538,12 +551,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             FilesProcessedCountUpdated?.Invoke(this, EventArgs.Empty);
 
-            await _batchLock.WaitAsync();
-
             if (fileMetadata != null)
                 _batchMetadataToEmit.Add(fileMetadata);
-
-            _batchLock.Release();
 
             _ = HandleChanged();
 

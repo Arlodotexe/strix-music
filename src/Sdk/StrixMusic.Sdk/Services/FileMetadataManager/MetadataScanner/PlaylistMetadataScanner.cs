@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using OwlCore;
+using OwlCore.AbstractStorage;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models.Playlist.Smil;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -12,17 +15,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Newtonsoft.Json.Linq;
-using OwlCore;
-using OwlCore.AbstractStorage;
-using OwlCore.AbstractUI.Models;
-using OwlCore.Extensions;
-using OwlCore.Provisos;
-using StrixMusic.Sdk.Services.FileMetadataManager.Models;
-using StrixMusic.Sdk.Services.FileMetadataManager.Models.Playlist.Smil;
-using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
@@ -45,7 +37,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private int _totalFiles;
 
         /// <summary>
-        /// Creates a new isntance <see cref="PlaylistMetadataScanner"/>.
+        /// Creates a new instance <see cref="PlaylistMetadataScanner"/>.
         /// </summary>
         /// <param name="fileCoreRootFolder"></param>
         /// <param name="fileMetadataScanner"></param>
