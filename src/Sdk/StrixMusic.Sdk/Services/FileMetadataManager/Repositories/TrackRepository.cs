@@ -4,12 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using MessagePack;
+
 using Microsoft.Toolkit.Diagnostics;
+
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Events;
 using OwlCore.Extensions;
+
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
@@ -50,7 +54,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Guard.IsFalse(IsInitialized, nameof(IsInitialized));
             IsInitialized = true;
 
-            //await LoadDataFromDisk();
+            await LoadDataFromDisk();
         }
 
         private void AttachEvents()
@@ -109,35 +113,64 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private async void FileMetadataScanner_FileMetadataAdded(object sender, IEnumerable<FileMetadata> e)
         {
-            var addedTracks = new List<TrackMetadata>();
+            List<TrackMetadata>? addedTracks = null;
+            List<TrackMetadata>? updatedTracks = null;
 
-            // Add track metadata
-            // When tracks are added, artist and album IDs are created with it. No need to emit changed.
+            // Iterate through FileMetadata and store it in _inMemoryMetadata.
+            // Updates and additions are tracked separately and emitted as events after all metadata has been processed.
             foreach (var metadata in e)
             {
-                if (metadata.TrackMetadata != null)
+                Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata?.Id, nameof(metadata.TrackMetadata.Id));
+                Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
+                Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
+
+                var trackMetadata = metadata.TrackMetadata;
+
+                trackMetadata.AlbumId = metadata.AlbumMetadata.Id;
+                trackMetadata.ArtistIds = metadata.ArtistMetadata.Id.IntoList();
+
+                var isUpdate = false;
+
+                await _storageMutex.WaitAsync();
+
+                _inMemoryMetadata.AddOrUpdate(
+                    trackMetadata.Id,
+                    addValueFactory: id =>
+                    {
+                        isUpdate = false;
+                        return trackMetadata;
+                    },
+                    updateValueFactory: (id, existing) =>
+                    {
+                        isUpdate = true;
+                        return trackMetadata;
+                    });
+
+                _storageMutex.Release();
+
+                if (isUpdate)
                 {
-                    Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
-                    Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
-                    Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
-
-                    metadata.TrackMetadata.AlbumId = metadata.AlbumMetadata.Id;
-                    metadata.TrackMetadata.ArtistIds = metadata.ArtistMetadata.Id.IntoList();
-
-                    await _storageMutex.WaitAsync();
-
-                    if (!_inMemoryMetadata.TryAdd(metadata.TrackMetadata.Id, metadata.TrackMetadata))
-                        ThrowHelper.ThrowInvalidOperationException($"Tried adding an item that already exists in {nameof(_inMemoryMetadata)}");
-
-                    _storageMutex.Release();
-                    addedTracks.Add(metadata.TrackMetadata);
+                    (updatedTracks ??= new List<TrackMetadata>()).Add(metadata.TrackMetadata);
+                }
+                else
+                {
+                    (addedTracks ??= new List<TrackMetadata>()).Add(metadata.TrackMetadata);
                 }
             }
 
-            if (addedTracks.Count > 0)
+            if (addedTracks != null || updatedTracks != null)
             {
                 _ = CommitChangesAsync();
-                MetadataAdded?.Invoke(this, addedTracks);
+
+                if (addedTracks != null)
+                {
+                    MetadataAdded?.Invoke(this, addedTracks);
+                }
+
+                if (updatedTracks != null)
+                {
+                    MetadataUpdated?.Invoke(this, updatedTracks);
+                }
             }
         }
 
@@ -274,6 +307,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
         private async Task LoadDataFromDisk()
         {
+            Guard.IsEmpty((ICollection<KeyValuePair<string, TrackMetadata>>)_inMemoryMetadata, nameof(_inMemoryMetadata));
             Guard.IsNotNull(_folderData, nameof(_folderData));
 
             var fileData = await _folderData.CreateFileAsync(TRACK_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
@@ -287,6 +321,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 return;
 
             var data = MessagePackSerializer.Deserialize<List<TrackMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            var addedTracks = new List<TrackMetadata>();
 
             await _storageMutex.WaitAsync();
 
@@ -296,9 +331,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
                 if (!_inMemoryMetadata.TryAdd(item.Id, item))
                     ThrowHelper.ThrowInvalidOperationException($"Item already added to {nameof(_inMemoryMetadata)}");
+
+                addedTracks.Add(item);
             }
 
             _storageMutex.Release();
+
+            if (addedTracks.Count > 0)
+            {
+                MetadataAdded?.Invoke(this, addedTracks);
+            }
         }
 
         private async Task CommitChangesAsync()
