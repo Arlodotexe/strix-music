@@ -484,7 +484,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
                         _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
-                  
+
                     var files = fileDatas.GetRange(offset, BUCKET_SIZE);
 
                     await files.InParallel(ProcessFile);
@@ -554,7 +554,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (fileMetadata != null)
                 _batchMetadataToEmit.Add(fileMetadata);
 
-            _ = HandleChanged();
+            Task.Run(HandleChanged);
 
             return fileMetadata;
         }
