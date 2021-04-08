@@ -4,16 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 using MessagePack;
-
 using Microsoft.Toolkit.Diagnostics;
-
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Events;
 using OwlCore.Extensions;
-
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
@@ -113,10 +109,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private async void FileMetadataScanner_FileMetadataAdded(object sender, IEnumerable<FileMetadata> e)
         {
-            List<TrackMetadata>? addedTracks = null;
-            List<TrackMetadata>? updatedTracks = null;
+            var addedTracks = new List<TrackMetadata>();
+            var updatedTracks = new List<TrackMetadata>();
 
-            // Iterate through FileMetadata and store it in _inMemoryMetadata.
+            // Iterate through FileMetadata and store in memory.
             // Updates and additions are tracked separately and emitted as events after all metadata has been processed.
             foreach (var metadata in e)
             {
@@ -149,28 +145,20 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 _storageMutex.Release();
 
                 if (isUpdate)
-                {
-                    (updatedTracks ??= new List<TrackMetadata>()).Add(metadata.TrackMetadata);
-                }
+                    updatedTracks.Add(metadata.TrackMetadata);
                 else
-                {
-                    (addedTracks ??= new List<TrackMetadata>()).Add(metadata.TrackMetadata);
-                }
+                    addedTracks.Add(metadata.TrackMetadata);
             }
 
-            if (addedTracks != null || updatedTracks != null)
+            if (addedTracks.Count > 0 || updatedTracks.Count > 0)
             {
                 _ = CommitChangesAsync();
 
-                if (addedTracks != null)
-                {
+                if (addedTracks.Count > 0)
                     MetadataAdded?.Invoke(this, addedTracks);
-                }
 
-                if (updatedTracks != null)
-                {
+                if (updatedTracks.Count > 0)
                     MetadataUpdated?.Invoke(this, updatedTracks);
-                }
             }
         }
 
