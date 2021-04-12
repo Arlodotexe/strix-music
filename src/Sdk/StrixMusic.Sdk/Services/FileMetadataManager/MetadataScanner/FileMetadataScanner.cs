@@ -519,6 +519,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                             _mediaFilesFound++;
                         }
 
+                        if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                            _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
                         //considering playlists files too. Because we are all scannable files one time using FileMetadataScanner.
                         FilesFoundCountUpdated?.Invoke(this, EventArgs.Empty);
                         filesToScan.Enqueue(file);
@@ -551,10 +554,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             FilesProcessedCountUpdated?.Invoke(this, EventArgs.Empty);
 
+            await _batchLock.WaitAsync();
+
             if (fileMetadata != null)
                 _batchMetadataToEmit.Add(fileMetadata);
 
-            Task.Run(HandleChanged);
+            _batchLock.Release();
+
+            _ = HandleChanged();
 
             return fileMetadata;
         }
@@ -568,10 +575,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task HandleChanged()
         {
-            await _batchLock.WaitAsync();
-
             if (_filesProcessed != _mediaFilesFound && _batchMetadataToEmit.Count < 100 && !await Flow.Debounce(_emitDebouncerId, TimeSpan.FromSeconds(5)))
                 return;
+
+            await _batchLock.WaitAsync();
+
+            if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
             FileMetadataAdded?.Invoke(this, _batchMetadataToEmit.ToArray());
 

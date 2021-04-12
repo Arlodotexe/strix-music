@@ -46,7 +46,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             _fileMetadataScanner = fileMetadataScanner;
             _rootFolder = fileCoreRootFolder;
             _batchLock = new SemaphoreSlim(1, 1);
-          
+
             _scanningCancellationTokenSource = new CancellationTokenSource();
 
             AttachEvents();
@@ -147,6 +147,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             if (_totalFiles != _filesProcessed && _batchMetadataToEmit.Count < 100 && !await Flow.Debounce(_emitDebouncerId, TimeSpan.FromSeconds(5)))
                 return;
+
+            if (_scanningCancellationTokenSource.Token.IsCancellationRequested)
+                _scanningCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
             PlaylistMetadataAdded?.Invoke(this, _batchMetadataToEmit.ToArray());
 
