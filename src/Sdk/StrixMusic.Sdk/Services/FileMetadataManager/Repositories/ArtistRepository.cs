@@ -55,7 +55,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Guard.IsFalse(IsInitialized, nameof(IsInitialized));
             IsInitialized = true;
 
-            //await LoadDataFromDisk();
+            await LoadDataFromDisk();
         }
 
         private void AttachEvents()
@@ -306,6 +306,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
         private async Task LoadDataFromDisk()
         {
+            Guard.IsEmpty((ICollection<KeyValuePair<string, ArtistMetadata>>)_inMemoryMetadata, nameof(_inMemoryMetadata));
             Guard.IsNotNull(_folderData, nameof(_folderData));
 
             var fileData = await _folderData.CreateFileAsync(ARTIST_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
@@ -319,6 +320,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 return;
 
             var data = MessagePackSerializer.Deserialize<List<ArtistMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            var addedArtists = new List<ArtistMetadata>();
 
             await _storageMutex.WaitAsync();
 
@@ -326,13 +328,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             {
                 Guard.IsNotNullOrWhiteSpace(item?.Id, nameof(item.Id));
 
-
                 if (!_inMemoryMetadata.TryAdd(item.Id, item))
                     ThrowHelper.ThrowInvalidOperationException($"Item already added to {nameof(_inMemoryMetadata)}");
 
+                addedArtists.Add(item);
             }
 
             _storageMutex.Release();
+
+            if (addedArtists.Count > 0)
+                MetadataAdded?.Invoke(this, addedArtists);
         }
 
         private async Task CommitChangesAsync()
