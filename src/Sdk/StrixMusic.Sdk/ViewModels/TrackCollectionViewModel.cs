@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Events;
@@ -14,6 +15,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
@@ -24,6 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
     public class TrackCollectionViewModel : ObservableObject, ITrackCollectionViewModel, IImageCollectionViewModel
     {
         private readonly ITrackCollection _collection;
+        private readonly IPlaybackHandlerService _playbackHandlerService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ITrackCollectionViewModel"/> class.
@@ -48,6 +51,7 @@ namespace StrixMusic.Sdk.ViewModels
             PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackCollectionInternalAsync);
 
             SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(MainViewModel.GetLoadedCore).ToList();
+            _playbackHandlerService = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             AttachEvents();
         }
@@ -337,7 +341,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync()
         {
-            return _collection.PlayTrackCollectionAsync();
+            return _playbackHandlerService.PlayAsync(this, _collection);
         }
 
         /// <inheritdoc />
