@@ -292,6 +292,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public ObservableCollection<IArtistCollectionItem> Artists { get; }
 
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
+
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
@@ -436,6 +439,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             DetachEvents();
             return _collection.DisposeAsync();
+        }
+
+        /// <inheritdoc />
+        public Task InitAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

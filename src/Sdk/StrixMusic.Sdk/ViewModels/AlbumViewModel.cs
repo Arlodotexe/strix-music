@@ -395,7 +395,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync()
         {
-            return _playbackHandler.PlayAsync(this, _album);
+            return _playbackHandler.PlayAsync((ITrackCollectionViewModel)this, _album);
         }
 
         /// <inheritdoc />
@@ -407,7 +407,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayArtistCollectionAsync()
         {
-            return _album.PlayArtistCollectionAsync();
+            return _playbackHandler.PlayAsync((IArtistCollectionViewModel)this, _album);
         }
 
         /// <inheritdoc />

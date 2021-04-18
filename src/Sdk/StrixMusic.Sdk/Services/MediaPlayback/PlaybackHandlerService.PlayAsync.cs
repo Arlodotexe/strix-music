@@ -46,6 +46,41 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         }
 
         /// <inheritdoc />
+        public async Task PlayAsync(IArtistCollectionViewModel artistCollection, IPlayableBase context)
+        {
+            var firstArtist = artistCollection.Artists.FirstOrDefault();
+            if (firstArtist is null)
+            {
+                var apiArtists = await artistCollection.GetArtistItemsAsync(1, 0);
+                Guard.HasSizeGreaterThan(apiArtists, 0, nameof(apiArtists));
+
+                firstArtist = apiArtists[0];
+            }
+
+            await PlayAsync(firstArtist, artistCollection, context);
+        }
+
+        /// <inheritdoc />
+        public async Task PlayAsync(IArtistCollectionItem artistCollectionItem, IArtistCollectionViewModel artistCollection, IPlayableBase context)
+        {
+            Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
+
+            var canPlay = await PrepareToPlayCollection();
+            if (!canPlay)
+            {
+                await artistCollection.PlayArtistCollectionAsync(artistCollectionItem);
+                return;
+            }
+
+            ClearPrevious();
+            ClearNext();
+
+            var trackInfo = await AddArtistCollectionToQueue(artistCollectionItem, artistCollection);
+            await PlayFromNext(trackInfo.Index);
+            _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
+        }
+
+        /// <inheritdoc />
         public async Task PlayAsync(IAlbumCollectionViewModel albumCollection, IPlayableBase context)
         {
             await albumCollection.InitAsync();
@@ -188,8 +223,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 if (albumItem is IAlbum album)
                 {
                     var albumVm = new AlbumViewModel(album);
-                    await albumVm.InitAsync();
-
                     // We expect an album to have at least 1 track.
                     Guard.IsGreaterThan(album.TotalTracksCount, 0, nameof(album.TotalTracksCount));
 
@@ -213,6 +246,55 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     await albumColVm.InitAsync();
 
                     _ = await AddAlbumCollectionToQueue(null, albumColVm);
+                }
+            }
+
+            Guard.IsNotNull(playbackTrack, nameof(playbackTrack));
+
+            return (playbackTrack, itemIndex);
+        }
+
+        /// <summary>
+        /// Adds all artists in the given collection to the queue.
+        /// </summary>
+        /// <returns>The instance and index of the first playable track in the selected <paramref name="artistCollectionItem"/> items within the entire <paramref name="artistCollection"/>.</returns>
+        private async Task<(ITrack PlaybackTrack, int Index)> AddArtistCollectionToQueue(IArtistCollectionItem? artistCollectionItem, IArtistCollectionViewModel artistCollection)
+        {
+            await artistCollection.InitAsync();
+
+            var itemIndex = 0;
+            ITrack? playbackTrack = null;
+            var foundItemTarget = false;
+
+            foreach (var artistItem in artistCollection.Artists)
+            {
+                if (artistItem is IArtist artist)
+                {
+                    var albumVm = new ArtistViewModel(artist);
+                    var type = artist.GetType();
+                    // We expect an album to have at least 1 track.
+                    Guard.IsGreaterThan(artist.TotalTracksCount, 0, nameof(artist.TotalTracksCount));
+
+                    var firstTrack = albumVm.Tracks[0].Model;
+
+                    if (artistItem.Id == artistCollectionItem?.Id && !foundItemTarget)
+                    {
+                        // Tracks are added to the queue of previous items until we reach the item the user wants to play.
+                        itemIndex = _prevItems.Count;
+                        foundItemTarget = true;
+
+                        playbackTrack = firstTrack;
+                    }
+
+                    _ = await AddTrackCollectionToQueue(firstTrack, albumVm, foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                }
+
+                if (artistItem is IArtistCollection artistCol)
+                {
+                    var artistColVm = new ArtistCollectionViewModel(artistCol);
+                    await artistColVm.InitAsync();
+
+                    _ = await AddArtistCollectionToQueue(null, artistColVm);
                 }
             }
 
