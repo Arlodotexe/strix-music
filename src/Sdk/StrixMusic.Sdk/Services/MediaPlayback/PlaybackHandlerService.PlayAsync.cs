@@ -226,6 +226,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     // We expect an album to have at least 1 track.
                     Guard.IsGreaterThan(album.TotalTracksCount, 0, nameof(album.TotalTracksCount));
 
+                    await albumVm.InitAsync();
+
                     var firstTrack = albumVm.Tracks[0].Model;
 
                     if (albumItem.Id == albumCollectionItem?.Id && !foundItemTarget)
