@@ -40,7 +40,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private void AlbumSelected(object sender, SelectionChangedEventArgs<AlbumViewModel> e)
         {
-            e.SelectedItem.PopulateMoreTracksCommand.Execute(20);
+            e.SelectedItem?.PopulateMoreTracksCommand.Execute(20);
             TrackCollection.DataContext = e.SelectedItem;
         }
 
