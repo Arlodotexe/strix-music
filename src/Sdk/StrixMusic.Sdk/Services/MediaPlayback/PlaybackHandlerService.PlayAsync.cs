@@ -272,12 +272,13 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             {
                 if (artistItem is IArtist artist)
                 {
-                    var albumVm = new ArtistViewModel(artist);
+                    var artistVm = new ArtistViewModel(artist);
                     var type = artist.GetType();
                     // We expect an album to have at least 1 track.
                     Guard.IsGreaterThan(artist.TotalTracksCount, 0, nameof(artist.TotalTracksCount));
 
-                    var firstTrack = albumVm.Tracks[0].Model;
+                    await artistVm.InitAsync();
+                    var firstTrack = artistVm.Tracks[0].Model;
 
                     if (artistItem.Id == artistCollectionItem?.Id && !foundItemTarget)
                     {
@@ -288,7 +289,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                         playbackTrack = firstTrack;
                     }
 
-                    _ = await AddTrackCollectionToQueue(firstTrack, albumVm, foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                    _ = await AddTrackCollectionToQueue(firstTrack, artistVm, foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
                 }
 
                 if (artistItem is IArtistCollection artistCol)
