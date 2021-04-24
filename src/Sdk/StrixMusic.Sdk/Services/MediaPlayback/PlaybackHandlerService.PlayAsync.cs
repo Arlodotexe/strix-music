@@ -273,7 +273,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 if (artistItem is IArtist artist)
                 {
                     var artistVm = new ArtistViewModel(artist);
-                    var type = artist.GetType();
                     // We expect an album to have at least 1 track.
                     Guard.IsGreaterThan(artist.TotalTracksCount, 0, nameof(artist.TotalTracksCount));
 
