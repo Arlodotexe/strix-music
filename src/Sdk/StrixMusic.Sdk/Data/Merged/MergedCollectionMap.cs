@@ -332,6 +332,8 @@ namespace StrixMusic.Sdk.Data.Merged
 
                 ItemsChanged?.Invoke(this, addedMergedItems, removedMergedItems);
                 ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
+
+                Guard.IsGreaterThan(_mergedMappedData.Count, 0, nameof(_mergedMappedData.Count));
             }
         }
 
