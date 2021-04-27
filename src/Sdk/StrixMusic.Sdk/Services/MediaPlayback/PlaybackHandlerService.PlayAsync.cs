@@ -203,6 +203,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 }
             }
 
+            Guard.IsTrue(reachedTargetTrack, nameof(reachedTargetTrack));
+
             return trackPlaybackIndex;
         }
 
@@ -251,6 +253,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 }
             }
 
+            Guard.IsTrue(foundItemTarget, nameof(foundItemTarget));
             Guard.IsNotNull(playbackTrack, nameof(playbackTrack));
 
             return (playbackTrack, itemIndex);
@@ -273,7 +276,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 if (artistItem is IArtist artist)
                 {
                     var artistVm = new ArtistViewModel(artist);
-                    // We expect an album to have at least 1 track.
+                    // We expect an artist to have at least 1 track.
                     Guard.IsGreaterThan(artist.TotalTracksCount, 0, nameof(artist.TotalTracksCount));
 
                     await artistVm.InitAsync();
@@ -300,6 +303,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 }
             }
 
+            Guard.IsTrue(foundItemTarget, nameof(foundItemTarget));
             Guard.IsNotNull(playbackTrack, nameof(playbackTrack));
 
             return (playbackTrack, itemIndex);

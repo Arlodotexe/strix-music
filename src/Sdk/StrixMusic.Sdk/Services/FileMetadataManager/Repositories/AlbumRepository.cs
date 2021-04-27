@@ -256,7 +256,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             var allAlbums = _inMemoryMetadata.Values.ToList();
 
             if (limit == -1)
-                return Task.FromResult<IReadOnlyList<AlbumMetadata>>(allAlbums.GetRange(offset, allAlbums.Count - offset));
+                return Task.FromResult<IReadOnlyList<AlbumMetadata>>(allAlbums);
+
+            if (offset + limit > allAlbums.Count)
+                return Task.FromResult<IReadOnlyList<AlbumMetadata>>(new List<AlbumMetadata>());
 
             return Task.FromResult<IReadOnlyList<AlbumMetadata>>(allAlbums.GetRange(offset, limit));
         }
@@ -275,6 +278,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 if (item.ArtistIds.Contains(artistId))
                     results.Add(item);
             }
+
+            if (offset + limit > results.Count)
+                return new List<AlbumMetadata>();
 
             return results.GetRange(offset, limit).ToList();
         }

@@ -317,7 +317,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The sources that were merged to form this member.
         /// </summary>
-        public IReadOnlyList<ICoreArtist> Sources => this.GetSources<ICoreArtist>();
+        public IReadOnlyList<ICoreArtist> Sources => _artist.GetSources<ICoreArtist>();
 
         /// <inheritdoc />
         IReadOnlyList<ICoreArtist> IMerged<ICoreArtist>.Sources => Sources;

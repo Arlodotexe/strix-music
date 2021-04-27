@@ -43,7 +43,7 @@
                                 <core:EventTriggerBehavior
                                         EventName="DoubleTapped">
                                     <core:InvokeCommandAction
-                                            Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayArtistCollectionAsyncCommand, Mode=OneWay}"
+                                            Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayArtistAsyncCommand, Mode=OneWay}"
                                             CommandParameter="{Binding}" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>

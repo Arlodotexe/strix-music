@@ -50,7 +50,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Guard.IsFalse(IsInitialized, nameof(IsInitialized));
             IsInitialized = true;
 
-            await LoadDataFromDisk();
+            //await LoadDataFromDisk();
         }
 
         private void AttachEvents()
@@ -268,6 +268,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     filteredTracks.Add(item);
             }
 
+            if (offset + limit > filteredTracks.Count)
+                return new List<TrackMetadata>();
+
             return filteredTracks.GetRange(offset, limit).ToList();
         }
 
@@ -285,6 +288,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 if (item.AlbumId == albumId)
                     filteredTracks.Add(item);
             }
+
+            if (offset + limit > filteredTracks.Count)
+                return new List<TrackMetadata>();
 
             return filteredTracks.Skip(offset).Take(limit).ToList();
         }
