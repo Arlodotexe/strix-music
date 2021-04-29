@@ -108,7 +108,8 @@ namespace StrixMusic.Core.LocalFiles.Models
                 }
             }
 
-            AlbumItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
+            if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
+                AlbumItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
         }
 
         private void Artists_MetadataUpdated(object sender, IEnumerable<ArtistMetadata> e)

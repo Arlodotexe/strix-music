@@ -294,31 +294,55 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private void MergedCollectionMap_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreImage>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreImage>> removedItems)
         {
+            var changedItemsCount = addedItems.Count + removedItems.Count;
+
+            Guard.IsGreaterThan(changedItemsCount, 0, nameof(changedItemsCount));
+
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
         private void MergedCollectionMap_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreTrack>> removedItems)
         {
+            var changedItemsCount = addedItems.Count + removedItems.Count;
+
+            Guard.IsGreaterThan(changedItemsCount, 0, nameof(changedItemsCount));
+
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
         private void MergedCollectionMap_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>> removedItems)
         {
+            var changedItemsCount = addedItems.Count + removedItems.Count;
+
+            Guard.IsGreaterThan(changedItemsCount, 0, nameof(changedItemsCount));
+
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
         private void MergedCollectionMap_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreAlbumCollectionItem>> removedItems)
         {
+            var changedItemsCount = addedItems.Count + removedItems.Count;
+
+            Guard.IsGreaterThan(changedItemsCount, 0, nameof(changedItemsCount));
+
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
         private void MergedCollectionMap_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICorePlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlayableCollectionGroup>> removedItems)
         {
+            var changedItemsCount = addedItems.Count + removedItems.Count;
+
+            Guard.IsGreaterThan(changedItemsCount, 0, nameof(changedItemsCount));
+
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
         private void MergedCollectionMap_PlaylistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> removedItems)
         {
+            var changedItemsCount = addedItems.Count + removedItems.Count;
+
+            Guard.IsGreaterThan(changedItemsCount, 0, nameof(changedItemsCount));
+
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
