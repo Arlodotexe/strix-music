@@ -309,6 +309,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
                 if (!_inMemoryMetadata.TryAdd(item.Id, item))
                     ThrowHelper.ThrowInvalidOperationException($"Item already added to {nameof(_inMemoryMetadata)}");
+
+                addedAlbums.Add(item);
             }
 
             _storageMutex.Release();
