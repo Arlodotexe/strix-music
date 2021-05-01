@@ -628,7 +628,7 @@ namespace StrixMusic.Sdk.ViewModels
         private Task PlayAlbumCollectionInternalAsync(IAlbumCollectionItem? albumItem)
         {
             Guard.IsNotNull(albumItem, nameof(albumItem));
-            return _artist.PlayAlbumCollectionAsync(albumItem);
+            return _playbackHandler.PlayAsync(albumItem,this,this);
         }
 
         /// <inheritdoc />

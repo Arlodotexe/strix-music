@@ -80,7 +80,8 @@ namespace StrixMusic.Core.LocalFiles.Models
                 }
             }
 
-            TrackItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
+            if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
+                TrackItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
         }
 
         private void Artists_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<(ArtistMetadata Artist, AlbumMetadata Album)>> addedItems, IReadOnlyList<CollectionChangedItem<(ArtistMetadata Artist, AlbumMetadata Album)>> removedItems)
