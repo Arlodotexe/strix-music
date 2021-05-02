@@ -224,11 +224,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             {
                 if (albumItem is IAlbum album)
                 {
-                    var albumVm = new AlbumViewModel(album);
-                    // We expect an album to have at least 1 track.
-                    Guard.IsGreaterThan(album.TotalTracksCount, 0, nameof(album.TotalTracksCount));
+                    var albumVm = (AlbumViewModel)album;
 
                     await albumVm.InitAsync();
+
+                    // We expect an album to have at least 1 track.
+                    Guard.IsGreaterThan(album.TotalTracksCount, 0, nameof(album.TotalTracksCount));
 
                     var firstTrack = albumVm.Tracks[0].Model;
 
@@ -246,7 +247,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
                 if (albumItem is IAlbumCollection albumCol)
                 {
-                    var albumColVm = new AlbumCollectionViewModel(albumCol);
+                    var albumColVm = (AlbumCollectionViewModel)albumCol;
                     await albumColVm.InitAsync();
 
                     _ = await AddAlbumCollectionToQueue(null, albumColVm);
@@ -275,11 +276,13 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             {
                 if (artistItem is IArtist artist)
                 {
-                    var artistVm = new ArtistViewModel(artist);
+                    var artistVm = (ArtistViewModel)artist;
+
+                    await artistVm.InitAsync();
+
                     // We expect an artist to have at least 1 track.
                     Guard.IsGreaterThan(artist.TotalTracksCount, 0, nameof(artist.TotalTracksCount));
 
-                    await artistVm.InitAsync();
                     var firstTrack = artistVm.Tracks[0].Model;
 
                     if (artistItem.Id == artistCollectionItem?.Id && !foundItemTarget)
@@ -296,7 +299,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
                 if (artistItem is IArtistCollection artistCol)
                 {
-                    var artistColVm = new ArtistCollectionViewModel(artistCol);
+                    var artistColVm = (ArtistCollectionViewModel)artistCol;
                     await artistColVm.InitAsync();
 
                     _ = await AddArtistCollectionToQueue(null, artistColVm);
