@@ -281,7 +281,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     results.Add(item);
             }
 
-            if (offset + limit >= results.Count)
+            if (offset + limit > allArtists.Count)
                 return new List<ArtistMetadata>();
 
             return results.GetRange(offset, limit).ToList();
@@ -292,9 +292,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             var filteredArtists = new List<ArtistMetadata>();
 
-            var artists = await GetArtists(0, -1);
+            var allArtists = await GetArtists(0, -1);
 
-            foreach (var item in artists)
+            foreach (var item in allArtists)
             {
                 Guard.IsNotNull(item.TrackIds, nameof(item.TrackIds));
                 Guard.HasSizeGreaterThan(item.TrackIds, 0, nameof(ArtistMetadata.TrackIds));
@@ -303,7 +303,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     filteredArtists.Add(item);
             }
 
-            if (offset + limit >= filteredArtists.Count)
+            if (offset + limit > allArtists.Count)
                 return new List<ArtistMetadata>();
 
             return filteredArtists.GetRange(offset, limit).ToList();
@@ -335,10 +335,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             {
                 Guard.IsNotNullOrWhiteSpace(item?.Id, nameof(item.Id));
 
-
                 if (!_inMemoryMetadata.TryAdd(item.Id, item))
                     ThrowHelper.ThrowInvalidOperationException($"Item already added to {nameof(_inMemoryMetadata)}");
-
             }
 
             _storageMutex.Release();

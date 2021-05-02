@@ -279,7 +279,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     results.Add(item);
             }
 
-            if (offset + limit > results.Count)
+            if (offset + limit > allArtists.Count)
                 return new List<AlbumMetadata>();
 
             return results.GetRange(offset, limit).ToList();

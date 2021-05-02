@@ -48,6 +48,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <inheritdoc />
         public async Task PlayAsync(IArtistCollectionViewModel artistCollection, IPlayableBase context)
         {
+            await artistCollection.InitAsync();
+
             var firstArtist = artistCollection.Artists.FirstOrDefault();
             if (firstArtist is null)
             {
@@ -64,6 +66,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public async Task PlayAsync(IArtistCollectionItem artistCollectionItem, IArtistCollectionViewModel artistCollection, IPlayableBase context)
         {
             Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
+
+            await artistCollection.InitAsync();
 
             var canPlay = await PrepareToPlayCollection();
             if (!canPlay)
