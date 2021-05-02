@@ -25,7 +25,7 @@ namespace OwlCore.Net.HttpClientHandlers
         /// </summary>
         public CachedHttpClientHandler(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter cacheRequestFilter)
         {
-            _rateLimiterAction = new CachedHttpClientHandlerAction(cacheFolderPath, defaultCacheTime, CacheRequestFilter cacheRequestFilter);
+            _rateLimiterAction = new CachedHttpClientHandlerAction(cacheFolderPath, defaultCacheTime, cacheRequestFilter);
         }
 
         /// <inheritdoc />
