@@ -2,6 +2,7 @@
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.ViewModels;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -64,7 +65,7 @@ namespace StrixMusic.Sdk.Uno.Controls
             PART_ImageBrush.ImageFailed -= SafeImage_ImageFailed;
         }
 
-        private void SafeImage_Loaded(object sender, RoutedEventArgs e)
+        private async void SafeImage_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= SafeImage_Loaded;
 
@@ -77,7 +78,7 @@ namespace StrixMusic.Sdk.Uno.Controls
             else
                 ThrowHelper.ThrowInvalidDataException($"{nameof(PART_ImageRectangle)}'s fill must an ImageBrush.");
 
-            RequestImages();
+            await RequestImages();
             AttachHandlers();
         }
 
@@ -86,9 +87,9 @@ namespace StrixMusic.Sdk.Uno.Controls
             DetachHandlers();
         }
 
-        private void SafeImage_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
+        private async void SafeImage_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
         {
-            RequestImages();
+            await RequestImages();
         }
 
         private void SafeImage_ImageFailed(object sender, ExceptionRoutedEventArgs e)
@@ -97,10 +98,10 @@ namespace StrixMusic.Sdk.Uno.Controls
             OverrideToFallback();
         }
 
-        private void RequestImages()
+        private async Task RequestImages()
         {
             if (ViewModel?.PopulateMoreImagesCommand.IsRunning == false)
-                ViewModel.PopulateMoreImagesCommand.ExecuteAsync(1);
+                await ViewModel.PopulateMoreImagesCommand.ExecuteAsync(1);
         }
 
         /// <summary>
