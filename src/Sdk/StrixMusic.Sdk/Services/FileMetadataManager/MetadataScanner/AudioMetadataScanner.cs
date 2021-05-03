@@ -151,6 +151,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             _filesToScanCount = remainingFilesToScan.Count;
 
+            _metadataManager.FilesFound = _filesToScanCount;
+
             try
             {
                 Guard.HasSizeGreaterThan(remainingFilesToScan, 0, nameof(remainingFilesToScan));
@@ -170,27 +172,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     var currentBatch = new IFileData[batchSize];
                     for (var i = 0; i < batchSize; i++)
                     {
-                        var file = remainingFilesToScan.Dequeue();
-
-                        if (!_supportedMusicFileFormats.Contains(file.FileExtension))
-                        {
-                            // Unsupported file, skip & retry adding an item at this index
-                            i--;
-
-                            // Count this file as "scanned", so progress displays properly.
-                            _filesProcessed++;
-                            continue;
-                        }
-
-                        currentBatch[i] = file;
+                        currentBatch[i] = remainingFilesToScan.Dequeue();
                     }
-
-                    System.Diagnostics.Debug.WriteLine($"Scanning batch with {currentBatch.Length} files, already scanned {_filesProcessed} files");
 
                     // Scan the files in the current batch
                     await Task.Run(() => currentBatch.InParallel(ProcessFile));
-
-                    System.Diagnostics.Debug.WriteLine($"Batch scanned.");
                 }
 
                 return _allFileMetadata;
@@ -539,7 +525,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             }
 
             bool IsEnoughMetadataToEmit() => _batchMetadataToEmit.Count >= 100;
-            bool IsFinishedScanning() => _filesProcessed == _allFileMetadata.Count;
+            bool IsFinishedScanning() => _filesProcessed == _filesToScanCount;
 
             if (!IsFinishedScanning() && !IsEnoughMetadataToEmit())
             {
@@ -550,16 +536,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (_scanningCancellationTokenSource?.Token.IsCancellationRequested ?? false)
                 _scanningCancellationTokenSource?.Token.ThrowIfCancellationRequested();
 
-            System.Diagnostics.Debug.WriteLine($"=========Emitting {_batchMetadataToEmit.Count} items========");
-
             FileMetadataAdded?.Invoke(this, _batchMetadataToEmit.ToArray());
-
-            System.Diagnostics.Debug.WriteLine($"---------Emitted {_batchMetadataToEmit.Count} items---------");
 
             _batchMetadataToEmit.Clear();
             _batchLock.Release();
 
-            if (_filesProcessed == _filesToScanCount)
+            if (IsFinishedScanning())
                 FileScanCompleted?.Invoke(this, _allFileMetadata);
         }
 

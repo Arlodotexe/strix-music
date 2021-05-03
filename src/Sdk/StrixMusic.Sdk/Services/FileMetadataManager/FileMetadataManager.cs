@@ -195,13 +195,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             findingFilesNotif.Dismiss();
 
             _currentScanningType = FileScanningType.AudioFiles;
-            var scanningFilesNotif = RaiseProcessingNotification();
+            var scanningMusicNotif = RaiseProcessingNotification();
             var fileMetadata = await _audioMetadataScanner.ScanMusicFiles(discoveredFiles);
+            scanningMusicNotif.Dismiss();
 
-            _currentScanningType = FileScanningType.Playlists;
+            // Playlist scanning is disabled until bugs are fixed.
+/*            _currentScanningType = FileScanningType.Playlists;
+            var scanningPlaylistsNotif = RaiseProcessingNotification();
             await _playlistMetadataScanner.ScanPlaylists(discoveredFiles, fileMetadata);
+            scanningPlaylistsNotif.Dismiss();*/
 
-            scanningFilesNotif.Dismiss();
             ScanningCompleted?.Invoke(this, EventArgs.Empty);
         }
 
@@ -209,7 +212,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             Guard.IsNotNull(_filesScannedNotification, nameof(_filesScannedNotification));
 
-            _filesScannedNotification.AbstractUIElementGroup.Subtitle = $"Scanned {FilesProcessed}/{FilesFound} files in {_rootFolder.Path}";
+            _filesScannedNotification.AbstractUIElementGroup.Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolder.Path}";
         }
 
         private void UpdateFilesFoundNotification()

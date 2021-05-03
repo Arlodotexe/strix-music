@@ -101,11 +101,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var playlists = files.Where(c => _supportedPlaylistFileFormats.Contains(c.FileExtension)).ToList();
             _totalFiles = playlists.Count;
-
-            if (_totalFiles == 0)
-                PlaylistMetadataScanCompleted?.Invoke(this, EventArgs.Empty);
+            _metadataManager.FilesFound = playlists.Count;
 
             var scannedMetadata = new List<PlaylistMetadata>();
+
+            if (_totalFiles == 0)
+            {
+                PlaylistMetadataScanCompleted?.Invoke(this, EventArgs.Empty);
+                return scannedMetadata;
+            }
 
             foreach (var item in playlists)
             {
@@ -123,18 +127,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task<PlaylistMetadata?> ProcessFile(IFileData file, IEnumerable<FileMetadata> files)
         {
-            if (!_supportedPlaylistFileFormats.Contains(file.FileExtension))
-            {
-                _filesProcessed++;
-                return null;
-            }
-
             var playlistMetadata = await ScanPlaylistMetadata(_rootFolder, file, files);
 
             await _batchLock.WaitAsync();
 
             if (playlistMetadata != null)
+            {
                 _batchMetadataToEmit.Add(playlistMetadata);
+                _metadataManager.FilesProcessed = ++_filesProcessed;
+            }
 
             _batchLock.Release();
 
