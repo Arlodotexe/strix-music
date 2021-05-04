@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private readonly ConcurrentDictionary<string, AlbumMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;
-        private readonly FileMetadataScanner _fileMetadataScanner;
+        private readonly AudioMetadataScanner _audioMetadataScanner;
         private readonly TrackRepository _trackRepository;
         private readonly string _debouncerId;
         private IFolderData? _folderData;
@@ -30,17 +30,17 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <summary>
         /// Creates a new instance of <see cref="AlbumRepository"/>.
         /// </summary>
-        ///  <param name="fileMetadataScanner">The file scanner instance to source metadata from.</param>
+        ///  <param name="audioMetadataScanner">The file scanner instance to source metadata from.</param>
         /// <param name="trackRepository">A <see cref="TrackRepository"/> that references the same set of data as this <see cref="AlbumMetadata"/>.</param>
-        internal AlbumRepository(FileMetadataScanner fileMetadataScanner, TrackRepository trackRepository)
+        internal AlbumRepository(AudioMetadataScanner audioMetadataScanner, TrackRepository trackRepository)
         {
-            Guard.IsNotNull(fileMetadataScanner, nameof(fileMetadataScanner));
+            Guard.IsNotNull(audioMetadataScanner, nameof(audioMetadataScanner));
 
-            _fileMetadataScanner = fileMetadataScanner;
+            _audioMetadataScanner = audioMetadataScanner;
             _trackRepository = trackRepository;
 
             _inMemoryMetadata = new ConcurrentDictionary<string, AlbumMetadata>();
-            _fileMetadataScanner = fileMetadataScanner;
+            _audioMetadataScanner = audioMetadataScanner;
             _storageMutex = new SemaphoreSlim(1, 1);
             _debouncerId = Guid.NewGuid().ToString();
 
@@ -58,14 +58,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private void AttachEvents()
         {
-            _fileMetadataScanner.FileMetadataAdded += FileMetadataScanner_FileMetadataAdded;
-            _fileMetadataScanner.FileMetadataRemoved += FileMetadataScanner_FileMetadataRemoved;
+            _audioMetadataScanner.FileMetadataAdded += FileMetadataScanner_FileMetadataAdded;
+            _audioMetadataScanner.FileMetadataRemoved += FileMetadataScanner_FileMetadataRemoved;
         }
 
         private void DetachEvents()
         {
-            _fileMetadataScanner.FileMetadataAdded -= FileMetadataScanner_FileMetadataAdded;
-            _fileMetadataScanner.FileMetadataRemoved -= FileMetadataScanner_FileMetadataRemoved;
+            _audioMetadataScanner.FileMetadataAdded -= FileMetadataScanner_FileMetadataAdded;
+            _audioMetadataScanner.FileMetadataRemoved -= FileMetadataScanner_FileMetadataRemoved;
         }
 
         private async void FileMetadataScanner_FileMetadataRemoved(object sender, IEnumerable<FileMetadata> e)
