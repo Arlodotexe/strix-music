@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Data;
@@ -80,7 +81,8 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             ClearNext();
 
             var trackInfo = await AddArtistCollectionToQueue(artistCollectionItem, artistCollection);
-            await PlayFromNext(trackInfo.Index);
+
+            await PlayFromNext(0);
             _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
         }
 
@@ -213,6 +215,60 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         }
 
         /// <summary>
+        /// Adds the tracks in the collection to the queue.
+        /// </summary>
+        /// <param name="track">A target track to return an index for.</param>
+        /// <param name="trackCollection">The collection to iterate for adding to the queue.</param>
+        /// <param name="offset">The offset to add when adding tracks to <see cref="NextItems"/></param>.
+        /// <param name="pushTarget">When adding to the queue, specify where to push the items to.</param>
+        /// <returns>The index of the given <paramref name="track"/> in the <paramref name="trackCollection"/>.</returns>
+        private async Task<int> AddTrackCollectionToQueue(ITrack track, ITrackCollectionViewModel trackCollection, int offset, AddTrackPushTarget pushTarget = AddTrackPushTarget.Normal)
+        {
+            // Setup for local playback
+            await trackCollection.InitAsync();
+            var trackPlaybackIndex = 0;
+            var reachedTargetTrack = false;
+
+            for (var i = 0; i < trackCollection.Tracks.Count; i++)
+            {
+                var item = trackCollection.Tracks[i];
+
+                var coreTrack = item.GetSources<ICoreTrack>().First(x => x.Id == item.Id);
+
+                var mediaSource = await coreTrack.SourceCore.GetMediaSource(coreTrack);
+                if (mediaSource is null)
+                    continue;
+
+                if (item.Id == track.Id)
+                {
+                    reachedTargetTrack = true;
+                    trackPlaybackIndex = i;
+                }
+
+                switch (pushTarget)
+                {
+                    case AddTrackPushTarget.Normal when reachedTargetTrack:
+                        InsertNext(i - trackPlaybackIndex, mediaSource);
+                        break;
+                    case AddTrackPushTarget.Normal:
+                    case AddTrackPushTarget.AllPrevious:
+                        PushPrevious(mediaSource);
+                        break;
+                    case AddTrackPushTarget.AllNext:
+                        InsertNext(i + offset, mediaSource);
+                        break;
+                    default:
+                        return ThrowHelper.ThrowArgumentOutOfRangeException<int>(nameof(pushTarget));
+                }
+            }
+
+            Guard.IsTrue(reachedTargetTrack, nameof(reachedTargetTrack));
+
+            return trackPlaybackIndex;
+        }
+
+
+        /// <summary>
         /// Adds all albums in the given collection to the queue.
         /// </summary>
         /// <returns>The instance and index of the first playable track in the selected <paramref name="albumCollectionItem"/> items within the entire <paramref name="albumCollection"/>.</returns>
@@ -275,6 +331,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var itemIndex = 0;
             ITrack? playbackTrack = null;
             var foundItemTarget = false;
+            var offset = 0;
 
             foreach (var artistItem in artistCollection.Artists)
             {
@@ -298,7 +355,17 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                         playbackTrack = firstTrack;
                     }
 
-                    _ = await AddTrackCollectionToQueue(firstTrack, artistVm, foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                    if (foundItemTarget)
+                    {
+                        _ = await AddTrackCollectionToQueue(firstTrack, artistVm, offset,
+                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                        offset = _nextItems.Count;
+                    }
+                    else
+                    {
+                        _ = await AddTrackCollectionToQueue(firstTrack, artistVm,
+                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                    }
                 }
 
                 if (artistItem is IArtistCollection artistCol)
