@@ -121,7 +121,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             ClearNext();
 
             var trackInfo = await AddAlbumCollectionToQueue(albumCollectionItem, albumCollection);
-            await PlayFromNext(trackInfo.Index);
+            await PlayFromNext(0);
             _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
         }
 
@@ -279,6 +279,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var itemIndex = 0;
             ITrack? playbackTrack = null;
             var foundItemTarget = false;
+            var offset = 0;
 
             foreach (var albumItem in albumCollection.Albums)
             {
@@ -302,7 +303,17 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                         playbackTrack = firstTrack;
                     }
 
-                    _ = await AddTrackCollectionToQueue(firstTrack, albumVm, foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                    if (foundItemTarget)
+                    {
+                        _ = await AddTrackCollectionToQueue(firstTrack, albumVm, offset,
+                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                        offset = _nextItems.Count;
+                    }
+                    else
+                    {
+                        _ = await AddTrackCollectionToQueue(firstTrack, albumVm,
+                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                    }
                 }
 
                 if (albumItem is IAlbumCollection albumCol)
