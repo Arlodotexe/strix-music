@@ -84,34 +84,24 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 },
             };
 
-            var dataList = new AbstractDataList(id: "testList", items: dataListItems)
+            var dataListGrid = new AbstractDataList(id: "dataListGrid", dataListItems.ToList())
             {
-                PreferredDisplayMode = AbstractDataListPreferredDisplayMode.List,
-                Title = "DataList test",
-            };
-
-            var dataListGrid = new AbstractDataList(id: "testList", items: dataListItems)
-            {
-                PreferredDisplayMode = AbstractDataListPreferredDisplayMode.Grid,
                 Title = "DataList grid test",
-            };
-
-            var mutableDataListGrid = new AbstractMutableDataList(id: "mutableDataListGrid", dataListItems.ToList())
-            {
-                Title = "MutableDataList grid test",
                 Subtitle = "Add or remove something",
                 PreferredDisplayMode = AbstractDataListPreferredDisplayMode.Grid,
+                IsUserEditingEnabled = false,
             };
 
-            var mutableDataList = new AbstractMutableDataList(id: "mutableDataList", dataListItems.ToList())
+            var dataList = new AbstractDataList(id: "dataList", dataListItems.ToList())
             {
-                Title = "MutableDataList test",
+                Title = "DataList test",
                 Subtitle = "Add or remove something",
                 PreferredDisplayMode = AbstractDataListPreferredDisplayMode.List,
+                IsUserEditingEnabled = false,
             };
 
-            mutableDataListGrid.AddRequested += MutableDataListGrid_AddRequested;
-            mutableDataList.AddRequested += MutableDataListGrid_AddRequested;
+            dataListGrid.AddRequested += DataListGrid_AddRequested;
+            dataList.AddRequested += DataListGrid_AddRequested;
 
             var multiChoiceItems = dataListItems.ToList();
 
@@ -160,10 +150,8 @@ namespace StrixMusic.Core.MusicBrainz.Models
                         radioButtons,
                         dataList,
                         dataListGrid,
-                        mutableDataListGrid,
                         button,
                         buttons,
-                        mutableDataList,
                         allDoneButton,
                     },
                 },
@@ -186,9 +174,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
         }
 
-        private async void MutableDataListGrid_AddRequested(object sender, EventArgs e)
+        private async void DataListGrid_AddRequested(object sender, EventArgs e)
         {
-            if (!(sender is AbstractMutableDataList dataList))
+            if (!(sender is AbstractDataList dataList))
                 return;
 
             Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));

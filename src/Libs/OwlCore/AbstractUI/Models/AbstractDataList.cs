@@ -1,23 +1,44 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using OwlCore.Events;
 
 namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
-    /// Presents a list of metadata in a Grid or List.
+    /// A <see cref="AbstractDataList"/> that can be changed by the user.
     /// </summary>
     public class AbstractDataList : AbstractUIElement
     {
+        private readonly CollectionChangedItem<AbstractUIMetadata>[] _emptyAbstractUiArray = Array.Empty<CollectionChangedItem<AbstractUIMetadata>>();
+        private bool _isUserEditingEnabled;
+
         /// <summary>
-        /// Constructs a new instance of a <see cref="AbstractDataList"/>.
+        /// Creates a new instance of <see cref="AbstractDataList"/>.
         /// </summary>
-        /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
-        /// <param name="items">The items in this collection.</param>
+        /// <param name="id">A unique identifier for this item.</param>
+        /// <param name="items">The initial items for this collection.</param>
         public AbstractDataList(string id, List<AbstractUIMetadata> items)
             : base(id)
         {
             Items = items;
         }
+
+        /// <summary>
+        /// Fires when <see cref="RequestNewItem"/> is called.
+        /// </summary>
+        public event EventHandler? AddRequested;
+
+        /// <summary>
+        /// Fires when <see cref="RemoveItem"/> is called.
+        /// </summary>
+        public event CollectionChangedEventHandler<AbstractUIMetadata>? ItemsChanged;
+
+        /// <summary>
+        /// Raised when <see cref="IsUserEditingEnabled"/> changes.
+        /// </summary>
+        public event EventHandler<bool>? IsUserEditingEnabledChanged;
 
         /// <summary>
         /// Get an item from this <see cref="AbstractDataList"/>.
@@ -30,7 +51,84 @@ namespace OwlCore.AbstractUI.Models
         /// </summary>
         public List<AbstractUIMetadata> Items { get; }
 
+        /// <summary>
+        /// If true, the user is able to add or remove items from the list.
+        /// </summary>
+        public bool IsUserEditingEnabled
+        {
+            get => _isUserEditingEnabled;
+            set
+            {
+                _isUserEditingEnabled = value;
+                IsUserEditingEnabledChanged?.Invoke(this, value);
+            }
+        }
+
         /// <inheritdoc cref="AbstractDataListPreferredDisplayMode"/>
         public AbstractDataListPreferredDisplayMode PreferredDisplayMode { get; set; }
+
+        /// <summary>
+        /// Called when the user wants to add a new item in the list.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the added item.</returns>
+        public void RequestNewItem()
+        {
+            AddRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Adds an item from the <see cref="AbstractDataList.Items"/>.
+        /// </summary>
+        /// <param name="item">The item to add.</param>
+        public void AddItem(AbstractUIMetadata item)
+        {
+            InsertItem(item, Items.Count);
+        }
+
+        /// <summary>
+        /// Inserts an item into <see cref="AbstractDataList.Items"/> at a specific index.
+        /// </summary>
+        /// <param name="index">The index to insert at.</param>
+        /// <param name="item">The item to add.</param>
+        public void InsertItem(AbstractUIMetadata item, int index)
+        {
+            Items.Add(item);
+
+            var addedItems = new List<CollectionChangedItem<AbstractUIMetadata>>
+            {
+                new CollectionChangedItem<AbstractUIMetadata>(item, index)
+            };
+
+            ItemsChanged?.Invoke(this, addedItems, _emptyAbstractUiArray);
+        }
+
+        /// <summary>
+        /// Removes an item from the <see cref="AbstractDataList.Items"/>.
+        /// </summary>
+        /// <param name="item">The item being removed</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public void RemoveItem(AbstractUIMetadata item)
+        {
+            var index = Items.IndexOf(item);
+            RemoveItemAt(index);
+        }
+
+        /// <summary>
+        /// Removes an item at a specific index from the <see cref="AbstractDataList.Items"/>.
+        /// </summary>
+        /// <param name="index">The index of the item to be removed.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public void RemoveItemAt(int index)
+        {
+            var item = Items.ElementAt(index);
+            Items.RemoveAt(index);
+
+            var removedItems = new List<CollectionChangedItem<AbstractUIMetadata>>
+            {
+                new CollectionChangedItem<AbstractUIMetadata>(item, index)
+            };
+
+            ItemsChanged?.Invoke(this, _emptyAbstractUiArray, removedItems);
+        }
     }
 }

@@ -196,7 +196,7 @@ namespace StrixMusic.Core.MusicBrainz
             }
         }
 
-        private bool _configured = true;
+        private bool _configured = false;
 
         /// <inheritdoc/>
         public async Task InitAsync(IServiceCollection services)

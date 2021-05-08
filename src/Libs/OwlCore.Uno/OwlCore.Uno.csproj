@@ -56,7 +56,6 @@
     <None Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractMutableDataListStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractProgressUIElementStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
@@ -73,7 +72,6 @@
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMutableDataListStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressUIElementStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
@@ -88,7 +86,7 @@
     <ProjectReference Include="..\OwlCore\OwlCore.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="AbstractUI\Controls\AbstractUIGroupPresenter.xaml.cs">
+    <Compile Update="AbstractUI\Controls\AbstractUIGroupPresenter.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractBooleanUIElementStyle.xaml.cs">
@@ -97,17 +95,14 @@
     <Compile Update="AbstractUI\Themes\AbstractButtonStyle.xaml.cs">
       <DependentUpon>AbstractButtonStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractDataListStyle.xaml.cs">
-      <DependentUpon>AbstractDataListStyle.xaml</DependentUpon>
-    </Compile>
     <Compile Update="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml.cs">
       <DependentUpon>AbstractMultiChoiceUIElementStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml.cs">
       <DependentUpon>AbstractRichTextBlockStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractMutableDataListStyle.xaml.cs">
-      <DependentUpon>AbstractMutableDataListStyle.xaml</DependentUpon>
+    <Compile Update="AbstractUI\Themes\AbstractDataListStyle.xaml.cs">
+      <DependentUpon>AbstractDataListStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Controls\ContentOverlay.xaml.cs">
       <DependentUpon>ContentOverlay.xaml</DependentUpon>
