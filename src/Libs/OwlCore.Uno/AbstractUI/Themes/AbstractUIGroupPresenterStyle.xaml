@@ -17,7 +17,6 @@
         <themes:AbstractButtonStyle />
         <themes:AbstractDataListStyle />
         <themes:AbstractMultiChoiceUIElementStyle />
-        <themes:AbstractMutableDataListStyle />
         <themes:AbstractProgressUIElementStyle />
         <themes:AbstractRichTextBlockStyle />
         <themes:AbstractTextBoxStyle />
@@ -54,17 +53,17 @@
             </DataTemplate>
         </controls:AbstractUIGroupItemTemplateSelector.ProgressTemplate>
 
-        <controls:AbstractUIGroupItemTemplateSelector.MutableDataListTemplate>
-            <DataTemplate x:DataType="abstractUIVm:AbstractMutableDataListViewModel">
-                <controls:AbstractMutableDataListPresenter />
-            </DataTemplate>
-        </controls:AbstractUIGroupItemTemplateSelector.MutableDataListTemplate>
-
         <controls:AbstractUIGroupItemTemplateSelector.TextBoxTemplate>
             <DataTemplate x:DataType="abstractUIVm:AbstractTextBoxViewModel">
                 <controls:AbstractTextBoxPresenter />
             </DataTemplate>
         </controls:AbstractUIGroupItemTemplateSelector.TextBoxTemplate>
+
+        <controls:AbstractUIGroupItemTemplateSelector.ElementGroupTemplate>
+            <DataTemplate x:DataType="abstractUIVm:AbstractUIElementGroupViewModel">
+                <controls:AbstractUIGroupPresenter />
+            </DataTemplate>
+        </controls:AbstractUIGroupItemTemplateSelector.ElementGroupTemplate>
     </controls:AbstractUIGroupItemTemplateSelector>
 
     <Style TargetType="controls:AbstractUIGroupPresenter">
@@ -72,29 +71,28 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="controls:AbstractUIGroupPresenter">
-                        <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                            <ContentControl.ContentTemplate>
-                                <DataTemplate x:DataType="abstractUIVm:AbstractUIElementGroupViewModel">
-                                    <StackPanel Margin="10,20">
-
-                                        <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="30" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" 
-                                                   Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Title), Mode=OneWay}"/>
-
-                                        <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="18" FontWeight="SemiLight" Opacity="0.5"
-                                                   Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
-
-                                        <ItemsControl ItemsSource="{x:Bind Items}"
-                                                      Margin="0,20,0,0"
-                                                      ItemTemplateSelector="{StaticResource GroupTemplateSelector}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ContentControl.ContentTemplate>
-                        </ContentControl>
+                        <ContentControl  ContentTemplate="{StaticResource DefaultAbstractUIElementGroupTemplate}"
+                                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style.Setters>
     </Style>
+
+    <DataTemplate x:Key="DefaultAbstractUIElementGroupTemplate" x:DataType="abstractUIVm:AbstractUIElementGroupViewModel">
+        <StackPanel Margin="10,20">
+
+            <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="30" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" 
+                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Title), Mode=OneWay}"/>
+
+            <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="18" FontWeight="SemiLight" Opacity="0.5"
+                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
+
+            <ItemsControl ItemsSource="{x:Bind Items}"
+                          Margin="0,20,0,0"
+                          ItemTemplateSelector="{StaticResource GroupTemplateSelector}" />
+        </StackPanel>
+    </DataTemplate>
     
 </ResourceDictionary>
     

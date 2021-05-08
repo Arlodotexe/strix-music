@@ -10,7 +10,6 @@
         <themes:AbstractButtonStyle />
         <themes:AbstractDataListStyle />
         <themes:AbstractMultiChoiceUIElementStyle />
-        <themes:AbstractMutableDataListStyle />
         <themes:AbstractRichTextBlockStyle />
         <themes:AbstractTextBoxStyle />
     </ResourceDictionary.MergedDictionaries>

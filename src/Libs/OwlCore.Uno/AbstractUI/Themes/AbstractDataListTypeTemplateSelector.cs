@@ -25,16 +25,6 @@ namespace OwlCore.Uno.AbstractUI.Themes
         /// <inheritdoc />
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            if (item is AbstractMutableDataListViewModel mutableViewModel)
-            {
-                return mutableViewModel.PreferredDisplayMode switch
-                {
-                    AbstractDataListPreferredDisplayMode.Grid => GridTemplate ?? ThrowHelper.ThrowArgumentNullException<DataTemplate>(),
-                    AbstractDataListPreferredDisplayMode.List => ListTemplate ?? ThrowHelper.ThrowArgumentNullException<DataTemplate>(),
-                    _ => throw new NotImplementedException(),
-                };
-            }
-
             if (item is AbstractDataListViewModel viewModel)
             {
                 return viewModel.PreferredDisplayMode switch
