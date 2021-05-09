@@ -13,7 +13,7 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///OwlCore.Uno/AbstractUI/Themes/AbstractUIResources.xaml"/>
-        <themes:AbstractBooleanUIElementStyle />
+        <themes:AbstractBooleanStyle />
         <themes:AbstractButtonStyle />
         <themes:AbstractDataListStyle />
         <themes:AbstractMultiChoiceUIElementStyle />
@@ -25,7 +25,7 @@
     <controls:AbstractUIGroupItemTemplateSelector x:Key="GroupTemplateSelector">
         <controls:AbstractUIGroupItemTemplateSelector.BooleanTemplate>
             <DataTemplate x:DataType="abstractUIVm:AbstractBooleanViewModel">
-                <controls:AbstractBooleanUIElementPresenter />
+                <controls:AbstractBooleanPresenter />
             </DataTemplate>
         </controls:AbstractUIGroupItemTemplateSelector.BooleanTemplate>
 

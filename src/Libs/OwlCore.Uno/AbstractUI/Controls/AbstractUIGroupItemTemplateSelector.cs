@@ -36,7 +36,7 @@ namespace OwlCore.Uno.AbstractUI.Controls
                 MultiChoiceTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(multiChoiceTemplate));
             }
 
-            if (!new Themes.AbstractBooleanUIElementStyle().TryGetValue("DefaultAbstractBooleanUIElementTemplate", out var booleanTemplate))
+            if (!new Themes.AbstractBooleanStyle().TryGetValue("DefaultAbstractBooleanTemplate", out var booleanTemplate))
             {
                 BooleanTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(booleanTemplate));
             }
