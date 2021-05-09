@@ -156,14 +156,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (updatedArtistItems.Count > 0)
                 ArtistItemsChanged?.Invoke(this, updatedArtistItems, Array.Empty<CollectionChangedItem<(AlbumMetadata, ArtistMetadata)>>());
 
-            if (addedTrackItems.Count > 0)
-                TracksChanged?.Invoke(this, addedTrackItems, Array.Empty<CollectionChangedItem<(AlbumMetadata, TrackMetadata)>>());
-
             if (updatedAlbums.Count > 0)
                 MetadataUpdated?.Invoke(this, updatedAlbums);
 
             if (addedAlbums.Count > 0)
                 MetadataAdded?.Invoke(this, addedAlbums);
+
+            if (addedTrackItems.Count > 0)
+                TracksChanged?.Invoke(this, addedTrackItems, Array.Empty<CollectionChangedItem<(AlbumMetadata, TrackMetadata)>>());
 
             _ = CommitChangesAsync();
         }
