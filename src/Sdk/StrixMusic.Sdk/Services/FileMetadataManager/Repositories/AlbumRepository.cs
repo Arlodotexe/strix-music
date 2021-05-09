@@ -65,6 +65,21 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _initMutex.Release();
         }
 
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<AlbumMetadata>>? MetadataUpdated;
+
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<AlbumMetadata>>? MetadataAdded;
+
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<AlbumMetadata>>? MetadataRemoved;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<(AlbumMetadata Album, ArtistMetadata Artist)>? ArtistItemsChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<(AlbumMetadata Album, TrackMetadata Track)>? TracksChanged;
+
         private void AttachEvents()
         {
             _fileMetadataScanner.FileMetadataAdded += FileMetadataScanner_FileMetadataAdded;
@@ -178,21 +193,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public event EventHandler<IEnumerable<AlbumMetadata>>? MetadataUpdated;
-
-        /// <inheritdoc />
-        public event EventHandler<IEnumerable<AlbumMetadata>>? MetadataAdded;
-
-        /// <inheritdoc />
-        public event EventHandler<IEnumerable<AlbumMetadata>>? MetadataRemoved;
-
-        /// <inheritdoc />
-        public event CollectionChangedEventHandler<(AlbumMetadata Album, ArtistMetadata Artist)>? ArtistItemsChanged;
-
-        /// <inheritdoc />
-        public event CollectionChangedEventHandler<(AlbumMetadata Album, TrackMetadata Track)>? TracksChanged;
-
-        /// <inheritdoc />
         public bool IsInitialized { get; private set; }
 
         /// <summary>
@@ -202,6 +202,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public void SetDataFolder(IFolderData rootFolder)
         {
             _folderData = rootFolder;
+        }
+
+        /// <inheritdoc />
+        public Task<int> GetItemCount()
+        {
+            return Task.FromResult(_inMemoryMetadata.Count);
         }
 
         /// <inheritdoc />

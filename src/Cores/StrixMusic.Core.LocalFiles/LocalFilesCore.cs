@@ -120,15 +120,14 @@ namespace StrixMusic.Core.LocalFiles
                 return;
             }
 
-            await coreConfig.SetupServices(services);
-
             InstanceDescriptor = configuredFolder.Path;
             InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
 
+            await coreConfig.SetupServices(services);
+            await Library.Cast<LocalFilesCoreLibrary>().InitAsync();
+
             Guard.IsNotNull(CoreConfig.Services, nameof(CoreConfig.Services));
             ChangeCoreState(CoreState.Loaded);
-
-            await Library.Cast<LocalFilesCoreLibrary>().InitAsync();
         }
 
         private async Task PickAndSaveFolder()

@@ -67,6 +67,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _initMutex.Release();
         }
 
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataUpdated;
+
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataAdded;
+
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataRemoved;
+
         private void AttachEvents()
         {
             _playlistMetadataScanner.PlaylistMetadataAdded += PlaylistMetadataScanner_PlaylistMetadataAdded;
@@ -134,15 +143,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataUpdated;
-
-        /// <inheritdoc />
-        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataAdded;
-
-        /// <inheritdoc />
-        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataRemoved;
-
-        /// <inheritdoc />
         public bool IsInitialized { get; private set; }
 
         /// <summary>
@@ -152,6 +152,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public void SetDataFolder(IFolderData rootFolder)
         {
             _folderData = rootFolder;
+        }
+
+        /// <inheritdoc />
+        public Task<int> GetItemCount()
+        {
+            return Task.FromResult(_inMemoryMetadata.Count);
         }
 
         /// <inheritdoc />
