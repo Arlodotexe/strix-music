@@ -31,16 +31,16 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
         {
-            e.SelectedItem.PopulateMoreAlbumsCommand.Execute(20);
+            e.SelectedItem?.PopulateMoreAlbumsCommand.Execute(20);
             AlbumCollection.DataContext = e.SelectedItem;
 
-            e.SelectedItem.PopulateMoreTracksCommand.Execute(20);
+            e.SelectedItem?.PopulateMoreTracksCommand.Execute(20);
             TrackCollection.DataContext = e.SelectedItem;
         }
 
         private void AlbumSelected(object sender, SelectionChangedEventArgs<AlbumViewModel> e)
         {
-            e.SelectedItem.PopulateMoreTracksCommand.Execute(20);
+            e.SelectedItem?.PopulateMoreTracksCommand.Execute(20);
             TrackCollection.DataContext = e.SelectedItem;
         }
 
