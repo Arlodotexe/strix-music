@@ -18,6 +18,7 @@ namespace OwlCore.AbstractUI.ViewModels
     {
         private readonly AbstractDataList _model;
         private readonly AbstractDataListItemViewModel _requestAddMetadataItemVm;
+        private bool _isUserEditingEnabled;
 
         /// <summary>
         /// Initializes a new instance of see <see cref="AbstractDataListViewModel"/>.
@@ -93,6 +94,8 @@ namespace OwlCore.AbstractUI.ViewModels
                 if (!Items.Contains(_requestAddMetadataItemVm))
                     Items.Add(_requestAddMetadataItemVm);
             }
+
+            IsUserEditingEnabled = e;
         }
 
         private void DetachEvents()
@@ -159,8 +162,11 @@ namespace OwlCore.AbstractUI.ViewModels
         /// </summary>
         public bool IsUserEditingEnabled
         {
-            set => SetProperty(_model.IsUserEditingEnabled, value, _model, (list, b) => list.IsUserEditingEnabled = b);
-            get => _model.IsUserEditingEnabled;
+            get => _isUserEditingEnabled;
+            set { 
+                _isUserEditingEnabled = value;
+                OnPropertyChanged(nameof(IsUserEditingEnabled));
+            }
         }
 
         /// <inheritdoc cref="AbstractDataListPreferredDisplayMode"/>

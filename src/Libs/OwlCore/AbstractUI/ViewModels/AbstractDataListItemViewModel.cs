@@ -11,7 +11,6 @@ namespace OwlCore.AbstractUI.ViewModels
     [Bindable(true)]
     public class AbstractDataListItemViewModel : AbstractUIMetadataViewModel
     {
-        private readonly AbstractDataListViewModel _parent;
 
         /// <summary>
         /// Creates a new instance of <see cref="AbstractDataListItemViewModel"/>.
@@ -21,7 +20,7 @@ namespace OwlCore.AbstractUI.ViewModels
         public AbstractDataListItemViewModel(AbstractUIMetadata metadata, AbstractDataListViewModel parent)
             : base(metadata)
         {
-            _parent = parent;
+            Parent = parent;
             RequestRemoveCommand = new RelayCommand(RemoveSelf);
             RequestAddCommand = new RelayCommand(RequestAdd);
 
@@ -47,6 +46,11 @@ namespace OwlCore.AbstractUI.ViewModels
         public event EventHandler? ItemAddRequested;
 
         /// <summary>
+        /// The parent that this list item belongs to.
+        /// </summary>
+        public AbstractDataListViewModel Parent { get; }
+
+        /// <summary>
         /// Run this command to request the removal of this item from the containing list.
         /// </summary>
         public IRelayCommand RequestRemoveCommand { get; set; }
@@ -55,9 +59,6 @@ namespace OwlCore.AbstractUI.ViewModels
         /// Run this command to request a new item be added to the containing list.
         /// </summary>
         public IRelayCommand RequestAddCommand { get; set; }
-
-        /// <inheritdoc cref="AbstractDataList.IsUserEditingEnabled"/>
-        public bool IsUserEditingEnabled => _parent.IsUserEditingEnabled;
 
         /// <summary>
         /// If the current item is used to request a new item.
