@@ -122,7 +122,12 @@ namespace StrixMusic.Core.LocalFiles
 
         private void SetupAbstractUISettings()
         {
-            _initWithEmptyReposToggle = new AbstractBooleanUIElement("InitWithEmptyMetadataRepos", "Ignore previously scanned metadata");
+            _initWithEmptyReposToggle = new AbstractBooleanUIElement("InitWithEmptyMetadataRepos", string.Empty)
+            {
+                Title = "Ignore previously scanned metadata",
+                Subtitle = "Requires an app restart",
+            };
+
             _initWithEmptyReposToggle.StateChanged += InitWithEmptyReposToggleOnStateChanged;
 
             AbstractUIElements = new List<AbstractUIElementGroup>
