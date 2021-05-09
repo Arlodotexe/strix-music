@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Utils;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -102,6 +104,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
             dataListGrid.AddRequested += DataListGrid_AddRequested;
             dataList.AddRequested += DataListGrid_AddRequested;
+            dataList.ItemTapped += DataList_ItemTapped;
 
             var multiChoiceItems = dataListItems.ToList();
 
@@ -135,6 +138,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
             };
 
             boolUi.StateChanged += BoolUi_StateChanged;
+            boolUi.StateChanged += (sender, b) =>
+            {
+                dataListGrid.IsUserEditingEnabled = boolUi.State;
+            };
 
             AbstractUIElements = new List<AbstractUIElementGroup>
             {
@@ -156,6 +163,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
                     },
                 },
             };
+        }
+
+        private void DataList_ItemTapped(object sender, AbstractUIMetadata e)
+        {
+            var notifServ = Ioc.Default.GetRequiredService<INotificationService>();
+            notifServ.RaiseNotification("Wow", $"You tapped {e.Title}");
         }
 
         private void BoolUi_StateChanged(object sender, bool e)
