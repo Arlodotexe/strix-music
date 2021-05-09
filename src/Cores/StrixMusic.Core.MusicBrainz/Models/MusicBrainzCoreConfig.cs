@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Core.MusicBrainz.Services;
 using StrixMusic.Core.MusicBrainz.Utils;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Core.MusicBrainz.Models
 {
@@ -84,34 +86,25 @@ namespace StrixMusic.Core.MusicBrainz.Models
                 },
             };
 
-            var dataList = new AbstractDataList(id: "testList", items: dataListItems)
+            var dataListGrid = new AbstractDataList(id: "dataListGrid", dataListItems.ToList())
             {
-                PreferredDisplayMode = AbstractDataListPreferredDisplayMode.List,
-                Title = "DataList test",
-            };
-
-            var dataListGrid = new AbstractDataList(id: "testList", items: dataListItems)
-            {
-                PreferredDisplayMode = AbstractDataListPreferredDisplayMode.Grid,
                 Title = "DataList grid test",
-            };
-
-            var mutableDataListGrid = new AbstractMutableDataList(id: "mutableDataListGrid", dataListItems.ToList())
-            {
-                Title = "MutableDataList grid test",
                 Subtitle = "Add or remove something",
                 PreferredDisplayMode = AbstractDataListPreferredDisplayMode.Grid,
+                IsUserEditingEnabled = false,
             };
 
-            var mutableDataList = new AbstractMutableDataList(id: "mutableDataList", dataListItems.ToList())
+            var dataList = new AbstractDataList(id: "dataList", dataListItems.ToList())
             {
-                Title = "MutableDataList test",
+                Title = "DataList test",
                 Subtitle = "Add or remove something",
                 PreferredDisplayMode = AbstractDataListPreferredDisplayMode.List,
+                IsUserEditingEnabled = false,
             };
 
-            mutableDataListGrid.AddRequested += MutableDataListGrid_AddRequested;
-            mutableDataList.AddRequested += MutableDataListGrid_AddRequested;
+            dataListGrid.AddRequested += DataListGrid_AddRequested;
+            dataList.AddRequested += DataListGrid_AddRequested;
+            dataList.ItemTapped += DataList_ItemTapped;
 
             var multiChoiceItems = dataListItems.ToList();
 
@@ -145,6 +138,10 @@ namespace StrixMusic.Core.MusicBrainz.Models
             };
 
             boolUi.StateChanged += BoolUi_StateChanged;
+            boolUi.StateChanged += (sender, b) =>
+            {
+                dataListGrid.IsUserEditingEnabled = boolUi.State;
+            };
 
             AbstractUIElements = new List<AbstractUIElementGroup>
             {
@@ -160,14 +157,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
                         radioButtons,
                         dataList,
                         dataListGrid,
-                        mutableDataListGrid,
                         button,
                         buttons,
-                        mutableDataList,
                         allDoneButton,
                     },
                 },
             };
+        }
+
+        private void DataList_ItemTapped(object sender, AbstractUIMetadata e)
+        {
+            var notifServ = Ioc.Default.GetRequiredService<INotificationService>();
+            notifServ.RaiseNotification("Wow", $"You tapped {e.Title}");
         }
 
         private void BoolUi_StateChanged(object sender, bool e)
@@ -186,9 +187,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
             }
         }
 
-        private async void MutableDataListGrid_AddRequested(object sender, EventArgs e)
+        private async void DataListGrid_AddRequested(object sender, EventArgs e)
         {
-            if (!(sender is AbstractMutableDataList dataList))
+            if (!(sender is AbstractDataList dataList))
                 return;
 
             Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));

@@ -8,9 +8,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Arlo Godfrey</Authors>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <Product>OwlCore</Product>
-    <Description>Have you ever seen an owl do a barrel roll? Me neither, but with OwlCore, your code can!
+    <Description>Have you ever seen an owl do a barrel roll? Me neither.
 
 This project is a constant work in progress. Until a stable release, breaking changes are possible at any time.
 
@@ -24,7 +24,7 @@ This project is a constant work in progress. Until a stable release, breaking ch
  - Countless extension methods. PruneNull, Shuffle, InParallel, ChangeDate, HashMD5Fast, DistinctBy, InsertOrAdd, and more.</Description>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>Added missing standalone CachedHttpClientHandler. Added misc code docs.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

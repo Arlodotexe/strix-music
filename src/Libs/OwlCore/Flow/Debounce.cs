@@ -15,6 +15,7 @@ namespace OwlCore
         /// </summary>
         /// <remarks> This is especially useful when you have an event that fires repeatedly. but you only care about when the event stops being called.
         /// </remarks>
+        /// <returns>False if debouce was triggered, True if no debounce occured and "post debounce" code should execute.</returns>
         public static async Task<bool> Debounce(string debouncerKey, TimeSpan timeToWait)
         {
             // If the debouncer data doesn't exist

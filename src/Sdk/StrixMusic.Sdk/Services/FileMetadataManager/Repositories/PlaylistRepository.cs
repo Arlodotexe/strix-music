@@ -88,23 +88,23 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _playlistMetadataScanner.PlaylistMetadataRemoved -= PlaylistMetadataScannerPlaylistMetadataRemoved;
         }
 
-        private async void PlaylistMetadataScannerPlaylistMetadataRemoved(object sender, IEnumerable<FileMetadata> e)
+        private async void PlaylistMetadataScannerPlaylistMetadataRemoved(object sender, IEnumerable<PlaylistMetadata> e)
         {
             var removedPlaylists = new List<PlaylistMetadata>();
 
             foreach (var metadata in e)
             {
-                if (metadata.PlaylistMetadata != null)
+                if (metadata != null)
                 {
-                    Guard.IsNotNullOrWhiteSpace(metadata.PlaylistMetadata.Id, nameof(metadata.PlaylistMetadata.Id));
+                    Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
 
                     await _storageMutex.WaitAsync();
 
-                    if (!_inMemoryMetadata.TryAdd(metadata.PlaylistMetadata.Id, metadata.PlaylistMetadata))
+                    if (!_inMemoryMetadata.TryAdd(metadata.Id, metadata))
                         ThrowHelper.ThrowInvalidOperationException($"Tried adding an item that already exists in {nameof(_inMemoryMetadata)}");
 
                     _storageMutex.Release();
-                    removedPlaylists.Add(metadata.PlaylistMetadata);
+                    removedPlaylists.Add(metadata);
                 }
             }
 
@@ -115,23 +115,23 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             }
         }
 
-        private async void PlaylistMetadataScanner_PlaylistMetadataAdded(object sender, IEnumerable<FileMetadata> e)
+        private async void PlaylistMetadataScanner_PlaylistMetadataAdded(object sender, IEnumerable<PlaylistMetadata> e)
         {
             var addedPlaylists = new List<PlaylistMetadata>();
 
             foreach (var metadata in e)
             {
-                if (metadata.PlaylistMetadata != null)
+                if (metadata != null)
                 {
-                    Guard.IsNotNullOrWhiteSpace(metadata.PlaylistMetadata.Id, nameof(metadata.PlaylistMetadata.Id));
+                    Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
 
                     await _storageMutex.WaitAsync();
 
-                    if (!_inMemoryMetadata.TryAdd(metadata.PlaylistMetadata.Id, metadata.PlaylistMetadata))
+                    if (!_inMemoryMetadata.TryAdd(metadata.Id, metadata))
                         ThrowHelper.ThrowInvalidOperationException($"Tried adding an item that already exists in {nameof(_inMemoryMetadata)}");
 
                     _storageMutex.Release();
-                    addedPlaylists.Add(metadata.PlaylistMetadata);
+                    addedPlaylists.Add(metadata);
                 }
             }
 

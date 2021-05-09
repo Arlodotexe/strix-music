@@ -32,11 +32,11 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// <summary>
         /// Raised when a new notification needs to be displayed.
         /// </summary>
-        internal event EventHandler<Notification>? NotificationRaised;
+        public event EventHandler<Notification>? NotificationRaised;
 
         /// <summary>
         /// Raised when the user dismisses a notification.
         /// </summary>
-        internal event EventHandler<Notification>? NotificationDismissed;
+        public event EventHandler<Notification>? NotificationDismissed;
     }
 }

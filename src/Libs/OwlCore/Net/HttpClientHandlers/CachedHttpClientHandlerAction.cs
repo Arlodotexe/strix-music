@@ -20,14 +20,6 @@ namespace OwlCore.Net.HttpClientHandlers
         private readonly CacheRequestFilter? _cacheRequestFilter;
 
         /// <summary>
-        /// Decides if the given URL should return data from cache.
-        /// </summary>
-        /// <param name="uri">The URL to decide against.</param>
-        /// <param name="cacheEntry">The cache entry for this request, if found.</param>
-        /// <returns><see langword="true"/> if values should be cached and returned, otherwise false.</returns>
-        public delegate bool CacheRequestFilter(Uri uri, CacheEntry? cacheEntry = null);
-
-        /// <summary>
         /// Creates an instance of the <see cref="RateLimitedHttpClientHandlerAction"/>.
         /// </summary>
         public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan defaultCacheTime)
@@ -162,26 +154,34 @@ namespace OwlCore.Net.HttpClientHandlers
         {
             return Path.Combine(basePath, requestUri.HashMD5Fast()) + ".cache";
         }
+    }
+
+    /// <summary>
+    /// Decides if the given URL should return data from cache.
+    /// </summary>
+    /// <param name="uri">The URL to decide against.</param>
+    /// <param name="cacheEntry">The cache entry for this request, if found.</param>
+    /// <returns><see langword="true"/> if values should be cached and returned, otherwise false.</returns>
+    public delegate bool CacheRequestFilter(Uri uri, CacheEntry? cacheEntry = null);
+
+    /// <summary>
+    /// A class to hold and save cached data.
+    /// </summary>
+    public class CacheEntry
+    {
+        /// <summary>
+        /// The cached response object.
+        /// </summary>
+        public string? RequestUri { get; set; }
 
         /// <summary>
-        /// A class to hold and save cached data.
+        /// The http response content.
         /// </summary>
-        public class CacheEntry
-        {
-            /// <summary>
-            /// The cached response object.
-            /// </summary>
-            public string? RequestUri { get; set; }
+        public byte[]? ContentBytes { get; set; }
 
-            /// <summary>
-            /// The http response content.
-            /// </summary>
-            public byte[]? ContentBytes { get; set; }
-
-            /// <summary>
-            /// Timestamp for the cache.
-            /// </summary>
-            public DateTime TimeStamp { get; set; }
-        }
+        /// <summary>
+        /// Timestamp for the cache.
+        /// </summary>
+        public DateTime TimeStamp { get; set; }
     }
 }
