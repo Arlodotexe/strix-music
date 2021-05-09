@@ -82,7 +82,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             var dataFolder = await GetDataStorageFolder(_instanceId);
 
-            _fileMetadataScanner.CacheFolder = dataFolder;
+            _audioMetadataScanner.CacheFolder = dataFolder;
 
             Albums.SetDataFolder(dataFolder);
             Artists.SetDataFolder(dataFolder);
@@ -95,26 +95,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             await Playlists.InitAsync();
 
             AttachEvents();
-        }
-
-        private void AttachEvents()
-        {
-            _fileMetadataScanner.FilesFoundCountUpdated += FileMetadataScanner_FilesFoundCountUpdated;
-            _fileMetadataScanner.FileDiscoveryCompleted += FileMetadataScanner_FileDiscoveryCompleted;
-            _fileMetadataScanner.FilesProcessedCountUpdated += FileMetadataScanner_FilesProcessedCountUpdated;
-            _playlistMetadataScanner.PlaylistMetadataScanCompleted += PlaylistMetadataScanner_PlaylistMetadataScanCompleted;
-            _playlistMetadataScanner.PlaylistMetadataProcessedFileCountUpdated += PlaylistMetadataScanner_PlaylistMetadataProcessedFileCountUpdated;
-            _fileMetadataScanner.FileDiscoveryStarted += FileMetadataScanner_FileDiscoveryStarted;
-        }
-
-        private void DetachEvents()
-        {
-            _fileMetadataScanner.FilesFoundCountUpdated -= FileMetadataScanner_FilesFoundCountUpdated;
-            _fileMetadataScanner.FileDiscoveryCompleted -= FileMetadataScanner_FileDiscoveryCompleted;
-            _fileMetadataScanner.FilesProcessedCountUpdated -= FileMetadataScanner_FilesProcessedCountUpdated;
-            _playlistMetadataScanner.PlaylistMetadataScanCompleted -= PlaylistMetadataScanner_PlaylistMetadataScanCompleted;
-            _playlistMetadataScanner.PlaylistMetadataProcessedFileCountUpdated -= PlaylistMetadataScanner_PlaylistMetadataProcessedFileCountUpdated;
-            _fileMetadataScanner.FileDiscoveryStarted -= FileMetadataScanner_FileDiscoveryStarted;
         }
 
         private static async Task<IFolderData> GetDataStorageFolder(string instanceId)
@@ -131,24 +111,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Guard.IsNotNull(folderData, nameof(folderData));
 
             return folderData;
-        }
-
-        /// <inheritdoc />
-        public async Task InitAsync()
-        {
-            Guard.IsFalse(IsInitialized, nameof(IsInitialized));
-            IsInitialized = true;
-
-            var dataFolder = await GetDataStorageFolder(_instanceId);
-
-            _audioMetadataScanner.CacheFolder = dataFolder;
-
-            Albums.SetDataFolder(dataFolder);
-            Artists.SetDataFolder(dataFolder);
-            Tracks.SetDataFolder(dataFolder);
-            Playlists.SetDataFolder(dataFolder);
-
-            AttachEvents();
         }
 
         /// <inheritdoc />
