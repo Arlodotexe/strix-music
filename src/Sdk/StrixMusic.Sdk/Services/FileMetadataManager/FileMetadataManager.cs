@@ -89,10 +89,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Tracks.SetDataFolder(dataFolder);
             Playlists.SetDataFolder(dataFolder);
 
-            await Albums.InitAsync();
-            await Artists.InitAsync();
-            await Tracks.InitAsync();
-            await Playlists.InitAsync();
+            if (!SkipRepoInit)
+            {
+                await Albums.InitAsync();
+                await Artists.InitAsync();
+                await Tracks.InitAsync();
+                await Playlists.InitAsync();
+            }
 
             AttachEvents();
         }
@@ -183,6 +186,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public TrackRepository Tracks { get; private set; }
 
         /// <inheritdoc />
+        public bool SkipRepoInit { get; set; }
+
+        /// <inheritdoc />
         public async Task StartScan()
         {
             if (!IsInitialized)
@@ -190,10 +196,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             ScanningStarted?.Invoke(this, EventArgs.Empty);
 
-            await Albums.InitAsync();
-            await Artists.InitAsync();
-            await Tracks.InitAsync();
-            await Playlists.InitAsync();
+            if (!SkipRepoInit)
+            {
+                await Albums.InitAsync();
+                await Artists.InitAsync();
+                await Tracks.InitAsync();
+                await Playlists.InitAsync();
+            }
 
             var findingFilesNotif = RaiseFileDiscoveryNotification();
             var discoveredFiles = await _fileScanner.ScanFolder(_rootFolder);
@@ -205,10 +214,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             scanningMusicNotif.Dismiss();
 
             // Playlist scanning is disabled until bugs are fixed.
-/*            _currentScanningType = FileScanningType.Playlists;
-            var scanningPlaylistsNotif = RaiseProcessingNotification();
-            await _playlistMetadataScanner.ScanPlaylists(discoveredFiles, fileMetadata);
-            scanningPlaylistsNotif.Dismiss();*/
+            /*            _currentScanningType = FileScanningType.Playlists;
+                        var scanningPlaylistsNotif = RaiseProcessingNotification();
+                        await _playlistMetadataScanner.ScanPlaylists(discoveredFiles, fileMetadata);
+                        scanningPlaylistsNotif.Dismiss();*/
 
             ScanningCompleted?.Invoke(this, EventArgs.Empty);
         }
