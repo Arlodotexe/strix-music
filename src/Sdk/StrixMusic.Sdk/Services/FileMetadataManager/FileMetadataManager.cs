@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         Playlists
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IFileMetadataManager" />
     public class FileMetadataManager : IFileMetadataManager, IDisposable
     {
         private static string NewGuid() => Guid.NewGuid().ToString();
@@ -74,22 +74,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _rootFolder = rootFolder;
         }
 
-        private static async Task<IFolderData> GetDataStorageFolder(string instanceId)
-        {
-            var primaryFileSystemService = Ioc.Default.GetRequiredService<IFileSystemService>();
-
-            var path = Path.Combine(primaryFileSystemService.RootFolder.Path, instanceId, nameof(FileMetadataManager));
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            var folderData = await primaryFileSystemService.GetFolderFromPathAsync(path);
-
-            Guard.IsNotNull(folderData, nameof(folderData));
-
-            return folderData;
-        }
-
         /// <inheritdoc />
         public async Task InitAsync()
         {
@@ -105,7 +89,28 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Tracks.SetDataFolder(dataFolder);
             Playlists.SetDataFolder(dataFolder);
 
+            await Albums.InitAsync();
+            await Artists.InitAsync();
+            await Tracks.InitAsync();
+            await Playlists.InitAsync();
+
             AttachEvents();
+        }
+
+        private static async Task<IFolderData> GetDataStorageFolder(string instanceId)
+        {
+            var primaryFileSystemService = Ioc.Default.GetRequiredService<IFileSystemService>();
+
+            var path = Path.Combine(primaryFileSystemService.RootFolder.Path, instanceId, nameof(FileMetadataManager));
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            var folderData = await primaryFileSystemService.GetFolderFromPathAsync(path);
+
+            Guard.IsNotNull(folderData, nameof(folderData));
+
+            return folderData;
         }
 
         /// <inheritdoc />
@@ -274,6 +279,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             _fileScanner.Dispose();
             _playlistMetadataScanner.Dispose();
+
             _filesFoundNotification?.Dismiss();
             _filesScannedNotification?.Dismiss();
 

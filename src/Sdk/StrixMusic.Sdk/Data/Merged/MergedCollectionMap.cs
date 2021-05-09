@@ -361,11 +361,11 @@ namespace StrixMusic.Sdk.Data.Merged
                 var mergedImpl = MergeOrAdd(newItems, collectionItemData);
 
                 _sortedMap.Add(mappedData);
-                _mergedMappedData.Add(new MergedMappedData(mergedImpl, new[] { mappedData }));
 
                 // If the number of items in this list changes, the item was not merged and should be emitted on the ItemsChanged event.
                 if (newItemsCount != newItems.Count)
                 {
+                    _mergedMappedData.Add(new MergedMappedData(mergedImpl, new[] { mappedData }));
                     added.Add(new CollectionChangedItem<TCollectionItem>((TCollectionItem)mergedImpl, _mergedMappedData.Count - 1));
                 }
             }

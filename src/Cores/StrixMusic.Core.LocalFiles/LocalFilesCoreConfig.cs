@@ -61,6 +61,7 @@ namespace StrixMusic.Core.LocalFiles
 
             _fileMetadataManager = new FileMetadataManager(SourceCore.InstanceId, folderData);
             await _fileMetadataManager.InitAsync();
+            _ = _fileMetadataManager.StartScan();
 
             services.AddSingleton<IFileMetadataManager>(_fileMetadataManager);
 
@@ -91,22 +92,6 @@ namespace StrixMusic.Core.LocalFiles
             Services = services.BuildServiceProvider();
 
             return _fileSystemService.InitAsync();
-        }
-
-        /// <summary>
-        /// Scans metadata for the configured folders.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task ScanFileMetadata()
-        {
-            Guard.IsNotNull(Services, nameof(Services));
-            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-
-            var folderData = await GetConfiguredFolder();
-
-            Guard.IsNotNull(folderData, nameof(folderData));
-
-            await _fileMetadataManager.StartScan();
         }
 
         /// <summary>

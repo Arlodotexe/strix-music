@@ -4,9 +4,9 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.Uno.AbstractUI.Controls
 {
     /// <summary>
-    /// A control that displays an <see cref="AbstractMutableDataList"/>.
+    /// A control that displays an <see cref="AbstractBooleanUIElement"/>.
     /// </summary>
-    public partial class AbstractMutableDataListPresenter : Control
+    public partial class AbstractBooleanPresenter : Control
     {
     }
 }

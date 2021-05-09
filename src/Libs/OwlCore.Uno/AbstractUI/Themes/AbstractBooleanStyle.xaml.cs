@@ -4,14 +4,14 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.Uno.AbstractUI.Themes
 {
     /// <summary>
-    /// Default template for the <see cref="AbstractBooleanUIElementStyle"/>
+    /// Default template for the <see cref="AbstractBooleanStyle"/>
     /// </summary>
-    public sealed partial class AbstractBooleanUIElementStyle : ResourceDictionary
+    public sealed partial class AbstractBooleanStyle : ResourceDictionary
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractButtonTemplate"/> class.
         /// </summary>
-        public AbstractBooleanUIElementStyle()
+        public AbstractBooleanStyle()
         {
             this.InitializeComponent();
         }

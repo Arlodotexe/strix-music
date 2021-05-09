@@ -28,11 +28,11 @@ namespace OwlCore.AbstractUI.ViewModels
                 yield return item switch
                 {
                     AbstractTextBox textBox => new AbstractTextBoxViewModel(textBox),
-                    AbstractMutableDataList mutableDataList => new AbstractMutableDataListViewModel(mutableDataList),
                     AbstractDataList dataList => new AbstractDataListViewModel(dataList),
                     AbstractButton button => new AbstractButtonViewModel(button),
                     AbstractBooleanUIElement boolean => new AbstractBooleanViewModel(boolean),
                     AbstractMultiChoiceUIElement multiChoiceUIElement => new AbstractMultiChoiceUIElementViewModel(multiChoiceUIElement),
+                    AbstractUIElementGroup elementGroup => new AbstractUIElementGroupViewModel(elementGroup),
                     _ => throw new NotImplementedException(),
                 };
             }
