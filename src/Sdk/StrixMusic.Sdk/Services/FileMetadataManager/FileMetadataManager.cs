@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         Playlists
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IFileMetadataManager" />
     public class FileMetadataManager : IFileMetadataManager, IDisposable
     {
         private static string NewGuid() => Guid.NewGuid().ToString();
@@ -72,6 +72,49 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Artists = new ArtistRepository(_audioMetadataScanner, Tracks);
 
             _rootFolder = rootFolder;
+        }
+
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            Guard.IsFalse(IsInitialized, nameof(IsInitialized));
+            IsInitialized = true;
+
+            var dataFolder = await GetDataStorageFolder(_instanceId);
+
+            _fileMetadataScanner.CacheFolder = dataFolder;
+
+            Albums.SetDataFolder(dataFolder);
+            Artists.SetDataFolder(dataFolder);
+            Tracks.SetDataFolder(dataFolder);
+            Playlists.SetDataFolder(dataFolder);
+
+            await Albums.InitAsync();
+            await Artists.InitAsync();
+            await Tracks.InitAsync();
+            await Playlists.InitAsync();
+
+            AttachEvents();
+        }
+
+        private void AttachEvents()
+        {
+            _fileMetadataScanner.FilesFoundCountUpdated += FileMetadataScanner_FilesFoundCountUpdated;
+            _fileMetadataScanner.FileDiscoveryCompleted += FileMetadataScanner_FileDiscoveryCompleted;
+            _fileMetadataScanner.FilesProcessedCountUpdated += FileMetadataScanner_FilesProcessedCountUpdated;
+            _playlistMetadataScanner.PlaylistMetadataScanCompleted += PlaylistMetadataScanner_PlaylistMetadataScanCompleted;
+            _playlistMetadataScanner.PlaylistMetadataProcessedFileCountUpdated += PlaylistMetadataScanner_PlaylistMetadataProcessedFileCountUpdated;
+            _fileMetadataScanner.FileDiscoveryStarted += FileMetadataScanner_FileDiscoveryStarted;
+        }
+
+        private void DetachEvents()
+        {
+            _fileMetadataScanner.FilesFoundCountUpdated -= FileMetadataScanner_FilesFoundCountUpdated;
+            _fileMetadataScanner.FileDiscoveryCompleted -= FileMetadataScanner_FileDiscoveryCompleted;
+            _fileMetadataScanner.FilesProcessedCountUpdated -= FileMetadataScanner_FilesProcessedCountUpdated;
+            _playlistMetadataScanner.PlaylistMetadataScanCompleted -= PlaylistMetadataScanner_PlaylistMetadataScanCompleted;
+            _playlistMetadataScanner.PlaylistMetadataProcessedFileCountUpdated -= PlaylistMetadataScanner_PlaylistMetadataProcessedFileCountUpdated;
+            _fileMetadataScanner.FileDiscoveryStarted -= FileMetadataScanner_FileDiscoveryStarted;
         }
 
         private static async Task<IFolderData> GetDataStorageFolder(string instanceId)
@@ -274,6 +317,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             _fileScanner.Dispose();
             _playlistMetadataScanner.Dispose();
+
             _filesFoundNotification?.Dismiss();
             _filesScannedNotification?.Dismiss();
 

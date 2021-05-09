@@ -29,9 +29,14 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public override async Task InitAsync()
         {
+            IsInitialized = true;
+
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
 
-            IsInitialized = true;
+            TotalAlbumItemsCount = await _fileMetadataManager.Albums.GetItemCount();
+            TotalArtistItemsCount = await _fileMetadataManager.Artists.GetItemCount();
+            TotalPlaylistItemsCount = await _fileMetadataManager.Playlists.GetItemCount();
+            TotalTracksCount = await _fileMetadataManager.Tracks.GetItemCount();
 
             await base.InitAsync();
 
