@@ -299,7 +299,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 return;
 
             var data = MessagePackSerializer.Deserialize<List<AlbumMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
-            var addedAlbums = new List<AlbumMetadata>();
 
             await _storageMutex.WaitAsync();
 
@@ -309,14 +308,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
                 if (!_inMemoryMetadata.TryAdd(item.Id, item))
                     ThrowHelper.ThrowInvalidOperationException($"Item already added to {nameof(_inMemoryMetadata)}");
-
-                addedAlbums.Add(item);
             }
 
             _storageMutex.Release();
-
-            if (addedAlbums.Count > 0)
-                MetadataAdded?.Invoke(this, addedAlbums);
         }
 
         private async Task CommitChangesAsync()
