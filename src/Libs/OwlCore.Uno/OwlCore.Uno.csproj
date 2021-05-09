@@ -52,7 +52,7 @@
     <None Remove="AbstractUI\AbstractUIGroupListPresenter.xaml" />
     <None Remove="AbstractUI\AbstractUIGroupPresenterTemplateSelector.xaml" />
     <None Remove="AbstractUI\Controls\AbstractUIGroupPresenter.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractBooleanUIElementStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractBooleanStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml" />
@@ -68,7 +68,7 @@
   <ItemGroup>
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenter.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenterTemplateSelector.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractBooleanUIElementStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractBooleanStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml" />
@@ -89,8 +89,8 @@
     <Compile Update="AbstractUI\Controls\AbstractUIGroupPresenter.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractBooleanUIElementStyle.xaml.cs">
-      <DependentUpon>AbstractBooleanUIElementStyle.xaml</DependentUpon>
+    <Compile Update="AbstractUI\Themes\AbstractBooleanStyle.xaml.cs">
+      <DependentUpon>AbstractBooleanStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractButtonStyle.xaml.cs">
       <DependentUpon>AbstractButtonStyle.xaml</DependentUpon>

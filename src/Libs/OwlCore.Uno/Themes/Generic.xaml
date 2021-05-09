@@ -6,7 +6,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///OwlCore.Uno/Controls/MarqueeTextBlock/MarqueeTextBlock.xaml"/>
         <ResourceDictionary Source="ms-appx:///OwlCore.Uno/Controls/ToggleContentButton/ToggleContentButton.xaml"/>
-        <themes:AbstractBooleanUIElementStyle />
+        <themes:AbstractBooleanStyle />
         <themes:AbstractButtonStyle />
         <themes:AbstractDataListStyle />
         <themes:AbstractMultiChoiceUIElementStyle />
