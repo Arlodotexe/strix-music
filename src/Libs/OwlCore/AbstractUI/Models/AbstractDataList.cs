@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Events;
@@ -34,6 +35,11 @@ namespace OwlCore.AbstractUI.Models
         /// Fires when <see cref="RemoveItem"/> is called.
         /// </summary>
         public event CollectionChangedEventHandler<AbstractUIMetadata>? ItemsChanged;
+
+        /// <summary>
+        /// Raised when an item is tapped.
+        /// </summary>
+        public event EventHandler<AbstractUIMetadata>? ItemTapped; 
 
         /// <summary>
         /// Raised when <see cref="IsUserEditingEnabled"/> changes.
@@ -74,6 +80,15 @@ namespace OwlCore.AbstractUI.Models
         public void RequestNewItem()
         {
             AddRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Simulates the tapping of a specific item in <see cref="Items"/>.
+        /// </summary>
+        /// <param name="item">The item to relay as tapped.</param>
+        public void TapItem(AbstractUIMetadata item)
+        {
+            ItemTapped?.Invoke(this, item);
         }
 
         /// <summary>

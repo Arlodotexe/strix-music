@@ -37,7 +37,7 @@
         <ListView x:Name="PrimaryListView" ItemsSource="{x:Bind Items}" SelectionMode="None" Margin="10" IsItemClickEnabled="true">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="ItemClick">
-                    <core:InvokeCommandAction Command="{x:Bind RequestNewItemCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+                    <core:InvokeCommandAction Command="{x:Bind ItemTappedCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <ListView.ItemContainerTransitions>
@@ -123,7 +123,7 @@
         <GridView SelectionMode="None" ItemsSource="{x:Bind Items}" IsItemClickEnabled="true">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="ItemClick">
-                    <core:InvokeCommandAction Command="{x:Bind RequestNewItemCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+                    <core:InvokeCommandAction Command="{x:Bind ItemTappedCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <GridView.ItemContainerStyle>

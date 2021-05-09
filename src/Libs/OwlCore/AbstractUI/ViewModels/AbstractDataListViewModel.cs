@@ -17,8 +17,7 @@ namespace OwlCore.AbstractUI.ViewModels
     public class AbstractDataListViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractDataList _model;
-        private AbstractUIMetadata? _requestAddMetadataItem;
-        private AbstractDataListItemViewModel _requestAddMetadataItemVm;
+        private readonly AbstractDataListItemViewModel _requestAddMetadataItemVm;
 
         /// <summary>
         /// Initializes a new instance of see <see cref="AbstractDataListViewModel"/>.
@@ -31,12 +30,12 @@ namespace OwlCore.AbstractUI.ViewModels
 
             using (Threading.PrimaryContext)
             {
-                _requestAddMetadataItem = new AbstractUIMetadata("requestAddItem")
+                var requestAddMetadataItem = new AbstractUIMetadata("requestAddItem")
                 {
                     Title = "Add new",
                 };
 
-                _requestAddMetadataItemVm = new AbstractDataListItemViewModel(_requestAddMetadataItem, this);
+                _requestAddMetadataItemVm = new AbstractDataListItemViewModel(requestAddMetadataItem, this);
 
                 var itemViewModels = _model.Items.Select(item => new AbstractDataListItemViewModel(item, this));
                 Items = new ObservableCollection<AbstractDataListItemViewModel>(itemViewModels);
@@ -45,7 +44,7 @@ namespace OwlCore.AbstractUI.ViewModels
                     Items.Add(_requestAddMetadataItemVm);
             }
 
-            RequestNewItemCommand = new RelayCommand<AbstractDataListItemViewModel>(RequestNewItem);
+            ItemTappedCommand = new RelayCommand<AbstractDataListItemViewModel>(TapItem);
 
             AttachEvents();
         }
@@ -57,6 +56,16 @@ namespace OwlCore.AbstractUI.ViewModels
         {
             add => _model.AddRequested += value;
             remove => _model.AddRequested -= value;
+        }
+
+
+        /// <summary>
+        /// Raised when an item is tapped.
+        /// </summary>
+        public event EventHandler<AbstractUIMetadata> ItemTapped
+        {
+            add => _model.ItemTapped += value;
+            remove => _model.ItemTapped -= value;
         }
 
         private void AttachEvents()
@@ -204,17 +213,19 @@ namespace OwlCore.AbstractUI.ViewModels
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public void RemoveItemAt(int index) => _model.RemoveItemAt(index);
 
-        private void RequestNewItem(AbstractDataListItemViewModel? viewModel)
+        private void TapItem(AbstractDataListItemViewModel? viewModel)
         {
             Guard.IsNotNull(viewModel, nameof(viewModel));
 
             if (viewModel.Id == "requestAddItem")
                 RequestNewItem();
+
+            _model.TapItem((AbstractUIMetadata)viewModel.Model);
         }
 
         /// <summary>
         /// Fires when a new item has been requested.
         /// </summary>
-        public IRelayCommand<AbstractDataListItemViewModel> RequestNewItemCommand { get; set; }
+        public IRelayCommand<AbstractDataListItemViewModel> ItemTappedCommand { get; set; }
     }
 }
