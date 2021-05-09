@@ -13,7 +13,7 @@ using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
-    /// <inheritdoc />
+    /// <inheritdoc cref="IFileMetadataManager" />
     public class FileMetadataManager : IFileMetadataManager, IDisposable
     {
         private readonly string _instanceId;
@@ -62,6 +62,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Artists.SetDataFolder(dataFolder);
             Tracks.SetDataFolder(dataFolder);
             Playlists.SetDataFolder(dataFolder);
+
+            await Albums.InitAsync();
+            await Artists.InitAsync();
+            await Tracks.InitAsync();
+            await Playlists.InitAsync();
 
             AttachEvents();
         }
@@ -261,8 +266,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Artists.Dispose();
             Playlists.Dispose();
             Tracks.Dispose();
+
             _fileMetadataScanner.Dispose();
             _playlistMetadataScanner.Dispose();
+
             _filesFoundNotification?.Dismiss();
             _filesScannedNotification?.Dismiss();
 

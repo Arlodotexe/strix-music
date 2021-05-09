@@ -24,6 +24,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private readonly ConcurrentDictionary<string, TrackMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;
+        private readonly SemaphoreSlim _initMutex;
         private readonly FileMetadataScanner _fileMetadataScanner;
         private readonly string _debouncerId;
         private IFolderData? _folderData;
@@ -39,6 +40,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _inMemoryMetadata = new ConcurrentDictionary<string, TrackMetadata>();
             _fileMetadataScanner = fileMetadataScanner;
             _storageMutex = new SemaphoreSlim(1, 1);
+            _initMutex = new SemaphoreSlim(1, 1);
             _debouncerId = Guid.NewGuid().ToString();
 
             AttachEvents();
@@ -47,10 +49,17 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <inheritdoc />
         public async Task InitAsync()
         {
-            Guard.IsFalse(IsInitialized, nameof(IsInitialized));
-            IsInitialized = true;
+            await _initMutex.WaitAsync();
+            if (IsInitialized)
+            {
+                _initMutex.Release();
+                return;
+            }
 
             await LoadDataFromDisk();
+
+            IsInitialized = true;
+            _initMutex.Release();
         }
 
         private void AttachEvents()
