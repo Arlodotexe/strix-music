@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
@@ -17,6 +18,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// </summary>
         /// <param name="rootFolder">The root folder to save data in.</param>
         public void SetDataFolder(IFolderData rootFolder);
+
+        /// <summary>
+        /// Returns the number of items currently loaded in the repository.
+        /// </summary>
+        public Task<int> GetItemCount();
 
         /// <summary>
         /// Raised when metadata is updated.

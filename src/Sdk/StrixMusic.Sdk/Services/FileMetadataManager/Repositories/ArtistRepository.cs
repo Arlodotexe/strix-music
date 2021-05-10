@@ -24,6 +24,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private readonly ConcurrentDictionary<string, ArtistMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;
+        private readonly SemaphoreSlim _initMutex;
         private readonly AudioMetadataScanner _audioMetadataScanner;
         private readonly TrackRepository _trackRepository;
         private readonly string _debouncerId;
@@ -44,6 +45,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _inMemoryMetadata = new ConcurrentDictionary<string, ArtistMetadata>();
             _audioMetadataScanner = audioMetadataScanner;
             _storageMutex = new SemaphoreSlim(1, 1);
+            _initMutex = new SemaphoreSlim(1, 1);
             _debouncerId = Guid.NewGuid().ToString();
 
             AttachEvents();
@@ -52,11 +54,33 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <inheritdoc />
         public async Task InitAsync()
         {
-            Guard.IsFalse(IsInitialized, nameof(IsInitialized));
-            IsInitialized = true;
+            await _initMutex.WaitAsync();
+            if (IsInitialized)
+            {
+                _initMutex.Release();
+                return;
+            }
 
-            //await LoadDataFromDisk();
+            await LoadDataFromDisk();
+
+            IsInitialized = true;
+            _initMutex.Release();
         }
+
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<ArtistMetadata>>? MetadataUpdated;
+
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<ArtistMetadata>>? MetadataAdded;
+
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<ArtistMetadata>>? MetadataRemoved;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<(ArtistMetadata Artist, AlbumMetadata Album)>? AlbumItemsChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<(ArtistMetadata Artist, TrackMetadata Track)>? TracksChanged;
 
         private void AttachEvents()
         {
@@ -171,21 +195,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public event EventHandler<IEnumerable<ArtistMetadata>>? MetadataUpdated;
-
-        /// <inheritdoc />
-        public event EventHandler<IEnumerable<ArtistMetadata>>? MetadataAdded;
-
-        /// <inheritdoc />
-        public event EventHandler<IEnumerable<ArtistMetadata>>? MetadataRemoved;
-
-        /// <inheritdoc />
-        public event CollectionChangedEventHandler<(ArtistMetadata Artist, AlbumMetadata Album)>? AlbumItemsChanged;
-
-        /// <inheritdoc />
-        public event CollectionChangedEventHandler<(ArtistMetadata Artist, TrackMetadata Track)>? TracksChanged;
-
-        /// <inheritdoc />
         public bool IsInitialized { get; private set; }
 
         /// <summary>
@@ -195,6 +204,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public void SetDataFolder(IFolderData rootFolder)
         {
             _folderData = rootFolder;
+        }
+
+        /// <inheritdoc />
+        public Task<int> GetItemCount()
+        {
+            return Task.FromResult(_inMemoryMetadata.Count);
         }
 
         /// <inheritdoc />
@@ -315,6 +330,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <returns>The <see cref="TrackMetadata"/> collection.</returns>
         private async Task LoadDataFromDisk()
         {
+            Guard.IsEmpty((ICollection<KeyValuePair<string, ArtistMetadata>>)_inMemoryMetadata, nameof(_inMemoryMetadata));
             Guard.IsNotNull(_folderData, nameof(_folderData));
 
             var fileData = await _folderData.CreateFileAsync(ARTIST_DATA_FILENAME, CreationCollisionOption.OpenIfExists);

@@ -32,7 +32,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         Playlists
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IFileMetadataManager" />
     public class FileMetadataManager : IFileMetadataManager, IDisposable
     {
         private static string NewGuid() => Guid.NewGuid().ToString();
@@ -74,22 +74,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _rootFolder = rootFolder;
         }
 
-        private static async Task<IFolderData> GetDataStorageFolder(string instanceId)
-        {
-            var primaryFileSystemService = Ioc.Default.GetRequiredService<IFileSystemService>();
-
-            var path = Path.Combine(primaryFileSystemService.RootFolder.Path, instanceId, nameof(FileMetadataManager));
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            var folderData = await primaryFileSystemService.GetFolderFromPathAsync(path);
-
-            Guard.IsNotNull(folderData, nameof(folderData));
-
-            return folderData;
-        }
-
         /// <inheritdoc />
         public async Task InitAsync()
         {
@@ -105,7 +89,31 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Tracks.SetDataFolder(dataFolder);
             Playlists.SetDataFolder(dataFolder);
 
+            if (!SkipRepoInit)
+            {
+                await Albums.InitAsync();
+                await Artists.InitAsync();
+                await Tracks.InitAsync();
+                await Playlists.InitAsync();
+            }
+
             AttachEvents();
+        }
+
+        private static async Task<IFolderData> GetDataStorageFolder(string instanceId)
+        {
+            var primaryFileSystemService = Ioc.Default.GetRequiredService<IFileSystemService>();
+
+            var path = Path.Combine(primaryFileSystemService.RootFolder.Path, instanceId, nameof(FileMetadataManager));
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            var folderData = await primaryFileSystemService.GetFolderFromPathAsync(path);
+
+            Guard.IsNotNull(folderData, nameof(folderData));
+
+            return folderData;
         }
 
         /// <inheritdoc />
@@ -178,6 +186,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public TrackRepository Tracks { get; private set; }
 
         /// <inheritdoc />
+        public bool SkipRepoInit { get; set; }
+
+        /// <inheritdoc />
         public async Task StartScan()
         {
             if (!IsInitialized)
@@ -185,10 +196,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             ScanningStarted?.Invoke(this, EventArgs.Empty);
 
-            await Albums.InitAsync();
-            await Artists.InitAsync();
-            await Tracks.InitAsync();
-            await Playlists.InitAsync();
+            if (!SkipRepoInit)
+            {
+                await Albums.InitAsync();
+                await Artists.InitAsync();
+                await Tracks.InitAsync();
+                await Playlists.InitAsync();
+            }
 
             var findingFilesNotif = RaiseFileDiscoveryNotification();
             var discoveredFiles = await _fileScanner.ScanFolder(_rootFolder);
@@ -200,10 +214,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             scanningMusicNotif.Dismiss();
 
             // Playlist scanning is disabled until bugs are fixed.
-/*            _currentScanningType = FileScanningType.Playlists;
-            var scanningPlaylistsNotif = RaiseProcessingNotification();
-            await _playlistMetadataScanner.ScanPlaylists(discoveredFiles, fileMetadata);
-            scanningPlaylistsNotif.Dismiss();*/
+            /*            _currentScanningType = FileScanningType.Playlists;
+                        var scanningPlaylistsNotif = RaiseProcessingNotification();
+                        await _playlistMetadataScanner.ScanPlaylists(discoveredFiles, fileMetadata);
+                        scanningPlaylistsNotif.Dismiss();*/
 
             ScanningCompleted?.Invoke(this, EventArgs.Empty);
         }
@@ -274,6 +288,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             _fileScanner.Dispose();
             _playlistMetadataScanner.Dispose();
+
             _filesFoundNotification?.Dismiss();
             _filesScannedNotification?.Dismiss();
 

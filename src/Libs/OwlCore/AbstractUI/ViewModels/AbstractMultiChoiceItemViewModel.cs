@@ -6,7 +6,7 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// A view model for items that are shown in a <see cref="AbstractMutableDataListViewModel"/>.
+    /// A view model for items that are shown in a <see cref="AbstractDataListViewModel"/>.
     /// </summary>
     [Bindable(true)]
     public class AbstractMultiChoiceItemViewModel : AbstractUIMetadataViewModel
@@ -14,7 +14,7 @@ namespace OwlCore.AbstractUI.ViewModels
         private bool _isSelected;
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbstractMutableDataListItemViewModel"/>.
+        /// Creates a new instance of <see cref="AbstractDataListItemViewModel"/>.
         /// </summary>
         /// <param name="metadata"></param>
         /// <param name="groupId">A unique identifier that can be used to group together <see cref="AbstractMultiChoiceItemViewModel"/>s.</param>

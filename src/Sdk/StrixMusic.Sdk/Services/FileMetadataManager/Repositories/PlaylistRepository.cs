@@ -27,6 +27,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private readonly ConcurrentDictionary<string, PlaylistMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;
+        private readonly SemaphoreSlim _initMutex;
         private readonly PlaylistMetadataScanner _playlistMetadataScanner;
         private readonly string _debouncerId;
         private IFolderData? _folderData;
@@ -44,6 +45,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _inMemoryMetadata = new ConcurrentDictionary<string, PlaylistMetadata>();
             _playlistMetadataScanner = playlistMetadataScanner;
             _storageMutex = new SemaphoreSlim(1, 1);
+            _initMutex = new SemaphoreSlim(1, 1);
             _debouncerId = Guid.NewGuid().ToString();
 
             AttachEvents();
@@ -52,11 +54,27 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <inheritdoc />
         public async Task InitAsync()
         {
-            Guard.IsFalse(IsInitialized, nameof(IsInitialized));
-            IsInitialized = true;
+            await _initMutex.WaitAsync();
+            if (IsInitialized)
+            {
+                _initMutex.Release();
+                return;
+            }
 
-            //await LoadDataFromDisk();
+            // await LoadDataFromDisk();
+
+            IsInitialized = true;
+            _initMutex.Release();
         }
+
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataUpdated;
+
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataAdded;
+
+        /// <inheritdoc />
+        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataRemoved;
 
         private void AttachEvents()
         {
@@ -125,15 +143,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataUpdated;
-
-        /// <inheritdoc />
-        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataAdded;
-
-        /// <inheritdoc />
-        public event EventHandler<IEnumerable<PlaylistMetadata>>? MetadataRemoved;
-
-        /// <inheritdoc />
         public bool IsInitialized { get; private set; }
 
         /// <summary>
@@ -143,6 +152,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public void SetDataFolder(IFolderData rootFolder)
         {
             _folderData = rootFolder;
+        }
+
+        /// <inheritdoc />
+        public Task<int> GetItemCount()
+        {
+            return Task.FromResult(_inMemoryMetadata.Count);
         }
 
         /// <inheritdoc />

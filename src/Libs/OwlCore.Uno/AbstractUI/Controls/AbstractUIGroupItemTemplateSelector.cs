@@ -26,11 +26,6 @@ namespace OwlCore.Uno.AbstractUI.Controls
                 DataListTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(dataListTemplate));
             }
 
-            if (!new Themes.AbstractMutableDataListStyle().TryGetValue("DefaultAbstractMutableDataListTemplate", out var mutableDataListTemplate))
-            {
-                MutableDataListTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(mutableDataListTemplate));
-            }
-
             if (!new Themes.AbstractButtonStyle().TryGetValue("DefaultAbstractButtonTemplate", out var buttonTemplate))
             {
                 ButtonTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(buttonTemplate));
@@ -41,7 +36,7 @@ namespace OwlCore.Uno.AbstractUI.Controls
                 MultiChoiceTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(multiChoiceTemplate));
             }
 
-            if (!new Themes.AbstractBooleanUIElementStyle().TryGetValue("DefaultAbstractBooleanUIElementTemplate", out var booleanTemplate))
+            if (!new Themes.AbstractBooleanStyle().TryGetValue("DefaultAbstractBooleanTemplate", out var booleanTemplate))
             {
                 BooleanTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(booleanTemplate));
             }
@@ -50,15 +45,19 @@ namespace OwlCore.Uno.AbstractUI.Controls
             {
                 ProgressTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(progressTemplate));
             }
-            
+
             TextBoxTemplate = (DataTemplate)textBoxTemplate;
             DataListTemplate = (DataTemplate)dataListTemplate;
             ButtonTemplate = (DataTemplate)buttonTemplate;
-            MutableDataListTemplate = (DataTemplate)mutableDataListTemplate;
             MultiChoiceTemplate = (DataTemplate)multiChoiceTemplate;
             BooleanTemplate = (DataTemplate)booleanTemplate;
             ProgressTemplate = (DataTemplate)progressTemplate;
         }
+
+        /// <summary>
+        /// The data template used to display an <see cref="AbstractUIElementGroup"/>.
+        /// </summary>
+        public DataTemplate? ElementGroupTemplate { get; set; }
 
         /// <summary>
         /// The data template used to display an <see cref="AbstractTextBox"/>.
@@ -69,11 +68,6 @@ namespace OwlCore.Uno.AbstractUI.Controls
         /// The data template used to display an <see cref="AbstractDataList"/>.
         /// </summary>
         public DataTemplate DataListTemplate { get; set; }
-
-        /// <summary>
-        /// The data template used to display an <see cref="AbstractMutableDataList"/>.
-        /// </summary>
-        public DataTemplate MutableDataListTemplate { get; set; }
 
         /// <summary>
         /// The data template used to display an <see cref="AbstractButton"/>.
@@ -98,17 +92,20 @@ namespace OwlCore.Uno.AbstractUI.Controls
         /// <inheritdoc />
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            System.Diagnostics.Debug.WriteLine($"{item.GetType()} template selecting for {nameof(AbstractUIGroupItemTemplateSelector)}");
+            if (!new Themes.AbstractUIGroupPresenterStyle().TryGetValue("DefaultAbstractUIElementGroupTemplate", out var elementGroupTemplate))
+                ElementGroupTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(elementGroupTemplate));
+
+            ElementGroupTemplate = (DataTemplate)elementGroupTemplate;
 
             return item switch
             {
                 AbstractTextBoxViewModel _ => TextBoxTemplate,
                 AbstractDataListViewModel _ => DataListTemplate,
                 AbstractButtonViewModel _ => ButtonTemplate,
-                AbstractMutableDataListViewModel _ => MutableDataListTemplate,
                 AbstractMultiChoiceUIElementViewModel _ => MultiChoiceTemplate,
                 AbstractBooleanViewModel _ => BooleanTemplate,
-                AbstractProgressUIElement _ => ProgressTemplate,
+                AbstractProgressUIElementViewModel _ => ProgressTemplate,
+                AbstractUIElementGroupViewModel _ => ElementGroupTemplate,
                 _ => base.SelectTemplateCore(item, container)
             };
         }

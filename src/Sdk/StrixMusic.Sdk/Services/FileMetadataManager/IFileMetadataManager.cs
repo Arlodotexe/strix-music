@@ -32,6 +32,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         TrackRepository Tracks { get; }
 
         /// <summary>
+        /// If true, the repositories will not be initialized when <see cref="IAsyncInit.InitAsync"/> is called for this <see cref="IFileMetadataManager"/>.
+        /// </summary>
+        bool SkipRepoInit { get; set; }
+
+        /// <summary>
         /// Starts scanning the given folder.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
