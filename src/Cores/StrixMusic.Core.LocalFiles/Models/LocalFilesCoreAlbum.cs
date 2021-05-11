@@ -86,7 +86,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 }
             }
 
-            if (coreAddedItems.Count + coreRemovedItems.Count > 0)
+            if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
                 TrackItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
         }
 
@@ -115,7 +115,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 }
             }
 
-            if (coreAddedItems.Count + coreRemovedItems.Count > 0)
+            if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
                 ArtistItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
         }
 

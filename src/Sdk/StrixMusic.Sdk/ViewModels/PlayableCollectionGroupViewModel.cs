@@ -866,7 +866,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayArtistCollectionAsync()
         {
-            return _collectionGroup.PlayArtistCollectionAsync();
+            return _playbackHandler.PlayAsync((IArtistCollectionViewModel)this, _collectionGroup);
         }
 
         /// <inheritdoc />
@@ -1006,19 +1006,19 @@ namespace StrixMusic.Sdk.ViewModels
         private Task PlayArtistCollectionInternalAsync(IArtistCollectionItem? artistItem)
         {
             Guard.IsNotNull(artistItem, nameof(artistItem));
-            return _collectionGroup.PlayArtistCollectionAsync(artistItem);
+            return _playbackHandler.PlayAsync(artistItem, this, _collectionGroup);
         }
 
         private Task PlayPlaylistCollectionInternalAsync(IPlaylistCollectionItem? playlistItem)
         {
             Guard.IsNotNull(playlistItem, nameof(playlistItem));
-            return _collectionGroup.PlayPlaylistCollectionAsync(playlistItem);
+            throw new NotImplementedException();
         }
 
         private Task PlayPlayableCollectionGroupInternalAsync(IPlayableCollectionGroup? collectionGroup)
         {
             Guard.IsNotNull(collectionGroup, nameof(collectionGroup));
-            return _collectionGroup.PlayPlayableCollectionGroupAsync(collectionGroup);
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />

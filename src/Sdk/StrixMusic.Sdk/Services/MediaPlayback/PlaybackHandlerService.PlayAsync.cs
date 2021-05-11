@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Data;
@@ -46,6 +47,46 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         }
 
         /// <inheritdoc />
+        public async Task PlayAsync(IArtistCollectionViewModel artistCollection, IPlayableBase context)
+        {
+            await artistCollection.InitAsync();
+
+            var firstArtist = artistCollection.Artists.FirstOrDefault();
+            if (firstArtist is null)
+            {
+                var apiArtists = await artistCollection.GetArtistItemsAsync(1, 0);
+                Guard.HasSizeGreaterThan(apiArtists, 0, nameof(apiArtists));
+
+                firstArtist = apiArtists[0];
+            }
+
+            await PlayAsync(firstArtist, artistCollection, context);
+        }
+
+        /// <inheritdoc />
+        public async Task PlayAsync(IArtistCollectionItem artistCollectionItem, IArtistCollectionViewModel artistCollection, IPlayableBase context)
+        {
+            Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
+
+            await artistCollection.InitAsync();
+
+            var canPlay = await PrepareToPlayCollection();
+            if (!canPlay)
+            {
+                await artistCollection.PlayArtistCollectionAsync(artistCollectionItem);
+                return;
+            }
+
+            ClearPrevious();
+            ClearNext();
+
+            var trackInfo = await AddArtistCollectionToQueue(artistCollectionItem, artistCollection);
+
+            await PlayFromNext(0);
+            _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
+        }
+
+        /// <inheritdoc />
         public async Task PlayAsync(IAlbumCollectionViewModel albumCollection, IPlayableBase context)
         {
             await albumCollection.InitAsync();
@@ -80,7 +121,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             ClearNext();
 
             var trackInfo = await AddAlbumCollectionToQueue(albumCollectionItem, albumCollection);
-            await PlayFromNext(trackInfo.Index);
+            await PlayFromNext(0);
             _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
         }
 
@@ -168,8 +209,64 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                 }
             }
 
+            Guard.IsTrue(reachedTargetTrack, nameof(reachedTargetTrack));
+
             return trackPlaybackIndex;
         }
+
+        /// <summary>
+        /// Adds the tracks in the collection to the queue.
+        /// </summary>
+        /// <param name="track">A target track to return an index for.</param>
+        /// <param name="trackCollection">The collection to iterate for adding to the queue.</param>
+        /// <param name="offset">The offset to add when adding tracks to <see cref="NextItems"/></param>.
+        /// <param name="pushTarget">When adding to the queue, specify where to push the items to.</param>
+        /// <returns>The index of the given <paramref name="track"/> in the <paramref name="trackCollection"/>.</returns>
+        private async Task<int> AddTrackCollectionToQueue(ITrack track, ITrackCollectionViewModel trackCollection, int offset, AddTrackPushTarget pushTarget = AddTrackPushTarget.Normal)
+        {
+            // Setup for local playback
+            await trackCollection.InitAsync();
+            var trackPlaybackIndex = 0;
+            var reachedTargetTrack = false;
+
+            for (var i = 0; i < trackCollection.Tracks.Count; i++)
+            {
+                var item = trackCollection.Tracks[i];
+
+                var coreTrack = item.GetSources<ICoreTrack>().First(x => x.Id == item.Id);
+
+                var mediaSource = await coreTrack.SourceCore.GetMediaSource(coreTrack);
+                if (mediaSource is null)
+                    continue;
+
+                if (item.Id == track.Id)
+                {
+                    reachedTargetTrack = true;
+                    trackPlaybackIndex = i;
+                }
+
+                switch (pushTarget)
+                {
+                    case AddTrackPushTarget.Normal when reachedTargetTrack:
+                        InsertNext(i - trackPlaybackIndex, mediaSource);
+                        break;
+                    case AddTrackPushTarget.Normal:
+                    case AddTrackPushTarget.AllPrevious:
+                        PushPrevious(mediaSource);
+                        break;
+                    case AddTrackPushTarget.AllNext:
+                        InsertNext(i + offset, mediaSource);
+                        break;
+                    default:
+                        return ThrowHelper.ThrowArgumentOutOfRangeException<int>(nameof(pushTarget));
+                }
+            }
+
+            Guard.IsTrue(reachedTargetTrack, nameof(reachedTargetTrack));
+
+            return trackPlaybackIndex;
+        }
+
 
         /// <summary>
         /// Adds all albums in the given collection to the queue.
@@ -182,12 +279,14 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var itemIndex = 0;
             ITrack? playbackTrack = null;
             var foundItemTarget = false;
+            var offset = 0;
 
             foreach (var albumItem in albumCollection.Albums)
             {
                 if (albumItem is IAlbum album)
                 {
-                    var albumVm = new AlbumViewModel(album);
+                    var albumVm = (AlbumViewModel)album;
+
                     await albumVm.InitAsync();
 
                     // We expect an album to have at least 1 track.
@@ -204,18 +303,92 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                         playbackTrack = firstTrack;
                     }
 
-                    _ = await AddTrackCollectionToQueue(firstTrack, albumVm, foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                    if (foundItemTarget)
+                    {
+                        _ = await AddTrackCollectionToQueue(firstTrack, albumVm, offset,
+                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                        offset = _nextItems.Count;
+                    }
+                    else
+                    {
+                        _ = await AddTrackCollectionToQueue(firstTrack, albumVm,
+                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                    }
                 }
 
                 if (albumItem is IAlbumCollection albumCol)
                 {
-                    var albumColVm = new AlbumCollectionViewModel(albumCol);
+                    var albumColVm = (AlbumCollectionViewModel)albumCol;
                     await albumColVm.InitAsync();
 
                     _ = await AddAlbumCollectionToQueue(null, albumColVm);
                 }
             }
 
+            Guard.IsTrue(foundItemTarget, nameof(foundItemTarget));
+            Guard.IsNotNull(playbackTrack, nameof(playbackTrack));
+
+            return (playbackTrack, itemIndex);
+        }
+
+        /// <summary>
+        /// Adds all artists in the given collection to the queue.
+        /// </summary>
+        /// <returns>The instance and index of the first playable track in the selected <paramref name="artistCollectionItem"/> items within the entire <paramref name="artistCollection"/>.</returns>
+        private async Task<(ITrack PlaybackTrack, int Index)> AddArtistCollectionToQueue(IArtistCollectionItem? artistCollectionItem, IArtistCollectionViewModel artistCollection)
+        {
+            await artistCollection.InitAsync();
+
+            var itemIndex = 0;
+            ITrack? playbackTrack = null;
+            var foundItemTarget = false;
+            var offset = 0;
+
+            foreach (var artistItem in artistCollection.Artists)
+            {
+                if (artistItem is IArtist artist)
+                {
+                    var artistVm = (ArtistViewModel)artist;
+
+                    await artistVm.InitAsync();
+
+                    // We expect an artist to have at least 1 track.
+                    Guard.IsGreaterThan(artist.TotalTracksCount, 0, nameof(artist.TotalTracksCount));
+
+                    var firstTrack = artistVm.Tracks[0].Model;
+
+                    if (artistItem.Id == artistCollectionItem?.Id && !foundItemTarget)
+                    {
+                        // Tracks are added to the queue of previous items until we reach the item the user wants to play.
+                        itemIndex = _prevItems.Count;
+                        foundItemTarget = true;
+
+                        playbackTrack = firstTrack;
+                    }
+
+                    if (foundItemTarget)
+                    {
+                        _ = await AddTrackCollectionToQueue(firstTrack, artistVm, offset,
+                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                        offset = _nextItems.Count;
+                    }
+                    else
+                    {
+                        _ = await AddTrackCollectionToQueue(firstTrack, artistVm,
+                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                    }
+                }
+
+                if (artistItem is IArtistCollection artistCol)
+                {
+                    var artistColVm = (ArtistCollectionViewModel)artistCol;
+                    await artistColVm.InitAsync();
+
+                    _ = await AddArtistCollectionToQueue(null, artistColVm);
+                }
+            }
+
+            Guard.IsTrue(foundItemTarget, nameof(foundItemTarget));
             Guard.IsNotNull(playbackTrack, nameof(playbackTrack));
 
             return (playbackTrack, itemIndex);

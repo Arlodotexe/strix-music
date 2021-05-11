@@ -198,10 +198,23 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged
+        {
+            add => _album.IsPlayTrackCollectionAsyncAvailableChanged += value;
+            remove => _album.IsPlayTrackCollectionAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged
+        {
+            add => _album.IsPlayArtistCollectionAsyncAvailableChanged += value;
+            remove => _album.IsPlayArtistCollectionAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
         public event EventHandler<int>? TrackItemsCountChanged
         {
             add => _album.TrackItemsCountChanged += value;
-
             remove => _album.TrackItemsCountChanged -= value;
         }
 
@@ -209,7 +222,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event CollectionChangedEventHandler<ITrack>? TrackItemsChanged
         {
             add => _album.TrackItemsChanged += value;
-
             remove => _album.TrackItemsChanged -= value;
         }
 
@@ -217,7 +229,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => _album.ImagesChanged += value;
-
             remove => _album.ImagesChanged -= value;
         }
 
@@ -225,7 +236,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<int>? ImagesCountChanged
         {
             add => _album.ImagesCountChanged += value;
-
             remove => _album.ImagesCountChanged -= value;
         }
 
@@ -395,7 +405,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync()
         {
-            return _playbackHandler.PlayAsync(this, _album);
+            return _playbackHandler.PlayAsync((ITrackCollectionViewModel)this, _album);
         }
 
         /// <inheritdoc />
@@ -407,7 +417,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayArtistCollectionAsync()
         {
-            return _album.PlayArtistCollectionAsync();
+            return _playbackHandler.PlayAsync((IArtistCollectionViewModel)this, _album);
         }
 
         /// <inheritdoc />
@@ -415,6 +425,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             return _album.PauseArtistCollectionAsync();
         }
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackCollectionInternalAsync(track);
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => PlayArtistCollectionInternalAsync(artistItem);
 
         /// <inheritdoc />
         public Uri? Url => _album.Url;
@@ -471,21 +487,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveTrackAvailable(int index) => _album.IsRemoveTrackAvailable(index);
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged
-        {
-            add => _album.IsPlayTrackCollectionAsyncAvailableChanged += value;
-            remove => _album.IsPlayTrackCollectionAsyncAvailableChanged -= value;
-        }
-
-        /// <inheritdoc />
         public Task<bool> IsRemoveArtistItemAvailable(int index) => _album.IsRemoveArtistItemAvailable(index);
-
-        /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged
-        {
-            add => _album.IsPlayArtistCollectionAsyncAvailableChanged += value;
-            remove => _album.IsPlayArtistCollectionAsyncAvailableChanged -= value;
-        }
 
         /// <inheritdoc />
         public Task ChangeDatePublishedAsync(DateTime datePublished) => _album.ChangeDatePublishedAsync(datePublished);
@@ -509,12 +511,6 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveArtistItemAsync(int index) => _album.RemoveArtistItemAsync(index);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track)
-        {
-            return _album.PlayTrackCollectionAsync(track);
-        }
-
-        /// <inheritdoc />
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _album.GetTracksAsync(limit, offset);
 
         /// <inheritdoc />
@@ -531,9 +527,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             return _album.GetImagesAsync(limit, offset);
         }
-
-        /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => PlayArtistCollectionInternalAsync(artistItem);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset)
@@ -649,13 +642,13 @@ namespace StrixMusic.Sdk.ViewModels
         private Task PlayArtistCollectionInternalAsync(IArtistCollectionItem? artistItem)
         {
             Guard.IsNotNull(artistItem, nameof(artistItem));
-            throw new NotImplementedException();
+            return _playbackHandler.PlayAsync(artistItem, this, this);
         }
 
         private Task PlayTrackCollectionInternalAsync(ITrack? track)
         {
             Guard.IsNotNull(track, nameof(track));
-            throw new NotImplementedException();
+            return _playbackHandler.PlayAsync(track, this, this);
         }
 
         private Task ChangeNameInternalAsync(string? name)

@@ -21,6 +21,7 @@ namespace StrixMusic.Core.LocalFiles
         private ISettingsService? _settingsService;
         private bool _baseServicesSetup;
         private FileMetadataManager? _fileMetadataManager;
+        private AbstractBooleanUIElement _initWithEmptyReposToggle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreConfig"/> class.
@@ -29,6 +30,7 @@ namespace StrixMusic.Core.LocalFiles
         {
             SourceCore = sourceCore;
             AbstractUIElements = new List<AbstractUIElementGroup>();
+            SetupAbstractUISettings();
         }
 
         /// <inheritdoc />
@@ -54,12 +56,15 @@ namespace StrixMusic.Core.LocalFiles
         {
             await SetupConfigurationServices(services);
             Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
+            Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
             var folderData = await GetConfiguredFolder();
 
             Guard.IsNotNull(folderData, nameof(folderData));
 
             _fileMetadataManager = new FileMetadataManager(SourceCore.InstanceId, folderData);
+            _fileMetadataManager.SkipRepoInit = await _settingsService.GetValue<bool>(nameof(LocalFilesCoreSettingsKeys.InitWithEmptyMetadataRepos));
+
             await _fileMetadataManager.InitAsync();
             _ = _fileMetadataManager.StartScan();
 
@@ -73,10 +78,10 @@ namespace StrixMusic.Core.LocalFiles
         /// Configures the minimum required services for core configuration in a safe manner.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task SetupConfigurationServices(IServiceCollection services)
+        public async Task SetupConfigurationServices(IServiceCollection services)
         {
             if (_baseServicesSetup)
-                return Task.CompletedTask;
+                return;
 
             _baseServicesSetup = true;
 
@@ -87,11 +92,13 @@ namespace StrixMusic.Core.LocalFiles
             _fileSystemService = fileSystemService;
             _settingsService = new LocalFilesCoreSettingsService(SourceCore.InstanceId);
 
+            _initWithEmptyReposToggle.State = await _settingsService.GetValue<bool>(nameof(LocalFilesCoreSettingsKeys.InitWithEmptyMetadataRepos));
+
             services.AddSingleton(_settingsService);
 
             Services = services.BuildServiceProvider();
 
-            return _fileSystemService.InitAsync();
+            await _fileSystemService.InitAsync();
         }
 
         /// <summary>
@@ -111,6 +118,34 @@ namespace StrixMusic.Core.LocalFiles
             var folderData = await _fileSystemService.GetFolderFromPathAsync(configuredPath);
 
             return folderData;
+        }
+
+        private void SetupAbstractUISettings()
+        {
+            _initWithEmptyReposToggle = new AbstractBooleanUIElement("InitWithEmptyMetadataRepos", string.Empty)
+            {
+                Title = "Ignore previously scanned metadata",
+                Subtitle = "Requires an app restart",
+            };
+
+            _initWithEmptyReposToggle.StateChanged += InitWithEmptyReposToggleOnStateChanged;
+
+            AbstractUIElements = new List<AbstractUIElementGroup>
+            {
+                new AbstractUIElementGroup("SettingsGroup")
+                {
+                    Items = new List<AbstractUIElement>
+                    {
+                        _initWithEmptyReposToggle,
+                    },
+                }
+            };
+        }
+
+        private async void InitWithEmptyReposToggleOnStateChanged(object sender, bool e)
+        {
+            Guard.IsNotNull(_settingsService, nameof(_settingsService));
+            await _settingsService.SetValue<bool>(nameof(LocalFilesCoreSettingsKeys.InitWithEmptyMetadataRepos), e);
         }
 
         /// <inheritdoc />

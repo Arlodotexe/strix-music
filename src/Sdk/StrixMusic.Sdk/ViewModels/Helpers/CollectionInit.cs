@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
 using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Merged;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers
 {
@@ -21,8 +23,12 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
             {
                 var allTracks = await APIs.GetAllItemsAsync<ITrack>(trackCollection.TotalTracksCount, async offset => await trackCollection.GetTracksAsync(trackCollection.TotalTracksCount, offset));
 
-                foreach (var item in allTracks)
-                    trackCollection.Tracks.Add(new TrackViewModel(item));
+                foreach (var track in allTracks)
+                {
+                    Guard.IsAssignableToType(track, typeof(MergedTrack), nameof(track));
+
+                    trackCollection.Tracks.Add(new TrackViewModel(track));
+                }
             }
         }
     }
