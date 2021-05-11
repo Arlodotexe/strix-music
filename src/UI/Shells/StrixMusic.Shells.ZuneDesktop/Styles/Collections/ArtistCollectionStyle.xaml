@@ -12,9 +12,7 @@
         <ResourceDictionary
                 Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneTrackListViewItemStyle.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
-    <DataTemplate x:Key="ZuneDesktopArtistCollectionDataTemplate"
-            x:DataType="viewModels:IArtistCollectionViewModel">
+    <DataTemplate x:Key="ZuneDesktopArtistCollectionDataTemplate" x:DataType="viewModels:IArtistCollectionViewModel">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
