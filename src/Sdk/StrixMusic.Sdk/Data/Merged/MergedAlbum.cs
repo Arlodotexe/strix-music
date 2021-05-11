@@ -48,7 +48,11 @@ namespace StrixMusic.Sdk.Data.Merged
             PlaybackState = _preferredSource.PlaybackState;
             LastPlayed = _preferredSource.LastPlayed;
             AddedAt = _preferredSource.AddedAt;
-            TotalTracksCount = _preferredSource.TotalTracksCount;
+
+            foreach (var item in sources)
+            {
+                TotalTracksCount += item.TotalTracksCount;
+            }
 
             _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
             _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
