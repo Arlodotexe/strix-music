@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Events;
@@ -14,6 +15,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -23,6 +25,7 @@ namespace StrixMusic.Sdk.ViewModels
     public class AlbumCollectionViewModel : ObservableObject, IAlbumCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IAlbumCollection _collection;
+        private readonly IPlaybackHandlerService _playbackHandlerService;
 
         /// <summary>
         /// Creates a new instance of <see cref="AlbumCollectionViewModel"/>.
@@ -46,6 +49,7 @@ namespace StrixMusic.Sdk.ViewModels
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
             PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionInternalAsync);
+            _playbackHandlerService = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             AttachEvents();
         }
@@ -371,7 +375,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayAlbumCollectionAsync()
         {
-            return _collection.PlayAlbumCollectionAsync();
+            return _playbackHandlerService.PlayAsync(this, _collection);
         }
 
         /// <inheritdoc />

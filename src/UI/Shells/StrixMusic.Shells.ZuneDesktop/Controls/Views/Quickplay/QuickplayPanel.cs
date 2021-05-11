@@ -172,7 +172,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Quickplay
         {
             foreach (var child in Children)
             {
-                child.Measure(availableSize);
+                 child.Measure(availableSize);
             }
 
             return ArrangeTiles(availableSize);

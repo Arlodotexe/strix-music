@@ -49,6 +49,13 @@ namespace StrixMusic.Sdk.Data.Merged
             LastPlayed = _preferredSource.LastPlayed;
             AddedAt = _preferredSource.AddedAt;
 
+            foreach (var item in sources)
+            {
+                TotalTracksCount += item.TotalTracksCount;
+                TotalImageCount += item.TotalImageCount;
+                TotalArtistItemsCount += item.TotalArtistItemsCount;
+            }
+
             _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
             _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
             _artistCollectionMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this);
@@ -506,7 +513,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
             await _artistCollectionMap.DisposeAsync();
             await _imageCollectionMap.DisposeAsync();
-            
+
             await Sources.InParallel(x => x.DisposeAsync().AsTask());
         }
     }

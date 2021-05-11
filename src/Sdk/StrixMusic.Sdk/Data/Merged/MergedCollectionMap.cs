@@ -314,6 +314,10 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private void MergedCollectionMap_ChildItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICorePlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlayableCollectionGroup>> removedItems)
         {
+            var changedItemsCount = addedItems.Count + removedItems.Count;
+
+            Guard.IsGreaterThan(changedItemsCount, 0, nameof(changedItemsCount));
+
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
 
@@ -325,10 +329,14 @@ namespace StrixMusic.Sdk.Data.Merged
         private void MergedCollectionMap_ItemsChanged<T>(object sender, IReadOnlyList<CollectionChangedItem<T>> addedItems, IReadOnlyList<CollectionChangedItem<T>> removedItems)
             where T : class, ICollectionItemBase, ICoreMember
         {
+            Guard.IsGreaterThan(addedItems.Count + removedItems.Count, 0, "Total changed items count");
+
             lock (_mergedMappedData)
             {
                 var addedMergedItems = ItemsAdded_CheckAddedItems(addedItems, sender);
                 var removedMergedItems = ItemsChanged_CheckRemovedItems(removedItems);
+
+                Guard.IsGreaterThan(_mergedMappedData.Count, 0, nameof(_mergedMappedData.Count));
 
                 ItemsChanged?.Invoke(this, addedMergedItems, removedMergedItems);
                 ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
@@ -620,6 +628,7 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
             Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
             Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry.Count));
+            Guard.IsGreaterThan(limit, 0, nameof(limit));
 
             // Rebuild the sorted map so we're sure it's sorted correctly.
             _sortedMap.Clear();
@@ -674,6 +683,8 @@ namespace StrixMusic.Sdk.Data.Merged
                 {
                     var item = remainingItemsForSource[o];
 
+                    Guard.IsNotNull(item, nameof(item));
+
                     _sortedMap[mappedIndex + o].CollectionItem = item;
                 }
             }
@@ -681,7 +692,6 @@ namespace StrixMusic.Sdk.Data.Merged
             lock (_sortedMap)
             {
                 var relevantMergedMappedData = MergeMappedData(_sortedMap.ToArray()).Skip(offset).Take(limit);
-
                 var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
 
                 return merged;
@@ -693,7 +703,6 @@ namespace StrixMusic.Sdk.Data.Merged
             _mergedMappedData.Clear();
 
             var returnedData = new List<IMergedMutable<TCoreCollectionItem>>();
-
             var mergedItemMaps = new Dictionary<IMergedMutable<TCoreCollectionItem>, List<MappedData>>();
 
             foreach (var item in sortedData)
@@ -704,17 +713,16 @@ namespace StrixMusic.Sdk.Data.Merged
                 var mergedInto = MergeOrAdd(returnedData, item.CollectionItem);
 
                 bool exists = mergedItemMaps.TryGetValue(mergedInto, out List<MappedData> mergedMapItems);
+                
                 mergedMapItems ??= new List<MappedData>();
-
                 mergedMapItems.Add(item);
+
                 if (!exists)
                     mergedItemMaps.Add(mergedInto, mergedMapItems);
             }
 
             foreach (var item in mergedItemMaps)
-            {
                 _mergedMappedData.Add(new MergedMappedData(item.Key, item.Value));
-            }
 
             ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
 

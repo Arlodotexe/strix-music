@@ -317,7 +317,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The sources that were merged to form this member.
         /// </summary>
-        public IReadOnlyList<ICoreArtist> Sources => this.GetSources<ICoreArtist>();
+        public IReadOnlyList<ICoreArtist> Sources => _artist.GetSources<ICoreArtist>();
 
         /// <inheritdoc />
         IReadOnlyList<ICoreArtist> IMerged<ICoreArtist>.Sources => Sources;
@@ -628,7 +628,7 @@ namespace StrixMusic.Sdk.ViewModels
         private Task PlayAlbumCollectionInternalAsync(IAlbumCollectionItem? albumItem)
         {
             Guard.IsNotNull(albumItem, nameof(albumItem));
-            return _artist.PlayAlbumCollectionAsync(albumItem);
+            return _playbackHandler.PlayAsync(albumItem,this,this);
         }
 
         /// <inheritdoc />

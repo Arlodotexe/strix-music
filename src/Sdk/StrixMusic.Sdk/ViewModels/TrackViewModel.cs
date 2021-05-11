@@ -615,5 +615,14 @@ namespace StrixMusic.Sdk.ViewModels
             DetachEvents();
             return Model.DisposeAsync();
         }
+
+        /// <inheritdoc />
+        public Task InitAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; }
     }
 }
