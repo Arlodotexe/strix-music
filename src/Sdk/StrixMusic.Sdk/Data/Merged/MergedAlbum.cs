@@ -39,6 +39,13 @@ namespace StrixMusic.Sdk.Data.Merged
                 RelatedItems = new MergedPlayableCollectionGroup(relatedItemsSources);
             }
 
+            foreach (var source in _sources)
+            {
+                TotalArtistItemsCount += source.TotalArtistItemsCount;
+                TotalImageCount += source.TotalImageCount;
+                TotalTracksCount += source.TotalTracksCount;
+            }
+
             // TODO: Get the actual preferred source.
             _preferredSource = _sources[0];
 
