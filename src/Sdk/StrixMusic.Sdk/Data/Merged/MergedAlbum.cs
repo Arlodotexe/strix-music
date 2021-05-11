@@ -52,6 +52,8 @@ namespace StrixMusic.Sdk.Data.Merged
             foreach (var item in sources)
             {
                 TotalTracksCount += item.TotalTracksCount;
+                TotalImageCount += item.TotalImageCount;
+                TotalArtistItemsCount += item.TotalArtistItemsCount;
             }
 
             _trackCollectionMap = new MergedCollectionMap<ITrackCollection, ICoreTrackCollection, ITrack, ICoreTrack>(this);
