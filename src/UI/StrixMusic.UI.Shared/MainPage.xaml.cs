@@ -51,6 +51,11 @@ namespace StrixMusic.Shared
         /// </summary>
         internal ShellAssemblyInfo? PreferredShell { get; private set; }
 
+        /// <summary>
+        /// The user's preferred shell.
+        /// </summary>
+        internal ShellAssemblyInfo? FallbackShell { get; private set; }
+
         private static Shell CreateShellControl(Type shellType)
         {
             if (shellType.BaseType != typeof(Shell))
@@ -89,7 +94,10 @@ namespace StrixMusic.Shared
             _shellRegistry = await settingsService.GetValue<IReadOnlyList<ShellAssemblyInfo>>(nameof(SettingsKeysUI.ShellRegistry));
 
             LoadRegisteredMediaPlayerElements();
-            await SetupPreferredShell();
+            await SetupShellsFromSettings();
+            Guard.IsNotNull(PreferredShell, nameof(PreferredShell));
+
+            await SetupShell(PreferredShell);
 
             AttachEvents();
 
@@ -124,9 +132,20 @@ namespace StrixMusic.Shared
 
         private async void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)
         {
-            if (e.Key == nameof(SettingsKeysUI.PreferredShell))
+            if (e.Key == nameof(SettingsKeysUI.FallbackShell) || e.Key == nameof(SettingsKeysUI.PreferredShell))
             {
-                await SetupPreferredShell();
+                await SetupShellsFromSettings();
+
+                if (PreferredShell is null)
+                    return;
+
+                if (FallbackShell is null)
+                    return;
+
+                if (CheckShellModelSupport(PreferredShell))
+                    await SetupShell(PreferredShell);
+                else
+                    await SetupShell(FallbackShell);
             }
         }
 
@@ -138,15 +157,15 @@ namespace StrixMusic.Shared
             }
         }
 
-        private async Task SetupPreferredShell()
+        private async Task SetupShellsFromSettings()
         {
             Guard.IsNotNull(_shellRegistry, nameof(_shellRegistry));
             Guard.IsNotNull(_navigationService, nameof(_navigationService));
 
             // Gets the preferred shell from settings.
-            var preferredShellDisplayName = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeysUI.PreferredShell));
+            var preferredShellAssemblyName = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeysUI.PreferredShell));
 
-            PreferredShell = _shellRegistry.FirstOrDefault(x => x.AssemblyName == preferredShellDisplayName);
+            PreferredShell = _shellRegistry.FirstOrDefault(x => x.AssemblyName == preferredShellAssemblyName);
 
             if (PreferredShell == default)
             {
@@ -154,7 +173,10 @@ namespace StrixMusic.Shared
                 return;
             }
 
-            await SetupShell(PreferredShell);
+            // Gets the preferred shell from settings.
+            var fallbackShellAssemblyName = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeysUI.FallbackShell));
+
+            FallbackShell = _shellRegistry.FirstOrDefault(x => x.AssemblyName == fallbackShellAssemblyName);
         }
 
         private Task SetupShell(ShellAssemblyInfo shellAssemblyInfo)
@@ -205,7 +227,7 @@ namespace StrixMusic.Shared
             if (_shellRegistry is null)
                 return;
 
-            if (ActiveShellModel == null || PreferredShell == null)
+            if (ActiveShellModel is null || PreferredShell is null || FallbackShell is null)
             {
                 // Ignore this during initialization
                 return;
@@ -220,8 +242,7 @@ namespace StrixMusic.Shared
             }
             else if (!CheckShellModelSupport(ActiveShellModel))
             {
-                // TODO fall back to the user's secondary shell.
-                await SetupShell(_shellRegistry.First());
+                await SetupShell(FallbackShell);
             }
         }
 
