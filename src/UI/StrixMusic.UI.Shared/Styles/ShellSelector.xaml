@@ -53,7 +53,7 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
 
-                        <TextBlock Text="! The selected skin isn't optimized for all display sizes." Foreground="#9A4C4C" 
+                        <TextBlock Text="The selected skin isn't optimized for all display sizes." Foreground="#9A4C4C" 
                                    Margin="0,5,0,15"/>
 
                         <TextBlock Text="{x:Bind PreferredShell.Description, Mode=OneWay}"
