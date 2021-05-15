@@ -124,7 +124,7 @@ namespace StrixMusic.Shared
 
         private async void SettingsService_SettingChanged(object sender, SettingChangedEventArgs e)
         {
-            if (e.Key == nameof(SettingsKeys.PreferredShell))
+            if (e.Key == nameof(SettingsKeysUI.PreferredShell))
             {
                 await SetupPreferredShell();
             }
@@ -144,7 +144,7 @@ namespace StrixMusic.Shared
             Guard.IsNotNull(_navigationService, nameof(_navigationService));
 
             // Gets the preferred shell from settings.
-            var preferredShellDisplayName = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeys.PreferredShell));
+            var preferredShellDisplayName = await Ioc.Default.GetRequiredService<ISettingsService>().GetValue<string>(nameof(SettingsKeysUI.PreferredShell));
 
             PreferredShell = _shellRegistry.FirstOrDefault(x => x.AssemblyName == preferredShellDisplayName);
 

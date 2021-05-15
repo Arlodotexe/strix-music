@@ -21,6 +21,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <styles:CoreItemStyle />
+                <styles:ShellSelector />
                 <ResourceDictionary Source="ms-appx:///OwlCore.Uno/Themes/CenteredPivotHeadersStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
@@ -71,18 +72,8 @@
         <!-- Will be replaced with NavigationView eventually -->
         <Pivot Grid.Row="1" Style="{StaticResource CenteredPivotHeadersStyle}" SelectedIndex="{x:Bind ViewModel.SelectedTabIndex, Mode=TwoWay}">
             <PivotItem  x:Uid="/SuperShell/AppSkinTB" Header="Skins" Padding="30,20">
-                <StackPanel Spacing="10" HorizontalAlignment="Center">
-                    <ComboBox x:Name="ShellSelector" Grid.Row="1" Width="200" ItemsSource="{x:Bind Skins, Mode=OneWay}" PlaceholderText="Loading..."
-                              SelectionChanged="ComboBox_SelectionChanged">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="models:ShellAssemblyInfo">
-                                <TextBlock Text="{x:Bind DisplayName}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-
-                    <TextBlock Text="(WIP - Big plans for this page!)" FontSize="7" />
-                </StackPanel>
+                <ContentControl ContentTemplate="{StaticResource DefaultShellSelector}" DataContext="{x:Bind ViewModel.ShellSelectorViewModel}"
+                                VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
             </PivotItem>
             <PivotItem Header="Services">
                 <Grid HorizontalAlignment="Center">

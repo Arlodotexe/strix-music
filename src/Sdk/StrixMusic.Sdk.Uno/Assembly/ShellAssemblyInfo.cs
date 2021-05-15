@@ -29,6 +29,11 @@ namespace StrixMusic.Sdk.Uno.Models
         public string DisplayName => AttributeData.DisplayName;
 
         /// <summary>
+        /// A brief summary of the shell that will be displayed to the user.
+        /// </summary>
+        public string Description => AttributeData.Description;
+
+        /// <summary>
         /// Gets the <see cref="ShellAttribute"/> for the <see cref="ShellAssemblyInfo"/>.
         /// </summary>
         public ShellAttributeData AttributeData { get; set;  }

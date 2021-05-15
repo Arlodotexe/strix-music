@@ -12,6 +12,16 @@ namespace StrixMusic.Sdk.Uno.Services
     public static partial class SettingsKeysUI
     {
         /// <summary>
+        /// Stores the assembly name of the user's preferred shell.
+        /// </summary>
+        public static readonly string PreferredShell = "Default";
+
+        /// <summary>
+        /// The assembly name of the user's current fallback shell. Used to cover display sizes that the <see cref="PreferredShell"/> doesn't support. 
+        /// </summary>
+        public static readonly string FallbackShell = "Default";
+
+        /// <summary>
         /// Stored assembly information about all available shells.
         /// </summary>
         public static readonly IReadOnlyList<ShellAssemblyInfo> ShellRegistry = new List<ShellAssemblyInfo>();

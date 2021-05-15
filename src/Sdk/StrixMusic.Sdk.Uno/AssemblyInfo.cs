@@ -3,5 +3,6 @@ using StrixMusic.Shells.Default;
 
 [assembly: Shell(
     shellClass: typeof(DefaultShell),
-    displayName: "Default Shell")
+    displayName: "Default",
+    description: "A fallback skin. Used when something goes horribly wrong, and by devs to test default controls.")
 ]

@@ -13,6 +13,7 @@ using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.ViewModels;
 
 namespace StrixMusic.Shared.ViewModels
@@ -38,6 +39,7 @@ namespace StrixMusic.Shared.ViewModels
             _mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
             _coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
 
+            ShellSelectorViewModel = new ShellSelectorViewModel();
             Services = new ObservableCollection<LoadedServicesItemViewModel>();
             AvailableServices = new ObservableCollection<AvailableServicesItemViewModel>();
 
@@ -46,9 +48,7 @@ namespace StrixMusic.Shared.ViewModels
             CancelConfigCoreCommand = new RelayCommand(() => CurrentCoreConfig = null);
 
             foreach (var coreVm in _mainViewModel.Cores)
-            {
                 Services.Add(new LoadedServicesItemViewModel(false, coreVm));
-            }
 
             _addNewItem = new LoadedServicesItemViewModel(true, null);
             Services.Add(_addNewItem);
@@ -56,32 +56,15 @@ namespace StrixMusic.Shared.ViewModels
             AttachEvents();
         }
 
-        /// <summary>
-        /// Finalizes an instance of the <see cref="SuperShellViewModel"/> class.
-        /// </summary>
-        ~SuperShellViewModel()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: false);
-        }
-
         /// <inheritdoc/>
-        public async Task InitAsync()
+        public Task InitAsync()
         {
             if (IsInitialized)
-                return;
+                return Task.CompletedTask;
 
             IsInitialized = true;
 
-            var availableCores = await _coreManagementService.GetCoreRegistryAsync();
-
-            foreach (var coreAssemblyInfo in availableCores)
-            {
-                AvailableServices.Add(new AvailableServicesItemViewModel(coreAssemblyInfo));
-            }
-
-            foreach (var core in _mainViewModel.Cores)
-                AttachEvents(core);
+            return Task.WhenAll(SetupCores(), ShellSelectorViewModel.InitAsync());
         }
 
         private void AttachEvents()
@@ -89,7 +72,7 @@ namespace StrixMusic.Shared.ViewModels
             _addNewItem.NewItemRequested += AddNewItem_NewItemRequested;
             _mainViewModel.Cores.CollectionChanged += Cores_CollectionChanged;
 
-            foreach(var loadedService in Services)
+            foreach (var loadedService in Services)
             {
                 loadedService.ConfigRequested += LoadedService_ConfigRequested;
             }
@@ -200,7 +183,7 @@ namespace StrixMusic.Shared.ViewModels
         }
 
         /// <summary>
-        /// The services displayed in the app.
+        /// The loaded services displayed in the app.
         /// </summary>
         public ObservableCollection<LoadedServicesItemViewModel> Services { get; }
 
@@ -209,15 +192,8 @@ namespace StrixMusic.Shared.ViewModels
         /// </summary>
         public ObservableCollection<AvailableServicesItemViewModel> AvailableServices { get; }
 
-        /// <summary>
-        /// When fired, the user has canceled adding a new item.
-        /// </summary>
-        public IRelayCommand CancelAddNewCommand { get; }
-
-        /// <summary>
-        /// When fired, the user has canceled configuring a core.
-        /// </summary>
-        public IRelayCommand CancelConfigCoreCommand { get; }
+        /// <inheritdoc cref="ShellSelectorViewModel" />
+        public ShellSelectorViewModel ShellSelectorViewModel { get; }
 
         /// <summary>
         /// If true, the user has selected to add a new item and the UI should reflect this.
@@ -229,7 +205,7 @@ namespace StrixMusic.Shared.ViewModels
         }
 
         /// <summary>
-        /// If true, the view should display configuration
+        /// If not null, the view should display configuration
         /// </summary>
         public CoreViewModel? CurrentCoreConfig
         {
@@ -248,6 +224,27 @@ namespace StrixMusic.Shared.ViewModels
 
         /// <inheritdoc/>
         public bool IsInitialized { get; private set; }
+
+        /// <summary>
+        /// When fired, the user has canceled adding a new item.
+        /// </summary>
+        public IRelayCommand CancelAddNewCommand { get; }
+
+        /// <summary>
+        /// When fired, the user has canceled configuring a core.
+        /// </summary>
+        public IRelayCommand CancelConfigCoreCommand { get; }
+
+        private async Task SetupCores()
+        {
+            var availableCores = await _coreManagementService.GetCoreRegistryAsync();
+
+            foreach (var coreAssemblyInfo in availableCores)
+                AvailableServices.Add(new AvailableServicesItemViewModel(coreAssemblyInfo));
+
+            foreach (var core in _mainViewModel.Cores)
+                AttachEvents(core);
+        }
 
         /// <inheritdoc cref="Dispose"/>
         protected virtual void Dispose(bool disposing)
@@ -276,6 +273,15 @@ namespace StrixMusic.Shared.ViewModels
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="SuperShellViewModel"/> class.
+        /// </summary>
+        ~SuperShellViewModel()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: false);
         }
     }
 }

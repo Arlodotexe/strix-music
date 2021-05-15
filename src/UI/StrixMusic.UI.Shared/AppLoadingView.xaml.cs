@@ -177,6 +177,7 @@ namespace StrixMusic.Shared
                 var attributeData = new ShellAttributeData(
                     shellAttribute.ShellType.AssemblyQualifiedName,
                     shellAttribute.DisplayName,
+                    shellAttribute.Description,
                     shellAttribute.DeviceFamily,
                     shellAttribute.InputMethod,
                     shellAttribute.MaxWindowSize.Width,
@@ -202,7 +203,6 @@ namespace StrixMusic.Shared
 
             // TODO: IMPORTANT
             // Need to rename all core namespaces to StrixMusic.Cores.Something, and change the below when done. #723
-
             const string shellAssemblyRegex = @"^(?:StrixMusic\.Core\.)(\w{3,})[^.]";
             var coreRegistryData = new List<CoreAssemblyInfo>();
 

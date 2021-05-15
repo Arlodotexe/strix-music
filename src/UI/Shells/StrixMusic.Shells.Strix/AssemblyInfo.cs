@@ -3,5 +3,6 @@ using StrixMusic.Shells.Strix;
 
 [assembly: Shell(
     shellClass: typeof(StrixShell),
-    displayName: "Strix")
+    displayName: "Strix",
+    description: "A refreshing take on conventional music app design. It's fast, fluid, and feels natural to use.")
 ]

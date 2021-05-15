@@ -36,7 +36,7 @@ namespace StrixMusic.Sdk.Uno.Services
         {
             if (respectCurrentShell)
             {
-                var currentShell = await GetValue<string>(nameof(SettingsKeys.PreferredShell));
+                var currentShell = await GetValue<string>(nameof(SettingsKeysUI.PreferredShell));
 
                 return await GetValue<T>(key, $"{Id}IsolatedTo{currentShell}");
             }
@@ -56,7 +56,7 @@ namespace StrixMusic.Sdk.Uno.Services
         {
             if (respectCurrentShell)
             {
-                var currentShell = await GetValue<string>(nameof(SettingsKeys.PreferredShell));
+                var currentShell = await GetValue<string>(nameof(SettingsKeysUI.PreferredShell));
 
                 await SetValue<T>(key, value, $"{Id}IsolatedTo{currentShell}");
                 return;

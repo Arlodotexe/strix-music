@@ -14,11 +14,6 @@ namespace StrixMusic.Sdk.Services.Settings
     public static partial class SettingsKeys
     {
         /// <summary>
-        /// Stores the display name of the user's preferred shell.
-        /// </summary>
-        public static readonly string PreferredShell = "Default";
-
-        /// <summary>
         /// Stored assembly information about all available cores.
         /// </summary>
         public static readonly IReadOnlyList<CoreAssemblyInfo> CoreRegistry = new List<CoreAssemblyInfo>();

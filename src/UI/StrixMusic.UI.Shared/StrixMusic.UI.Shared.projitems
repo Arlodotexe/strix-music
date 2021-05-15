@@ -35,6 +35,9 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Services\SharedFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\ShellSelector.xaml.cs">
+      <DependentUpon>ShellSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Styles\CoreItemStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
@@ -44,6 +47,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)TemplateSelectors\ServicesItemTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\AvailableServicesItemViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoadedServicesItemViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellInfoViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShellSelectorViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SuperShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +64,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Styles\ShellSelector.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Styles\CoreItemStyle.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -70,6 +78,10 @@
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\SegoeMDL2.ttf" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\Default\1.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\Groove\1.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\ZuneDesktop\1.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\ZuneDesktop\2.png" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-gb\Quips.resw" />

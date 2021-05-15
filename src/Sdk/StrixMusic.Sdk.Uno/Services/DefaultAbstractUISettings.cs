@@ -78,7 +78,7 @@ namespace StrixMusic.Sdk.Services.Settings
 
         private async void ShellSelector_ItemSelected(object sender, AbstractUIMetadata e)
         {
-            await _settingsService.SetValue<string>(nameof(SettingsKeys.PreferredShell), e.Id);
+            await _settingsService.SetValue<string>(nameof(SettingsKeysUI.PreferredShell), e.Id);
         }
 
         /// <inheritdoc />

@@ -13,6 +13,7 @@ namespace StrixMusic.Sdk.Uno.Models
         /// </summary>
         /// <param name="shellClassAssemblyQualifiedName">The full name of the Shell child Type.</param>
         /// <param name="displayName">The display name for the shell.</param>
+        /// <param name="description"> A brief summary of the shell that will be displayed to the user.</param>
         /// <param name="deviceFamily">The supported device families for the shell.</param>
         /// <param name="inputMethod">The supported input methods.</param>
         /// <param name="maxWidth">The maximum width of the window for the shell.</param>
@@ -22,6 +23,7 @@ namespace StrixMusic.Sdk.Uno.Models
         public ShellAttributeData(
             string shellClassAssemblyQualifiedName,
             string displayName,
+            string description,
             DeviceFamily deviceFamily = (DeviceFamily)int.MaxValue,
             InputMethod inputMethod = (InputMethod)int.MaxValue,
             double maxWidth = double.MaxValue,
@@ -31,6 +33,7 @@ namespace StrixMusic.Sdk.Uno.Models
         {
             ShellTypeAssemblyQualifiedName = shellClassAssemblyQualifiedName;
             DisplayName = displayName;
+            Description = description;
             DeviceFamily = deviceFamily;
             InputMethod = inputMethod;
             MaxWindowSize = new Size(maxWidth, maxHeight);
@@ -46,6 +49,11 @@ namespace StrixMusic.Sdk.Uno.Models
         /// The DisplayName of the shell in the assembly.
         /// </summary>
         public string DisplayName { get; set; }
+
+        /// <summary>
+        /// A brief summary of the shell that will be displayed to the user.
+        /// </summary>
+        public string Description { get; }
 
         /// <summary>
         /// The DisplayName of the shell in the assembly.
