@@ -21,10 +21,8 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
             : base(model)
         {
             _model = model;
-            var buttons = _model.Items.Where(x => x is AbstractButton button).Select(x => new AbstractButtonViewModel((AbstractButton)x)).Take(MAX_BUTTONS);
+            _buttons = new ObservableCollection<AbstractButtonViewModel>();
 
-
-            _buttons = new ObservableCollection<AbstractButtonViewModel>(buttons);
             EvaluateExpectedElements();
         }
 
@@ -36,16 +34,15 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
             foreach (var value in _model.Items)
             {
                 if (value is AbstractProgressUIElement progressUIElement)
+                {
                     ProgressBarViewModel = new AbstractProgressUIElementViewModel(progressUIElement);
+                }
                 else if (value is AbstractButton buttonElement && ButtonViewModels.Count < MAX_BUTTONS)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Adding button {buttonElement.Id}");
                     ButtonViewModels.Add(new AbstractButtonViewModel(buttonElement));
-                    System.Diagnostics.Debug.Write($"Added button {buttonElement.Id}. Total count: {ButtonViewModels.Count}");
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine($"Adding unhandled {value.Id}");
                     UnhandledItems.Add(value);
                 }
             }
