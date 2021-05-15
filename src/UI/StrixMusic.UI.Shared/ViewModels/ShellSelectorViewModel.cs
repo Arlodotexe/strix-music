@@ -58,7 +58,6 @@ namespace StrixMusic.Shared.ViewModels
                 if (shell.AssemblyInfo.AssemblyName == preferredShell)
                 {
                     PreferredShell = shell;
-                    break;
                 }
 
                 if (shell.AssemblyInfo.AssemblyName == fallbackShell)
