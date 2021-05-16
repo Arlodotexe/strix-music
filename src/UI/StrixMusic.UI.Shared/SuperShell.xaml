@@ -15,7 +15,8 @@
     xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
     mc:Ignorable="d"
     MinHeight="650"
-    Width="1000">
+    MaxWidth="1000"
+    HorizontalAlignment="Center">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -62,7 +63,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Image Height="135" Width="300" Margin="0, -15,0,-25">
+        <Image MaxHeight="135" MaxWidth="300" Margin="0, -15,0,-25">
             <Image.Source>
                 <SvgImageSource UriSource="ms-appx:///Assets/Strix/en/Wide.svg"
                                 RasterizePixelHeight="135" RasterizePixelWidth="300"/>

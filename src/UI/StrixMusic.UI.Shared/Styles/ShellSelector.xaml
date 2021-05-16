@@ -29,113 +29,202 @@
     </ResourceDictionary.ThemeDictionaries>
 
     <DataTemplate x:Key="DefaultShellSelector" x:DataType="viewModels1:ShellSelectorViewModel">
-        <StackPanel>
-            <Grid MaxHeight="600">
-                <Grid Visibility="{x:Bind visibilityConverters:InverseBoolToVisibilityConverter.Convert(PreferredShell.IsFullyResponsive), Mode=OneWay}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="300" />
-                        <RowDefinition Height="300" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
+        <ScrollViewer MaxHeight="600">
+            <StackPanel>
+                <Grid>
+                    <UserControl>
+                        <Grid Visibility="{x:Bind visibilityConverters:InverseBoolToVisibilityConverter.Convert(PreferredShell.IsFullyResponsive), Mode=OneWay}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="Wide">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                    </VisualState>
+                                    <VisualState x:Name="Minimum">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_PreferredSkinSelectorContainer.(Grid.ColumnSpan)" Value="2" />
 
-                    <StackPanel VerticalAlignment="Center">
-                        <ComboBox Grid.Row="1" Width="200"  Header="Select a skin"
-                          ItemsSource="{x:Bind AllShells, Mode=OneWay}"
-                          SelectedItem="{x:Bind PreferredShell, Mode=TwoWay}"
-                          PlaceholderText="Loading...">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate x:DataType="models:ShellAssemblyInfo">
-                                    <TextBlock Text="{Binding DisplayName}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+                                            <Setter Target="PART_PreferredSkinPreviewFlipView.(Grid.ColumnSpan)" Value="2" />
+                                            <Setter Target="PART_PreferredSkinPreviewFlipView.(Grid.Row)" Value="1" />
+                                            <Setter Target="PART_PreferredSkinPreviewFlipView.(Grid.Column)" Value="0" />
+                                            <Setter Target="PART_PreferredSkinPreviewFlipView.Height" Value="275" />
 
-                        <TextBlock Text="The selected skin isn't optimized for all display sizes." Foreground="#9A4C4C" 
-                                   Margin="0,5,0,15"/>
+                                            <Setter Target="PART_FallbackSkinSelectorContainer.(Grid.ColumnSpan)" Value="2" />
+                                            <Setter Target="PART_FallbackSkinSelectorContainer.(Grid.Row)" Value="2" />
+                                            <Setter Target="PART_FallbackSkinSelectorContainer.(Grid.Column)" Value="0" />
 
-                        <TextBlock Text="{x:Bind PreferredShell.Description, Mode=OneWay}"
-                                   HorizontalAlignment="Left" TextWrapping="WrapWholeWords" />
-                    </StackPanel>
+                                            <Setter Target="PART_FallbackSkinSelectorContainer.Margin" Value="0,10,0,0" />
 
-                    <FlipView Grid.Row="0" Grid.Column="1" ItemsSource="{Binding PreferredShell.ShellPreviews, Mode=OneWay}"
-                              VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                              Background="Transparent">
-                        <FlipView.ItemTemplate>
-                            <DataTemplate>
-                                <Image Source="{Binding}" Stretch="Uniform" />
-                            </DataTemplate>
-                        </FlipView.ItemTemplate>
-                    </FlipView>
+                                            <Setter Target="PART_FallbackSkinPreviewFlipView.(Grid.ColumnSpan)" Value="2" />
+                                            <Setter Target="PART_FallbackSkinPreviewFlipView.(Grid.Row)" Value="3" />
+                                            <Setter Target="PART_FallbackSkinPreviewFlipView.(Grid.Column)" Value="0" />
+                                            <Setter Target="PART_FallbackSkinPreviewFlipView.Height" Value="275" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
 
-                    <StackPanel Spacing="15" Grid.Row="1">
-                        <ComboBox Grid.Row="1" Width="200" Header="Select a fallback skin"
-                          ItemsSource="{x:Bind FullyResponsiveShells, Mode=OneWay}"
-                          SelectedItem="{x:Bind FallbackShell, Mode=TwoWay}"
-                          PlaceholderText="Loading...">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate x:DataType="models:ShellAssemblyInfo">
-                                    <TextBlock Text="{Binding DisplayName}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                        <TextBlock Text="{x:Bind FallbackShell.Description, Mode=OneWay}"
-                                   HorizontalAlignment="Left" TextWrapping="WrapWholeWords"  />
-                    </StackPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
 
-                    <FlipView Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FallbackShell.ShellPreviews, Mode=OneWay}"
-                              VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                              Background="Transparent">
-                        <FlipView.ItemTemplate>
-                            <DataTemplate>
-                                <Image Source="{Binding}" Stretch="Uniform" />
-                            </DataTemplate>
-                        </FlipView.ItemTemplate>
-                    </FlipView>
+                            <StackPanel x:Name="PART_PreferredSkinSelectorContainer" VerticalAlignment="Center">
+                                <ComboBox Grid.Row="1" Width="200"  Header="Select a skin"
+                                        ItemsSource="{x:Bind AllShells, Mode=OneWay}"
+                                        SelectedItem="{x:Bind PreferredShell, Mode=TwoWay}"
+                                        PlaceholderText="Loading...">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:ShellAssemblyInfo">
+                                            <TextBlock Text="{Binding DisplayName}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                                <TextBlock Text="The selected skin isn't optimized for all display sizes." 
+                                        Foreground="#9A4C4C" 
+                                       
+                                        Margin="0,5,0,15"/>
+
+                                <TextBlock Text="{x:Bind PreferredShell.Description, Mode=OneWay}"
+                                    HorizontalAlignment="Left" TextWrapping="WrapWholeWords" />
+                            </StackPanel>
+
+                            <FlipView x:Name="PART_PreferredSkinPreviewFlipView" Grid.Row="0" Grid.Column="1"
+                                  ItemsSource="{Binding PreferredShell.ShellPreviews, Mode=OneWay}" Margin="10"
+                                  Height="225"
+                                  Background="Transparent">
+                                <FlipView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding}" Stretch="Uniform" />
+                                    </DataTemplate>
+                                </FlipView.ItemTemplate>
+                            </FlipView>
+
+                            <StackPanel x:Name="PART_FallbackSkinSelectorContainer" Spacing="15" Grid.Row="1">
+                                <ComboBox Grid.Row="1" Width="200" Header="Select a fallback skin"
+                                        ItemsSource="{x:Bind FullyResponsiveShells, Mode=OneWay}"
+                                        SelectedItem="{x:Bind FallbackShell, Mode=TwoWay}"
+                                        PlaceholderText="Loading...">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:ShellAssemblyInfo">
+                                            <TextBlock Text="{Binding DisplayName}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                                <TextBlock Text="{x:Bind FallbackShell.Description, Mode=OneWay}"
+                                    HorizontalAlignment="Left" TextWrapping="WrapWholeWords"  />
+                            </StackPanel>
+
+                            <FlipView x:Name="PART_FallbackSkinPreviewFlipView" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="1" 
+                                  ItemsSource="{Binding FallbackShell.ShellPreviews, Mode=OneWay}" Margin="10"
+                                  Height="225"
+                                  Background="Transparent">
+                                <FlipView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding}" Stretch="Uniform" />
+                                    </DataTemplate>
+                                </FlipView.ItemTemplate>
+                            </FlipView>
+                        </Grid>
+                    </UserControl>
+
+                    <UserControl>
+                        <Grid Visibility="{x:Bind PreferredShell.IsFullyResponsive, Mode=OneWay}" MaxHeight="475">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="FullyResponsive_Wide">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="800" />
+                                        </VisualState.StateTriggers>
+                                    </VisualState>
+                                    <VisualState x:Name="FullyResponsive_Narrow">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="600" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_FullyResponsiveDescription.(Grid.Row)" Value="1" />
+                                            <Setter Target="PART_FullyResponsiveDescription.(Grid.Column)" Value="0" />
+                                            <Setter Target="PART_FullyResponsiveDescription.(Grid.ColumnSpan)" Value="2" />
+
+                                            <Setter Target="PART_FullyResponsiveSkinPreviewFlipView.(Grid.Row)" Value="2" />
+                                            <Setter Target="PART_FullyResponsiveSkinPreviewFlipView.(Grid.ColumnSpan)" Value="2" />
+
+                                            <Setter Target="PART_FullyResponsivePreferredShellComboBox.(Grid.ColumnSpan)" Value="2" />
+                                            <Setter Target="PART_FullyResponsiveSkinPreviewFlipView.Height" Value="300" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="FullyResponsive_Minimum">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="0" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="PART_FullyResponsiveDescription.(Grid.Row)" Value="1" />
+                                            <Setter Target="PART_FullyResponsiveDescription.(Grid.Column)" Value="0" />
+                                            <Setter Target="PART_FullyResponsiveDescription.(Grid.ColumnSpan)" Value="2" />
+
+                                            <Setter Target="PART_FullyResponsiveSkinPreviewFlipView.(Grid.Row)" Value="3" />
+                                            <Setter Target="PART_FullyResponsiveSkinPreviewFlipView.(Grid.ColumnSpan)" Value="2" />
+
+                                            <Setter Target="PART_FullyResponsivePreferredShellComboBox.(Grid.ColumnSpan)" Value="2" />
+                                            <Setter Target="PART_FullyResponsiveSkinPreviewFlipView.Height" Value="200" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <ComboBox x:Name="PART_FullyResponsivePreferredShellComboBox" Width="300" Header="Select a skin" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                      ItemsSource="{x:Bind AllShells, Mode=OneWay}"
+                                      SelectedItem="{x:Bind PreferredShell, Mode=TwoWay}"
+                                      PlaceholderText="Loading..." >
+
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="models:ShellAssemblyInfo">
+                                        <TextBlock Text="{Binding DisplayName}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                            <TextBlock x:Name="PART_FullyResponsiveDescription" Text="{Binding PreferredShell.Description}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                       TextWrapping="WrapWholeWords" Margin="5" />
+
+                            <FlipView x:Name="PART_FullyResponsiveSkinPreviewFlipView" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="2" ItemsSource="{Binding PreferredShell.ShellPreviews, Mode=OneWay}"
+                                      Background="Transparent" Margin="15" Height="350" MaxWidth="800">
+                                <FlipView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding}" Stretch="Uniform" />
+                                    </DataTemplate>
+                                </FlipView.ItemTemplate>
+                            </FlipView>
+                        </Grid>
+                    </UserControl>
                 </Grid>
 
-                <Grid Visibility="{x:Bind PreferredShell.IsFullyResponsive, Mode=OneWay}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-
-                    <ComboBox Width="300" Header="Select a skin" VerticalAlignment="Center" HorizontalAlignment="Center"
-                          ItemsSource="{x:Bind AllShells, Mode=OneWay}"
-                          SelectedItem="{x:Bind PreferredShell, Mode=TwoWay}"
-                          PlaceholderText="Loading...">
-
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="models:ShellAssemblyInfo">
-                                <TextBlock Text="{Binding DisplayName}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-
-                    <TextBlock Text="{Binding PreferredShell.Description}" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
-                               TextWrapping="WrapWholeWords" />
-
-                    <FlipView Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding PreferredShell.ShellPreviews, Mode=OneWay}"
-                              VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                              Background="Transparent">
-                        <FlipView.ItemTemplate>
-                            <DataTemplate>
-                                <Image Source="{Binding}" Stretch="Uniform" />
-                            </DataTemplate>
-                        </FlipView.ItemTemplate>
-                    </FlipView>
-                </Grid>
-            </Grid>
-
-            <Button Content="Save &amp; Apply" FontSize="14" CornerRadius="2" Command="{x:Bind SaveSelectedShellAsyncCommand}" HorizontalAlignment="Right" />
-        </StackPanel>
+                <Button Content="Save &amp; Apply" FontSize="14" CornerRadius="2" Command="{x:Bind SaveSelectedShellAsyncCommand}" HorizontalAlignment="Right" />
+            </StackPanel>
+        </ScrollViewer>
     </DataTemplate>
 
 </ResourceDictionary>
