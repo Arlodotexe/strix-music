@@ -10,28 +10,36 @@ namespace OwlCore.Net.HttpClientHandlers
     /// </summary>
     public class CachedHttpClientHandler : HttpClientHandler
     {
-        private readonly CachedHttpClientHandlerAction _rateLimiterAction;
+        private readonly CachedHttpClientHandlerAction _cachedHttpClientHandler;
 
         /// <summary>
         /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
         /// </summary>
         public CachedHttpClientHandler(string cacheFolderPath, TimeSpan defaultCacheTime)
         {
-            _rateLimiterAction = new CachedHttpClientHandlerAction(cacheFolderPath, defaultCacheTime);
+            _cachedHttpClientHandler = new CachedHttpClientHandlerAction(cacheFolderPath, defaultCacheTime);
         }
 
         /// <summary>
         /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
         /// </summary>
-        public CachedHttpClientHandler(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter cacheRequestFilter)
+        public CachedHttpClientHandler(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter shouldReturnFromCacheFilter)
         {
-            _rateLimiterAction = new CachedHttpClientHandlerAction(cacheFolderPath, defaultCacheTime, cacheRequestFilter);
+            _cachedHttpClientHandler = new CachedHttpClientHandlerAction(cacheFolderPath, defaultCacheTime, shouldReturnFromCacheFilter);
+        }
+
+        /// <summary>
+        /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
+        /// </summary>
+        public CachedHttpClientHandler(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter shouldReturnFromCacheFilter, CacheRequestFilter shouldSaveToCacheFilter)
+        {
+            _cachedHttpClientHandler = new CachedHttpClientHandlerAction(cacheFolderPath, defaultCacheTime, shouldReturnFromCacheFilter, shouldSaveToCacheFilter);
         }
 
         /// <inheritdoc />
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            return _rateLimiterAction.SendAsync(request, cancellationToken, () => base.SendAsync(request, cancellationToken));
+            return _cachedHttpClientHandler.SendAsync(request, cancellationToken, () => base.SendAsync(request, cancellationToken));
         }
     }
 }
