@@ -20,7 +20,7 @@ namespace OwlCore.Net.HttpClientHandlers
         /// Creates a new instance of <see cref="CompositeHttpClientHandler"/>.
         /// </summary>
         /// <param name="actions">The actions to perform when executing <see cref="SendAsync(HttpRequestMessage, CancellationToken)"/>.</param>
-        public CompositeHttpClientHandler(IEnumerable<CompositeHttpClientHandlerAction> actions)
+        public CompositeHttpClientHandler(params CompositeHttpClientHandlerAction[] actions)
         {
             _actions = actions.ToOrAsList();
         }
@@ -37,7 +37,7 @@ namespace OwlCore.Net.HttpClientHandlers
         /// Creates a new instance of <see cref="CompositeHttpClientHandler"/>.
         /// </summary>
         /// <param name="actions">The actions to perform when executing <see cref="SendAsync(HttpRequestMessage, CancellationToken)"/>.</param>
-        public CompositeHttpClientHandler(IEnumerable<CompositeHttpClientHandlerActionBase> actions)
+        public CompositeHttpClientHandler(params CompositeHttpClientHandlerActionBase[] actions)
         {
             _actions = actions.Select<CompositeHttpClientHandlerActionBase, CompositeHttpClientHandlerAction>(x => x.SendAsync).ToOrAsList();
         }

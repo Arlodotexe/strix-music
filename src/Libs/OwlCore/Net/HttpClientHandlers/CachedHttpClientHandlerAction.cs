@@ -20,7 +20,7 @@ namespace OwlCore.Net.HttpClientHandlers
         private readonly CacheRequestFilter? _cacheRequestFilter;
 
         /// <summary>
-        /// Creates an instance of the <see cref="RateLimitedHttpClientHandlerAction"/>.
+        /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
         /// </summary>
         public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan defaultCacheTime)
         {
@@ -29,7 +29,7 @@ namespace OwlCore.Net.HttpClientHandlers
         }
 
         /// <summary>
-        /// Creates an instance of the <see cref="RateLimitedHttpClientHandlerAction"/>.
+        /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
         /// </summary>
         public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter cacheRequestFilter)
         {
