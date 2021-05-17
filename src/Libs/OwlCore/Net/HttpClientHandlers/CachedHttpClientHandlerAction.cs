@@ -17,7 +17,8 @@ namespace OwlCore.Net.HttpClientHandlers
     {
         private readonly string _cacheFolderPath;
         private readonly TimeSpan _defaultCacheTime;
-        private readonly CacheRequestFilter? _cacheRequestFilter;
+        private readonly CacheRequestFilter? _shouldReturnFromCacheFilter;
+        private readonly CacheRequestFilter? _shouldSaveToCacheFilter;
 
         /// <summary>
         /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
@@ -31,11 +32,22 @@ namespace OwlCore.Net.HttpClientHandlers
         /// <summary>
         /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
         /// </summary>
-        public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter cacheRequestFilter)
+        public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter shouldReturnFromCacheFilter)
         {
             _cacheFolderPath = cacheFolderPath;
             _defaultCacheTime = defaultCacheTime;
-            _cacheRequestFilter = cacheRequestFilter;
+            _shouldReturnFromCacheFilter = shouldReturnFromCacheFilter;
+        }
+
+        /// <summary>
+        /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
+        /// </summary>
+        public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter shouldReturnFromCacheFilter, CacheRequestFilter shouldSaveToCacheFilter)
+        {
+            _cacheFolderPath = cacheFolderPath;
+            _defaultCacheTime = defaultCacheTime;
+            _shouldReturnFromCacheFilter = shouldReturnFromCacheFilter;
+            _shouldSaveToCacheFilter = shouldSaveToCacheFilter;
         }
 
         /// <inheritdoc cref="HttpClientHandler.SendAsync(HttpRequestMessage, CancellationToken)"/>
@@ -49,7 +61,7 @@ namespace OwlCore.Net.HttpClientHandlers
             // check if item is cached
             var cachedEntry = ReadCachedFile(path, request.RequestUri.AbsoluteUri);
 
-            var shouldUseCache = _cacheRequestFilter?.Invoke(request.RequestUri, cachedEntry) ?? false;
+            var shouldUseCache = _shouldReturnFromCacheFilter?.Invoke(request.RequestUri, cachedEntry) ?? false;
 
             if (cachedEntry != null && shouldUseCache)
             {
@@ -77,7 +89,8 @@ namespace OwlCore.Net.HttpClientHandlers
 
             var result = await baseSendAsync();
 
-            await WriteCachedFile(path, request.RequestUri.AbsoluteUri, result);
+            if (_shouldSaveToCacheFilter == null || _shouldSaveToCacheFilter.Invoke(request.RequestUri, cachedEntry))
+                await WriteCachedFile(path, request.RequestUri.AbsoluteUri, result);
 
             return result;
         }
@@ -128,7 +141,7 @@ namespace OwlCore.Net.HttpClientHandlers
                 var fileBytes = File.ReadAllText(cachedFilePath);
                 cacheEntry = JsonSerializer.Deserialize<CacheEntry>(fileBytes);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (fileExists)
                     Debug.WriteLine($"WARNING: Failed to read or deserialized the file at \"{cachedFilePath}\". The data will be discarded. ({ex})");
@@ -161,7 +174,7 @@ namespace OwlCore.Net.HttpClientHandlers
     /// </summary>
     /// <param name="uri">The URL to decide against.</param>
     /// <param name="cacheEntry">The cache entry for this request, if found.</param>
-    /// <returns><see langword="true"/> if values should be cached and returned, otherwise false.</returns>
+    /// <returns><see langword="true"/> if a cached value should be returned/cached, otherwise false.</returns>
     public delegate bool CacheRequestFilter(Uri uri, CacheEntry? cacheEntry = null);
 
     /// <summary>

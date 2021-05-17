@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace OwlCore.Net.HttpClientHandlers
 {
     /// <summary>
-    /// An <see cref="HttpClientHandler"/> that provides rate limiting functionality.
+    /// An <see cref="HttpClientHandler"/> that caches requests and returns them when specified (with optional cache filtering).
     /// </summary>
     public class CachedHttpClientHandler : HttpClientHandler
     {
