@@ -7,9 +7,7 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
-
 using Nito.AsyncEx;
-
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;

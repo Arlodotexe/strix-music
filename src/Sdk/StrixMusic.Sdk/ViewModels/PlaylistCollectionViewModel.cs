@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-
 using Nito.AsyncEx;
-
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
