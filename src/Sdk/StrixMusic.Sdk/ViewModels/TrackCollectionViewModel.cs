@@ -7,6 +7,9 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
+
+using Nito.AsyncEx;
+
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -27,6 +30,9 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly ITrackCollection _collection;
         private readonly IPlaybackHandlerService _playbackHandlerService;
+
+        private readonly AsyncLock _populateTracksMutex = new AsyncLock();
+        private readonly AsyncLock _populateImagesMutex = new AsyncLock();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ITrackCollectionViewModel"/> class.
@@ -365,29 +371,35 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
-            var items = await _collection.GetTracksAsync(limit, Tracks.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateTracksMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await _collection.GetTracksAsync(limit, Tracks.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    Tracks.Add(new TrackViewModel(item));
-                }
-            });
+                    foreach (var item in items)
+                    {
+                        Tracks.Add(new TrackViewModel(item));
+                    }
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            var items = await _collection.GetImagesAsync(limit, Images.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateImagesMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await _collection.GetImagesAsync(limit, Images.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    Images.Add(item);
-                }
-            });
+                    foreach (var item in items)
+                    {
+                        Images.Add(item);
+                    }
+                });
+            }
         }
 
         /// <inheritdoc />

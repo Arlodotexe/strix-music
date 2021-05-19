@@ -7,6 +7,9 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
+
+using Nito.AsyncEx;
+
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -28,6 +31,13 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IPlayableCollectionGroup _collectionGroup;
         private readonly IPlaybackHandlerService _playbackHandler;
+
+        private readonly AsyncLock _populateTracksMutex = new AsyncLock();
+        private readonly AsyncLock _populateAlbumsMutex = new AsyncLock();
+        private readonly AsyncLock _populateArtistsMutex = new AsyncLock();
+        private readonly AsyncLock _populatePlaylistsMutex = new AsyncLock();
+        private readonly AsyncLock _populateChildrenMutex = new AsyncLock();
+        private readonly AsyncLock _populateImagesMutex = new AsyncLock();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupViewModel"/> class.
@@ -698,109 +708,127 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMorePlaylistsAsync(int limit)
         {
-            var items = await Task.Run(() => _collectionGroup.GetPlaylistItemsAsync(limit, Playlists.Count));
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populatePlaylistsMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await Task.Run(() => _collectionGroup.GetPlaylistItemsAsync(limit, Playlists.Count));
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    switch (item)
+                    foreach (var item in items)
                     {
-                        case IPlaylist playlist:
-                            Playlists.Add(new PlaylistViewModel(playlist));
-                            break;
-                        case IPlaylistCollection collection:
-                            Playlists.Add(new PlaylistCollectionViewModel(collection));
-                            break;
+                        switch (item)
+                        {
+                            case IPlaylist playlist:
+                                Playlists.Add(new PlaylistViewModel(playlist));
+                                break;
+                            case IPlaylistCollection collection:
+                                Playlists.Add(new PlaylistCollectionViewModel(collection));
+                                break;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
-            var items = await Task.Run(() => _collectionGroup.GetTracksAsync(limit, Tracks.Count));
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateTracksMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await Task.Run(() => _collectionGroup.GetTracksAsync(limit, Tracks.Count));
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    Tracks.Add(new TrackViewModel(item));
-                }
-            });
+                    foreach (var item in items)
+                    {
+                        Tracks.Add(new TrackViewModel(item));
+                    }
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreAlbumsAsync(int limit)
         {
-            var items = await Task.Run(() => _collectionGroup.GetAlbumItemsAsync(limit, Albums.Count));
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateAlbumsMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await Task.Run(() => _collectionGroup.GetAlbumItemsAsync(limit, Albums.Count));
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    switch (item)
+                    foreach (var item in items)
                     {
-                        case IAlbum album:
-                            Albums.Add(new AlbumViewModel(album));
-                            break;
-                        case IAlbumCollection collection:
-                            Albums.Add(new AlbumCollectionViewModel(collection));
-                            break;
+                        switch (item)
+                        {
+                            case IAlbum album:
+                                Albums.Add(new AlbumViewModel(album));
+                                break;
+                            case IAlbumCollection collection:
+                                Albums.Add(new AlbumCollectionViewModel(collection));
+                                break;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            var items = await Task.Run(() => _collectionGroup.GetArtistItemsAsync(limit, Artists.Count));
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateArtistsMutex.LockAsync())
             {
-                foreach (var item in items)
-                {
-                    if (item is IArtist artist)
-                    {
-                        Artists.Add(new ArtistViewModel(artist));
-                    }
+                var items = await Task.Run(() => _collectionGroup.GetArtistItemsAsync(limit, Artists.Count));
 
-                    if (item is IArtistCollection collection)
+                _ = Threading.OnPrimaryThread(() =>
+                {
+                    foreach (var item in items)
                     {
-                        Artists.Add(new ArtistCollectionViewModel(collection));
+                        if (item is IArtist artist)
+                        {
+                            Artists.Add(new ArtistViewModel(artist));
+                        }
+
+                        if (item is IArtistCollection collection)
+                        {
+                            Artists.Add(new ArtistCollectionViewModel(collection));
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreChildrenAsync(int limit)
         {
-            var items = await Task.Run(() => _collectionGroup.GetChildrenAsync(limit, Albums.Count));
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateChildrenMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await Task.Run(() => _collectionGroup.GetChildrenAsync(limit, Albums.Count));
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    Children.Add(new PlayableCollectionGroupViewModel(item));
-                }
-            });
+                    foreach (var item in items)
+                    {
+                        Children.Add(new PlayableCollectionGroupViewModel(item));
+                    }
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            var items = await Task.Run(() => _collectionGroup.GetImagesAsync(limit, Images.Count));
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateImagesMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await Task.Run(() => _collectionGroup.GetImagesAsync(limit, Images.Count));
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    Images.Add(item);
-                }
-            });
+                    foreach (var item in items)
+                    {
+                        Images.Add(item);
+                    }
+                });
+            }
         }
 
         /// <inheritdoc />

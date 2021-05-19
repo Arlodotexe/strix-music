@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+
+using Nito.AsyncEx;
+
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -22,6 +25,9 @@ namespace StrixMusic.Sdk.ViewModels
     public class PlaylistCollectionViewModel : ObservableObject, IPlaylistCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IPlaylistCollection _collection;
+
+        private readonly AsyncLock _populatePlaylistsMutex = new AsyncLock();
+        private readonly AsyncLock _populateImagesMutex = new AsyncLock();
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistCollectionViewModel"/>.
@@ -368,37 +374,43 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMorePlaylistsAsync(int limit)
         {
-            var items = await _collection.GetPlaylistItemsAsync(limit, Playlists.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populatePlaylistsMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await _collection.GetPlaylistItemsAsync(limit, Playlists.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    switch (item)
+                    foreach (var item in items)
                     {
-                        case IPlaylist playlist:
-                            Playlists.Add(new PlaylistViewModel(playlist));
-                            break;
-                        case IPlaylistCollection collection:
-                            Playlists.Add(new PlaylistCollectionViewModel(collection));
-                            break;
+                        switch (item)
+                        {
+                            case IPlaylist playlist:
+                                Playlists.Add(new PlaylistViewModel(playlist));
+                                break;
+                            case IPlaylistCollection collection:
+                                Playlists.Add(new PlaylistCollectionViewModel(collection));
+                                break;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            var items = await _collection.GetImagesAsync(limit, Images.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateImagesMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await _collection.GetImagesAsync(limit, Images.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    Images.Add(item);
-                }
-            });
+                    foreach (var item in items)
+                    {
+                        Images.Add(item);
+                    }
+                });
+            }
         }
 
         /// <inheritdoc />

@@ -7,6 +7,9 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
+
+using Nito.AsyncEx;
+
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
@@ -29,6 +32,9 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly IPlaylist _playlist;
         private readonly IUserProfile? _owner;
         private readonly IPlaybackHandlerService _playbackHandler;
+
+        private readonly AsyncLock _populateTracksMutex = new AsyncLock();
+        private readonly AsyncLock _populateImagesMutex = new AsyncLock();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaylistViewModel"/> class.
@@ -397,31 +403,37 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
-            var items = await _playlist.GetTracksAsync(limit, Tracks.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateTracksMutex.LockAsync())
             {
-                foreach (var item in items)
-                {
-                    Tracks.Add(new TrackViewModel(item));
-                }
+                var items = await _playlist.GetTracksAsync(limit, Tracks.Count);
 
-                _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTracksCount)));
-            });
+                _ = Threading.OnPrimaryThread(() =>
+                {
+                    foreach (var item in items)
+                    {
+                        Tracks.Add(new TrackViewModel(item));
+                    }
+
+                    _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTracksCount)));
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            var items = await _playlist.GetImagesAsync(limit, Images.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateImagesMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await _playlist.GetImagesAsync(limit, Images.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    Images.Add(item);
-                }
-            });
+                    foreach (var item in items)
+                    {
+                        Images.Add(item);
+                    }
+                });
+            }
         }
 
         /// <summary>

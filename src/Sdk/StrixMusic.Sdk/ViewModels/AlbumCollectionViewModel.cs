@@ -7,6 +7,9 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
+
+using Nito.AsyncEx;
+
 using OwlCore;
 using OwlCore.Events;
 using OwlCore.Extensions;
@@ -26,6 +29,9 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IAlbumCollection _collection;
         private readonly IPlaybackHandlerService _playbackHandlerService;
+
+        private readonly AsyncLock _populateAlbumsMutex = new AsyncLock();
+        private readonly AsyncLock _populateImagesMutex = new AsyncLock();
 
         /// <summary>
         /// Creates a new instance of <see cref="AlbumCollectionViewModel"/>.
@@ -240,37 +246,43 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreAlbumsAsync(int limit)
         {
-            var items = await _collection.GetAlbumItemsAsync(limit, Albums.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateAlbumsMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await _collection.GetAlbumItemsAsync(limit, Albums.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    switch (item)
+                    foreach (var item in items)
                     {
-                        case IAlbum album:
-                            Albums.Add(new AlbumViewModel(album));
-                            break;
-                        case IAlbumCollection collection:
-                            Albums.Add(new AlbumCollectionViewModel(collection));
-                            break;
+                        switch (item)
+                        {
+                            case IAlbum album:
+                                Albums.Add(new AlbumViewModel(album));
+                                break;
+                            case IAlbumCollection collection:
+                                Albums.Add(new AlbumCollectionViewModel(collection));
+                                break;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            var items = await _collection.GetImagesAsync(limit, Images.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateImagesMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await _collection.GetImagesAsync(limit, Images.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    Images.Add(item);
-                }
-            });
+                    foreach (var item in items)
+                    {
+                        Images.Add(item);
+                    }
+                });
+            }
         }
 
         /// <inheritdoc />
