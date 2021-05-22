@@ -7,6 +7,7 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
+using Nito.AsyncEx;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
@@ -28,6 +29,10 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IAlbum _album;
         private readonly IPlaybackHandlerService _playbackHandler;
+
+        private readonly AsyncLock _populateTracksMutex = new AsyncLock();
+        private readonly AsyncLock _populateArtistsMutex = new AsyncLock();
+        private readonly AsyncLock _populateImagesMutex = new AsyncLock();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumViewModel"/> class.
@@ -516,9 +521,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
-            foreach (var item in await _album.GetTracksAsync(limit, Tracks.Count))
+            using (await _populateTracksMutex.LockAsync())
             {
-                Tracks.Add(new TrackViewModel(item));
+                foreach (var item in await _album.GetTracksAsync(limit, Tracks.Count))
+                {
+                    Tracks.Add(new TrackViewModel(item));
+                }
             }
         }
 
@@ -537,32 +545,38 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            var items = await _album.GetImagesAsync(limit, Images.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateImagesMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await _album.GetImagesAsync(limit, Images.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    Images.Add(item);
-                }
-            });
+                    foreach (var item in items)
+                    {
+                        Images.Add(item);
+                    }
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            var items = await _album.GetArtistItemsAsync(limit, Artists.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateArtistsMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await _album.GetArtistItemsAsync(limit, Artists.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    if (item is IArtist artist)
+                    foreach (var item in items)
                     {
-                        Artists.Add(new ArtistViewModel(artist));
+                        if (item is IArtist artist)
+                        {
+                            Artists.Add(new ArtistViewModel(artist));
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         /// <inheritdoc />

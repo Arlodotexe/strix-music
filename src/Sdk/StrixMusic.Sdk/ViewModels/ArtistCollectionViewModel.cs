@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using Nito.AsyncEx;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
@@ -24,6 +25,9 @@ namespace StrixMusic.Sdk.ViewModels
     public class ArtistCollectionViewModel : ObservableObject, IArtistCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IArtistCollection _collection;
+
+        private readonly AsyncLock _populateArtistsMutex = new AsyncLock();
+        private readonly AsyncLock _populateImagesMutex = new AsyncLock();
 
         /// <summary>
         /// Creates a new instance of <see cref="ArtistCollectionViewModel"/>.
@@ -355,37 +359,43 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            var items = await _collection.GetArtistItemsAsync(limit, Artists.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateArtistsMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await _collection.GetArtistItemsAsync(limit, Artists.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    switch (item)
+                    foreach (var item in items)
                     {
-                        case IArtist artist:
-                            Artists.Add(new ArtistViewModel(artist));
-                            break;
-                        case IArtistCollection collection:
-                            Artists.Add(new ArtistCollectionViewModel(collection));
-                            break;
+                        switch (item)
+                        {
+                            case IArtist artist:
+                                Artists.Add(new ArtistViewModel(artist));
+                                break;
+                            case IArtistCollection collection:
+                                Artists.Add(new ArtistCollectionViewModel(collection));
+                                break;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            var items = await _collection.GetImagesAsync(limit, Images.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateImagesMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await _collection.GetImagesAsync(limit, Images.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    Images.Add(item);
-                }
-            });
+                    foreach (var item in items)
+                    {
+                        Images.Add(item);
+                    }
+                });
+            }
         }
 
         /// <inheritdoc />

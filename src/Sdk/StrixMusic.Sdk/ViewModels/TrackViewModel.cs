@@ -8,6 +8,7 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
+using Nito.AsyncEx;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
@@ -27,6 +28,9 @@ namespace StrixMusic.Sdk.ViewModels
     public class TrackViewModel : ObservableObject, ITrack, IArtistCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IPlaybackHandlerService _playbackHandler;
+
+        private readonly AsyncLock _populateArtistsMutex = new AsyncLock();
+        private readonly AsyncLock _populateImagesMutex = new AsyncLock();
 
         /// <summary>
         /// Creates a bindable wrapper around an <see cref="ITrack"/>.
@@ -519,37 +523,43 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
-            var items = await GetArtistItemsAsync(limit, Artists.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateArtistsMutex.LockAsync())
             {
-                foreach (var item in items)
-                {
-                    if (item is IArtist artist)
-                    {
-                        Artists.Add(new ArtistViewModel(artist));
-                    }
+                var items = await GetArtistItemsAsync(limit, Artists.Count);
 
-                    if (item is IArtistCollection collection)
+                _ = Threading.OnPrimaryThread(() =>
+                {
+                    foreach (var item in items)
                     {
-                        Artists.Add(new ArtistCollectionViewModel(collection));
+                        if (item is IArtist artist)
+                        {
+                            Artists.Add(new ArtistViewModel(artist));
+                        }
+
+                        if (item is IArtistCollection collection)
+                        {
+                            Artists.Add(new ArtistCollectionViewModel(collection));
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)
         {
-            var items = await GetImagesAsync(limit, Images.Count);
-
-            _ = Threading.OnPrimaryThread(() =>
+            using (await _populateImagesMutex.LockAsync())
             {
-                foreach (var item in items)
+                var items = await GetImagesAsync(limit, Images.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
                 {
-                    Images.Add(item);
-                }
-            });
+                    foreach (var item in items)
+                    {
+                        Images.Add(item);
+                    }
+                });
+            }
         }
 
         /// <inheritdoc />
