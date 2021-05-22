@@ -711,6 +711,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 var mergedInto = MergeOrAdd(returnedData, item.CollectionItem);
 
                 bool exists = mergedItemMaps.TryGetValue(mergedInto, out List<MappedData> mergedMapItems);
+
                 mergedMapItems ??= new List<MappedData>();
                 mergedMapItems.Add(item);
 
