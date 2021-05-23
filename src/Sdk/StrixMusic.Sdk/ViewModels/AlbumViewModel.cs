@@ -614,12 +614,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Attempts to change the description of the album, if supported.
         /// </summary>
-        public IAsyncRelayCommand ChangeDescriptionAsyncCommand { get; }
+        public IAsyncRelayCommand<string?> ChangeDescriptionAsyncCommand { get; }
 
         /// <summary>
         /// Attempts to change the duration of the album, if supported.
         /// </summary>
-        public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
+        public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
 
         /// <inheritdoc />
         public bool Equals(ICoreAlbumCollectionItem other) => _album.Equals(other);
