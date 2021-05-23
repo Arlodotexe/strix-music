@@ -68,6 +68,7 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
@@ -575,19 +576,19 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
 
         /// <summary>
-        /// Attempts to change the name of the artistViewModel, if supported.
+        /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
         /// </summary>
         public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
 
         /// <summary>
-        /// Attempts to change the description of the artistViewModel, if supported.
+        /// Command to change the description. It triggers <see cref="ChangeDescriptionAsync"/>.
         /// </summary>
-        public IAsyncRelayCommand ChangeDescriptionAsyncCommand { get; }
+        public IAsyncRelayCommand<string?> ChangeDescriptionAsyncCommand { get; }
 
         /// <summary>
-        /// Attempts to change the duration of the artistViewModel, if supported.
+        /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
         /// </summary>
-        public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
+        public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
@@ -642,7 +643,7 @@ namespace StrixMusic.Sdk.ViewModels
         private Task PlayAlbumCollectionInternalAsync(IAlbumCollectionItem? albumItem)
         {
             Guard.IsNotNull(albumItem, nameof(albumItem));
-            return _playbackHandler.PlayAsync(albumItem,this,this);
+            return _playbackHandler.PlayAsync(albumItem, this, this);
         }
 
         /// <inheritdoc />

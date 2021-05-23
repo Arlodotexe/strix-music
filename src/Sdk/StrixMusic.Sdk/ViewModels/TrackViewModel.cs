@@ -14,6 +14,7 @@ using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
@@ -574,23 +575,23 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public IAsyncRelayCommand PauseArtistCollectionAsyncCommand { get; }
 
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
         /// <summary>
-        /// Attempts to change the name of the album, if supported.
+        /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
         /// </summary>
         public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
 
         /// <summary>
-        /// Attempts to change the description of the album, if supported.
+        /// Command to change the description. It triggers <see cref="ChangeDescriptionAsync"/>.
         /// </summary>
-        public IAsyncRelayCommand ChangeDescriptionAsyncCommand { get; }
+        public IAsyncRelayCommand<string?> ChangeDescriptionAsyncCommand { get; }
 
         /// <summary>
-        /// Attempts to change the duration of the album, if supported.
+        /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
         /// </summary>
-        public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+        public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => Model.Equals(other);
