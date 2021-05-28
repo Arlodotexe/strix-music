@@ -609,7 +609,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Attempts to change the name of the album, if supported.
         /// </summary>
-        public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
+        public IAsyncRelayCommand<string> ChangeNameAsyncCommand { get; }
 
         /// <summary>
         /// Attempts to change the description of the album, if supported.

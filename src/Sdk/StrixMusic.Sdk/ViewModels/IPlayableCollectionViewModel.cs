@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Command to change the name, if supported.
         /// </summary>
-        public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
+        public IAsyncRelayCommand<string> ChangeNameAsyncCommand { get; }
 
         /// <summary>
         /// Command to change the description, if supported.

@@ -42,20 +42,5 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="ITrackCollectionBase.PauseTrackCollectionAsync"/>
         /// </summary>
         public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
-
-        /// <summary>
-        /// Command to change the name, if supported.
-        /// </summary>
-        public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
-
-        /// <summary>
-        /// Command to change the description, if supported.
-        /// </summary>
-        public IAsyncRelayCommand<string?> ChangeDescriptionAsyncCommand { get; }
-
-        /// <summary>
-        /// Command to change the duration, if supported.
-        /// </summary>
-        public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
     }
 }

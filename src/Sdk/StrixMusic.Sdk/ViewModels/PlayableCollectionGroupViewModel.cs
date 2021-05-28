@@ -958,7 +958,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
         /// </summary>
-        public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
+        public IAsyncRelayCommand<string> ChangeNameAsyncCommand { get; }
 
         /// <summary>
         /// Command to change the description. It triggers <see cref="ChangeDescriptionAsync"/>.
