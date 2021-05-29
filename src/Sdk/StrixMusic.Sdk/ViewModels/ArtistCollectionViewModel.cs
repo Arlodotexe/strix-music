@@ -45,6 +45,10 @@ namespace StrixMusic.Sdk.ViewModels
             PauseArtistCollectionAsyncCommand = new AsyncRelayCommand(PauseArtistCollectionAsync);
             PlayArtistCollectionAsyncCommand = new AsyncRelayCommand(PlayArtistCollectionAsync);
 
+            ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
+            ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+
             PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistInternalAsync);
 
             using (Threading.PrimaryContext)
@@ -285,7 +289,7 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsPauseArtistCollectionAsyncAvailable => _collection.IsPauseArtistCollectionAsyncAvailable;
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => _collection.ChangeNameAsync(name);
+        public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
 
         /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description) => _collection.ChangeDescriptionAsync(description);
@@ -428,6 +432,21 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public IAsyncRelayCommand<IArtistCollectionItem> PlayArtistAsyncCommand { get; }
 
+        /// <summary>
+        /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<string> ChangeNameAsyncCommand { get; }
+
+        /// <summary>
+        /// Command to change the description. It triggers <see cref="ChangeDescriptionAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<string?> ChangeDescriptionAsyncCommand { get; }
+
+        /// <summary>
+        /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
+
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => _collection.Equals(other);
 
@@ -442,6 +461,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(artistCollectionItem, nameof(artistCollectionItem));
             throw new NotImplementedException();
+        }
+
+        private Task ChangeNameInternalAsync(string? name)
+        {
+            Guard.IsNotNull(name, nameof(name));
+            return _collection.ChangeNameAsync(name);
         }
 
         /// <inheritdoc />

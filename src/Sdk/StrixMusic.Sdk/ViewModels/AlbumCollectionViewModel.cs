@@ -52,6 +52,11 @@ namespace StrixMusic.Sdk.ViewModels
 
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
+
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
+            ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
+            ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+
             PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionInternalAsync);
             _playbackHandlerService = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
@@ -341,6 +346,9 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveAlbumItemAvailable(int index) => _collection.IsRemoveAlbumItemAvailable(index);
 
         /// <inheritdoc />
+        public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
+
+        /// <inheritdoc />
         public event EventHandler<bool>? IsPlayAlbumCollectionAsyncAvailableChanged
         {
             add => _collection.IsPlayAlbumCollectionAsyncAvailableChanged += value;
@@ -372,9 +380,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// The sources for this item.
         /// </summary>
         public IReadOnlyList<ICoreAlbumCollection> Sources => _collection.GetSources<ICoreAlbumCollection>();
-
-        /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => _collection.ChangeNameAsync(name);
 
         /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description) => _collection.ChangeDescriptionAsync(description);
@@ -427,6 +432,21 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }
 
+        /// <summary>
+        /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<string> ChangeNameAsyncCommand { get; }
+
+        /// <summary>
+        /// Command to change the description. It triggers <see cref="ChangeDescriptionAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<string?> ChangeDescriptionAsyncCommand { get; }
+
+        /// <summary>
+        /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
+
         /// <inheritdoc />
         public bool Equals(ICoreAlbumCollectionItem other) => _collection.Equals(other);
 
@@ -440,6 +460,12 @@ namespace StrixMusic.Sdk.ViewModels
         public Task InitAsync()
         {
             throw new NotImplementedException();
+        }
+
+        private Task ChangeNameInternalAsync(string? name)
+        {
+            Guard.IsNotNull(name, nameof(name));
+            return _collection.ChangeNameAsync(name);
         }
 
         private Task PlayAlbumCollectionInternalAsync(IAlbumCollectionItem? albumItem)
