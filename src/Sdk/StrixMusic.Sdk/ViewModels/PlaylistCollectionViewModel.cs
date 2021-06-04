@@ -49,6 +49,10 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMorePlaylistsCommand = new AsyncRelayCommand<int>(PopulateMorePlaylistsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
+            ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
+            ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+
             AttachEvents();
         }
 
@@ -304,13 +308,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => _collection.ChangeNameAsync(name);
-
-        /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description) => _collection.ChangeDescriptionAsync(description);
 
         /// <inheritdoc />
         public Task ChangeDurationAsync(TimeSpan duration) => _collection.ChangeDurationAsync(duration);
+
+        /// <inheritdoc />
+        public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }
@@ -423,6 +427,21 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }
 
+        /// <summary>
+        /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
+
+        /// <summary>
+        /// Command to change the description. It triggers <see cref="ChangeDescriptionAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<string?> ChangeDescriptionAsyncCommand { get; }
+
+        /// <summary>
+        /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
+
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
 
@@ -439,6 +458,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(playlistCollectionItem, nameof(playlistCollectionItem));
             throw new NotImplementedException();
+        }
+
+        private Task ChangeNameInternalAsync(string? name)
+        {
+            Guard.IsNotNull(name, nameof(name));
+            return _collection.ChangeNameAsync(name);
         }
 
         /// <inheritdoc />

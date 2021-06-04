@@ -700,8 +700,6 @@ namespace StrixMusic.Sdk.Data.Merged
 
         private List<IMergedMutable<TCoreCollectionItem>> MergeMappedData(IList<MappedData> sortedData)
         {
-            _mergedMappedData.Clear();
-
             var returnedData = new List<IMergedMutable<TCoreCollectionItem>>();
             var mergedItemMaps = new Dictionary<IMergedMutable<TCoreCollectionItem>, List<MappedData>>();
 
@@ -713,7 +711,7 @@ namespace StrixMusic.Sdk.Data.Merged
                 var mergedInto = MergeOrAdd(returnedData, item.CollectionItem);
 
                 bool exists = mergedItemMaps.TryGetValue(mergedInto, out List<MappedData> mergedMapItems);
-                
+
                 mergedMapItems ??= new List<MappedData>();
                 mergedMapItems.Add(item);
 

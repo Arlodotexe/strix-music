@@ -434,21 +434,6 @@ namespace StrixMusic.Sdk.ViewModels
             }
         }
 
-        /// <summary>
-        /// Attempts to change the name of the album, if supported.
-        /// </summary>
-        public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
-
-        /// <summary>
-        /// Attempts to change the description of the album, if supported.
-        /// </summary>
-        public IAsyncRelayCommand ChangeDescriptionAsyncCommand { get; }
-
-        /// <summary>
-        /// Attempts to change the duration of the album, if supported.
-        /// </summary>
-        public IAsyncRelayCommand ChangeDurationAsyncCommand { get; }
-
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
 
@@ -463,6 +448,21 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
+
+        /// <summary>
+        /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
+
+        /// <summary>
+        /// Command to change the description. It triggers <see cref="ChangeDescriptionAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<string?> ChangeDescriptionAsyncCommand { get; }
+
+        /// <summary>
+        /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
 
         /// <inheritdoc />
         public bool Equals(ICoreImageCollection other) => _playlist.Equals(other);

@@ -54,6 +54,10 @@ namespace StrixMusic.Sdk.ViewModels
 
             PlayTrackAsyncCommand = new AsyncRelayCommand<ITrack>(PlayTrackCollectionInternalAsync);
 
+            ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
+            ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
+            ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+
             SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(MainViewModel.GetLoadedCore).ToList();
             _playbackHandlerService = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
@@ -325,6 +329,9 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveImageAvailable(int index) => _collection.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
+        public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
+
+        /// <inheritdoc />
         public Task AddTrackAsync(ITrack track, int index) => _collection.AddTrackAsync(track, index);
 
         /// <inheritdoc />
@@ -356,9 +363,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             return _collection.PauseTrackCollectionAsync();
         }
-
-        /// <inheritdoc />
-        public Task ChangeNameAsync(string name) => _collection.ChangeNameAsync(name);
 
         /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description) => _collection.ChangeDescriptionAsync(description);
@@ -415,6 +419,21 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
 
+        /// <summary>
+        /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<string> ChangeNameAsyncCommand { get; }
+
+        /// <summary>
+        /// Command to change the description. It triggers <see cref="ChangeDescriptionAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<string?> ChangeDescriptionAsyncCommand { get; }
+
+        /// <summary>
+        /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
+        /// </summary>
+        public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
+
         /// <inheritdoc />
         public bool Equals(ICoreImageCollection other) => _collection.Equals(other);
 
@@ -440,6 +459,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(track, nameof(track));
             return _collection.PlayTrackCollectionAsync(track);
+        }
+
+        private Task ChangeNameInternalAsync(string? name)
+        {
+            Guard.IsNotNull(name, nameof(name));
+            return _collection.ChangeNameAsync(name);
         }
 
         /// <inheritdoc />
