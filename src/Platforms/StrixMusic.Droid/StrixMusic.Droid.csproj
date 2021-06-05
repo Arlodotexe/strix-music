@@ -131,7 +131,9 @@
     <PackageReference Include="Uno.UI">
       <Version>3.7.6</Version>
     </PackageReference>
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.0-dev.7" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.0-dev.7" Condition="'$(Configuration)'=='Debug-Dev'" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.0-dev.7" Condition="'$(Configuration)'=='Debug-Nightly'" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.0-dev.7" Condition="'$(Configuration)'=='Debug-Prod'" />
     <PackageReference Include="Uno.UniversalImageLoader" Version="1.9.33" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />

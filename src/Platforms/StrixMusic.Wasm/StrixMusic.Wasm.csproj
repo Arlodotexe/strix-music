@@ -15,7 +15,19 @@
     <Configurations>Debug-Dev;Debug-Nightly;Debug-Prod;Release-Dev;Release-Nightly;Release-Prod;</Configurations>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug-Dev'">
+    <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
+    <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug-Nightly'">
+    <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
+    <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug-Prod'">
     <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
     <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
     <DebugType>portable</DebugType>
@@ -60,13 +72,9 @@
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.1.0-build.2.g0e224f133a" />
     <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.0-build.2.g0e224f133a" />
     <PackageReference Include="Uno.UI" Version="3.7.6" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.1" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.UI.RemoteControl" Condition="'$(Configuration)'=='Debug-Nightly'">
-      <Version>3.5.1</Version>
-    </PackageReference>
-    <PackageReference Include="Uno.UI.RemoteControl" Condition="'$(Configuration)'=='Debug-Patreon'">
-      <Version>3.5.1</Version>
-    </PackageReference>
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.1" Condition="'$(Configuration)'=='Debug-Dev'" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.1" Condition="'$(Configuration)'=='Debug-Nightly'" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.1" Condition="'$(Configuration)'=='Debug-Prod'" />
     <PackageReference Include="Uno.UI.WebAssembly" Version="3.5.1" />
     <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0" />
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0" PrivateAssets="all" />
