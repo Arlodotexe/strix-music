@@ -1,4 +1,4 @@
-﻿using StrixMusic.Sdk.Uno.Controls.Items;
+﻿using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Xaml;
 
 namespace StrixMusic.Sdk.Uno.Styles.Items

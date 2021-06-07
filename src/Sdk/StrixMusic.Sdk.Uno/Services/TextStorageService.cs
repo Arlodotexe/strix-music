@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Nito.AsyncEx;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.StorageService;
-using Windows.Storage;
 
 namespace StrixMusic.Sdk.Uno.Services
 {
