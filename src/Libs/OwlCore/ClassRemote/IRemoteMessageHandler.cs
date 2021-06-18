@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OwlCore.Remoting
+namespace OwlCore.ClassRemote
 {
-    public interface IRemotingMessageHandler
+    public interface IRemoteMessageHandler
     {
         // think these through more
         public event EventHandler<IRemotingMessage[]>? DataInbound;
