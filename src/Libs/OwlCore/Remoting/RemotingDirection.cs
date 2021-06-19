@@ -1,7 +1,6 @@
-﻿using OwlCore.ClassRemote.Attributes;
-using System;
+﻿using System;
 
-namespace OwlCore.ClassRemote
+namespace OwlCore.Remoting
 {
     /// <summary>
     /// Used to specify the direction of data flow when relaying member changes remotely.

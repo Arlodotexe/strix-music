@@ -72,6 +72,9 @@ namespace StrixMusic.Shared
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 #endif
+
+            var x = new OwlCore.Remoting.Test();
+            x.TestMethod(5);
         }
 
         private void ShowQuip()

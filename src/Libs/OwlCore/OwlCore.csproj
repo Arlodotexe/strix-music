@@ -50,6 +50,8 @@ This project is a constant work in progress. Until a stable release, breaking ch
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Cauldron.BasicInterceptors" Version="3.2.3" />
+    <PackageReference Include="Cauldron.Interception.Fody" Version="3.2.3" />
     <PackageReference Include="MessagePack" Version="2.2.85" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />

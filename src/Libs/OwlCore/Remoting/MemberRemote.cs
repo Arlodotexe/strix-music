@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using OwlCore.ClassRemote.Attributes;
 using OwlCore.Extensions;
 using OwlCore.MemberInterception;
+using OwlCore.Remoting.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OwlCore.ClassRemote
+namespace OwlCore.Remoting
 {
     /// <summary>
     /// Automatically sync events, properties, method calls and fields remotely between two object instances, even if the code runs on another machine.
@@ -62,7 +62,7 @@ namespace OwlCore.ClassRemote
         {
             var intercept = (MethodIntercept)sender;
             var methodInfo = intercept.OriginalMethodInfo;
-            var options = methodInfo.GetCustomAttribute<RemoteOptionsAttribute>();
+            var options = methodInfo.GetCustomAttribute<RemoteMethodAttribute>();
 
             if (_mode == RemotingMode.None || options.Direction == RemotingDirection.None)
                 return;
@@ -73,7 +73,7 @@ namespace OwlCore.ClassRemote
             // emit the data
             if (isValidClientConfig || isValidHostConfig)
             {
-                _someDataTransferService.SendAsync(_id, methodInfo.Name, parameters);
+                //_someDataTransferService.SendAsync(_id, methodInfo.Name, parameters);
             }
         }
 
@@ -89,8 +89,6 @@ namespace OwlCore.ClassRemote
         public static RemotingMode GlobalRemotingMode;
     }
 
-    // Default is bidirectional.
-    [RemoteOptions(RemotingDirection.Bidirectional)]
     public class Test : IDisposable
     {
         private MemberRemote _remote;
@@ -100,26 +98,15 @@ namespace OwlCore.ClassRemote
             _remote = new MemberRemote(this, "someId", FakeValues.GlobalRemotingMode);
         }
 
-        // No remoting
-        [RemoteOptions(RemotingDirection.None)]
-        public int MyProperty { get; set; }
-
-        // one way remoting, where hosts send and clients receive.
-        [RemoteOptions(RemotingDirection.OutboundHost | RemotingDirection.InboundClient)]
-        public int MyOtherProperty { get; set; }
-
-        // Uses default or option specified at class level.
-        public long OtherFullyRemoteProp { get; set; }
-
         // Fully remote method, synced between all hosts and clients (all connected nodes).
-        [RemoteOptions(RemotingDirection.Bidirectional)]
-        private void TestMethod(int data)
+        [RemoteMethod(RemotingDirection.OutboundHost | RemotingDirection.InboundClient)]
+        public void TestMethod(int data)
         {
-
+            System.Diagnostics.Debug.WriteLine(data);
         }
 
         /// <inheritdoc/>
-        [RemoteOptions(RemotingDirection.None)]
+        [RemoteMethod(RemotingDirection.None)]
         public void Dispose()
         {
             _remote.Dispose();

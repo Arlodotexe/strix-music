@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OwlCore.ClassRemote.Attributes
+namespace OwlCore.Remoting
 {
     /// <summary>
     /// The primary kind of remoting used for this node.
