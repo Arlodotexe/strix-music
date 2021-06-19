@@ -45,15 +45,15 @@ namespace OwlCore.Remoting.Attributes
         }
 
         /// <inheritdoc/>
-        public void OnExit()
-        {
-        }
-
-        /// <inheritdoc/>
         public object OnExit(Type returnType, object returnValue)
         {
             Debug.WriteLine("Exiting: " + _methodBase?.Name ?? "null");
             return returnValue;
+        }
+
+        /// <inheritdoc/>
+        public void OnExit()
+        {
         }
     }
 }

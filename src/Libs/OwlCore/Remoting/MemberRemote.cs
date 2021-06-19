@@ -24,7 +24,7 @@ namespace OwlCore.Remoting
         private string _id;
         private readonly RemotingMode _mode;
 
-        private IEnumerable<MethodIntercept> _methods;
+        private IEnumerable<MethodInfo> _methods;
         private IEnumerable<EventInfo> _events;
         private IEnumerable<FieldInfo> _fields;
         private IEnumerable<PropertyInfo> _properties;
@@ -47,15 +47,7 @@ namespace OwlCore.Remoting
             _events = members.Where(x => x.MemberType == MemberTypes.Event).Cast<EventInfo>(); // TODO: Intercepts
             _fields = members.Where(x => x.MemberType == MemberTypes.Field).Cast<FieldInfo>(); // TODO: Intercepts
             _properties = members.Where(x => x.MemberType == MemberTypes.Property).Cast<PropertyInfo>(); // TODO: Intercepts
-            _methods = members.Where(x => x.MemberType == MemberTypes.Method).Select(x => new MethodIntercept((MethodInfo)x, _instance));
-
-
-            // Might need "async lock" on every method
-            // Normal lock on sync methods / properties setter?
-            foreach (var method in _methods)
-            {
-                method.MethodExecuted += OnMethodExecuted;
-            }
+            _methods = members.Where(x => x.MemberType == MemberTypes.Method).Cast<MethodInfo>();
         }
 
         private void OnMethodExecuted(object sender, object[] parameters)
