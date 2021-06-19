@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
     public class AlbumCollectionViewModel : ObservableObject, IAlbumCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IAlbumCollection _collection;
-        private readonly IPlaybackHandlerService _playbackHandlerService;
+        private readonly IPlaybackHandlerService _playbackHandler;
 
         private readonly AsyncLock _populateAlbumsMutex = new AsyncLock();
         private readonly AsyncLock _populateImagesMutex = new AsyncLock();
@@ -58,7 +58,7 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
             PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionInternalAsync);
-            _playbackHandlerService = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
+            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             AttachEvents();
         }
@@ -390,7 +390,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayAlbumCollectionAsync()
         {
-            return _playbackHandlerService.PlayAsync(this, _collection);
+            return _playbackHandler.PlayAsync(this, _collection);
         }
 
         /// <inheritdoc />
@@ -472,8 +472,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(albumItem, nameof(albumItem));
 
-            throw new NotImplementedException();
-            // return _playbackHandler.PlayAsync(albumItem, this, _collection);
+            return _playbackHandler.PlayAsync(albumItem, this, this);
         }
 
         /// <inheritdoc />

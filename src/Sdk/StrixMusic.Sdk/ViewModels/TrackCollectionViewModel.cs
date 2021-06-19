@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.ViewModels
     public class TrackCollectionViewModel : ObservableObject, ITrackCollectionViewModel, IImageCollectionViewModel
     {
         private readonly ITrackCollection _collection;
-        private readonly IPlaybackHandlerService _playbackHandlerService;
+        private readonly IPlaybackHandlerService _playbackHandler;
 
         private readonly AsyncLock _populateTracksMutex = new AsyncLock();
         private readonly AsyncLock _populateImagesMutex = new AsyncLock();
@@ -59,7 +59,7 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
             SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(MainViewModel.GetLoadedCore).ToList();
-            _playbackHandlerService = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
+            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             AttachEvents();
         }
@@ -352,7 +352,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync()
         {
-            return _playbackHandlerService.PlayAsync(this, _collection);
+            return _playbackHandler.PlayAsync(this, _collection);
         }
 
         /// <inheritdoc />
@@ -458,7 +458,8 @@ namespace StrixMusic.Sdk.ViewModels
         private Task PlayTrackCollectionInternalAsync(ITrack? track)
         {
             Guard.IsNotNull(track, nameof(track));
-            return _collection.PlayTrackCollectionAsync(track);
+
+            return _playbackHandler.PlayAsync(track, this, this);
         }
 
         private Task ChangeNameInternalAsync(string? name)

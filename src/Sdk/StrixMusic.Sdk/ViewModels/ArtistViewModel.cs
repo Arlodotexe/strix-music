@@ -420,16 +420,28 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeDurationAsyncAvailable => _artist.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync() => _artist.PlayTrackCollectionAsync();
+        public async Task PlayTrackCollectionAsync()
+        {
+            await _playbackHandler.PlayAsync((ITrackCollectionViewModel)this, _artist);
+        }
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync() => _artist.PauseTrackCollectionAsync();
+        public async Task PauseTrackCollectionAsync()
+        {
+            await _playbackHandler.PauseAsync();
+        }
 
         /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync() => _artist.PlayAlbumCollectionAsync();
+        public async Task PlayAlbumCollectionAsync()
+        {
+            await _playbackHandler.PlayAsync((IAlbumCollectionViewModel)this, _artist);
+        }
 
         /// <inheritdoc />
-        public Task PauseAlbumCollectionAsync() => _artist.PauseAlbumCollectionAsync();
+        public async Task PauseAlbumCollectionAsync()
+        {
+            await _playbackHandler.PauseAsync();
+        }
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);

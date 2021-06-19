@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Nito.AsyncEx;
 using OwlCore;
@@ -16,6 +17,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.MediaPlayback;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -28,6 +30,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         private readonly AsyncLock _populateArtistsMutex = new AsyncLock();
         private readonly AsyncLock _populateImagesMutex = new AsyncLock();
+        private readonly IPlaybackHandlerService _playbackHandler;
 
         /// <summary>
         /// Creates a new instance of <see cref="ArtistCollectionViewModel"/>.
@@ -50,6 +53,7 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
             PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistInternalAsync);
+            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             using (Threading.PrimaryContext)
             {
@@ -460,7 +464,8 @@ namespace StrixMusic.Sdk.ViewModels
         private Task PlayArtistInternalAsync(IArtistCollectionItem? artistCollectionItem)
         {
             Guard.IsNotNull(artistCollectionItem, nameof(artistCollectionItem));
-            throw new NotImplementedException();
+
+            return _playbackHandler.PlayAsync(artistCollectionItem, this, this);
         }
 
         private Task ChangeNameInternalAsync(string? name)
