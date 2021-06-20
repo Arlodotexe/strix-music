@@ -1,17 +1,14 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using OwlCore.Extensions;
-using OwlCore.MemberInterception;
-using OwlCore.Remoting.Attributes;
-using OwlCore.Remoting.EventArgs;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Extensions;
+using OwlCore.Remoting.Attributes;
+using OwlCore.Remoting.EventArgs;
+using OwlCore.Remoting.Transfer;
 
 namespace OwlCore.Remoting
 {
@@ -20,102 +17,200 @@ namespace OwlCore.Remoting
     /// </summary>
     public class MemberRemote : IDisposable
     {
-        private Type _type;
-        private object _instance;
-        private string _id;
-        private readonly RemotingMode _mode;
+        private static IRemoteMessageHandler? _defaultRemoteMessageHandler;
 
-        private IEnumerable<MethodInfo> _methods;
-        private IEnumerable<EventInfo> _events;
-        private IEnumerable<FieldInfo> _fields;
-        private IEnumerable<PropertyInfo> _properties;
+        /// <summary>
+        /// Set the default message handler to use for all instances of <see cref="MemberRemote"/>, unless given an overload.
+        /// </summary>
+        /// <param name="messageHandler"></param>
+        public static void SetDefaultMessageHandler(IRemoteMessageHandler messageHandler) => _defaultRemoteMessageHandler = messageHandler;
 
         /// <summary>
         /// Creates a new instance of <see cref="MemberRemote"/>.
         /// </summary>
         /// <param name="classInstance">The instance to remote.</param>
         /// <param name="id">A unique identifier for this instance, consistent between hosts and clients.</param>
-        /// <param name="mode"></param>
-        public static MemberRemote Register(object classInstance, string id, RemotingMode mode)
+        /// <param name="messageHandler">The message handler to use when communicating changes.</param>
+        public MemberRemote(object classInstance, string id, IRemoteMessageHandler? messageHandler = null)
         {
-            return new MemberRemote(classInstance, id, mode);
+            Type = classInstance.GetType();
+            Instance = classInstance;
+            Id = id;
+
+            MessageHandler = messageHandler ?? _defaultRemoteMessageHandler ?? ThrowHelper.ThrowArgumentNullException<IRemoteMessageHandler>($"No {nameof(messageHandler)} was specified and no default handler was set.");
+
+            var members = Type.GetMembers();
+
+            Events = members.Where(x => x.MemberType == MemberTypes.Event).Cast<EventInfo>(); // TODO: Intercepts
+            Fields = members.Where(x => x.MemberType == MemberTypes.Field).Cast<FieldInfo>(); // TODO: Intercepts
+            Properties = members.Where(x => x.MemberType == MemberTypes.Property).Cast<PropertyInfo>(); // TODO: Intercepts
+            Methods = members.Where(x => x.MemberType == MemberTypes.Method).Cast<MethodInfo>();
+
+            AttachEvents();
         }
 
-        private MemberRemote(object classInstance, string id, RemotingMode mode)
+        private void AttachEvents()
         {
-            _type = classInstance.GetType();
-            _instance = classInstance;
-            _id = id;
-            _mode = mode;
+            MessageHandler.MessageReceived += MessageHandler_DataReceived;
 
-            var members = _type.GetMembers();
-
-            _events = members.Where(x => x.MemberType == MemberTypes.Event).Cast<EventInfo>(); // TODO: Intercepts
-            _fields = members.Where(x => x.MemberType == MemberTypes.Field).Cast<FieldInfo>(); // TODO: Intercepts
-            _properties = members.Where(x => x.MemberType == MemberTypes.Property).Cast<PropertyInfo>(); // TODO: Intercepts
-            _methods = members.Where(x => x.MemberType == MemberTypes.Method).Cast<MethodInfo>();
-
-            foreach (var method in _methods)
-            {
-                var attr = method.GetCustomAttribute<RemoteMethod_v1Attribute>();
-                if (attr is null)
-                    return;
-
-                attr.Entered += OnMethodEntered;
-            }
+            RemoteMethodAttribute.Entered += OnMethodEntered;
         }
 
-        private void OnMethodEntered(object sender, MethodEnteredEventArgs e)
+        private void DetachEvents()
         {
-            var attribute = (RemoteMethod_v1Attribute)sender;
+            MessageHandler.MessageReceived -= MessageHandler_DataReceived;
 
-            if (_mode == RemotingMode.None || attribute.Direction == RemotingDirection.None)
+            RemoteMethodAttribute.Entered -= OnMethodEntered;
+        }
+
+        private async void MessageHandler_DataReceived(object sender, byte[] e)
+        {
+            var message = await MessageHandler.MessageConverter.DeserializeAsync(e);
+
+            if (message.MemberInstanceId != Id)
                 return;
 
-            var isValidHostConfig = _mode == RemotingMode.Host && attribute.Direction == (RemotingDirection.InboundHost | RemotingDirection.OutboundHost);
-            var isValidClientConfig = _mode == RemotingMode.Client && attribute.Direction == (RemotingDirection.InboundClient | RemotingDirection.OutboundClient);
-
-            // emit the data
-            if (isValidClientConfig || isValidHostConfig)
+            if (message is RemoteMethodCallMessage methodCallMsg)
             {
-                //_someDataTransferService.SendAsync(_id, methodInfo.Name, parameters);
+                var methodInfo = Methods.First(x => x.ToString() == message.TargetName);
+
+                if (!IsValidRemotingDirection(methodInfo, true))
+                    return;
+
+                var parameterValues = new List<object?>();
+
+                foreach (var param in methodCallMsg.Parameters)
+                {
+                    var type = Type.GetType(param.Key, true);
+                    var castValue = Convert.ChangeType(param.Value, type);
+
+                    parameterValues.Add(castValue);
+                }
+
+                methodInfo?.Invoke(Instance, parameterValues.ToArray());
+            }
+            else
+            {
+                ThrowHelper.ThrowArgumentOutOfRangeException();
             }
         }
+
+        private bool IsValidRemotingDirection(MemberInfo memberInfo, bool isReceiving)
+        {
+            var attribute = memberInfo.GetCustomAttribute<RemoteMemberAttribute>();
+            if (attribute is null)
+            {
+                var declaringClassType = memberInfo.DeclaringType;
+                if (declaringClassType.MemberType != MemberTypes.TypeInfo)
+                    return false;
+
+                attribute = declaringClassType.GetCustomAttribute<RemoteMemberAttribute>();
+
+                if (attribute is null)
+                    return false;
+            }
+
+            var isHost = Mode.HasFlag(RemotingMode.Host);
+            var isClient = Mode.HasFlag(RemotingMode.Client);
+            
+            var targetOutbound = (attribute.Direction.HasFlag(RemotingDirection.OutboundClient) && isClient) || (attribute.Direction.HasFlag(RemotingDirection.OutboundHost) && isHost);
+            var targetInbound = (attribute.Direction.HasFlag(RemotingDirection.InboundClient) && isClient) || (attribute.Direction.HasFlag(RemotingDirection.InboundHost) && isHost);
+
+            return (!isReceiving && targetInbound) || (isReceiving && targetOutbound);
+        }
+
+        private async void OnMethodEntered(object sender, MethodEnteredEventArgs e)
+        {
+            if (e.Instance != Instance)
+                return;
+
+            await MessageHandler.InitAsync();
+
+            if (!IsValidRemotingDirection(e.MethodBase, false))
+                return;
+
+            // emit the data
+            var parameterInfo = e.MethodBase.GetParameters();
+            var paramData = new Dictionary<string, object?>();
+
+            for (int i = 0; i < parameterInfo.Length; i++)
+            {
+                ParameterInfo? parameter = parameterInfo[i];
+
+                // TODO: Generic types.
+                paramData.Add(parameter.ParameterType.AssemblyQualifiedName, e.Values[i]);
+            }
+
+            var remoteMessage = new RemoteMethodCallMessage(Id, e.MethodBase.ToString(), paramData);
+            var data = await MessageHandler.MessageConverter.SerializeAsync(remoteMessage);
+
+            await MessageHandler.SendMessageAsync(data);
+        }
+
+        /// <inheritdoc cref="RemotingMode" />
+        public RemotingMode Mode => MessageHandler.Mode;
+
+        /// <summary>
+        /// The <see cref="IRemoteMessageHandler"/> used by this <see cref="MemberRemote"/> instance to transfer member states.
+        /// </summary>
+        public IRemoteMessageHandler MessageHandler { get; set; }
+
+        /// <summary>
+        /// A unique identifier for this instance, consistent between hosts and clients.
+        /// </summary>
+        public string Id { get; }
+
+        internal Type Type { get; }
+
+        internal object Instance { get; }
+
+        internal IEnumerable<MethodInfo> Methods { get; }
+
+        internal IEnumerable<EventInfo> Events { get; }
+
+        internal IEnumerable<FieldInfo> Fields { get; }
+
+        internal IEnumerable<PropertyInfo> Properties { get; }
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            throw new NotImplementedException();
+            DetachEvents();
         }
     }
 
+    [RemoteMember(RemotingDirection.Inbound | RemotingDirection.OutboundClient)]
     public class Test
     {
+        private MemberRemote _memberRemote;
+
         public Test()
         {
-            MemberRemote.Register(this, "myId", RemotingMode.Full);
-            Method();
-            MethodAsync();
-            OtherMethodAsync();
+            _memberRemote = new MemberRemote(this, "myId");
         }
 
-        [RemoteMethod_v1(RemotingDirection.Bidirectional)]
-        public void Method()
+        [RemoteMethod]
+        public void Log()
         {
-            System.Diagnostics.Debug.WriteLine("Method");
+            Console.WriteLine("Method");
         }
 
-        [RemoteMethod_v1(RemotingDirection.Outbound | RemotingDirection.InboundClient)]
-        public async Task MethodAsync()
+        [RemoteMember(RemotingDirection.HostToClient), RemoteMethod]
+        public async Task<string> MethodAsync(int number, Test? test = null, ICollection<int>? collection = null)
         {
-            await Task.CompletedTask;
-            System.Diagnostics.Debug.WriteLine("MethodAsync");
+            var rpc = new RemoteMethodProxy<string>(nameof(MethodAsync), _memberRemote);
+            if (_memberRemote.Mode == RemotingMode.Client)
+                return await rpc.ReceiveResult();
+
+            // Actual code
+
+            return await rpc.PublishResult("MethodResultValue");
         }
 
-        [RemoteMethod_v1(RemotingDirection.Outbound)]
-        public Task OtherMethodAsync()
+        [RemoteMember(RemotingDirection.ClientToHost), RemoteMethod]
+        public Task OtherMethodAsync(string logMessage)
         {
-            System.Diagnostics.Debug.WriteLine("OtherAsync");
+            Console.WriteLine(logMessage);
 
             return Task.CompletedTask;
         }

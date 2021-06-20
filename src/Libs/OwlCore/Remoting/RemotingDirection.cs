@@ -44,6 +44,16 @@ namespace OwlCore.Remoting
         Outbound = OutboundHost | OutboundClient,
 
         /// <summary>
+        /// Data is only emitted from the host to the client.
+        /// </summary>
+        HostToClient = InboundClient | OutboundHost,
+
+        /// <summary>
+        /// Data is only emitted from the client to the host.
+        /// </summary>
+        ClientToHost = OutboundClient | InboundHost,
+
+        /// <summary>
         /// The target emits and receives changes when the node is in either <see cref="RemotingMode.Client"/> or <see cref="RemotingMode.Host"/> mode.
         /// </summary>
         Bidirectional = Inbound | Outbound,
