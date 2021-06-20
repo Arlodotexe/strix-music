@@ -868,7 +868,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync()
         {
-            return _playbackHandler.PlayAsync((ITrackCollectionViewModel)this, this);
+            return _playbackHandler.PlayAsync((ITrackCollectionViewModel) this, this);
         }
 
         /// <inheritdoc />
@@ -1039,7 +1039,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(playlistItem, nameof(playlistItem));
 
-            return _playbackHandler.PlayAsync((ITrack)playlistItem, this, this);
+            throw new NotImplementedException();
         }
 
         private Task PlayPlayableCollectionGroupInternalAsync(IPlayableCollectionGroup? collectionGroup)
