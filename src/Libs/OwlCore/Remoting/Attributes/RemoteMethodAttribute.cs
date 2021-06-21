@@ -11,7 +11,7 @@ namespace OwlCore.Remoting.Attributes
     /// Mark a method with this attribute to opt into remote method changes.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class RemoteMethodAttribute : Attribute, IMethodInterceptor 
+    public class RemoteMethodAttribute : Attribute, IMethodInterceptor
     {
         /// <inheritdoc/>
         public void OnEnter(Type declaringType, object instance, MethodBase methodbase, object[] values)

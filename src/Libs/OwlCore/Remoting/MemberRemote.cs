@@ -179,8 +179,11 @@ namespace OwlCore.Remoting
         }
     }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+
     [RemoteMember(RemotingDirection.Inbound | RemotingDirection.OutboundClient)]
-    public class Test
+    public class Test : IDisposable
     {
         private MemberRemote _memberRemote;
 
@@ -198,21 +201,26 @@ namespace OwlCore.Remoting
         [RemoteMember(RemotingDirection.HostToClient), RemoteMethod]
         public async Task<string> MethodAsync(int number, Test? test = null, ICollection<int>? collection = null)
         {
-            var rpc = new RemoteMethodProxy<string>(nameof(MethodAsync), _memberRemote);
+            var rpc = new RemoteMethodProxy<string>(_memberRemote);
             if (_memberRemote.Mode == RemotingMode.Client)
                 return await rpc.ReceiveResult();
 
-            // Actual code
+            // Do something here
 
             return await rpc.PublishResult("MethodResultValue");
         }
 
         [RemoteMember(RemotingDirection.ClientToHost), RemoteMethod]
-        public Task OtherMethodAsync(string logMessage)
+        public Task LogAsync(string logMessage)
         {
             Console.WriteLine(logMessage);
 
             return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            _memberRemote.Dispose();
         }
     }
 }

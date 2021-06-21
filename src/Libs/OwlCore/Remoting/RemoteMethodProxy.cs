@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace OwlCore.Remoting
@@ -19,16 +20,16 @@ namespace OwlCore.Remoting
         /// <summary>
         /// Creates a new instance of <see cref="RemoteMethodProxy{TResult}"/>.
         /// </summary>
-        /// <param name="methodName">The name of the method being modified.</param>
         /// <param name="memberRemote">The <see cref="MemberRemote"/> that handles the instance the relevant method is a member of.</param>
-        public RemoteMethodProxy(string methodName, MemberRemote memberRemote)
+        /// <param name="callerMemberName">The name of the method being modified.</param>
+        public RemoteMethodProxy(MemberRemote memberRemote [CallerMemberName] string callerMemberName = "")
         {
             // TODO: Throw if more than 2 nodes are present. Cannot designate which node to get data from in this scenario.
             _receiveResCompletionSource = new TaskCompletionSource<TResult>();
-            _methodName = methodName;
+            _methodName = callerMemberName;
             _memberRemote = memberRemote;
 
-            Id = $"{memberRemote.Id}.MethodCall.{methodName}.{Guid.NewGuid()}";
+            Id = $"{memberRemote.Id}.MethodCall.{callerMemberName}.{Guid.NewGuid()}";
 
             AttachEvents();
         }
