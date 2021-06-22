@@ -12,20 +12,20 @@ namespace OwlCore.Remoting.Transfer
         /// Creates a new instance of <see cref="RemoteMethodCallMessage"/>.
         /// </summary>
         /// <param name="memberInstanceId">A unique identifier for this instance, consistent between hosts and clients.</param>
-        /// <param name="methodName">The name of the method being invoked.</param>
+        /// <param name="targetMemberSignature">The signature of the method being invoked.</param>
         /// <param name="parameters">The parameters to pass to the remote method, if any.</param>
-        public RemoteMethodCallMessage(string memberInstanceId, string methodName, Dictionary<string, object?> parameters)
+        public RemoteMethodCallMessage(string memberInstanceId, string targetMemberSignature, Dictionary<string, object?> parameters)
         {
-            MemberInstanceId = memberInstanceId;
-            TargetName = methodName;
+            MemberRemoteId = memberInstanceId;
+            TargetMemberSignature = targetMemberSignature;
             Parameters = parameters;
         }
 
         /// <inheritdoc />
-        public string MemberInstanceId { get; set; }
+        public string MemberRemoteId { get; set; }
 
         /// <inheritdoc/>
-        public string TargetName { get; set; }
+        public string TargetMemberSignature { get; set; }
 
         /// <inheritdoc />
         public RemotingAction Action { get; } = RemotingAction.MethodCall;

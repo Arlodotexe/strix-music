@@ -12,15 +12,15 @@
         /// <param name="targetName">The name of the target member being changed or invoked.</param>
         public RemoteMemberMessageBase(string memberInstanceId, string targetName)
         {
-            MemberInstanceId = memberInstanceId;
-            TargetName = targetName;
+            MemberRemoteId = memberInstanceId;
+            TargetMemberSignature = targetName;
         }
 
         /// <inheritdoc/>
-        public string MemberInstanceId { get; set; }
+        public string MemberRemoteId { get; set; }
 
         /// <inheritdoc/>
-        public string TargetName { get; set; }
+        public string TargetMemberSignature { get; set; }
 
         /// <inheritdoc/>
         public RemotingAction Action { get; set; }

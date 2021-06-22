@@ -25,7 +25,7 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
                 _ => ThrowHelper.ThrowArgumentOutOfRangeException<IRemoteMemberMessage>(),
             };
 
-            result.TargetName = result.TargetName.Replace("TARGETNAME_", "");
+            result.TargetMemberSignature = result.TargetMemberSignature.Replace("TARGETNAME_", "");
 
             return Task.FromResult(result);
         }
@@ -34,12 +34,12 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
         public Task<byte[]> SerializeAsync(IRemoteMemberMessage message)
         {
             // Newtonsoft won't serialize a string containing a method signature.
-            message.TargetName = $"TARGETNAME_{message.TargetName}";
+            message.TargetMemberSignature = $"TARGETNAME_{message.TargetMemberSignature}";
 
             var jsonStr = JsonConvert.SerializeObject(message);
             var bytes = Encoding.UTF8.GetBytes(jsonStr);
 
-            message.TargetName = message.TargetName.Replace("TARGETNAME_", "");
+            message.TargetMemberSignature = message.TargetMemberSignature.Replace("TARGETNAME_", "");
             return Task.FromResult(bytes);
         }
     }

@@ -13,16 +13,16 @@
         /// <param name="result"></param>
         public RemoteMethodProxyMessage(string memberInstanceId, string targetName, object? result)
         {
-            MemberInstanceId = memberInstanceId;
-            TargetName = targetName;
+            MemberRemoteId = memberInstanceId;
+            TargetMemberSignature = targetName;
             Result = result;
         }
 
         /// <inheritdoc/>
-        public string MemberInstanceId { get; set; }
+        public string MemberRemoteId { get; set; }
 
         /// <inheritdoc/>
-        public string TargetName { get; set; }
+        public string TargetMemberSignature { get; set; }
 
         /// <inheritdoc/>
         public RemotingAction Action { get; set; }

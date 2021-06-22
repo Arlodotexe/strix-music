@@ -15,13 +15,12 @@
         /// <summary>
         /// A unique identifier for this instance, consistent between hosts and clients.
         /// </summary>
-        public string MemberInstanceId { get; set; }
+        public string MemberRemoteId { get; set; }
 
         /// <summary>
-        /// The name of the target member being changed or invoked.
+        /// The signature of the target member being changed or invoked.
         /// </summary>
-        // TODO: More unique identifier for members that are consistent between app sessions.
-        public string TargetName { get; set; }
+        public string TargetMemberSignature { get; set; }
 
         /// <inheritdoc cref="Action"/>
         public RemotingAction Action { get; }

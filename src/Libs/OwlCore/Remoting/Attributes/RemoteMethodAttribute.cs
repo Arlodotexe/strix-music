@@ -20,7 +20,8 @@ namespace OwlCore.Remoting.Attributes
             var trace = new StackTrace(true);
             var frames = trace.GetFrames();
 
-            if (frames[3].GetMethod().Name == nameof(MethodBase.Invoke) &&
+            if (frames.Length > 8 &&
+                frames[3].GetMethod().Name == nameof(MethodBase.Invoke) &&
                 frames[8].GetMethod().Name == nameof(MemberRemote.MessageHandler_DataReceived))
                 return;
 

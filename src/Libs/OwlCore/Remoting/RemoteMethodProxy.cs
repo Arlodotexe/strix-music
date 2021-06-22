@@ -42,7 +42,7 @@ namespace OwlCore.Remoting
         private async void MessageHandler_MessageReceived(object sender, byte[] e)
         {
             var message = await _memberRemote.MessageHandler.MessageConverter.DeserializeAsync(e);
-            if (message is null || !(message is RemoteMethodProxyMessage proxyMessage) || proxyMessage.MemberInstanceId != Id)
+            if (message is null || !(message is RemoteMethodProxyMessage proxyMessage) || proxyMessage.MemberRemoteId != Id)
                 return;
 
             _receiveResCompletionSource.TrySetResult((TResult)proxyMessage.Result!);

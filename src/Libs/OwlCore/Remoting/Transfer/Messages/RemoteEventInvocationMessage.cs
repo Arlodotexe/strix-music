@@ -13,18 +13,18 @@
         /// <param name="targetName"></param>
         public RemoteEventInvocationMessage(string memberInstanceId, RemotingAction action, string targetName)
         {
-            MemberInstanceId = memberInstanceId;
+            MemberRemoteId = memberInstanceId;
             Action = action;
-            TargetName = targetName;
+            TargetMemberSignature = targetName;
         }
 
         /// <inheritdoc />
-        public string MemberInstanceId { get; set; }
+        public string MemberRemoteId { get; set; }
 
         /// <inheritdoc />
         public RemotingAction Action { get; set; }
 
         /// <inheritdoc />
-        public string TargetName { get; set; }
+        public string TargetMemberSignature { get; set; }
     }
 }
