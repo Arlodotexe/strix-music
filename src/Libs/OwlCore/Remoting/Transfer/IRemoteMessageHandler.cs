@@ -1,12 +1,11 @@
 ﻿using OwlCore.Provisos;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OwlCore.Remoting.Transfer
 {
     /// <summary>
-    /// Handles sending and receiving of serialized <see cref="IRemoteMemberMessage"/>s.
+    /// Handles sending and receiving of serialized <see cref="IRemoteMessage"/>s.
     /// </summary>
     public interface IRemoteMessageHandler : IAsyncInit
     {

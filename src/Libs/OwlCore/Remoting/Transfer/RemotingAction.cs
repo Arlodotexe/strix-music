@@ -21,14 +21,14 @@
         PropertyChange,
 
         /// <summary>
-        /// Represents an event being raised.
-        /// </summary>
-        EventInvocation,
-
-        /// <summary>
         /// Indicates that the message delegates a <see cref="RemoteMethodProxy{TResult}"/>.
         /// </summary>
         RemoteMethodProxy,
+
+        /// <summary>
+        /// Indicates that an exception was thrown by a node.
+        /// </summary>
+        ExceptionThrown,
 
         /// <summary>
         /// Indicates that the message contains a custom remoting action. See <see cref="IRemoteMemberMessage.CustomActionName"/>.

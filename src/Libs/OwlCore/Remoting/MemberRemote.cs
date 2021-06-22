@@ -51,7 +51,10 @@ namespace OwlCore.Remoting
             MessageHandler.MessageReceived += MessageHandler_DataReceived;
 
             RemoteMethodAttribute.Entered += OnMethodEntered;
+            RemoteMethodAttribute.ExceptionRaised += OnMethodExceptionRaised;
+
             RemotePropertyAttribute.SetEntered += OnPropertySetEntered;
+            RemotePropertyAttribute.ExceptionRaised += OnPropertySetExceptionRaised;
         }
 
         private void DetachEvents()
@@ -66,7 +69,7 @@ namespace OwlCore.Remoting
         {
             var message = await MessageHandler.MessageConverter.DeserializeAsync(e);
 
-            if (message.MemberRemoteId != Id)
+            if (message is IRemoteMemberMessage memberMsg && memberMsg.MemberRemoteId != Id)
                 return;
 
             if (message is RemoteMethodCallMessage methodCallMsg)
@@ -89,6 +92,16 @@ namespace OwlCore.Remoting
             var remoteMessage = new RemoteMethodCallMessage(Id, memberSignature, paramData);
 
             await EmitRemotingMessageToHandler(remoteMessage);
+        }
+
+        private void OnPropertySetExceptionRaised(object sender, Exception e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnMethodExceptionRaised(object sender, Exception e)
+        {
+            throw new NotImplementedException();
         }
 
         private async void OnPropertySetEntered(object sender, PropertySetEnteredEventArgs e)

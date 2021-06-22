@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace OwlCore.Remoting.Transfer
 {
     /// <summary>
-    /// Prepares the data in a <see cref="IRemoteMemberMessage"/> for generic data transfer.
+    /// Prepares the data in a <see cref="IRemoteMessage"/> for generic data transfer.
     /// </summary>
     /// <remarks>
     /// Several default implementations are given in the <see cref="MessageConverters"/> namespace.
@@ -20,13 +20,13 @@ namespace OwlCore.Remoting.Transfer
         /// </summary>
         /// <param name="message">The message being sent.</param>
         /// <returns></returns>
-        public Task<byte[]> SerializeAsync(IRemoteMemberMessage message);
+        public Task<byte[]> SerializeAsync(IRemoteMessage message);
 
         /// <summary>
-        /// Converts the given byte array back to a valid <see cref="IRemoteMemberMessage"/>.
+        /// Converts the given byte array back to a valid <see cref="IRemoteMessage"/>.
         /// </summary>
         /// <param name="bytes">The byte array to deserialize.</param>
         /// <returns></returns>
-        public Task<IRemoteMemberMessage> DeserializeAsync(byte[] bytes);
+        public Task<IRemoteMessage> DeserializeAsync(byte[] bytes);
     }
 }

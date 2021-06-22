@@ -7,15 +7,15 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
     public class MessagePackRemoteMessageConverter : IRemoteMessageConverter
     {
         /// <inheritdoc/>
-        public Task<IRemoteMemberMessage> DeserializeAsync(byte[] bytes)
+        public Task<IRemoteMessage> DeserializeAsync(byte[] bytes)
         {
-            var data = MessagePackSerializer.Deserialize<IRemoteMemberMessage>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            var data = MessagePackSerializer.Deserialize<IRemoteMessage>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
             return Task.FromResult(data);
         }
 
         /// <inheritdoc/>
-        public Task<byte[]> SerializeAsync(IRemoteMemberMessage message)
+        public Task<byte[]> SerializeAsync(IRemoteMessage message)
         {
             var data = MessagePackSerializer.Serialize(message, MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
