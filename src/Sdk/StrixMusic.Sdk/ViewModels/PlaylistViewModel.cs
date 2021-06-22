@@ -366,7 +366,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PauseTrackCollectionAsync() => _playlist.PauseTrackCollectionAsync();
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync() => _playlist.PlayTrackCollectionAsync();
+        public Task PlayTrackCollectionAsync()
+        {
+            return _playbackHandler.PlayAsync(this, this);
+        }
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
