@@ -22,7 +22,7 @@ namespace OwlCore.Remoting
         /// </summary>
         /// <param name="memberRemote">The <see cref="MemberRemote"/> that handles the instance the relevant method is a member of.</param>
         /// <param name="callerMemberName">The name of the method being modified.</param>
-        public RemoteMethodProxy(MemberRemote memberRemote [CallerMemberName] string callerMemberName = "")
+        public RemoteMethodProxy(MemberRemote memberRemote, [CallerMemberName] string callerMemberName = "")
         {
             // TODO: Throw if more than 2 nodes are present. Cannot designate which node to get data from in this scenario.
             _receiveResCompletionSource = new TaskCompletionSource<TResult>();
