@@ -24,5 +24,8 @@
 
         /// <inheritdoc/>
         public RemotingAction Action { get; set; }
+
+        /// <inheritdoc/>
+        public string? CustomActionName { get; set; }
     }
 }

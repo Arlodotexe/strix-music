@@ -38,5 +38,8 @@
         /// The new value being set to the backing field.
         /// </summary>
         public object? NewValue { get; set; }
+
+        /// <inheritdoc/>
+        public string? CustomActionName { get; set; }
     }
 }

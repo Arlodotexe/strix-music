@@ -29,5 +29,10 @@
         /// Indicates that the message delegates a <see cref="RemoteMethodProxy{TResult}"/>.
         /// </summary>
         RemoteMethodProxy,
+
+        /// <summary>
+        /// Indicates that the message contains a custom remoting action. See <see cref="IRemoteMemberMessage.CustomActionName"/>.
+        /// </summary>
+        Custom,
     }
 }

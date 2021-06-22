@@ -28,8 +28,11 @@
         public RemotingAction Action { get; set; }
 
         /// <summary>
-        /// The result value
+        /// The result value.
         /// </summary>
         public object? Result { get; set; }
+
+        /// <inheritdoc/>
+        public string? CustomActionName { get; set; }
     }
 }

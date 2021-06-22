@@ -33,7 +33,9 @@ namespace OwlCore.Remoting.Transfer
         /// <summary>
         /// The arguments being passed to the remotely called method. Key is the <see cref="Type.AssemblyQualifiedName"/>, value is the data.
         /// </summary>
-        // TODO: Handle generic types. AssemblyQualifiedName doesn't do this.
         public Dictionary<string, object?> Parameters { get; set; }
+
+        /// <inheritdoc/>
+        public string? CustomActionName { get; set; }
     }
 }

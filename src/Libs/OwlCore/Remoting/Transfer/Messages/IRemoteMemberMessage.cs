@@ -5,13 +5,6 @@
     /// </summary>
     public interface IRemoteMemberMessage
     {
-        // What if the IDs are unknown until they're created?
-        // original creator decides ID. So the ID must be sent as part of an "instance registration".
-        // Instance reg would mean actually creating the instances on the receiver side to match sender
-        // This should be up to the app's method call, which can also be remotely executed with params if needed.
-        // Ultimately it's up to the implementor to be smart about how they use it.
-        // Verdict: Not our problem
-
         /// <summary>
         /// A unique identifier for this instance, consistent between hosts and clients.
         /// </summary>
@@ -24,5 +17,13 @@
 
         /// <inheritdoc cref="Action"/>
         public RemotingAction Action { get; }
+
+        /// <summary>
+        /// A custom remoting action for custom <see cref="IRemoteMemberMessage"/>s not supplied by the library.
+        /// </summary>
+        /// <remarks>
+        /// Use this to assist in de/serializing any custom <see cref="IRemoteMemberMessage"/>s you may be using.
+        /// </remarks>
+        public string? CustomActionName { get; set; }
     }
 }
