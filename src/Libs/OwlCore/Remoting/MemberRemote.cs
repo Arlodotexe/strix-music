@@ -12,6 +12,8 @@ using OwlCore.Remoting.Transfer;
 
 namespace OwlCore.Remoting
 {
+    public delegate void Callback(params dynamic[] parameters);
+
     /// <summary>
     /// Automatically sync events, properties, method calls and fields remotely between two object instances, even if the code runs on another machine.
     /// </summary>
@@ -39,9 +41,8 @@ namespace OwlCore.Remoting
 
             MessageHandler = messageHandler ?? _defaultRemoteMessageHandler ?? ThrowHelper.ThrowArgumentNullException<IRemoteMessageHandler>($"No {nameof(messageHandler)} was specified and no default handler was set.");
 
-            var members = Type.GetMembers();
+            var members = Type.GetMembers(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-            Events = members.Where(x => x.MemberType == MemberTypes.Event).Cast<EventInfo>(); // TODO: Intercepts
             Fields = members.Where(x => x.MemberType == MemberTypes.Field).Cast<FieldInfo>(); // TODO: Intercepts
             Properties = members.Where(x => x.MemberType == MemberTypes.Property).Cast<PropertyInfo>();
             Methods = members.Where(x => x.MemberType == MemberTypes.Method).Cast<MethodInfo>();
@@ -61,7 +62,7 @@ namespace OwlCore.Remoting
         {
             MessageHandler.MessageReceived -= MessageHandler_DataReceived;
 
-            RemoteMethodAttribute.Entered -= OnMethodEntered;
+            RemoteMethodAttribute.Entered += OnMethodEntered;
             RemotePropertyAttribute.SetEntered -= OnPropertySetEntered;
         }
 
@@ -128,11 +129,9 @@ namespace OwlCore.Remoting
 
         internal IEnumerable<MethodInfo> Methods { get; }
 
-        internal IEnumerable<EventInfo> Events { get; }
+        internal IEnumerable<PropertyInfo> Properties { get; }
 
         internal IEnumerable<FieldInfo> Fields { get; }
-
-        internal IEnumerable<PropertyInfo> Properties { get; }
 
         private async Task EmitRemotingMessageToHandler(IRemoteMemberMessage message)
         {
@@ -237,14 +236,31 @@ namespace OwlCore.Remoting
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 
+    public delegate void FancyEventHandler();
+
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public class Test : IDisposable
     {
         private MemberRemote _memberRemote;
+        private int _count = 0;
 
         public Test()
         {
             _memberRemote = new MemberRemote(this, "myId");
+            EasyRaiseMe += Test_EasyRaiseMe;
+            RaiseMe += Test_RaiseMe;
+        }
+
+        [RemoteMethod]
+        private void Test_RaiseMe(object sender, string e)
+        {
+            throw new NotImplementedException();
+        }
+
+        [RemoteMethod]
+        private void Test_EasyRaiseMe(object sender, System.EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         [RemoteMethod]
@@ -253,7 +269,11 @@ namespace OwlCore.Remoting
             Console.WriteLine("Method");
         }
 
-        private int _count = 0;
+        event EventHandler? EasyRaiseMe;
+
+        event EventHandler<string>? RaiseMe;
+
+        event FancyEventHandler? HardRaiseMe;
 
         [RemoteProperty]
         public int Count
@@ -278,7 +298,8 @@ namespace OwlCore.Remoting
             return await rpc.PublishResult("MethodResultValue");
         }
 
-        [RemoteOptions(RemotingDirection.Bidirectional), RemoteMethod]
+        [RemoteOptions(RemotingDirection.Bidirectional)]
+        [RemoteMethod]
         public Task LogAsync(string logMessage)
         {
             Console.WriteLine(logMessage);
