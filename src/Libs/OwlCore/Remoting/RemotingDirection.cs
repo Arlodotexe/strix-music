@@ -9,7 +9,7 @@ namespace OwlCore.Remoting
     public enum RemotingDirection : byte
     {
         /// <summary>
-        /// No changes are sent or received. Remoting is effectively disabled for the target.
+        /// No changes are sent or received. Remoting is disabled for the target.
         /// </summary>
         None = 0,
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OwlCore.Remoting.Attributes;
+using System;
 
 namespace OwlCore.Remoting
 {
@@ -9,7 +10,7 @@ namespace OwlCore.Remoting
     public enum RemotingMode
     {
         /// <summary>
-        /// This node acts as neither client nor host. Remoting is effectively disabled.
+        /// This node acts as neither client nor host. Remoting is disabled.
         /// </summary>
         None = 0,
 
@@ -24,7 +25,7 @@ namespace OwlCore.Remoting
         Host = 2,
 
         /// <summary>
-        /// This node acts as both <see cref="Client"/> and <see cref="Host"/>.
+        /// This node acts as both <see cref="Client"/> and <see cref="Host"/>. Effectively overrides all <see cref="RemotingDirection"/> to be <see cref="RemotingDirection.Bidirectional"/>.
         /// </summary>
         Full = Client | Host,
     }

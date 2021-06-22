@@ -26,7 +26,7 @@
         EventInvocation,
 
         /// <summary>
-        /// Indicates that the message delegates a <see cref="RemoteMethodProxy"/>
+        /// Indicates that the message delegates a <see cref="RemoteMethodProxy{TResult}"/>.
         /// </summary>
         RemoteMethodProxy,
     }

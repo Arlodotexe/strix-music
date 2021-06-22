@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -12,8 +11,6 @@ using OwlCore.Remoting.Transfer;
 
 namespace OwlCore.Remoting
 {
-    public delegate void Callback(params dynamic[] parameters);
-
     /// <summary>
     /// Automatically sync events, properties, method calls and fields remotely between two object instances, even if the code runs on another machine.
     /// </summary>
@@ -43,7 +40,6 @@ namespace OwlCore.Remoting
 
             var members = Type.GetMembers(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-            Fields = members.Where(x => x.MemberType == MemberTypes.Field).Cast<FieldInfo>(); // TODO: Intercepts
             Properties = members.Where(x => x.MemberType == MemberTypes.Property).Cast<PropertyInfo>();
             Methods = members.Where(x => x.MemberType == MemberTypes.Method).Cast<MethodInfo>();
 
@@ -110,6 +106,11 @@ namespace OwlCore.Remoting
             await EmitRemotingMessageToHandler(remoteMessage);
         }
 
+        /// <summary>
+        /// A unique identifier for this instance, consistent between hosts and clients.
+        /// </summary>
+        public string Id { get; }
+
         /// <inheritdoc cref="RemotingMode" />
         public RemotingMode Mode => MessageHandler.Mode;
 
@@ -117,11 +118,6 @@ namespace OwlCore.Remoting
         /// The <see cref="IRemoteMessageHandler"/> used by this <see cref="MemberRemote"/> instance to transfer member states.
         /// </summary>
         public IRemoteMessageHandler MessageHandler { get; set; }
-
-        /// <summary>
-        /// A unique identifier for this instance, consistent between hosts and clients.
-        /// </summary>
-        public string Id { get; }
 
         internal Type Type { get; }
 
@@ -131,9 +127,12 @@ namespace OwlCore.Remoting
 
         internal IEnumerable<PropertyInfo> Properties { get; }
 
-        internal IEnumerable<FieldInfo> Fields { get; }
-
-        private async Task EmitRemotingMessageToHandler(IRemoteMemberMessage message)
+        /// <summary>
+        /// Prepares and sends the given <paramref name="message"/> outbound.
+        /// </summary>
+        /// <param name="message">The message</param>
+        /// <returns>This should be used in scenarios where you need to send a custom <see cref="IRemoteMemberMessage"/>, or where you need to force emit a member change remotely without executing the change on the current node.</returns>
+        public async Task EmitRemotingMessageToHandler(IRemoteMemberMessage message)
         {
             await MessageHandler.InitAsync();
 
@@ -213,7 +212,15 @@ namespace OwlCore.Remoting
             return (!isReceiving && targetInbound) || (isReceiving && targetOutbound);
         }
 
-        private static string CreateMemberSignature(MemberInfo memberInfo)
+        /// <summary>
+        /// Creates a member signature that is internally used to identify members in a type when sending/receiving data.
+        /// </summary>
+        /// <param name="memberInfo">The <see cref="MemberInfo"/> to generate a signature for.</param>
+        /// <returns>A unique member signature for the given <see cref="MemberInfo"/>.</returns>
+        /// <remarks>
+        /// Useful in scenarios where you need to construct your own <see cref="IRemoteMemberMessage"/> instance.
+        /// </remarks>
+        public static string CreateMemberSignature(MemberInfo memberInfo)
         {
             if (memberInfo is MethodBase methodBase)
                 return methodBase.ToString();
@@ -223,93 +230,13 @@ namespace OwlCore.Remoting
                 return $"{propertyInfo.DeclaringType} {propertyInfo.PropertyType} {propertyInfo.Name}";
             }
 
-            throw new ArgumentOutOfRangeException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
         public void Dispose()
         {
             DetachEvents();
-        }
-    }
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-
-    public delegate void FancyEventHandler();
-
-    [RemoteOptions(RemotingDirection.Bidirectional)]
-    public class Test : IDisposable
-    {
-        private MemberRemote _memberRemote;
-        private int _count = 0;
-
-        public Test()
-        {
-            _memberRemote = new MemberRemote(this, "myId");
-            EasyRaiseMe += Test_EasyRaiseMe;
-            RaiseMe += Test_RaiseMe;
-        }
-
-        [RemoteMethod]
-        private void Test_RaiseMe(object sender, string e)
-        {
-            throw new NotImplementedException();
-        }
-
-        [RemoteMethod]
-        private void Test_EasyRaiseMe(object sender, System.EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        [RemoteMethod]
-        public void Log()
-        {
-            Console.WriteLine("Method");
-        }
-
-        event EventHandler? EasyRaiseMe;
-
-        event EventHandler<string>? RaiseMe;
-
-        event FancyEventHandler? HardRaiseMe;
-
-        [RemoteProperty]
-        public int Count
-        {
-            get => _count;
-            set
-            {
-                Console.WriteLine("Cnt: " + value);
-                _count = value;
-            }
-        }
-
-        [RemoteMethod]
-        public async Task<string> MethodAsync(int number, Test? test = null, ICollection<int>? collection = null)
-        {
-            var rpc = new RemoteMethodProxy<string>(_memberRemote);
-            if (_memberRemote.Mode == RemotingMode.Client)
-                return await rpc.ReceiveResult();
-
-            // Do something here
-
-            return await rpc.PublishResult("MethodResultValue");
-        }
-
-        [RemoteOptions(RemotingDirection.Bidirectional)]
-        [RemoteMethod]
-        public Task LogAsync(string logMessage)
-        {
-            Console.WriteLine(logMessage);
-
-            return Task.CompletedTask;
-        }
-
-        public void Dispose()
-        {
-            _memberRemote.Dispose();
         }
     }
 }

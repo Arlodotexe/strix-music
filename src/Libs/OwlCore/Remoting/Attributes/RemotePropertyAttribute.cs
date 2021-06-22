@@ -41,7 +41,7 @@ namespace OwlCore.Remoting.Attributes
         public static event EventHandler<PropertySetEnteredEventArgs>? SetEntered;
 
         /// <summary>
-        /// Raised when the event is finished executing and is about to exit.
+        /// Raised when the property is finished setting and is about to exit.
         /// </summary>
         /// <remarks>
         /// This static needed because the <see cref="IPropertySetterInterceptor"/> weaver removes the attribute from the method in IL, making it innaccessible through normal means.
@@ -50,7 +50,7 @@ namespace OwlCore.Remoting.Attributes
         public static event EventHandler? Exited;
 
         /// <summary>
-        /// Raised when an exception occurs in the method.
+        /// Raised when an exception occurs while setting the property.
         /// </summary>
         /// <remarks>
         /// This static needed because the <see cref="IPropertySetterInterceptor"/> weaver removes the attribute from the method in IL, making it innaccessible through normal means.

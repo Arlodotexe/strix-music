@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace OwlCore.Remoting.Transfer
 {
     /// <summary>
-    /// Handles sending and receiving of remote member change messages.
+    /// Handles sending and receiving of serialized <see cref="IRemoteMemberMessage"/>s.
     /// </summary>
     public interface IRemoteMessageHandler : IAsyncInit
     {
