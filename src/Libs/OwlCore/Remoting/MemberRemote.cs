@@ -30,7 +30,7 @@ namespace OwlCore.Remoting
         /// </summary>
         /// <param name="classInstance">The instance to remote.</param>
         /// <param name="id">A unique identifier for this instance, consistent between hosts and clients.</param>
-        /// <param name="messageHandler">The message handler to use when communicating changes.</param>
+        /// <param name="messageHandler">The message handler to use when communicating changes. If not given, the handler given to <see cref="SetDefaultMessageHandler(IRemoteMessageHandler)"/> will be used instead.</param>
         public MemberRemote(object classInstance, string id, IRemoteMessageHandler? messageHandler = null)
         {
             Type = classInstance.GetType();
@@ -73,38 +73,10 @@ namespace OwlCore.Remoting
                 return;
 
             if (message is RemoteMethodCallMessage methodCallMsg)
-            {
-                var methodInfo = Methods.First(x => CreateMemberSignature(x) == message.TargetMemberSignature);
+                HandleIncomingRemoteMethodCall(methodCallMsg);
 
-                if (!IsValidRemotingDirection(methodInfo, methodInfo.DeclaringType, true))
-                    return;
-
-                var parameterValues = new List<object?>();
-
-                foreach (var param in methodCallMsg.Parameters)
-                {
-                    var type = Type.GetType(param.Key, true);
-                    var castValue = Convert.ChangeType(param.Value, type);
-
-                    parameterValues.Add(castValue);
-                }
-
-                methodInfo?.Invoke(Instance, parameterValues.ToArray());
-            }
-            else if (message is RemotePropertyChangeMessage propertyChangeMsg)
-            {
-                var propertyInfo = Properties.First(x => CreateMemberSignature(x) == message.TargetMemberSignature);
-
-                if (!IsValidRemotingDirection(propertyInfo, propertyInfo.DeclaringType, true))
-                    return;
-
-                var castValue = Convert.ChangeType(propertyChangeMsg.NewValue, propertyInfo.PropertyType);
-                propertyInfo.SetValue(Instance, castValue);
-            }
-            else
-            {
-                ThrowHelper.ThrowArgumentOutOfRangeException();
-            }
+            if (message is RemotePropertyChangeMessage propertyChangeMsg)
+                HandleIncomingRemotePropertyChange(propertyChangeMsg);
         }
 
         private async void OnMethodEntered(object sender, MethodEnteredEventArgs e)
@@ -112,27 +84,14 @@ namespace OwlCore.Remoting
             if (e.Instance != Instance)
                 return;
 
-            await MessageHandler.InitAsync();
-
             if (!IsValidRemotingDirection(e.MethodBase, e.MethodBase.DeclaringType, false))
                 return;
 
-            // emit the data
-            var parameterInfo = e.MethodBase.GetParameters();
-            var paramData = new Dictionary<string, object?>();
+            var paramData = CreateMethodParameterData(e.MethodBase, e.Values);
+            var memberSignature = CreateMemberSignature(e.MethodBase);
+            var remoteMessage = new RemoteMethodCallMessage(Id, memberSignature, paramData);
 
-            for (int i = 0; i < parameterInfo.Length; i++)
-            {
-                ParameterInfo? parameter = parameterInfo[i];
-
-                // TODO: Generic types.
-                paramData.Add(parameter.ParameterType.AssemblyQualifiedName, e.Values[i]);
-            }
-
-            var remoteMessage = new RemoteMethodCallMessage(Id, CreateMemberSignature(e.MethodBase), paramData);
-            var data = await MessageHandler.MessageConverter.SerializeAsync(remoteMessage);
-
-            await MessageHandler.SendMessageAsync(data);
+            await EmitRemotingMessageToHandler(remoteMessage);
         }
 
         private async void OnPropertySetEntered(object sender, PropertySetEnteredEventArgs e)
@@ -140,15 +99,14 @@ namespace OwlCore.Remoting
             if (e.PropertyInterceptionInfo.Instance != Instance)
                 return;
 
-            await MessageHandler.InitAsync();
-
             if (!IsValidRemotingDirection(e.PropertyInterceptionInfo.PropertyType, e.PropertyInterceptionInfo.DeclaringType, false))
                 return;
 
-            var remoteMessage = new RemotePropertyChangeMessage(Id, CreateMemberSignature(e.PropertyInterceptionInfo.ToPropertyInfo()), e.NewValue, e.OldValue);
-            var data = await MessageHandler.MessageConverter.SerializeAsync(remoteMessage);
+            var propertyInfo = e.PropertyInterceptionInfo.ToPropertyInfo();
+            var memberSignature = CreateMemberSignature(propertyInfo);
+            var remoteMessage = new RemotePropertyChangeMessage(Id, memberSignature, e.NewValue, e.OldValue);
 
-            await MessageHandler.SendMessageAsync(data);
+            await EmitRemotingMessageToHandler(remoteMessage);
         }
 
         /// <inheritdoc cref="RemotingMode" />
@@ -176,6 +134,62 @@ namespace OwlCore.Remoting
 
         internal IEnumerable<PropertyInfo> Properties { get; }
 
+        private async Task EmitRemotingMessageToHandler(IRemoteMemberMessage message)
+        {
+            await MessageHandler.InitAsync();
+
+            var data = await MessageHandler.MessageConverter.SerializeAsync(message);
+
+            await MessageHandler.SendMessageAsync(data);
+        }
+
+        private void HandleIncomingRemotePropertyChange(RemotePropertyChangeMessage propertyChangeMessage)
+        {
+            var propertyInfo = Properties.First(x => CreateMemberSignature(x) == propertyChangeMessage.TargetMemberSignature);
+
+            if (!IsValidRemotingDirection(propertyInfo, propertyInfo.DeclaringType, true))
+                return;
+
+            var castValue = Convert.ChangeType(propertyChangeMessage.NewValue, propertyInfo.PropertyType);
+            propertyInfo.SetValue(Instance, castValue);
+        }
+
+        private void HandleIncomingRemoteMethodCall(RemoteMethodCallMessage methodCallMsg)
+        {
+            var methodInfo = Methods.First(x => CreateMemberSignature(x) == methodCallMsg.TargetMemberSignature);
+
+            if (!IsValidRemotingDirection(methodInfo, methodInfo.DeclaringType, true))
+                return;
+
+            var parameterValues = new List<object?>();
+
+            foreach (var param in methodCallMsg.Parameters)
+            {
+                var type = Type.GetType(param.Key, true);
+                var castValue = Convert.ChangeType(param.Value, type);
+
+                parameterValues.Add(castValue);
+            }
+
+            methodInfo?.Invoke(Instance, parameterValues.ToArray());
+        }
+
+        private static Dictionary<string, object?> CreateMethodParameterData(MethodBase method, object?[] parameterValues)
+        {
+            var parameterInfo = method.GetParameters();
+            var paramData = new Dictionary<string, object?>();
+
+            for (int i = 0; i < parameterInfo.Length; i++)
+            {
+                ParameterInfo? parameter = parameterInfo[i];
+
+                // TODO: Generic types.
+                paramData.Add(parameter.ParameterType.AssemblyQualifiedName, parameterValues[i]);
+            }
+
+            return paramData;
+        }
+
         private bool IsValidRemotingDirection(MemberInfo memberInfo, MemberInfo declaringType, bool isReceiving)
         {
             var attribute = memberInfo.GetCustomAttribute<RemoteOptionsAttribute>();
@@ -200,10 +214,10 @@ namespace OwlCore.Remoting
             return (!isReceiving && targetInbound) || (isReceiving && targetOutbound);
         }
 
-        internal static string CreateMemberSignature(MemberInfo memberInfo)
+        private static string CreateMemberSignature(MemberInfo memberInfo)
         {
-            if (memberInfo.MemberType == MemberTypes.Method)
-                return ((MethodBase)memberInfo).ToString();
+            if (memberInfo is MethodBase methodBase)
+                return methodBase.ToString();
 
             if (memberInfo is PropertyInfo propertyInfo)
             {
