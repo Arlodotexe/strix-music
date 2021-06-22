@@ -63,7 +63,7 @@ namespace OwlCore.Remoting
             RemoteMethodAttribute.Entered -= OnMethodEntered;
         }
 
-        private async void MessageHandler_DataReceived(object sender, byte[] e)
+        internal async void MessageHandler_DataReceived(object sender, byte[] e)
         {
             var message = await MessageHandler.MessageConverter.DeserializeAsync(e);
 
@@ -182,7 +182,7 @@ namespace OwlCore.Remoting
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 
-    [RemoteMember(RemotingDirection.Inbound | RemotingDirection.OutboundClient)]
+    [RemoteMember(RemotingDirection.Bidirectional)]
     public class Test : IDisposable
     {
         private MemberRemote _memberRemote;
@@ -210,7 +210,7 @@ namespace OwlCore.Remoting
             return await rpc.PublishResult("MethodResultValue");
         }
 
-        [RemoteMember(RemotingDirection.ClientToHost), RemoteMethod]
+        [RemoteMember(RemotingDirection.Bidirectional), RemoteMethod]
         public Task LogAsync(string logMessage)
         {
             Console.WriteLine(logMessage);

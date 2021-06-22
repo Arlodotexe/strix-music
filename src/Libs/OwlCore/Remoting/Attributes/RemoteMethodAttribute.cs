@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using Cauldron.Interception;
 using OwlCore.Remoting.EventArgs;
@@ -16,6 +17,13 @@ namespace OwlCore.Remoting.Attributes
         /// <inheritdoc/>
         public void OnEnter(Type declaringType, object instance, MethodBase methodbase, object[] values)
         {
+            var trace = new StackTrace(true);
+            var frames = trace.GetFrames();
+
+            if (frames[3].GetMethod().Name == nameof(MethodBase.Invoke) &&
+                frames[8].GetMethod().Name == nameof(MemberRemote.MessageHandler_DataReceived))
+                return;
+
             Entered?.Invoke(this, new MethodEnteredEventArgs(declaringType, instance, methodbase, values));
         }
 
