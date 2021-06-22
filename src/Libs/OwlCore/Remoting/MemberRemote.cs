@@ -21,7 +21,7 @@ namespace OwlCore.Remoting
         /// <summary>
         /// Set the default message handler to use for all instances of <see cref="MemberRemote"/>, unless given an overload.
         /// </summary>
-        /// <param name="messageHandler"></param>
+        /// <param name="messageHandler">The default message handler to use.</param>
         public static void SetDefaultMessageHandler(IRemoteMessageHandler messageHandler) => _defaultRemoteMessageHandler = messageHandler;
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace OwlCore.Remoting
             if (e.Instance != Instance)
                 return;
 
-            if (!IsValidRemotingDirection(e.MethodBase, e.MethodBase.DeclaringType, false))
+            if (!IsValidRemotingDirection(e.MethodBase, false))
                 return;
 
             var paramData = CreateMethodParameterData(e.MethodBase, e.Values);
@@ -96,10 +96,11 @@ namespace OwlCore.Remoting
             if (e.PropertyInterceptionInfo.Instance != Instance)
                 return;
 
-            if (!IsValidRemotingDirection(e.PropertyInterceptionInfo.PropertyType, e.PropertyInterceptionInfo.DeclaringType, false))
+            var propertyInfo = e.PropertyInterceptionInfo.ToPropertyInfo();
+
+            if (!IsValidRemotingDirection(propertyInfo, false))
                 return;
 
-            var propertyInfo = e.PropertyInterceptionInfo.ToPropertyInfo();
             var memberSignature = CreateMemberSignature(propertyInfo);
             var remoteMessage = new RemotePropertyChangeMessage(Id, memberSignature, e.NewValue, e.OldValue);
 
@@ -145,7 +146,7 @@ namespace OwlCore.Remoting
         {
             var propertyInfo = Properties.First(x => CreateMemberSignature(x) == propertyChangeMessage.TargetMemberSignature);
 
-            if (!IsValidRemotingDirection(propertyInfo, propertyInfo.DeclaringType, true))
+            if (!IsValidRemotingDirection(propertyInfo, true))
                 return;
 
             var castValue = Convert.ChangeType(propertyChangeMessage.NewValue, propertyInfo.PropertyType);
@@ -156,7 +157,7 @@ namespace OwlCore.Remoting
         {
             var methodInfo = Methods.First(x => CreateMemberSignature(x) == methodCallMsg.TargetMemberSignature);
 
-            if (!IsValidRemotingDirection(methodInfo, methodInfo.DeclaringType, true))
+            if (!IsValidRemotingDirection(methodInfo, true))
                 return;
 
             var parameterValues = new List<object?>();
@@ -188,12 +189,12 @@ namespace OwlCore.Remoting
             return paramData;
         }
 
-        private bool IsValidRemotingDirection(MemberInfo memberInfo, MemberInfo declaringType, bool isReceiving)
+        private bool IsValidRemotingDirection(MemberInfo memberInfo, bool isReceiving)
         {
             var attribute = memberInfo.GetCustomAttribute<RemoteOptionsAttribute>();
             if (attribute is null)
             {
-                var declaringClassType = declaringType;
+                var declaringClassType = memberInfo.DeclaringType;
                 if (declaringClassType.MemberType != MemberTypes.TypeInfo)
                     return false;
 
