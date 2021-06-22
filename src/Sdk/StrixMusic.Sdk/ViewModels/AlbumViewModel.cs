@@ -426,9 +426,9 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PauseArtistCollectionAsync()
+        public Task PauseArtistCollectionAsync()
         {
-            await _playbackHandler.PauseAsync();
+            return _playbackHandler.PauseAsync();
         }
 
         /// <inheritdoc />
