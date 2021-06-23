@@ -38,4 +38,20 @@ namespace OwlCore.Remoting.Transfer
         /// <inheritdoc/>
         public string? CustomActionName { get; set; }
     }
+
+
+    public class ParameterData
+    {
+        /// <summary>
+        /// The value being passed to the parameter, if any.
+        /// </summary>
+        public object? Value { get; }
+
+        /// <summary>
+        /// The assembly qualified name of the parameter type, if any
+        /// </summary>
+        public string? AssemblyQualifiedName { get; }
+
+
+    }
 }

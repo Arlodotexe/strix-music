@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using Cauldron.Interception;
 using OwlCore.Remoting.EventArgs;
 
@@ -27,6 +29,14 @@ namespace OwlCore.Remoting.Attributes
         /// <inheritdoc/>
         public bool OnSet(PropertyInterceptionInfo propertyInterceptionInfo, object oldValue, object newValue)
         {
+            var trace = new StackTrace(true);
+            var frames = trace.GetFrames();
+
+            if (frames.Length > 8 &&
+                frames[3].GetMethod().Name == nameof(MethodBase.Invoke) &&
+                frames[8].GetMethod().Name == nameof(MemberRemote.MessageHandler_DataReceived))
+                return false;
+
             SetEntered?.Invoke(this, new PropertySetEnteredEventArgs(propertyInterceptionInfo, oldValue, newValue));
             return false;
         }

@@ -24,15 +24,5 @@ namespace OwlCore.Remoting.Transfer
 
         /// <inheritdoc cref="IRemoteMessageConverter"/>
         public IRemoteMessageConverter MessageConverter { get; }
-
-        /// <summary>
-        /// Raised when this node is connected and is read to send and receive member changes.
-        /// </summary>
-        public event EventHandler? OnConnected;
-
-        /// <summary>
-        /// Raised when this node is disconnected and is no longer able to send and receive member changes.
-        /// </summary>
-        public event EventHandler? OnDisconnected;
     }
 }
