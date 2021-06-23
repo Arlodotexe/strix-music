@@ -129,14 +129,24 @@ namespace OwlCore.Remoting
         }
 
         /// <summary>
-        /// Raised when a remote message is received and about to be processed.
+        /// Raised when an inbound remote message is received and about to be processed.
         /// </summary>
         public event EventHandler<RemoteMessageReceivingEventArgs>? MessageReceiving;
 
         /// <summary>
-        /// Raised when a remote message is received and has been processed.
+        /// Raised when an inbound remote message is received and has been processed.
         /// </summary>
         public event EventHandler<IRemoteMessage>? MessageReceived;
+
+        /// <summary>
+        /// Raised when an outbound remote message is about to be sent.
+        /// </summary>
+        public event EventHandler<RemoteMessageSendingEventArgs>? MessageSending;
+
+        /// <summary>
+        /// Raised when an outbound remote message has been sent.
+        /// </summary>
+        public event EventHandler<IRemoteMessage>? MessageSent;
 
         /// <summary>
         /// A unique identifier for this instance, consistent between hosts and clients.
@@ -166,11 +176,19 @@ namespace OwlCore.Remoting
         /// <returns>This should be used in scenarios where you need to send a custom <see cref="IRemoteMessage"/>, or where you need to force emit a member change remotely without executing the change on the current node.</returns>
         public async Task EmitRemotingMessageToHandler(IRemoteMessage message)
         {
+            var eventArgs = new RemoteMessageSendingEventArgs(message);
+            MessageSending?.Invoke(this, eventArgs);
+
+            if (eventArgs.Handled)
+                return;
+
             await MessageHandler.InitAsync();
 
             var data = await MessageHandler.MessageConverter.SerializeAsync(message);
 
             await MessageHandler.SendMessageAsync(data);
+
+            MessageSent?.Invoke(this, message);
         }
 
         private void HandleIncomingRemotePropertyChange(RemotePropertyChangeMessage propertyChangeMessage)

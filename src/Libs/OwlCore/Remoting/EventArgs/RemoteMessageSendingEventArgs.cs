@@ -5,19 +5,19 @@ namespace OwlCore.Remoting.EventArgs
     /// <summary>
     /// <see cref="EventArgs"/> for <see cref="MemberRemote.MessageReceiving"/>.
     /// </summary>
-    public class RemoteMessageReceivingEventArgs : System.EventArgs
+    public class RemoteMessageSendingEventArgs : System.EventArgs
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteMessageReceivingEventArgs"/>.
         /// </summary>
-        /// <param name="message">The message being received.</param>
-        public RemoteMessageReceivingEventArgs(IRemoteMessage message)
+        /// <param name="message">The message being sent.</param>
+        public RemoteMessageSendingEventArgs(IRemoteMessage message)
         {
             Message = message;
         }
 
         /// <summary>
-        /// The message being received.
+        /// The message being sent.
         /// </summary>
         public IRemoteMessage Message { get; }
 
