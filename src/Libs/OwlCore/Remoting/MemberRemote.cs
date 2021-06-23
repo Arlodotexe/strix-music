@@ -51,10 +51,10 @@ namespace OwlCore.Remoting
             MessageHandler.MessageReceived += MessageHandler_DataReceived;
 
             RemoteMethodAttribute.Entered += OnMethodEntered;
-            RemoteMethodAttribute.ExceptionRaised += OnMethodExceptionRaised;
+            RemoteMethodAttribute.ExceptionRaised += OnInterceptExceptionRaised;
 
             RemotePropertyAttribute.SetEntered += OnPropertySetEntered;
-            RemotePropertyAttribute.ExceptionRaised += OnPropertySetExceptionRaised;
+            RemotePropertyAttribute.ExceptionRaised += OnInterceptExceptionRaised;
         }
 
         private void DetachEvents()
@@ -62,10 +62,10 @@ namespace OwlCore.Remoting
             MessageHandler.MessageReceived -= MessageHandler_DataReceived;
 
             RemoteMethodAttribute.Entered -= OnMethodEntered;
-            RemoteMethodAttribute.ExceptionRaised -= OnMethodExceptionRaised;
+            RemoteMethodAttribute.ExceptionRaised -= OnInterceptExceptionRaised;
 
             RemotePropertyAttribute.SetEntered -= OnPropertySetEntered;
-            RemotePropertyAttribute.ExceptionRaised -= OnPropertySetExceptionRaised;
+            RemotePropertyAttribute.ExceptionRaised -= OnInterceptExceptionRaised;
         }
 
         internal async void MessageHandler_DataReceived(object sender, byte[] e)
@@ -105,14 +105,11 @@ namespace OwlCore.Remoting
             await EmitRemotingMessageToHandler(remoteMessage);
         }
 
-        private void OnPropertySetExceptionRaised(object sender, Exception e)
+        private async void OnInterceptExceptionRaised(object sender, Exception e)
         {
-            throw new NotImplementedException();
-        }
+            var exceptionMessage = new RemoteExceptionDataMessage(e);
 
-        private void OnMethodExceptionRaised(object sender, Exception e)
-        {
-            throw new NotImplementedException();
+            await EmitRemotingMessageToHandler(exceptionMessage);
         }
 
         private async void OnPropertySetEntered(object sender, PropertySetEnteredEventArgs e)
@@ -132,12 +129,12 @@ namespace OwlCore.Remoting
         }
 
         /// <summary>
-        /// Raised when a remote message is received and about to be handled.
+        /// Raised when a remote message is received and about to be processed.
         /// </summary>
         public event EventHandler<RemoteMessageReceivingEventArgs>? MessageReceiving;
 
         /// <summary>
-        /// Raised when a remote message is received and has been handled.
+        /// Raised when a remote message is received and has been processed.
         /// </summary>
         public event EventHandler<IRemoteMessage>? MessageReceived;
 
