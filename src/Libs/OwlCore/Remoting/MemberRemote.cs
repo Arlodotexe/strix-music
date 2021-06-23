@@ -61,8 +61,11 @@ namespace OwlCore.Remoting
         {
             MessageHandler.MessageReceived -= MessageHandler_DataReceived;
 
-            RemoteMethodAttribute.Entered += OnMethodEntered;
+            RemoteMethodAttribute.Entered -= OnMethodEntered;
+            RemoteMethodAttribute.ExceptionRaised -= OnMethodExceptionRaised;
+
             RemotePropertyAttribute.SetEntered -= OnPropertySetEntered;
+            RemotePropertyAttribute.ExceptionRaised -= OnPropertySetExceptionRaised;
         }
 
         internal async void MessageHandler_DataReceived(object sender, byte[] e)
@@ -72,11 +75,19 @@ namespace OwlCore.Remoting
             if (message is IRemoteMemberMessage memberMsg && memberMsg.MemberRemoteId != Id)
                 return;
 
+            var receivedArgs = new RemoteMessageReceivingEventArgs(message);
+            MessageReceiving?.Invoke(this, receivedArgs);
+
+            if (receivedArgs.Handled)
+                return;
+
             if (message is RemoteMethodCallMessage methodCallMsg)
                 HandleIncomingRemoteMethodCall(methodCallMsg);
 
             if (message is RemotePropertyChangeMessage propertyChangeMsg)
                 HandleIncomingRemotePropertyChange(propertyChangeMsg);
+
+            MessageReceived?.Invoke(this, message);
         }
 
         private async void OnMethodEntered(object sender, MethodEnteredEventArgs e)
@@ -121,6 +132,16 @@ namespace OwlCore.Remoting
         }
 
         /// <summary>
+        /// Raised when a remote message is received and about to be handled.
+        /// </summary>
+        public event EventHandler<RemoteMessageReceivingEventArgs>? MessageReceiving;
+
+        /// <summary>
+        /// Raised when a remote message is received and has been handled.
+        /// </summary>
+        public event EventHandler<IRemoteMessage>? MessageReceived;
+
+        /// <summary>
         /// A unique identifier for this instance, consistent between hosts and clients.
         /// </summary>
         public string Id { get; }
@@ -145,8 +166,8 @@ namespace OwlCore.Remoting
         /// Prepares and sends the given <paramref name="message"/> outbound.
         /// </summary>
         /// <param name="message">The message</param>
-        /// <returns>This should be used in scenarios where you need to send a custom <see cref="IRemoteMemberMessage"/>, or where you need to force emit a member change remotely without executing the change on the current node.</returns>
-        public async Task EmitRemotingMessageToHandler(IRemoteMemberMessage message)
+        /// <returns>This should be used in scenarios where you need to send a custom <see cref="IRemoteMessage"/>, or where you need to force emit a member change remotely without executing the change on the current node.</returns>
+        public async Task EmitRemotingMessageToHandler(IRemoteMessage message)
         {
             await MessageHandler.InitAsync();
 
