@@ -7,24 +7,26 @@
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Authors>Arlo Godfrey</Authors>
-    <Version>0.0.6</Version>
+    <Author>Arlo Godfrey</Author>
+    <Version>0.0.9</Version>
     <Product>OwlCore</Product>
-    <Description>Have you ever seen an owl do a barrel roll? Me neither.
+    <Description>
+		Have you ever seen an owl do a barrel roll? Me neither.
 
-This project is a constant work in progress. Until a stable release, breaking changes are possible at any time.
+		This project is a constant work in progress. Until a stable release, breaking changes are possible at any time.
 
- - AbstractUI - Abstract away simple UI elements as pure data. Let something else decide how to display it.
- - AbstractStorage - Completely abstract away your storage needs, no matter how you access it.
- - Provisos - IAsyncInit, C# 9-in-8 features. 
- - Debouncer - For when something fires repeatedly. but you only care about when it stops.
- - CompositeHttpClientHandler - Combine multiple HttpClientHandlers together.
- - CachedHttpClientHandler - Cache http requests to disk and return them as needed.
- - RateLimitedHttpClientHandler - Limit the number of requests within a window of time.
- - Countless extension methods. PruneNull, Shuffle, InParallel, ChangeDate, HashMD5Fast, DistinctBy, InsertOrAdd, and more.</Description>
+		- AbstractUI - Abstract away simple UI elements as pure data. Let something else decide how to display it.
+		- AbstractStorage - Completely abstract away your storage needs, no matter how you access it.
+		- OwlCore.Remoting - Painlessly sync member changes in C# with an external source via magic (reflection + IL weaving).
+		- Provisos - IAsyncInit, C# 9-in-8 features.
+		- Debouncer - For when something fires repeatedly. but you only care about when it stops.
+		- CompositeHttpClientHandler - Combine multiple HttpClientHandlers together.
+		- CachedHttpClientHandler - Cache http requests to disk and return them as needed.
+		- RateLimitedHttpClientHandler - Limit the number of requests within a window of time.
+		- Countless extension methods. PruneNull, Shuffle, InParallel, ChangeDate, HashMD5Fast, DistinctBy, InsertOrAdd, and more.</Description>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
-    <PackageReleaseNotes>Add shouldSaveToCacheFilter to CachedHttpClientHandler. Fixed misc code documentation.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added OwlCore.Remoting and a struct-compatible PruneNull overload.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -43,10 +45,10 @@ This project is a constant work in progress. Until a stable release, breaking ch
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <None Include="logo.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+	  <None Include="logo.png">
+		  <Pack>True</Pack>
+		  <PackagePath></PackagePath>
+	  </None>
   </ItemGroup>
 
   <ItemGroup>
