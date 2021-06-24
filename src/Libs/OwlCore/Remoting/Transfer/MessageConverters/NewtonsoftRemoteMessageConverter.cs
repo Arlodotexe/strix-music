@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using Newtonsoft.Json;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OwlCore.Remoting.Transfer.MessageConverters
@@ -9,7 +10,7 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
     public class NewtonsoftRemoteMessageConverter : IRemoteMessageConverter
     {
         /// <inheritdoc/>
-        public Task<IRemoteMessage> DeserializeAsync(byte[] message)
+        public Task<IRemoteMessage> DeserializeAsync(byte[] message, CancellationToken? cancellationToken = null)
         {
             var jsonStr = Encoding.UTF8.GetString(message);
 
@@ -20,7 +21,7 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
                 RemotingAction.None => deserializedBase,
                 RemotingAction.MethodCall => JsonConvert.DeserializeObject<RemoteMethodCallMessage>(jsonStr),
                 RemotingAction.PropertyChange => JsonConvert.DeserializeObject<RemotePropertyChangeMessage>(jsonStr),
-                RemotingAction.RemoteMethodProxy => JsonConvert.DeserializeObject<RemoteMethodProxyMessage>(jsonStr),
+                RemotingAction.RemoteDataProxy => JsonConvert.DeserializeObject<RemoteDataMessage>(jsonStr),
                 RemotingAction.ExceptionThrown => JsonConvert.DeserializeObject<RemoteExceptionDataMessage>(jsonStr),
                 _ => ThrowHelper.ThrowNotSupportedException<IRemoteMemberMessage>(),
             };
@@ -32,7 +33,7 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
         }
 
         /// <inheritdoc/>
-        public Task<byte[]> SerializeAsync(IRemoteMessage message)
+        public Task<byte[]> SerializeAsync(IRemoteMessage message, CancellationToken? cancellationToken = null)
         {
             var methodCallMessage = message as RemoteMethodCallMessage;
 

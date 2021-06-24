@@ -1,4 +1,5 @@
 ﻿using OwlCore.Remoting.Transfer.MessageConverters;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OwlCore.Remoting.Transfer
@@ -19,14 +20,16 @@ namespace OwlCore.Remoting.Transfer
         /// Converts the given <paramref name="message"/> to a byte array that is safe for generic data transfer.
         /// </summary>
         /// <param name="message">The message being sent.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the ongoing task.</param>
         /// <returns></returns>
-        public Task<byte[]> SerializeAsync(IRemoteMessage message);
+        public Task<byte[]> SerializeAsync(IRemoteMessage message, CancellationToken? cancellationToken = null);
 
         /// <summary>
         /// Converts the given byte array back to a valid <see cref="IRemoteMessage"/>.
         /// </summary>
         /// <param name="bytes">The byte array to deserialize.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the ongoing task.</param>
         /// <returns></returns>
-        public Task<IRemoteMessage> DeserializeAsync(byte[] bytes);
+        public Task<IRemoteMessage> DeserializeAsync(byte[] bytes, CancellationToken? cancellationToken = null);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using OwlCore.Provisos;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OwlCore.Remoting.Transfer
@@ -15,7 +16,9 @@ namespace OwlCore.Remoting.Transfer
         /// <summary>
         /// Emit a remoting message to all connected nodes.
         /// </summary>
-        public Task SendMessageAsync(byte[] memberMessage);
+        /// <param name="memberMessage">The byte serialized byte array of the message being sent.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the ongoing task.</param>
+        public Task SendMessageAsync(byte[] memberMessage, CancellationToken? cancellationToken = null);
 
         /// <summary>
         /// Raised when a new remoting message is received.

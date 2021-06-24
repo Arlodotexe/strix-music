@@ -23,7 +23,7 @@
         /// <summary>
         /// Indicates that the message delegates a <see cref="RemoteMethodProxy{TResult}"/>.
         /// </summary>
-        RemoteMethodProxy,
+        RemoteDataProxy,
 
         /// <summary>
         /// Indicates that an exception was thrown by a node.

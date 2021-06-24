@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OwlCore.Remoting.Transfer.MessageConverters
@@ -7,7 +8,7 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
     public class MessagePackRemoteMessageConverter : IRemoteMessageConverter
     {
         /// <inheritdoc/>
-        public Task<IRemoteMessage> DeserializeAsync(byte[] bytes)
+        public Task<IRemoteMessage> DeserializeAsync(byte[] bytes, CancellationToken? cancellationToken = null)
         {
             var data = MessagePackSerializer.Deserialize<IRemoteMessage>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
@@ -15,7 +16,7 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
         }
 
         /// <inheritdoc/>
-        public Task<byte[]> SerializeAsync(IRemoteMessage message)
+        public Task<byte[]> SerializeAsync(IRemoteMessage message, CancellationToken? cancellationToken = null)
         {
             var data = MessagePackSerializer.Serialize(message, MessagePack.Resolvers.ContractlessStandardResolver.Options);
 

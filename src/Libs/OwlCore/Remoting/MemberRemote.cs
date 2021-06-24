@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
@@ -102,14 +103,14 @@ namespace OwlCore.Remoting
             var memberSignature = CreateMemberSignature(e.MethodBase);
             var remoteMessage = new RemoteMethodCallMessage(Id, memberSignature, paramData);
 
-            await EmitRemotingMessageToHandler(remoteMessage);
+            await SendRemotingMessageAsync(remoteMessage);
         }
 
         private async void OnInterceptExceptionRaised(object sender, Exception e)
         {
             var exceptionMessage = new RemoteExceptionDataMessage(e);
 
-            await EmitRemotingMessageToHandler(exceptionMessage);
+            await SendRemotingMessageAsync(exceptionMessage);
         }
 
         private async void OnPropertySetEntered(object sender, PropertySetEnteredEventArgs e)
@@ -125,7 +126,7 @@ namespace OwlCore.Remoting
             var memberSignature = CreateMemberSignature(propertyInfo);
             var remoteMessage = new RemotePropertyChangeMessage(Id, memberSignature, e.NewValue, e.OldValue);
 
-            await EmitRemotingMessageToHandler(remoteMessage);
+            await SendRemotingMessageAsync(remoteMessage);
         }
 
         /// <summary>
@@ -172,9 +173,10 @@ namespace OwlCore.Remoting
         /// <summary>
         /// Prepares and sends the given <paramref name="message"/> outbound.
         /// </summary>
-        /// <param name="message">The message</param>
+        /// <param name="message">The message being emitted.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the ongoing request. Request may still be emitted.</param>
         /// <returns>This should be used in scenarios where you need to send a custom <see cref="IRemoteMessage"/>, or where you need to force emit a member change remotely without executing the change on the current node.</returns>
-        public async Task EmitRemotingMessageToHandler(IRemoteMessage message)
+        public async Task SendRemotingMessageAsync(IRemoteMessage message, CancellationToken? cancellationToken = null)
         {
             var eventArgs = new RemoteMessageSendingEventArgs(message);
             MessageSending?.Invoke(this, eventArgs);
@@ -184,9 +186,9 @@ namespace OwlCore.Remoting
 
             await MessageHandler.InitAsync();
 
-            var data = await MessageHandler.MessageConverter.SerializeAsync(message);
+            var data = await MessageHandler.MessageConverter.SerializeAsync(message, cancellationToken);
 
-            await MessageHandler.SendMessageAsync(data);
+            await MessageHandler.SendMessageAsync(data, cancellationToken);
 
             MessageSent?.Invoke(this, message);
         }
@@ -278,6 +280,11 @@ namespace OwlCore.Remoting
             if (memberInfo is PropertyInfo propertyInfo)
             {
                 return $"{propertyInfo.DeclaringType} {propertyInfo.PropertyType} {propertyInfo.Name}";
+            }
+
+            if (memberInfo is Type type)
+            {
+                return type.AssemblyQualifiedName;
             }
 
             throw new NotSupportedException();
