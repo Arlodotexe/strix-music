@@ -71,6 +71,7 @@
 		<None Remove="Styles\AlbumItemStyle.xaml" />
 		<None Remove="Styles\ArtistCollectionStyle.xaml" />
 		<None Remove="Styles\ArtistItemStyle.xaml" />
+		<None Remove="Styles\Collections\PlaylistCollectionStyle.xaml" />
 		<None Remove="Styles\NowPlayingBarStyle.xaml" />
 		<None Remove="Styles\NowPlayingViewStyle.xaml" />
 		<None Remove="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml" />
@@ -108,6 +109,7 @@
 		<UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\Collections\PlaylistCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml" />
@@ -165,6 +167,9 @@
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 		<Compile Update="Styles\Collections\AlbumCollectionStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\Collections\PlaylistCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 		<Compile Update="Styles\Items\AlbumItemStyle.xaml.cs">
