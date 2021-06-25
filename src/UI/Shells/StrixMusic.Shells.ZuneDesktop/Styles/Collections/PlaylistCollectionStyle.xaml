@@ -23,7 +23,7 @@
             <StackPanel Margin="24,0,0,12">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{x:Bind TotalPlaylistItemsCount, Mode=OneWay}" FontSize="12" FontWeight="Bold"/>
-                    <TextBlock x:Uid="/Music/SongsTB" Text="PLAYLISTS" FontSize="12" FontWeight="Bold" Margin="4,0,0,0"
+                    <TextBlock x:Uid="/Music/PlaylistsTB" Text="PLAYLISTS" FontSize="12" FontWeight="Bold" Margin="4,0,0,0"
                                a:TextHelpers.CharacterCasing="Upper"/>
                 </StackPanel>
                 <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
