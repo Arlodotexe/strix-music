@@ -44,6 +44,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 Images = new ObservableCollection<IImage>();
                 Tracks = new ObservableCollection<TrackViewModel>();
+                DefaultTrackCollectionOrder = new List<TrackViewModel>();
             }
 
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
@@ -57,6 +58,8 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+
+            SortTrackCollectionCommand = new AsyncRelayCommand<SortType>(SortTrackCollection);
 
             SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(MainViewModel.GetLoadedCore).ToList();
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
@@ -297,7 +300,10 @@ namespace StrixMusic.Sdk.ViewModels
         public DateTime? AddedAt => _collection.AddedAt;
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> Tracks { get; }
+        public ObservableCollection<TrackViewModel> Tracks { get; set; }
+
+        /// <inheritdoc />
+        public IEnumerable<TrackViewModel> DefaultTrackCollectionOrder { get; set; }
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }
@@ -370,6 +376,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task ChangeDurationAsync(TimeSpan duration) => _collection.ChangeDurationAsync(duration);
 
+        ///<inheritdoc />
+        public Task SortTrackCollection(SortType sortType) => CollectionInit.SortTracks(this, sortType);
+
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
@@ -403,6 +412,9 @@ namespace StrixMusic.Sdk.ViewModels
                 });
             }
         }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<SortType> SortTrackCollectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }

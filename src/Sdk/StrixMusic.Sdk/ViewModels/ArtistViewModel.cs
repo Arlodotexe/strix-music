@@ -55,6 +55,7 @@ namespace StrixMusic.Sdk.ViewModels
                 Images = new ObservableCollection<IImage>();
                 Tracks = new ObservableCollection<TrackViewModel>();
                 Albums = new ObservableCollection<IAlbumCollectionItem>();
+                DefaultTrackCollectionOrder = new List<TrackViewModel>();
             }
 
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
@@ -72,6 +73,7 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
+            SortTrackCollectionCommand = new AsyncRelayCommand<SortType>(SortTrackCollection);
 
             AttachEvents();
         }
@@ -369,7 +371,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The tracks released by this artist.
         /// </summary>
-        public ObservableCollection<TrackViewModel> Tracks { get; }
+        public ObservableCollection<TrackViewModel> Tracks { get; set; }
+
+        /// <inheritdoc />
+        public IEnumerable<TrackViewModel> DefaultTrackCollectionOrder { get; set; }
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }
@@ -542,6 +547,9 @@ namespace StrixMusic.Sdk.ViewModels
             }
         }
 
+        ///<inheritdoc />
+        public Task SortTrackCollection(SortType sortType) => CollectionInit.SortTracks(this, sortType);
+
         /// <inheritdoc />
         public Task AddTrackAsync(ITrack track, int index) => _artist.AddTrackAsync(track, index);
 
@@ -580,6 +588,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand PlayTrackCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<SortType> SortTrackCollectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<ITrack> PlayTrackAsyncCommand { get; }

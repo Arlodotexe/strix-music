@@ -56,6 +56,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
+            SortTrackCollectionCommand = new AsyncRelayCommand<SortType>(SortTrackCollection);
 
             if (_playlist.Owner != null)
                 _owner = new UserProfileViewModel(_playlist.Owner);
@@ -69,6 +70,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 Images = new ObservableCollection<IImage>();
                 Tracks = new ObservableCollection<TrackViewModel>();
+                DefaultTrackCollectionOrder = new List<TrackViewModel>();
             }
 
             AttachEvents();
@@ -293,7 +295,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The tracks in this playlist.
         /// </summary>
-        public ObservableCollection<TrackViewModel> Tracks { get; }
+        public ObservableCollection<TrackViewModel> Tracks { get; set; }
+
+        /// <inheritdoc />
+        public IEnumerable<TrackViewModel> DefaultTrackCollectionOrder { get; set; }
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }
@@ -351,6 +356,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task<bool> IsRemoveGenreAvailable(int index) => _playlist.IsRemoveGenreAvailable(index);
+
+        ///<inheritdoc />
+        public Task SortTrackCollection(SortType sortType) => CollectionInit.SortTracks(this, sortType);
 
         /// <inheritdoc />
         public Task<bool> IsRemoveTrackAvailable(int index) => _playlist.IsRemoveTrackAvailable(index);
@@ -466,6 +474,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
         /// </summary>
         public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
+
+        ///<inheritdoc />
+        public IAsyncRelayCommand<SortType> SortTrackCollectionCommand { get; }
 
         /// <inheritdoc />
         public bool Equals(ICoreImageCollection other) => _playlist.Equals(other);

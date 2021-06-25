@@ -73,11 +73,13 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
+            SortTrackCollectionCommand = new AsyncRelayCommand<SortType>(SortTrackCollection);
 
             using (Threading.PrimaryContext)
             {
                 Images = new ObservableCollection<IImage>();
                 Tracks = new ObservableCollection<TrackViewModel>();
+                DefaultTrackCollectionOrder = new List<TrackViewModel>();
                 Artists = new ObservableCollection<IArtistCollectionItem>();
                 Children = new ObservableCollection<PlayableCollectionGroupViewModel>();
                 Playlists = new ObservableCollection<IPlaylistCollectionItem>();
@@ -498,7 +500,10 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IPlaylistCollectionItem> Playlists { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> Tracks { get; }
+        public ObservableCollection<TrackViewModel> Tracks { get; set; }
+
+        /// <inheritdoc />
+        public IEnumerable<TrackViewModel> DefaultTrackCollectionOrder { get; set; }
 
         /// <summary>
         /// The albums in this collection.
@@ -859,6 +864,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayPlaylistCollectionAsync() => _collectionGroup.PlayPlaylistCollectionAsync();
 
+        ///<inheritdoc />
+        public Task SortTrackCollection(SortType sortType) => CollectionInit.SortTracks(this, sortType);
+
         /// <inheritdoc />
         public Task PausePlaylistCollectionAsync()
         {
@@ -918,6 +926,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand PlayPlaylistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<SortType> SortTrackCollectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<IPlaylistCollectionItem> PlayPlaylistAsyncCommand { get; }

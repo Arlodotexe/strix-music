@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.ViewModels.Helpers;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -16,7 +19,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The tracks in this collection.
         /// </summary>
-        public ObservableCollection<TrackViewModel> Tracks { get; }
+        public ObservableCollection<TrackViewModel> Tracks { get; set; }
+
+        /// <summary>
+        /// Keeps the default track collection while sorting.
+        /// </summary>
+        public IEnumerable<TrackViewModel> DefaultTrackCollectionOrder { get; set; }
 
         /// <summary>
         /// Populates the next set of tracks into the collection.
@@ -24,6 +32,13 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="limit">The number of items to load.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PopulateMoreTracksAsync(int limit);
+
+        /// <summary>
+        /// Sorts the track collection by <see cref="SortType"/>.
+        /// </summary>
+        /// <param name="sortType">The <see cref="SortType"/> according to which the order should be changed.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task SortTrackCollection(SortType sortType);
 
         /// <inheritdoc cref="PopulateMoreTracksAsync" />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
@@ -42,5 +57,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="ITrackCollectionBase.PauseTrackCollectionAsync"/>
         /// </summary>
         public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
+
+        /// <summary>
+        /// Sorts track collection by <see cref="SortType"/>.
+        /// </summary>
+        public IAsyncRelayCommand<SortType> SortTrackCollectionCommand { get; }
     }
 }
