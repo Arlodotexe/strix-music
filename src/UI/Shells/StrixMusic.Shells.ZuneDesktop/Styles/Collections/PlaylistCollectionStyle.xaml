@@ -10,7 +10,7 @@
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.PlaylistCollectionStyle">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZunePlaylistListViewItemStyle.xaml"/>
+        <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneTrackListViewItemStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="ZuneDesktopPlaylistListTemplate" x:DataType="viewModels:IPlaylistCollectionViewModel">
@@ -29,7 +29,7 @@
                 <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMorePlaylistsCommand.IsRunning, Mode=OneWay}"/>
             </StackPanel>
 
-            <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Playlists, Mode=OneWay}" ItemContainerStyle="{StaticResource ZunePlaylistListViewItemStyle}" HorizontalAlignment="Stretch"
+            <ListView x:Name="PART_Selector" ItemsSource="{x:Bind Playlists, Mode=OneWay}" ItemContainerStyle="{StaticResource ZuneTrackListViewItemStyle}" HorizontalAlignment="Stretch"
                       SelectionMode="Extended" IsItemClickEnabled="True" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <ListView.Header>
                     <Grid Height="6"/>

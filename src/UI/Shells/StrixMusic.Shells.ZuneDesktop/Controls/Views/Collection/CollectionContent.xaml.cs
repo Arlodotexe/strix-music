@@ -20,6 +20,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(20);
             _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsCommand.ExecuteAsync(20);
             _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.ExecuteAsync(20);
+            _ = MainViewModel.Singleton?.Library?.PopulateMorePlaylistsCommand.ExecuteAsync(20);
         }
 
         private MainViewModel? ViewModel => DataContext as MainViewModel;
@@ -44,6 +45,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             TrackCollection.DataContext = e.SelectedItem;
         }
 
+        private void PlaylistSelected(object sender, SelectionChangedEventArgs<PlaylistViewModel> e)
+        {
+            e.SelectedItem?.PopulateMoreTracksCommand.Execute(20);
+            TrackCollection.DataContext = e.SelectedItem;
+        }
+
         private void AlbumsPageSelected(object sender, RoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, "Albums", true);
@@ -52,6 +59,11 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         private void SongsPageSelected(object sender, RoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, "Songs", true);
+        }
+
+        private void PlaylistPageSelected(object sender, RoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Playlists", true);
         }
     }
 }

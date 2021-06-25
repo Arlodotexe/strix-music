@@ -26,6 +26,7 @@
                 <!--Collection related style-->
                 <collectionstyles:AlbumCollectionStyle/>
                 <collectionstyles:ArtistCollectionStyle/>
+                <collectionstyles:PlaylistCollectionStyle/>
                 <collectionstyles:TrackCollectionStyle/>
 
 
@@ -33,6 +34,7 @@
                 <itemstyles:AlbumItemStyle/>
                 <itemstyles:ArtistItemStyle/>
                 <itemstyles:TrackItemStyle/>
+                <itemstyles:PlaylistItemStyle/>
 
 
                 <!--Shell related style-->
@@ -54,7 +56,7 @@
                     <VisualState.Setters>
                         <Setter Target="PrimaryColumn.MinWidth" Value="200"/>
                         <Setter Target="SecondaryColumn.MinWidth" Value="200"/>
-                        <Setter Target="TertiaryColumn.MaxWidth" Value="200"/>
+                        <Setter Target="TertiaryColumn.MinWidth" Value="200"/>
 
                         <Setter Target="PrimaryColumn.MaxWidth" Value="1000000"/>
                         <Setter Target="SecondaryColumn.MaxWidth" Value="1000000"/>
@@ -63,36 +65,55 @@
                         <Setter Target="ArtistCollection.(Grid.Column)" Value="0"/>
                         <Setter Target="AlbumCollection.(Grid.Column)" Value="1"/>
                         <Setter Target="TrackCollection.(Grid.Column)" Value="2"/>
+                        <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Albums">
                     <VisualState.Setters>
-                        <Setter Target="PrimaryColumn.MinWidth" Value="0"/>
+                        <Setter Target="PrimaryColumn.MinWidth" Value="200"/>
                         <Setter Target="SecondaryColumn.MinWidth" Value="200"/>
-                        <Setter Target="TertiaryColumn.MaxWidth" Value="200"/>
+                        <Setter Target="TertiaryColumn.MinWidth" Value="0"/>
 
-                        <Setter Target="PrimaryColumn.MaxWidth" Value="0"/>
+                        <Setter Target="PrimaryColumn.MaxWidth" Value="1000000"/>
                         <Setter Target="SecondaryColumn.MaxWidth" Value="1000000"/>
-                        <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="0"/>
 
-                        <Setter Target="ArtistCollection.(Grid.Column)" Value="0"/>
-                        <Setter Target="AlbumCollection.(Grid.Column)" Value="1"/>
-                        <Setter Target="TrackCollection.(Grid.Column)" Value="2"/>
+                        <Setter Target="ArtistCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="AlbumCollection.(Grid.Column)" Value="0"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="1"/>
+                        <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Songs">
                     <VisualState.Setters>
-                        <Setter Target="PrimaryColumn.MinWidth" Value="0"/>
+                        <Setter Target="PrimaryColumn.MinWidth" Value="200"/>
                         <Setter Target="SecondaryColumn.MinWidth" Value="0"/>
-                        <Setter Target="TertiaryColumn.MaxWidth" Value="200"/>
+                        <Setter Target="TertiaryColumn.MinWidth" Value="0"/>
 
-                        <Setter Target="PrimaryColumn.MaxWidth" Value="0"/>
+                        <Setter Target="PrimaryColumn.MaxWidth" Value="1000000"/>
                         <Setter Target="SecondaryColumn.MaxWidth" Value="0"/>
-                        <Setter Target="TertiaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="0"/>
 
                         <Setter Target="ArtistCollection.(Grid.Column)" Value="0"/>
-                        <Setter Target="AlbumCollection.(Grid.Column)" Value="1"/>
-                        <Setter Target="TrackCollection.(Grid.Column)" Value="2"/>
+                        <Setter Target="AlbumCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Playlists">
+                    <VisualState.Setters>
+                        <Setter Target="PrimaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="SecondaryColumn.MinWidth" Value="200"/>
+                        <Setter Target="TertiaryColumn.MinWidth" Value="0"/>
+
+                        <Setter Target="PrimaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="SecondaryColumn.MaxWidth" Value="1000000"/>
+                        <Setter Target="TertiaryColumn.MaxWidth" Value="0"/>
+
+                        <Setter Target="ArtistCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="AlbumCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="1"/>
+                        <Setter Target="PlaylistCollection.(Grid.Column)" Value="0"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -124,7 +145,7 @@
                          a:TextHelpers.CharacterCasing="Upper"/>
             <RadioButton x:Uid="/Music/SongsBTN" Content="SONGS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="SongsPageSelected"
                          a:TextHelpers.CharacterCasing="Upper"/>
-            <RadioButton x:Uid="/Music/PlaylistsBTN" Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" IsEnabled="False"
+            <RadioButton x:Uid="/Music/PlaylistsBTN" Content="PLAYLISTS" Style="{StaticResource ZuneMockPivotItemRadioButtonStyle}" Click="PlaylistPageSelected"
                          a:TextHelpers.CharacterCasing="Upper"/>
         </StackPanel>
 
@@ -134,6 +155,7 @@
                 <ColumnDefinition x:Name="PrimaryColumn" MinWidth="200"/>
                 <ColumnDefinition x:Name="SecondaryColumn" MinWidth="200"/>
                 <ColumnDefinition x:Name="TertiaryColumn" MinWidth="200"/>
+                <ColumnDefinition x:Name="HiddenColumn" MaxWidth="0"/>
             </Grid.ColumnDefinitions>
 
             <collections:ArtistCollection x:Name="ArtistCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="0"
@@ -141,6 +163,9 @@
 
             <collections:AlbumCollection x:Name="AlbumCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="1"
                                       SelectionChanged="AlbumSelected"/>
+
+            <collections:PlaylistCollection x:Name="PlaylistCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="3"
+                                      SelectionChanged="PlaylistSelected"/>
 
             <collections:TrackCollection x:Name="TrackCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="2"/>
 
