@@ -50,6 +50,16 @@
     </UserControl.Resources>
 
     <Grid Padding="32,-16,32,16">
+        <Grid.Resources>
+            <Storyboard x:Name="PageTransition">
+                <DoubleAnimation Storyboard.TargetName="ContentTransform" Storyboard.TargetProperty="X" From="-20" To="0" Duration="0:0:0.5">
+                    <DoubleAnimation.EasingFunction>
+                        <ExponentialEase EasingMode="EaseOut"/>
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+        </Grid.Resources>
+        
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="PageStates">
                 <VisualState x:Name="Artists">
@@ -118,6 +128,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -151,6 +162,9 @@
 
         <!--Collection Grid-->
         <Grid Grid.Row="2">
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="ContentTransform"/>
+            </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="PrimaryColumn" MinWidth="200"/>
                 <ColumnDefinition x:Name="SecondaryColumn" MinWidth="200"/>
