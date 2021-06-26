@@ -5,6 +5,7 @@
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:a="using:OwlCore.Uno.Attached"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
