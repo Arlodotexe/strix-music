@@ -4,7 +4,7 @@ using StrixMusic.Sdk.Uno.Services.Localization;
 using System;
 using Windows.UI.Xaml.Data;
 
-namespace StrixMusic.Converters.Units
+namespace StrixMusic.Sdk.Uno.Converters.Units
 {
     /// <summary>
     /// A converter that adds an "Artists" suffix to a unit..
