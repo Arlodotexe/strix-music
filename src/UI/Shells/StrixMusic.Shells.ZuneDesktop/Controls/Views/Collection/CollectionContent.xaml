@@ -12,6 +12,7 @@
     xmlns:shellstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Shells"
     xmlns:viewstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Views"
     x:Class="StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections.CollectionContent"
+    KeyDown="Grid_KeyDown"
     mc:Ignorable="d">
 
     <UserControl.Resources>

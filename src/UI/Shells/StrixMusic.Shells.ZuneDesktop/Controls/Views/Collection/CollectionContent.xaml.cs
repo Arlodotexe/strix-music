@@ -1,9 +1,10 @@
 ﻿using StrixMusic.Sdk;
 using StrixMusic.Sdk.Uno.Controls.Collections.Events;
 using StrixMusic.Sdk.ViewModels;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Input;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 {
@@ -69,6 +70,30 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         {
             e.SelectedItem?.PopulateMoreTracksCommand.Execute(20);
             TrackCollection.DataContext = e.SelectedItem;
+        }
+
+        private void ClearSelections()
+        {
+            if (ViewModel == null)
+                return;
+
+            ArtistCollection.ClearSelected();
+            AlbumCollection.ClearSelected();
+            TrackCollection.ClearSelected();
+            PlaylistCollection.ClearSelected();
+
+            ArtistCollection.DataContext = ViewModel.Library;
+            AlbumCollection.DataContext = ViewModel.Library;
+            TrackCollection.DataContext = ViewModel.Library;
+            PlaylistCollection.DataContext = ViewModel.Library;
+        }
+
+        private void Grid_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Escape)
+            {
+                ClearSelections();
+            }
         }
     }
 }
