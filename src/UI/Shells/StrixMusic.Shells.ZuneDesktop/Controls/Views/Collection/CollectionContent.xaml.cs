@@ -69,7 +69,8 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
         private void PlaylistSelected(object sender, SelectionChangedEventArgs<PlaylistViewModel> e)
         {
             e.SelectedItem?.PopulateMoreTracksCommand.Execute(20);
-            TrackCollection.DataContext = e.SelectedItem;
+            TrackCollection.DataContext =
+                DetailsPane.DataContext = e.SelectedItem;
         }
 
         private void ClearSelections()
@@ -82,10 +83,12 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             TrackCollection.ClearSelected();
             PlaylistCollection.ClearSelected();
 
-            ArtistCollection.DataContext = ViewModel.Library;
-            AlbumCollection.DataContext = ViewModel.Library;
-            TrackCollection.DataContext = ViewModel.Library;
-            PlaylistCollection.DataContext = ViewModel.Library;
+            ArtistCollection.DataContext =
+            AlbumCollection.DataContext =
+            TrackCollection.DataContext =
+            PlaylistCollection.DataContext= ViewModel.Library;
+
+            DetailsPane.DataContext = null;
         }
 
         private void Grid_KeyDown(object sender, KeyRoutedEventArgs e)

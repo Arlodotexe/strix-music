@@ -5,6 +5,9 @@
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:timeconvert="using:StrixMusic.Sdk.Uno.Converters.Time"
+    xmlns:unitconvert="using:StrixMusic.Sdk.Uno.Converters.Units"
     xmlns:a="using:OwlCore.Uno.Attached"
     mc:Ignorable="d"
     d:DesignHeight="300"
@@ -13,12 +16,14 @@
     <StackPanel Padding="24,0,0,0">
         <TextBlock x:Uid="/Common/DetailsTB" Text="DETAILS" FontSize="12" FontWeight="Bold" Margin="0,0,0,12"
                    a:TextHelpers.CharacterCasing="Upper"/>
-        
-        <Rectangle Width="150" Height="100" HorizontalAlignment="Left" Fill="Black" Margin="0,0,0,16"/>
 
-        <TextBlock Text="June 2020" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,12"/>
+        <strix:SafeImage Width="144" Height="144" HorizontalAlignment="Left" Margin="0,0,0,16"
+                         DataContext="{x:Bind ViewModel}"/>
 
-        <TextBlock Text="2 Songs" FontSize="13" FontWeight="Normal" Margin="0,0,0,2"/>
-        <TextBlock Text="6 min 42 sec" FontSize="13" FontWeight="Normal" Margin="0,0,0,2"/>
+        <TextBlock Text="{x:Bind ViewModel.Name}" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,12"/>
+
+        <TextBlock Text="{x:Bind unitconvert:CountToSongsConverter.Convert(ViewModel.TotalTracksCount)}" FontSize="13" Margin="0,0,0,2"
+                   a:TextHelpers.CharacterCasing="Lower"/>
+        <TextBlock Text="{x:Bind timeconvert:TimeSpanToShortTextConverter.Convert(ViewModel.Duration)}" FontSize="13" Margin="0,0,0,2"/>
     </StackPanel>
 </UserControl>
