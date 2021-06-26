@@ -249,4 +249,10 @@
   <data name="FollowABB.Label" xml:space="preserve">
     <value>מעקב</value>
   </data>
+  <data name="Details" xml:space="preserve">
+    <value>פרטים</value>
+  </data>
+  <data name="DetailsTB.Text" xml:space="preserve">
+    <value>פרטים</value>
+  </data>
 </root>
