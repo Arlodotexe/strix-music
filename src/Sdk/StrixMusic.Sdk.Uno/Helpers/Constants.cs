@@ -31,6 +31,11 @@
             public const string CommonResource = "Common";
 
             /// <summary>
+            /// The PRI path of the Time resource.
+            /// </summary>
+            public const string TimeResource = "Time";
+
+            /// <summary>
             /// The PRI path of the Music resource.
             /// </summary>
             public const string MusicResource = "Music";

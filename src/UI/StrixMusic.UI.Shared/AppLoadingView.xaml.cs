@@ -305,6 +305,7 @@ namespace StrixMusic.Shared
 
             _localizationService.RegisterProvider(Constants.Localization.SuperShellResource);
             _localizationService.RegisterProvider(Constants.Localization.CommonResource);
+            _localizationService.RegisterProvider(Constants.Localization.TimeResource);
             _localizationService.RegisterProvider(Constants.Localization.MusicResource);
 
             // TODO: Add debug boot mode.
