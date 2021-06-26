@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
+using OwlCore.Extensions.ObservableCollections;
+using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.ViewModels.Helpers.Comparers;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers
@@ -12,41 +14,40 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
     /// <summary>
     /// Helper to perform operations on a collection of tracks.
     /// </summary>
-    public static class TracksHelper
+    public static class CollectionSorting
     {
         /// <summary>
         /// Initialize a track collection view model.
         /// </summary>
         /// <param name="trackCollection">The collection to initialize.</param>
-        /// <param name="tracksSortType">Sort type of the collection.</param>
+        /// <param name="trackSorting">Sort type of the collection.</param>
         /// <param name="originalOrder">The original order of the trackCollection.</param>
-        public static void SortTracks(IList<TrackViewModel> trackCollection, TracksSortType tracksSortType, IList<TrackViewModel> originalOrder)
+        public static void SortTracks(ObservableCollection<TrackViewModel> trackCollection, TrackSorting trackSorting, ObservableCollection<TrackViewModel> originalOrder)
         {
             if (!originalOrder.Any())
             {
                 originalOrder = trackCollection;
             }
 
-            switch (tracksSortType)
+            switch (trackSorting)
             {
-                case TracksSortType.Ascending:
-                    trackCollection.ToList().Sort(new NameComparision<TrackViewModel>());
+                case TrackSorting.Ascending:
+                    trackCollection.Sort(new NameComparer());
                     break;
-                case TracksSortType.Descending:
-                    trackCollection.ToList().Sort(new NameComparision<TrackViewModel>());
-                    trackCollection.ToList().Reverse();
+                case TrackSorting.Descending:
+                    trackCollection.Sort(new ReverseNameComparer());
                     break;
-                case TracksSortType.Unordered:
+                case TrackSorting.Unordered:
                     originalOrder.Clear();
                     break;
-                case TracksSortType.TrackNumber:
+                case TrackSorting.TrackNumber:
                     break;
-                case TracksSortType.AddedAt:
+                case TrackSorting.AddedAt:
                     break;
-                case TracksSortType.Duration:
+                case TrackSorting.Duration:
                     break;
                 default:
-                    ThrowHelper.ThrowNotSupportedException($"TrackSortType {tracksSortType} is not supported.");
+                    ThrowHelper.ThrowNotSupportedException($"TrackSortType {trackSorting} is not supported.");
                     break;
             }
         }

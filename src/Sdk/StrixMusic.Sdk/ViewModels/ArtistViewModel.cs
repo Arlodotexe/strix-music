@@ -73,7 +73,7 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreAlbumsCommand = new AsyncRelayCommand<int>(PopulateMoreAlbumsAsync);
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
-            SortTrackCollectionCommand = new RelayCommand<TracksSortType>(SortTrackCollection);
+            SortTrackCollectionCommand = new RelayCommand<TrackSorting>(SortTrackCollection);
 
             AttachEvents();
         }
@@ -548,9 +548,9 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         ///<inheritdoc />
-        public void SortTrackCollection(TracksSortType tracksSortType)
+        public void SortTrackCollection(TrackSorting trackSorting)
         {
-            TracksHelper.SortTracks(Tracks, tracksSortType, UnsortedTracks);
+            CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
 
             OnPropertyChanged(nameof(Tracks)); // letting UI know that the order has changed.
         }
@@ -595,7 +595,7 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PlayTrackCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public RelayCommand<TracksSortType> SortTrackCollectionCommand { get; }
+        public RelayCommand<TrackSorting> SortTrackCollectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<ITrack> PlayTrackAsyncCommand { get; }

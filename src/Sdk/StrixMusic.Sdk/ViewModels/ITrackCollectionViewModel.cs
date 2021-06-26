@@ -34,10 +34,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PopulateMoreTracksAsync(int limit);
 
         /// <summary>
-        /// Sorts the track collection by <see cref="TracksSortType"/>.
+        /// Sorts the track collection by <see cref="TrackSorting"/>.
         /// </summary>
-        /// <param name="tracksSortType">The <see cref="TracksSortType"/> according to which the order should be changed.</param>
-        public void SortTrackCollection(TracksSortType tracksSortType);
+        /// <param name="trackSorting">The <see cref="TrackSorting"/> according to which the order should be changed.</param>
+        public void SortTrackCollection(TrackSorting trackSorting);
 
         /// <inheritdoc cref="PopulateMoreTracksAsync" />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
@@ -58,8 +58,8 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
 
         /// <summary>
-        /// Sorts track collection by <see cref="TracksSortType"/>.
+        /// Sorts track collection by <see cref="TrackSorting"/>.
         /// </summary>
-        public RelayCommand<TracksSortType> SortTrackCollectionCommand { get; }
+        public RelayCommand<TrackSorting> SortTrackCollectionCommand { get; }
     }
 }

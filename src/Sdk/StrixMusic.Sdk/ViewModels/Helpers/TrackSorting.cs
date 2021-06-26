@@ -3,7 +3,7 @@
     /// <summary>
     /// Enumeration for sort types of tracks.
     /// </summary>
-    public enum TracksSortType
+    public enum TrackSorting
     {
         /// <summary>
         /// Default order of the collection.

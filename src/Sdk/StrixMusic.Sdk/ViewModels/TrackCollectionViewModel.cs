@@ -59,7 +59,7 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
-            SortTrackCollectionCommand = new RelayCommand<TracksSortType>(SortTrackCollection);
+            SortTrackCollectionCommand = new RelayCommand<TrackSorting>(SortTrackCollection);
 
             SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(MainViewModel.GetLoadedCore).ToList();
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
@@ -377,10 +377,9 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration) => _collection.ChangeDurationAsync(duration);
 
         ///<inheritdoc />
-        ///<inheritdoc />
-        public void SortTrackCollection(TracksSortType tracksSortType)
+        public void SortTrackCollection(TrackSorting trackSorting)
         {
-            TracksHelper.SortTracks(Tracks, tracksSortType, UnsortedTracks);
+            CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
 
             OnPropertyChanged(nameof(Tracks)); // letting UI know that the order has changed.
         }
@@ -420,7 +419,7 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public RelayCommand<TracksSortType> SortTrackCollectionCommand { get; }
+        public RelayCommand<TrackSorting> SortTrackCollectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
