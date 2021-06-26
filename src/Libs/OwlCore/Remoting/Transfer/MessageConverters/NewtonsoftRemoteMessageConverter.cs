@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using Newtonsoft.Json;
+using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
                 RemotingAction.None => deserializedBase,
                 RemotingAction.MethodCall => JsonConvert.DeserializeObject<RemoteMethodCallMessage>(jsonStr),
                 RemotingAction.PropertyChange => JsonConvert.DeserializeObject<RemotePropertyChangeMessage>(jsonStr),
-                RemotingAction.RemoteDataProxy => JsonConvert.DeserializeObject<RemoteDataMessage>(jsonStr),
+                RemotingAction.RemoteDataProxy => JsonConvert.DeserializeObject<RemoteDataMessage<object?>>(jsonStr),
                 RemotingAction.ExceptionThrown => JsonConvert.DeserializeObject<RemoteExceptionDataMessage>(jsonStr),
                 _ => ThrowHelper.ThrowNotSupportedException<IRemoteMemberMessage>(),
             };
@@ -33,7 +34,7 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
         }
 
         /// <inheritdoc/>
-        public Task<byte[]> SerializeAsync(IRemoteMessage message, CancellationToken? cancellationToken = null)
+        public async Task<byte[]> SerializeAsync(IRemoteMessage message, CancellationToken? cancellationToken = null)
         {
             var methodCallMessage = message as RemoteMethodCallMessage;
 
@@ -48,7 +49,9 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
             if (methodCallMessage != null)
                 methodCallMessage.TargetMemberSignature = methodCallMessage.TargetMemberSignature.Replace("TARGETNAME_", "");
 
-            return Task.FromResult(bytes);
+            var x = await DeserializeAsync(bytes);
+
+            return bytes;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace OwlCore.Remoting.Attributes
     /// Attribute used in conjuction with <see cref="MemberRemote"/>.
     /// Mark a property with this attribute to opt into remote method changes.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
     public class RemotePropertyAttribute : Attribute, IPropertySetterInterceptor
     {
         /// <inheritdoc/>

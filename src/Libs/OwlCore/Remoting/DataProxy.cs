@@ -25,12 +25,16 @@ namespace OwlCore.Remoting
 
             void MemberRemote_MessageReceived(object sender, IRemoteMessage e)
             {
-                if (e is RemoteDataMessage remoteDataMessage)
+                if (e is RemoteDataMessage<object?> remoteDataMessage)
                 {
                     if (remoteDataMessage.Token != token)
                         return;
 
                     var type = Type.GetType(remoteDataMessage.TargetMemberSignature);
+
+                    if (type == typeof(Guid))
+                        remoteDataMessage.Result = Guid.Parse(remoteDataMessage.Result?.ToString());
+
                     var res = Convert.ChangeType(remoteDataMessage.Result, type);
                     taskCompletionSource.SetResult((TResult?)res);
                 }
@@ -53,9 +57,9 @@ namespace OwlCore.Remoting
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the exact data given to <paramref name="data"/>.</returns>
         public static async Task<T?> PublishDataAsync<T>(this MemberRemote memberRemote, T? data, string token, CancellationToken? cancellationToken = null)
         {
-            var memberSignature = MemberRemote.CreateMemberSignature(typeof(T));
+            var memberSignature = MemberRemote.CreateMemberSignature(typeof(T?));
 
-            await memberRemote.SendRemotingMessageAsync(new RemoteDataMessage(memberRemote.Id, token, memberSignature, data), cancellationToken);
+            await memberRemote.SendRemotingMessageAsync(new RemoteDataMessage<T?>(memberRemote.Id, token, memberSignature, data), cancellationToken);
             return data;
         }
     }
