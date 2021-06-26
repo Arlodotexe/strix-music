@@ -354,4 +354,7 @@
   <data name="PodcastsTB.Text" xml:space="preserve">
     <value>Podcasts</value>
   </data>
+  <data name="SongsCount" xml:space="preserve">
+    <value>{0} Songs</value>
+  </data>
 </root>

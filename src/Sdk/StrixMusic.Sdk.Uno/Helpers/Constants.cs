@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using StrixMusic.Sdk.Uno.Assembly;
-using StrixMusic.Sdk.Uno.Models;
-
-namespace StrixMusic.Helpers
+﻿namespace StrixMusic.Sdk.Uno.Helpers
 {
     /// <summary>
     /// Constants and Assembly data accessed throughout the library.
@@ -47,6 +39,11 @@ namespace StrixMusic.Helpers
             /// The PRI path of the Quips resource.
             /// </summary>
             public const string QuipsResource = "Quips";
+
+            /// <summary>
+            /// The default string in the case of a localization error.
+            /// </summary>
+            public const string LocalizationErrorString = "Localization Error";
         }
     }
 }
