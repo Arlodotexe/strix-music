@@ -60,6 +60,7 @@
 		<None Remove="Controls\NowPlayingButtonContent.xaml" />
 		<None Remove="Controls\QuickplayContent.xaml" />
 		<None Remove="Controls\SettingsView.xaml" />
+		<None Remove="Controls\Views\Collection\PlaylistDetailsPane.xaml" />
 		<None Remove="Controls\Views\Settings\BackgroundSettings.xaml" />
 		<None Remove="Controls\ZuneShell.xaml" />
 		<None Remove="Preview.xaml" />
@@ -99,6 +100,7 @@
 		<UpToDateCheckInput Remove="Controls\NowPlayingButtonContent.xaml" />
 		<UpToDateCheckInput Remove="Controls\QuickplayContent.xaml" />
 		<UpToDateCheckInput Remove="Controls\SettingsView.xaml" />
+		<UpToDateCheckInput Remove="Controls\Views\Collection\PlaylistDetailsPane.xaml" />
 		<UpToDateCheckInput Remove="Controls\Views\Settings\BackgroundSettings.xaml" />
 		<UpToDateCheckInput Remove="Controls\ZuneShell.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
