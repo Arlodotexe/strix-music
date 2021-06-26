@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace OwlCore.Extensions.ObservableCollections
+namespace OwlCore.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="ObservableCollection{T}"/>.

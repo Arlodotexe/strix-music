@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Extensions.ObservableCollections;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.ViewModels.Helpers.Comparers;
 
@@ -38,6 +38,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                     trackCollection.Sort(new ReverseNameComparer());
                     break;
                 case TrackSorting.Unordered:
+                    trackCollection = originalOrder;
                     originalOrder.Clear();
                     break;
                 case TrackSorting.TrackNumber:

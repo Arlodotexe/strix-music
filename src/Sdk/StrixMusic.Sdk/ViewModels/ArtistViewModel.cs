@@ -371,10 +371,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The tracks released by this artist.
         /// </summary>
-        public ObservableCollection<TrackViewModel> Tracks { get; private set; }
+        public ObservableCollection<TrackViewModel> Tracks { get; set; }
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> UnsortedTracks { get; private set; }
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get;  }
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }

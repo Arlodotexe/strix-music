@@ -300,10 +300,10 @@ namespace StrixMusic.Sdk.ViewModels
         public DateTime? AddedAt => _collection.AddedAt;
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> Tracks { get; private set; }
+        public ObservableCollection<TrackViewModel> Tracks { get; set; }
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> UnsortedTracks { get; private set; }
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get;  }
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }

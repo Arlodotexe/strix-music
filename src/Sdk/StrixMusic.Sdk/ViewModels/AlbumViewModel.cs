@@ -380,10 +380,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The tracks for this album.
         /// </summary>
-        public ObservableCollection<TrackViewModel> Tracks { get; private set; }
+        public ObservableCollection<TrackViewModel> Tracks { get; set; }
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> UnsortedTracks { get; private set; }
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get; }
 
         /// <inheritdoc />
         public ObservableCollection<IArtistCollectionItem> Artists { get; }

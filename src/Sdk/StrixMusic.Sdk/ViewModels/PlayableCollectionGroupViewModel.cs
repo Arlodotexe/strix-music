@@ -500,10 +500,10 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IPlaylistCollectionItem> Playlists { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> Tracks { get; private set; }
+        public ObservableCollection<TrackViewModel> Tracks { get; set; }
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> UnsortedTracks { get; private set; }
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get;  }
 
         /// <summary>
         /// The albums in this collection.
