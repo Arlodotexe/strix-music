@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Uno.Converters.Time
     /// <summary>
     /// A converter that converts a given <see cref="TimeSpan"/> to a natural time format string.
     /// </summary>
-    public sealed class TimeSpanToLongTextConverter : IValueConverter
+    public sealed class TimeSpanToShortTextConverter : IValueConverter
     {
         /// <summary>
         /// Converts a <see cref="TimeSpan"/> to a formatted string.
@@ -28,20 +28,14 @@ namespace StrixMusic.Sdk.Uno.Converters.Time
             string returnValue = string.Empty;
 
             // TODO: Make more rigorous cases
-            if (value.Hours == 1)
-                returnValue += localizationService[Constants.Localization.TimeResource, "HourSingular"] + " ";
-            else if (value.Hours >= 2)
-                returnValue += string.Format(localizationService[Constants.Localization.TimeResource, "HoursCount"], value.Hours) + " ";
+            if (value.Hours > 0)
+                returnValue += string.Format(localizationService[Constants.Localization.TimeResource, "HrCount"], value.Hours) + " ";
 
-            if (value.Minutes == 1)
-                returnValue += localizationService[Constants.Localization.TimeResource, "MinuteSingular"] + " ";
-            else if(value.Minutes >= 2)
-                returnValue += string.Format(localizationService[Constants.Localization.TimeResource, "MinutesCount"], value.Minutes) + " ";
+            if (value.Minutes > 0)
+                returnValue += string.Format(localizationService[Constants.Localization.TimeResource, "MinCount"], value.Minutes) + " ";
 
-            if (value.Seconds == 1)
-                returnValue += localizationService[Constants.Localization.TimeResource, "SecondSingular"] + " ";
-            else if (value.Seconds >= 2 || returnValue == string.Empty)
-                returnValue += string.Format(localizationService[Constants.Localization.TimeResource, "SecondsCount"], value.Seconds) + " ";
+            if (value.Seconds > 0 || returnValue == string.Empty)
+                returnValue += string.Format(localizationService[Constants.Localization.TimeResource, "SecCount"], value.Seconds) + " ";
 
             return returnValue;
         }

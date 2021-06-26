@@ -123,11 +123,20 @@
   <data name="HourSingular" xml:space="preserve">
     <value>1 Hour</value>
   </data>
+  <data name="HrsCount" xml:space="preserve">
+    <value>{0} Hr</value>
+  </data>
+  <data name="MinCount" xml:space="preserve">
+    <value>{0} Min</value>
+  </data>
   <data name="MinutesCount" xml:space="preserve">
     <value>{0} Minutes</value>
   </data>
   <data name="MinuteSingular" xml:space="preserve">
     <value>1 Minute</value>
+  </data>
+  <data name="SecCount" xml:space="preserve">
+    <value>{0} Sec</value>
   </data>
   <data name="SecondsCount" xml:space="preserve">
     <value>{0} Seconds</value>
