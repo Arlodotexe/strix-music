@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Reflection;
 
 namespace OwlCore.Remoting.Transfer
@@ -19,17 +20,6 @@ namespace OwlCore.Remoting.Transfer
             Message = message;
             StackTrace = stackTrace;
             TargetSiteSignature = targetSiteSignature;
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="RemoteExceptionDataMessage"/>.
-        /// </summary>
-        /// <param name="exception">The <see cref="Exception"/> to extract data from for this message.</param>
-        public RemoteExceptionDataMessage(Exception exception)
-        {
-            Message = exception.Message;
-            StackTrace = exception.StackTrace;
-            TargetSiteSignature = MemberRemote.CreateMemberSignature(exception.TargetSite);
         }
 
         /// <summary>

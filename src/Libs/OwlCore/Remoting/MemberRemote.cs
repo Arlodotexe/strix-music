@@ -106,10 +106,13 @@ namespace OwlCore.Remoting
             await SendRemotingMessageAsync(remoteMessage);
         }
 
-        private async void OnInterceptExceptionRaised(object sender, Exception e)
+        private async void OnInterceptExceptionRaised(object sender, Exception exception)
         {
-            var exceptionMessage = new RemoteExceptionDataMessage(e);
+            var message = exception.Message;
+            var stackTrace = exception.StackTrace;
+            var targetSiteSignature = CreateMemberSignature(exception.TargetSite);
 
+            var exceptionMessage = new RemoteExceptionDataMessage(message, stackTrace, targetSiteSignature);
             await SendRemotingMessageAsync(exceptionMessage);
         }
 
