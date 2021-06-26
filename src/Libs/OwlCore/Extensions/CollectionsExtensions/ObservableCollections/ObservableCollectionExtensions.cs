@@ -13,8 +13,8 @@ namespace OwlCore.Extensions
         /// <summary>
         /// Extension method to sort <see cref="ObservableCollection{T}"/>.
         /// </summary>
-        /// <param name="collection"></param>
-        /// <param name="comparison"></param>
+        /// <param name="collection">The <see cref="ObservableCollection{T}"/> to sort.</param>
+        /// <param name="comparison">The <see cref="Comparer{T}"/> according to which collection should be sorted.</param>
         public static void Sort<T>(this ObservableCollection<T> collection, Comparer<T> comparison)
         {
             var sortableList = new List<T>(collection);
