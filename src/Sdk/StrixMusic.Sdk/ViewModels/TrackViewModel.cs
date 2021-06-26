@@ -516,7 +516,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveArtistItemAsync(int index) => Model.RemoveArtistItemAsync(index);
 
         /// <inheritdoc />
-        public  Task PlayArtistCollectionAsync()
+        public Task PlayArtistCollectionAsync()
         {
             return _playbackHandler.PlayAsync(this, Model);
         }

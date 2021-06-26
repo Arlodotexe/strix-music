@@ -19,12 +19,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The tracks in this collection.
         /// </summary>
-        public ObservableCollection<TrackViewModel> Tracks { get; set; }
+        public ObservableCollection<TrackViewModel> Tracks { get; }
 
         /// <summary>
         /// Keeps the default track collection while sorting.
         /// </summary>
-        public IEnumerable<TrackViewModel> DefaultTrackCollectionOrder { get; set; }
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get; } 
 
         /// <summary>
         /// Populates the next set of tracks into the collection.
@@ -34,11 +34,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PopulateMoreTracksAsync(int limit);
 
         /// <summary>
-        /// Sorts the track collection by <see cref="SortType"/>.
+        /// Sorts the track collection by <see cref="TracksSortType"/>.
         /// </summary>
-        /// <param name="sortType">The <see cref="SortType"/> according to which the order should be changed.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task SortTrackCollection(SortType sortType);
+        /// <param name="tracksSortType">The <see cref="TracksSortType"/> according to which the order should be changed.</param>
+        public void SortTrackCollection(TracksSortType tracksSortType);
 
         /// <inheritdoc cref="PopulateMoreTracksAsync" />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
@@ -59,8 +58,8 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
 
         /// <summary>
-        /// Sorts track collection by <see cref="SortType"/>.
+        /// Sorts track collection by <see cref="TracksSortType"/>.
         /// </summary>
-        public IAsyncRelayCommand<SortType> SortTrackCollectionCommand { get; }
+        public RelayCommand<TracksSortType> SortTrackCollectionCommand { get; }
     }
 }

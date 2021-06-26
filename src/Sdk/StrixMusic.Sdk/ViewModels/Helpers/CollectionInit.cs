@@ -34,33 +34,5 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                 }
             }
         }
-
-        /// <summary>
-        /// Initialize a track collection view model.
-        /// </summary>
-        /// <param name="trackCollection">The collection to initialize.</param>
-        /// <param name="sortType">Sort type of the collection.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static Task<ITrackCollectionViewModel> SortTracks(ITrackCollectionViewModel trackCollection, SortType sortType)
-        {
-            if (!trackCollection.DefaultTrackCollectionOrder.Any())
-            {
-                // Saving the default order.
-                trackCollection.DefaultTrackCollectionOrder = new List<TrackViewModel>(trackCollection.Tracks);
-            }
-
-            trackCollection.Tracks = sortType switch
-            {
-                SortType.Ascending => new ObservableCollection<TrackViewModel>(
-                    trackCollection.Tracks.OrderBy(c => c.Name)),
-                SortType.Descending => new ObservableCollection<TrackViewModel>(
-                    trackCollection.Tracks.OrderByDescending(c => c.Name)),
-                SortType.UnOrdered => new ObservableCollection<TrackViewModel>(trackCollection
-                    .DefaultTrackCollectionOrder),
-                _ => trackCollection.Tracks
-            };
-
-            return Task.FromResult(trackCollection);
-        }
     }
 }

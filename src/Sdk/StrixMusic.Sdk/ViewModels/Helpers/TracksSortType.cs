@@ -1,22 +1,22 @@
 ﻿namespace StrixMusic.Sdk.ViewModels.Helpers
 {
     /// <summary>
-    /// Enumeration for sort types.
+    /// Enumeration for sort types of tracks.
     /// </summary>
-    public enum SortType
+    public enum TracksSortType
     {
         /// <summary>
         /// Default order of the collection.
         /// </summary>
-        UnOrdered,
+        Unordered,
 
         /// <summary>
-        /// Sort tracks by ascending order(A-Z).
+        /// Sort tracks by ascending order (A-Z).
         /// </summary>
         Ascending,
 
         /// <summary>
-        /// Sort tracks in descending order(Z-A)
+        /// Sort tracks in descending order (Z-A).
         /// </summary>
         Descending,
 
@@ -33,6 +33,6 @@
         /// <summary>
         /// Sort tracks by duration.
         /// </summary>
-        Duration
+        Duration,
     }
 }

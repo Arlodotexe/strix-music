@@ -73,13 +73,13 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
-            SortTrackCollectionCommand = new AsyncRelayCommand<SortType>(SortTrackCollection);
+            SortTrackCollectionCommand = new RelayCommand<TracksSortType>(SortTrackCollection);
 
             using (Threading.PrimaryContext)
             {
                 Images = new ObservableCollection<IImage>();
                 Tracks = new ObservableCollection<TrackViewModel>();
-                DefaultTrackCollectionOrder = new List<TrackViewModel>();
+                UnsortedTracks = new ObservableCollection<TrackViewModel>();
                 Artists = new ObservableCollection<IArtistCollectionItem>();
                 Children = new ObservableCollection<PlayableCollectionGroupViewModel>();
                 Playlists = new ObservableCollection<IPlaylistCollectionItem>();
@@ -500,10 +500,10 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IPlaylistCollectionItem> Playlists { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> Tracks { get; set; }
+        public ObservableCollection<TrackViewModel> Tracks { get; private set; }
 
         /// <inheritdoc />
-        public IEnumerable<TrackViewModel> DefaultTrackCollectionOrder { get; set; }
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get; private set; }
 
         /// <summary>
         /// The albums in this collection.
@@ -865,7 +865,13 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PlayPlaylistCollectionAsync() => _collectionGroup.PlayPlaylistCollectionAsync();
 
         ///<inheritdoc />
-        public Task SortTrackCollection(SortType sortType) => CollectionInit.SortTracks(this, sortType);
+        public void SortTrackCollection(TracksSortType tracksSortType)
+        {
+            TracksHelper.SortTracks(Tracks, tracksSortType, UnsortedTracks);
+
+            OnPropertyChanged(nameof(Tracks)); // letting UI know that the order has changed.
+        }
+
 
         /// <inheritdoc />
         public Task PausePlaylistCollectionAsync()
@@ -876,7 +882,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync()
         {
-            return _playbackHandler.PlayAsync((ITrackCollectionViewModel) this, this);
+            return _playbackHandler.PlayAsync((ITrackCollectionViewModel)this, this);
         }
 
         /// <inheritdoc />
@@ -928,7 +934,7 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PlayPlaylistCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public IAsyncRelayCommand<SortType> SortTrackCollectionCommand { get; }
+        public RelayCommand<TracksSortType> SortTrackCollectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<IPlaylistCollectionItem> PlayPlaylistAsyncCommand { get; }
