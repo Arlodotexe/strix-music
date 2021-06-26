@@ -27,28 +27,31 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 
         private MainViewModel? ViewModel => DataContext as MainViewModel;
 
+        private void SwapPage(string pageVisualStateName)
+        {
+            VisualStateManager.GoToState(this, pageVisualStateName, true);
+            PageTransition.Begin();
+            ClearSelections();
+        }
+
         private void ArtistsPageSelected(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "Artists", true);
-            PageTransition.Begin();
+            SwapPage("Artists");
         }
 
         private void AlbumsPageSelected(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "Albums", true);
-            PageTransition.Begin();
+            SwapPage("Albums");
         }
 
         private void SongsPageSelected(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "Songs", true);
-            PageTransition.Begin();
+            SwapPage("Songs");
         }
 
         private void PlaylistPageSelected(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "Playlists", true);
-            PageTransition.Begin();
+            SwapPage("Playlists");
         }
 
         private void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
