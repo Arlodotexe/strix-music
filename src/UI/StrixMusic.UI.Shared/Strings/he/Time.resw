@@ -129,10 +129,19 @@
   <data name="HourSingular" xml:space="preserve">
     <value>1 שעה</value>
   </data>
-  <data name="MinutesSingular" xml:space="preserve">
+  <data name="MinuteSingular" xml:space="preserve">
     <value>1 דקה</value>
   </data>
-  <data name="SecondsSingular" xml:space="preserve">
+  <data name="SecondSingular" xml:space="preserve">
     <value>1 שניה</value>
+  </data>
+  <data name="SecCount" xml:space="preserve">
+    <value>{0} ש</value>
+  </data>
+  <data name="HrsCount" xml:space="preserve">
+    <value>{0} ש</value>
+  </data>
+  <data name="MinCount" xml:space="preserve">
+    <value>{0} ד</value>
   </data>
 </root>
