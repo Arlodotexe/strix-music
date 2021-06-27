@@ -67,6 +67,7 @@
 		<None Remove="Resources.xaml" />
 		<None Remove="Resources\Brushes.xaml" />
 		<None Remove="Resources\ButtonStyles.xaml" />
+		<None Remove="Resources\ZuneDataGrid.xaml" />
 		<None Remove="Resources\ZuneSlider.xaml" />
 		<None Remove="Styles\AlbumCollectionStyle.xaml" />
 		<None Remove="Styles\AlbumItemStyle.xaml" />
@@ -108,6 +109,7 @@
 		<UpToDateCheckInput Remove="Resources.xaml" />
 		<UpToDateCheckInput Remove="Resources\Brushes.xaml" />
 		<UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
+		<UpToDateCheckInput Remove="Resources\ZuneDataGrid.xaml" />
 		<UpToDateCheckInput Remove="Resources\ZuneSlider.xaml" />
 		<UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
@@ -177,9 +179,6 @@
 		</Compile>
 		<Compile Update="Styles\Collections\PlaylistCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
-		</Compile>
-		<Compile Update="Styles\Collections\TrackTableStyle.xaml.cs">
-		  <DependentUpon>TrackTableStyle.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="Styles\Items\AlbumItemStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
