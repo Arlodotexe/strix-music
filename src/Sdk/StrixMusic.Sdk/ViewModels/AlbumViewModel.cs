@@ -73,6 +73,8 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             SortTrackCollectionCommand = new RelayCommand<TrackSorting>(SortTrackCollection);
 
+            CurrentTracksSorting = TrackSorting.Unordered;
+
             AttachEvents();
         }
 
@@ -303,7 +305,24 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+                if (CurrentTracksSorting == TrackSorting.Unordered)
+                {
+                    Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+                }
+                else
+                {
+                    // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
+                    UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+
+                    // Avoiding direct assignment to prevent effect on UI.
+                    foreach (var item in UnsortedTracks)
+                    {
+                        if (!Tracks.Contains(item))
+                            Tracks.Add(item);
+                    }
+
+                    SortTrackCollection(CurrentTracksSorting);
+                }
             });
         }
 
@@ -523,8 +542,9 @@ namespace StrixMusic.Sdk.ViewModels
         ///<inheritdoc />
         public void SortTrackCollection(TrackSorting trackSorting)
         {
-            CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
+            CurrentTracksSorting = trackSorting;
 
+            CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
             OnPropertyChanged(nameof(Tracks)); // letting UI know that the order has changed.
         }
 
@@ -591,6 +611,9 @@ namespace StrixMusic.Sdk.ViewModels
                 });
             }
         }
+
+        /// <inheritdoc />
+        public TrackSorting CurrentTracksSorting { get; private set; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }

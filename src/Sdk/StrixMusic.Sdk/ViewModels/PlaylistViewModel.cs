@@ -73,6 +73,8 @@ namespace StrixMusic.Sdk.ViewModels
                 UnsortedTracks = new ObservableCollection<TrackViewModel>();
             }
 
+            CurrentTracksSorting = TrackSorting.Unordered;
+
             AttachEvents();
         }
 
@@ -250,12 +252,32 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                Tracks.ChangeCollection(addedItems, removedItems, item => new TrackViewModel(item.Data));
+                if (CurrentTracksSorting == TrackSorting.Unordered)
+                {
+                    Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+                }
+                else
+                {
+                    // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
+                    UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+
+                    // Avoiding direct assignment to prevent effect on UI.
+                    foreach (var item in UnsortedTracks)
+                    {
+                        if (!Tracks.Contains(item))
+                            Tracks.Add(item);
+                    }
+
+                    SortTrackCollection(CurrentTracksSorting);
+                }
             });
         }
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
+
+        /// <inheritdoc />
+        public TrackSorting CurrentTracksSorting { get; private set; }
 
         /// <summary>
         /// The merged sources that form this member.
@@ -361,6 +383,8 @@ namespace StrixMusic.Sdk.ViewModels
         ///<inheritdoc />
         public void SortTrackCollection(TrackSorting trackSorting)
         {
+            CurrentTracksSorting = trackSorting;
+
             CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
 
             OnPropertyChanged(nameof(Tracks)); // letting UI know that the order has changed.

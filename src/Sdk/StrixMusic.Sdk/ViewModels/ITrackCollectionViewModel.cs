@@ -24,7 +24,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Keeps the default track collection while sorting.
         /// </summary>
-        public ObservableCollection<TrackViewModel> UnsortedTracks { get; } 
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get; }
 
         /// <summary>
         /// Populates the next set of tracks into the collection.
@@ -32,6 +32,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="limit">The number of items to load.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PopulateMoreTracksAsync(int limit);
+
+        /// <summary>
+        /// The current sorting of the tracks.
+        /// </summary>
+        public TrackSorting CurrentTracksSorting { get; }
 
         /// <summary>
         /// Sorts the track collection by <see cref="TrackSorting"/>.

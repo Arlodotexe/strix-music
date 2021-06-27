@@ -75,6 +75,8 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             SortTrackCollectionCommand = new RelayCommand<TrackSorting>(SortTrackCollection);
 
+            CurrentTracksSorting = TrackSorting.Unordered;
+
             AttachEvents();
         }
 
@@ -302,7 +304,24 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                Tracks.ChangeCollection(addedItems, removedItems, item => new TrackViewModel(item.Data));
+                if (CurrentTracksSorting == TrackSorting.Unordered)
+                {
+                    Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+                }
+                else
+                {
+                    // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
+                    UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+
+                    // Avoiding direct assignment to prevent effect on UI.
+                    foreach (var item in UnsortedTracks)
+                    {
+                        if (!Tracks.Contains(item))
+                            Tracks.Add(item);
+                    }
+
+                    SortTrackCollection(CurrentTracksSorting);
+                }
             });
         }
 
@@ -368,13 +387,16 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         public ObservableCollection<IAlbumCollectionItem> Albums { get; }
 
+        /// <inheritdoc />
+        public TrackSorting CurrentTracksSorting { get; private set; }
+
         /// <summary>
         /// The tracks released by this artist.
         /// </summary>
         public ObservableCollection<TrackViewModel> Tracks { get; set; }
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> UnsortedTracks { get;  }
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get; }
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }
@@ -550,6 +572,8 @@ namespace StrixMusic.Sdk.ViewModels
         ///<inheritdoc />
         public void SortTrackCollection(TrackSorting trackSorting)
         {
+            CurrentTracksSorting = trackSorting;
+
             CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
 
             OnPropertyChanged(nameof(Tracks)); // letting UI know that the order has changed.
