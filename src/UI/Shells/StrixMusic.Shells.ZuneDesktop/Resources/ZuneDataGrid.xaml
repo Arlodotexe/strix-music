@@ -58,8 +58,8 @@
     <SolidColorBrush x:Key="SystemControlRowGroupHeaderBackgroundMediumBrush" Color="{StaticResource SystemChromeMediumColor}"/>
     <SolidColorBrush x:Key="DataGridCurrencyVisualPrimaryBrush" Color="Transparent"/>
 
-    <x:String x:Key="SortIconAscending">&#xE74A;</x:String>
-    <x:String x:Key="SortIconDescending">&#xE74B;</x:String>
+    <x:String x:Key="SortIconAscending">&#xEDDB;</x:String>
+    <x:String x:Key="SortIconDescending">&#xEDDC;</x:String>
     <x:String x:Key="RowGroupHeaderIconClosed">&#xE0E3;</x:String>
     <x:String x:Key="RowGroupHeaderIconOpened">&#xE0E5;</x:String>
 
