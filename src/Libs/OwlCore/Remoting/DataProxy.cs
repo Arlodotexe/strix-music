@@ -40,14 +40,14 @@ namespace OwlCore.Remoting
                                                     $"received ({remoteDataMessage.TargetMemberSignature}).");
                     }
 
-                    if (!(type?.IsAssignableFrom(mostDerivedType) ?? false))
+                    if (!type?.IsAssignableFrom(mostDerivedType) ?? false)
                     {
-                        if (!type?.IsSubclassOf(typeof(IConvertible)) ?? false)
+                        if (!most?.IsSubclassOf(typeof(IConvertible)) ?? false)
                         {
                             throw new NotSupportedException($"Received data {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"}" +
                                                             $"and must implement {nameof(IConvertible)} for automatic type conversion." +
-                                                            $"Either derive from {nameof(IConvertible)}, or manually convert to this type " +
-                                                            $"and re-assign {nameof(RemoteDataMessage)}.{nameof(RemoteDataMessage.Result)}" +
+                                                            $"Either derive from {nameof(IConvertible)}, or convert to this type " +
+                                                            $"for {nameof(RemoteDataMessage)}.{nameof(RemoteDataMessage.Result)}" +
                                                             $"in your {nameof(IRemoteMessageHandler.MessageConverter)}.");
                         }
 
