@@ -7,12 +7,9 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
     /// <summary>
     /// A class that can compare names.
     /// </summary>
-    public class NameComparer : Comparer<TrackViewModel>
+    public class NameComparer<TTrack> : Comparer<TTrack> where TTrack : ITrack
     {
         /// <inheritdoc/>
-        public override int Compare(TrackViewModel x, TrackViewModel y)
-        {
-            return string.Compare(x.Name, y.Name, false, CultureInfo.CurrentCulture);
-        }
+        public override int Compare(TTrack x, TTrack y) => string.Compare(x.Name, y.Name, false, CultureInfo.CurrentCulture);
     }
 }

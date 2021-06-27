@@ -7,16 +7,15 @@ using StrixMusic.Sdk.Data;
 namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
 {
     /// <summary>
-    /// Compares the name in reverse order.
+    /// Compares the track number.
     /// </summary>
-    public class ReverseNameComparer<TTrack> : Comparer<TTrack> where TTrack : ITrack
+    public class TrackNumberComparer<TTrack> : Comparer<TTrack> where TTrack : ITrack
     {
         /// <inheritdoc/>
         public override int Compare(TTrack x, TTrack y)
         {
-            var result = string.Compare(x.Name, y.Name, false, CultureInfo.CurrentCulture);
-
-            return result == 1 ? result *= -1 : result;
+            // Handling nullable dataTypes while comparison using Nullable<T>.
+            return Nullable.Compare(x.TrackNumber, y.TrackNumber);
         }
     }
 }

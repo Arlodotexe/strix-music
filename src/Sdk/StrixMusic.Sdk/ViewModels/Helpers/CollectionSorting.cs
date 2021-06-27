@@ -32,20 +32,23 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
             switch (trackSorting)
             {
                 case TrackSorting.Ascending:
-                    trackCollection.Sort(new NameComparer());
+                    trackCollection.Sort(new NameComparer<TrackViewModel>());
                     break;
                 case TrackSorting.Descending:
-                    trackCollection.Sort(new ReverseNameComparer());
+                    trackCollection.Sort(new ReverseNameComparer<TrackViewModel>());
                     break;
                 case TrackSorting.Unordered:
                     trackCollection = originalOrder;
                     originalOrder.Clear();
                     break;
                 case TrackSorting.TrackNumber:
+                    trackCollection.Sort(new TrackNumberComparer<TrackViewModel>());
                     break;
                 case TrackSorting.AddedAt:
+                    trackCollection.Sort(new AddedAtComparer<TrackViewModel>());
                     break;
                 case TrackSorting.Duration:
+                    trackCollection.Sort(new DurationComparer<TrackViewModel>());
                     break;
                 default:
                     ThrowHelper.ThrowNotSupportedException($"TrackSortType {trackSorting} is not supported.");
