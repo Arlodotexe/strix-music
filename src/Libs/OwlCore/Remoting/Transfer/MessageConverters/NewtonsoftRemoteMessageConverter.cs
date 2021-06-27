@@ -30,13 +30,12 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
             if (result is RemoteMethodCallMessage memberMessage)
                 memberMessage.TargetMemberSignature = memberMessage.TargetMemberSignature.Replace("TARGETNAME_", "");
 
-            // Newtonsoft doesn't serialize Guid to proper type when holder type is T, object, or dynamic.
+            // Newtonsoft doesn't deserialize these to proper types when holder type is T, object, or dynamic,
+            // presumably because they don't implement IConvertible.
             if (result is RemoteDataMessage dataMsg)
             {
-                if (Guid.TryParse(dataMsg.Result, out Guid guid))
-                {
+                if (Guid.TryParse(dataMsg.Result?.ToString(), out Guid guid))
                     dataMsg.Result = guid;
-                }
             }
 
             return Task.FromResult(result);

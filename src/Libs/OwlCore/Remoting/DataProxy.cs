@@ -31,9 +31,30 @@ namespace OwlCore.Remoting
                         return;
 
                     var type = Type.GetType(remoteDataMessage.TargetMemberSignature);
+                    var mostDerivedType = remoteDataMessage.Result?.GetType();
 
-                    var res = Convert.ChangeType(remoteDataMessage.Result, type);
-                    taskCompletionSource.SetResult((TResult?)res);
+                    if (typeof(TResult?) != type)
+                    {
+                        throw new ArgumentException($"Generic type argument does not match the received member signature. " +
+                                                    $"Expected {typeof(TResult?).AssemblyQualifiedName}, " +
+                                                    $"received ({remoteDataMessage.TargetMemberSignature}).");
+                    }
+
+                    if (!(type?.IsAssignableFrom(mostDerivedType) ?? false))
+                    {
+                        if (!type?.IsSubclassOf(typeof(IConvertible)) ?? false)
+                        {
+                            throw new NotSupportedException($"Received data {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"}" +
+                                                            $"and must implement {nameof(IConvertible)} for automatic type conversion." +
+                                                            $"Either derive from {nameof(IConvertible)}, or manually convert to this type " +
+                                                            $"and re-assign {nameof(RemoteDataMessage)}.{nameof(RemoteDataMessage.Result)}" +
+                                                            $"in your {nameof(IRemoteMessageHandler.MessageConverter)}.");
+                        }
+
+                        remoteDataMessage.Result = Convert.ChangeType(remoteDataMessage.Result, type);
+                    }
+
+                    taskCompletionSource.SetResult((TResult?)remoteDataMessage.Result);
                 }
             }
 

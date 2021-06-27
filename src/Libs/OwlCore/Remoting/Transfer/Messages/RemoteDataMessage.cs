@@ -14,7 +14,7 @@ namespace OwlCore.Remoting.Transfer
         /// <param name="token">The name of the target member being changed or invoked.</param>
         /// <param name="memberSignature"></param>
         /// <param name="result">The result data being transferred.</param>
-        public RemoteDataMessage(string memberInstanceId, string token, string memberSignature, dynamic? result)
+        public RemoteDataMessage(string memberInstanceId, string token, string memberSignature, object? result)
         {
             MemberRemoteId = memberInstanceId;
             TargetMemberSignature = memberSignature;
@@ -39,7 +39,7 @@ namespace OwlCore.Remoting.Transfer
         /// <summary>s
         /// The result value.
         /// </summary>
-        public dynamic? Result { get; set; }
+        public object? Result { get; set; }
 
         /// <inheritdoc/>
         public string? CustomActionName { get; set; }

@@ -8,12 +8,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Author>Arlo Godfrey</Author>
-    <Version>0.0.10</Version>
+    <Version>0.0.11</Version>
     <Product>OwlCore</Product>
     <Description>
 Have you ever seen an owl do a barrel roll? Me neither.
 
-This project is a constant work in progress. Until a stable release, breaking changes are possible at any time.
+This project is a constant work in progress. Until a stable release, breaking changes are possible.
 
 - AbstractUI - Abstract away simple UI elements as pure data. Let something else decide how to display it.
 - AbstractStorage - Completely abstract away your storage needs, no matter how you access it.
@@ -26,7 +26,7 @@ This project is a constant work in progress. Until a stable release, breaking ch
 - Countless extension methods. PruneNull, Shuffle, InParallel, ChangeDate, HashMD5Fast, DistinctBy, InsertOrAdd, and more.</Description>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
-    <PackageReleaseNotes>Added missing documentation. Replaced RemoteMethodProxy with PublishDataAsync and ReceiveDataAsync extension methods. Added cancellation tokens to Remoting.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed a bug in OwlCore.Remoting where passing Guid to DataProxy using NewtonsoftRemoteMessageConverter would throw.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
