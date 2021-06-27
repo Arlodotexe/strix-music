@@ -73,6 +73,7 @@
 		<None Remove="Styles\ArtistCollectionStyle.xaml" />
 		<None Remove="Styles\ArtistItemStyle.xaml" />
 		<None Remove="Styles\Collections\PlaylistCollectionStyle.xaml" />
+		<None Remove="Styles\Collections\TrackTableStyle.xaml" />
 		<None Remove="Styles\Items\PlaylistItemStyle.xaml" />
 		<None Remove="Styles\NowPlayingBarStyle.xaml" />
 		<None Remove="Styles\NowPlayingViewStyle.xaml" />
@@ -113,6 +114,7 @@
 		<UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\Collections\PlaylistCollectionStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\Collections\TrackTableStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\Items\PlaylistItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
@@ -175,6 +177,9 @@
 		</Compile>
 		<Compile Update="Styles\Collections\PlaylistCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\Collections\TrackTableStyle.xaml.cs">
+		  <DependentUpon>TrackTableStyle.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="Styles\Items\AlbumItemStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
