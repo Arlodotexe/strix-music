@@ -5,7 +5,7 @@ namespace OwlCore.Remoting.Transfer
     /// <summary>
     /// Contains information for sending and receiving a single object tied to a token.
     /// </summary>
-    public class RemoteDataMessage<T> : IRemoteMemberMessage
+    public class RemoteDataMessage : IRemoteMemberMessage
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteMemberMessageBase"/>.
@@ -14,7 +14,7 @@ namespace OwlCore.Remoting.Transfer
         /// <param name="token">The name of the target member being changed or invoked.</param>
         /// <param name="memberSignature"></param>
         /// <param name="result">The result data being transferred.</param>
-        public RemoteDataMessage(string memberInstanceId, string token, string memberSignature, T? result)
+        public RemoteDataMessage(string memberInstanceId, string token, string memberSignature, dynamic? result)
         {
             MemberRemoteId = memberInstanceId;
             TargetMemberSignature = memberSignature;
@@ -36,10 +36,10 @@ namespace OwlCore.Remoting.Transfer
         /// </summary>
         public string Token { get; set; }
 
-        /// <summary>
+        /// <summary>s
         /// The result value.
         /// </summary>
-        public T? Result { get; set; } // todo: newtonsoft can't serialize this type properly for some reason
+        public dynamic? Result { get; set; }
 
         /// <inheritdoc/>
         public string? CustomActionName { get; set; }

@@ -22,13 +22,22 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
                 RemotingAction.None => deserializedBase,
                 RemotingAction.MethodCall => JsonConvert.DeserializeObject<RemoteMethodCallMessage>(jsonStr),
                 RemotingAction.PropertyChange => JsonConvert.DeserializeObject<RemotePropertyChangeMessage>(jsonStr),
-                RemotingAction.RemoteDataProxy => JsonConvert.DeserializeObject<RemoteDataMessage<object?>>(jsonStr),
+                RemotingAction.RemoteDataProxy => JsonConvert.DeserializeObject<RemoteDataMessage>(jsonStr),
                 RemotingAction.ExceptionThrown => JsonConvert.DeserializeObject<RemoteExceptionDataMessage>(jsonStr),
                 _ => ThrowHelper.ThrowNotSupportedException<IRemoteMemberMessage>(),
             };
 
             if (result is RemoteMethodCallMessage memberMessage)
                 memberMessage.TargetMemberSignature = memberMessage.TargetMemberSignature.Replace("TARGETNAME_", "");
+
+            // Newtonsoft doesn't serialize Guid to proper type when holder type is T, object, or dynamic.
+            if (result is RemoteDataMessage dataMsg)
+            {
+                if (Guid.TryParse(dataMsg.Result, out Guid guid))
+                {
+                    dataMsg.Result = guid;
+                }
+            }
 
             return Task.FromResult(result);
         }

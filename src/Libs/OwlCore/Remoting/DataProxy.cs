@@ -25,15 +25,12 @@ namespace OwlCore.Remoting
 
             void MemberRemote_MessageReceived(object sender, IRemoteMessage e)
             {
-                if (e is RemoteDataMessage<object?> remoteDataMessage)
+                if (e is RemoteDataMessage remoteDataMessage)
                 {
                     if (remoteDataMessage.Token != token)
                         return;
 
                     var type = Type.GetType(remoteDataMessage.TargetMemberSignature);
-
-                    if (type == typeof(Guid))
-                        remoteDataMessage.Result = Guid.Parse(remoteDataMessage.Result?.ToString());
 
                     var res = Convert.ChangeType(remoteDataMessage.Result, type);
                     taskCompletionSource.SetResult((TResult?)res);
@@ -59,7 +56,7 @@ namespace OwlCore.Remoting
         {
             var memberSignature = MemberRemote.CreateMemberSignature(typeof(T?));
 
-            await memberRemote.SendRemotingMessageAsync(new RemoteDataMessage<T?>(memberRemote.Id, token, memberSignature, data), cancellationToken);
+            await memberRemote.SendRemotingMessageAsync(new RemoteDataMessage(memberRemote.Id, token, memberSignature, data), cancellationToken);
             return data;
         }
     }
