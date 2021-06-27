@@ -42,7 +42,7 @@ namespace OwlCore.Remoting
 
                     if (!type?.IsAssignableFrom(mostDerivedType) ?? false)
                     {
-                        if (!most?.IsSubclassOf(typeof(IConvertible)) ?? false)
+                        if (!type?.IsSubclassOf(typeof(IConvertible)) ?? false)
                         {
                             throw new NotSupportedException($"Received data {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"}" +
                                                             $"and must implement {nameof(IConvertible)} for automatic type conversion." +
