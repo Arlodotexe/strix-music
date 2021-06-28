@@ -40,8 +40,9 @@
                                  HorizontalAlignment="Stretch" SelectionMode="Extended" IsReadOnly="True"
                                  Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible">
                 <tkcontrols:DataGrid.Columns>
-                    <tkcontrols:DataGridTextColumn x:Uid="/Music/SongPVI" Header="SONG" Binding="{Binding Name}" Tag="Name"/>
-                    <tkcontrols:DataGridTextColumn Header="URL" Binding="{Binding Url}"/>
+                    <tkcontrols:DataGridTextColumn x:Uid="/Music/SongCOL" Header="SONG" Binding="{Binding Name}" Tag="Name"/>
+                    <tkcontrols:DataGridTextColumn x:Uid="/Music/AlbumCOL" Header="ALBUM" Binding="{Binding Album.Name}" Tag="Album"/>
+                    <tkcontrols:DataGridTextColumn x:Uid="/Music/SongArtistCOL" Header="SONG ARTIST" Binding="{Binding Model.Id}" Tag="Source"/>
                 </tkcontrols:DataGrid.Columns>
             </tkcontrols:DataGrid>
         </Grid>
