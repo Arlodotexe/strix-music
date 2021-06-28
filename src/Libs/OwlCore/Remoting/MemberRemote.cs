@@ -69,10 +69,8 @@ namespace OwlCore.Remoting
             RemotePropertyAttribute.ExceptionRaised -= OnInterceptExceptionRaised;
         }
 
-        internal async void MessageHandler_DataReceived(object sender, byte[] e)
+        internal void MessageHandler_DataReceived(object sender, IRemoteMessage message)
         {
-            var message = await MessageHandler.MessageConverter.DeserializeAsync(e);
-
             if (message is IRemoteMemberMessage memberMsg && memberMsg.MemberRemoteId != Id)
                 return;
 
@@ -188,10 +186,7 @@ namespace OwlCore.Remoting
                 return;
 
             await MessageHandler.InitAsync();
-
-            var data = await MessageHandler.MessageConverter.SerializeAsync(message, cancellationToken);
-
-            await MessageHandler.SendMessageAsync(data, cancellationToken);
+            await MessageHandler.SendMessageAsync(message, cancellationToken);
 
             MessageSent?.Invoke(this, message);
         }

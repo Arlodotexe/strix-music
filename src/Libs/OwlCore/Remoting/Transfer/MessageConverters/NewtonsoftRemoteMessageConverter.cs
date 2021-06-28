@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace OwlCore.Remoting.Transfer.MessageConverters
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// Prepares the data in a <see cref="IRemoteMessage"/> for generic data transfer using <see cref="Newtonsoft.Json"/>.
+    /// </summary>
     public class NewtonsoftRemoteMessageConverter : IRemoteMessageConverter
     {
         /// <inheritdoc/>
@@ -42,7 +44,7 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
         }
 
         /// <inheritdoc/>
-        public async Task<byte[]> SerializeAsync(IRemoteMessage message, CancellationToken? cancellationToken = null)
+        public Task<byte[]> SerializeAsync(IRemoteMessage message, CancellationToken? cancellationToken = null)
         {
             var methodCallMessage = message as RemoteMethodCallMessage;
 
@@ -57,9 +59,7 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
             if (methodCallMessage != null)
                 methodCallMessage.TargetMemberSignature = methodCallMessage.TargetMemberSignature.Replace("TARGETNAME_", "");
 
-            var x = await DeserializeAsync(bytes);
-
-            return bytes;
+            return Task.FromResult(bytes);
         }
     }
 }

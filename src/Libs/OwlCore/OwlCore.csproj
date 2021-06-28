@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Author>Arlo Godfrey</Author>
-    <Version>0.0.11</Version>
+    <Version>0.0.12</Version>
     <Product>OwlCore</Product>
     <Description>
 Have you ever seen an owl do a barrel roll? Me neither.
@@ -27,6 +27,7 @@ This project is a constant work in progress. Until a stable release, breaking ch
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
     <PackageReleaseNotes>
+		Changed IRemoteMessageHandler to send and receive IRemoteMessage directly, removing internal de/serialization.
 		Fixed a bug in OwlCore.Remoting where passing Guid to DataProxy using NewtonsoftRemoteMessageConverter would throw.
 		Added checks, exceptions and instructions for mismatched data types received in DataProxy.
 	</PackageReleaseNotes>
