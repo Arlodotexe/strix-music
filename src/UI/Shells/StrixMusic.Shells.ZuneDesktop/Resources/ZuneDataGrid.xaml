@@ -49,10 +49,9 @@
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
-    <SolidColorBrush x:Key="ZuneListViewItemBackground" Color="#00000000"/>
-    <SolidColorBrush x:Key="ZuneListViewItemBackgroundHover" Color="#18000000"/>
-    <SolidColorBrush x:Key="ZuneListViewItemBackgroundPressed" Color="#18000000"/>
-    <SolidColorBrush x:Key="ZuneListViewItemBackgroundSelected" Color="#27000000"/>
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Brushes.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
 
     <SolidColorBrush x:Key="SystemControlGridLinesBaseMediumLowBrush" Color="{StaticResource SystemBaseMediumLowColor}" Opacity="0.4"/>
     <SolidColorBrush x:Key="SystemControlRowGroupHeaderBackgroundMediumBrush" Color="{StaticResource SystemChromeMediumColor}"/>
@@ -150,7 +149,7 @@
         <Setter Property="DropLocationIndicatorStyle">
             <Setter.Value>
                 <Style TargetType="Control">
-                    <Setter Property="Background" Value="#F10EA0"/>
+                    <Setter Property="Background" Value="{StaticResource ZunePink}"/>
                     <Setter Property="Width" Value="1"/>
                     <Setter Property="Template">
                         <Setter.Value>
@@ -523,6 +522,7 @@
     <Style TargetType="control:DataGridRow">
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="MinHeight" Value="0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="control:DataGridRow">
