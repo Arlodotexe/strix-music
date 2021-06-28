@@ -37,9 +37,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         public Uri? Url { get; set; }
 
         /// <summary>
-        /// The picture of the artist.
+        /// The unique identifier(s) for this artist's image(s).
         /// </summary>
-        public string? ImagePath { get; set; }
+        public List<string>? ImageIds { get; set; }
 
         /// <summary>
         /// The genres of this track.

@@ -236,7 +236,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 metadata.TrackMetadata.Id ??= fileData.Path.HashMD5Fast();
 
-                if (metadata.TrackMetadata.ImagePath is null)
+                if (metadata.TrackMetadata.ImageIds is null)
                 {
                     // TODO get file thumbnail
                 }
@@ -428,14 +428,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         }
                     }
                 }
-
+                
                 return new FileMetadata
                 {
                     AlbumMetadata = new AlbumMetadata
                     {
                         Description = tags.Description,
                         Title = tags.Album,
-                        ImagePath = imagePath,
+                        ImageIds = new List<string>(),
                         Duration = tagFile.Properties.Duration,
                         Genres = new List<string>(tags.Genres),
                         DatePublished = tags.DateTagged,
@@ -445,7 +445,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     TrackMetadata = new TrackMetadata
                     {
                         Source = new Uri(fileData.Path),
-                        ImagePath = imagePath,
+                        ImageIds = new List<string>(),
                         Description = tags.Description,
                         Title = tags.Title,
                         DiscNumber = tags.Disc,
@@ -458,7 +458,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     ArtistMetadata = new ArtistMetadata
                     {
                         Name = tags.FirstAlbumArtist,
-                        ImagePath = artistImagePath,
+                        ImageIds = new List<string>(),
                         Genres = new List<string>(tags.Genres),
                         AlbumIds = new List<string>(),
                         TrackIds = new List<string>(),

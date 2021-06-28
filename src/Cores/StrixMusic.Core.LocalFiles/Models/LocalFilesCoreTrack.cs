@@ -35,8 +35,8 @@ namespace StrixMusic.Core.LocalFiles.Models
             _trackMetadata = trackMetadata;
             Genres = new SynchronizedObservableCollection<string>(trackMetadata.Genres);
 
-            if (trackMetadata.ImagePath != null)
-                _image = InstanceCache.Images.GetOrCreate(Id, SourceCore, new Uri(trackMetadata.ImagePath));
+            if (trackMetadata.ImageIds != null)
+                _image = InstanceCache.Images.GetOrCreate(Id, SourceCore, null);
 
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
             AttachEvents();
@@ -98,7 +98,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 if (metadata.Title != previousData.Title)
                     NameChanged?.Invoke(this, Name);
 
-                if (metadata.ImagePath != previousData.ImagePath)
+                if (metadata.ImageIds != previousData.ImageIds)
                     HandleImageChanged(metadata);
 
                 if (metadata.Description != previousData.Description)
@@ -136,10 +136,9 @@ namespace StrixMusic.Core.LocalFiles.Models
             if (previousImage != null)
                 removed.Add(new CollectionChangedItem<ICoreImage>(previousImage, 0));
 
-            // ReSharper disable once ReplaceWithStringIsNullOrEmpty (breaks nullability check)
-            if (e.ImagePath != null && e.ImagePath.Length > 0)
+            if (e.ImageIds != null)
             {
-                var newImage = new LocalFilesCoreImage(SourceCore, new Uri(e.ImagePath));
+                var newImage = new LocalFilesCoreImage(SourceCore, null);
                 InstanceCache.Images.Replace(Id, newImage);
                 added.Add(new CollectionChangedItem<ICoreImage>(newImage, 0));
                 _image = newImage;

@@ -22,9 +22,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         public string? Description { get; set; }
 
         /// <summary>
-        /// The path to the cover art for this album.
+        /// The unique identifer(s) for this album's image(s).
         /// </summary>
-        public string? ImagePath { get; set; }
+        public List<string>? ImageIds { get; set; }
 
         /// <summary>
         /// The unique identifier(s) for this album's track(s).

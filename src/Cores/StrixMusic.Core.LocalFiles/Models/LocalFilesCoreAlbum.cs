@@ -39,8 +39,8 @@ namespace StrixMusic.Core.LocalFiles.Models
             Guard.IsNotNull(albumMetadata.ArtistIds, nameof(albumMetadata.ArtistIds));
             Guard.IsNotNull(albumMetadata.TrackIds, nameof(albumMetadata.TrackIds));
 
-            if (albumMetadata.ImagePath != null)
-                _image = InstanceCache.Images.GetOrCreate(Id, sourceCore, new Uri(albumMetadata.ImagePath));
+            if (albumMetadata.ImageIds != null)
+                _image = InstanceCache.Images.GetOrCreate(Id, sourceCore, null);
 
             Genres = new SynchronizedObservableCollection<string>(albumMetadata.Genres);
 
@@ -135,7 +135,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 if (metadata.Title != previousData.Title)
                     NameChanged?.Invoke(this, Name);
 
-                if (metadata.ImagePath != previousData.ImagePath)
+                if (metadata.ImageIds != previousData.ImageIds)
                     HandleImageChanged(metadata);
 
                 if (metadata.DatePublished != previousData.DatePublished)
@@ -167,10 +167,9 @@ namespace StrixMusic.Core.LocalFiles.Models
             if (previousImage != null)
                 removed.Add(new CollectionChangedItem<ICoreImage>(previousImage, 0));
 
-            // ReSharper disable once ReplaceWithStringIsNullOrEmpty (breaks nullability check)
-            if (e.ImagePath != null && e.ImagePath.Length > 0)
+            if (e.ImageIds != null)
             {
-                var newImage = new LocalFilesCoreImage(SourceCore, new Uri(e.ImagePath));
+                var newImage = new LocalFilesCoreImage(SourceCore, null);
                 InstanceCache.Images.Replace(Id, newImage);
                 added.Add(new CollectionChangedItem<ICoreImage>(newImage, 0));
                 _image = newImage;
@@ -276,7 +275,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public DateTime? AddedAt { get; }
 
         /// <inheritdoc />
-        public int TotalImageCount => _albumMetadata.ImagePath != null ? 1 : 0;
+        public int TotalImageCount => _albumMetadata.ImageIds?.Count ?? 0;
 
         /// <inheritdoc />
         public int TotalArtistItemsCount => _albumMetadata.ArtistIds?.Count ?? 0;
