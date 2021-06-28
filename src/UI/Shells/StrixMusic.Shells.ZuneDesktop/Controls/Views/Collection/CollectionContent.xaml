@@ -77,10 +77,9 @@
                         <Setter Target="ArtistCollection.(Grid.Column)" Value="0"/>
                         <Setter Target="AlbumCollection.(Grid.Column)" Value="1"/>
                         <Setter Target="TrackCollection.(Grid.Column)" Value="2"/>
+                        <Setter Target="TrackTable.(Grid.Column)" Value="3"/>
                         <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
                         <Setter Target="DetailsPane.(Grid.Column)" Value="3"/>
-
-                        <Setter Target="TrackCollection.Style" Value="{StaticResource ZuneDesktopTrackListControlStyle}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Albums">
@@ -96,10 +95,9 @@
                         <Setter Target="ArtistCollection.(Grid.Column)" Value="3"/>
                         <Setter Target="AlbumCollection.(Grid.Column)" Value="0"/>
                         <Setter Target="TrackCollection.(Grid.Column)" Value="1"/>
+                        <Setter Target="TrackTable.(Grid.Column)" Value="3"/>
                         <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
                         <Setter Target="DetailsPane.(Grid.Column)" Value="3"/>
-
-                        <Setter Target="TrackCollection.Style" Value="{StaticResource ZuneDesktopTrackListControlStyle}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Songs">
@@ -114,11 +112,10 @@
 
                         <Setter Target="ArtistCollection.(Grid.Column)" Value="3"/>
                         <Setter Target="AlbumCollection.(Grid.Column)" Value="3"/>
-                        <Setter Target="TrackCollection.(Grid.Column)" Value="0"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="TrackTable.(Grid.Column)" Value="0"/>
                         <Setter Target="PlaylistCollection.(Grid.Column)" Value="3"/>
                         <Setter Target="DetailsPane.(Grid.Column)" Value="3"/>
-
-                        <Setter Target="TrackCollection.Style" Value="{StaticResource ZuneDesktopTrackTableControlStyle}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Playlists">
@@ -133,11 +130,10 @@
 
                         <Setter Target="ArtistCollection.(Grid.Column)" Value="3"/>
                         <Setter Target="AlbumCollection.(Grid.Column)" Value="3"/>
-                        <Setter Target="TrackCollection.(Grid.Column)" Value="1"/>
+                        <Setter Target="TrackCollection.(Grid.Column)" Value="3"/>
+                        <Setter Target="TrackTable.(Grid.Column)" Value="1"/>
                         <Setter Target="PlaylistCollection.(Grid.Column)" Value="0"/>
                         <Setter Target="DetailsPane.(Grid.Column)" Value="2"/>
-
-                        <Setter Target="TrackCollection.Style" Value="{StaticResource ZuneDesktopTrackTableControlStyle}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -195,7 +191,8 @@
             <collections:PlaylistCollection x:Name="PlaylistCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="3"
                                       SelectionChanged="PlaylistSelected"/>
 
-            <collections:TrackCollection x:Name="TrackCollection" DataContext="{x:Bind ViewModel.Library}" Margin="8,0" Grid.Column="2"/>
+            <collections:TrackCollection x:Name="TrackCollection" DataContext="{x:Bind ViewModel.Library}" Style="{StaticResource ZuneDesktopTrackListControlStyle}" Margin="8,0" Grid.Column="2"/>
+            <collections:TrackCollection x:Name="TrackTable" DataContext="{x:Bind ViewModel.Library}" Style="{StaticResource ZuneDesktopTrackTableControlStyle}" Margin="8,0" Grid.Column="3"/>
 
             <local:PlaylistDetailsPane x:Name="DetailsPane" Margin="8,0" Grid.Column="3"/>
 
