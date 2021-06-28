@@ -401,7 +401,7 @@
                                                                                     AutomationProperties.AccessibilityView="Raw"/>
                             <!-- Use TopRightCornerHeader when ColumnHeadersPresenter's Grid.ColumnSpan is 1 and the vertical ScrollBar does not paint on top of the cells -->
                             <!--<localprimitives:DataGridColumnHeader x:Name="TopRightCornerHeader" Grid.Column="2" Template="{StaticResource TopRightHeaderTemplate}"/>-->
-                            <Rectangle x:Name="ColumnHeadersAndRowsSeparator" Grid.ColumnSpan="3" Grid.Row="1" VerticalAlignment="Bottom" Width="Auto" StrokeThickness="1" Height="12" Fill="Transparent"/>
+                            <Rectangle x:Name="ColumnHeadersAndRowsSeparator" Grid.ColumnSpan="3" Grid.Row="1" VerticalAlignment="Bottom" Width="Auto" StrokeThickness="1" Height="16" Fill="Transparent"/>
 
                             <controlprimitives:DataGridRowsPresenter x:Name="RowsPresenter" Grid.ColumnSpan="3" Grid.Row="2" Grid.RowSpan="2"
                                                                            AutomationProperties.AccessibilityView="Raw"/>
@@ -601,7 +601,8 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
         <Setter Property="FontSize" Value="12"/>
-        <Setter Property="MinHeight" Value="28"/>
+        <Setter Property="Padding" Value="0,4"/>
+        <Setter Property="MinHeight" Value="0"/>
         <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -639,11 +640,11 @@
                         <Rectangle x:Name="CurrencyVisual" Stroke="{ThemeResource DataGridCurrencyVisualPrimaryBrush}" StrokeThickness="1" Fill="Transparent"
                                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsHitTestVisible="False" Opacity="0"/>
 
-                        <ContentPresenter
-                                    Content="{TemplateBinding Content}" Opacity=".8"
-                                    ContentTemplate="{TemplateBinding ContentTemplate}"
-                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        <ContentPresenter Content="{TemplateBinding Content}" Opacity=".8"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Padding="{TemplateBinding Padding}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 
                         <Rectangle x:Name="InvalidVisualElement" IsHitTestVisible="False" StrokeThickness="1" Stroke="{ThemeResource DataGridCellInvalidBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0"/>
 
