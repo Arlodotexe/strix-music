@@ -366,7 +366,13 @@
   <data name="PlaylistsCount" xml:space="preserve">
     <value>{0} פלייליסטים</value>
   </data>
-  <data name="SongPVI.Header" xml:space="preserve">
+  <data name="SongCOL.Header" xml:space="preserve">
     <value>שיר</value>
+  </data>
+  <data name="SongArtistCOL.Header" xml:space="preserve">
+    <value>אמן השיר</value>
+  </data>
+  <data name="AlbumCOL.Header" xml:space="preserve">
+    <value>אלבום</value>
   </data>
 </root>
