@@ -26,7 +26,10 @@ This project is a constant work in progress. Until a stable release, breaking ch
 - Countless extension methods. PruneNull, Shuffle, InParallel, ChangeDate, HashMD5Fast, DistinctBy, InsertOrAdd, and more.</Description>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
-    <PackageReleaseNotes>Fixed a bug in OwlCore.Remoting where passing Guid to DataProxy using NewtonsoftRemoteMessageConverter would throw.</PackageReleaseNotes>
+    <PackageReleaseNotes>
+		Fixed a bug in OwlCore.Remoting where passing Guid to DataProxy using NewtonsoftRemoteMessageConverter would throw.
+		Added checks, exceptions and instructions for mismatched data types received in DataProxy.
+	</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
