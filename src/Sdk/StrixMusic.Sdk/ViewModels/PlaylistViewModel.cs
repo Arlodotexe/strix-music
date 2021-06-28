@@ -73,8 +73,6 @@ namespace StrixMusic.Sdk.ViewModels
                 UnsortedTracks = new ObservableCollection<TrackViewModel>();
             }
 
-            CurrentTracksSorting = TrackSorting.Unordered;
-
             AttachEvents();
         }
 
@@ -268,6 +266,12 @@ namespace StrixMusic.Sdk.ViewModels
                             Tracks.Add(item);
                     }
 
+                    foreach (var item in Tracks)
+                    {
+                        if (!UnsortedTracks.Contains(item))
+                            Tracks.Remove(item);
+                    }
+
                     SortTrackCollection(CurrentTracksSorting);
                 }
             });
@@ -386,8 +390,6 @@ namespace StrixMusic.Sdk.ViewModels
             CurrentTracksSorting = trackSorting;
 
             CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
-
-            OnPropertyChanged(nameof(Tracks)); // letting UI know that the order has changed.
         }
 
         /// <inheritdoc />
