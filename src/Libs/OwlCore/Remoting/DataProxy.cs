@@ -46,9 +46,8 @@ namespace OwlCore.Remoting
                         {
                             throw new NotSupportedException($"Received data {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"}" +
                                                             $"and must implement {nameof(IConvertible)} for automatic type conversion." +
-                                                            $"Either derive from {nameof(IConvertible)}, or convert to this type " +
-                                                            $"for {nameof(RemoteDataMessage)}.{nameof(RemoteDataMessage.Result)}" +
-                                                            $"in your {nameof(IRemoteMessageHandler.MessageConverter)}.");
+                                                            $"Either derive from {nameof(IConvertible)}, or convert {nameof(RemoteDataMessage)}.{nameof(RemoteDataMessage.Result)}" +
+                                                            $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)}.");
                         }
 
                         remoteDataMessage.Result = Convert.ChangeType(remoteDataMessage.Result, type);
