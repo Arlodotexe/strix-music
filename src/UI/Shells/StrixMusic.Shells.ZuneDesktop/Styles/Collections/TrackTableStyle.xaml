@@ -9,6 +9,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:tkprimitives="using:Microsoft.Toolkit.Uwp.UI.Controls.Primitives"
+    xmlns:timeconvert="using:OwlCore.Uno.Converters.Time"
     xmlns:a="using:OwlCore.Uno.Attached"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.TrackTableStyle">
 
@@ -16,6 +17,8 @@
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ZuneDataGrid.xaml"/>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneTrackListViewItemStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
+
+    <timeconvert:TimeSpanToTextConverter x:Key="TimeSpanToTextConverter"/>
 
     <DataTemplate x:Key="ZuneDesktopTrackTableTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
         <Grid Margin="0,-12,0,0">
@@ -38,11 +41,12 @@
                     <tkcontrols:DataGridTextColumn x:Uid="/Music/SongCOL" Header="SONG" Binding="{Binding Name}" Tag="Song"/>
                     <tkcontrols:DataGridTextColumn x:Uid="/Music/AlbumCOL" Header="ALBUM" Binding="{Binding Album.Name}" Tag="Album"/>
                     <tkcontrols:DataGridTextColumn x:Uid="/Music/SongArtistCOL" Header="SONG ARTIST" Tag="SongArtist"/>
+                    <tkcontrols:DataGridTextColumn x:Uid="/Music/LengthCOL" Header="LENGTH" Binding="{Binding Duration, Converter={StaticResource TimeSpanToTextConverter}}" Tag="Length"/>
                     <tkcontrols:DataGridTemplateColumn Header="&#xECAD;" Width="20" CanUserResize="False" Tag="Explicit"
                                                        HeaderStyle="{StaticResource IconColumnHeaderStyle}">
                         <tkcontrols:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <FontIcon x:Name="Icon" Glyph="&#xECAD;" FontSize="10" Visibility="{Binding IsExplicit}"/>
+                                <FontIcon x:Name="Icon" Glyph="&#xECAD;" FontSize="12" Visibility="{Binding IsExplicit}"/>
                             </DataTemplate>
                         </tkcontrols:DataGridTemplateColumn.CellTemplate>
                     </tkcontrols:DataGridTemplateColumn>

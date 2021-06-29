@@ -375,4 +375,10 @@
   <data name="SongArtistCOL.Header" xml:space="preserve">
     <value>Song Artist</value>
   </data>
+  <data name="Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="LengthCOL.Header" xml:space="preserve">
+    <value>Length</value>
+  </data>
 </root>
