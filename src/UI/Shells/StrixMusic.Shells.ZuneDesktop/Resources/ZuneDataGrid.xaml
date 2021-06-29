@@ -496,13 +496,13 @@
 
                         <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition MinWidth="32" Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
                             <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0"/>
 
-                            <FontIcon x:Name="SortIcon" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="{ThemeResource SortIconAscending}" FontSize="12"
+                            <FontIcon x:Name="SortIcon" Grid.Column="1" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="{ThemeResource SortIconAscending}" FontSize="8"
                                               Foreground="{ThemeResource DataGridColumnHeaderForegroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0"/>
                         </Grid>
                         <Grid x:Name="VerticalSeparator" BorderThickness="1,0" Margin="-1,0,0,0" VerticalAlignment="Stretch" BorderBrush="{TemplateBinding SeparatorBrush}" Opacity="0" Visibility="{TemplateBinding SeparatorVisibility}"/>
