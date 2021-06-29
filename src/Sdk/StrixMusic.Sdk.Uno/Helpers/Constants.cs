@@ -44,11 +44,6 @@
             /// The PRI path of the Quips resource.
             /// </summary>
             public const string QuipsResource = "Quips";
-
-            /// <summary>
-            /// The default string in the case of a localization error.
-            /// </summary>
-            public const string LocalizationErrorString = "Localization Error";
         }
     }
 }

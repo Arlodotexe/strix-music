@@ -23,11 +23,7 @@ namespace StrixMusic.Sdk.Uno.Converters.Time
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Convert(TimeSpan value)
         {
-            var localizationService = Ioc.Default.GetService<LocalizationResourceLoader>();
-
-            if (localizationService == null)
-                return Constants.Localization.LocalizationErrorString;
-
+            LocalizationResourceLoader localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
             string returnValue = string.Empty;
 
             // TODO: Make more rigorous cases
