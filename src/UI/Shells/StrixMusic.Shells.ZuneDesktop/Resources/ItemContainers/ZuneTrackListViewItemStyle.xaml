@@ -44,7 +44,6 @@
                                         <Setter Target="ContentBorder.Background" Value="{ThemeResource ZuneListViewItemBackgroundPressed}"/>
                                     </VisualState.Setters>
                                 </VisualState>
-
                                 <VisualState x:Name="Selected">
                                     <VisualState.Setters>
                                         <Setter Target="ContentBorder.Background" Value="{ThemeResource ZuneListViewItemBackgroundSelected}"/>
@@ -65,15 +64,15 @@
                         </VisualStateManager.VisualStateGroups>
 
                         <ContentPresenter x:Name="ContentPresenter"
-                                                AutomationProperties.AccessibilityView="Raw"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                ContentTransitions="{TemplateBinding ContentTransitions}"
-                                                Content="{TemplateBinding Content}"
-                                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                Padding="{TemplateBinding Padding}"
-                                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Padding="{TemplateBinding Padding}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

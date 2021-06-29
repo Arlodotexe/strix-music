@@ -17,12 +17,6 @@
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ItemContainers/ZuneTrackListViewItemStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style x:Key="ColumnHeaderStyle" TargetType="tkprimitives:DataGridColumnHeader">
-        <Setter Target="Foreground" Value="{ThemeResource Foreground}"/>
-        <Setter Target="FontWeight" Value="Bold"/>
-        <Setter Target="FontSize" Value="12"/>
-    </Style>
-
     <DataTemplate x:Key="ZuneDesktopTrackTableTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
         <Grid Margin="0,-12,0,0">
             <Grid.RowDefinitions>
@@ -42,7 +36,15 @@
                 <tkcontrols:DataGrid.Columns>
                     <tkcontrols:DataGridTextColumn x:Uid="/Music/SongCOL" Header="SONG" Binding="{Binding Name}" Tag="Name"/>
                     <tkcontrols:DataGridTextColumn x:Uid="/Music/AlbumCOL" Header="ALBUM" Binding="{Binding Album.Name}" Tag="Album"/>
-                    <tkcontrols:DataGridTextColumn x:Uid="/Music/SongArtistCOL" Header="SONG ARTIST" Binding="{Binding Model.Id}" Tag="Source"/>
+                    <tkcontrols:DataGridTextColumn x:Uid="/Music/SongArtistCOL" Header="SONG ARTIST" Tag="SongArtist"/>
+                    <tkcontrols:DataGridTemplateColumn Header="&#xECAD;" Width="20" CanUserResize="False" Tag="Explicit"
+                                                       HeaderStyle="{StaticResource IconColumnHeaderStyle}">
+                        <tkcontrols:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <FontIcon x:Name="Icon" Glyph="&#xECAD;" FontSize="10" Visibility="{Binding IsExplicit}"/>
+                            </DataTemplate>
+                        </tkcontrols:DataGridTemplateColumn.CellTemplate>
+                    </tkcontrols:DataGridTemplateColumn>
                 </tkcontrols:DataGrid.Columns>
             </tkcontrols:DataGrid>
         </Grid>
@@ -60,5 +62,4 @@
             </Setter>
         </Style.Setters>
     </Style>
-
 </ResourceDictionary>

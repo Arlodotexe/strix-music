@@ -519,6 +519,71 @@
         </Setter>
     </Style>
 
+    <Style x:Key="IconColumnHeaderStyle" TargetType="controlprimitives:DataGridColumnHeader">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="MinHeight" Value="16"/>
+        <Setter Target="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controlprimitives:DataGridColumnHeader">
+                    <Grid x:Name="ColumnHeaderRoot">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Duration="0" To="{ThemeResource DataGridColumnHeaderBackgroundColor}"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Duration="0" To="{ThemeResource DataGridColumnHeaderHoveredBackgroundColor}"/>
+                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="VerticalSeparator.Opacity" Value="1"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Duration="0" To="{ThemeResource DataGridColumnHeaderPressedBackgroundColor}"/>
+                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="VerticalSeparator.Opacity" Value="1"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Unfocused"/>
+                                <VisualState x:Name="Focused">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="FocusVisual" Storyboard.TargetProperty="Opacity" To="1" Duration="0"/>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="SortStates">
+                                <VisualState x:Name="Unsorted"/>
+                                <VisualState x:Name="SortAscending"/>
+                                <VisualState x:Name="SortDescending"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Rectangle x:Name="BackgroundRectangle" Stretch="Fill" Fill="{ThemeResource DataGridColumnHeaderBackgroundBrush}" Grid.ColumnSpan="3"/>
+                        <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                        <Grid x:Name="VerticalSeparator" BorderThickness="1,0" Margin="-1,0,0,0" VerticalAlignment="Stretch" BorderBrush="{TemplateBinding SeparatorBrush}" Opacity="0" Visibility="{TemplateBinding SeparatorVisibility}"/>
+
+                        <Grid x:Name="FocusVisual" IsHitTestVisible="False" Opacity="0">
+                            <Rectangle x:Name="FocusVisualPrimary" Stroke="{ThemeResource DataGridCellFocusVisualPrimaryBrush}" StrokeThickness="2" Fill="Transparent"
+                                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsHitTestVisible="False"/>
+                            <Rectangle x:Name="FocusVisualSecondary" Stroke="{ThemeResource DataGridCellFocusVisualSecondaryBrush}" StrokeThickness="1" Fill="Transparent"
+                                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsHitTestVisible="False" Margin="2"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="control:DataGridRow">
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="IsTabStop" Value="False"/>
@@ -601,8 +666,11 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
         <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Margin" Value="0"/>
         <Setter Property="Padding" Value="0,4"/>
+        <Setter Property="Opacity" Value="0.8"/>
         <Setter Property="MinHeight" Value="0"/>
+        <Setter Property="MinWidth" Value="0"/>
         <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -611,24 +679,12 @@
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CurrentStates">
                                 <VisualState x:Name="Regular"/>
-                                <VisualState x:Name="Current">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="CurrencyVisual" Storyboard.TargetProperty="Opacity" To="1" Duration="0"/>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="CurrentWithFocus">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="CurrencyVisual" Storyboard.TargetProperty="Opacity" To="1" Duration="0"/>
-                                    </Storyboard>
-                                </VisualState>
+                                <VisualState x:Name="Current"/>
+                                <VisualState x:Name="CurrentWithFocus"/>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="ValidationStates">
                                 <VisualState x:Name="Valid"/>
-                                <VisualState x:Name="Invalid">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="InvalidVisualElement" Storyboard.TargetProperty="Opacity" Duration="0" To="1"/>
-                                    </Storyboard>
-                                </VisualState>
+                                <VisualState x:Name="Invalid"/>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
@@ -637,16 +693,12 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Rectangle x:Name="CurrencyVisual" Stroke="{ThemeResource DataGridCurrencyVisualPrimaryBrush}" StrokeThickness="1" Fill="Transparent"
-                                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsHitTestVisible="False" Opacity="0"/>
-
-                        <ContentPresenter Content="{TemplateBinding Content}" Opacity=".8"
+                        <ContentPresenter Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           Padding="{TemplateBinding Padding}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 
-                        <Rectangle x:Name="InvalidVisualElement" IsHitTestVisible="False" StrokeThickness="1" Stroke="{ThemeResource DataGridCellInvalidBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0"/>
 
                         <Rectangle x:Name="RightGridLine" Grid.Column="1" VerticalAlignment="Stretch" Width="1" Fill="{ThemeResource DataGridFillerColumnGridLinesBrush}"/>
                     </Grid>
@@ -656,3 +708,4 @@
     </Style>
 
 </ResourceDictionary>
+    
