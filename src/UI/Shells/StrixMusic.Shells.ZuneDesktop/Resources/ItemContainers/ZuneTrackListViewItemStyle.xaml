@@ -16,10 +16,9 @@
         <Setter Property="Background" Value="{ThemeResource ZuneListViewItemBackground}"/>
         <Setter Property="TabNavigation" Value="Local"/>
         <Setter Property="IsHoldingEnabled" Value="True"/>
-        <Setter Property="Padding" Value="24,4"/>
-        <Setter Property="MinHeight" Value="0"/>
-        <Setter Property="Margin" Value="0,0,0,1"/>
-        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Padding" Value="24,0"/>
+        <Setter Property="MinHeight" Value="26"/>
+        <Setter Property="FontSize" Value="13"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -30,7 +29,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
-                    <Grid x:Name="ContentBorder" Background="Transparent">
+                    <Grid x:Name="ContentBorder" Background="Transparent" Margin="0,0.5">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal"/>

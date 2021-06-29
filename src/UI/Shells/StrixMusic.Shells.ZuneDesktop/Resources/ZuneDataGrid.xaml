@@ -455,6 +455,7 @@
                                     </Storyboard>
                                     <VisualState.Setters>
                                         <Setter Target="VerticalSeparator.Opacity" Value="1"/>
+                                        <!--<Setter Target="SortIcon.Opacity" Value="1"/>-->
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
@@ -477,15 +478,13 @@
                             <VisualStateGroup x:Name="SortStates">
                                 <VisualState x:Name="Unsorted"/>
                                 <VisualState x:Name="SortAscending">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="SortIcon" Storyboard.TargetProperty="Opacity" Duration="0" To="1"/>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="SortIcon.Opacity" Value="1"/>
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="SortDescending">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="SortIcon" Storyboard.TargetProperty="Opacity" Duration="0" To="1"/>
-                                    </Storyboard>
                                     <VisualState.Setters>
+                                        <Setter Target="SortIcon.Opacity" Value="1"/>
                                         <Setter Target="SortIcon.Glyph" Value="{ThemeResource SortIconDescending}"/>
                                     </VisualState.Setters>
                                 </VisualState>
@@ -497,7 +496,7 @@
                         <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition MinWidth="32" Width="Auto"/>
+                                <ColumnDefinition MinWidth="20" Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
                             <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0"/>
@@ -521,7 +520,7 @@
 
     <Style x:Key="IconColumnHeaderStyle" TargetType="controlprimitives:DataGridColumnHeader">
         <Setter Property="Foreground" Value="Black"/>
-        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontSize" Value="12"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="MinHeight" Value="16"/>
         <Setter Target="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}"/>
@@ -585,9 +584,8 @@
     </Style>
 
     <Style TargetType="control:DataGridRow">
-        <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="MinHeight" Value="0"/>
+        <Setter Property="MinHeight" Value="28"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="control:DataGridRow">
@@ -644,7 +642,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Rectangle x:Name="BackgroundRectangle" Grid.ColumnSpan="2" Fill="{ThemeResource ZuneListViewItemBackground}" Margin="0,0,0,1"/>
+                        <Rectangle x:Name="BackgroundRectangle" Grid.ColumnSpan="2" Fill="{ThemeResource ZuneListViewItemBackground}" Margin="0,0.5"/>
                         <Rectangle x:Name="InvalidVisualElement" Grid.ColumnSpan="2" Opacity="0" Fill="{ThemeResource DataGridRowInvalidBrush}"/>
 
                         <controlprimitives:DataGridRowHeader x:Name="RowHeader" Grid.RowSpan="3" controlprimitives:DataGridFrozenGrid.IsFrozen="True"/>
@@ -665,11 +663,12 @@
         <Setter Property="Background" Value="{ThemeResource DataGridCellBackgroundBrush}"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Margin" Value="0"/>
-        <Setter Property="Padding" Value="0,4"/>
+        <Setter Property="Padding" Value="0"/>
         <Setter Property="Opacity" Value="0.8"/>
-        <Setter Property="MinHeight" Value="0"/>
+        <Setter Property="MinHeight" Value="26"/>
         <Setter Property="MinWidth" Value="0"/>
         <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
