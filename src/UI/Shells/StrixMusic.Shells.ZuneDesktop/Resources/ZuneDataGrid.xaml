@@ -5,7 +5,8 @@
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
     xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls"
     xmlns:control="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:controlprimitives="using:Microsoft.Toolkit.Uwp.UI.Controls.Primitives">
+    xmlns:controlprimitives="using:Microsoft.Toolkit.Uwp.UI.Controls.Primitives"
+    xmlns:a="using:OwlCore.Uno.Attached">
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
@@ -428,12 +429,11 @@
         </Setter>
     </Style>
 
-    <Style TargetType="controlprimitives:DataGridColumnHeader">
+    <Style x:Key="TextColumnHeaderStyle" TargetType="controlprimitives:DataGridColumnHeader">
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="SeparatorBrush" Value="{ThemeResource GridLinesBrush}"/>
         <Setter Property="Padding" Value="12,0,0,0"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="FontWeight" Value="Bold"/>
@@ -499,8 +499,7 @@
                                 <ColumnDefinition MinWidth="20" Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0"/>
-
+                            <TextBlock Text="{TemplateBinding Content}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
                             <FontIcon x:Name="SortIcon" Grid.Column="1" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="{ThemeResource SortIconAscending}" FontSize="8"
                                               Foreground="{ThemeResource DataGridColumnHeaderForegroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0"/>
                         </Grid>

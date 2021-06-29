@@ -38,10 +38,14 @@
                                  Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible"
                                  Sorting="DataGrid_Sorting">
                 <tkcontrols:DataGrid.Columns>
-                    <tkcontrols:DataGridTextColumn x:Uid="/Music/SongCOL" Header="SONG" Binding="{Binding Name}" Tag="Song"/>
-                    <tkcontrols:DataGridTextColumn x:Uid="/Music/AlbumCOL" Header="ALBUM" Binding="{Binding Album.Name}" Tag="Album"/>
-                    <tkcontrols:DataGridTextColumn x:Uid="/Music/SongArtistCOL" Header="SONG ARTIST" Tag="SongArtist"/>
-                    <tkcontrols:DataGridTextColumn x:Uid="/Music/LengthCOL" Header="LENGTH" Binding="{Binding Duration, Converter={StaticResource TimeSpanToTextConverter}}" Tag="Length"/>
+                    <tkcontrols:DataGridTextColumn x:Uid="/Music/SongCOL" Header="SONG" Binding="{Binding Name}" Tag="Song"
+                                                   HeaderStyle="{StaticResource TextColumnHeaderStyle}"/>
+                    <tkcontrols:DataGridTextColumn x:Uid="/Music/AlbumCOL" Header="ALBUM" Binding="{Binding Album.Name}" Tag="Album"
+                                                   HeaderStyle="{StaticResource TextColumnHeaderStyle}"/>
+                    <tkcontrols:DataGridTextColumn x:Uid="/Music/SongArtistCOL" Header="SONG ARTIST" Tag="SongArtist"
+                                                   HeaderStyle="{StaticResource TextColumnHeaderStyle}"/>
+                    <tkcontrols:DataGridTextColumn x:Uid="/Music/LengthCOL" Header="LENGTH" Binding="{Binding Duration, Converter={StaticResource TimeSpanToTextConverter}}" Tag="Length"
+                                                   HeaderStyle="{StaticResource TextColumnHeaderStyle}"/>
                     <tkcontrols:DataGridTemplateColumn Header="&#xECAD;" Width="20" CanUserResize="False" Tag="Explicit"
                                                        HeaderStyle="{StaticResource IconColumnHeaderStyle}">
                         <tkcontrols:DataGridTemplateColumn.CellTemplate>
