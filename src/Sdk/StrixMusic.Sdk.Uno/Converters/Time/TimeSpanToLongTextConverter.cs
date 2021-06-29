@@ -10,6 +10,9 @@ namespace StrixMusic.Sdk.Uno.Converters.Time
     /// <summary>
     /// A converter that converts a given <see cref="TimeSpan"/> to a natural time format string.
     /// </summary>
+    /// <example>
+    ///  "1 Hour 4 Minutes 40 Seconds"
+    /// </example>
     public sealed class TimeSpanToLongTextConverter : IValueConverter
     {
         /// <summary>
