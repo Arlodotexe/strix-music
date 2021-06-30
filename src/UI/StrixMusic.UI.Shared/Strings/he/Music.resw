@@ -354,4 +354,16 @@
   <data name="PodcastsTB.Text" xml:space="preserve">
     <value>פודקסטים</value>
   </data>
+  <data name="SongsCount" xml:space="preserve">
+    <value>{0} שירים</value>
+  </data>
+  <data name="ArtistsCount" xml:space="preserve">
+    <value>{0} אמנים</value>
+  </data>
+  <data name="AlbumsCount" xml:space="preserve">
+    <value>{0} אלבומים</value>
+  </data>
+  <data name="PlaylistsCount" xml:space="preserve">
+    <value>{0} פלייליסטים</value>
+  </data>
 </root>

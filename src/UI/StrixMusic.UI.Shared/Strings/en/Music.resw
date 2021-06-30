@@ -354,4 +354,16 @@
   <data name="PodcastsTB.Text" xml:space="preserve">
     <value>Podcasts</value>
   </data>
+  <data name="SongsCount" xml:space="preserve">
+    <value>{0} Songs</value>
+  </data>
+  <data name="AlbumsCount" xml:space="preserve">
+    <value>{0} Albums</value>
+  </data>
+  <data name="ArtistsCount" xml:space="preserve">
+    <value>{0} Artists</value>
+  </data>
+  <data name="PlaylistsCount" xml:space="preserve">
+    <value>{0} Playlists</value>
+  </data>
 </root>

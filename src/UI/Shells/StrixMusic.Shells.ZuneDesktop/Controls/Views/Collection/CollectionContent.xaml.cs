@@ -1,8 +1,10 @@
 ﻿using StrixMusic.Sdk;
 using StrixMusic.Sdk.Uno.Controls.Collections.Events;
 using StrixMusic.Sdk.ViewModels;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
 {
@@ -20,13 +22,36 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             _ = MainViewModel.Singleton?.Library?.PopulateMoreTracksCommand.ExecuteAsync(20);
             _ = MainViewModel.Singleton?.Library?.PopulateMoreAlbumsCommand.ExecuteAsync(20);
             _ = MainViewModel.Singleton?.Library?.PopulateMoreArtistsCommand.ExecuteAsync(20);
+            _ = MainViewModel.Singleton?.Library?.PopulateMorePlaylistsCommand.ExecuteAsync(20);
         }
 
         private MainViewModel? ViewModel => DataContext as MainViewModel;
 
+        private void SwapPage(string pageVisualStateName)
+        {
+            VisualStateManager.GoToState(this, pageVisualStateName, true);
+            PageTransition.Begin();
+            ClearSelections();
+        }
+
         private void ArtistsPageSelected(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "Artists", true);
+            SwapPage("Artists");
+        }
+
+        private void AlbumsPageSelected(object sender, RoutedEventArgs e)
+        {
+            SwapPage("Albums");
+        }
+
+        private void SongsPageSelected(object sender, RoutedEventArgs e)
+        {
+            SwapPage("Songs");
+        }
+
+        private void PlaylistPageSelected(object sender, RoutedEventArgs e)
+        {
+            SwapPage("Playlists");
         }
 
         private void ArtistSelected(object sender, SelectionChangedEventArgs<ArtistViewModel> e)
@@ -44,14 +69,37 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Views.Collections
             TrackCollection.DataContext = e.SelectedItem;
         }
 
-        private void AlbumsPageSelected(object sender, RoutedEventArgs e)
+        private void PlaylistSelected(object sender, SelectionChangedEventArgs<PlaylistViewModel> e)
         {
-            VisualStateManager.GoToState(this, "Albums", true);
+            e.SelectedItem?.PopulateMoreTracksCommand.Execute(20);
+            TrackCollection.DataContext =
+                DetailsPane.DataContext = e.SelectedItem;
         }
 
-        private void SongsPageSelected(object sender, RoutedEventArgs e)
+        private void ClearSelections()
         {
-            VisualStateManager.GoToState(this, "Songs", true);
+            if (ViewModel == null)
+                return;
+
+            ArtistCollection.ClearSelected();
+            AlbumCollection.ClearSelected();
+            TrackCollection.ClearSelected();
+            PlaylistCollection.ClearSelected();
+
+            ArtistCollection.DataContext =
+            AlbumCollection.DataContext =
+            TrackCollection.DataContext =
+            PlaylistCollection.DataContext= ViewModel.Library;
+
+            DetailsPane.DataContext = null;
+        }
+
+        private void Grid_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Escape)
+            {
+                ClearSelections();
+            }
         }
     }
 }

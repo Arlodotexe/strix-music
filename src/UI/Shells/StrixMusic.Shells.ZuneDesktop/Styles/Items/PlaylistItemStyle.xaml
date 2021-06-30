@@ -1,0 +1,27 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
+    xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.PlaylistItemStyle">
+
+    <DataTemplate x:Key="ZuneDesktopPlaylistTemplate" x:DataType="viewModels:PlaylistViewModel">
+        <TextBlock Text="{x:Bind Name}" FontSize="12" FontWeight="SemiBold" Opacity=".8"/>
+    </DataTemplate>
+
+    <Style x:Key="ZuneDesktopPlaylistControlStyle" TargetType="items:PlaylistItem">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="items:PlaylistItem">
+                        <ContentControl ContentTemplate="{StaticResource ZuneDesktopPlaylistTemplate}"
+                                        HorizontalContentAlignment="Stretch"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style BasedOn="{StaticResource ZuneDesktopPlaylistControlStyle}" TargetType="items:PlaylistItem"/>
+
+</ResourceDictionary>
