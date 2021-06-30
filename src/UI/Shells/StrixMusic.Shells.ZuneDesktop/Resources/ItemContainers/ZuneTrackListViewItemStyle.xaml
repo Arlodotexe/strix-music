@@ -21,7 +21,8 @@
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
         <Setter Property="UseSystemFocusVisuals" Value="false"/>
         <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource SystemControlBackgroundAccentBrush}"/>
         <Setter Property="FocusVisualPrimaryThickness" Value="1"/>

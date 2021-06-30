@@ -6,7 +6,10 @@
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.PlaylistItemStyle">
 
     <DataTemplate x:Key="ZuneDesktopPlaylistTemplate" x:DataType="viewModels:PlaylistViewModel">
-        <TextBlock Text="{x:Bind Name}" FontSize="12" FontWeight="SemiBold" Opacity=".8"/>
+        <Grid Background="Transparent" Margin="-24,0" Padding="24,0">
+            <TextBlock Text="{x:Bind Name}" FontSize="12" FontWeight="SemiBold" Opacity=".8"
+                   VerticalAlignment="Center"/>
+        </Grid>
     </DataTemplate>
 
     <Style x:Key="ZuneDesktopPlaylistControlStyle" TargetType="items:PlaylistItem">
@@ -15,7 +18,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="items:PlaylistItem">
                         <ContentControl ContentTemplate="{StaticResource ZuneDesktopPlaylistTemplate}"
-                                        HorizontalContentAlignment="Stretch"/>
+                                        VerticalContentAlignment="Stretch" VerticalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
