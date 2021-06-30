@@ -8,6 +8,7 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.ViewModels.Helpers.Comparers;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers
 {

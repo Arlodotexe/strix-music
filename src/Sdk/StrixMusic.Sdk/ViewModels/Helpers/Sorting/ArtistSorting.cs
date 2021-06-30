@@ -1,9 +1,13 @@
-﻿namespace StrixMusic.Sdk.ViewModels.Helpers
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
 {
     /// <summary>
-    /// Enumeration for sort types of tracks.
+    /// Enumeration for sort types of artists.
     /// </summary>
-    public enum TrackSorting
+    public enum ArtistSorting
     {
         /// <summary>
         /// Default order of the collection.

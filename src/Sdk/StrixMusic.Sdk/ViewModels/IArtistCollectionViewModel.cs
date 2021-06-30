@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -17,6 +18,17 @@ namespace StrixMusic.Sdk.ViewModels
         /// The artist items in this collection.
         /// </summary>
         public ObservableCollection<IArtistCollectionItem> Artists { get; }
+
+        /// <summary>
+        /// Keeps the default artists collection while sorting.
+        /// </summary>
+        public ObservableCollection<IArtistCollectionItem> UnsortedArtists { get; }
+
+        /// <summary>
+        /// Sorts the artist collection by <see cref="ArtistSorting"/>.
+        /// </summary>
+        /// <param name="artistSorting">The <see cref="ArtistSorting"/> according to which the order should be changed.</param>
+        public void SortArtistCollection(ArtistSorting artistSorting);
 
         /// <summary>
         /// Populates the next set of artists into the collection.
@@ -44,5 +56,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IArtistCollectionBase.PauseArtistCollectionAsync"/>
         /// </summary>
         public IAsyncRelayCommand PauseArtistCollectionAsyncCommand { get; }
+
+        /// <summary>
+        /// Sorts artist collection by <see cref="ArtistSorting"/>.
+        /// </summary>
+        public RelayCommand<ArtistSorting> SortArtistCollectionCommand { get; }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -19,11 +20,22 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IAlbumCollectionItem> Albums { get; }
 
         /// <summary>
+        /// Keeps the default album collection while sorting.
+        /// </summary>
+        public ObservableCollection<IAlbumCollectionItem> UnsortedAlbums { get; }
+
+        /// <summary>
         /// Populates the next set of albums into the collection.
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PopulateMoreAlbumsAsync(int limit);
+
+        /// <summary>
+        /// Sorts the track collection by <see cref="AlbumSorting"/>.
+        /// </summary>
+        /// <param name="albumSorting">The <see cref="AlbumSorting"/> according to which the order should be changed.</param>
+        public void SortAlbumCollection(AlbumSorting albumSorting);
 
         /// <summary>
         /// <inheritdoc cref="PopulateMoreAlbumsAsync"/>
@@ -44,5 +56,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IAlbumCollectionBase.PauseAlbumCollectionAsync"/>
         /// </summary>
         public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }
+
+        /// <summary>
+        /// Sorts album collection by <see cref="AlbumSorting"/>.
+        /// </summary>
+        public RelayCommand<AlbumSorting> SortAlbumCollectionCommand { get; }
     }
 }

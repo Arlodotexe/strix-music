@@ -7,7 +7,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
-using StrixMusic.Sdk.ViewModels.Helpers;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {
