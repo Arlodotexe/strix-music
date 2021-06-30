@@ -18,11 +18,7 @@ namespace StrixMusic.Sdk.Uno.Converters.Units
         /// <returns>The converted value.</returns>
         public static string Convert(int value)
         {
-            var localizationService = Ioc.Default.GetService<LocalizationResourceLoader>();
-
-            if (localizationService == null)
-                return Constants.Localization.LocalizationErrorString;
-
+            LocalizationResourceLoader localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
             return string.Format(localizationService[Constants.Localization.MusicResource, "SongsCount"], value);
         }
 

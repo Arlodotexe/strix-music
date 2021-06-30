@@ -10,6 +10,9 @@ namespace StrixMusic.Sdk.Uno.Converters.Time
     /// <summary>
     /// A converter that converts a given <see cref="TimeSpan"/> to a natural time format string.
     /// </summary>
+    /// <example>
+    ///  "1 Hr 4 Min 40 Sec"
+    /// </example>
     public sealed class TimeSpanToShortTextConverter : IValueConverter
     {
         /// <summary>
@@ -20,11 +23,7 @@ namespace StrixMusic.Sdk.Uno.Converters.Time
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Convert(TimeSpan value)
         {
-            var localizationService = Ioc.Default.GetService<LocalizationResourceLoader>();
-
-            if (localizationService == null)
-                return Constants.Localization.LocalizationErrorString;
-
+            LocalizationResourceLoader localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
             string returnValue = string.Empty;
 
             // TODO: Make more rigorous cases

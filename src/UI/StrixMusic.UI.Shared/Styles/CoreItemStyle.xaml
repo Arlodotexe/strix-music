@@ -35,7 +35,7 @@
             </interactivity:Interaction.Behaviors>
 
             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE109;" FontSize="36" VerticalAlignment="Center" Margin="0,0,0,40" />
-            <TextBlock Text="Add new service" FontSize="16" Margin="0,0,0,40" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            <TextBlock x:Uid="/SuperShell/AddNewServiceTB" Text="Add new service" FontSize="16" Margin="0,0,0,40" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
         </Grid>
     </DataTemplate>
 
