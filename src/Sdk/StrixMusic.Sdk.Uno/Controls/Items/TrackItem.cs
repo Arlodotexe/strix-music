@@ -17,25 +17,50 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
         public TrackItem()
         {
             this.DefaultStyleKey = typeof(TrackItem);
-
-            this.Loaded += TrackItem_Loaded;
         }
 
-        private void TrackItem_Loaded(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The <see cref="TrackViewModel"/> for the control.
+        /// </summary>
+        public TrackViewModel ViewModel => (TrackViewModel)DataContext;
+
+        /// <inheritdoc/>
+        protected override void OnApplyTemplate()
         {
-            Loaded -= TrackItem_Loaded;
+            base.OnApplyTemplate();
+
             AttachHandlers();
-        }
-
-        private void TrackItem_Unloaded(object sender, RoutedEventArgs e)
-        {
-            DetachHandlers();
         }
 
         private void AttachHandlers()
         {
             this.Unloaded += TrackItem_Unloaded;
-            ViewModel.PlaybackStateChanged += ViewModel_PlaybackStateChanged;
+            this.DataContextChanged += TrackItem_DataContextChanged;
+        }
+
+        private void DetachHandlers()
+        {
+            this.Unloaded -= TrackItem_Unloaded;
+            this.DataContextChanged -= TrackItem_DataContextChanged;
+
+            if (ViewModel != null)
+            {
+                ViewModel.PlaybackStateChanged -= ViewModel_PlaybackStateChanged;
+            }
+        }
+
+        private void TrackItem_DataContextChanged(DependencyObject sender, DataContextChangedEventArgs args)
+        {
+            if (DataContext != null)
+            {
+                ViewModel.PlaybackStateChanged -= ViewModel_PlaybackStateChanged;
+            }
+
+            if (args.NewValue is TrackViewModel viewModel)
+            {
+
+                viewModel.PlaybackStateChanged += ViewModel_PlaybackStateChanged;
+            }
         }
 
         private void ViewModel_PlaybackStateChanged(object sender, PlaybackState e)
@@ -43,15 +68,9 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
             PlaybackState = e;
         }
 
-        private void DetachHandlers()
+        private void TrackItem_Unloaded(object sender, RoutedEventArgs e)
         {
-            this.Unloaded -= TrackItem_Unloaded;
-            ViewModel.PlaybackStateChanged -= ViewModel_PlaybackStateChanged;
+            DetachHandlers();
         }
-
-        /// <summary>
-        /// The <see cref="TrackViewModel"/> for the control.
-        /// </summary>
-        public TrackViewModel ViewModel => (TrackViewModel)DataContext;
     }
 }
