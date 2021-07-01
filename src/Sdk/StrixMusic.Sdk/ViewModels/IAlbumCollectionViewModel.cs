@@ -24,6 +24,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// </summary>
         public ObservableCollection<IAlbumCollectionItem> UnsortedAlbums { get; }
 
+        /// <inheritdoc />
+        public AlbumSorting CurrentAlbumSorting { get; }
+
         /// <summary>
         /// Populates the next set of albums into the collection.
         /// </summary>
