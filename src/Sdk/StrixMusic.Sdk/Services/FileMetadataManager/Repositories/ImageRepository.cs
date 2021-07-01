@@ -1,9 +1,12 @@
-﻿using OwlCore.AbstractStorage;
+﻿using Microsoft.Toolkit.Diagnostics;
+
+using OwlCore.AbstractStorage;
 
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
@@ -11,6 +14,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
     /// <inheritdoc/>
     public class ImageRepository : IImageRepository
     {
+        private readonly SemaphoreSlim _initMutex;
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ImageRepository"/>.
+        /// </summary>
+        public ImageRepository()
+        {
+            _initMutex = new SemaphoreSlim(1, 1);
+        }
+
         /// <inheritdoc/>
         public bool IsInitialized { get; private set; }
 
@@ -19,18 +32,26 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 
         /// <inheritdoc/>
         public event EventHandler<IEnumerable<ImageMetadata>>? MetadataRemoved;
-        
+
         /// <inheritdoc/>
         public event EventHandler<IEnumerable<ImageMetadata>>? MetadataAdded;
 
         /// <inheritdoc/>
-        public Task<int> GetItemCount()
+        public async Task InitAsync()
         {
-            throw new NotImplementedException();
+            await _initMutex.WaitAsync();
+            if (IsInitialized)
+            {
+                _initMutex.Release();
+                return;
+            }
+
+            IsInitialized = true;
+            _initMutex.Release();
         }
 
         /// <inheritdoc/>
-        public Task InitAsync()
+        public Task<int> GetItemCount()
         {
             throw new NotImplementedException();
         }
@@ -41,10 +62,23 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             throw new NotImplementedException();
         }
 
+        private void ReleaseUnmanagedResources()
+        {
+            // TODO
+        }
+
         /// <inheritdoc cref="Dispose()"/>
         protected virtual void Dispose(bool disposing)
         {
-            throw new NotImplementedException();
+            Guard.IsTrue(IsInitialized, nameof(IsInitialized));
+
+            ReleaseUnmanagedResources();
+            if (disposing)
+            {
+                // TODO
+            }
+
+            IsInitialized = false;
         }
 
         /// <inheritdoc/>
