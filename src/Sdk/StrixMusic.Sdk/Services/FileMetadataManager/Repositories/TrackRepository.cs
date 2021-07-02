@@ -30,9 +30,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private IFolderData? _folderData;
 
         /// <summary>
-        /// Creates a new instance for <see cref="TrackRepository"/>.
+        /// Creates a new instance of <see cref="TrackRepository"/>.
         /// </summary>
-        ///  <param name="audioMetadataScanner">The file scanner instance to source metadata from.</param>
+        /// <param name="audioMetadataScanner">The file scanner instance to source metadata from.</param>
         public TrackRepository(AudioMetadataScanner audioMetadataScanner)
         {
             Guard.IsNotNull(audioMetadataScanner, nameof(audioMetadataScanner));

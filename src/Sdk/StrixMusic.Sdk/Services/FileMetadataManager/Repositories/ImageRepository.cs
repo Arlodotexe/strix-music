@@ -1,17 +1,16 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-
-using OwlCore.AbstractStorage;
-
-using StrixMusic.Sdk.Services.FileMetadataManager.Models;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.AbstractStorage;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// The service that helps in interacting with the saved file core image information.
+    /// </summary>
     public class ImageRepository : IImageRepository
     {
         private readonly SemaphoreSlim _initMutex;

@@ -6,7 +6,7 @@ using OwlCore.AbstractStorage;
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
     /// <summary>
-    /// <see cref="IFolderData"/> extensions methods for <see cref="LocalFilesCore"/>.
+    /// <see cref="IFolderData"/> extensions methods for the local files core.
     /// </summary>
     public static class FolderDataExtensions
     {

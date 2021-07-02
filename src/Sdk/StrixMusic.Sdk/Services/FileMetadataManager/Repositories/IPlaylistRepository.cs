@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using OwlCore.AbstractStorage;
-using OwlCore.Events;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 {
-    ///<inheritdoc/>
+    /// <summary>
+    /// Provides storage for playlist metadata.
+    /// </summary>
     public interface IPlaylistRepository : IMetadataRepository<PlaylistMetadata>
     {
         /// <summary>

@@ -16,7 +16,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
     /// <summary>
-    /// Service to retrieve artist records.
+    /// The service that helps in interacting with the saved file core artist information.
     /// </summary>
     public class ArtistRepository : IArtistRepository
     {
@@ -31,9 +31,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private IFolderData? _folderData;
 
         /// <summary>
-        /// Creates a new instance for <see cref="TrackRepository"/>.
+        /// Creates a new instance of <see cref="ArtistRepository"/>.
         /// </summary>
-        ///  <param name="audioMetadataScanner">The file scanner instance to source metadata from.</param>
+        /// <param name="audioMetadataScanner">The file scanner instance to source metadata from.</param>
         /// <param name="trackRepository">A <see cref="TrackRepository"/> that references the same set of data as this <see cref="ArtistMetadata"/>.</param>
         internal ArtistRepository(AudioMetadataScanner audioMetadataScanner, TrackRepository trackRepository)
         {

@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.AbstractStorage;
-using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
@@ -35,7 +32,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistRepository"/>.
         /// </summary>
-        ///  <param name="playlistMetadataScanner">The file scanner instance to source metadata from.</param>
+        /// <param name="playlistMetadataScanner">The file scanner instance to source metadata from.</param>
         internal PlaylistRepository(PlaylistMetadataScanner playlistMetadataScanner)
         {
             _playlistMetadataScanner = playlistMetadataScanner;

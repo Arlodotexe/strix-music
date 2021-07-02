@@ -15,7 +15,9 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// The service that helps in interacting with the saved file core album information.
+    /// </summary>
     public class AlbumRepository : IAlbumRepository
     {
         private const string ALBUM_DATA_FILENAME = "AlbumData.bin";
@@ -31,7 +33,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <summary>
         /// Creates a new instance of <see cref="AlbumRepository"/>.
         /// </summary>
-        ///  <param name="audioMetadataScanner">The file scanner instance to source metadata from.</param>
+        /// <param name="audioMetadataScanner">The file scanner instance to source metadata from.</param>
         /// <param name="trackRepository">A <see cref="TrackRepository"/> that references the same set of data as this <see cref="AlbumMetadata"/>.</param>
         internal AlbumRepository(AudioMetadataScanner audioMetadataScanner, TrackRepository trackRepository)
         {

@@ -8,7 +8,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
     /// </summary>
     public class ArtistMetadata : IFileMetadata
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// The unique identifier for this artist.
+        /// </summary>
         public string? Id { get; set; }
 
         /// <summary>

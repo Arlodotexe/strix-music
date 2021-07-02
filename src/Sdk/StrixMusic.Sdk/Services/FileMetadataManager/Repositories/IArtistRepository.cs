@@ -7,7 +7,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
     /// <summary>
-    /// Provides storage for artist metadata
+    /// Provides storage for artist metadata.
     /// </summary>
     public interface IArtistRepository : IMetadataRepository<ArtistMetadata>
     {
