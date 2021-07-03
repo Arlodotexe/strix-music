@@ -18,6 +18,8 @@ using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.MediaPlayback;
+using StrixMusic.Sdk.ViewModels.Helpers;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -51,6 +53,7 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+            SortArtistCollectionCommand = new RelayCommand<ArtistSorting>(SortArtistCollection);
 
             PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistInternalAsync);
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
@@ -59,6 +62,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 Images = new SynchronizedObservableCollection<IImage>();
                 Artists = new SynchronizedObservableCollection<IArtistCollectionItem>();
+                UnsortedArtists = new ObservableCollection<IArtistCollectionItem>();
             }
 
             AttachEvents();
@@ -140,12 +144,42 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                if (CurrentArtistSorting == ArtistSorting.Unordered)
                 {
-                    IArtist artist => new ArtistViewModel(artist),
-                    IArtistCollection collection => new ArtistCollectionViewModel(collection),
-                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
-                });
+                    Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                    {
+                        IArtist artist => new ArtistViewModel(artist),
+                        IArtistCollection collection => new ArtistCollectionViewModel(collection),
+                        _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
+                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                    });
+                }
+                else
+                {
+                    // Preventing index issues during artists emission from the core, also making sure that unordered artists updated. 
+                    UnsortedArtists.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                    {
+                        IArtist artist => new ArtistViewModel(artist),
+                        IArtistCollection collection => new ArtistCollectionViewModel(collection),
+                        _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>(
+                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                    });
+
+                    // Avoiding direct assignment to prevent effect on UI.
+                    foreach (var item in UnsortedArtists)
+                    {
+                        if (!Artists.Contains(item))
+                            Artists.Add(item);
+                    }
+
+                    foreach (var item in Artists)
+                    {
+                        if (!UnsortedArtists.Contains(item))
+                            Artists.Remove(item);
+                    }
+
+                    SortArtistCollection(CurrentArtistSorting);
+                }
             });
         }
 
@@ -328,6 +362,12 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
+        public ArtistSorting CurrentArtistSorting { get; private set; }
+
+        /// <inheritdoc />
+        public ObservableCollection<IArtistCollectionItem> UnsortedArtists { get; }
+
+        /// <inheritdoc />
         public Task<bool> IsAddArtistItemAvailable(int index) => _collection.IsAddArtistItemAvailable(index);
 
         /// <inheritdoc />
@@ -406,6 +446,14 @@ namespace StrixMusic.Sdk.ViewModels
             }
         }
 
+        ///<inheritdoc />
+        public void SortArtistCollection(ArtistSorting artistSorting)
+        {
+            CurrentArtistSorting = artistSorting;
+
+            CollectionSorting.SortArtists(Artists, artistSorting, UnsortedArtists);
+        }
+
         /// <inheritdoc />
         public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _collection.AddArtistItemAsync(artist, index);
 
@@ -432,6 +480,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+         /// <inheritdoc />
+        public RelayCommand<ArtistSorting> SortArtistCollectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<IArtistCollectionItem> PlayArtistAsyncCommand { get; }

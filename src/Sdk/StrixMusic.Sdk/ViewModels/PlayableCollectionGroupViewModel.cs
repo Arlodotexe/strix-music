@@ -75,7 +75,7 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             SortTrackCollectionCommand = new RelayCommand<TrackSorting>(SortTrackCollection);
-
+            SortArtistCollectionCommand = new RelayCommand<ArtistSorting>(SortArtistCollection);
             SortAlbumCollectionCommand = new RelayCommand<AlbumSorting>(SortAlbumCollection);
 
             using (Threading.PrimaryContext)
@@ -88,6 +88,7 @@ namespace StrixMusic.Sdk.ViewModels
                 Playlists = new ObservableCollection<IPlaylistCollectionItem>();
                 Albums = new ObservableCollection<IAlbumCollectionItem>();
                 UnsortedAlbums = new ObservableCollection<IAlbumCollectionItem>();
+                UnsortedArtists = new ObservableCollection<IArtistCollectionItem>();
             }
 
             AttachPropertyEvents();
@@ -560,7 +561,10 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<TrackViewModel> Tracks { get; set; }
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> UnsortedTracks { get;  }
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get; }
+
+        /// <inheritdoc />
+        public ObservableCollection<IArtistCollectionItem> UnsortedArtists { get; }
 
         ///<inheritdoc />
         public ObservableCollection<IAlbumCollectionItem> UnsortedAlbums { get; }
@@ -569,7 +573,13 @@ namespace StrixMusic.Sdk.ViewModels
         public RelayCommand<AlbumSorting> SortAlbumCollectionCommand { get; }
 
         /// <inheritdoc />
+        public RelayCommand<ArtistSorting> SortArtistCollectionCommand { get; }
+
+        /// <inheritdoc />
         public TrackSorting CurrentTracksSorting { get; private set; }
+
+        /// <inheritdoc />
+        public ArtistSorting CurrentArtistSorting { get; private set; }
 
         /// <inheritdoc />
         public AlbumSorting CurrentAlbumSorting { get; private set; }
@@ -769,7 +779,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             CollectionSorting.SortAlbums(Albums, albumSorting, UnsortedAlbums);
         }
-        
+
         /// <inheritdoc />
         public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => _collectionGroup.GetAlbumItemsAsync(limit, offset);
 
@@ -949,6 +959,13 @@ namespace StrixMusic.Sdk.ViewModels
             CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
         }
 
+        ///<inheritdoc />
+        public void SortArtistCollection(ArtistSorting artistSorting)
+        {
+            CurrentArtistSorting = artistSorting;
+
+            CollectionSorting.SortArtists(Artists, artistSorting, UnsortedArtists);
+        }
 
         /// <inheritdoc />
         public Task PausePlaylistCollectionAsync()
