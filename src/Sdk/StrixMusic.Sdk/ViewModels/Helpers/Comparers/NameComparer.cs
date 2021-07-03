@@ -8,9 +8,9 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
     /// <summary>
     /// A class that can compare names.
     /// </summary>
-    public class NameComparer<TCollectionITem> : Comparer<TCollectionITem> where TCollectionITem : IPlayableCollectionItem
+    public class NameComparer<TPlayableBase> : Comparer<TPlayableBase> where TPlayableBase : IPlayableBase
     {
         /// <inheritdoc/>
-        public override int Compare(TCollectionITem x, TCollectionITem y) => string.Compare(x.Name, y.Name, false, CultureInfo.CurrentCulture);
+        public override int Compare(TPlayableBase x, TPlayableBase y) => string.Compare(x.Name, y.Name, false, CultureInfo.CurrentCulture);
     }
 }

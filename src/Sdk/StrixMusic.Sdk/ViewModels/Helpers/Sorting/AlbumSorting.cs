@@ -15,17 +15,17 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
         Unordered,
 
         /// <summary>
-        /// Sort tracks by ascending order (A-Z).
+        /// Sort albums by ascending order (A-Z).
         /// </summary>
         Ascending,
 
         /// <summary>
-        /// Sort tracks in descending order (Z-A).
+        /// Sort albums in descending order (Z-A).
         /// </summary>
         Descending,
 
         /// <summary>
-        /// Sort tracks by track number.
+        /// Sort albums by track number.
         /// </summary>
         TrackNumber,
 
@@ -35,8 +35,19 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
         AddedAt,
 
         /// <summary>
-        /// Sort tracks by duration.
+        /// Sort albums by duration.
         /// </summary>
         Duration,
+
+        /// <summary>
+        /// Sort albums by lastPlayed.
+        /// </summary>
+        LastPlayed,
+
+
+        /// <summary>
+        /// Sort albums by date published.
+        /// </summary>
+        DatePublished,
     }
 }

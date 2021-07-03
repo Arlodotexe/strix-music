@@ -10,10 +10,10 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
     /// <summary>
     /// Compares the name in reverse order.
     /// </summary>
-    public class ReverseNameComparer<TCollectionITem> : Comparer<TCollectionITem> where TCollectionITem : IPlayableCollectionItem
+    public class ReverseNameComparer<TPlayableBase> : Comparer<TPlayableBase> where TPlayableBase : IPlayableBase
     {
         /// <inheritdoc/>
-        public override int Compare(TCollectionITem x, TCollectionITem y)
+        public override int Compare(TPlayableBase x, TPlayableBase y)
         {
             var result = string.Compare(x.Name, y.Name, false, CultureInfo.CurrentCulture);
 
