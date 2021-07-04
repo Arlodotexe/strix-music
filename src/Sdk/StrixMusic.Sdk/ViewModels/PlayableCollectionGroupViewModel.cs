@@ -985,11 +985,11 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PlayPlaylistCollectionAsync() => _collectionGroup.PlayPlaylistCollectionAsync();
 
         ///<inheritdoc />
-        public void SortTrackCollection(TrackSorting playlistSorting)
+        public void SortTrackCollection(TrackSorting trackSorting)
         {
-            CurrentTracksSorting = playlistSorting;
+            CurrentTracksSorting = trackSorting;
 
-            CollectionSorting.SortTracks(Tracks, playlistSorting, UnsortedTracks);
+            CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
         }
 
         ///<inheritdoc />

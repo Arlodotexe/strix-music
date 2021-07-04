@@ -379,9 +379,6 @@ namespace StrixMusic.Sdk.ViewModels
         ///<inheritdoc />
         public ObservableCollection<IAlbumCollectionItem> UnsortedAlbums { get; }
 
-        ///<inheritdoc />
-        public RelayCommand<AlbumSorting> SortAlbumCollectionCommand { get; }
-
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
 
@@ -673,6 +670,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public RelayCommand<TrackSorting> SortTrackCollectionCommand { get; }
+
+        ///<inheritdoc />
+        public RelayCommand<AlbumSorting> SortAlbumCollectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<ITrack> PlayTrackAsyncCommand { get; }
