@@ -411,7 +411,7 @@ namespace StrixMusic.Sdk.ViewModels
                 {
                     Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
-                        IPlaylist artist => new PlaylistViewModel(artist),
+                        IPlaylist playlist => new PlaylistViewModel(playlist),
                         IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
                         _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>(
                             $"{item.Data.GetType()} not supported for adding to {GetType()}")
