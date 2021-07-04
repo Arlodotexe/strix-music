@@ -1,47 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
 {
     /// <summary>
     /// Enumeration for sort types of artists.
     /// </summary>
+    [Flags]
     public enum ArtistSorting
     {
         /// <summary>
         /// Default order of the collection.
         /// </summary>
-        Unordered,
+        Unordered = 0,
 
         /// <summary>
-        /// sort artists by ascending order (A-Z).
+        /// Flags sorting in descending order.
         /// </summary>
-        Ascending,
+        Descending = 0x1,
 
         /// <summary>
-        /// sort artists in descending order (Z-A).
+        /// Sort artists by name.
         /// </summary>
-        Descending,
+        Alphanumerical = 0x2,
 
         /// <summary>
-        /// sort artists by track number.
+        /// Sort artists by track number.
         /// </summary>
-        TrackNumber,
+        TrackNumber = 0x4,
 
         /// <summary>
-        /// Sort track by index.
+        /// Sort track by date added to collection.
         /// </summary>
-        AddedAt,
+        DateAdded = 0x8,
 
         /// <summary>
-        /// sort artists by duration.
+        /// Sort artists by duration.
         /// </summary>
-        Duration,
+        Duration = 0x16,
 
         /// <summary>
-        /// sort artists by lastPlayed.
+        /// Sort artists by last played.
         /// </summary>
-        LastPlayed,
+        LastPlayed = 0x32,
     }
 }

@@ -8,27 +8,27 @@
         /// <summary>
         /// Default order of the collection.
         /// </summary>
-        Unordered,
+        Unordered = 0x0,
 
         /// <summary>
-        /// Sort tracks by ascending order (A-Z).
+        /// Flags sorting in descending order
         /// </summary>
-        Ascending,
+        Descending = 0x1,
 
         /// <summary>
-        /// Sort tracks in descending order (Z-A).
+        /// Sort tracks by name.
         /// </summary>
-        Descending,
+        Alphanumerical = 0x2,
 
         /// <summary>
         /// Sort tracks by track number.
         /// </summary>
-        TrackNumber,
+        TrackNumber = 0x4,
 
         /// <summary>
-        /// Sort track by index.
+        /// Sort tracks by date added to collection.
         /// </summary>
-        AddedAt,
+        DateAdded = 0x8,
 
         /// <summary>
         /// Sort tracks by duration.

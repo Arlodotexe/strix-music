@@ -1,42 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
 {
     /// <summary>
     /// Enumeration for sort types of playlists.
     /// </summary>
+    [Flags]
     public enum PlaylistSorting
     {
         /// <summary>
         /// Default order of the collection.
         /// </summary>
-        Unordered,
+        Unordered = 0,
 
         /// <summary>
-        /// Sort albums by ascending order (A-Z).
+        /// Flags sorting in descending order.
         /// </summary>
-        Ascending,
+        Descending = 0x1,
 
         /// <summary>
-        /// Sort albums in descending order (Z-A).
+        /// Sort playlists by name.
         /// </summary>
-        Descending,
+        Alphanumerical = 0x2,
 
         /// <summary>
-        /// Sort track by index.
+        /// Sort playlists by date added to collection.
         /// </summary>
-        AddedAt,
+        DateAdded = 0x4,
 
         /// <summary>
-        /// Sort albums by duration.
+        /// Sort playlists by duration.
         /// </summary>
-        Duration,
+        Duration = 0x8,
 
         /// <summary>
-        /// Sort albums by lastPlayed.
+        /// Sort playlists by last played.
         /// </summary>
-        LastPlayed,
+        LastPlayed = 0x16,
     }
 }

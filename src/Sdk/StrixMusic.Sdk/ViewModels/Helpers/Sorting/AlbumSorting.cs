@@ -1,48 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
 {
     /// <summary>
     /// Enumeration for sort types of tracks.
     /// </summary>
+    [Flags]
     public enum AlbumSorting
     {
         /// <summary>
         /// Default order of the collection.
         /// </summary>
-        Unordered,
+        Unordered = 0x0,
 
         /// <summary>
-        /// Sort albums by ascending order (A-Z).
+        /// Flags sorting in descending order
         /// </summary>
-        Ascending,
+        Descending = 0x1,
 
         /// <summary>
-        /// Sort albums in descending order (Z-A).
+        /// Sort albums by name.
         /// </summary>
-        Descending,
+        Alphanumerical = 0x2,
 
         /// <summary>
-        /// Sort track by index.
+        /// Sort albums by date added to collection.
         /// </summary>
-        AddedAt,
+        DateAdded = 0x4,
 
         /// <summary>
         /// Sort albums by duration.
         /// </summary>
-        Duration,
+        Duration = 0x8,
 
         /// <summary>
-        /// Sort albums by lastPlayed.
+        /// Sort albums by last played.
         /// </summary>
-        LastPlayed,
-
+        LastPlayed = 0x16,
 
         /// <summary>
         /// Sort albums by date published.
         /// </summary>
-        DatePublished,
+        DatePublished = 0x32,
     }
 }
