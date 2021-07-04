@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.ViewModels.Helpers.Comparers.Abstract;
 
 namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
 {
@@ -9,13 +8,22 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Comparers
     /// Compares the LastPlayed item/>.
     /// </summary>
     /// <typeparam name="TPlayableBase">The <inheritdoc cref="IPlayableCollectionItem"/> to sort.</typeparam>
-    public class LastPlayedComparer<TPlayableBase> : Comparer<TPlayableBase> where TPlayableBase : IPlayableBase
+    public class LastPlayedComparer<TPlayableBase> : InversableComparer<TPlayableBase> where TPlayableBase : IPlayableBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LastPlayedComparer{TPlayableBase}"/> class.
+        /// </summary>
+        /// <param name="isDescending">Sets if the comparer operates in descending order.</param>
+        public LastPlayedComparer(bool isDescending = false) : base(isDescending)
+        {
+        }
+
         /// <inheritdoc/>
         public override int Compare(TPlayableBase x, TPlayableBase y)
         {
             // Handling nullable dataTypes while comparison using Nullable<T>. It also compares the values of the dataType provided and returns greater,less or equal relation.
-            return Nullable.Compare(x.LastPlayed, y.LastPlayed);
+            int value = Nullable.Compare(x.LastPlayed, y.LastPlayed);
+            return IsDescending ? -value : value;
         }
     }
 }
