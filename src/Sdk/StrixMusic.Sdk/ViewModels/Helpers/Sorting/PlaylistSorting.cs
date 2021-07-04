@@ -5,9 +5,9 @@ using System.Text;
 namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
 {
     /// <summary>
-    /// Enumeration for sort types of tracks.
+    /// Enumeration for sort types of playlists.
     /// </summary>
-    public enum AlbumSorting
+    public enum PlaylistSorting
     {
         /// <summary>
         /// Default order of the collection.
@@ -38,11 +38,5 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
         /// Sort albums by lastPlayed.
         /// </summary>
         LastPlayed,
-
-
-        /// <summary>
-        /// Sort albums by date published.
-        /// </summary>
-        DatePublished,
     }
 }

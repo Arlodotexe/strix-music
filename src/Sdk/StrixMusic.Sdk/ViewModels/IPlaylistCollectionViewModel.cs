@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -12,10 +13,21 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public interface IPlaylistCollectionViewModel : IPlaylistCollection
     {
+
+        /// <summary>
+        /// Keeps the default track collection while sorting.
+        /// </summary>
+        public ObservableCollection<IPlaylistCollectionItem> UnsortedPlaylists { get; }
+
         /// <summary>
         /// The playlists in this collection
         /// </summary>
         public ObservableCollection<IPlaylistCollectionItem> Playlists { get; }
+
+        /// <summary>
+        /// The current sorting of the playlists.
+        /// </summary>
+        public PlaylistSorting CurrentPlaylistSorting { get; }
 
         /// <summary>
         /// Populates the next set of playlists into the collection.
@@ -26,6 +38,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc cref="PopulateMorePlaylistsAsync" />
         public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }
+
+        /// <summary>
+        /// Sorts the playlist collection by <see cref="PlaylistSorting"/>.
+        /// </summary>
+        /// <param name="playlistSorting">The <see cref="PlaylistSorting"/> according to which the order should be changed.</param>
+        public void SortPlaylistCollection(PlaylistSorting playlistSorting);
 
         /// <summary>
         /// <inheritdoc cref="IPlaylistCollectionBase.PlayPlaylistCollectionAsync"/>
@@ -41,5 +59,10 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IPlaylistCollectionBase.PausePlaylistCollectionAsync"/>
         /// </summary>
         public IAsyncRelayCommand PausePlaylistCollectionAsyncCommand { get; }
+
+        /// <summary>
+        /// Sorts playlists collection by <see cref="PlaylistSorting"/>.
+        /// </summary>
+        public RelayCommand<PlaylistSorting> SortPlaylistCollectionCommand { get; }
     }
 }

@@ -77,6 +77,7 @@ namespace StrixMusic.Sdk.ViewModels
             SortTrackCollectionCommand = new RelayCommand<TrackSorting>(SortTrackCollection);
             SortArtistCollectionCommand = new RelayCommand<ArtistSorting>(SortArtistCollection);
             SortAlbumCollectionCommand = new RelayCommand<AlbumSorting>(SortAlbumCollection);
+            SortPlaylistCollectionCommand = new RelayCommand<PlaylistSorting>(SortPlaylistCollection);
 
             using (Threading.PrimaryContext)
             {
@@ -89,6 +90,7 @@ namespace StrixMusic.Sdk.ViewModels
                 Albums = new ObservableCollection<IAlbumCollectionItem>();
                 UnsortedAlbums = new ObservableCollection<IAlbumCollectionItem>();
                 UnsortedArtists = new ObservableCollection<IArtistCollectionItem>();
+                UnsortedPlaylists = new ObservableCollection<IPlaylistCollectionItem>();
             }
 
             AttachPropertyEvents();
@@ -405,12 +407,42 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                if (CurrentPlaylistSorting == PlaylistSorting.Unordered)
                 {
-                    IPlaylist playlist => new PlaylistViewModel(playlist),
-                    IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
-                    _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
-                });
+                    Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                    {
+                        IPlaylist artist => new PlaylistViewModel(artist),
+                        IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                        _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollectionItem>(
+                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                    });
+                }
+                else
+                {
+                    // Preventing index issues during playlists emission from the core, also making sure that unordered artists updated. 
+                    UnsortedPlaylists.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                    {
+                        IPlaylist playlist => new PlaylistViewModel(playlist),
+                        IPlaylistCollection collection => new PlaylistCollectionViewModel(collection),
+                        _ => ThrowHelper.ThrowNotSupportedException<IPlaylistCollection>(
+                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                    });
+
+                    // Avoiding direct assignment to prevent effect on UI.
+                    foreach (var item in UnsortedPlaylists)
+                    {
+                        if (!Playlists.Contains(item))
+                            Playlists.Add(item);
+                    }
+
+                    foreach (var item in Playlists)
+                    {
+                        if (!UnsortedPlaylists.Contains(item))
+                            UnsortedPlaylists.Remove(item);
+                    }
+
+                    SortPlaylistCollection(CurrentPlaylistSorting);
+                }
             });
         }
 
@@ -570,19 +602,20 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IAlbumCollectionItem> UnsortedAlbums { get; }
 
         ///<inheritdoc />
-        public RelayCommand<AlbumSorting> SortAlbumCollectionCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<ArtistSorting> SortArtistCollectionCommand { get; }
+        public ObservableCollection<IPlaylistCollectionItem> UnsortedPlaylists { get; }
 
         /// <inheritdoc />
         public TrackSorting CurrentTracksSorting { get; private set; }
+
+        ///<inheritdoc />
+        public PlaylistSorting CurrentPlaylistSorting { get; private set; }
 
         /// <inheritdoc />
         public ArtistSorting CurrentArtistSorting { get; private set; }
 
         /// <inheritdoc />
         public AlbumSorting CurrentAlbumSorting { get; private set; }
+
 
         /// <summary>
         /// The albums in this collection.
@@ -952,11 +985,11 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PlayPlaylistCollectionAsync() => _collectionGroup.PlayPlaylistCollectionAsync();
 
         ///<inheritdoc />
-        public void SortTrackCollection(TrackSorting trackSorting)
+        public void SortTrackCollection(TrackSorting playlistSorting)
         {
-            CurrentTracksSorting = trackSorting;
+            CurrentTracksSorting = playlistSorting;
 
-            CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
+            CollectionSorting.SortTracks(Tracks, playlistSorting, UnsortedTracks);
         }
 
         ///<inheritdoc />
@@ -965,6 +998,14 @@ namespace StrixMusic.Sdk.ViewModels
             CurrentArtistSorting = artistSorting;
 
             CollectionSorting.SortArtists(Artists, artistSorting, UnsortedArtists);
+        }
+
+        ///<inheritdoc />
+        public void SortPlaylistCollection(PlaylistSorting playlistSorting)
+        {
+            CurrentPlaylistSorting = playlistSorting;
+
+            CollectionSorting.SortPlaylists(Playlists, playlistSorting, UnsortedPlaylists);
         }
 
         /// <inheritdoc />
@@ -1029,6 +1070,15 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public RelayCommand<TrackSorting> SortTrackCollectionCommand { get; }
+
+        ///<inheritdoc />
+        public RelayCommand<AlbumSorting> SortAlbumCollectionCommand { get; }
+
+        /// <inheritdoc />
+        public RelayCommand<ArtistSorting> SortArtistCollectionCommand { get; }
+
+        /// <inheritdoc />
+        public RelayCommand<PlaylistSorting> SortPlaylistCollectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<IPlaylistCollectionItem> PlayPlaylistAsyncCommand { get; }

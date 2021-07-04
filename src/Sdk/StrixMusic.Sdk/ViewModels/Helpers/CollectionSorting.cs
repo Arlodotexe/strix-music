@@ -23,7 +23,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// </summary>
         /// <param name="trackCollection">The collection to initialize.</param>
         /// <param name="trackSorting">Sort type of the collection.</param>
-        /// <param name="originalOrder">The original order of the trackCollection.</param>
+        /// <param name="originalOrder">The original order of the playlistCollection.</param>
         public static void SortTracks(ObservableCollection<TrackViewModel> trackCollection, TrackSorting trackSorting, ObservableCollection<TrackViewModel> originalOrder)
         {
             if (!originalOrder.Any())
@@ -103,39 +103,79 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <summary>
         /// Sorts the artists.
         /// </summary>
-        /// <param name="trackCollection">The collection to sort.</param>
+        /// <param name="artistCollection">The collection to sort.</param>
         /// <param name="artistSorting">Sort type of the collection.</param>
-        /// <param name="originalOrder">The original order of the trackCollection.</param>
-        public static void SortArtists(ObservableCollection<IArtistCollectionItem> trackCollection, ArtistSorting artistSorting, ObservableCollection<IArtistCollectionItem> originalOrder)
+        /// <param name="originalOrder">The original order of the playlistCollection.</param>
+        public static void SortArtists(ObservableCollection<IArtistCollectionItem> artistCollection, ArtistSorting artistSorting, ObservableCollection<IArtistCollectionItem> originalOrder)
         {
             if (!originalOrder.Any())
             {
-                originalOrder = trackCollection;
+                originalOrder = artistCollection;
             }
 
             switch (artistSorting)
             {
                 case ArtistSorting.Ascending:
-                    trackCollection.Sort(new NameComparer<IArtistCollectionItem>());
+                    artistCollection.Sort(new NameComparer<IArtistCollectionItem>());
                     break;
                 case ArtistSorting.Descending:
-                    trackCollection.Sort(new ReverseNameComparer<IArtistCollectionItem>());
+                    artistCollection.Sort(new ReverseNameComparer<IArtistCollectionItem>());
                     break;
                 case ArtistSorting.Unordered:
-                    trackCollection = originalOrder;
+                    artistCollection = originalOrder;
                     originalOrder.Clear();
                     break;
                 case ArtistSorting.AddedAt:
-                    trackCollection.Sort(new AddedAtComparer<IArtistCollectionItem>());
+                    artistCollection.Sort(new AddedAtComparer<IArtistCollectionItem>());
                     break;
                 case ArtistSorting.Duration:
-                    trackCollection.Sort(new DurationComparer<IArtistCollectionItem>());
+                    artistCollection.Sort(new DurationComparer<IArtistCollectionItem>());
                     break;
                 case ArtistSorting.LastPlayed:
-                    trackCollection.Sort(new LastPlayedComparer<IArtistCollectionItem>());
+                    artistCollection.Sort(new LastPlayedComparer<IArtistCollectionItem>());
                     break;
                 default:
                     ThrowHelper.ThrowNotSupportedException($"TrackSortType {artistSorting} is not supported.");
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Sorts the playlists.
+        /// </summary>
+        /// <param name="playlistCollection">The collection to sort.</param>
+        /// <param name="playlistSorting">Sort type of the collection.</param>
+        /// <param name="originalOrder">The original order of the playlistCollection.</param>
+        public static void SortPlaylists(ObservableCollection<IPlaylistCollectionItem> playlistCollection, PlaylistSorting playlistSorting, ObservableCollection<IPlaylistCollectionItem> originalOrder)
+        {
+            if (!originalOrder.Any())
+            {
+                originalOrder = playlistCollection;
+            }
+
+            switch (playlistSorting)
+            {
+                case PlaylistSorting.Ascending:
+                    playlistCollection.Sort(new NameComparer<IPlaylistCollectionItem>());
+                    break;
+                case PlaylistSorting.Descending:
+                    playlistCollection.Sort(new ReverseNameComparer<IPlaylistCollectionItem>());
+                    break;
+                case PlaylistSorting.Unordered:
+                    playlistCollection = originalOrder;
+                    originalOrder.Clear();
+                    break;
+                case PlaylistSorting.AddedAt:
+                    playlistCollection.Sort(new AddedAtComparer<IPlaylistCollectionItem>());
+                    break;
+                case PlaylistSorting.Duration:
+                    playlistCollection.Sort(new DurationComparer<IPlaylistCollectionItem>());
+                    break;
+                case PlaylistSorting.LastPlayed:
+                    playlistCollection.Sort(new LastPlayedComparer<IPlaylistCollectionItem>());
+                    break;
+                default:
+                    ThrowHelper.ThrowNotSupportedException($"TrackSortType {playlistCollection} is not supported.");
                     break;
             }
         }
