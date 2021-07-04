@@ -1,8 +1,11 @@
-﻿namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
+﻿using System;
+
+namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
 {
     /// <summary>
     /// Enumeration for sort types of tracks.
     /// </summary>
+    [Flags]
     public enum TrackSorting
     {
         /// <summary>
@@ -33,6 +36,6 @@
         /// <summary>
         /// Sort tracks by duration.
         /// </summary>
-        Duration,
+        Duration = 0x16,
     }
 }

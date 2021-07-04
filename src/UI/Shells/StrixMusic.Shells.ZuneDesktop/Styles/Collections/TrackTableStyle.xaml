@@ -10,6 +10,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:tkprimitives="using:Microsoft.Toolkit.Uwp.UI.Controls.Primitives"
     xmlns:timeconvert="using:OwlCore.Uno.Converters.Time"
+    xmlns:strixtimeconvert="using:StrixMusic.Sdk.Uno.Converters.Time"
     xmlns:a="using:OwlCore.Uno.Attached"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.TrackTableStyle">
 
@@ -19,6 +20,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <timeconvert:TimeSpanToTextConverter x:Key="TimeSpanToTextConverter"/>
+    <strixtimeconvert:DateTimeToShortTextConverter x:Key="DateTimeToShortTextConverter"/>
 
     <DataTemplate x:Key="ZuneDesktopTrackTableTemplate" x:DataType="viewModels:ITrackCollectionViewModel">
         <Grid Margin="0,-12,0,0">
@@ -54,6 +56,8 @@
                             </DataTemplate>
                         </tkcontrols:DataGridTemplateColumn.CellTemplate>
                     </tkcontrols:DataGridTemplateColumn>
+                    <tkcontrols:DataGridTextColumn x:Uid="/Music/DateAddedCOL" Header="Date Added" Binding="{Binding AddedAt, Converter={StaticResource DateTimeToShortTextConverter}}" Tag="DateAdded"
+                                                   HeaderStyle="{StaticResource TextColumnHeaderStyle}"/>
                 </tkcontrols:DataGrid.Columns>
             </tkcontrols:DataGrid>
         </Grid>

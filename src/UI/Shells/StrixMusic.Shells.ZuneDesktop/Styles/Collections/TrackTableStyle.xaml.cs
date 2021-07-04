@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 using System;
 using Windows.UI.Xaml;
 
@@ -28,21 +29,46 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles.Collections
 
         private void DataGrid_Sorting(object sender, DataGridColumnEventArgs e)
         {
-            DataGridSortDirection? oldSortDirection = e.Column.SortDirection;
-            ClearSortings((DataGrid)sender);
+            DataGrid grid = (DataGrid)sender;
+            SortColumn(grid, e.Column);
+        }
 
+        private void SortColumn(DataGrid grid, DataGridColumn column)
+        {
+            ITrackCollectionViewModel viewModel = (ITrackCollectionViewModel)grid.DataContext;
+
+            TrackSorting sorting = TrackSorting.Unordered;
+
+            switch (column.Tag)
+            {
+                case "Song":
+                    sorting |= TrackSorting.Alphanumerical;
+                    break;
+                case "Length":
+                    sorting |= TrackSorting.Duration;
+                    break;
+                case "DateAdded":
+                    sorting |= TrackSorting.DateAdded;
+                    break;
+                default:
+                    return;
+            }
+
+            DataGridSortDirection? oldSortDirection = column.SortDirection;
+            ClearSortings(grid);
             switch (oldSortDirection)
             {
                 case null:
-                    e.Column.SortDirection = DataGridSortDirection.Ascending;
+                case DataGridSortDirection.Descending:
+                    column.SortDirection = DataGridSortDirection.Ascending;
                     break;
                 case DataGridSortDirection.Ascending:
-                    e.Column.SortDirection = DataGridSortDirection.Descending;
-                    break;
-                case DataGridSortDirection.Descending:
-                    e.Column.SortDirection = null;
+                    column.SortDirection = DataGridSortDirection.Descending;
+                    sorting |= TrackSorting.Descending;
                     break;
             }
+
+            viewModel.SortTrackCollection(sorting);
         }
     }
 }
