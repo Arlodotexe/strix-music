@@ -56,7 +56,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                     trackCollection.Sort(new DurationComparer<TrackViewModel>(isDescending));
                     break;
                 default:
-                    ThrowHelper.ThrowNotSupportedException($"TrackSortType {trackSorting} is not supported.");
+                    ThrowHelper.ThrowNotSupportedException($"{nameof(TrackSorting)}: {trackSorting} is not supported.");
                     break;
             }
         }
@@ -101,7 +101,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                 case AlbumSorting.DatePublished:
                     throw new NotImplementedException(); // IAlbumCollectionItem don't have DatePublished property. IAlbumBase has it. The potential solution will be is to move those IAlbumBase items to IAlbumCollectionItem.
                 default:
-                    ThrowHelper.ThrowNotSupportedException($"TrackSortType {albumSorting} is not supported.");
+                    ThrowHelper.ThrowNotSupportedException($"{nameof(AlbumSorting)}: {albumSorting} is not supported.");
                     break;
             }
         }
@@ -144,7 +144,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                     artistCollection.Sort(new LastPlayedComparer<IArtistCollectionItem>(isDescending));
                     break;
                 default:
-                    ThrowHelper.ThrowNotSupportedException($"TrackSortType {artistSorting} is not supported.");
+                    ThrowHelper.ThrowNotSupportedException($"{nameof(ArtistSorting)}: {artistSorting} is not supported.");
                     break;
             }
         }
@@ -188,7 +188,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
                     playlistCollection.Sort(new LastPlayedComparer<IPlaylistCollectionItem>(isDescending));
                     break;
                 default:
-                    ThrowHelper.ThrowNotSupportedException($"PlaylistSortings type {playlistSorting} is not supported.");
+                    ThrowHelper.ThrowNotSupportedException($"{nameof(PlaylistSorting)}: {playlistSorting} is not supported.");
                     break;
             }
         }
