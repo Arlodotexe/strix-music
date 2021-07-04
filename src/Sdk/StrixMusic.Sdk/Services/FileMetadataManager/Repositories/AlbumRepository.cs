@@ -16,7 +16,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
     /// <summary>
-    /// The service that helps in interacting with the saved file core album information.
+    /// The service that helps in interacting with album information.
     /// </summary>
     public class AlbumRepository : IAlbumRepository
     {

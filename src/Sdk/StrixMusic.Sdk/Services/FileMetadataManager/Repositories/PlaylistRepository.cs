@@ -16,7 +16,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Repositories;
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
     /// <summary>
-    /// The service that helps in interacting with the saved file core playlists information.
+    /// The service that helps in interacting with playlist information.
     /// </summary>
     public class PlaylistRepository : IPlaylistRepository
     {

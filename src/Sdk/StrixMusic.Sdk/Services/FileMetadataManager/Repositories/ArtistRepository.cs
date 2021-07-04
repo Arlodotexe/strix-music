@@ -16,7 +16,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
     /// <summary>
-    /// The service that helps in interacting with the saved file core artist information.
+    /// The service that helps in interacting with artist information.
     /// </summary>
     public class ArtistRepository : IArtistRepository
     {

@@ -9,7 +9,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 {
     /// <summary>
-    /// The service that helps in interacting with the saved file core image information.
+    /// The service that helps in interacting with image information.
     /// </summary>
     public class ImageRepository : IImageRepository
     {

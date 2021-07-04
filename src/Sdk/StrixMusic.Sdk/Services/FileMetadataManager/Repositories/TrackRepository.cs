@@ -16,7 +16,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
     /// <summary>
-    /// The service that helps in interacting with the saved file core track information.
+    /// The service that helps in interacting with track information.
     /// </summary>
     public class TrackRepository : ITrackRepository
     {
