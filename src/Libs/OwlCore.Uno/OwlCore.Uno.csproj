@@ -20,7 +20,7 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CluterNet" Version="0.0.2-alpha" />
+    <PackageReference Include="ClusterNet" Version="0.0.3-alpha" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />

@@ -81,7 +81,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel x:Name="PART_PreferredSkinSelectorContainer" VerticalAlignment="Center">
-                                <ComboBox Grid.Row="1" Width="200"  Header="Select a skin"
+                                <ComboBox x:Uid="/SuperShell/SelectASkinCB" Grid.Row="1" Width="200" Header="Select a skin"
                                         ItemsSource="{x:Bind AllShells, Mode=OneWay}"
                                         SelectedItem="{x:Bind PreferredShell, Mode=TwoWay}"
                                         PlaceholderText="Loading...">
@@ -92,9 +92,8 @@
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
 
-                                <TextBlock Text="The selected skin isn't optimized for all display sizes." 
+                                <TextBlock x:Uid="/SuperShell/UnoptimizedDisplayTB" Text="The selected skin isn't optimized for all display sizes." 
                                         Foreground="#9A4C4C" 
-                                       
                                         Margin="0,5,0,15"/>
 
                                 <TextBlock Text="{x:Bind PreferredShell.Description, Mode=OneWay}"
@@ -113,7 +112,7 @@
                             </FlipView>
 
                             <StackPanel x:Name="PART_FallbackSkinSelectorContainer" Spacing="15" Grid.Row="1">
-                                <ComboBox Grid.Row="1" Width="200" Header="Select a fallback skin"
+                                <ComboBox x:Uid="/SuperShell/SelectAFallbackSkinCB" Grid.Row="1" Width="200" Header="Select a fallback skin"
                                         ItemsSource="{x:Bind FullyResponsiveShells, Mode=OneWay}"
                                         SelectedItem="{x:Bind FallbackShell, Mode=TwoWay}"
                                         PlaceholderText="Loading...">
@@ -195,7 +194,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <ComboBox x:Name="PART_FullyResponsivePreferredShellComboBox" Width="300" Header="Select a skin" VerticalAlignment="Center" HorizontalAlignment="Center"
+                            <ComboBox x:Uid="/SuperShell/SelectASkinCB" x:Name="PART_FullyResponsivePreferredShellComboBox" Width="300" Header="Select a skin" VerticalAlignment="Center" HorizontalAlignment="Center"
                                       ItemsSource="{x:Bind AllShells, Mode=OneWay}"
                                       SelectedItem="{x:Bind PreferredShell, Mode=TwoWay}"
                                       PlaceholderText="Loading..." >
@@ -222,7 +221,7 @@
                     </UserControl>
                 </Grid>
 
-                <Button Content="Save &amp; Apply" FontSize="14" CornerRadius="2" Command="{x:Bind SaveSelectedShellAsyncCommand}" HorizontalAlignment="Right" />
+                <Button x:Uid="/SuperShell/SaveAndApplyBTN" Content="Save &amp; Apply" FontSize="14" CornerRadius="2" Command="{x:Bind SaveSelectedShellAsyncCommand}" HorizontalAlignment="Right" />
             </StackPanel>
         </ScrollViewer>
     </DataTemplate>

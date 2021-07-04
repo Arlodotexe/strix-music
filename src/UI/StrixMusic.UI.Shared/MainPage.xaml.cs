@@ -73,8 +73,8 @@ namespace StrixMusic.Shared
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
             var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             var localizationService = new LocalizationResourceLoader();
-            localizationService.RegisterProvider(Helpers.Constants.Localization.CommonResource);
-            localizationService.RegisterProvider(Helpers.Constants.Localization.MusicResource);
+            localizationService.RegisterProvider(Sdk.Uno.Helpers.Constants.Localization.CommonResource);
+            localizationService.RegisterProvider(Sdk.Uno.Helpers.Constants.Localization.MusicResource);
 
             services.AddSingleton<INavigationService<Control>>(new NavigationService<Control>());
             services.AddSingleton(localizationService);
