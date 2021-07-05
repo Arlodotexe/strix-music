@@ -53,7 +53,7 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
-            SortArtistCollectionCommand = new RelayCommand<ArtistSorting>(SortArtistCollection);
+            SortArtistCollectionCommand = new RelayCommand<ArtistSortingType>(SortArtistCollection);
 
             PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistInternalAsync);
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
@@ -144,7 +144,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                if (CurrentArtistSorting == ArtistSorting.Unordered)
+                if (CurrentArtistSortingType == ArtistSortingType.Unordered)
                 {
                     Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
@@ -178,7 +178,7 @@ namespace StrixMusic.Sdk.ViewModels
                             Artists.Remove(item);
                     }
 
-                    SortArtistCollection(CurrentArtistSorting);
+                    SortArtistCollection(CurrentArtistSortingType);
                 }
             });
         }
@@ -362,7 +362,10 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
-        public ArtistSorting CurrentArtistSorting { get; private set; }
+        public ArtistSortingType CurrentArtistSortingType { get; private set; }
+
+        /// <inheritdoc />
+        public SortDirection CurrentArtistSortingDirection { get; private set; }
 
         /// <inheritdoc />
         public ObservableCollection<IArtistCollectionItem> UnsortedArtists { get; }
@@ -447,9 +450,9 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         ///<inheritdoc />
-        public void SortArtistCollection(ArtistSorting artistSorting)
+        public void SortArtistCollection(ArtistSortingType artistSorting)
         {
-            CurrentArtistSorting = artistSorting;
+            CurrentArtistSortingType = artistSorting;
 
             CollectionSorting.SortArtists(Artists, artistSorting, UnsortedArtists);
         }
@@ -482,7 +485,7 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
 
          /// <inheritdoc />
-        public RelayCommand<ArtistSorting> SortArtistCollectionCommand { get; }
+        public RelayCommand<ArtistSortingType> SortArtistCollectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<IArtistCollectionItem> PlayArtistAsyncCommand { get; }
@@ -501,6 +504,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
         /// </summary>
         public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public RelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand => throw new NotImplementedException();
+
+        /// <inheritdoc />
+        public RelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand => throw new NotImplementedException();
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => _collection.Equals(other);

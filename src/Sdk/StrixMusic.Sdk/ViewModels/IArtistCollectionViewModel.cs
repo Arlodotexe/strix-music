@@ -25,10 +25,10 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IArtistCollectionItem> UnsortedArtists { get; }
 
         /// <summary>
-        /// Sorts the artist collection by <see cref="ArtistSorting"/>.
+        /// Sorts the artist collection by <see cref="ArtistSortingType"/>.
         /// </summary>
-        /// <param name="artistSorting">The <see cref="ArtistSorting"/> according to which the order should be changed.</param>
-        public void SortArtistCollection(ArtistSorting artistSorting);
+        /// <param name="artistSorting">The <see cref="ArtistSortingType"/> according to which the order should be changed.</param>
+        public void SortArtistCollection(ArtistSortingType artistSorting);
 
         /// <summary>
         /// Populates the next set of artists into the collection.
@@ -36,6 +36,16 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="limit">The number of items to load.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PopulateMoreArtistsAsync(int limit);
+
+        /// <summary>
+        /// The sorting direction of artists in the collection. 
+        /// </summary>
+        public ArtistSortingType CurrentArtistSortingType { get; }
+
+        /// <summary>
+        /// The sorting direction of artists in the collection. 
+        /// </summary>
+        public SortDirection CurrentArtistSortingDirection { get; }
 
         /// <summary>
         /// <inheritdoc cref="PopulateMoreArtistsAsync"/>
@@ -58,8 +68,18 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PauseArtistCollectionAsyncCommand { get; }
 
         /// <summary>
-        /// Sorts artist collection by <see cref="ArtistSorting"/>.
+        /// Sorts artist collection by <see cref="ArtistSortingType"/>.
         /// </summary>
-        public RelayCommand<ArtistSorting> SortArtistCollectionCommand { get; }
+        public RelayCommand<ArtistSortingType> SortArtistCollectionCommand { get; }
+
+        /// <summary>
+        /// Adjustes sorting to maintain its direction, with a new type.
+        /// </summary>
+        public RelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand { get; }
+
+        /// <summary>
+        /// Sorts adjustes sorting to maintain its type, with a new direction.
+        /// </summary>
+        public RelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand { get; }
     }
 }

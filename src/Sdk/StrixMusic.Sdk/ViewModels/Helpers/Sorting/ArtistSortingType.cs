@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
     /// Enumeration for sort types of artists.
     /// </summary>
     [Flags]
-    public enum ArtistSorting
+    public enum ArtistSortingType
     {
         /// <summary>
         /// Default order of the collection.

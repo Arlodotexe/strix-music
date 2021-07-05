@@ -37,18 +37,18 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles.Collections
         {
             ITrackCollectionViewModel viewModel = (ITrackCollectionViewModel)grid.DataContext;
 
-            TrackSorting sorting = TrackSorting.Unordered;
+            TrackSortingType sorting = TrackSortingType.Unordered;
 
             switch (column.Tag)
             {
                 case "Song":
-                    sorting |= TrackSorting.Alphanumerical;
+                    sorting |= TrackSortingType.Alphanumerical;
                     break;
                 case "Length":
-                    sorting |= TrackSorting.Duration;
+                    sorting |= TrackSortingType.Duration;
                     break;
                 case "DateAdded":
-                    sorting |= TrackSorting.DateAdded;
+                    sorting |= TrackSortingType.DateAdded;
                     break;
                 default:
                     return;
@@ -64,7 +64,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles.Collections
                     break;
                 case DataGridSortDirection.Ascending:
                     column.SortDirection = DataGridSortDirection.Descending;
-                    sorting |= TrackSorting.Descending;
+                    sorting |= TrackSortingType.Descending;
                     break;
             }
 

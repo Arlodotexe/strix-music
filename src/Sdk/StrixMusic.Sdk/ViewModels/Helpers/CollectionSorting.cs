@@ -24,39 +24,39 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <param name="trackCollection">The collection to initialize.</param>
         /// <param name="trackSorting">Sort type of the collection.</param>
         /// <param name="originalOrder">The original order of the playlistCollection.</param>
-        public static void SortTracks(ObservableCollection<TrackViewModel> trackCollection, TrackSorting trackSorting, ObservableCollection<TrackViewModel> originalOrder)
+        public static void SortTracks(ObservableCollection<TrackViewModel> trackCollection, TrackSortingType trackSorting, ObservableCollection<TrackViewModel> originalOrder)
         {
             if (!originalOrder.Any())
             {
                 originalOrder = trackCollection;
             }
 
-            bool isDescending = trackSorting.HasFlag(TrackSorting.Descending);
+            bool isDescending = trackSorting.HasFlag(TrackSortingType.Descending);
 
             // Remove the Descending flag from the enum.
-            TrackSorting deflaggedSorting = trackSorting
-                & ~TrackSorting.Descending;
+            TrackSortingType deflaggedSorting = trackSorting
+                & ~TrackSortingType.Descending;
 
             switch (deflaggedSorting)
             {
-                case TrackSorting.Unordered:
+                case TrackSortingType.Unordered:
                     trackCollection = originalOrder;
                     originalOrder.Clear();
                     break;
-                case TrackSorting.Alphanumerical:
+                case TrackSortingType.Alphanumerical:
                     trackCollection.Sort(new NameComparer<TrackViewModel>(isDescending));
                     break;
-                case TrackSorting.TrackNumber:
+                case TrackSortingType.TrackNumber:
                     trackCollection.Sort(new TrackNumberComparer<TrackViewModel>(isDescending));
                     break;
-                case TrackSorting.DateAdded:
+                case TrackSortingType.DateAdded:
                     trackCollection.Sort(new AddedAtComparer<TrackViewModel>(isDescending));
                     break;
-                case TrackSorting.Duration:
+                case TrackSortingType.Duration:
                     trackCollection.Sort(new DurationComparer<TrackViewModel>(isDescending));
                     break;
                 default:
-                    ThrowHelper.ThrowNotSupportedException($"{nameof(TrackSorting)}: {trackSorting} is not supported.");
+                    ThrowHelper.ThrowNotSupportedException($"{nameof(TrackSortingType)}: {trackSorting} is not supported.");
                     break;
             }
         }
@@ -67,41 +67,41 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <param name="albumCollection">The collection to sort.</param>
         /// <param name="albumSorting">Sort type of the collection.</param>
         /// <param name="originalOrder">The original order of the albumCollection.</param>
-        public static void SortAlbums(ObservableCollection<IAlbumCollectionItem> albumCollection, AlbumSorting albumSorting, ObservableCollection<IAlbumCollectionItem> originalOrder)
+        public static void SortAlbums(ObservableCollection<IAlbumCollectionItem> albumCollection, AlbumSortingType albumSorting, ObservableCollection<IAlbumCollectionItem> originalOrder)
         {
             if (!originalOrder.Any())
             {
                 originalOrder = albumCollection;
             }
 
-            bool isDescending = albumSorting.HasFlag(AlbumSorting.Descending);
+            bool isDescending = albumSorting.HasFlag(AlbumSortingType.Descending);
 
             // Remove the Descending flag from the enum.
-            AlbumSorting deflaggedSorting = albumSorting
-                & ~AlbumSorting.Descending;
+            AlbumSortingType deflaggedSorting = albumSorting
+                & ~AlbumSortingType.Descending;
 
             switch (deflaggedSorting)
             {
-                case AlbumSorting.Unordered:
+                case AlbumSortingType.Unordered:
                     albumCollection = originalOrder;
                     originalOrder.Clear();
                     break;
-                case AlbumSorting.Descending:
+                case AlbumSortingType.Descending:
                     albumCollection.Sort(new NameComparer<IAlbumCollectionItem>(isDescending));
                     break;
-                case AlbumSorting.DateAdded:
+                case AlbumSortingType.DateAdded:
                     albumCollection.Sort(new AddedAtComparer<IAlbumCollectionItem>(isDescending));
                     break;
-                case AlbumSorting.Duration:
+                case AlbumSortingType.Duration:
                     albumCollection.Sort(new DurationComparer<IAlbumCollectionItem>(isDescending));
                     break;
-                case AlbumSorting.LastPlayed:
+                case AlbumSortingType.LastPlayed:
                     albumCollection.Sort(new LastPlayedComparer<IAlbumCollectionItem>(isDescending));
                     break;
-                case AlbumSorting.DatePublished:
+                case AlbumSortingType.DatePublished:
                     throw new NotImplementedException(); // IAlbumCollectionItem don't have DatePublished property. IAlbumBase has it. The potential solution will be is to move those IAlbumBase items to IAlbumCollectionItem.
                 default:
-                    ThrowHelper.ThrowNotSupportedException($"{nameof(AlbumSorting)}: {albumSorting} is not supported.");
+                    ThrowHelper.ThrowNotSupportedException($"{nameof(AlbumSortingType)}: {albumSorting} is not supported.");
                     break;
             }
         }
@@ -112,39 +112,39 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <param name="artistCollection">The collection to sort.</param>
         /// <param name="artistSorting">Sort type of the collection.</param>
         /// <param name="originalOrder">The original order of the playlistCollection.</param>
-        public static void SortArtists(ObservableCollection<IArtistCollectionItem> artistCollection, ArtistSorting artistSorting, ObservableCollection<IArtistCollectionItem> originalOrder)
+        public static void SortArtists(ObservableCollection<IArtistCollectionItem> artistCollection, ArtistSortingType artistSorting, ObservableCollection<IArtistCollectionItem> originalOrder)
         {
             if (!originalOrder.Any())
             {
                 originalOrder = artistCollection;
             }
 
-            bool isDescending = artistSorting.HasFlag(ArtistSorting.Descending);
+            bool isDescending = artistSorting.HasFlag(ArtistSortingType.Descending);
 
             // Remove the Descending flag from the enum.
-            ArtistSorting deflaggedSorting = artistSorting
-                & ~ArtistSorting.Descending;
+            ArtistSortingType deflaggedSorting = artistSorting
+                & ~ArtistSortingType.Descending;
 
             switch (deflaggedSorting)
             {
-                case ArtistSorting.Unordered:
+                case ArtistSortingType.Unordered:
                     artistCollection = originalOrder;
                     originalOrder.Clear();
                     break;
-                case ArtistSorting.Alphanumerical:
+                case ArtistSortingType.Alphanumerical:
                     artistCollection.Sort(new NameComparer<IArtistCollectionItem>(isDescending));
                     break;
-                case ArtistSorting.DateAdded:
+                case ArtistSortingType.DateAdded:
                     artistCollection.Sort(new AddedAtComparer<IArtistCollectionItem>(isDescending));
                     break;
-                case ArtistSorting.Duration:
+                case ArtistSortingType.Duration:
                     artistCollection.Sort(new DurationComparer<IArtistCollectionItem>(isDescending));
                     break;
-                case ArtistSorting.LastPlayed:
+                case ArtistSortingType.LastPlayed:
                     artistCollection.Sort(new LastPlayedComparer<IArtistCollectionItem>(isDescending));
                     break;
                 default:
-                    ThrowHelper.ThrowNotSupportedException($"{nameof(ArtistSorting)}: {artistSorting} is not supported.");
+                    ThrowHelper.ThrowNotSupportedException($"{nameof(ArtistSortingType)}: {artistSorting} is not supported.");
                     break;
             }
         }
@@ -155,40 +155,40 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <param name="playlistCollection">The collection to sort.</param>
         /// <param name="playlistSorting">Sort type of the collection.</param>
         /// <param name="originalOrder">The original order of the playlistCollection.</param>
-        public static void SortPlaylists(ObservableCollection<IPlaylistCollectionItem> playlistCollection, PlaylistSorting playlistSorting, ObservableCollection<IPlaylistCollectionItem> originalOrder)
+        public static void SortPlaylists(ObservableCollection<IPlaylistCollectionItem> playlistCollection, PlaylistSortingType playlistSorting, ObservableCollection<IPlaylistCollectionItem> originalOrder)
         {
             if (!originalOrder.Any())
             {
                 originalOrder = playlistCollection;
             }
 
-            bool isDescending = playlistSorting.HasFlag(PlaylistSorting.Descending);
+            bool isDescending = playlistSorting.HasFlag(PlaylistSortingType.Descending);
 
             // Remove the Descending flag from the enum.
-            PlaylistSorting deflaggedSorting = playlistSorting
-                & ~PlaylistSorting.Descending;
+            PlaylistSortingType deflaggedSorting = playlistSorting
+                & ~PlaylistSortingType.Descending;
             
             // Switch the remaining value
             switch (deflaggedSorting)
             {
-                case PlaylistSorting.Unordered:
+                case PlaylistSortingType.Unordered:
                     playlistCollection = originalOrder;
                     originalOrder.Clear();
                     break;
-                case PlaylistSorting.Alphanumerical:
+                case PlaylistSortingType.Alphanumerical:
                     playlistCollection.Sort(new NameComparer<IPlaylistCollectionItem>(isDescending));
                     break;
-                case PlaylistSorting.DateAdded:
+                case PlaylistSortingType.DateAdded:
                     playlistCollection.Sort(new AddedAtComparer<IPlaylistCollectionItem>(isDescending));
                     break;
-                case PlaylistSorting.Duration:
+                case PlaylistSortingType.Duration:
                     playlistCollection.Sort(new DurationComparer<IPlaylistCollectionItem>(isDescending));
                     break;
-                case PlaylistSorting.LastPlayed:
+                case PlaylistSortingType.LastPlayed:
                     playlistCollection.Sort(new LastPlayedComparer<IPlaylistCollectionItem>(isDescending));
                     break;
                 default:
-                    ThrowHelper.ThrowNotSupportedException($"{nameof(PlaylistSorting)}: {playlistSorting} is not supported.");
+                    ThrowHelper.ThrowNotSupportedException($"{nameof(PlaylistSortingType)}: {playlistSorting} is not supported.");
                     break;
             }
         }

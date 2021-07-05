@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
     /// Enumeration for sort types of playlists.
     /// </summary>
     [Flags]
-    public enum PlaylistSorting
+    public enum PlaylistSortingType
     {
         /// <summary>
         /// Default order of the collection.
