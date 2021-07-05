@@ -53,7 +53,9 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
-            SortArtistCollectionCommand = new RelayCommand<ArtistSortingType>(SortArtistCollection);
+
+            ChangeArtistCollectionSortingTypeCommand = new RelayCommand<ArtistSortingType>(x => SortArtistCollection(x));
+            ChangeArtistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortArtistCollection(CurrentArtistSortingType));
 
             PlayArtistAsyncCommand = new AsyncRelayCommand<IArtistCollectionItem>(PlayArtistInternalAsync);
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
@@ -484,8 +486,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
 
-         /// <inheritdoc />
-        public RelayCommand<ArtistSortingType> SortArtistCollectionCommand { get; }
+        /// <inheritdoc />
+        public RelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand { get; }
+
+        /// <inheritdoc />
+        public RelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<IArtistCollectionItem> PlayArtistAsyncCommand { get; }
@@ -504,12 +509,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
         /// </summary>
         public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand => throw new NotImplementedException();
-
-        /// <inheritdoc />
-        public RelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand => throw new NotImplementedException();
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => _collection.Equals(other);

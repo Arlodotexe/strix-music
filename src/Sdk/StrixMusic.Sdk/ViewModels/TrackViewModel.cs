@@ -72,7 +72,6 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
-            SortArtistCollectionCommand = new RelayCommand<ArtistSortingType>(SortArtistCollection);
             ChangeArtistCollectionSortingTypeCommand = new RelayCommand<ArtistSortingType>(x => SortArtistCollection(x));
             ChangeArtistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortArtistCollection(CurrentArtistSortingType));
 
@@ -407,7 +406,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public ObservableCollection<IArtistCollectionItem> UnsortedArtists { get; }
 
-
         /// <inheritdoc />
         public ArtistSortingType CurrentArtistSortingType { get; private set; }
 
@@ -628,7 +626,10 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PlayArtistCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public RelayCommand<ArtistSortingType> SortArtistCollectionCommand { get; }
+        public RelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand { get; }
+
+        /// <inheritdoc />
+        public RelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<IArtistCollectionItem> PlayArtistAsyncCommand { get; }
@@ -696,11 +697,5 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool IsInitialized { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand { get; }
     }
 }

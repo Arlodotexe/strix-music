@@ -55,13 +55,13 @@ namespace StrixMusic.Sdk.ViewModels
 
             PauseAlbumCollectionAsyncCommand = new AsyncRelayCommand(PauseAlbumCollectionAsync);
             PlayAlbumCollectionAsyncCommand = new AsyncRelayCommand(PlayAlbumCollectionAsync);
-            SortAlbumCollectionCommand = new RelayCommand<AlbumSortingType>(SortAlbumCollection);
-            ChangeAlbumCollectionSortingTypeCommand = new RelayCommand<AlbumSortingType>(SortAlbumCollection);
-            ChangeAlbumCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortAlbumCollection(CurrentAlbumSortingType));
 
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+
+            ChangeAlbumCollectionSortingTypeCommand = new RelayCommand<AlbumSortingType>(SortAlbumCollection);
+            ChangeAlbumCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortAlbumCollection(CurrentAlbumSortingType));
 
             PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionInternalAsync);
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
@@ -419,9 +419,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         ///<inheritdoc />
         public ObservableCollection<IAlbumCollectionItem> UnsortedAlbums { get; }
-
-        ///<inheritdoc />
-        public RelayCommand<AlbumSortingType> SortAlbumCollectionCommand { get; }
 
         ///<inheritdoc />
         public RelayCommand<AlbumSortingType> ChangeAlbumCollectionSortingTypeCommand { get; }

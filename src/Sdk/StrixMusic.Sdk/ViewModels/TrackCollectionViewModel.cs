@@ -60,7 +60,6 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
-            SortTrackCollectionCommand = new RelayCommand<TrackSortingType>(SortTrackCollection);
             ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x));
             ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType));
 
@@ -451,7 +450,10 @@ namespace StrixMusic.Sdk.ViewModels
         public SortDirection CurrentTracksSortingDirection { get; private set; }
 
         /// <inheritdoc />
-        public RelayCommand<TrackSortingType> SortTrackCollectionCommand { get; }
+        public RelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
+
+        /// <inheritdoc />
+        public RelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
@@ -482,12 +484,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// Command to change the duration. It triggers <see cref="ChangeDurationAsync"/>.
         /// </summary>
         public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
 
         /// <inheritdoc />
         public bool Equals(ICoreImageCollection other) => _collection.Equals(other);

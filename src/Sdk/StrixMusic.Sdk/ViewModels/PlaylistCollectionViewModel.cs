@@ -46,7 +46,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             PlayPlaylistCollectionAsyncCommand = new AsyncRelayCommand(PlayPlaylistCollectionAsync);
             PausePlaylistCollectionAsyncCommand = new AsyncRelayCommand(PausePlaylistCollectionAsync);
-            SortPlaylistCollectionCommand = new RelayCommand<PlaylistSortingType>(SortPlaylistCollection);
+
             ChangePlaylistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortPlaylistCollection(CurrentPlaylistSortingType));
             ChangePlaylistCollectionSortingTypeCommand = new RelayCommand<PlaylistSortingType>(SortPlaylistCollection);
 
@@ -484,9 +484,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
         /// </summary>
         public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<PlaylistSortingType> SortPlaylistCollectionCommand { get; }
 
         /// <inheritdoc />
         public RelayCommand<PlaylistSortingType> ChangePlaylistCollectionSortingTypeCommand { get; }

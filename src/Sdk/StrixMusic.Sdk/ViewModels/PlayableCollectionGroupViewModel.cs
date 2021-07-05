@@ -75,16 +75,12 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
-            SortTrackCollectionCommand = new RelayCommand<TrackSortingType>(SortTrackCollection);
             ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x));
             ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType));
-            SortArtistCollectionCommand = new RelayCommand<ArtistSortingType>(SortArtistCollection);
             ChangeArtistCollectionSortingTypeCommand = new RelayCommand<ArtistSortingType>(x => SortArtistCollection(x));
             ChangeArtistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortArtistCollection(CurrentArtistSortingType));
-            SortAlbumCollectionCommand = new RelayCommand<AlbumSortingType>(SortAlbumCollection);
             ChangeAlbumCollectionSortingTypeCommand = new RelayCommand<AlbumSortingType>(x => SortAlbumCollection(x));
             ChangeAlbumCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortAlbumCollection(CurrentAlbumSortingType));
-            SortPlaylistCollectionCommand = new RelayCommand<PlaylistSortingType>(SortPlaylistCollection);
             ChangePlaylistCollectionSortingTypeCommand = new RelayCommand<PlaylistSortingType>(x => SortPlaylistCollection(x));
             ChangePlaylistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortPlaylistCollection(CurrentPlaylistSortingType));
 
@@ -1088,16 +1084,10 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PlayPlaylistCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public RelayCommand<TrackSortingType> SortTrackCollectionCommand { get; }
-
-        /// <inheritdoc />
         public RelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
 
         /// <inheritdoc />
         public RelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
-
-        ///<inheritdoc />
-        public RelayCommand<AlbumSortingType> SortAlbumCollectionCommand { get; }
 
         /// <inheritdoc />
         public RelayCommand<AlbumSortingType> ChangeAlbumCollectionSortingTypeCommand { get; }
@@ -1106,16 +1096,10 @@ namespace StrixMusic.Sdk.ViewModels
         public RelayCommand<SortDirection> ChangeAlbumCollectionSortingDirectionCommand { get; }
 
         /// <inheritdoc />
-        public RelayCommand<ArtistSortingType> SortArtistCollectionCommand { get; }
-
-        /// <inheritdoc />
         public RelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand { get; }
 
         /// <inheritdoc />
         public RelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<PlaylistSortingType> SortPlaylistCollectionCommand { get; }
 
         /// <inheritdoc />
         public RelayCommand<PlaylistSortingType> ChangePlaylistCollectionSortingTypeCommand { get; }

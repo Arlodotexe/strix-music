@@ -65,11 +65,6 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PausePlaylistCollectionAsyncCommand { get; }
 
         /// <summary>
-        /// Sorts playlists collection by <see cref="PlaylistSortingType"/>.
-        /// </summary>
-        public RelayCommand<PlaylistSortingType> SortPlaylistCollectionCommand { get; }
-
-        /// <summary>
         /// Adjustes sorting to maintain its direction, with a new type.
         /// </summary>
         public RelayCommand<PlaylistSortingType> ChangePlaylistCollectionSortingTypeCommand { get; }
