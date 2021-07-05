@@ -58,8 +58,8 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
-            ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x));
-            ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType));
+            ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
+            ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType, x));
 
             if (_playlist.Owner != null)
                 _owner = new UserProfileViewModel(_playlist.Owner);
@@ -275,7 +275,7 @@ namespace StrixMusic.Sdk.ViewModels
                             Tracks.Remove(item);
                     }
 
-                    SortTrackCollection(CurrentTracksSortingType);
+                    SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
                 }
             });
         }
@@ -390,9 +390,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveGenreAvailable(int index) => _playlist.IsRemoveGenreAvailable(index);
 
         ///<inheritdoc />
-        public void SortTrackCollection(TrackSortingType trackSorting)
+        public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
         {
             CurrentTracksSortingType = trackSorting;
+            CurrentTracksSortingDirection = sortDirection;
 
             CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
         }

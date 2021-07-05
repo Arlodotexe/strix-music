@@ -60,8 +60,8 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
-            ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x));
-            ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType));
+            ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
+            ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType, x));
 
             SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(MainViewModel.GetLoadedCore).ToList();
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
@@ -169,7 +169,7 @@ namespace StrixMusic.Sdk.ViewModels
                             Tracks.Remove(item);
                     }
 
-                    SortTrackCollection(CurrentTracksSortingType);
+                    SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
                 }
             });
         }
@@ -402,9 +402,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration) => _collection.ChangeDurationAsync(duration);
 
         ///<inheritdoc />
-        public void SortTrackCollection(TrackSortingType trackSorting)
+        public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
         {
             CurrentTracksSortingType = trackSorting;
+            CurrentTracksSortingDirection = sortDirection;
 
             CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
         }

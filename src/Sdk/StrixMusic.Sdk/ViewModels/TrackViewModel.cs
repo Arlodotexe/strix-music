@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+﻿using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -14,7 +8,6 @@ using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
@@ -22,6 +15,12 @@ using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels.Helpers;
 using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -72,8 +71,8 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
-            ChangeArtistCollectionSortingTypeCommand = new RelayCommand<ArtistSortingType>(x => SortArtistCollection(x));
-            ChangeArtistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortArtistCollection(CurrentArtistSortingType));
+            ChangeArtistCollectionSortingTypeCommand = new RelayCommand<ArtistSortingType>(x => SortArtistCollection(x, CurrentArtistSortingDirection));
+            ChangeArtistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortArtistCollection(CurrentArtistSortingType, x));
 
             AttachEvents();
         }
@@ -354,15 +353,16 @@ namespace StrixMusic.Sdk.ViewModels
                             Artists.Remove(item);
                     }
 
-                    SortArtistCollection(CurrentArtistSortingType);
+                    SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
                 }
             });
         }
 
         ///<inheritdoc />
-        public void SortArtistCollection(ArtistSortingType artistSorting)
+        public void SortArtistCollection(ArtistSortingType artistSorting, SortDirection sortDirection)
         {
             CurrentArtistSortingType = artistSorting;
+            CurrentArtistSortingDirection = sortDirection;
 
             CollectionSorting.SortArtists(Artists, artistSorting, UnsortedArtists);
         }

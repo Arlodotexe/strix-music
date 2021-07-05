@@ -27,8 +27,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Sorts the artist collection by <see cref="ArtistSortingType"/>.
         /// </summary>
-        /// <param name="artistSorting">The <see cref="ArtistSortingType"/> according to which the order should be changed.</param>
-        public void SortArtistCollection(ArtistSortingType artistSorting);
+        /// <param name="artistSorting">The <see cref="ArtistSortingType"/> by which to sort.</param>
+        /// <param name="sortDirection">The direction by which to sort.</param>
+        public void SortArtistCollection(ArtistSortingType artistSorting, SortDirection sortDirection);
 
         /// <summary>
         /// Populates the next set of artists into the collection.

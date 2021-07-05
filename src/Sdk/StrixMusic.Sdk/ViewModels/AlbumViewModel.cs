@@ -74,10 +74,10 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
-            ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x));
-            ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType));
-            ChangeArtistCollectionSortingTypeCommand = new RelayCommand<ArtistSortingType>(x => SortArtistCollection(x));
-            ChangeArtistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortArtistCollection(CurrentArtistSortingType));
+            ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
+            ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType, x));
+            ChangeArtistCollectionSortingTypeCommand = new RelayCommand<ArtistSortingType>(x => SortArtistCollection(x, CurrentArtistSortingDirection));
+            ChangeArtistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortArtistCollection(CurrentArtistSortingType, x));
 
             AttachEvents();
         }
@@ -331,7 +331,7 @@ namespace StrixMusic.Sdk.ViewModels
                             Tracks.Remove(item);
                     }
 
-                    SortTrackCollection(CurrentTracksSortingType);
+                    SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
                 }
             });
         }
@@ -374,7 +374,7 @@ namespace StrixMusic.Sdk.ViewModels
                             Artists.Remove(item);
                     }
 
-                    SortArtistCollection(CurrentArtistSortingType);
+                    SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
                 }
             });
         }
@@ -583,17 +583,19 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveArtistItemAsync(int index) => _album.RemoveArtistItemAsync(index);
 
         ///<inheritdoc />
-        public void SortTrackCollection(TrackSortingType trackSorting)
+        public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
         {
             CurrentTracksSortingType = trackSorting;
+            CurrentTracksSortingDirection = sortDirection;
 
             CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
         }
 
         ///<inheritdoc />
-        public void SortArtistCollection(ArtistSortingType artistSorting)
+        public void SortArtistCollection(ArtistSortingType artistSorting, SortDirection sortDirection)
         {
             CurrentArtistSortingType = artistSorting;
+            CurrentArtistSortingDirection = sortDirection;
 
             CollectionSorting.SortArtists(Artists, artistSorting, UnsortedArtists);
         }

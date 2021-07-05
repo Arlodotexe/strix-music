@@ -46,8 +46,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Sorts the track collection by <see cref="TrackSortingType"/>.
         /// </summary>
-        /// <param name="trackSorting">The <see cref="TrackSortingType"/> according to which the order should be changed.</param>
-        public void SortTrackCollection(TrackSortingType trackSorting);
+        /// <param name="trackSorting">The <see cref="TrackSortingType"/> by which to sort.</param>
+        /// <param name="sortDirection">The direction by which to sort.</param>
+        public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection);
 
         /// <inheritdoc cref="PopulateMoreTracksAsync" />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }

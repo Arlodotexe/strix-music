@@ -60,8 +60,8 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
 
-            ChangeAlbumCollectionSortingTypeCommand = new RelayCommand<AlbumSortingType>(SortAlbumCollection);
-            ChangeAlbumCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortAlbumCollection(CurrentAlbumSortingType));
+            ChangeAlbumCollectionSortingTypeCommand = new RelayCommand<AlbumSortingType>(x => SortAlbumCollection(x, CurrentAlbumSortingDirection));
+            ChangeAlbumCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortAlbumCollection(CurrentAlbumSortingType, x));
 
             PlayAlbumAsyncCommand = new AsyncRelayCommand<IAlbumCollectionItem>(PlayAlbumCollectionInternalAsync);
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
@@ -179,7 +179,7 @@ namespace StrixMusic.Sdk.ViewModels
                             Albums.Remove(item);
                     }
 
-                    SortAlbumCollection(CurrentAlbumSortingType);
+                    SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
                 }
             });
         }
@@ -325,9 +325,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public void SortAlbumCollection(AlbumSortingType albumSorting)
+        public void SortAlbumCollection(AlbumSortingType albumSorting, SortDirection sortDirection)
         {
             CurrentAlbumSortingType = albumSorting;
+            CurrentAlbumSortingDirection = sortDirection;
 
             CollectionSorting.SortAlbums(Albums, albumSorting, UnsortedAlbums);
         }

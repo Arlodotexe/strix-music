@@ -47,8 +47,8 @@ namespace StrixMusic.Sdk.ViewModels
             PlayPlaylistCollectionAsyncCommand = new AsyncRelayCommand(PlayPlaylistCollectionAsync);
             PausePlaylistCollectionAsyncCommand = new AsyncRelayCommand(PausePlaylistCollectionAsync);
 
-            ChangePlaylistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortPlaylistCollection(CurrentPlaylistSortingType));
-            ChangePlaylistCollectionSortingTypeCommand = new RelayCommand<PlaylistSortingType>(SortPlaylistCollection);
+            ChangePlaylistCollectionSortingTypeCommand = new RelayCommand<PlaylistSortingType>(x => SortPlaylistCollection(x, CurrentPlaylistSortingDirection));
+            ChangePlaylistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortPlaylistCollection(CurrentPlaylistSortingType, x));
 
             PlayPlaylistAsyncCommand = new AsyncRelayCommand<IPlaylistCollectionItem>(PlaylistPlaylistInternalAsync);
 
@@ -174,7 +174,7 @@ namespace StrixMusic.Sdk.ViewModels
                             UnsortedPlaylists.Remove(item);
                     }
 
-                    SortPlaylistCollection(CurrentPlaylistSortingType);
+                    SortPlaylistCollection(CurrentPlaylistSortingType, CurrentPlaylistSortingDirection);
                 }
             });
         }
@@ -444,9 +444,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         ///<inheritdoc />
-        public void SortPlaylistCollection(PlaylistSortingType playlistSorting)
+        public void SortPlaylistCollection(PlaylistSortingType playlistSorting, SortDirection sortDirection)
         {
             CurrentPlaylistSortingType = playlistSorting;
+            CurrentPlaylistSortingDirection = sortDirection;
 
             CollectionSorting.SortPlaylists(Playlists, playlistSorting, UnsortedPlaylists);
         }

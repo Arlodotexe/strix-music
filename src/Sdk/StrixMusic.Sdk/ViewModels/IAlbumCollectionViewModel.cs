@@ -40,8 +40,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Sorts the track collection by <see cref="AlbumSortingType"/>.
         /// </summary>
-        /// <param name="albumSorting">The <see cref="AlbumSortingType"/> according to which the order should be changed.</param>
-        public void SortAlbumCollection(AlbumSortingType albumSorting);
+        /// <param name="albumSorting">The <see cref="AlbumSortingType"/> by which to sort.</param>
+        /// <param name="sortDirection">The direction by which to sort.</param>
+        public void SortAlbumCollection(AlbumSortingType albumSorting, SortDirection sortDirection);
 
         /// <summary>
         /// <inheritdoc cref="PopulateMoreAlbumsAsync"/>

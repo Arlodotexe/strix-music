@@ -46,8 +46,9 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Sorts the playlist collection by <see cref="PlaylistSortingType"/>.
         /// </summary>
-        /// <param name="playlistSorting">The <see cref="PlaylistSortingType"/> according to which the order should be changed.</param>
-        public void SortPlaylistCollection(PlaylistSortingType playlistSorting);
+        /// <param name="playlistSorting">The <see cref="PlaylistSortingType"/> by which to sort.</param>
+        /// <param name="sortDirection">The direction by which to sort.</param>
+        public void SortPlaylistCollection(PlaylistSortingType playlistSorting, SortDirection sortDirection);
 
         /// <summary>
         /// <inheritdoc cref="IPlaylistCollectionBase.PlayPlaylistCollectionAsync"/>
