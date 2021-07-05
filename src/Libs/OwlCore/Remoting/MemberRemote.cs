@@ -195,10 +195,28 @@ namespace OwlCore.Remoting
         {
             var propertyInfo = Properties.First(x => CreateMemberSignature(x) == propertyChangeMessage.TargetMemberSignature);
 
-            if (!IsValidRemotingDirection(propertyInfo, true))
+            if (!IsValidRemotingDirection(propertyInfo, isReceiving: true))
                 return;
 
+            var type = Type.GetType(propertyChangeMessage.TargetMemberSignature);
+            var mostDerivedType = propertyChangeMessage.NewValue?.GetType();
+
+            if (!type?.IsAssignableFrom(mostDerivedType) ?? false)
+            {
+                if (!type?.IsSubclassOf(typeof(IConvertible)) ?? false)
+                {
+                    throw new NotSupportedException($"Received parameter value {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"}" +
+                                                    $"and must implement {nameof(IConvertible)} for automatic type conversion." +
+                                                    $"Either handle conversion of {nameof(ParameterData)}.{nameof(ParameterData.Value)}" +
+                                                    $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)}" +
+                                                    $"or use a primitive type that implements {nameof(IConvertible)}.");
+                }
+
+                propertyChangeMessage.NewValue = Convert.ChangeType(propertyChangeMessage.NewValue, type);
+            }
+
             var castValue = Convert.ChangeType(propertyChangeMessage.NewValue, propertyInfo.PropertyType);
+            
             propertyInfo.SetValue(Instance, castValue);
         }
 
@@ -206,33 +224,51 @@ namespace OwlCore.Remoting
         {
             var methodInfo = Methods.First(x => CreateMemberSignature(x) == methodCallMsg.TargetMemberSignature);
 
-            if (!IsValidRemotingDirection(methodInfo, true))
+            if (!IsValidRemotingDirection(methodInfo, isReceiving: true))
                 return;
 
             var parameterValues = new List<object?>();
 
             foreach (var param in methodCallMsg.Parameters)
             {
-                var type = Type.GetType(param.Key, true);
-                var castValue = Convert.ChangeType(param.Value, type);
+                var type = Type.GetType(param.AssemblyQualifiedName);
+                var mostDerivedType = param.Value?.GetType();
 
-                parameterValues.Add(castValue);
+                if (!type?.IsAssignableFrom(mostDerivedType) ?? false)
+                {
+                    if (!type?.IsSubclassOf(typeof(IConvertible)) ?? false)
+                    {
+                        throw new NotSupportedException($"Received parameter value {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"}" +
+                                                        $"and must implement {nameof(IConvertible)} for automatic type conversion." +
+                                                        $"Either handle conversion of {nameof(ParameterData)}.{nameof(ParameterData.Value)}" +
+                                                        $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)}" +
+                                                        $"or use a primitive type that implements {nameof(IConvertible)}.");
+                    }
+
+                    param.Value = Convert.ChangeType(param.Value, type);
+                }
+
+                parameterValues.Add(param.Value);
             }
 
             methodInfo?.Invoke(Instance, parameterValues.ToArray());
         }
 
-        private static Dictionary<string, object?> CreateMethodParameterData(MethodBase method, object?[] parameterValues)
+        private static List<ParameterData> CreateMethodParameterData(MethodBase method, object?[] parameterValues)
         {
             var parameterInfo = method.GetParameters();
-            var paramData = new Dictionary<string, object?>();
+            var paramData = new List<ParameterData>();
 
             for (int i = 0; i < parameterInfo.Length; i++)
             {
                 ParameterInfo? parameter = parameterInfo[i];
 
                 // TODO: Generic types.
-                paramData.Add(parameter.ParameterType.AssemblyQualifiedName, parameterValues[i]);
+                paramData.Add(new ParameterData()
+                {
+                    AssemblyQualifiedName = parameter.ParameterType.AssemblyQualifiedName,
+                    Value = parameterValues[i],
+                });
             }
 
             return paramData;

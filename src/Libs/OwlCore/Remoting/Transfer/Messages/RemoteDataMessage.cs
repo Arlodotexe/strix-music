@@ -5,10 +5,10 @@ namespace OwlCore.Remoting.Transfer
     /// <summary>
     /// Contains information for sending and receiving a single object tied to a token.
     /// </summary>
-    public class RemoteDataMessage : IRemoteMemberMessage
+    public class RemoteDataMessage : RemoteMessageBase
     {
         /// <summary>
-        /// Creates a new instance of <see cref="RemoteMemberMessageBase"/>.
+        /// Creates a new instance of <see cref="RemoteMessageBase"/>.
         /// </summary>
         /// <param name="memberInstanceId">A unique identifier for this instance, consistent between hosts and clients.</param>
         /// <param name="token">The name of the target member being changed or invoked.</param>
@@ -20,6 +20,8 @@ namespace OwlCore.Remoting.Transfer
             TargetMemberSignature = memberSignature;
             Token = token;
             Result = result;
+
+            Action = RemotingAction.RemoteDataProxy;
         }
 
         /// <inheritdoc/>
@@ -27,9 +29,6 @@ namespace OwlCore.Remoting.Transfer
 
         /// <inheritdoc/>
         public string TargetMemberSignature { get; set; }
-
-        /// <inheritdoc/>
-        public RemotingAction Action { get; set; } = RemotingAction.RemoteDataProxy;
 
         /// <summary>
         /// A unique identifier for this member.
@@ -40,8 +39,5 @@ namespace OwlCore.Remoting.Transfer
         /// The result value.
         /// </summary>
         public object? Result { get; set; }
-
-        /// <inheritdoc/>
-        public string? CustomActionName { get; set; }
     }
 }
