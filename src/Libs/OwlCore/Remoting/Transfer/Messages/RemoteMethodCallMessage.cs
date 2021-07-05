@@ -48,10 +48,5 @@ namespace OwlCore.Remoting.Transfer
         /// The assembly qualified name of the parameter type, if any
         /// </summary>
         public string? AssemblyQualifiedName { get; set; }
-
-        /// <summary>
-        /// Indicates if this parameter is a generic type.
-        /// </summary>
-        public bool IsGeneric { get; set; }
     }
 }

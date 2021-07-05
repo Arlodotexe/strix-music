@@ -1,54 +1,13 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace OwlCore.Remoting.Transfer.MessageConverters
 {
-    public class NewtonsoftRemoteContractResolver : DefaultContractResolver
-    {
-        protected override JsonDynamicContract CreateDynamicContract(Type objectType)
-        {
-            return base.CreateDynamicContract(objectType);
-        }
-
-        protected override JsonObjectContract CreateObjectContract(Type objectType)
-        {
-            return base.CreateObjectContract(objectType);
-        }
-
-        protected override IValueProvider CreateMemberValueProvider(MemberInfo member)
-        {
-            return base.CreateMemberValueProvider(member);
-        }
-
-        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-        {
-            return base.CreateProperty(member, memberSerialization);
-        }
-
-        protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
-        {
-            return base.CreateProperties(type, memberSerialization);
-        }
-
-        protected override JsonDictionaryContract CreateDictionaryContract(Type objectType)
-        {
-            return base.CreateDictionaryContract(objectType);
-        }
-
-        protected override JsonArrayContract CreateArrayContract(Type objectType)
-        {
-            return base.CreateArrayContract(objectType);
-        }
-    }
-
     /// <summary>
     /// Prepares the data in a <see cref="IRemoteMessage"/> for generic data transfer using <see cref="Newtonsoft.Json"/>.
     /// </summary>
@@ -57,13 +16,12 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
         /// <summary>
         /// The settings used when serializing and deserializing json.
         /// </summary>
-        public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings()
+        public JsonSerializerSettings SerializerSettings { get; set; } = new JsonSerializerSettings
         {
             ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
             PreserveReferencesHandling = PreserveReferencesHandling.All,
             TypeNameHandling = TypeNameHandling.All,
             TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
-            ContractResolver = new NewtonsoftRemoteContractResolver(),
         };
 
         /// <inheritdoc/>
@@ -91,18 +49,25 @@ namespace OwlCore.Remoting.Transfer.MessageConverters
 
                 foreach (var param in memberMessage.Parameters)
                 {
-                    if (param.Value is JObject jObj)
+                    if (param.Value is JContainer container)
                     {
                         var targetType = Type.GetType(param.AssemblyQualifiedName);
-                        param.Value = jObj.ToObject(targetType);
+                        param.Value = container.ToObject(targetType);
                     }
+
+                    if (Guid.TryParse(param.Value?.ToString(), out Guid guid))
+                        param.Value = guid;
                 }
             }
 
-            // Newtonsoft doesn't deserialize these to proper types when holder type is T, object, or dynamic,
-            // presumably because they don't implement IConvertible.
             if (result is RemoteDataMessage dataMsg)
             {
+                if (dataMsg.Result is JContainer container)
+                {
+                    var targetType = Type.GetType(dataMsg.TargetMemberSignature);
+                    dataMsg.Result = container.ToObject(targetType);
+                }
+
                 if (Guid.TryParse(dataMsg.Result?.ToString(), out Guid guid))
                     dataMsg.Result = guid;
             }
