@@ -44,10 +44,10 @@ namespace OwlCore.Remoting
                     {
                         if (!type?.IsSubclassOf(typeof(IConvertible)) ?? false)
                         {
-                            throw new NotSupportedException($"Received data {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"}" +
-                                                            $"and must implement {nameof(IConvertible)} for automatic type conversion." +
-                                                            $"Either handle conversion of {nameof(RemoteDataMessage)}.{nameof(RemoteDataMessage.Result)}" +
-                                                            $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)}" +
+                            throw new NotSupportedException($"Received data {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"} " +
+                                                            $"and must implement {nameof(IConvertible)} for automatic type conversion. " +
+                                                            $"Either handle conversion of {nameof(RemoteDataMessage)}.{nameof(RemoteDataMessage.Result)} " +
+                                                            $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)} " +
                                                             $"or use a primitive type that implements {nameof(IConvertible)}.");
                         }
 
