@@ -117,10 +117,76 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="About" xml:space="preserve">
+    <value>אודות</value>
+  </data>
+  <data name="AboutPVI.Header" xml:space="preserve">
+    <value>אודות</value>
+  </data>
+  <data name="AddNewService" xml:space="preserve">
+    <value>הוסף שירות חדש</value>
+  </data>
+  <data name="AddNewServiceTB.Text" xml:space="preserve">
+    <value>הוסף שירות חדש</value>
+  </data>
+  <data name="Advanced" xml:space="preserve">
+    <value>מתקדםות</value>
+  </data>
+  <data name="AdvancedPVI.Header" xml:space="preserve">
+    <value>מתקדםות</value>
+  </data>
   <data name="AppSkin" xml:space="preserve">
     <value>סגנון אפליקציה</value>
   </data>
-  <data name="AppSkinTB.Header" xml:space="preserve">
+  <data name="AppSkinPVI.Header" xml:space="preserve">
     <value>סגנון אפליקציה</value>
+  </data>
+  <data name="ConnectANewService" xml:space="preserve">
+    <value>חבר שירות חדש</value>
+  </data>
+  <data name="ConnectANewServiceTB.Text" xml:space="preserve">
+    <value>חבר שירות חדש</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>שירותים</value>
+  </data>
+  <data name="ServicesPVI.Header" xml:space="preserve">
+    <value>שירותים</value>
+  </data>
+  <data name="StrixImageSVGIS.UriSource" xml:space="preserve">
+    <value>ms-appx:///Assets/Strix/he/Splash Screen.svg</value>
+  </data>
+  <data name="SaveAndApply" xml:space="preserve">
+    <value>שומר ולהחיל</value>
+  </data>
+  <data name="SaveAndApplyBTN.Content" xml:space="preserve">
+    <value>שומר ולהחיל</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>טוען</value>
+  </data>
+  <data name="SelectASkinCB.Header" xml:space="preserve">
+    <value>בחר סגנון</value>
+  </data>
+  <data name="SelectASkin" xml:space="preserve">
+    <value>בחר סגנון</value>
+  </data>
+  <data name="SelectASkinCB.PlaceholderText" xml:space="preserve">
+    <value>טוען...</value>
+  </data>
+  <data name="SelectAFallbackSkinCB.PlaceholderText" xml:space="preserve">
+    <value>טוען...</value>
+  </data>
+  <data name="SelectAFallbackSkin" xml:space="preserve">
+    <value>בחר סגנון גיבוי</value>
+  </data>
+  <data name="SelectAFallbackSkinCB.Header" xml:space="preserve">
+    <value>בחר סגנון גיבוי</value>
+  </data>
+  <data name="UnoptimizedDisplay" xml:space="preserve">
+    <value>הסגנון שנבחר אינו מתאים לכל גודל התצוגה.</value>
+  </data>
+  <data name="UnoptimizedDisplayTB.Text" xml:space="preserve">
+    <value>הסגנון שנבחר אינו מתאים לכל גודל התצוגה.</value>
   </data>
 </root>

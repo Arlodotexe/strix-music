@@ -46,7 +46,9 @@ namespace StrixMusic.Sdk.ViewModels
 
             PlayPlaylistCollectionAsyncCommand = new AsyncRelayCommand(PlayPlaylistCollectionAsync);
             PausePlaylistCollectionAsyncCommand = new AsyncRelayCommand(PausePlaylistCollectionAsync);
-            SortPlaylistCollectionCommand = new RelayCommand<PlaylistSorting>(SortPlaylistCollection);
+
+            ChangePlaylistCollectionSortingTypeCommand = new RelayCommand<PlaylistSortingType>(x => SortPlaylistCollection(x, CurrentPlaylistSortingDirection));
+            ChangePlaylistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortPlaylistCollection(CurrentPlaylistSortingType, x));
 
             PlayPlaylistAsyncCommand = new AsyncRelayCommand<IPlaylistCollectionItem>(PlaylistPlaylistInternalAsync);
 
@@ -138,7 +140,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                if (CurrentPlaylistSorting == PlaylistSorting.Unordered)
+                if (CurrentPlaylistSortingType == PlaylistSortingType.Unsorted)
                 {
                     Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
@@ -172,7 +174,7 @@ namespace StrixMusic.Sdk.ViewModels
                             UnsortedPlaylists.Remove(item);
                     }
 
-                    SortPlaylistCollection(CurrentPlaylistSorting);
+                    SortPlaylistCollection(CurrentPlaylistSortingType, CurrentPlaylistSortingDirection);
                 }
             });
         }
@@ -320,8 +322,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public DateTime? AddedAt => _collection.AddedAt;
 
-        ///<inheritdoc />
-        public PlaylistSorting CurrentPlaylistSorting { get; private set; }
+        /// <inheritdoc />
+        public PlaylistSortingType CurrentPlaylistSortingType { get; private set; }
+
+        /// <inheritdoc />
+        public SortDirection CurrentPlaylistSortingDirection { get; private set; }
 
         /// <inheritdoc />
         public ObservableCollection<IPlaylistCollectionItem> Playlists { get; }
@@ -439,11 +444,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         ///<inheritdoc />
-        public void SortPlaylistCollection(PlaylistSorting playlistSorting)
+        public void SortPlaylistCollection(PlaylistSortingType playlistSorting, SortDirection sortDirection)
         {
-            CurrentPlaylistSorting = playlistSorting;
+            CurrentPlaylistSortingType = playlistSorting;
+            CurrentPlaylistSortingDirection = sortDirection;
 
-            CollectionSorting.SortPlaylists(Playlists, playlistSorting, UnsortedPlaylists);
+            CollectionSorting.SortPlaylists(Playlists, playlistSorting, sortDirection, UnsortedPlaylists);
         }
 
         /// <inheritdoc />
@@ -481,7 +487,10 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand ChangeNameAsyncCommand { get; }
 
         /// <inheritdoc />
-        public RelayCommand<PlaylistSorting> SortPlaylistCollectionCommand { get; }
+        public RelayCommand<PlaylistSortingType> ChangePlaylistCollectionSortingTypeCommand { get; }
+
+        /// <inheritdoc />
+        public RelayCommand<SortDirection> ChangePlaylistCollectionSortingDirectionCommand { get; }
 
         /// <summary>
         /// Command to change the description. It triggers <see cref="ChangeDescriptionAsync"/>.

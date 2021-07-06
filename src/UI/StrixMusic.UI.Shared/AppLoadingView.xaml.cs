@@ -16,6 +16,7 @@ using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 using StrixMusic.Sdk.Uno.Assembly;
+using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
@@ -24,7 +25,6 @@ using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Shared.Services;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -305,6 +305,7 @@ namespace StrixMusic.Shared
 
             _localizationService.RegisterProvider(Constants.Localization.SuperShellResource);
             _localizationService.RegisterProvider(Constants.Localization.CommonResource);
+            _localizationService.RegisterProvider(Constants.Localization.TimeResource);
             _localizationService.RegisterProvider(Constants.Localization.MusicResource);
 
             // TODO: Add debug boot mode.

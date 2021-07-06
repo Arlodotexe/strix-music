@@ -354,4 +354,37 @@
   <data name="PodcastsTB.Text" xml:space="preserve">
     <value>Podcasts</value>
   </data>
+  <data name="SongsCount" xml:space="preserve">
+    <value>{0} Songs</value>
+  </data>
+  <data name="AlbumsCount" xml:space="preserve">
+    <value>{0} Albums</value>
+  </data>
+  <data name="ArtistsCount" xml:space="preserve">
+    <value>{0} Artists</value>
+  </data>
+  <data name="PlaylistsCount" xml:space="preserve">
+    <value>{0} Playlists</value>
+  </data>
+  <data name="SongCOL.Header" xml:space="preserve">
+    <value>Song</value>
+  </data>
+  <data name="AlbumCOL.Header" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="SongArtistCOL.Header" xml:space="preserve">
+    <value>Song Artist</value>
+  </data>
+  <data name="Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="LengthCOL.Header" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
+  </data>
+  <data name="DateAddedCOL.Header" xml:space="preserve">
+    <value>Date added</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using StrixMusic.Sdk.Uno.Controls.Items.Abstract;
 using StrixMusic.Sdk.Uno.Helpers;
 using System;
@@ -53,7 +54,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections.Abstract
             set => SetValue(EmptyContentProperty, value);
         }
 
-        private Selector? PART_Selector { get; set; }
+        private Control? PART_Selector { get; set; }
 
         private ScrollViewer? PART_Scroller { get; set; }
 
@@ -67,7 +68,10 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections.Abstract
             if (PART_Selector == null)
                 return;
 
-            PART_Selector.SelectedItem = null;
+            if (PART_Selector is Selector selector)
+                selector.SelectedItem = null;
+            else if (PART_Selector is DataGrid dataGrid)
+                dataGrid.SelectedItem = null;
         }
 
         /// <summary>
@@ -98,7 +102,12 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections.Abstract
             if (PART_Selector == null || PART_Scroller == null)
                 return;
 
-            PART_Selector.SelectionChanged += SelectedItemChanged;
+            if (PART_Selector is Selector selector)
+                selector.SelectionChanged += SelectedItemChanged;
+            else if (PART_Selector is DataGrid dataGrid)
+                dataGrid.SelectionChanged += SelectedItemChanged;
+            else return;
+
             PART_Scroller.ViewChanged += CollectionControl_ViewChanged;
         }
 
@@ -109,7 +118,12 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections.Abstract
             if (PART_Selector == null || PART_Scroller == null)
                 return;
 
-            PART_Selector!.SelectionChanged -= SelectedItemChanged;
+            if (PART_Selector is Selector selector)
+                selector.SelectionChanged -= SelectedItemChanged;
+            else if (PART_Selector is DataGrid dataGrid)
+                dataGrid.SelectionChanged -= SelectedItemChanged;
+            else return;
+
             PART_Scroller!.ViewChanged -= CollectionControl_ViewChanged;
         }
 
@@ -117,6 +131,12 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections.Abstract
         {
             // Find and set Selector
             PART_Selector = VisualTreeHelpers.GetDataTemplateChild<Selector>(this, nameof(PART_Selector));
+            if (PART_Selector == null)
+            {
+                PART_Selector = VisualTreeHelpers.GetDataTemplateChild<DataGrid>(this, nameof(PART_Selector));
+            }
+
+            // Find and set Scroller
             PART_Scroller = VisualTreeHelpers.GetDataTemplateChild<ScrollViewer>(this);
 
             AttachHandlers();
@@ -152,7 +172,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections.Abstract
         {
             e.AddedItems.ForEach(x =>
             {
-                TItem container = GetItemFromData(x);
+                TItem? container = GetItemFromData(x);
                 if (container != null)
                 {
                     container.Selected = true;
@@ -161,7 +181,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections.Abstract
 
             e.RemovedItems.ForEach(x =>
             {
-                TItem container = GetItemFromData(x);
+                TItem? container = GetItemFromData(x);
                 if (container != null)
                 {
                     container.Selected = false;
@@ -173,13 +193,23 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections.Abstract
 
             // Get selected item
             // Invoke event
-            Events.SelectionChangedEventArgs<TData> selectionChangedEventArgs = new Events.SelectionChangedEventArgs<TData>((TData)PART_Selector.SelectedItem);
+            TData data;
+            if (PART_Selector is Selector selector)
+                data = (TData)selector.SelectedItem;
+            else if (PART_Selector is DataGrid dataGrid)
+                data = (TData)dataGrid.SelectedItem;
+            else
+                return;
+
+            Events.SelectionChangedEventArgs<TData> selectionChangedEventArgs = new Events.SelectionChangedEventArgs<TData>(data);
             SelectionChanged?.Invoke(this, selectionChangedEventArgs);
         }
 
-        private TItem GetItemFromData(object data)
+        private TItem? GetItemFromData(object data)
         {
-            return VisualTreeHelpers.FindVisualChildren<TItem>(PART_Selector!.ContainerFromItem(data)).FirstOrDefault()!;
+            if (PART_Selector is Selector selector)
+                return VisualTreeHelpers.FindVisualChildren<TItem>(selector.ContainerFromItem(data)).FirstOrDefault();
+            return null;
         }
 
         private void SetNoContentTemplate(FrameworkElement frameworkElement)

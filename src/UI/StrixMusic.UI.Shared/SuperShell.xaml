@@ -65,18 +65,18 @@
 
         <Image MaxHeight="135" MaxWidth="300" Margin="0, -15,0,-25">
             <Image.Source>
-                <SvgImageSource UriSource="ms-appx:///Assets/Strix/en/Wide.svg"
+                <SvgImageSource x:Uid="/SuperShell/StrixImageSVGIS" UriSource="ms-appx:///Assets/Strix/en/Wide.svg"
                                 RasterizePixelHeight="135" RasterizePixelWidth="300"/>
             </Image.Source>
         </Image>
 
         <!-- Will be replaced with NavigationView eventually -->
         <Pivot Grid.Row="1" Style="{StaticResource CenteredPivotHeadersStyle}" SelectedIndex="{x:Bind ViewModel.SelectedTabIndex, Mode=TwoWay}">
-            <PivotItem  x:Uid="/SuperShell/AppSkinTB" Header="Skins" Padding="30,20">
+            <PivotItem x:Uid="/SuperShell/AppSkinPVI" Header="Skins" Padding="30,20">
                 <ContentControl ContentTemplate="{StaticResource DefaultShellSelector}" DataContext="{x:Bind ViewModel.ShellSelectorViewModel}"
                                 VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
             </PivotItem>
-            <PivotItem Header="Services">
+            <PivotItem x:Uid="/SuperShell/ServicesPVI" Header="Services">
                 <Grid HorizontalAlignment="Center">
                     <!-- TODO A bit messy, clean up or use a better approach -->
                     <Grid x:Name="ExistingOrNewCoreGrid" Visibility="{x:Bind ViewModel.CurrentCoreConfig, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}">
@@ -109,7 +109,7 @@
                                     </Button.Content>
                                 </Button>
 
-                                <TextBlock Text="CONNECT A NEW SERVICE" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.5" FontWeight="SemiBold" CharacterSpacing="60"/>
+                                <TextBlock x:Uid="/SuperShell/ConnectANewServiceTB" Text="CONNECT A NEW SERVICE" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.5" FontWeight="SemiBold" CharacterSpacing="60"/>
                             </Grid>
                         </StackPanel>
                     </Grid>
@@ -144,10 +144,10 @@
                     </StackPanel>
                 </Grid>
             </PivotItem>
-            <PivotItem Header="About">
+            <PivotItem x:Uid="/SuperShell/AboutPVI" Header="About">
                 <TextBlock Text="Todo" FontSize="18" />
             </PivotItem>
-            <PivotItem Header="Advanced">
+            <PivotItem x:Uid="/SuperShell/AdvancedPVI" Header="Advanced">
                 <TextBlock Text="Todo" FontSize="18" />
             </PivotItem>
         </Pivot>
