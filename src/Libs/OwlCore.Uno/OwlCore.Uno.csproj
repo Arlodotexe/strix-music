@@ -9,11 +9,12 @@
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <UserSecretsId>6fa950de-976e-453b-bfcb-f0abe43fa342</UserSecretsId>
+    <Configurations>Prod-Debug;Release;Dev-Debug</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Prod-Debug|netstandard2.0|AnyCPU'">
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
