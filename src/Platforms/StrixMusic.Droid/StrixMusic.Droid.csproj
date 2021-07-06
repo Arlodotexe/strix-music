@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<Configurations>Prod-Debug;Production;Development;Dev-Release;Nightly;Nightly-Debug</Configurations>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7ACFE9FE-4243-43C2-9DE2-2232B090274C}</ProjectGuid>
@@ -26,55 +25,55 @@
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Prod-Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
-    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
-    <AotAssemblies>false</AotAssemblies>
-    <EnableLLVM>false</EnableLLVM>
-    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
-    <BundleAssemblies>false</BundleAssemblies>
-    <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+	
+  <PropertyGroup>
+	  <DebugSymbols>true</DebugSymbols>
+	  <DebugType>portable</DebugType>
+	  <EnableLLVM>false</EnableLLVM>
+	  <AotAssemblies>false</AotAssemblies>
+	  <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+	  <BundleAssemblies>false</BundleAssemblies>
+	  <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+	  <ErrorReport>prompt</ErrorReport>
+	  <WarningLevel>4</WarningLevel>
+	  <OutputPath>bin\%24%28Configuration%29\</OutputPath>
+	  <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
+	  <Configurations>Prod-Debug;Production;Development;Dev-Release;Nightly;Nightly-Debug</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Production|AnyCPU' ">
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <AndroidManagedSymbols>true</AndroidManagedSymbols>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
-    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
-    <AndroidCreatePackagePerAbi>true</AndroidCreatePackagePerAbi>
-    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
-    <AotAssemblies>false</AotAssemblies>
-    <EnableLLVM>false</EnableLLVM>
-    <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
-    <DocumentationFile>bin\%24%28Configuration%29\%24%28TargetFramework%29\%24%28AssemblyName%29.xml</DocumentationFile>
-    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
-    <BundleAssemblies>false</BundleAssemblies>
+
+
+  <!--Debug/Release properties-->
+  <PropertyGroup Condition="'$(Configuration)'=='Development' Or '$(Configuration)'=='Nightly-Debug' Or '$(Configuration)'=='Prod-Debug'">
+	  <!--Debug-->
+	  <Optimize>false</Optimize>
+	  <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
+	  <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Development|AnyCPU' ">
-    <OutputPath>bin\Dev-Debug\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev-Release|AnyCPU'">
-    <OutputPath>bin\Dev-Release\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly|AnyCPU'">
-    <OutputPath>bin\Nightly\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly-Debug|AnyCPU'">
-    <OutputPath>bin\Nightly-Debug\</OutputPath>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Dev-Release' Or '$(Configuration)'=='Nightly' Or '$(Configuration)'=='Production'">
+	  <!--Release-->
+	  <Optimize>true</Optimize>
+	  <DebugType>portable</DebugType>
+	  <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+	  <AndroidManagedSymbols>true</AndroidManagedSymbols>
+	  <AndroidCreatePackagePerAbi>true</AndroidCreatePackagePerAbi>
+	  <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+	  <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
+	</PropertyGroup>
+
+	<!--Development/Nightly/Production properties-->
+	<PropertyGroup Condition="'$(Configuration)'=='Nightly' Or '$(Configuration)'=='Nightly-Debug'">
+		<!--Development-->
+		<DefineConstants>$(DefineConstants);ENV_DEV</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Nightly' Or '$(Configuration)'=='Nightly-Debug'">
+		<!--Nightly-->
+		<DefineConstants>$(DefineConstants);ENV_NIGHTLY</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Prod-Debug' Or '$(Configuration)'=='Production'">
+		<!--Production-->
+		<DefineConstants>$(DefineConstants);ENV_PROD</DefineConstants>
+	</PropertyGroup>
+	
   <ItemGroup>
     <Reference Include="Hqub.MusicBrainz.API">
       <HintPath>..\..\Cores\StrixMusic.Core.MusicBrainz\Dependencies\Hqub.MusicBrainz.API.dll</HintPath>
