@@ -5,42 +5,36 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
     /// <summary>
     /// Enumeration for sort types of tracks.
     /// </summary>
-    [Flags]
     public enum AlbumSortingType
     {
         /// <summary>
         /// Default order of the collection.
         /// </summary>
-        Unordered = 0x0,
-
-        /// <summary>
-        /// Flags sorting in descending order
-        /// </summary>
-        Descending = 0x1,
+        Unsorted,
 
         /// <summary>
         /// Sort albums by name.
         /// </summary>
-        Alphanumerical = 0x2,
+        Alphanumerical,
 
         /// <summary>
         /// Sort albums by date added to collection.
         /// </summary>
-        DateAdded = 0x4,
+        DateAdded,
 
         /// <summary>
         /// Sort albums by duration.
         /// </summary>
-        Duration = 0x8,
+        Duration,
 
         /// <summary>
         /// Sort albums by last played.
         /// </summary>
-        LastPlayed = 0x16,
+        LastPlayed,
 
         /// <summary>
         /// Sort albums by date published.
         /// </summary>
-        DatePublished = 0x32,
+        DatePublished,
     }
 }

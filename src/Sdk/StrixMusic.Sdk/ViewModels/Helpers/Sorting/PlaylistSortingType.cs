@@ -5,37 +5,31 @@ namespace StrixMusic.Sdk.ViewModels.Helpers.Sorting
     /// <summary>
     /// Enumeration for sort types of playlists.
     /// </summary>
-    [Flags]
     public enum PlaylistSortingType
     {
         /// <summary>
         /// Default order of the collection.
         /// </summary>
-        Unordered = 0,
-
-        /// <summary>
-        /// Flags sorting in descending order.
-        /// </summary>
-        Descending = 0x1,
+        Unsorted,
 
         /// <summary>
         /// Sort playlists by name.
         /// </summary>
-        Alphanumerical = 0x2,
+        Alphanumerical,
 
         /// <summary>
         /// Sort playlists by date added to collection.
         /// </summary>
-        DateAdded = 0x4,
+        DateAdded,
 
         /// <summary>
         /// Sort playlists by duration.
         /// </summary>
-        Duration = 0x8,
+        Duration,
 
         /// <summary>
         /// Sort playlists by last played.
         /// </summary>
-        LastPlayed = 0x16,
+        LastPlayed,
     }
 }

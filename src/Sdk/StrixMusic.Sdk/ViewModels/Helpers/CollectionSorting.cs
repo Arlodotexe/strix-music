@@ -23,26 +23,27 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// </summary>
         /// <param name="trackCollection">The collection to initialize.</param>
         /// <param name="trackSorting">Sort type of the collection.</param>
+        /// <param name="sortDirection">The direction to sort the collection.</param>
         /// <param name="originalOrder">The original order of the playlistCollection.</param>
-        public static void SortTracks(ObservableCollection<TrackViewModel> trackCollection, TrackSortingType trackSorting, ObservableCollection<TrackViewModel> originalOrder)
+        public static void SortTracks(ObservableCollection<TrackViewModel> trackCollection, TrackSortingType trackSorting, SortDirection sortDirection, ObservableCollection<TrackViewModel> originalOrder)
         {
             if (!originalOrder.Any())
             {
                 originalOrder = trackCollection;
             }
 
-            bool isDescending = trackSorting.HasFlag(TrackSortingType.Descending);
-
-            // Remove the Descending flag from the enum.
-            TrackSortingType deflaggedSorting = trackSorting
-                & ~TrackSortingType.Descending;
-
-            switch (deflaggedSorting)
+            if (sortDirection == SortDirection.Unsorted ||
+                trackSorting == TrackSortingType.Unsorted)
             {
-                case TrackSortingType.Unordered:
-                    trackCollection = originalOrder;
-                    originalOrder.Clear();
-                    break;
+                trackCollection = originalOrder;
+                originalOrder.Clear();
+                return;
+            }
+
+            bool isDescending = sortDirection == SortDirection.Descending;
+
+            switch (trackSorting)
+            {
                 case TrackSortingType.Alphanumerical:
                     trackCollection.Sort(new NameComparer<TrackViewModel>(isDescending));
                     break;
@@ -66,27 +67,28 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// </summary>
         /// <param name="albumCollection">The collection to sort.</param>
         /// <param name="albumSorting">Sort type of the collection.</param>
+        /// <param name="sortDirection">The direction to sort the collection.</param>
         /// <param name="originalOrder">The original order of the albumCollection.</param>
-        public static void SortAlbums(ObservableCollection<IAlbumCollectionItem> albumCollection, AlbumSortingType albumSorting, ObservableCollection<IAlbumCollectionItem> originalOrder)
+        public static void SortAlbums(ObservableCollection<IAlbumCollectionItem> albumCollection, AlbumSortingType albumSorting, SortDirection sortDirection, ObservableCollection<IAlbumCollectionItem> originalOrder)
         {
             if (!originalOrder.Any())
             {
                 originalOrder = albumCollection;
             }
 
-            bool isDescending = albumSorting.HasFlag(AlbumSortingType.Descending);
-
-            // Remove the Descending flag from the enum.
-            AlbumSortingType deflaggedSorting = albumSorting
-                & ~AlbumSortingType.Descending;
-
-            switch (deflaggedSorting)
+            if (sortDirection == SortDirection.Unsorted ||
+                albumSorting == AlbumSortingType.Unsorted)
             {
-                case AlbumSortingType.Unordered:
-                    albumCollection = originalOrder;
-                    originalOrder.Clear();
-                    break;
-                case AlbumSortingType.Descending:
+                albumCollection = originalOrder;
+                originalOrder.Clear();
+                return;
+            }
+
+            bool isDescending = sortDirection == SortDirection.Descending;
+
+            switch (albumSorting)
+            {
+                case AlbumSortingType.Alphanumerical:
                     albumCollection.Sort(new NameComparer<IAlbumCollectionItem>(isDescending));
                     break;
                 case AlbumSortingType.DateAdded:
@@ -111,26 +113,27 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// </summary>
         /// <param name="artistCollection">The collection to sort.</param>
         /// <param name="artistSorting">Sort type of the collection.</param>
+        /// <param name="sortDirection">The direction to sort the collection.</param>
         /// <param name="originalOrder">The original order of the playlistCollection.</param>
-        public static void SortArtists(ObservableCollection<IArtistCollectionItem> artistCollection, ArtistSortingType artistSorting, ObservableCollection<IArtistCollectionItem> originalOrder)
+        public static void SortArtists(ObservableCollection<IArtistCollectionItem> artistCollection, ArtistSortingType artistSorting, SortDirection sortDirection, ObservableCollection<IArtistCollectionItem> originalOrder)
         {
             if (!originalOrder.Any())
             {
                 originalOrder = artistCollection;
             }
 
-            bool isDescending = artistSorting.HasFlag(ArtistSortingType.Descending);
-
-            // Remove the Descending flag from the enum.
-            ArtistSortingType deflaggedSorting = artistSorting
-                & ~ArtistSortingType.Descending;
-
-            switch (deflaggedSorting)
+            if (sortDirection == SortDirection.Unsorted ||
+                artistSorting == ArtistSortingType.Unsorted)
             {
-                case ArtistSortingType.Unordered:
-                    artistCollection = originalOrder;
-                    originalOrder.Clear();
-                    break;
+                artistCollection = originalOrder;
+                originalOrder.Clear();
+                return;
+            }
+
+            bool isDescending = sortDirection == SortDirection.Descending;
+
+            switch (artistSorting)
+            {
                 case ArtistSortingType.Alphanumerical:
                     artistCollection.Sort(new NameComparer<IArtistCollectionItem>(isDescending));
                     break;
@@ -154,27 +157,27 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// </summary>
         /// <param name="playlistCollection">The collection to sort.</param>
         /// <param name="playlistSorting">Sort type of the collection.</param>
+        /// <param name="sortDirection">The direction to sort the collection.</param>
         /// <param name="originalOrder">The original order of the playlistCollection.</param>
-        public static void SortPlaylists(ObservableCollection<IPlaylistCollectionItem> playlistCollection, PlaylistSortingType playlistSorting, ObservableCollection<IPlaylistCollectionItem> originalOrder)
+        public static void SortPlaylists(ObservableCollection<IPlaylistCollectionItem> playlistCollection, PlaylistSortingType playlistSorting, SortDirection sortDirection, ObservableCollection<IPlaylistCollectionItem> originalOrder)
         {
             if (!originalOrder.Any())
             {
                 originalOrder = playlistCollection;
             }
 
-            bool isDescending = playlistSorting.HasFlag(PlaylistSortingType.Descending);
-
-            // Remove the Descending flag from the enum.
-            PlaylistSortingType deflaggedSorting = playlistSorting
-                & ~PlaylistSortingType.Descending;
-            
-            // Switch the remaining value
-            switch (deflaggedSorting)
+            if (sortDirection == SortDirection.Unsorted ||
+                playlistSorting == PlaylistSortingType.Unsorted)
             {
-                case PlaylistSortingType.Unordered:
-                    playlistCollection = originalOrder;
-                    originalOrder.Clear();
-                    break;
+                playlistCollection = originalOrder;
+                originalOrder.Clear();
+                return;
+            }
+
+            bool isDescending = sortDirection == SortDirection.Descending;
+
+            switch (playlistSorting)
+            {
                 case PlaylistSortingType.Alphanumerical:
                     playlistCollection.Sort(new NameComparer<IPlaylistCollectionItem>(isDescending));
                     break;

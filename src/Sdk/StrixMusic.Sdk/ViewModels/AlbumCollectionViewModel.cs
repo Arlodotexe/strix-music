@@ -145,7 +145,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                if (CurrentAlbumSortingType == AlbumSortingType.Unordered)
+                if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
                 {
                     Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
@@ -330,7 +330,7 @@ namespace StrixMusic.Sdk.ViewModels
             CurrentAlbumSortingType = albumSorting;
             CurrentAlbumSortingDirection = sortDirection;
 
-            CollectionSorting.SortAlbums(Albums, albumSorting, UnsortedAlbums);
+            CollectionSorting.SortAlbums(Albums, albumSorting, sortDirection, UnsortedAlbums);
         }
 
         /// <inheritdoc />

@@ -140,7 +140,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                if (CurrentPlaylistSortingType == PlaylistSortingType.Unordered)
+                if (CurrentPlaylistSortingType == PlaylistSortingType.Unsorted)
                 {
                     Playlists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
@@ -449,7 +449,7 @@ namespace StrixMusic.Sdk.ViewModels
             CurrentPlaylistSortingType = playlistSorting;
             CurrentPlaylistSortingDirection = sortDirection;
 
-            CollectionSorting.SortPlaylists(Playlists, playlistSorting, UnsortedPlaylists);
+            CollectionSorting.SortPlaylists(Playlists, playlistSorting, sortDirection, UnsortedPlaylists);
         }
 
         /// <inheritdoc />

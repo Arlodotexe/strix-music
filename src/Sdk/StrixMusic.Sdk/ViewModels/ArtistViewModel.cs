@@ -308,7 +308,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                if (CurrentTracksSortingType == TrackSortingType.Unordered)
+                if (CurrentTracksSortingType == TrackSortingType.Unsorted)
                 {
                     Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
                 }
@@ -339,7 +339,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                if (CurrentAlbumSortingType == AlbumSortingType.Unordered)
+                if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
                 {
                     Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
@@ -573,7 +573,7 @@ namespace StrixMusic.Sdk.ViewModels
             CurrentAlbumSortingType = albumSorting;
             CurrentAlbumSortingDirection = sortDirection;
 
-            CollectionSorting.SortAlbums(Albums, albumSorting, UnsortedAlbums);
+            CollectionSorting.SortAlbums(Albums, albumSorting, sortDirection, UnsortedAlbums);
         }
 
         /// <inheritdoc />
@@ -582,7 +582,7 @@ namespace StrixMusic.Sdk.ViewModels
             CurrentTracksSortingType = trackSorting;
             CurrentTracksSortingDirection = sortDirection;
 
-            CollectionSorting.SortTracks(Tracks, trackSorting, UnsortedTracks);
+            CollectionSorting.SortTracks(Tracks, trackSorting, sortDirection, UnsortedTracks);
         }
 
         /// <inheritdoc />
