@@ -35,11 +35,11 @@
 
     <DataTemplate x:Key="DefaultAbstractDataListListTemplate" x:DataType="abstractUI:AbstractDataListViewModel">
         <ListView x:Name="PrimaryListView" ItemsSource="{x:Bind Items}" SelectionMode="None" Margin="10" IsItemClickEnabled="true">
-            <interactivity:Interaction.Behaviors>
+            <!--<interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="ItemClick">
                     <core:InvokeCommandAction Command="{x:Bind ItemTappedCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
                 </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
+            </interactivity:Interaction.Behaviors>-->
             <ListView.ItemContainerTransitions>
                 <TransitionCollection />
             </ListView.ItemContainerTransitions>
@@ -77,11 +77,11 @@
                             <Button Content="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="16" 
                                     Height="40" Width="40" Margin="0,0,5,0" Background="Transparent"
                                     Visibility="{Binding IsAddItem, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                                <interactivity:Interaction.Behaviors>
+                                <!--<interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Click">
                                         <core:InvokeCommandAction Command="{Binding RequestRemoveCommand}" CommandParameter="{Binding}" />
                                     </core:EventTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
+                                </interactivity:Interaction.Behaviors>-->
                             </Button>
 
                             <Button Grid.RowSpan="2" Content="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="18" 
@@ -121,11 +121,11 @@
 
     <DataTemplate x:Key="DefaultAbstractDataListGridTemplate" x:DataType="abstractUI:AbstractDataListViewModel">
         <GridView SelectionMode="None" ItemsSource="{x:Bind Items}" IsItemClickEnabled="true">
-            <interactivity:Interaction.Behaviors>
+            <!--<interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="ItemClick">
                     <core:InvokeCommandAction Command="{x:Bind ItemTappedCommand}" InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
                 </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
+            </interactivity:Interaction.Behaviors>-->
             <GridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem">
                     <Setter Property="Template">
@@ -166,11 +166,11 @@
                                     Content="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="14" 
                                     Margin="5,-1,0,0" Background="Transparent"
                                     Visibility="{Binding IsAddItem, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                                <interactivity:Interaction.Behaviors>
+                                <!--<interactivity:Interaction.Behaviors>
                                     <core:EventTriggerBehavior EventName="Click">
                                         <core:InvokeCommandAction Command="{Binding RequestRemoveCommand}" CommandParameter="{Binding}" />
                                     </core:EventTriggerBehavior>
-                                </interactivity:Interaction.Behaviors>
+                                </interactivity:Interaction.Behaviors>-->
                             </Button>
                         </Border>
 

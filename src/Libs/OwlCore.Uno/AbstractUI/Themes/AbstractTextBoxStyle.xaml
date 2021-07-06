@@ -39,11 +39,11 @@
                      Margin="0,5,0,0"
                      PlaceholderText="{x:Bind PlaceholderText, Mode=OneWay}"
                      ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}">
-                <interactivity:Interaction.Behaviors>
+                <!--<interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="TextChanging">
                         <core:InvokeCommandAction Command="{x:Bind ValueChangedCommand}" />
                     </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
+                </interactivity:Interaction.Behaviors>-->
             </TextBox>
         </StackPanel>
     </DataTemplate>

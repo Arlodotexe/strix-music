@@ -15,18 +15,18 @@
             <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
                 <Button Style="{StaticResource MediaButton}" Command="{Binding ActiveDevice.PreviousAsyncCommand, Mode=OneWay}">
                     <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                    <interactivity:Interaction.Behaviors>
+                    <!--<interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
                             <core:InvokeCommandAction Command="{x:Bind ActiveDevice.PreviousAsyncCommand, Mode=OneWay}" />
                         </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
+                    </interactivity:Interaction.Behaviors>-->
                 </Button>
                 <owlcoreuno:ToggleContentButton Style="{StaticResource MediaToggleContentButton}" IsChecked="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}">
-                    <interactivity:Interaction.Behaviors>
+                    <!--<interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
                             <core:InvokeCommandAction Command="{Binding ActiveDevice.TogglePauseResumeCommand, Mode=OneWay}" />
                         </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
+                    </interactivity:Interaction.Behaviors>-->
                     <owlcoreuno:ToggleContentButton.CheckedContent>
                         <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </owlcoreuno:ToggleContentButton.CheckedContent>
@@ -34,11 +34,11 @@
                 </owlcoreuno:ToggleContentButton>
                 <Button Style="{StaticResource MediaButton}" Command="{Binding ActiveDevice.NextAsyncCommand, Mode=OneWay}">
                     <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
-                    <interactivity:Interaction.Behaviors>
+                    <!--<interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
                             <core:InvokeCommandAction Command="{x:Bind ActiveDevice.NextAsyncCommand, Mode=OneWay}" />
                         </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
+                    </interactivity:Interaction.Behaviors>-->
                 </Button>
             </StackPanel>
 

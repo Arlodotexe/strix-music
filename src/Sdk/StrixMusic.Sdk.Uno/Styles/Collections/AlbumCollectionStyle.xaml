@@ -16,11 +16,11 @@
             <GridView.ItemTemplate>
                 <DataTemplate x:Key="DefaultAlbumCollectionItemStyle">
                     <items:AlbumItem>
-                        <interactivity:Interaction.Behaviors>
+                        <!--<interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="DoubleTapped">
                                 <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayAlbumCollectionAsyncCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                             </core:EventTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
+                        </interactivity:Interaction.Behaviors>-->
                     </items:AlbumItem>
                 </DataTemplate>
             </GridView.ItemTemplate>

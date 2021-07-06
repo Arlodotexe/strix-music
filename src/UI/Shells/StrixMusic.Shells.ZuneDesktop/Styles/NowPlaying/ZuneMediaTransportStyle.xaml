@@ -39,20 +39,20 @@
                 <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
                     <Button x:Name="PreviousButton" Style="{StaticResource ZuneButton}" Width="32">
                         <PathIcon Data="M 0 4.2357127 6.3582224 8.4666673 V 0.0047581 Z M 6.3417776 4.2309543 12.7 8.4619093 V 0 Z" Margin="-2,0,0,0"/>
-                        <interactivity:Interaction.Behaviors>
+                        <!--<interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="Click">
                                 <core:InvokeCommandAction Command="{x:Bind ActiveDevice.PreviousAsyncCommand, Mode=OneWay}" />
                             </core:EventTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
+                        </interactivity:Interaction.Behaviors>-->
                     </Button>
 
                     <owlcoreuno:ToggleContentButton x:Name="PlayPauseButton" Style="{StaticResource ZuneToggleContentButtonStyle}" Width="42" IsChecked="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}"
                                                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-                        <interactivity:Interaction.Behaviors>
+                        <!--<interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="Click">
                                 <core:InvokeCommandAction Command="{x:Bind ActiveDevice.TogglePauseResumeCommand, Mode=OneWay}" />
                             </core:EventTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
+                        </interactivity:Interaction.Behaviors>-->
                         <owlcoreuno:ToggleContentButton.CheckedContent>
                                 <FontIcon Glyph="&#xE103;" FontSize="20" />
                         </owlcoreuno:ToggleContentButton.CheckedContent>
@@ -62,11 +62,11 @@
 
                     <Button x:Name="SkipButton" Style="{StaticResource ZuneButton}" Width="32">
                         <PathIcon Data="M 12.7 4.2357127 6.3417776 8.4666673 V 0.0047581 Z M 6.3582224 4.2309543 0 8.4619093 V 0 Z" Margin="2,0,0,0" />
-                        <interactivity:Interaction.Behaviors>
+                        <!--<interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="Click">
                                 <core:InvokeCommandAction Command="{x:Bind ActiveDevice.NextAsyncCommand, Mode=OneWay}" />
                             </core:EventTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
+                        </interactivity:Interaction.Behaviors>-->
                     </Button>
 
                 </StackPanel>

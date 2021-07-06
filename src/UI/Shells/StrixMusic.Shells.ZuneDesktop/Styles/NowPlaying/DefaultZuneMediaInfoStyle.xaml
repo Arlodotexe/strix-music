@@ -48,11 +48,11 @@
                                     Value="{x:Bind ActiveDevice.Position.TotalMilliseconds, Mode=OneWay}"
                                     Maximum="{x:Bind ActiveDevice.NowPlaying.Duration.TotalMilliseconds, Mode=OneWay}"
                                     FlowDirection="LeftToRight">
-                <interactivity:Interaction.Behaviors>
+                <!--<interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="SliderManipulationCompleted">
                         <core:InvokeCommandAction Command="{Binding ActiveDevice.SeekAsyncCommand, Mode=OneWay}" CommandParameter="{Binding Value, ElementName=PART_MediaSlider, Converter={StaticResource DoubleToTimeSpanConverter}}" />
                     </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
+                </interactivity:Interaction.Behaviors>-->
             </nowplaying:MediaSlider>
         </Grid>
     </DataTemplate>

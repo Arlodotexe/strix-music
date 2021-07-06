@@ -23,11 +23,11 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:TrackViewModel">
                     <items:TrackItem>
-                        <interactivity:Interaction.Behaviors>
+                        <!--<interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="DoubleTapped">
                                 <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
                             </core:EventTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
+                        </interactivity:Interaction.Behaviors>-->
                     </items:TrackItem>
                 </DataTemplate>
             </ListView.ItemTemplate>

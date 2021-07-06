@@ -33,11 +33,11 @@
                     <TextBlock Text="{Binding Title}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
-            <interactivity:Interaction.Behaviors>
+            <!--<interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="SelectionChanged">
                     <core:InvokeCommandAction Command="{x:Bind ItemSelectedCommand}" />
                 </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
+            </interactivity:Interaction.Behaviors>-->
         </ComboBox>
     </DataTemplate>
 
