@@ -166,17 +166,29 @@
     <Prefer32Bit>true</Prefer32Bit>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev-Debug|x86'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Development|x86' ">
     <OutputPath>bin\x86\Dev-Debug\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev-Debug|ARM'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Development|ARM' ">
     <OutputPath>bin\ARM\Dev-Debug\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev-Debug|ARM64'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Development|ARM64' ">
     <OutputPath>bin\ARM64\Dev-Debug\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev-Debug|x64'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Development|x64' ">
     <OutputPath>bin\x64\Dev-Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev-Release|x86'">
+    <OutputPath>bin\x86\Dev-Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev-Release|ARM'">
+    <OutputPath>bin\ARM\Dev-Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev-Release|ARM64'">
+    <OutputPath>bin\ARM64\Dev-Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev-Release|x64'">
+    <OutputPath>bin\x64\Dev-Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />

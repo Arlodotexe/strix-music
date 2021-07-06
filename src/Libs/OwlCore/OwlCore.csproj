@@ -27,7 +27,7 @@ This project is a constant work in progress. Until a stable release, breaking ch
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
     <PackageReleaseNotes>Added missing documentation. Replaced RemoteMethodProxy with PublishDataAsync and ReceiveDataAsync extension methods. Added cancellation tokens to Remoting.</PackageReleaseNotes>
-    <Configurations>Prod-Debug;Production;Dev-Debug</Configurations>
+    <Configurations>Prod-Debug;Production;Development;Dev-Release</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Prod-Debug|AnyCPU'">

@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
-    <Configurations>Prod-Debug;Production;Dev-Debug</Configurations>
+    <Configurations>Prod-Debug;Production;Development;Dev-Release</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Prod-Debug|AnyCPU'">

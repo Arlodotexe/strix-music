@@ -12,7 +12,7 @@
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <UnoUIUseRoslynSourceGenerators>false</UnoUIUseRoslynSourceGenerators>
-    <Configurations>Prod-Debug;Production;Dev-Debug</Configurations>
+    <Configurations>Prod-Debug;Production;Development;Dev-Release</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Prod-Debug'">
     <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
