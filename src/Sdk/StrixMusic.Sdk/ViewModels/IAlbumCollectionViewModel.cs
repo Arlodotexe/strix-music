@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -19,11 +20,29 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IAlbumCollectionItem> Albums { get; }
 
         /// <summary>
+        /// Keeps the default album collection while sorting.
+        /// </summary>
+        public ObservableCollection<IAlbumCollectionItem> UnsortedAlbums { get; }
+
+        /// <inheritdoc />
+        public AlbumSortingType CurrentAlbumSortingType { get; }
+
+        /// <inheritdoc />
+        public SortDirection CurrentAlbumSortingDirection { get; }
+
+        /// <summary>
         /// Populates the next set of albums into the collection.
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PopulateMoreAlbumsAsync(int limit);
+
+        /// <summary>
+        /// Sorts the track collection by <see cref="AlbumSortingType"/>.
+        /// </summary>
+        /// <param name="albumSorting">The <see cref="AlbumSortingType"/> by which to sort.</param>
+        /// <param name="sortDirection">The direction by which to sort.</param>
+        public void SortAlbumCollection(AlbumSortingType albumSorting, SortDirection sortDirection);
 
         /// <summary>
         /// <inheritdoc cref="PopulateMoreAlbumsAsync"/>
@@ -44,5 +63,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IAlbumCollectionBase.PauseAlbumCollectionAsync"/>
         /// </summary>
         public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }
+
+        /// <summary>
+        /// Adjustes sorting to maintain its direction, with a new type.
+        /// </summary>
+        public RelayCommand<AlbumSortingType> ChangeAlbumCollectionSortingTypeCommand { get; }
+
+        /// <summary>
+        /// Sorts adjustes sorting to maintain its type, with a new direction.
+        /// </summary>
+        public RelayCommand<SortDirection> ChangeAlbumCollectionSortingDirectionCommand { get; }
     }
 }

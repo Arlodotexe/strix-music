@@ -381,4 +381,10 @@
   <data name="LengthCOL.Header" xml:space="preserve">
     <value>Length</value>
   </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
+  </data>
+  <data name="DateAddedCOL.Header" xml:space="preserve">
+    <value>Date added</value>
+  </data>
 </root>
