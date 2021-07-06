@@ -27,7 +27,7 @@ This project is a constant work in progress. Until a stable release, breaking ch
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
     <PackageReleaseNotes>Added missing documentation. Replaced RemoteMethodProxy with PublishDataAsync and ReceiveDataAsync extension methods. Added cancellation tokens to Remoting.</PackageReleaseNotes>
-    <Configurations>Prod-Debug;Release;Dev-Debug</Configurations>
+    <Configurations>Prod-Debug;Production;Dev-Debug</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Prod-Debug|AnyCPU'">
@@ -35,7 +35,7 @@ This project is a constant work in progress. Until a stable release, breaking ch
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>

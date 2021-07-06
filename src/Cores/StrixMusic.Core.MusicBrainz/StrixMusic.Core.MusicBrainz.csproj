@@ -5,7 +5,7 @@
 	  <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <NullableContextOptions>enable</NullableContextOptions>
-    <Configurations>Prod-Debug;Release;Dev-Debug</Configurations>
+    <Configurations>Prod-Debug;Production;Dev-Debug</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Prod-Debug|AnyCPU'">
@@ -17,7 +17,7 @@
     <NoWarn>1701;1702;0067</NoWarn>
   </PropertyGroup>
   
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   
