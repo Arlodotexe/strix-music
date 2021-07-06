@@ -10,18 +10,40 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>8.0</LangVersion>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+		<NoWarn>1701;1702;VSX1000</NoWarn>
 		<Configurations>Prod-Debug;Production;Development;Dev-Release;Nightly;Nightly-Debug</Configurations>
 	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
 		<DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Prod-Debug|netstandard2.0|AnyCPU'">
-	  <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-	  <NoWarn>1701;1702;VSX1000</NoWarn>
+
+	<!--Debug/Release properties-->
+	<PropertyGroup Condition="'$(Configuration)'=='Development' Or '$(Configuration)'=='Nightly-Debug' Or '$(Configuration)'=='Prod-Debug'">
+		<!--Debug-->
+		<Optimize>false</Optimize>
+		<DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Production|netstandard2.0|AnyCPU'">
-	  <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+	<PropertyGroup Condition="'$(Configuration)'=='Dev-Release' Or '$(Configuration)'=='Nightly' Or '$(Configuration)'=='Production'">
+		<!--Release-->
+		<Optimize>true</Optimize>
 	</PropertyGroup>
+
+	<!--Development/Nightly/Production properties-->
+	<PropertyGroup Condition="'$(Configuration)'=='Development' Or '$(Configuration)'=='Dev-Release'">
+		<!--Development-->
+		<DefineConstants>$(DefineConstants);ENV_DEV</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Nightly' Or '$(Configuration)'=='Nightly-Debug'">
+		<!--Nightly-->
+		<DefineConstants>$(DefineConstants);ENV_NIGHTLY</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Prod-Debug' Or '$(Configuration)'=='Production'">
+		<!--Production-->
+		<DefineConstants>$(DefineConstants);ENV_PROD</DefineConstants>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />

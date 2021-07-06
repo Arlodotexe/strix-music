@@ -1,112 +1,134 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
-  <PropertyGroup>
-	<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.19041</TargetFrameworks>
-    <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
-    <GenerateLibraryLayout>true</GenerateLibraryLayout>
-    <RootNamespace>StrixMusic.Shells.Strix</RootNamespace>
-    <AssemblyName>StrixMusic.Shells.Strix</AssemblyName>
-    <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
-    <WarningsAsErrors>nullable</WarningsAsErrors>
-    <Configurations>Prod-Debug;Production;Development;Dev-Release;Nightly;Nightly-Debug</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Prod-Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Production|netstandard2.0|AnyCPU'">
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-    <Compile Update="**\*.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Controls\Drawer.xaml" />
-    <None Remove="Preview.xaml" />
-    <None Remove="Resources.xaml" />
-    <None Remove="Resources\Brushes.xaml" />
-    <None Remove="Resources\ButtonStyles.xaml" />
-    <None Remove="Styles\AlbumCollectionStyle.xaml" />
-    <None Remove="Styles\AlbumItemStyle.xaml" />
-    <None Remove="Styles\AlbumViewStyle.xaml" />
-    <None Remove="Styles\ArtistCollectionStyle.xaml" />
-    <None Remove="Styles\ArtistItemStyle.xaml" />
-    <None Remove="Styles\ArtistViewStyle.xaml" />
-    <None Remove="Styles\HomeStyle.xaml" />
-    <None Remove="Styles\MediaSlider.xaml" />
-    <None Remove="Styles\NowPlayingBarStyle.xaml" />
-    <None Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
-    <None Remove="Styles\SettingsViewStyle.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Controls\Drawer.xaml" />
-    <UpToDateCheckInput Remove="Controls\StrixShell.xaml" />
-    <UpToDateCheckInput Remove="Preview.xaml" />
-    <UpToDateCheckInput Remove="Resources.xaml" />
-    <UpToDateCheckInput Remove="Resources\Brushes.xaml" />
-    <UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
-    <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\AlbumViewStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\MediaSlider.xaml" />
-    <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.5-dev.13" />
-    <PackageReference Include="Uno.UI" Version="3.8.6" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
-    <ProjectReference Include="..\..\..\Libs\OwlCore\OwlCore.csproj" />
-    <ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
-    <ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Styles\AlbumCollectionStyle - Copy.xaml.cs">
-      <DependentUpon>AlbumCollectionStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Styles\AlbumViewStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="Styles\AlbumItemStyle.xaml.cs">
-      <DependentUpon>AlbumItemStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Styles\HomeStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-    <Compile Update="Styles\AlbumCollectionStyle.xaml.cs">
-      <DependentUpon>AlbumCollectionStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Styles\SettingsViewStyle.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;monoandroid10.0;uap10.0.19041</TargetFrameworks>
+		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<RootNamespace>StrixMusic.Shells.Strix</RootNamespace>
+		<AssemblyName>StrixMusic.Shells.Strix</AssemblyName>
+		<Nullable>enable</Nullable>
+		<LangVersion>8.0</LangVersion>
+		<WarningsAsErrors>nullable</WarningsAsErrors>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+		<Configurations>Prod-Debug;Production;Development;Dev-Release;Nightly;Nightly-Debug</Configurations>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+		<DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
+	</PropertyGroup>
+
+	<!--Debug/Release properties-->
+	<PropertyGroup Condition="'$(Configuration)'=='Development' Or '$(Configuration)'=='Nightly-Debug' Or '$(Configuration)'=='Prod-Debug'">
+		<!--Debug-->
+		<Optimize>false</Optimize>
+		<DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Dev-Release' Or '$(Configuration)'=='Nightly' Or '$(Configuration)'=='Production'">
+		<!--Release-->
+		<Optimize>true</Optimize>
+	</PropertyGroup>
+
+	<!--Development/Nightly/Production properties-->
+	<PropertyGroup Condition="'$(Configuration)'=='Development' Or '$(Configuration)'=='Dev-Release'">
+		<!--Development-->
+		<DefineConstants>$(DefineConstants);ENV_DEV</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Nightly' Or '$(Configuration)'=='Nightly-Debug'">
+		<!--Nightly-->
+		<DefineConstants>$(DefineConstants);ENV_NIGHTLY</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Prod-Debug' Or '$(Configuration)'=='Production'">
+		<!--Production-->
+		<DefineConstants>$(DefineConstants);ENV_PROD</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+		<Compile Update="**\*.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="Controls\Drawer.xaml" />
+		<None Remove="Preview.xaml" />
+		<None Remove="Resources.xaml" />
+		<None Remove="Resources\Brushes.xaml" />
+		<None Remove="Resources\ButtonStyles.xaml" />
+		<None Remove="Styles\AlbumCollectionStyle.xaml" />
+		<None Remove="Styles\AlbumItemStyle.xaml" />
+		<None Remove="Styles\AlbumViewStyle.xaml" />
+		<None Remove="Styles\ArtistCollectionStyle.xaml" />
+		<None Remove="Styles\ArtistItemStyle.xaml" />
+		<None Remove="Styles\ArtistViewStyle.xaml" />
+		<None Remove="Styles\HomeStyle.xaml" />
+		<None Remove="Styles\MediaSlider.xaml" />
+		<None Remove="Styles\NowPlayingBarStyle.xaml" />
+		<None Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
+		<None Remove="Styles\SettingsViewStyle.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Remove="Controls\Drawer.xaml" />
+		<UpToDateCheckInput Remove="Controls\StrixShell.xaml" />
+		<UpToDateCheckInput Remove="Preview.xaml" />
+		<UpToDateCheckInput Remove="Resources.xaml" />
+		<UpToDateCheckInput Remove="Resources\Brushes.xaml" />
+		<UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
+		<UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\AlbumViewStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\HomeStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\MediaSlider.xaml" />
+		<UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\PlayableCollectionGroupPivotStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.5-dev.13" />
+		<PackageReference Include="Uno.UI" Version="3.8.6" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Libs\OwlCore.Uno\OwlCore.Uno.csproj" />
+		<ProjectReference Include="..\..\..\Libs\OwlCore\OwlCore.csproj" />
+		<ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
+		<ProjectReference Include="..\..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Styles\AlbumCollectionStyle - Copy.xaml.cs">
+			<DependentUpon>AlbumCollectionStyle.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\AlbumViewStyle.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\AlbumItemStyle.xaml.cs">
+			<DependentUpon>AlbumItemStyle.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\HomeStyle.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\AlbumCollectionStyle.xaml.cs">
+			<DependentUpon>AlbumCollectionStyle.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\SettingsViewStyle.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Assets\" />
+	</ItemGroup>
 </Project>

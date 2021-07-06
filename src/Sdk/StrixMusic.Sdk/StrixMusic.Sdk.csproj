@@ -1,51 +1,69 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
-    <WarningsAsErrors>nullable</WarningsAsErrors>
-    <Configurations>Prod-Debug;Production;Development;Dev-Release;Nightly;Nightly-Debug</Configurations>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>8.0</LangVersion>
+		<WarningsAsErrors>nullable</WarningsAsErrors>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+		<Configurations>Prod-Debug;Production;Development;Dev-Release;Nightly;Nightly-Debug</Configurations>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Prod-Debug|AnyCPU'">
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
+	<!--Debug/Release properties-->
+	<PropertyGroup Condition="'$(Configuration)'=='Development' Or '$(Configuration)'=='Nightly-Debug' Or '$(Configuration)'=='Prod-Debug'">
+		<!--Debug-->
+		<Optimize>false</Optimize>
+		<DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Dev-Release' Or '$(Configuration)'=='Nightly' Or '$(Configuration)'=='Production'">
+		<!--Release-->
+		<Optimize>true</Optimize>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Production|AnyCPU'">
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
+	<!--Development/Nightly/Production properties-->
+	<PropertyGroup Condition="'$(Configuration)'=='Development' Or '$(Configuration)'=='Dev-Release'">
+		<!--Development-->
+		<DefineConstants>$(DefineConstants);ENV_DEV</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Nightly' Or '$(Configuration)'=='Nightly-Debug'">
+		<!--Nightly-->
+		<DefineConstants>$(DefineConstants);ENV_NIGHTLY</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Prod-Debug' Or '$(Configuration)'=='Production'">
+		<!--Production-->
+		<DefineConstants>$(DefineConstants);ENV_PROD</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Ninja.WebSockets" Version="1.1.8" />
-    <PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
-    <PackageReference Include="Refit" Version="5.2.4" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="System.Linq.Async" Version="4.1.1" />
-    <PackageReference Include="TagLibSharp" Version="2.2.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+		<PackageReference Include="Ninja.WebSockets" Version="1.1.8" />
+		<PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
+		<PackageReference Include="Refit" Version="5.2.4" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Linq.Async" Version="4.1.1" />
+		<PackageReference Include="TagLibSharp" Version="2.2.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\..\stylecop.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\..\stylecop.json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
+	</ItemGroup>
 
 </Project>
