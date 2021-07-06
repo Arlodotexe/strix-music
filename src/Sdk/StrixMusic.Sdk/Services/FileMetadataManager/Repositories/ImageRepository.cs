@@ -86,11 +86,5 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        /// <inheritdoc/>
-        ~ImageRepository()
-        {
-            Dispose(false);
-        }
     }
 }

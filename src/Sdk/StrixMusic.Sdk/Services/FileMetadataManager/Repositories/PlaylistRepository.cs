@@ -296,11 +296,5 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        /// <inheritdoc />
-        ~PlaylistRepository()
-        {
-            Dispose(false);
-        }
     }
 }
