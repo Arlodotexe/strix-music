@@ -189,4 +189,7 @@
   <data name="UnoptimizedDisplayTB.Text" xml:space="preserve">
     <value>The selected skin isn't optimized for all display sizes.</value>
   </data>
+  <data name="CommitFrom" xml:space="preserve">
+    <value>Commit {0} from {1}</value>
+  </data>
 </root>
