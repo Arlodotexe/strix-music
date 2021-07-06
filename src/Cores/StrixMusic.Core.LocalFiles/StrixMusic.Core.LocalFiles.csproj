@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <Configurations>Prod-Debug;Production;Development;Dev-Release</Configurations>
+    <Configurations>Prod-Debug;Production;Development;Dev-Release;Nightly;Nightly-Debug</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

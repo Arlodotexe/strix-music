@@ -69,6 +69,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev-Release|AnyCPU'">
     <OutputPath>bin\Dev-Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly|AnyCPU'">
+    <OutputPath>bin\Nightly\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly-Debug|AnyCPU'">
+    <OutputPath>bin\Nightly-Debug\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Hqub.MusicBrainz.API">
       <HintPath>..\..\Cores\StrixMusic.Core.MusicBrainz\Dependencies\Hqub.MusicBrainz.API.dll</HintPath>

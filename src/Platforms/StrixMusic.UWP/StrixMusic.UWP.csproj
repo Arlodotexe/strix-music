@@ -190,6 +190,30 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev-Release|x64'">
     <OutputPath>bin\x64\Dev-Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly|x86'">
+    <OutputPath>bin\x86\Nightly\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly|ARM'">
+    <OutputPath>bin\ARM\Nightly\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly|ARM64'">
+    <OutputPath>bin\ARM64\Nightly\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly|x64'">
+    <OutputPath>bin\x64\Nightly\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly-Debug|x86'">
+    <OutputPath>bin\x86\Nightly-Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly-Debug|ARM'">
+    <OutputPath>bin\ARM\Nightly-Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly-Debug|ARM64'">
+    <OutputPath>bin\ARM64\Nightly-Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nightly-Debug|x64'">
+    <OutputPath>bin\x64\Nightly-Debug\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
