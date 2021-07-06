@@ -61,7 +61,7 @@
 	</PropertyGroup>
 
 	<!--Development/Nightly/Production properties-->
-	<PropertyGroup Condition="'$(Configuration)'=='Nightly' Or '$(Configuration)'=='Nightly-Debug'">
+	<PropertyGroup Condition="'$(Configuration)'=='Development' Or '$(Configuration)'=='Dev-Release'">
 		<!--Development-->
 		<DefineConstants>$(DefineConstants);ENV_DEV</DefineConstants>
 	</PropertyGroup>
