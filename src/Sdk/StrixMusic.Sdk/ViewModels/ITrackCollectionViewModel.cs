@@ -34,15 +34,21 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PopulateMoreTracksAsync(int limit);
 
         /// <summary>
-        /// The current sorting of the tracks.
+        /// The current sorting type of tracks in the collection.
         /// </summary>
-        public TrackSorting CurrentTracksSorting { get; }
+        public TrackSortingType CurrentTracksSortingType { get; }
 
         /// <summary>
-        /// Sorts the track collection by <see cref="TrackSorting"/>.
+        /// The current sorting direction of tracks in the collection. 
         /// </summary>
-        /// <param name="trackSorting">The <see cref="TrackSorting"/> according to which the order should be changed.</param>
-        public void SortTrackCollection(TrackSorting trackSorting);
+        public SortDirection CurrentTracksSortingDirection { get; }
+
+        /// <summary>
+        /// Sorts the track collection by <see cref="TrackSortingType"/>.
+        /// </summary>
+        /// <param name="trackSorting">The <see cref="TrackSortingType"/> by which to sort.</param>
+        /// <param name="sortDirection">The direction by which to sort.</param>
+        public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection);
 
         /// <inheritdoc cref="PopulateMoreTracksAsync" />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
@@ -63,8 +69,13 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
 
         /// <summary>
-        /// Sorts track collection by <see cref="TrackSorting"/>.
+        /// Adjustes sorting to maintain its direction, with a new type.
         /// </summary>
-        public RelayCommand<TrackSorting> SortTrackCollectionCommand { get; }
+        public RelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
+
+        /// <summary>
+        /// Sorts adjustes sorting to maintain its type, with a new direction.
+        /// </summary>
+        public RelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
     }
 }

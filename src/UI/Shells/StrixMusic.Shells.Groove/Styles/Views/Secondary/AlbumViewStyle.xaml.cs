@@ -1,4 +1,4 @@
-﻿using ClusterNet;
+﻿using ClusterNet.Methods;
 using ClusterNet.Kernels;
 using OwlCore.Uno.ColorExtractor.Filters;
 using OwlCore.Uno.ColorExtractor;
@@ -84,7 +84,7 @@ namespace StrixMusic.Shells.Groove.Styles.Views.Secondary
 
             //var palette = KMeansMethod.KMeans<RGBColor, RGBShape>(colors, 3);
             GaussianKernel kernel = new GaussianKernel(.15);
-            var palette = MeanShiftMethod.MeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Math.Min(colors.Length, 480));
+            var palette = ClusterAlgorithms.WeightedMeanShift<RGBColor, RGBShape, GaussianKernel>(colors, kernel, Math.Min(colors.Length, 480));
             RGBColor primary = clamps.Clamp(palette[0].Item1);
             Color finalColor = Color.FromArgb(
                 255,

@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using StrixMusic.Sdk.MediaPlayback;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace StrixMusic.Sdk.Uno.Controls.Items.Abstract
@@ -19,6 +20,16 @@ namespace StrixMusic.Sdk.Uno.Controls.Items.Abstract
                 new PropertyMetadata(false));
 
         /// <summary>
+        /// <see cref="DependencyProperty"/> for the <see cref="PlaybackState"/> property.
+        /// </summary>
+        public static readonly DependencyProperty PlaybackStateProperty =
+            DependencyProperty.Register(
+                nameof(PlaybackState),
+                typeof(PlaybackState),
+                typeof(ItemControl),
+                new PropertyMetadata(PlaybackState.None));
+
+        /// <summary>
         /// Gets whether or not the Item is selected.
         /// </summary>
         public bool Selected
@@ -27,11 +38,24 @@ namespace StrixMusic.Sdk.Uno.Controls.Items.Abstract
             set
             {
                 SetValue(SelectedProperty, value);
-                UpdateVisualState(value);
+                UpdateSelectionState(value);
             }
         }
 
-        private void UpdateVisualState(bool selected)
+        /// <summary>
+        /// Gets whether or not the Item is playing.
+        /// </summary>
+        public PlaybackState PlaybackState
+        {
+            get => (PlaybackState)GetValue(PlaybackStateProperty);
+            protected set
+            {
+                SetValue(PlaybackStateProperty, value);
+                UpdatePlayingState(value);
+            }
+        }
+
+        private void UpdateSelectionState(bool selected)
         {
             if (selected)
             {
@@ -40,6 +64,31 @@ namespace StrixMusic.Sdk.Uno.Controls.Items.Abstract
             else
             {
                 VisualStateManager.GoToState(this, "Unselected", true);
+            }
+        }
+
+        private void UpdatePlayingState(PlaybackState state)
+        {
+            switch (state)
+            {
+                case PlaybackState.None:
+                    VisualStateManager.GoToState(this, "NotPlaying", true);
+                    break;
+                case PlaybackState.Failed:
+                    VisualStateManager.GoToState(this, "FailedPlay", true);
+                    break;
+                case PlaybackState.Playing:
+                    VisualStateManager.GoToState(this, "Playing", true);
+                    break;
+                case PlaybackState.Paused:
+                    VisualStateManager.GoToState(this, "Paused", true);
+                    break;
+                case PlaybackState.Queued:
+                    VisualStateManager.GoToState(this, "Queued", true);
+                    break;
+                case PlaybackState.Loading:
+                    VisualStateManager.GoToState(this, "LoadingPlay", true);
+                    break;
             }
         }
     }

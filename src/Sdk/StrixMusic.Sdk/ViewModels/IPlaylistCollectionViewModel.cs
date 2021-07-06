@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.Input;
+﻿using Microsoft.Toolkit.Mvvm.Input;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -27,7 +26,12 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// The current sorting of the playlists.
         /// </summary>
-        public PlaylistSorting CurrentPlaylistSorting { get; }
+        public PlaylistSortingType CurrentPlaylistSortingType { get; }
+
+        /// <summary>
+        /// The current sorting of the playlists.
+        /// </summary>
+        public SortDirection CurrentPlaylistSortingDirection { get; }
 
         /// <summary>
         /// Populates the next set of playlists into the collection.
@@ -40,10 +44,11 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }
 
         /// <summary>
-        /// Sorts the playlist collection by <see cref="PlaylistSorting"/>.
+        /// Sorts the playlist collection by <see cref="PlaylistSortingType"/>.
         /// </summary>
-        /// <param name="playlistSorting">The <see cref="PlaylistSorting"/> according to which the order should be changed.</param>
-        public void SortPlaylistCollection(PlaylistSorting playlistSorting);
+        /// <param name="playlistSorting">The <see cref="PlaylistSortingType"/> by which to sort.</param>
+        /// <param name="sortDirection">The direction by which to sort.</param>
+        public void SortPlaylistCollection(PlaylistSortingType playlistSorting, SortDirection sortDirection);
 
         /// <summary>
         /// <inheritdoc cref="IPlaylistCollectionBase.PlayPlaylistCollectionAsync"/>
@@ -61,8 +66,13 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PausePlaylistCollectionAsyncCommand { get; }
 
         /// <summary>
-        /// Sorts playlists collection by <see cref="PlaylistSorting"/>.
+        /// Adjustes sorting to maintain its direction, with a new type.
         /// </summary>
-        public RelayCommand<PlaylistSorting> SortPlaylistCollectionCommand { get; }
+        public RelayCommand<PlaylistSortingType> ChangePlaylistCollectionSortingTypeCommand { get; }
+
+        /// <summary>
+        /// Adjustes sorting to maintain its type, with a new direction.
+        /// </summary>
+        public RelayCommand<SortDirection> ChangePlaylistCollectionSortingDirectionCommand { get; }
     }
 }

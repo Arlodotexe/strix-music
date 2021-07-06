@@ -93,6 +93,7 @@ namespace StrixMusic.Shells.ZuneDesktop.Controls.Shells
 
                 Rectangle rect = CreateRectangle(rectWidth);
                 ScaleTransform scaleTransform = SetRectangleRenderTransform(rect);
+                scaleTransform.ScaleY = _random.NextDouble();
                 Grid.SetColumn(rect, i);
 
                 _rectangles[i] = rect;

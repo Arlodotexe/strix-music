@@ -25,7 +25,10 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IAlbumCollectionItem> UnsortedAlbums { get; }
 
         /// <inheritdoc />
-        public AlbumSorting CurrentAlbumSorting { get; }
+        public AlbumSortingType CurrentAlbumSortingType { get; }
+
+        /// <inheritdoc />
+        public SortDirection CurrentAlbumSortingDirection { get; }
 
         /// <summary>
         /// Populates the next set of albums into the collection.
@@ -35,10 +38,11 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PopulateMoreAlbumsAsync(int limit);
 
         /// <summary>
-        /// Sorts the track collection by <see cref="AlbumSorting"/>.
+        /// Sorts the track collection by <see cref="AlbumSortingType"/>.
         /// </summary>
-        /// <param name="albumSorting">The <see cref="AlbumSorting"/> according to which the order should be changed.</param>
-        public void SortAlbumCollection(AlbumSorting albumSorting);
+        /// <param name="albumSorting">The <see cref="AlbumSortingType"/> by which to sort.</param>
+        /// <param name="sortDirection">The direction by which to sort.</param>
+        public void SortAlbumCollection(AlbumSortingType albumSorting, SortDirection sortDirection);
 
         /// <summary>
         /// <inheritdoc cref="PopulateMoreAlbumsAsync"/>
@@ -61,8 +65,13 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }
 
         /// <summary>
-        /// Sorts album collection by <see cref="AlbumSorting"/>.
+        /// Adjustes sorting to maintain its direction, with a new type.
         /// </summary>
-        public RelayCommand<AlbumSorting> SortAlbumCollectionCommand { get; }
+        public RelayCommand<AlbumSortingType> ChangeAlbumCollectionSortingTypeCommand { get; }
+
+        /// <summary>
+        /// Sorts adjustes sorting to maintain its type, with a new direction.
+        /// </summary>
+        public RelayCommand<SortDirection> ChangeAlbumCollectionSortingDirectionCommand { get; }
     }
 }

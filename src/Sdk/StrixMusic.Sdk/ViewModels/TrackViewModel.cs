@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+﻿using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -14,7 +8,6 @@ using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
-using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
@@ -22,6 +15,12 @@ using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels.Helpers;
 using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -71,7 +70,9 @@ namespace StrixMusic.Sdk.ViewModels
 
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
-            SortArtistCollectionCommand = new RelayCommand<ArtistSorting>(SortArtistCollection);
+
+            ChangeArtistCollectionSortingTypeCommand = new RelayCommand<ArtistSortingType>(x => SortArtistCollection(x, CurrentArtistSortingDirection));
+            ChangeArtistCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortArtistCollection(CurrentArtistSortingType, x));
 
             AttachEvents();
         }
@@ -318,7 +319,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                if (CurrentArtistSorting == ArtistSorting.Unordered)
+                if (CurrentArtistSortingType == ArtistSortingType.Unsorted)
                 {
                     Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
                     {
@@ -352,17 +353,18 @@ namespace StrixMusic.Sdk.ViewModels
                             Artists.Remove(item);
                     }
 
-                    SortArtistCollection(CurrentArtistSorting);
+                    SortArtistCollection(CurrentArtistSortingType, CurrentArtistSortingDirection);
                 }
             });
         }
 
         ///<inheritdoc />
-        public void SortArtistCollection(ArtistSorting artistSorting)
+        public void SortArtistCollection(ArtistSortingType artistSorting, SortDirection sortDirection)
         {
-            CurrentArtistSorting = artistSorting;
+            CurrentArtistSortingType = artistSorting;
+            CurrentArtistSortingDirection = sortDirection;
 
-            CollectionSorting.SortArtists(Artists, artistSorting, UnsortedArtists);
+            CollectionSorting.SortArtists(Artists, artistSorting, sortDirection, UnsortedArtists);
         }
 
         /// <summary>
@@ -405,7 +407,10 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IArtistCollectionItem> UnsortedArtists { get; }
 
         /// <inheritdoc />
-        public ArtistSorting CurrentArtistSorting { get; private set; }
+        public ArtistSortingType CurrentArtistSortingType { get; private set; }
+
+        /// <inheritdoc />
+        public SortDirection CurrentArtistSortingDirection { get; private set; }
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }
@@ -621,7 +626,10 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand PlayArtistCollectionAsyncCommand { get; }
 
         /// <inheritdoc />
-        public RelayCommand<ArtistSorting> SortArtistCollectionCommand { get; }
+        public RelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand { get; }
+
+        /// <inheritdoc />
+        public RelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<IArtistCollectionItem> PlayArtistAsyncCommand { get; }
