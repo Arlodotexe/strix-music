@@ -8,26 +8,26 @@
         /// <summary>
         /// A 64x64 image.
         /// </summary>
-        Tiny,
+        Tiny = 64,
 
         /// <summary>
         /// A 128x128 image.
         /// </summary>
-        Small,
+        Small = 128,
 
         /// <summary>
         /// A 256x256 image.
         /// </summary>
-        Medium,
+        Medium = 256,
 
         /// <summary>
         /// A 512x512 image.
         /// </summary>
-        Large,
+        Large = 512,
 
         /// <summary>
         /// A 1024x1024 image.
         /// </summary>
-        ExtraLarge
+        ExtraLarge = 1024
     }
 }
