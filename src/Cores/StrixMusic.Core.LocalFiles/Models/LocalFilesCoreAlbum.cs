@@ -456,30 +456,24 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
-            var tracksList = _fileMetadataManager.Tracks;
-
-            var tracks = await tracksList.GetTracksByAlbumId(Id, offset, limit);
+            var tracks = await _fileMetadataManager.Tracks.GetTracksByAlbumId(Id, offset, limit);
 
             foreach (var track in tracks)
             {
-                if (track.Id != null)
-                    yield return InstanceCache.Tracks.GetOrCreate(track.Id, SourceCore, track);
+                Guard.IsNotNullOrWhiteSpace(track.Id, nameof(track.Id));
+                yield return InstanceCache.Tracks.GetOrCreate(track.Id, SourceCore, track);
             }
         }
 
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            var artistRepository = _fileMetadataManager.Artists;
-
-            var artists = await artistRepository.GetArtistsByAlbumId(Id, offset, limit);
+            var artists = await _fileMetadataManager.Artists.GetArtistsByAlbumId(Id, offset, limit);
 
             foreach (var artist in artists)
             {
-                if (artist.Id != null)
-                {
-                    yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist);
-                }
+                Guard.IsNotNullOrWhiteSpace(artist.Id, nameof(artist.Id));
+                yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist);
             }
         }
 

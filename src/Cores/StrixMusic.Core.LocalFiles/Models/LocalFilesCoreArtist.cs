@@ -229,7 +229,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public string Id => _artistMetadata.Id ?? string.Empty;
 
         /// <inheritdoc />
-        public int TotalImageCount => _image != null ? 1 : 0;
+        public int TotalImageCount => _artistMetadata.ImageIds?.Count ?? 0;
 
         /// <inheritdoc/>
         public int TotalTracksCount => _artistMetadata.TrackIds?.Count ?? 0;
@@ -429,14 +429,11 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            var albumsService = _fileMetadataManager.Albums;
-
-            var albums = await albumsService.GetAlbumsByArtistId(Id, offset, limit);
+            var albums = await _fileMetadataManager.Albums.GetAlbumsByArtistId(Id, offset, limit);
 
             foreach (var album in albums)
             {
                 Guard.IsNotNull(album.Id, nameof(album.Id));
-
                 yield return InstanceCache.Albums.GetOrCreate(album.Id, SourceCore, album);
             }
         }
@@ -444,8 +441,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
-            var trackService = _fileMetadataManager.Tracks;
-            var tracks = await trackService.GetTracksByArtistId(Id, offset, limit);
+            var tracks = await _fileMetadataManager.Tracks.GetTracksByArtistId(Id, offset, limit);
 
             foreach (var track in tracks)
             {
