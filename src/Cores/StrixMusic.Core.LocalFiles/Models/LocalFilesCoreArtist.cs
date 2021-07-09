@@ -20,7 +20,6 @@ namespace StrixMusic.Core.LocalFiles.Models
     {
         private readonly IFileMetadataManager _fileMetadataManager;
         private ArtistMetadata _artistMetadata;
-        private LocalFilesCoreImage? _image;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreArtist"/> class.
@@ -32,10 +31,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             SourceCore = sourceCore;
             _artistMetadata = artistMetadata;
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
-
-            if (artistMetadata.ImageIds != null)
-                _image = InstanceCache.Images.GetOrCreate(Id, SourceCore, null);
-
+            
             Genres = new SynchronizedObservableCollection<string>(artistMetadata.Genres);
 
             AttachEvents();
@@ -461,10 +457,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            if (_image != null)
-                yield return _image;
+            var images = await _fileMetadataManager.Images.GetImagesByArtistIdAsync(Id, offset, limit);
 
-            await Task.CompletedTask;
+            foreach (var image in images)
+            {
+                Guard.IsNotNullOrWhiteSpace(image.Id, nameof(image.Id));
+                yield return InstanceCache.Images.GetOrCreate(image.Id, SourceCore, image);
+            }
         }
 
         private void ReleaseUnmanagedResources()

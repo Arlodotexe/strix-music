@@ -60,6 +60,24 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
         {
             throw new NotImplementedException();
         }
+        
+        /// <inheritdoc/>
+        public Task<IReadOnlyList<ImageMetadata>> GetImagesByAlbumIdAsync(string albumId, int offset, int limit)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<IReadOnlyList<ImageMetadata>> GetImagesByArtistIdAsync(string artistId, int offset, int limit)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<IReadOnlyList<ImageMetadata>> GetImagesByTrackIdAsync(string trackId, int offset, int limit)
+        {
+            throw new NotImplementedException();
+        }
 
         private void ReleaseUnmanagedResources()
         {
