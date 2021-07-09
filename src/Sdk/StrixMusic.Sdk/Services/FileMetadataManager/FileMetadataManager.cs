@@ -7,6 +7,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
+using StrixMusic.Sdk.Services.FileMetadataManager.Repositories;
 using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
@@ -70,6 +71,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Playlists = new PlaylistRepository(_playlistMetadataScanner);
             Albums = new AlbumRepository(_audioMetadataScanner, Tracks);
             Artists = new ArtistRepository(_audioMetadataScanner, Tracks);
+            Images = new ImageRepository();
 
             _rootFolder = rootFolder;
         }
@@ -184,6 +186,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         /// <inheritdoc />
         public TrackRepository Tracks { get; private set; }
+
+        /// <inheritdoc/>
+        public ImageRepository Images { get; private set; }
 
         /// <inheritdoc />
         public bool SkipRepoInit { get; set; }
