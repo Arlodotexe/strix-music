@@ -4,6 +4,7 @@ using OwlCore.Uno.Controls;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.Navigation;
+using StrixMusic.Sdk.Uno.Controls.SubPages;
 using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
@@ -36,7 +37,7 @@ namespace StrixMusic.Shared
         /// <summary>
         /// The content overlay used as a popup dialog for the entire app.
         /// </summary>
-        public ContentOverlay? ContentOverlay { get; private set; }
+        public ControlSubPageContainer? PageContainer { get; private set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AppFrame"/>.
@@ -74,6 +75,7 @@ namespace StrixMusic.Shared
 
         private void AttachEvents()
         {
+            subPageContainer.AttachNavigationService(CurrentWindow.NavigationService);
             CurrentWindow.NavigationService.NavigationRequested += NavServiceOnNavigationRequested;
             Loaded += AppFrame_Loaded;
             Unloaded += AppFrame_Unloaded;
@@ -82,7 +84,7 @@ namespace StrixMusic.Shared
         private void AppFrame_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= AppFrame_Loaded;
-            ContentOverlay = OverlayPresenter;
+            PageContainer = subPageContainer;
         }
 
         private void AttachEvents(NotificationService notificationService)
@@ -164,7 +166,7 @@ namespace StrixMusic.Shared
                     _superShell.ViewModel.CurrentCoreConfig = relevantVm;
                     _superShell.ViewModel.SelectedTabIndex = 1;
 
-                    OverlayPresenter.Show(_superShell, localizationService[Constants.Localization.CommonResource, "Settings"]);
+                    CurrentWindow.NavigationService.NavigateTo(_superShell, true);
                 });
             }
         }
@@ -189,20 +191,8 @@ namespace StrixMusic.Shared
 
         private void NavServiceOnNavigationRequested(object sender, NavigateEventArgs<Control> e)
         {
-            var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
-
             switch (e.Page)
             {
-                case SuperShell superShell:
-                    {
-                        _superShell = superShell;
-                        if (e.IsOverlay)
-                            OverlayPresenter.Show(_superShell, localizationService[Constants.Localization.CommonResource, "Settings"]);
-                        else
-                            PART_ContentPresenter.Content = superShell;
-                        break;
-                    }
-
                 case MainPage mainPage:
                     {
                         PART_ContentPresenter.Content = mainPage;

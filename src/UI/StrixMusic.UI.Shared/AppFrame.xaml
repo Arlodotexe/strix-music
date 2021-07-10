@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:convertvis="using:OwlCore.Uno.Converters.Bools.Visible"
-    xmlns:controls="using:OwlCore.Uno.Controls"
+    xmlns:subpage="using:StrixMusic.Sdk.Uno.Controls.SubPages"
     xmlns:abstractUIControls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:notificationViewModels="using:StrixMusic.Sdk.ViewModels.Notifications"
     xmlns:shells="using:StrixMusic.Sdk.Uno.Styles.Shells"
@@ -24,7 +24,7 @@
     <Grid>
         <ContentPresenter x:Name="PART_ContentPresenter" />
 
-        <controls:ContentOverlay x:Name="OverlayPresenter" />
+        <subpage:ControlSubPageContainer x:Name="subPageContainer"/>
 
         <ItemsControl x:Name="NotificationItems" ItemsSource="{x:Bind ViewModel.Notifications.Notifications, Mode=OneWay}" Margin="25,30" HorizontalAlignment="Right" VerticalAlignment="Top"
                       Visibility="{x:Bind convertvis:InverseBoolToVisibilityConverter.Convert(ViewModel.Notifications.IsHandled), Mode=OneWay}">

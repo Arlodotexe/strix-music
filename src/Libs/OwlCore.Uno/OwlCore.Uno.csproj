@@ -60,7 +60,6 @@
     <None Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
-    <None Remove="Controls\ContentOverlay.xaml" />
     <None Remove="Controls\MarqueeTextBlock\MarqueeTextBlock.xaml" />
     <None Remove="Themes\CenteredPivotHeadersStyle.xaml" />
     <None Remove="Themes\Generic.xaml" />
@@ -77,7 +76,6 @@
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIGroupPresenterStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
-    <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml" />
     <UpToDateCheckInput Remove="Controls\MarqueeTextBlock\MarqueeTextBlock.xaml" />
     <UpToDateCheckInput Remove="Themes\CenteredPivotHeadersStyle.xaml" />
     <UpToDateCheckInput Remove="Themes\Generic.xaml" />
@@ -103,9 +101,6 @@
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractDataListStyle.xaml.cs">
       <DependentUpon>AbstractDataListStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Controls\ContentOverlay.xaml.cs">
-      <DependentUpon>ContentOverlay.xaml</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractTextBoxStyle.xaml.cs">
       <DependentUpon>AbstractTextBoxStyle.xaml</DependentUpon>

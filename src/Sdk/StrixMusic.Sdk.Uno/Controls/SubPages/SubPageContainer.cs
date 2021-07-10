@@ -1,5 +1,6 @@
 ﻿using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls.SubPages.Types;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Windows.UI.Xaml;
@@ -79,6 +80,16 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
             _contentHistory = new Stack<T>();
         }
 
+        /// <summary>
+        /// Fired when the <see cref="SubPageContainer{T}"/> opens.
+        /// </summary>
+        public event EventHandler? Opened;
+
+        /// <summary>
+        /// Fired when the <see cref="SubPageContainer{T}"/> closes.
+        /// </summary>
+        public event EventHandler? Closed;
+
         /// <inheritdoc/>
         protected override void OnApplyTemplate()
         {
@@ -129,9 +140,22 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
             get => (bool)GetValue(IsOpenProperty);
             set
             {
+                bool oldValue = (bool)GetValue(IsOpenProperty);
+                if (value == oldValue)
+                    return;
+
                 SetValue(IsOpenProperty, value);
-                if (value) VisualStateManager.GoToState(this, OpenState, true);
-                else VisualStateManager.GoToState(this, ClosedState, true);
+
+                if (value)
+                {
+                    VisualStateManager.GoToState(this, OpenState, true);
+                    Opened?.Invoke(this, EventArgs.Empty);
+                }
+                else
+                {
+                    VisualStateManager.GoToState(this, ClosedState, true);
+                    Closed?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 

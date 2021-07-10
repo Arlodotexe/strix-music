@@ -77,8 +77,8 @@ namespace StrixMusic.Shared.ViewModels
                 loadedService.ConfigRequested += LoadedService_ConfigRequested;
             }
 
-            Guard.IsNotNull(CurrentWindow.AppFrame.ContentOverlay, nameof(CurrentWindow.AppFrame.ContentOverlay));
-            CurrentWindow.AppFrame.ContentOverlay.Closed += ContentOverlay_Closed;
+            Guard.IsNotNull(CurrentWindow.AppFrame.PageContainer, nameof(CurrentWindow.AppFrame.PageContainer));
+            CurrentWindow.AppFrame.PageContainer.Closed += ContentOverlay_Closed;
         }
 
         private void AttachEvents(ICore core)
@@ -96,8 +96,8 @@ namespace StrixMusic.Shared.ViewModels
                 loadedService.ConfigRequested += LoadedService_ConfigRequested;
             }
 
-            Guard.IsNotNull(CurrentWindow.AppFrame.ContentOverlay, nameof(CurrentWindow.AppFrame.ContentOverlay));
-            CurrentWindow.AppFrame.ContentOverlay.Closed -= ContentOverlay_Closed;
+            Guard.IsNotNull(CurrentWindow.AppFrame.PageContainer, nameof(CurrentWindow.AppFrame.PageContainer));
+            CurrentWindow.AppFrame.PageContainer.Closed -= ContentOverlay_Closed;
         }
 
         private void DetachEvents(ICore core)
