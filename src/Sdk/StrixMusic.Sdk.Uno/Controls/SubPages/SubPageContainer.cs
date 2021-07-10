@@ -1,6 +1,7 @@
 ﻿using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls.SubPages.Types;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -18,8 +19,14 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
         private const string NormalState = "Normal";
         private const string FullScreenState = "FullScreen";
 
+        private readonly Stack<T> _contentHistory;
+
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SX1309:Field names should begin with underscore", Justification = "Templating name")]
+        private Button? PART_BackButton;
+        [SuppressMessage("StyleCop.CSharp.NamingRules", "SX1309:Field names should begin with underscore", Justification = "Templating name")]
+        private TextBlock? PART_HeaderText;
+
         private INavigationService<T>? _navigationService;
-        private Stack<T> _contentHistory;
 
         /// <summary>
         /// The backing <see cref="DependencyProperty"/> for the <see cref="BackButtonVisibility"/> property.
@@ -52,6 +59,16 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
             new PropertyMetadata(false));
 
         /// <summary>
+        /// The backing <see cref="DependencyProperty"/> for the <see cref="Header"/> property.
+        /// </summary>
+        public static readonly DependencyProperty HeaderProperty =
+            DependencyProperty.Register(
+            nameof(Header),
+            typeof(string),
+            typeof(SubPageContainer<T>),
+            new PropertyMetadata(string.Empty));
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SubPageContainer"/> class.
         /// </summary>
         public SubPageContainer()
@@ -66,6 +83,10 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+
+            PART_BackButton = (Button)GetTemplateChild(nameof(PART_BackButton));
+            PART_HeaderText = (TextBlock)GetTemplateChild(nameof(PART_HeaderText));
+
             AttachHandlers();
         }
 
@@ -89,6 +110,15 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
                 SetValue(ContentProperty, value);
                 UpdatePage(value);
             }
+        }
+
+        /// <summary>
+        /// Gets the Header of the page displayed.
+        /// </summary>
+        public string Header
+        {
+            get => (string)GetValue(HeaderProperty);
+            set => SetValue(HeaderProperty, value);
         }
 
         /// <summary>
@@ -119,11 +149,21 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
         private void AttachHandlers()
         {
             this.Unloaded += SubPageContainer_Unloaded;
+
+            if (PART_BackButton != null)
+            {
+                PART_BackButton.Click += BackButton_Clicked;
+            }
         }
 
         private void DetachHandlers()
         {
             this.Unloaded -= SubPageContainer_Unloaded;
+
+            if (PART_BackButton != null)
+            {
+                PART_BackButton.Click -= BackButton_Clicked;
+            }
 
             DetachNavigationService();
         }
@@ -182,6 +222,11 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
 
         private void UpdatePage(T page)
         {
+            if (page is ISubPage iPage)
+            {
+                Header = iPage.Header;
+            }
+
             switch (page)
             {
                 case IFullScreenPage _:
@@ -199,6 +244,12 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
                 VisualStateManager.GoToState(this, BackButtonState, true);
             else
                 VisualStateManager.GoToState(this, CloseButtonState, true);
+        }
+
+        private void BackButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (_navigationService != null)
+                _navigationService.GoBack();
         }
     }
 }

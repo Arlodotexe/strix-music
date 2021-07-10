@@ -104,11 +104,12 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
 
-                                <TextBlock x:Name="HeaderText"
+                                <TextBlock x:Name="PART_HeaderText"
+                                           Text="{TemplateBinding Header}"
                                            Margin="5,0,0,0"
                                            FontSize="22" />
 
-                                <Button Background="Transparent"
+                                <Button x:Name="PART_BackButton" Background="Transparent"
                                         Grid.Row="0" Grid.Column="1"
                                         Margin="0,0,0,0"
                                         Content="&#xE106;"
@@ -116,7 +117,7 @@
                                         Padding="7"
                                         HorizontalAlignment="Right" />
 
-                                <ContentPresenter x:Name="Presenter" CornerRadius="4" Margin="0,0,0,0" Padding="7,3,7,25"
+                                <ContentPresenter x:Name="PART_Presenter" CornerRadius="4" Margin="0,0,0,0" Padding="7,3,7,25"
                                                   Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
                                                   VerticalAlignment="Center" HorizontalAlignment="Center"
                                                   HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
