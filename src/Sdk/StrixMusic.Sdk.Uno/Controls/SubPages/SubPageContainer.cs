@@ -10,7 +10,7 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
     /// <summary>
     /// A Templated <see cref="Control"/> for showing SubPages in a Shell.
     /// </summary>
-    public partial class SubPageContainer<T> : Control
+    public abstract partial class SubPageContainer<T> : Control
     {
         private const string OpenState = "Open";
         private const string ClosedState = "Closed";
@@ -146,6 +146,28 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
             _navigationService.BackRequested += BackRequested;
         }
 
+        /// <summary>
+        /// Called when <see cref="Content"/> changes.
+        /// </summary>
+        /// <param name="page">The new <see cref="Content"/>.</param>
+        protected virtual void UpdatePage(T page)
+        {
+            if (page is ISubPage iPage)
+            {
+                Header = iPage.Header;
+            }
+
+            switch (page)
+            {
+                case IFullScreenPage _:
+                    VisualStateManager.GoToState(this, FullScreenState, true);
+                    break;
+                default:
+                    VisualStateManager.GoToState(this, NormalState, true);
+                    break;
+            }
+        }
+
         private void AttachHandlers()
         {
             this.Unloaded += SubPageContainer_Unloaded;
@@ -217,24 +239,6 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
             } else
             {
                 IsOpen = false;
-            }
-        }
-
-        private void UpdatePage(T page)
-        {
-            if (page is ISubPage iPage)
-            {
-                Header = iPage.Header;
-            }
-
-            switch (page)
-            {
-                case IFullScreenPage _:
-                    VisualStateManager.GoToState(this, FullScreenState, true);
-                    break;
-                default:
-                    VisualStateManager.GoToState(this, NormalState, true);
-                    break;
             }
         }
 

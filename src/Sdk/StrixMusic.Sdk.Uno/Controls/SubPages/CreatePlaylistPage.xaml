@@ -9,5 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid Width="400" Height="300" Background="Black"/>
+    <Grid Width="400" Height="300" Background="Black">
+        <TextBlock Text="Test"/>
+    </Grid>
 </UserControl>
