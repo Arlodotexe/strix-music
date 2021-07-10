@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls.Shells;
+using StrixMusic.Sdk.Uno.Controls.SubPages;
 using StrixMusic.Sdk.Uno.Controls.Views;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace StrixMusic.Shells.Default
     /// </summary>
     public sealed partial class DefaultShell : Shell
     {
-        private readonly IReadOnlyDictionary<NavigationViewItemBase, Type> _pagesMapping;
+        private readonly IReadOnlyDictionary<NavigationViewItemBase, (Type, bool)> _pagesMapping;
         private readonly Stack<Control> _history = new Stack<Control>();
         private INavigationService<Control>? _navigationService;
 
@@ -29,10 +30,11 @@ namespace StrixMusic.Shells.Default
             InitializeComponent();
 
             // Initialize map between NavigationItems and page types
-            _pagesMapping = new Dictionary<NavigationViewItemBase, Type>
+            _pagesMapping = new Dictionary<NavigationViewItemBase, (Type, bool)>
             {
-                { HomeItem, typeof(HomeView) },
-                { NowPlayingItem, typeof(NowPlayingView) },
+                { HomeItem, (typeof(HomeView), false) },
+                { NowPlayingItem, (typeof(NowPlayingView), false) },
+                { CreatePlaylistItem, (typeof(CreatePlaylistPage), true) },
             };
         }
 
@@ -50,10 +52,8 @@ namespace StrixMusic.Shells.Default
 
             base.InitServices(services);
 
-            if (_navigationService is INavigationService<object> navService)
-            {
-                SubPageContainer.AttachNavigationService(navService);
-            }
+            if (_navigationService != null)
+                PageContainer.AttachNavigationService(_navigationService);
 
             return Task.CompletedTask;
         }
@@ -82,15 +82,18 @@ namespace StrixMusic.Shells.Default
 
         private void NavigationService_NavigationRequested(object sender, NavigateEventArgs<Control> e)
         {
-            if (!e.IsOverlay)
+            if (e.IsOverlay)
+                return;
+
+            if (e.Page.GetType() != typeof(NowPlayingView))
             {
                 _history.Push((Control)MainContent.Content);
                 MainContent.Content = e.Page;
             }
             else
             {
-                OverlayContent.Content = e.Page;
-                OverlayContent.Visibility = Visibility.Visible;
+                NowPlayingContent.Content = e.Page;
+                NowPlayingContent.Visibility = Visibility.Visible;
                 
                 // No sense checking the NavigationItems if the type is an overlay
                 return;
@@ -103,7 +106,7 @@ namespace StrixMusic.Shells.Default
             // This isn't great, but there should only be 4 items
             foreach (var value in _pagesMapping.Values)
             {
-                containsValue = containsValue || (value == controlType);
+                containsValue = containsValue || (value.Item1 == controlType);
             }
 
             if (!containsValue)
@@ -119,9 +122,9 @@ namespace StrixMusic.Shells.Default
 
         private void Shell_BackRequested(object sender, EventArgs e)
         {
-            if (OverlayContent.Visibility == Visibility.Visible)
+            if (NowPlayingContent.Visibility == Visibility.Visible)
             {
-                OverlayContent.Visibility = Visibility.Collapsed;
+                NowPlayingContent.Visibility = Visibility.Collapsed;
                 return;
             }
 
@@ -148,13 +151,12 @@ namespace StrixMusic.Shells.Default
                 return;
             }
 
-            NavigationViewItemBase invokedItem = (args.InvokedItemContainer as NavigationViewItemBase)!;
+            NavigationViewItemBase invokedItem = args.InvokedItemContainer;
             if (invokedItem == null || !_pagesMapping.ContainsKey(invokedItem))
-            {
                 return;
-            }
 
-            _navigationService.NavigateTo(_pagesMapping[invokedItem], invokedItem == NowPlayingItem);
+            (Type, bool) page = _pagesMapping[invokedItem];
+            _navigationService.NavigateTo(page.Item1, page.Item2);
         }
     }
 }

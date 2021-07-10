@@ -31,6 +31,7 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Controls\SubPages\CreatePlaylistPage.xaml" />
     <None Remove="DefaultShell.xaml" />
     <None Remove="Resources.xaml" />
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
@@ -57,6 +58,7 @@
     <None Remove="Styles\TrackItemStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <UpToDateCheckInput Remove="Controls\SubPages\CreatePlaylistPage.xaml" />
     <UpToDateCheckInput Remove="DefaultShell.xaml" />
     <UpToDateCheckInput Remove="Resources.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />

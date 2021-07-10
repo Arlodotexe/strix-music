@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
     /// <summary>
     /// A Templated <see cref="Control"/> for showing SubPages in a Shell.
     /// </summary>
-    public partial class SubPageContainer : Control
+    public partial class SubPageContainer<T> : Control
     {
         private const string OpenState = "Open";
         private const string ClosedState = "Closed";
@@ -18,8 +18,8 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
         private const string NormalState = "Normal";
         private const string FullScreenState = "FullScreen";
 
-        private INavigationService<object>? _navigationService;
-        private Stack<object> _contentHistory;
+        private INavigationService<T>? _navigationService;
+        private Stack<T> _contentHistory;
 
         /// <summary>
         /// The backing <see cref="DependencyProperty"/> for the <see cref="BackButtonVisibility"/> property.
@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
             DependencyProperty.Register(
             nameof(BackButtonVisibility),
             typeof(Visibility),
-            typeof(SubPageContainer),
+            typeof(SubPageContainer<T>),
             new PropertyMetadata(Visibility.Visible));
 
         /// <summary>
@@ -37,8 +37,8 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
         public static readonly DependencyProperty ContentProperty =
             DependencyProperty.Register(
             nameof(Content),
-            typeof(object),
-            typeof(SubPageContainer),
+            typeof(T),
+            typeof(SubPageContainer<T>),
             new PropertyMetadata(null));
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
             DependencyProperty.Register(
             nameof(IsOpen),
             typeof(bool),
-            typeof(SubPageContainer),
+            typeof(SubPageContainer<T>),
             new PropertyMetadata(false));
 
         /// <summary>
@@ -56,10 +56,10 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
         /// </summary>
         public SubPageContainer()
         {
-            this.DefaultStyleKey = typeof(SubPageContainer);
+            this.DefaultStyleKey = typeof(SubPageContainer<T>);
 
             IsOpen = false;
-            _contentHistory = new Stack<object>();
+            _contentHistory = new Stack<T>();
         }
 
         /// <inheritdoc/>
@@ -81,9 +81,9 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
         /// <summary>
         /// Gets the Content on Display by the template's ContentControl.
         /// </summary>
-        public object Content
+        public T Content
         {
-            get => GetValue(ContentProperty);
+            get => (T)GetValue(ContentProperty);
             private set
             {
                 SetValue(ContentProperty, value);
@@ -108,7 +108,7 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
         /// <summary>
         /// Attaches the navigation service.
         /// </summary>
-        public void AttachNavigationService(INavigationService<object> navigationService)
+        public void AttachNavigationService(INavigationService<T> navigationService)
         {
             DetachNavigationService();
             _navigationService = navigationService;
@@ -142,7 +142,7 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
             DetachHandlers();
         }
 
-        private void NavigationRequested(object sender, NavigateEventArgs<object> e)
+        private void NavigationRequested(object sender, NavigateEventArgs<T> e)
         {
             if (!e.IsOverlay)
             {
@@ -176,11 +176,11 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
                 UpdateBackButtonState();
             } else
             {
-                // TODO: Close overlay
+                IsOpen = false;
             }
         }
 
-        private void UpdatePage(object page)
+        private void UpdatePage(T page)
         {
             switch (page)
             {

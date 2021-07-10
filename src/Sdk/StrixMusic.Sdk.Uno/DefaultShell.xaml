@@ -41,7 +41,7 @@
                         <FontIcon Glyph="&#xE142;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="/Music/CreatePlaylistNVI" Content="Create Playlist">
+                <NavigationViewItem x:Uid="/Music/CreatePlaylistNVI" x:Name="CreatePlaylistItem" Content="Create Playlist">
                     <NavigationViewItem.Icon>
                         <!--<SymbolIcon Symbol="Add"/>-->
                         <FontIcon Glyph="&#xE710;" FontSize="16" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
@@ -54,10 +54,10 @@
 
         <shells:NowPlayingBar Grid.Row="1"/>
 
-        <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+        <ContentControl x:Name="NowPlayingContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                         Visibility="Collapsed" Grid.RowSpan="2"/>
 
-        <subpages:SubPageContainer x:Name="SubPageContainer"/>
+        <subpages:ControlSubPageContainer x:Name="PageContainer"/>
     </Grid>
 </shells:Shell>

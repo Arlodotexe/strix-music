@@ -9,11 +9,11 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     x:Class="StrixMusic.Sdk.Uno.Styles.SubPages.SubPageContainerStyle">
 
-    <Style x:Key="DefaultSubPageContainerStyle" TargetType="subpages:SubPageContainer">
+    <Style x:Key="DefaultSubPageContainerStyle" TargetType="subpages:ControlSubPageContainer">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="subpages:SubPageContainer">
+                    <ControlTemplate TargetType="subpages:ControlSubPageContainer">
                         <Grid x:Name="Root" Visibility="Collapsed">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="IsOpen">
@@ -129,6 +129,6 @@
         </Style.Setters>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultSubPageContainerStyle}" TargetType="subpages:SubPageContainer"/>
+    <Style BasedOn="{StaticResource DefaultSubPageContainerStyle}" TargetType="subpages:ControlSubPageContainer"/>
     
 </ResourceDictionary>
