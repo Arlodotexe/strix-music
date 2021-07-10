@@ -208,13 +208,13 @@
     <value>חיפוש</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>הוגדות</value>
+    <value>הגדרות</value>
   </data>
   <data name="SettingsBTN.Content" xml:space="preserve">
-    <value>הוגדות</value>
+    <value>הגדרות</value>
   </data>
   <data name="SettingsTB.Text" xml:space="preserve">
-    <value>הוגדות</value>
+    <value>הגדרות</value>
   </data>
   <data name="Share" xml:space="preserve">
     <value>שיתוף</value>

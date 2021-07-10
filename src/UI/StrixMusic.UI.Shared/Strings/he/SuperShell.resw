@@ -189,4 +189,7 @@
   <data name="UnoptimizedDisplayTB.Text" xml:space="preserve">
     <value>הסגנון שנבחר אינו מתאים לכל גודל התצוגה.</value>
   </data>
+  <data name="Settings" xml:space="preserve">
+    <value>הגדרות</value>
+  </data>
 </root>

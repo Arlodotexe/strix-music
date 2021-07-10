@@ -189,4 +189,7 @@
   <data name="UnoptimizedDisplayTB.Text" xml:space="preserve">
     <value>The selected skin isn't optimized for all display sizes.</value>
   </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
 </root>
