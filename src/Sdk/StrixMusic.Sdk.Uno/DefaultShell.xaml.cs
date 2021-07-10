@@ -48,7 +48,14 @@ namespace StrixMusic.Shells.Default
                     _navigationService = SetupNavigationService(navigationService);
             }
 
-            return base.InitServices(services);
+            base.InitServices(services);
+
+            if (_navigationService is INavigationService<object> navService)
+            {
+                SubPageContainer.AttachNavigationService(navService);
+            }
+
+            return Task.CompletedTask;
         }
 
         private INavigationService<Control> SetupNavigationService(INavigationService<Control> navigationService)

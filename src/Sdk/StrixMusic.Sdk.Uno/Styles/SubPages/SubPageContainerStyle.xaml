@@ -14,63 +14,79 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="subpages:SubPageContainer">
-                        <Grid>
-                            <!--<Grid.Resources>
-                                <ResourceDictionary>
-                                    <Storyboard x:Name="ShowAnimation">
-                                        <DoubleAnimation Duration="0:0:0.3" To="1" From="0"
+                        <Grid x:Name="Root" Visibility="Collapsed">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="IsOpen">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition To="Open" GeneratedDuration="0:0:0.3">
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0:0:0.3" To="1" From="0"
                                                          Storyboard.TargetName="BackgroundFill" Storyboard.TargetProperty="Opacity">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Duration="0:0:0.3" To="1" From="0"
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CircleEase/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Duration="0:0:0.3" To="1" From="0"
                                                          Storyboard.TargetName="ContentTransform" Storyboard.TargetProperty="ScaleX">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Duration="0:0:0.3" To="1" From="0"
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CircleEase/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Duration="0:0:0.3" To="1" From="0"
                                                          Storyboard.TargetName="ContentTransform" Storyboard.TargetProperty="ScaleY">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Duration="0:0:0.1" BeginTime="0:0:0.2" To="1" From="0"
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CircleEase/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Duration="0:0:0.1" BeginTime="0:0:0.2" To="1" From="0"
                                                          Storyboard.TargetName="Content" Storyboard.TargetProperty="Opacity">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
-                                    <Storyboard x:Name="HideAnimation" Completed="HideAnimation_Completed">
-                                        <DoubleAnimation Duration="0:0:0.3" To="0" From="1"
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CircleEase/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </VisualTransition>
+                                        <VisualTransition To="Closed" GeneratedDuration="0:0:0.3">
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0:0:0.3" To="0" From="1"
                                                          Storyboard.TargetName="BackgroundFill" Storyboard.TargetProperty="Opacity">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Duration="0:0:0.3" To="0" From="1"
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CircleEase/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Duration="0:0:0.3" To="0" From="1"
                                                          Storyboard.TargetName="ContentTransform" Storyboard.TargetProperty="ScaleX">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Duration="0:0:0.3" To="0" From="1"
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CircleEase/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Duration="0:0:0.3" To="0" From="1"
                                                          Storyboard.TargetName="ContentTransform" Storyboard.TargetProperty="ScaleY">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                        <DoubleAnimation Duration="0:0:0.1" To="0" From="1"
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CircleEase/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Duration="0:0:0.1" To="0" From="1"
                                                          Storyboard.TargetName="Content" Storyboard.TargetProperty="Opacity">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CircleEase/>
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
-                                </ResourceDictionary>
-                            </Grid.Resources>-->
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CircleEase/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </VisualTransition>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Open">
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.Visibility" Value="Visible"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Closed">
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.Visibility" Value="Collapsed"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
 
                             <Rectangle x:Name="BackgroundFill"
                                        Fill="{ThemeResource SystemControlAcrylicElementBrush}"/>

@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using StrixMusic.Sdk.Services.Navigation;
+﻿using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Uno.Controls.SubPages.Types;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
@@ -19,9 +18,8 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
         private const string NormalState = "Normal";
         private const string FullScreenState = "FullScreen";
 
-        private NavigationService<object> _navigationService;
+        private INavigationService<object>? _navigationService;
         private Stack<object> _contentHistory;
-        private bool _isOpen;
 
         /// <summary>
         /// The backing <see cref="DependencyProperty"/> for the <see cref="BackButtonVisibility"/> property.
@@ -60,8 +58,7 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
         {
             this.DefaultStyleKey = typeof(SubPageContainer);
 
-            _isOpen = false;
-            _navigationService = Ioc.Default.GetRequiredService<NavigationService<object>>();
+            IsOpen = false;
             _contentHistory = new Stack<object>();
         }
 
@@ -108,17 +105,36 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
             }
         }
 
+        /// <summary>
+        /// Attaches the navigation service.
+        /// </summary>
+        public void AttachNavigationService(INavigationService<object> navigationService)
+        {
+            DetachNavigationService();
+            _navigationService = navigationService;
+            _navigationService.NavigationRequested += NavigationRequested;
+            _navigationService.BackRequested += BackRequested;
+        }
+
         private void AttachHandlers()
         {
             this.Unloaded += SubPageContainer_Unloaded;
-
-            _navigationService.NavigationRequested += NavigationRequested;
-            _navigationService.BackRequested += BackRequested;
         }
 
         private void DetachHandlers()
         {
             this.Unloaded -= SubPageContainer_Unloaded;
+
+            DetachNavigationService();
+        }
+
+        private void DetachNavigationService()
+        {
+            if (_navigationService != null)
+            {
+                _navigationService.NavigationRequested -= NavigationRequested;
+                _navigationService.BackRequested -= BackRequested;
+            }
         }
 
         private void SubPageContainer_Unloaded(object sender, RoutedEventArgs e)
@@ -130,7 +146,7 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
         {
             if (!e.IsOverlay)
             {
-                if (!_isOpen)
+                if (!IsOpen)
                     return;
 
                 // TODO: Close overlay and don't handle navigation
@@ -139,19 +155,19 @@ namespace StrixMusic.Sdk.Uno.Controls.SubPages
                 return;
             }
 
-            if (_isOpen)
+            if (IsOpen)
             {
                 _contentHistory.Push(Content);
                 UpdateBackButtonState();
             }
 
-            _isOpen = true;
+            IsOpen = true;
             Content = e.Page;
         }
 
         private void BackRequested(object sender, System.EventArgs e)
         {
-            if (!_isOpen)
+            if (!IsOpen)
                 return;
 
             if (_contentHistory.Count > 0)

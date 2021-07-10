@@ -5,6 +5,7 @@
     xmlns:shells="using:StrixMusic.Sdk.Uno.Controls.Shells"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:subpages="using:StrixMusic.Sdk.Uno.Controls.SubPages"
     mc:Ignorable="d">
 
     <Grid>
@@ -56,5 +57,7 @@
         <ContentControl x:Name="OverlayContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                         Visibility="Collapsed" Grid.RowSpan="2"/>
+
+        <subpages:SubPageContainer x:Name="SubPageContainer"/>
     </Grid>
 </shells:Shell>

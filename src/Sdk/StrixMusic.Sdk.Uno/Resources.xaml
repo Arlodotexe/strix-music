@@ -6,6 +6,7 @@
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:styles="using:StrixMusic.Sdk.Uno.Styles"
     xmlns:collectionstyles="using:StrixMusic.Sdk.Uno.Styles.Collections"
+    xmlns:subpagestyles="using:StrixMusic.Sdk.Uno.Styles.SubPages"
     xmlns:itemstyles="using:StrixMusic.Sdk.Uno.Styles.Items"
     xmlns:nowplayingstyles="using:StrixMusic.Sdk.Uno.Styles.NowPlaying"
     xmlns:shellstyles="using:StrixMusic.Sdk.Uno.Styles.Shells"
@@ -46,6 +47,9 @@
         <viewstyles:NowPlayingViewStyle/>
         <viewstyles:SearchViewStyle/>
         <viewstyles:SettingsViewStyle/>
+        
+        <!--Styles for SubPages-->
+        <subpagestyles:SubPageContainerStyle/>
 
         <!--Other imported styles-->
         <styles:SafeImageStyle/>
