@@ -6,7 +6,7 @@ namespace OwlCore.Remoting.Transfer
     /// <summary>
     /// Holds data to communicate a remotely invoked method.
     /// </summary>
-    public class RemoteMethodCallMessage : RemoteMessageBase
+    public class RemoteMethodCallMessage : RemoteMessageBase, IRemoteMemberMessage
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteMethodCallMessage"/>.
@@ -19,6 +19,20 @@ namespace OwlCore.Remoting.Transfer
             MemberRemoteId = memberInstanceId;
             TargetMemberSignature = targetMemberSignature;
             Parameters = parameters;
+
+            Action = RemotingAction.MethodCall;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RemoteMethodCallMessage"/>.
+        /// </summary>
+        /// <remarks>Should only be used by deserializers.</remarks>
+        public RemoteMethodCallMessage()
+        {
+            MemberRemoteId = string.Empty;
+            TargetMemberSignature = string.Empty;
+            Parameters = new List<ParameterData>();
+
             Action = RemotingAction.MethodCall;
         }
 

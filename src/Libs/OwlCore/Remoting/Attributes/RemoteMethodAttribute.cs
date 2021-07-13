@@ -20,10 +20,29 @@ namespace OwlCore.Remoting.Attributes
             var trace = new StackTrace(true);
             var frames = trace.GetFrames();
 
-            if (frames.Length > 8 &&
-                frames[3].GetMethod().Name == nameof(MethodBase.Invoke) &&
-                frames[8].GetMethod().Name == nameof(MemberRemote.MessageHandler_DataReceived))
-                return;
+            for (int i = 0; i < frames.Length; i++)
+            {
+                StackFrame? frame = frames[i];
+                if (frame is null)
+                    continue;
+
+                // Find the caller method name
+                var frameMethod = frame.GetMethod();
+                if (frameMethod.Name != methodbase.Name)
+                    continue;
+
+                // Check if the invoker was the OwlCore.Remoting lib between 1-5 frames back
+                for (; i <= i + 8; i++)
+                {
+                    if (frames.Length == i)
+                        break;
+
+                    if (frames[i].GetMethod().Name == nameof(MemberRemote.MessageHandler_DataReceived))
+                        return;
+                }
+
+                break;
+            }
 
             Entered?.Invoke(this, new MethodEnteredEventArgs(declaringType, instance, methodbase, values));
         }

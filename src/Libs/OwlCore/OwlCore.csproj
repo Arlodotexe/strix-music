@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Author>Arlo Godfrey</Author>
-    <Version>0.0.13</Version>
+    <Version>0.0.18</Version>
     <Product>OwlCore</Product>
     <Description>
 Have you ever seen an owl do a barrel roll? Me neither.
@@ -27,6 +27,22 @@ This project is a constant work in progress. Until a stable release, breaking ch
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
     <PackageReleaseNotes>
+		--- 0.0.18 ---
+		Fixed an issue where remote member change messages were not scoping to specific MemberRemote instances without manually implementing IRemoteMemberMessage.
+		
+		--- 0.0.17 ---
+		Re-release of 0.0.16 to fix freezing visual studio when building.
+		
+		--- 0.0.16 ---
+		Hardened the fix introduced in 0.0.15.
+		
+		--- 0.0.15 ---
+		Fixed an issue where bidirectional remoting causes a loop for method calls and property changes.
+
+		--- 0.0.14 ---
+		Added empty constructors to classes in OwlCore.Remoting.Transfer.Messages for deserializers.
+
+		--- 0.0.13 ---
 		Added additional checks, exceptions and instructions for mismatched data types in remote properties and method parameters.
 		Fixed and improved type handling for NewtonsoftRemoteMessageConverter.
 		Exposed a new SerializerSettings property for NewtonsoftRemoteMessageConverter.

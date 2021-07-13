@@ -5,7 +5,7 @@ namespace OwlCore.Remoting.Transfer
     /// <summary>
     /// Contains information for sending and receiving a single object tied to a token.
     /// </summary>
-    public class RemoteDataMessage : RemoteMessageBase
+    public class RemoteDataMessage : RemoteMessageBase, IRemoteMemberMessage
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteMessageBase"/>.
@@ -20,6 +20,19 @@ namespace OwlCore.Remoting.Transfer
             TargetMemberSignature = memberSignature;
             Token = token;
             Result = result;
+
+            Action = RemotingAction.RemoteDataProxy;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RemoteMessageBase"/>.
+        /// </summary>
+        /// <remarks>Should only be used by deserializers.</remarks>
+        public RemoteDataMessage()
+        {
+            Token = string.Empty;
+            MemberRemoteId = string.Empty;
+            TargetMemberSignature = string.Empty;
 
             Action = RemotingAction.RemoteDataProxy;
         }

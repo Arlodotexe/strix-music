@@ -25,6 +25,14 @@ namespace OwlCore.Remoting.Transfer
         }
 
         /// <summary>
+        /// Creates a new instance of <see cref="RemoteExceptionDataMessage"/>.
+        /// </summary>
+        public RemoteExceptionDataMessage()
+        {
+            Action = RemotingAction.ExceptionThrown;
+        }
+
+        /// <summary>
         /// Gets a message that describes the current exception.
         /// </summary>
         public string? Message { get; }

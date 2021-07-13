@@ -3,7 +3,7 @@
     /// <summary>
     /// Holds data to communicate a method call.
     /// </summary>
-    public class RemotePropertyChangeMessage : RemoteMessageBase
+    public class RemotePropertyChangeMessage : RemoteMessageBase, IRemoteMemberMessage
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteMethodCallMessage"/>.
@@ -18,6 +18,18 @@
             TargetMemberSignature = targetMemberSignature;
             NewValue = newValue;
             OldValue = oldValue;
+
+            Action = RemotingAction.PropertyChange;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RemoteMethodCallMessage"/>.
+        /// </summary>
+        /// <remarks>Should only be used by deserializers.</remarks>
+        public RemotePropertyChangeMessage()
+        {
+            MemberRemoteId = string.Empty;
+            TargetMemberSignature = string.Empty;
 
             Action = RemotingAction.PropertyChange;
         }

@@ -220,7 +220,7 @@ namespace OwlCore.Remoting
             propertyInfo.SetValue(Instance, castValue);
         }
 
-        private void HandleIncomingRemoteMethodCall(RemoteMethodCallMessage methodCallMsg)
+        internal void HandleIncomingRemoteMethodCall(RemoteMethodCallMessage methodCallMsg)
         {
             var methodInfo = Methods.First(x => CreateMemberSignature(x) == methodCallMsg.TargetMemberSignature);
 
