@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
+using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
@@ -14,13 +15,19 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
     public class ImageRepository : IImageRepository
     {
         private readonly SemaphoreSlim _initMutex;
+        private readonly AudioMetadataScanner _audioMetadataScanner;
+
+        private IFolderData? _folderData;
 
         /// <summary>
         /// Creates a new instance of <see cref="ImageRepository"/>.
         /// </summary>
-        public ImageRepository()
+        public ImageRepository(AudioMetadataScanner audioMetadataScanner)
         {
+            Guard.IsNotNull(audioMetadataScanner, nameof(audioMetadataScanner));
+
             _initMutex = new SemaphoreSlim(1, 1);
+            _audioMetadataScanner = audioMetadataScanner;
         }
 
         /// <inheritdoc/>
@@ -58,17 +65,17 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
         /// <inheritdoc/>
         public void SetDataFolder(IFolderData rootFolder)
         {
-            throw new NotImplementedException();
+            _folderData = rootFolder;
         }
 
         /// <inheritdoc/>
-        public Task<ImageMetadata> GetImageByIdAsync(string id)
+        public Task<ImageMetadata?> GetImageByIdAsync(string id)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<ImageMetadata>> GetImagesByIdsAsync(IEnumerable<string> ids)
+        public Task<IReadOnlyList<ImageMetadata?>> GetImagesByIdsAsync(IEnumerable<string> ids)
         {
             throw new NotImplementedException();
         }

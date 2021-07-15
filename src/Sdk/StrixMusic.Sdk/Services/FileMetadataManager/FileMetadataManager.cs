@@ -71,7 +71,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Playlists = new PlaylistRepository(_playlistMetadataScanner);
             Albums = new AlbumRepository(_audioMetadataScanner, Tracks);
             Artists = new ArtistRepository(_audioMetadataScanner, Tracks);
-            Images = new ImageRepository();
+            Images = new ImageRepository(_audioMetadataScanner);
 
             _rootFolder = rootFolder;
         }
@@ -90,6 +90,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Artists.SetDataFolder(dataFolder);
             Tracks.SetDataFolder(dataFolder);
             Playlists.SetDataFolder(dataFolder);
+            Images.SetDataFolder(dataFolder);
 
             if (!SkipRepoInit)
             {
@@ -97,6 +98,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 await Artists.InitAsync();
                 await Tracks.InitAsync();
                 await Playlists.InitAsync();
+                await Images.InitAsync();
             }
 
             AttachEvents();
@@ -207,6 +209,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 await Artists.InitAsync();
                 await Tracks.InitAsync();
                 await Playlists.InitAsync();
+                await Images.InitAsync();
             }
 
             var findingFilesNotif = RaiseFileDiscoveryNotification();
@@ -290,6 +293,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             Artists.Dispose();
             Playlists.Dispose();
             Tracks.Dispose();
+            Images.Dispose();
 
             _fileScanner.Dispose();
             _playlistMetadataScanner.Dispose();
