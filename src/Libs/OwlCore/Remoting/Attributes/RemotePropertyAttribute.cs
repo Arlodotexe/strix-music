@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
 using Cauldron.Interception;
 using OwlCore.Remoting.EventArgs;
 
@@ -29,34 +30,20 @@ namespace OwlCore.Remoting.Attributes
         /// <inheritdoc/>
         public bool OnSet(PropertyInterceptionInfo propertyInterceptionInfo, object oldValue, object newValue)
         {
-            var trace = new StackTrace(true);
-            var frames = trace.GetFrames();
-
-            for (int i = 0; i < frames.Length; i++)
+            // Check if the setter was the OwlCore.Remoting library.
+            // Don't re-emit "set" to the library if so.
+            lock (MemberRemote.MemberHandleExpectancyMap)
             {
-                StackFrame? frame = frames[i];
-                if (frame is null)
-                    continue;
-
-                // Find the caller method name
-                var frameMethod = frame.GetMethod();
-                if (frameMethod.Name != propertyInterceptionInfo.SetMethod.Name)
-                    continue;
-
-                // Check if the invoker was the OwlCore.Remoting lib between 1-8 frames back
-                for (; i <= i + 8; i++)
+                if (MemberRemote.MemberHandleExpectancyMap.TryGetValue(Thread.CurrentThread.ManagedThreadId, out var expectedInstance) && expectedInstance == propertyInterceptionInfo.Instance)
                 {
-                    if (frames.Length == i)
-                        break;
-
-                    if (frames[i].GetMethod().Name == nameof(MemberRemote.MessageHandler_DataReceived))
-                        return false;
+                    MemberRemote.MemberHandleExpectancyMap.Remove(Thread.CurrentThread.ManagedThreadId);
+                    return false;
                 }
-
-                break;
             }
 
-            SetEntered?.Invoke(this, new PropertySetEnteredEventArgs(propertyInterceptionInfo, oldValue, newValue));
+            var args = new PropertySetEnteredEventArgs(propertyInterceptionInfo, oldValue, newValue);
+            SetEntered?.Invoke(this, args);
+
             return false;
         }
 

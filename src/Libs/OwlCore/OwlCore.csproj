@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Author>Arlo Godfrey</Author>
-    <Version>0.0.18</Version>
+    <Version>0.0.20</Version>
     <Product>OwlCore</Product>
     <Description>
 Have you ever seen an owl do a barrel roll? Me neither.
@@ -27,15 +27,21 @@ This project is a constant work in progress. Until a stable release, breaking ch
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
     <PackageReleaseNotes>
+		--- 0.0.20 ---
+		Fixed threading issue with OwlCore.Remoting introduced in 0.0.19.
+		
+		--- 0.0.19 ---
+		Fixed a crash with OwlCore.Remoting when compiled with optimizations.
+
 		--- 0.0.18 ---
 		Fixed an issue where remote member change messages were not scoping to specific MemberRemote instances without manually implementing IRemoteMemberMessage.
-		
+
 		--- 0.0.17 ---
 		Re-release of 0.0.16 to fix freezing visual studio when building.
-		
+
 		--- 0.0.16 ---
 		Hardened the fix introduced in 0.0.15.
-		
+
 		--- 0.0.15 ---
 		Fixed an issue where bidirectional remoting causes a loop for method calls and property changes.
 
@@ -57,6 +63,7 @@ This project is a constant work in progress. Until a stable release, breaking ch
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <ItemGroup>

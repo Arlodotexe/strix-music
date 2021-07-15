@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -18,6 +19,8 @@ namespace OwlCore.Remoting
     public class MemberRemote : IDisposable
     {
         private static IRemoteMessageHandler? _defaultRemoteMessageHandler;
+
+        internal static Dictionary<int, object> MemberHandleExpectancyMap { get; set; } = new Dictionary<int, object>();
 
         /// <summary>
         /// Set the default message handler to use for all instances of <see cref="MemberRemote"/>, unless given an overload.
@@ -73,6 +76,13 @@ namespace OwlCore.Remoting
         {
             if (message is IRemoteMemberMessage memberMsg && memberMsg.MemberRemoteId != Id)
                 return;
+
+            // Things to try instead of changing threads
+            // - rename thread back to original via reflection
+            // - Store ThreadId/instance in static dict when we are about to invoke the member, use to check if caller was us, then remove when finished.
+
+            lock (MemberHandleExpectancyMap)
+                MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
 
             var receivedArgs = new RemoteMessageReceivingEventArgs(message);
             MessageReceiving?.Invoke(this, receivedArgs);
@@ -216,7 +226,7 @@ namespace OwlCore.Remoting
             }
 
             var castValue = Convert.ChangeType(propertyChangeMessage.NewValue, propertyInfo.PropertyType);
-            
+
             propertyInfo.SetValue(Instance, castValue);
         }
 
