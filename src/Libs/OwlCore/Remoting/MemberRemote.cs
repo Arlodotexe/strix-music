@@ -109,6 +109,7 @@ namespace OwlCore.Remoting
 
             var paramData = CreateMethodParameterData(e.MethodBase, e.Values);
             var memberSignature = CreateMemberSignature(e.MethodBase);
+
             var remoteMessage = new RemoteMethodCallMessage(Id, memberSignature, paramData);
 
             await SendRemotingMessageAsync(remoteMessage);
@@ -118,7 +119,7 @@ namespace OwlCore.Remoting
         {
             var message = exception.Message;
             var stackTrace = exception.StackTrace;
-            var targetSiteSignature = CreateMemberSignature(exception.TargetSite);
+            var targetSiteSignature = exception.TargetSite is null ? "Unknown" : CreateMemberSignature(exception.TargetSite);
 
             var exceptionMessage = new RemoteExceptionDataMessage(message, stackTrace, targetSiteSignature);
             await SendRemotingMessageAsync(exceptionMessage);
