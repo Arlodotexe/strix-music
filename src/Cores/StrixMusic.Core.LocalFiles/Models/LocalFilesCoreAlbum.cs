@@ -155,29 +155,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         private void HandleImageChanged(AlbumMetadata e)
         {
-            var previousImage = _image;
-
-            var removed = new List<CollectionChangedItem<ICoreImage>>();
-            var added = new List<CollectionChangedItem<ICoreImage>>();
-
-            if (previousImage != null)
-                removed.Add(new CollectionChangedItem<ICoreImage>(previousImage, 0));
-
-            if (e.ImageIds != null)
-            {
-                var newImage = new LocalFilesCoreImage(SourceCore, null);
-                InstanceCache.Images.Replace(Id, newImage);
-                added.Add(new CollectionChangedItem<ICoreImage>(newImage, 0));
-                _image = newImage;
-            }
-
-            if (added.Count > 0 || removed.Count > 0)
-            {
-                ImagesChanged?.Invoke(this, added, removed);
-
-                if (added.Count != removed.Count)
-                    ImagesCountChanged?.Invoke(this, TotalImageCount);
-            }
+            // TODO
         }
 
         /// <inheritdoc/>
