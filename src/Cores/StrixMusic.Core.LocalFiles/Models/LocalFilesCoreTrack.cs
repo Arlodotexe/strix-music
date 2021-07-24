@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
@@ -95,7 +96,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                     NameChanged?.Invoke(this, Name);
 
                 if (metadata.ImageIds != previousData.ImageIds)
-                    HandleImageChanged(metadata);
+                    HandleImagesChanged(previousData.ImageIds, metadata.ImageIds);
 
                 if (metadata.Description != previousData.Description)
                     DescriptionChanged?.Invoke(this, Description);
@@ -122,9 +123,49 @@ namespace StrixMusic.Core.LocalFiles.Models
             }
         }
 
-        private void HandleImageChanged(TrackMetadata e)
+        private void HandleImagesChanged(IReadOnlyList<string>? oldImageIds, IReadOnlyList<string>? newImageIds)
         {
-            // TODO
+            IReadOnlyList<CollectionChangedItem<ICoreImage>> Transform(IEnumerable<string> ids)
+            {
+                var collectionChangedItems = new List<CollectionChangedItem<ICoreImage>>(ids.Count());
+
+                // Should be safe to wait on Result here, as GetImagesByIdsAsync runs synchronously.
+                // This probably shouldn't be handled this way however.
+                var images = _fileMetadataManager.Images.GetImagesByIdsAsync(ids).Result;
+                foreach (var image in images)
+                {
+                    // TODO: Images returned by GetImagesByIdsAsync could technically be null, this should be handled properly.
+                    Guard.IsNotNullOrWhiteSpace(image?.Id, nameof(image.Id));
+                    collectionChangedItems.Add(new CollectionChangedItem<ICoreImage>(InstanceCache.Images.GetOrCreate(image.Id, SourceCore, image), collectionChangedItems.Count));
+                }
+
+                return collectionChangedItems;
+            }
+
+            IEnumerable<string> addedImages;
+            IEnumerable<string> removedImages;
+
+            if (oldImageIds == null && newImageIds != null)
+            {
+                addedImages = new List<string>(newImageIds);
+                removedImages = Enumerable.Empty<string>();
+            }
+            else if (oldImageIds != null && newImageIds == null)
+            {
+                addedImages = Enumerable.Empty<string>();
+                removedImages = new List<string>(oldImageIds);
+            }
+            else
+            {
+                // oldImagesIds == null && newImageIds == null shouldn't ever be handled by this method, so assume both are non-null at this point.
+                Guard.IsNotNull(oldImageIds, nameof(oldImageIds));
+                Guard.IsNotNull(newImageIds, nameof(newImageIds));
+
+                addedImages = newImageIds.Except(oldImageIds);
+                removedImages = oldImageIds.Except(newImageIds);
+            }
+
+            ImagesChanged?.Invoke(this, Transform(addedImages), Transform(removedImages));
         }
 
         /// <inheritdoc/>
