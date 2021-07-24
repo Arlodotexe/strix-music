@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Nito.AsyncEx;
 using OwlCore;
@@ -14,6 +15,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels.Helpers;
 using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
@@ -25,6 +27,7 @@ namespace StrixMusic.Sdk.ViewModels
     public class PlaylistCollectionViewModel : ObservableObject, IPlaylistCollectionViewModel, IImageCollectionViewModel
     {
         private readonly IPlaylistCollection _collection;
+        private readonly IPlaybackHandlerService _playbackHandler;
 
         private readonly AsyncLock _populatePlaylistsMutex = new AsyncLock();
         private readonly AsyncLock _populateImagesMutex = new AsyncLock();
@@ -58,6 +61,8 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+
+            _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
 
             AttachEvents();
         }
@@ -506,6 +511,15 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
 
         /// <inheritdoc />
+        public Task InitAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
+
+        /// <inheritdoc />
         public bool Equals(ICoreImageCollection other) => _collection.Equals(other);
 
         /// <inheritdoc />
@@ -517,7 +531,8 @@ namespace StrixMusic.Sdk.ViewModels
         private Task PlaylistPlaylistInternalAsync(IPlaylistCollectionItem? playlistCollectionItem)
         {
             Guard.IsNotNull(playlistCollectionItem, nameof(playlistCollectionItem));
-            throw new NotImplementedException();
+
+            return _playbackHandler.PlayAsync(this, this);
         }
 
         private Task ChangeNameInternalAsync(string? name)
