@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MessagePack;
@@ -82,13 +83,25 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
         /// <inheritdoc/>
         public Task<ImageMetadata?> GetImageByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            _inMemoryMetadata.TryGetValue(id, out var metadata);
+            return Task.FromResult<ImageMetadata?>(metadata);
         }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<ImageMetadata?>> GetImagesByIdsAsync(IEnumerable<string> ids)
         {
-            throw new NotImplementedException();
+            Guard.IsNotNull(ids, nameof(ids));
+
+            var metadataValues = new ImageMetadata?[ids.Count()];
+
+            var i = 0;
+            foreach (var id in ids)
+            {
+                _inMemoryMetadata.TryGetValue(id, out var metadata);
+                metadataValues[i++] = metadata;
+            }
+
+            return Task.FromResult<IReadOnlyList<ImageMetadata?>>(metadataValues);
         }
 
         /// <inheritdoc/>
