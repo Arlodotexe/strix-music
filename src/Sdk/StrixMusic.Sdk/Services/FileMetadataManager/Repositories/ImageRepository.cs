@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
@@ -14,6 +17,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
     /// </summary>
     public class ImageRepository : IImageRepository
     {
+        private const string IMAGE_DATA_FILENAME = "ImageData.bin";
+
+        private readonly ConcurrentDictionary<string, ImageMetadata> _inMemoryMetadata;
+        private readonly SemaphoreSlim _storageMutex;
         private readonly SemaphoreSlim _initMutex;
         private readonly AudioMetadataScanner _audioMetadataScanner;
 
@@ -26,6 +33,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
         {
             Guard.IsNotNull(audioMetadataScanner, nameof(audioMetadataScanner));
 
+            _inMemoryMetadata = new ConcurrentDictionary<string, ImageMetadata>();
+            _storageMutex = new SemaphoreSlim(1, 1);
             _initMutex = new SemaphoreSlim(1, 1);
             _audioMetadataScanner = audioMetadataScanner;
         }
@@ -52,6 +61,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
                 return;
             }
 
+            await LoadDataFromDiskAsync();
+
             IsInitialized = true;
             _initMutex.Release();
         }
@@ -59,7 +70,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
         /// <inheritdoc/>
         public Task<int> GetItemCount()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(_inMemoryMetadata.Count);
         }
 
         /// <inheritdoc/>
@@ -98,6 +109,36 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             throw new NotImplementedException();
         }
 
+        private async Task LoadDataFromDiskAsync()
+        {
+            Guard.IsEmpty((ICollection<KeyValuePair<string, ImageMetadata>>)_inMemoryMetadata, nameof(_inMemoryMetadata));
+            Guard.IsNotNull(_folderData, nameof(_folderData));
+
+            var fileData = await _folderData.CreateFileAsync(IMAGE_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
+
+            Guard.IsNotNull(fileData, nameof(fileData));
+
+            using var stream = await fileData.GetStreamAsync(FileAccessMode.ReadWrite);
+            var bytes = await stream.ToBytesAsync();
+
+            if (bytes.Length == 0)
+                return;
+
+            var data = MessagePackSerializer.Deserialize<List<ImageMetadata>>(bytes, MessagePack.Resolvers.ContractlessStandardResolver.Options);
+
+            await _storageMutex.WaitAsync();
+
+            foreach (var item in data)
+            {
+                Guard.IsNotNullOrWhiteSpace(item?.Id, nameof(item.Id));
+
+                if (!_inMemoryMetadata.TryAdd(item.Id, item))
+                    ThrowHelper.ThrowInvalidOperationException($"Item already added to {nameof(_inMemoryMetadata)}");
+            }
+
+            _storageMutex.Release();
+        }
+
         private void ReleaseUnmanagedResources()
         {
             // TODO
@@ -111,7 +152,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             ReleaseUnmanagedResources();
             if (disposing)
             {
-                // TODO
+                _inMemoryMetadata.Clear();
+                _storageMutex.Dispose();
             }
 
             IsInitialized = false;
