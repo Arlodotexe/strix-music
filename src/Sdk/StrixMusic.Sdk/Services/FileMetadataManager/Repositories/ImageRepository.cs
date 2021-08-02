@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
+
+using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
@@ -24,6 +26,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
         private readonly SemaphoreSlim _storageMutex;
         private readonly SemaphoreSlim _initMutex;
         private readonly AudioMetadataScanner _audioMetadataScanner;
+        private readonly string _debouncerId;
 
         private IFolderData? _folderData;
 
@@ -38,6 +41,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             _storageMutex = new SemaphoreSlim(1, 1);
             _initMutex = new SemaphoreSlim(1, 1);
             _audioMetadataScanner = audioMetadataScanner;
+            _debouncerId = Guid.NewGuid().ToString();
         }
 
         /// <inheritdoc/>
@@ -78,6 +82,58 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
         public void SetDataFolder(IFolderData rootFolder)
         {
             _folderData = rootFolder;
+        }
+
+        /// <inheritdoc/>
+        public async Task AddOrUpdateImageAsync(ImageMetadata imageMetadata)
+        {
+            Guard.IsNotNull(imageMetadata, nameof(imageMetadata));
+            Guard.IsNotNullOrWhiteSpace(imageMetadata.Id, nameof(imageMetadata.Id));
+
+            var isUpdate = false;
+
+            await _storageMutex.WaitAsync();
+
+            _inMemoryMetadata.AddOrUpdate(
+                imageMetadata.Id,
+                addValueFactory: id =>
+                {
+                    isUpdate = false;
+                    return imageMetadata;
+                },
+                updateValueFactory: (id, existing) =>
+                {
+                    isUpdate = true;
+                    return imageMetadata;
+                });
+
+            _storageMutex.Release();
+
+            _ = CommitChangesAsync();
+
+            if (isUpdate)
+                MetadataUpdated?.Invoke(this, imageMetadata.IntoList());
+            else
+                MetadataAdded?.Invoke(this, imageMetadata.IntoList());
+        }
+
+        /// <inheritdoc/>
+        public async Task RemoveImageAsync(ImageMetadata imageMetadata)
+        {
+            Guard.IsNotNull(imageMetadata, nameof(imageMetadata));
+            Guard.IsNotNullOrWhiteSpace(imageMetadata.Id, nameof(imageMetadata.Id));
+
+            await _storageMutex.WaitAsync();
+
+            var removed = _inMemoryMetadata.TryRemove(imageMetadata.Id, out _);
+            
+            _storageMutex.Release();
+
+            if (removed)
+            {
+                _ = CommitChangesAsync();
+                MetadataRemoved?.Invoke(this, imageMetadata.IntoList());
+            }
         }
 
         /// <inheritdoc/>
@@ -130,6 +186,22 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
                 if (!_inMemoryMetadata.TryAdd(item.Id, item))
                     ThrowHelper.ThrowInvalidOperationException($"Item already added to {nameof(_inMemoryMetadata)}");
             }
+
+            _storageMutex.Release();
+        }
+
+        private async Task CommitChangesAsync()
+        {
+            if (!await Flow.Debounce(_debouncerId, TimeSpan.FromSeconds(5)) || _inMemoryMetadata.IsEmpty)
+                return;
+
+            await _storageMutex.WaitAsync();
+
+            Guard.IsNotNull(_folderData, nameof(_folderData));
+            var bytes = MessagePackSerializer.Serialize(_inMemoryMetadata.Values.ToList(), MessagePack.Resolvers.ContractlessStandardResolver.Options);
+
+            var fileData = await _folderData.CreateFileAsync(IMAGE_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
+            await fileData.WriteAllBytesAsync(bytes);
 
             _storageMutex.Release();
         }
