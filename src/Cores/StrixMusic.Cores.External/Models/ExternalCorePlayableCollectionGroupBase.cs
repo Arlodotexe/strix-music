@@ -33,13 +33,16 @@ namespace StrixMusic.Core.External.Models
         /// <param name="sourceCore">The instance of the core this object was created in.</param>
         protected ExternalCorePlayableCollectionGroupBase(ICore sourceCore)
         {
+            // TODO: Change all properties to fully backed props, fire event on set.
+            // TODO: Receive items changed events.
+
+            // Properties assigned before MemberRemote is created won't be set remotely.
+            Name = string.Empty;
             SourceCore = sourceCore;
-        }
 
-        [RemoteMethod]
-        private void OnPlaybackStateChanged(object sender, PlaybackState e)
-        {
+            MemberRemote = new MemberRemote(this, $"{sourceCore.InstanceId}.{GetType().Name}");
 
+            Id = MemberRemote.Id;
         }
 
         /// <summary>
@@ -135,7 +138,6 @@ namespace StrixMusic.Core.External.Models
         public event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
 
         /// <inheritdoc />
-        [RemoteProperty]
         public ICore SourceCore { get; set; }
 
         /// <inheritdoc />
@@ -252,251 +254,162 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPlayArtistCollectionAsyncAvailable  { get; set; }
+        public bool IsPlayArtistCollectionAsyncAvailable { get; set; }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPauseArtistCollectionAsyncAvailable  { get; set; }
+        public bool IsPauseArtistCollectionAsyncAvailable { get; set; }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPlayPlaylistCollectionAsyncAvailable  { get; set; }
+        public bool IsPlayPlaylistCollectionAsyncAvailable { get; set; }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPausePlaylistCollectionAsyncAvailable  { get; set; }
+        public bool IsPausePlaylistCollectionAsyncAvailable { get; set; }
 
         /// <inheritdoc />
-        public bool IsPlayTrackCollectionAsyncAvailable  { get; set; }
-
-        /// <inheritdoc />
-        [RemoteProperty]
-        public bool IsPauseTrackCollectionAsyncAvailable  { get; set; }
+        public bool IsPlayTrackCollectionAsyncAvailable { get; set; }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsChangeNameAsyncAvailable  { get; set; }
+        public bool IsPauseTrackCollectionAsyncAvailable { get; set; }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsChangeDescriptionAsyncAvailable  { get; set; }
+        public bool IsChangeNameAsyncAvailable { get; set; }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public bool IsChangeDescriptionAsyncAvailable { get; set; }
 
         /// <inheritdoc/>
         [RemoteProperty]
-        public bool IsChangeDurationAsyncAvailable  { get; set; }
+        public bool IsChangeDurationAsyncAvailable { get; set; }
 
         /// <inheritdoc/>
         [RemoteProperty]
-        public virtual bool IsInitialized { get; set; }
+        public bool IsInitialized { get; set; }
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddChildAvailable(int index)
-        {
-            return MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddChildAvailable));
-        }
+        public Task<bool> IsAddChildAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddChildAvailable));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddPlaylistItemAvailable(int index)
-        {
-            return MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddPlaylistItemAvailable));
-        }
+        public Task<bool> IsAddPlaylistItemAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddPlaylistItemAvailable));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddTrackAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
+        public Task<bool> IsAddTrackAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddTrackAvailable));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddArtistItemAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
+        public Task<bool> IsAddArtistItemAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddArtistItemAvailable));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddAlbumItemAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
+        public Task<bool> IsAddAlbumItemAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddAlbumItemAvailable));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddImageAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
+        public Task<bool> IsAddImageAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddImageAvailable));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveTrackAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
+        public Task<bool> IsRemoveTrackAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveTrackAvailable));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveImageAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
+        public Task<bool> IsRemoveImageAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveImageAvailable));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemovePlaylistItemAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
+        public Task<bool> IsRemovePlaylistItemAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsRemovePlaylistItemAvailable));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveAlbumItemAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
+        public Task<bool> IsRemoveAlbumItemAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveAlbumItemAvailable));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveArtistItemAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
+        public Task<bool> IsRemoveArtistItemAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveArtistItemAvailable));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveChildAvailable(int index)
-        {
-            return MemberRemote.ReceiveDataAsync<bool>(nameof());
-        }
+        public Task<bool> IsRemoveChildAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveChildAvailable));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeDescriptionAsync(string? description)
-        {
-            return Task.CompletedTask;
-        }
+        public Task ChangeDescriptionAsync(string? description) => MemberRemote.ReceiveDataAsync<object>(nameof(IsRemoveChildAvailable));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeDurationAsync(TimeSpan duration)
-        {
-            return Task.CompletedTask;
-        }
+        public Task ChangeDurationAsync(TimeSpan duration) => MemberRemote.RemoteWaitAsync(nameof(ChangeDurationAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeNameAsync(string name)
-        {
-            return Task.CompletedTask;
-        }
+        public Task ChangeNameAsync(string name) => MemberRemote.RemoteWaitAsync(nameof(ChangeNameAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PauseAlbumCollectionAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public Task PauseAlbumCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PauseAlbumCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayAlbumCollectionAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public Task PlayAlbumCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PlayAlbumCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PauseArtistCollectionAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public Task PauseArtistCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PauseArtistCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayArtistCollectionAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public Task PlayArtistCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PlayArtistCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PausePlaylistCollectionAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public Task PausePlaylistCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PausePlaylistCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlaylistCollectionAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
-        public Task PauseTrackCollectionAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public Task PlayPlaylistCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PlayPlaylistCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayTrackCollectionAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public Task PauseTrackCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PauseTrackCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem)
-        {
-            return Task.CompletedTask;
-        }
+        public Task PlayTrackCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PauseTrackCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlayableCollectionGroupAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public Task PlayAlbumCollectionAsync(ICoreAlbumCollectionItem albumItem) => MemberRemote.RemoteWaitAsync(nameof(PlayAlbumCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PausePlayableCollectionGroupAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public Task PlayPlayableCollectionGroupAsync() => MemberRemote.RemoteWaitAsync(nameof(PlayPlayableCollectionGroupAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem)
-        {
-            return Task.CompletedTask;
-        }
+        public Task PausePlayableCollectionGroupAsync() => MemberRemote.RemoteWaitAsync(nameof(PausePlayableCollectionGroupAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
-        {
-            return Task.CompletedTask;
-        }
+        public Task PlayPlaylistCollectionAsync(ICorePlaylistCollectionItem playlistItem) => MemberRemote.RemoteWaitAsync(nameof(PlayPlaylistCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup)
-        {
-            return Task.CompletedTask;
-        }
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem) => MemberRemote.RemoteWaitAsync(nameof(PlayArtistCollectionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task PlayTrackCollectionAsync(ICoreTrack track)
-        {
-            return Task.CompletedTask;
-        }
+        public Task PlayPlayableCollectionGroupAsync(ICorePlayableCollectionGroup collectionGroup) => MemberRemote.RemoteWaitAsync(nameof(PlayPlayableCollectionGroupAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task PlayTrackCollectionAsync(ICoreTrack track) => MemberRemote.RemoteWaitAsync(nameof(PlayTrackCollectionAsync));
 
         /// <inheritdoc/>
         [RemoteMethod]
@@ -580,110 +493,81 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddTrackAsync(ICoreTrack track, int index)
+        public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            throw new NotSupportedException();
+            using (await _getAlbumsMutex.LockAsync())
+            {
+                var res = await MemberRemote.ReceiveDataAsync<IEnumerable<ICoreImage>>(nameof(GetImagesAsync));
+
+                if (res is null)
+                    yield break;
+
+                foreach (var item in res)
+                    yield return item;
+            }
         }
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
-        {
-            throw new NotSupportedException();
-        }
+        public Task AddTrackAsync(ICoreTrack track, int index) => MemberRemote.RemoteWaitAsync(nameof(AddTrackAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index)
-        {
-            throw new NotSupportedException();
-        }
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index) => MemberRemote.RemoteWaitAsync(nameof(AddArtistItemAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index)
-        {
-            throw new NotSupportedException();
-        }
+        public Task AddAlbumItemAsync(ICoreAlbumCollectionItem album, int index) => MemberRemote.RemoteWaitAsync(nameof(AddAlbumItemAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index)
-        {
-            throw new NotSupportedException();
-        }
+        public Task AddPlaylistItemAsync(ICorePlaylistCollectionItem playlist, int index) => MemberRemote.RemoteWaitAsync(nameof(AddPlaylistItemAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveTrackAsync(int index)
-        {
-            throw new NotSupportedException();
-        }
+        public Task AddChildAsync(ICorePlayableCollectionGroup child, int index) => MemberRemote.RemoteWaitAsync(nameof(AddChildAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveArtistItemAsync(int index)
-        {
-            throw new NotSupportedException();
-        }
+        public Task RemoveTrackAsync(int index) => MemberRemote.RemoteWaitAsync(nameof(RemoveTrackAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveAlbumItemAsync(int index)
-        {
-            throw new NotSupportedException();
-        }
+        public Task RemoveArtistItemAsync(int index) => MemberRemote.RemoteWaitAsync(nameof(RemoveArtistItemAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemovePlaylistItemAsync(int index)
-        {
-            throw new NotSupportedException();
-        }
+        public Task RemoveAlbumItemAsync(int index) => MemberRemote.RemoteWaitAsync(nameof(RemoveAlbumItemAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveChildAsync(int index)
-        {
-            throw new NotSupportedException();
-        }
+        public Task RemovePlaylistItemAsync(int index) => MemberRemote.RemoteWaitAsync(nameof(RemovePlaylistItemAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveImageAsync(int index)
-        {
-            throw new NotSupportedException();
-        }
+        public Task RemoveChildAsync(int index) => MemberRemote.RemoteWaitAsync(nameof(RemoveChildAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
-        {
-            MemberRemote.ReceiveDataAsync<IEnumerable<ICoreImage>>(nameof(GetImagesAsync));
-        }
+        public Task RemoveImageAsync(int index) => MemberRemote.RemoteWaitAsync(nameof(RemoveImageAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddImageAsync(ICoreImage image, int index)
-        {
-
-        }
+        public Task AddImageAsync(ICoreImage image, int index) => MemberRemote.RemoteWaitAsync(nameof(AddImageAsync));
 
         /// <summary>
         /// Initializes the collection group base.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [RemoteMethod]
-        public virtual Task InitAsync()
-        {
-            return Task.CompletedTask;
-        }
+        public virtual Task InitAsync() => MemberRemote.RemoteWaitAsync(nameof(InitAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
-            return default;
+            await MemberRemote.RemoteWaitAsync(nameof(DisposeAsync));
+            MemberRemote.Dispose();
         }
     }
 }
