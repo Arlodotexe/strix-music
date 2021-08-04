@@ -30,6 +30,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
         /// </summary>
         /// <param name="id">The ID of the corresponding <see cref="ImageMetadata"/>.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task<ImageMetadata?> GetImageByIdAsync(string id);
+        public Task<ImageMetadata> GetImageByIdAsync(string id);
     }
 }

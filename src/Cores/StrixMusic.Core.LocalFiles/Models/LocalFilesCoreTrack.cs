@@ -135,7 +135,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                     // This probably shouldn't be handled this way however.
                     var image = _fileMetadataManager.Images.GetImageByIdAsync(id).Result;
                     
-                    Guard.IsNotNullOrWhiteSpace(image?.Id, nameof(image.Id));
+                    Guard.IsNotNullOrWhiteSpace(image.Id, nameof(image.Id));
                     collectionChangedItems.Add(new CollectionChangedItem<ICoreImage>(InstanceCache.Images.GetOrCreate(image.Id, SourceCore, image), collectionChangedItems.Count));
                 }
 

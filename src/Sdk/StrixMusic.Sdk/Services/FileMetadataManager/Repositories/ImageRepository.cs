@@ -137,10 +137,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
         }
 
         /// <inheritdoc/>
-        public Task<ImageMetadata?> GetImageByIdAsync(string id)
+        public Task<ImageMetadata> GetImageByIdAsync(string id)
         {
-            _inMemoryMetadata.TryGetValue(id, out var metadata);
-            return Task.FromResult<ImageMetadata?>(metadata);
+            return Task.FromResult(_inMemoryMetadata[id]);
         }
 
         private async Task LoadDataFromDiskAsync()
