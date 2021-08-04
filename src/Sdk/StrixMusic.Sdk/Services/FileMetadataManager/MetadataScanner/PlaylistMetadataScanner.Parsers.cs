@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -39,11 +41,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 case ".m3u":
                 case ".m3u8":
                 case ".vlc":
-                    playlistMetadata = await GetM3UMetadata(fileData, files);
+                    playlistMetadata = await GetM3UMetadata(fileData, files); // TESTED
                     break;
 
                 case ".xspf":
-                    playlistMetadata = await GetXspfMetadata(fileData, files);
+                    playlistMetadata = await GetXspfMetadata(fileData, files); // TESTED
                     break;
 
                 case ".asx":
@@ -55,11 +57,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     break;
 
                 case ".fpl":
-                    playlistMetadata = await GetFplMetadata(fileData, files); // NOT TESTED
+                    playlistMetadata = await GetFplMetadata(fileData, files); // TESTED
                     break;
 
                 case ".pls":
-                    playlistMetadata = await GetPlsMetadata(fileData, files); // NOT TESTED
+                    playlistMetadata = await GetPlsMetadata(fileData, files); // TESTED
                     break;
 
                 case ".aimppl4":
@@ -78,7 +80,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Gets the SMIL metadata from the given file.
         /// </summary>
         /// <param name="fileData">The path to the file.</param>
-        /// <param name="files">The the scanned metadata files.</param>
+        /// <param name="files">The scanned metadata files.</param>
         /// <remarks>Recognizes Zune's ZPL and WMP's WPL.</remarks>
         private static async Task<PlaylistMetadata?> GetSmilMetadata(IFileData fileData, IEnumerable<FileMetadata> files)
         {
@@ -106,13 +108,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 if (media.Src != null)
                 {
-                    var hash = TryGetHashFromExistingTracks(new Uri(media.Src), files);
-
-                    if (hash != null)
+                    if (Uri.TryCreate(media.Src, UriKind.RelativeOrAbsolute, out Uri uri))
                     {
-                        playlist.Duration ??= default;
+                        var hash = TryGetHashFromExistingTracks(uri, files);
 
-                        playlist.TrackIds.Add(media.Src.HashMD5Fast());
+                        if (hash != null)
+                        {
+                            playlist.Duration ??= default;
+
+                            playlist.TrackIds.Add(media.Src.HashMD5Fast());
+                        }
                     }
                 }
 
@@ -155,13 +160,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 }
                 else
                 {
-                    var hash = TryGetHashFromExistingTracks(new Uri(line), files);
-
-                    if (hash != null)
+                    if (Uri.TryCreate(line, UriKind.RelativeOrAbsolute, out Uri uri))
                     {
-                        playlist.TrackIds ??= new List<string>();
+                        var hash = TryGetHashFromExistingTracks(uri, files);
 
-                        playlist.TrackIds.Add(hash);
+                        if (hash != null)
+                        {
+                            playlist.TrackIds ??= new List<string>();
+
+                            playlist.TrackIds.Add(hash);
+                        }
                     }
                 }
             }
@@ -176,7 +184,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// </summary>
         /// <remarks>Does not support any application extensions.</remarks>
         /// <param name="fileData">The file to scan for metadata.</param>
-        /// <param name="files">The the scanned metadata files.</param>
+        /// <param name="files">The scanned metadata files.</param>
         private static async Task<PlaylistMetadata?> GetXspfMetadata(IFileData fileData, IEnumerable<FileMetadata> files)
         {
             using var stream = await fileData.GetStreamAsync();
@@ -206,12 +214,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 if (location != null)
                 {
-                    playlist.TrackIds ??= new List<string>();
-                    var localPath = new Uri(location);
-                    var hash = TryGetHashFromExistingTracks(localPath, files);
+                    if (Uri.TryCreate(location, UriKind.RelativeOrAbsolute, out Uri localPath))
+                    {
+                        playlist.TrackIds ??= new List<string>();
+                        localPath = new Uri(location);
+                        var hash = TryGetHashFromExistingTracks(localPath, files);
 
-                    if (hash != null)
-                        playlist.TrackIds.Add(hash);
+                        if (hash != null)
+                            playlist.TrackIds.Add(hash);
+                    }
                 }
             }
 
@@ -222,7 +233,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Gets the ASX metadata from the given file.
         /// </summary>
         /// <param name="fileData">The file to scan for metadata.</param>
-        /// <param name="files">The the scanned metadata files.</param>
+        /// <param name="files">The scanned metadata files.</param>
         /// <remarks>Does not support ENTRYREF.</remarks>
         private static async Task<PlaylistMetadata?> GetAsxMetadata(IFileData fileData, IEnumerable<FileMetadata> files)
         {
@@ -235,8 +246,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             var playlist = new PlaylistMetadata()
             {
-                Title = asx.Element("title").Value,
-                TotalTracksCount = entries.Count(),
+                Id = fileData.Path.HashMD5Fast(),
+                Title = asx.Element("title")?.Value,
             };
 
             foreach (var entry in entries)
@@ -244,14 +255,17 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 var entryBaseUrl = entry.Element("base")?.Value ?? string.Empty;
 
                 // TODO: Where does the track ID come from?
-                var path = $"{baseUrl} {entryBaseUrl} {entry.Element("ref").Attribute("href").Value}";
+                var path = $"{baseUrl} {entryBaseUrl} {entry.Element("ref")?.Attribute("href")?.Value}";
 
-                var hash = TryGetHashFromExistingTracks(new Uri(path), files);
-
-                playlist.TrackIds ??= new List<string>();
-                if (hash != null)
+                if (Uri.TryCreate(path, UriKind.RelativeOrAbsolute, out Uri uri))
                 {
-                    playlist.TrackIds.Add(hash);
+                    var hash = TryGetHashFromExistingTracks(uri, files);
+
+                    playlist.TrackIds ??= new List<string>();
+                    if (hash != null)
+                    {
+                        playlist.TrackIds.Add(hash);
+                    }
                 }
             }
 
@@ -262,7 +276,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Gets the MPC-PL metadata from the given file.
         /// </summary>
         /// <param name="fileData">The file to scan for metadata.</param>
-        /// <param name="files">The the scanned metadata files.</param>
+        /// <param name="files">The scanned metadata files.</param>
         private static async Task<PlaylistMetadata?> GetMpcplMetadata(IFileData fileData, IEnumerable<FileMetadata> files)
         {
             using var stream = await fileData.GetStreamAsync();
@@ -309,13 +323,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             return metadata;
         }
 
-        private static readonly byte[] FplMagic = new byte[] { 0xE1, 0xA0, 0x9C, 0x91, 0xF8, 0x3C, 0x77, 0x42, 0x85, 0x2C, 0x3B, 0xCC, 0x14, 0x01, 0xD3, 0xF2 };
-
         /// <summary>
         /// Gets the FPL metadata from the given file.
         /// </summary>
         /// <param name="fileData">The file to scan for metadata.</param>
-        /// <param name="files">The the scanned metadata files.</param>
+        /// <param name="files">The scanned metadata files.</param>
         /// <remarks>
         /// Supports playlists created by foobar2000 v0.9.1 and newer.
         /// Based on the specification here: https://github.com/rr-/fpl_reader/blob/master/fpl-format.md
@@ -324,11 +336,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             try
             {
+                byte[] FplMagic = new byte[]
+                    {0xE1, 0xA0, 0x9C, 0x91, 0xF8, 0x3C, 0x77, 0x42, 0x85, 0x2C, 0x3B, 0xCC, 0x14, 0x01, 0xD3, 0xF2};
                 using var stream = await fileData.GetStreamAsync();
                 using var content = new BinaryReader(stream);
 
-                var metadata = new PlaylistMetadata();
-                var tracks = new List<TrackMetadata>();
+                var playlist = new PlaylistMetadata()
+                {
+                    Id = fileData.Path.HashMD5Fast()
+                };
 
                 // Make sure the file is an FPL
                 var fileMagic = content.ReadBytes(FplMagic.Length);
@@ -337,7 +353,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 // foobar2000 playlists don't have titles, so set it
                 // to the file name
-                metadata.Title = fileData.DisplayName;
+                playlist.Title = fileData.DisplayName;
 
                 // Get size of meta
                 var metaSize = content.ReadUInt32();
@@ -384,25 +400,100 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     var pathToTrack = stream.ReadNullTerminatedString(Encoding.UTF8);
                     stream.Seek(curPos, SeekOrigin.Begin);
 
-                    metadata.TrackIds ??= new List<string>();
+                    playlist.TrackIds ??= new List<string>();
 
                     // Check if the track has metadata
-                    if (!string.IsNullOrEmpty(pathToTrack))
-                    {
-                        var hash = TryGetHashFromExistingTracks(new Uri(pathToTrack), files);
+                    //  if (!string.IsNullOrEmpty(pathToTrack))
+                    //  {
+                    //     if (Uri.TryCreate(pathToTrack, UriKind.RelativeOrAbsolute, out Uri uri))
+                    // //     {
+                    //     var hash = TryGetHashFromExistingTracks(uri, files);
 
-                        if (hash != null)
-                            metadata.TrackIds.Add(hash);
+                    //      if (hash != null)
+                    //      playlist.TrackIds.Add(hash);
+                    //   }
+                    //   }
+
+                    // Get track file size
+                    var fileSize = content.ReadUInt64();
+
+                    // Get track file time (last modified)
+                    var fileTime = content.ReadUInt64();
+
+                    // Get track duration
+                    var durationSeconds = content.ReadDouble();
+
+                    // Get rpg_album, rpg_track, rpk_album, rpk_track
+                    // We don't need it but might as well read it
+                    var rpgAlbum = content.ReadSingle();
+                    var rpgTrack = content.ReadSingle();
+                    var rpkAlbum = content.ReadSingle();
+                    var rpkTrack = content.ReadSingle();
+
+                    // Get entry count
+                    var entryCount = (int)content.ReadUInt32();
+                    var primaryKeyCount = (int)content.ReadUInt32();
+                    var secondaryKeyCount = (int)content.ReadUInt32();
+                    var secondaryKeysOffset = (int)content.ReadUInt32();
+
+                    var primaryPairs = new Dictionary<string, string>(primaryKeyCount);
+
+                    // Get primary keys
+                    var primaryKeys = new Dictionary<uint, string>(primaryKeyCount);
+                    for (var x = 0; x < primaryKeyCount; x++)
+                    {
+                        var id = content.ReadUInt32();
+                        var nameOffset = content.ReadUInt32();
+                        curPos = stream.Position;
+                        stream.Seek(metaPos + nameOffset, SeekOrigin.Begin);
+                        primaryKeys[id] = stream.ReadNullTerminatedString(Encoding.UTF8);
+                        stream.Seek(curPos, SeekOrigin.Begin);
+                    }
+
+                    // Read 'unk0', no idea what it does
+                    var unk0 = content.ReadUInt32();
+
+                    // Get primary pair values
+                    var previousPrimaryKey = primaryKeys.First().Value;
+                    for (uint x = 0; x < primaryKeyCount; x++)
+                    {
+                        if (!string.IsNullOrEmpty(pathToTrack))
+                        {
+                            var valueOffset = content.ReadUInt32();
+                            curPos = stream.Position;
+                            stream.Seek(metaPos + valueOffset, SeekOrigin.Begin);
+                            var value = stream.ReadNullTerminatedString(Encoding.UTF8);
+                            stream.Seek(curPos, SeekOrigin.Begin);
+
+                            if (Uri.TryCreate(pathToTrack, UriKind.RelativeOrAbsolute, out Uri uri))
+                            {
+                                var hash = TryGetHashFromExistingTracks(uri, files);
+
+                                if (hash != null)
+                                {
+                                    playlist.TrackIds ??= new List<string>();
+
+                                    playlist.TrackIds.Add(hash);
+                                }
+                            }
+
+                            if (primaryKeys.ContainsKey(x))
+                                previousPrimaryKey = primaryKeys[x];
+
+                            primaryPairs.Add(previousPrimaryKey, value);
+                        }
                     }
                 }
 
-                return metadata;
+                return playlist;
             }
             catch (Exception)
             {
                 return null;
             }
         }
+
+
 
         /// <summary>
         /// Gets the PLS metadata from the given file.
@@ -412,7 +503,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             using var stream = await fileData.GetStreamAsync();
             using var content = new StreamReader(stream);
 
-            var metadata = new PlaylistMetadata();
+            var playlist = new PlaylistMetadata()
+            {
+                Id = fileData.Path.HashMD5Fast(),
+                Title = fileData.DisplayName
+            };
 
             // Make sure the file is really a PLS file
             var firstLine = await content.ReadLineAsync();
@@ -449,15 +544,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 switch (match.Groups["key"].Value)
                 {
                     case "File":
-                        tracksTable[index].Source = new Uri(ResolveFilePath(value, fileData));
-                        break;
 
-                    case "Length":
-                        tracksTable[index].Duration = new TimeSpan(0, 0, int.Parse(value));
-                        break;
+                        if (Uri.TryCreate(ResolveFilePath(value, fileData), UriKind.RelativeOrAbsolute, out Uri uri))
+                        {
+                            var hash = TryGetHashFromExistingTracks(uri, files);
 
-                    case "Title":
-                        tracksTable[index].Title = value;
+                            if (hash != null)
+                            {
+                                playlist.TrackIds ??= new List<string>();
+                                playlist.TrackIds.Add(hash);
+                            }
+                        }
+
                         break;
                 }
             }
@@ -465,7 +563,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             // Collapse the tracks table to a plain list
             var tracks = tracksTable.Select(t => t.Value).PruneNull().ToList();
 
-            return metadata;
+            return playlist;
         }
 
         /// <summary>
@@ -533,13 +631,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                                     if (trackComponents.FirstOrDefault() != null)
                                     {
-                                        var hash = TryGetHashFromExistingTracks(new Uri(trackComponents[0]), files);
-
-                                        if (hash != null)
+                                        if (Uri.TryCreate(trackComponents[0], UriKind.RelativeOrAbsolute, out Uri uri))
                                         {
-                                            playlist.TrackIds ??= new List<string>();
+                                            var hash = TryGetHashFromExistingTracks(uri, files);
 
-                                            playlist.TrackIds.Add(hash);
+                                            if (hash != null)
+                                            {
+                                                playlist.TrackIds ??= new List<string>();
+
+                                                playlist.TrackIds.Add(hash);
+                                            }
                                         }
                                     }
 
