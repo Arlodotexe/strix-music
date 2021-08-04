@@ -148,12 +148,12 @@ namespace StrixMusic.Core.LocalFiles.Models
             {
                 var collectionChangedItems = new List<CollectionChangedItem<ICoreImage>>(ids.Count());
 
-                // Should be safe to wait on Result here, as GetImagesByIdsAsync runs synchronously.
-                // This probably shouldn't be handled this way however.
-                var images = _fileMetadataManager.Images.GetImagesByIdsAsync(ids).Result;
-                foreach (var image in images)
+                foreach (var id in ids)
                 {
-                    // TODO: Images returned by GetImagesByIdsAsync could technically be null, this should be handled properly.
+                    // Should be safe to wait on Result here, as GetImageByIdAsync runs synchronously.
+                    // This probably shouldn't be handled this way however.
+                    var image = _fileMetadataManager.Images.GetImageByIdAsync(id).Result;
+
                     Guard.IsNotNullOrWhiteSpace(image?.Id, nameof(image.Id));
                     collectionChangedItems.Add(new CollectionChangedItem<ICoreImage>(InstanceCache.Images.GetOrCreate(image.Id, SourceCore, image), collectionChangedItems.Count));
                 }

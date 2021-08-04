@@ -143,23 +143,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             return Task.FromResult<ImageMetadata?>(metadata);
         }
 
-        /// <inheritdoc/>
-        public Task<IReadOnlyList<ImageMetadata?>> GetImagesByIdsAsync(IEnumerable<string> ids)
-        {
-            Guard.IsNotNull(ids, nameof(ids));
-
-            var metadataValues = new ImageMetadata?[ids.Count()];
-
-            var i = 0;
-            foreach (var id in ids)
-            {
-                _inMemoryMetadata.TryGetValue(id, out var metadata);
-                metadataValues[i++] = metadata;
-            }
-
-            return Task.FromResult<IReadOnlyList<ImageMetadata?>>(metadataValues);
-        }
-
         private async Task LoadDataFromDiskAsync()
         {
             Guard.IsEmpty((ICollection<KeyValuePair<string, ImageMetadata>>)_inMemoryMetadata, nameof(_inMemoryMetadata));
