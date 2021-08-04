@@ -41,31 +41,31 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 case ".m3u":
                 case ".m3u8":
                 case ".vlc":
-                    playlistMetadata = await GetM3UMetadata(fileData, files); // TESTED
+                    playlistMetadata = await GetM3UMetadata(fileData, files); 
                     break;
 
                 case ".xspf":
-                    playlistMetadata = await GetXspfMetadata(fileData, files); // TESTED
+                    playlistMetadata = await GetXspfMetadata(fileData, files); 
                     break;
 
                 case ".asx":
-                    playlistMetadata = await GetAsxMetadata(fileData, files); // TESTED
+                    playlistMetadata = await GetAsxMetadata(fileData, files); 
                     break;
 
                 case ".mpcpl":
-                    playlistMetadata = await GetMpcplMetadata(fileData, files); // NOT TESTED
+                    playlistMetadata = await GetMpcplMetadata(fileData, files); 
                     break;
 
                 case ".fpl":
-                    playlistMetadata = await GetFplMetadata(fileData, files); // TESTED
+                    playlistMetadata = await GetFplMetadata(fileData, files); 
                     break;
 
                 case ".pls":
-                    playlistMetadata = await GetPlsMetadata(fileData, files); // TESTED
+                    playlistMetadata = await GetPlsMetadata(fileData, files); 
                     break;
 
                 case ".aimppl4":
-                    playlistMetadata = await GetAimpplMetadata(fileData, files); // TESTED
+                    playlistMetadata = await GetAimpplMetadata(fileData, files); 
                     break;
 
                 default:
