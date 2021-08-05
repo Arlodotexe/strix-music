@@ -156,17 +156,15 @@ namespace StrixMusic.Core.LocalFiles.Models
             }
         }
 
-        private void HandleImagesChanged(IReadOnlyList<string>? oldImageIds, IReadOnlyList<string>? newImageIds)
+        private async void HandleImagesChanged(IReadOnlyList<string>? oldImageIds, IReadOnlyList<string>? newImageIds)
         {
-            IReadOnlyList<CollectionChangedItem<ICoreImage>> Transform(IEnumerable<string> ids)
+            async Task<IReadOnlyList<CollectionChangedItem<ICoreImage>>> TransformAsync(IEnumerable<string> ids)
             {
                 var collectionChangedItems = new List<CollectionChangedItem<ICoreImage>>(ids.Count());
 
                 foreach (var id in ids)
                 {
-                    // Should be safe to wait on Result here, as GetImageByIdAsync runs synchronously.
-                    // This probably shouldn't be handled this way however.
-                    var image = _fileMetadataManager.Images.GetImageByIdAsync(id).Result;
+                    var image = await _fileMetadataManager.Images.GetImageByIdAsync(id);
 
                     Guard.IsNotNullOrWhiteSpace(image.Id, nameof(image.Id));
                     collectionChangedItems.Add(new CollectionChangedItem<ICoreImage>(InstanceCache.Images.GetOrCreate(image.Id, SourceCore, image), collectionChangedItems.Count));
@@ -198,7 +196,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 removedImages = oldImageIds.Except(newImageIds);
             }
 
-            ImagesChanged?.Invoke(this, Transform(addedImages), Transform(removedImages));
+            ImagesChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
         }
 
         /// <inheritdoc/>
