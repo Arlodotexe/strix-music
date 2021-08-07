@@ -511,9 +511,14 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
 
         /// <inheritdoc />
-        public Task InitAsync()
+        public async Task InitAsync()
         {
-            throw new NotImplementedException();
+            if (IsInitialized)
+                return;
+
+            IsInitialized = true;
+
+            await CollectionInit.PlaylistsCollection(this);
         }
 
         /// <inheritdoc />

@@ -446,9 +446,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             var foundItemTarget = false;
             var offset = 0;
 
-            foreach (var artistItem in playlistCollection.Playlists)
+            foreach (var playlistItem in playlistCollection.Playlists)
             {
-                if (artistItem is IPlaylist artist)
+                if (playlistItem is IPlaylist artist)
                 {
                     var playlistVm = (PlaylistViewModel)artist;
 
@@ -459,7 +459,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
                     var firstTrack = playlistVm.Tracks[0].Model;
 
-                    if (artistItem.Id == playlistCollectionItem?.Id && !foundItemTarget)
+                    if (playlistItem.Id == playlistCollectionItem?.Id && !foundItemTarget)
                     {
                         // Tracks are added to the queue of previous items until we reach the item the user wants to play.
                         itemIndex = _prevItems.Count;
@@ -481,12 +481,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     }
                 }
 
-                if (artistItem is IArtistCollection artistCol)
+                if (playlistItem is IPlaylistCollection playlistCol)
                 {
-                    var artistColVm = (ArtistCollectionViewModel)artistCol;
-                    await artistColVm.InitAsync();
+                    var playlistColVm = (PlaylistCollectionViewModel)playlistCol;
+                    await playlistColVm.InitAsync();
 
-                    _ = await AddArtistCollectionToQueue(null, artistColVm);
+                    _ = await AddPlaylistCollectionToQueue(null, playlistColVm);
                 }
             }
 

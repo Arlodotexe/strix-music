@@ -516,12 +516,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public bool Equals(ICoreAlbumCollection other) => _collection.Equals(other);
 
-        /// <inheritdoc />
-        public Task InitAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         private Task ChangeNameInternalAsync(string? name)
         {
             Guard.IsNotNull(name, nameof(name));
@@ -536,7 +530,18 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public bool IsInitialized { get; }
+        public bool IsInitialized { get; private set; }
+
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            if (IsInitialized)
+                return;
+
+            IsInitialized = true;
+
+            await CollectionInit.AlbumCollection(this);
+        }
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()
