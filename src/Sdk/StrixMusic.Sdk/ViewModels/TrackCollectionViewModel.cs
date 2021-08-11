@@ -18,6 +18,7 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels.Helpers;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -44,6 +45,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 Images = new ObservableCollection<IImage>();
                 Tracks = new ObservableCollection<TrackViewModel>();
+                UnsortedTracks = new ObservableCollection<TrackViewModel>();
             }
 
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
@@ -57,6 +59,9 @@ namespace StrixMusic.Sdk.ViewModels
             ChangeNameAsyncCommand = new AsyncRelayCommand<string>(ChangeNameInternalAsync);
             ChangeDescriptionAsyncCommand = new AsyncRelayCommand<string?>(ChangeDescriptionAsync);
             ChangeDurationAsyncCommand = new AsyncRelayCommand<TimeSpan>(ChangeDurationAsync);
+
+            ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
+            ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType, x));
 
             SourceCores = collection.GetSourceCores<ICoreTrackCollection>().Select(MainViewModel.GetLoadedCore).ToList();
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
@@ -142,7 +147,30 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                Tracks.ChangeCollection(addedItems, removedItems, item => new TrackViewModel(item.Data));
+                if (CurrentTracksSortingType == TrackSortingType.Unsorted)
+                {
+                    Tracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+                }
+                else
+                {
+                    // Preventing index issues during tracks emission from the core, also making sure that unordered tracks updated. 
+                    UnsortedTracks.ChangeCollection(addedItems, removedItems, x => new TrackViewModel(x.Data));
+
+                    // Avoiding direct assignment to prevent effect on UI.
+                    foreach (var item in UnsortedTracks)
+                    {
+                        if (!Tracks.Contains(item))
+                            Tracks.Add(item);
+                    }
+
+                    foreach (var item in Tracks)
+                    {
+                        if (!UnsortedTracks.Contains(item))
+                            Tracks.Remove(item);
+                    }
+
+                    SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
+                }
             });
         }
 
@@ -297,7 +325,10 @@ namespace StrixMusic.Sdk.ViewModels
         public DateTime? AddedAt => _collection.AddedAt;
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> Tracks { get; }
+        public ObservableCollection<TrackViewModel> Tracks { get; set; }
+
+        /// <inheritdoc />
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get;  }
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }
@@ -370,6 +401,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public Task ChangeDurationAsync(TimeSpan duration) => _collection.ChangeDurationAsync(duration);
 
+        ///<inheritdoc />
+        public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
+        {
+            CurrentTracksSortingType = trackSorting;
+            CurrentTracksSortingDirection = sortDirection;
+
+            CollectionSorting.SortTracks(Tracks, trackSorting, sortDirection, UnsortedTracks);
+        }
+
         /// <inheritdoc />
         public async Task PopulateMoreTracksAsync(int limit)
         {
@@ -403,6 +443,18 @@ namespace StrixMusic.Sdk.ViewModels
                 });
             }
         }
+
+        /// <inheritdoc />
+        public TrackSortingType CurrentTracksSortingType { get; private set; }
+
+        /// <inheritdoc />
+        public SortDirection CurrentTracksSortingDirection { get; private set; }
+
+        /// <inheritdoc />
+        public RelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
+
+        /// <inheritdoc />
+        public RelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }

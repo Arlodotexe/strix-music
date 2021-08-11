@@ -9,7 +9,7 @@
     <RootNamespace>StrixMusic.Wasm</RootNamespace>
     <AssemblyName>StrixMusic.Wasm</AssemblyName>
     <Nullable>enable</Nullable>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <UnoUIUseRoslynSourceGenerators>false</UnoUIUseRoslynSourceGenerators>
   </PropertyGroup>
