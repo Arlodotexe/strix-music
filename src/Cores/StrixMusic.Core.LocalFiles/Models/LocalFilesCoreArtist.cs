@@ -162,24 +162,18 @@ namespace StrixMusic.Core.LocalFiles.Models
             IEnumerable<string> addedImages;
             IEnumerable<string> removedImages;
 
-            if (oldImageIds == null && newImageIds != null)
+            if (oldImageIds != null && newImageIds != null)
             {
-                addedImages = new List<string>(newImageIds);
-                removedImages = Enumerable.Empty<string>();
-            }
-            else if (oldImageIds != null && newImageIds == null)
-            {
-                addedImages = Enumerable.Empty<string>();
-                removedImages = new List<string>(oldImageIds);
-            }
-            else
-            {
-                // oldImagesIds == null && newImageIds == null shouldn't ever be handled by this method, so assume both are non-null at this point.
                 Guard.IsNotNull(oldImageIds, nameof(oldImageIds));
                 Guard.IsNotNull(newImageIds, nameof(newImageIds));
 
                 addedImages = newImageIds.Except(oldImageIds);
                 removedImages = oldImageIds.Except(newImageIds);
+            }
+            else
+            {
+                addedImages = newImageIds?.ToList() ?? Enumerable.Empty<string>();
+                removedImages = oldImageIds?.ToList() ?? Enumerable.Empty<string>();
             }
 
             ImagesChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
