@@ -10,7 +10,7 @@ namespace StrixMusic.Core.External.Models
         /// </summary>
         /// <param name="sourceCore">The core that created this instance.</param>
         public ExternalCoreLibrary(ICore sourceCore)
-            : base(sourceCore)
+            : base(sourceCore, "Library")
         {
         }
     }

@@ -1,206 +1,106 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Diagnostics;
+using Nito.AsyncEx;
 using OwlCore.Collections;
 using OwlCore.Events;
-using StrixMusic.Core.External.Services;
+using OwlCore.Provisos;
+using OwlCore.Remoting;
+using OwlCore.Remoting.Attributes;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
-using StrixMusic.Sdk.Services.FileMetadataManager;
-using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Core.External.Models
 {
     /// <summary>
     /// Wraps around <see cref="AlbumMetadata"/> to provide album information extracted from a file to the Strix SDK.
     /// </summary>
-    public class ExternalCoreAlbum : ICoreAlbum
+    public class ExternalCoreAlbum : ICoreAlbum, IAsyncInit
     {
-        private readonly IFileMetadataManager _fileMetadataManager;
-        private ExternalCoreImage? _image;
-        private AlbumMetadata _albumMetadata;
+        private readonly MemberRemote _memberRemote;
+
+        private int _totalArtistItemsCount;
+        private int _totalTracksCount;
+        private int _totalImageCount;
+
+        private Uri? _url;
+        private string _name;
+        private string? _description;
+        private PlaybackState _playbackState;
+        private TimeSpan _duration;
+        private DateTime? _lastPlayed;
+
+        private bool _isChangeDurationAsyncAvailable;
+        private bool _isChangeDescriptionAsyncAvailable;
+        private bool _isChangeNameAsyncAvailable;
+        private bool _isPauseTrackCollectionAsyncAvailable;
+        private bool _isPlayTrackCollectionAsyncAvailable;
+        private bool _isPauseArtistCollectionAsyncAvailable;
+        private bool _isPlayArtistCollectionAsyncAvailable;
+
+        private AsyncLock _getTracksMutex = new AsyncLock();
+        private AsyncLock _getArtistsMutex = new AsyncLock();
+        private AsyncLock _getImagesMutex = new AsyncLock();
+        private bool _isChangeDatePublishedAsyncAvailable;
+        private DateTime? _datePublished;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExternalCoreAlbum"/> class.
         /// </summary>
         /// <param name="sourceCore">The core that created this object.</param>
-        /// <param name="albumMetadata">The source album metadata to wrap around.</param>
-        public ExternalCoreAlbum(ICore sourceCore, AlbumMetadata albumMetadata)
+        /// <param name="id">A unique identifier for this instance.</param>
+        public ExternalCoreAlbum(ICore sourceCore, string id)
         {
-            Guard.IsNotNullOrWhiteSpace(albumMetadata.Id, nameof(albumMetadata.Id));
+            // Genres refactor (switch from SyncCol to collection changed events)
+            // Finish implementing the new IsChangeDatePublishedAsyncAvailableChanged everywhere else in the project.
 
-            Id = albumMetadata.Id;
-            _fileMetadataManager = sourceCore.GetService<IFileMetadataManager>();
-            SourceCore = sourceCore;
-            _albumMetadata = albumMetadata;
+            _name = string.Empty;
+            Id = id;
 
-            Guard.IsNotNull(albumMetadata.ArtistIds, nameof(albumMetadata.ArtistIds));
-            Guard.IsNotNull(albumMetadata.TrackIds, nameof(albumMetadata.TrackIds));
+            // Properties assigned before MemberRemote is created won't be set remotely.
+            SourceCore = sourceCore; // should be set remotely by the ctor.
 
-            if (albumMetadata.ImagePath != null)
-                _image = InstanceCache.Images.GetOrCreate(Id, sourceCore, new Uri(albumMetadata.ImagePath));
+            _memberRemote = new MemberRemote(this, $"{sourceCore.InstanceId}.{nameof(ExternalCoreAlbum)}.{id}");
 
-            Genres = new SynchronizedObservableCollection<string>(albumMetadata.Genres);
-
-            AttachEvents();
+            Genres = new SynchronizedObservableCollection<string>();
         }
 
-        private void AttachEvents()
+        [RemoteMethod]
+        private void OnTrackItemsChanged(IReadOnlyList<CollectionChangedItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreTrack>> removedItems)
         {
-            _fileMetadataManager.Albums.MetadataUpdated += Albums_MetadataUpdated;
-            _fileMetadataManager.Albums.ArtistItemsChanged += Albums_ArtistItemsChanged;
-            _fileMetadataManager.Albums.TracksChanged += Albums_TracksChanged;
+            TrackItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void DetachEvents()
+        [RemoteMethod]
+        private void OnArtistItemsChanged(IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>> removedItems)
         {
-            _fileMetadataManager.Albums.MetadataUpdated -= Albums_MetadataUpdated;
-            _fileMetadataManager.Albums.ArtistItemsChanged -= Albums_ArtistItemsChanged;
-            _fileMetadataManager.Albums.TracksChanged -= Albums_TracksChanged;
+            ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void Albums_TracksChanged(object sender, IReadOnlyList<CollectionChangedItem<(AlbumMetadata Album, TrackMetadata Track)>> addedItems, IReadOnlyList<CollectionChangedItem<(AlbumMetadata Album, TrackMetadata Track)>> removedItems)
+        [RemoteMethod]
+        private void OnImagesChanged(IReadOnlyList<CollectionChangedItem<ICoreImage>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreImage>> removedItems)
         {
-            var coreAddedItems = new List<CollectionChangedItem<ICoreTrack>>();
-            var coreRemovedItems = new List<CollectionChangedItem<ICoreTrack>>();
-
-            foreach (var item in addedItems)
-            {
-                if (item.Data.Album.Id == Id)
-                {
-                    Guard.IsNotNullOrWhiteSpace(item.Data.Track.Id, nameof(item.Data.Track.Id));
-                    var coreTrack = InstanceCache.Tracks.GetOrCreate(item.Data.Track.Id, SourceCore, item.Data.Track);
-                    coreAddedItems.Add(new CollectionChangedItem<ICoreTrack>(coreTrack, item.Index));
-                }
-            }
-
-            foreach (var item in removedItems)
-            {
-                if (item.Data.Album.Id == Id)
-                {
-                    Guard.IsNotNullOrWhiteSpace(item.Data.Track.Id, nameof(item.Data.Track.Id));
-                    var coreTrack = InstanceCache.Tracks.GetOrCreate(item.Data.Track.Id, SourceCore, item.Data.Track);
-                    coreRemovedItems.Add(new CollectionChangedItem<ICoreTrack>(coreTrack, item.Index));
-                }
-            }
-
-            if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
-                TrackItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
+            ImagesChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void Albums_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>> addedItems, IReadOnlyList<CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>> removedItems)
-        {
-            var coreAddedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
-            var coreRemovedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
+        /// <summary>
+        /// The <see cref="MemberRemote"/> used to communicate changes for the derived class.
+        /// </summary>
+        public MemberRemote MemberRemote { get; set; }
 
-            foreach (var item in addedItems)
-            {
-                if (item.Data.Album.Id == Id)
-                {
-                    Guard.IsNotNullOrWhiteSpace(item.Data.Artist.Id, nameof(item.Data.Artist.Id));
-                    var coreArtist = InstanceCache.Artists.GetOrCreate(item.Data.Artist.Id, SourceCore, item.Data.Artist);
-                    coreAddedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(coreArtist, item.Index));
-                }
-            }
-
-            foreach (var item in removedItems)
-            {
-                if (item.Data.Album.Id == Id)
-                {
-                    Guard.IsNotNullOrWhiteSpace(item.Data.Artist.Id, nameof(item.Data.Artist.Id));
-                    var coreArtist = InstanceCache.Artists.GetOrCreate(item.Data.Artist.Id, SourceCore, item.Data.Artist);
-                    coreRemovedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(coreArtist, item.Index));
-                }
-            }
-
-            if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
-                ArtistItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
-        }
-
-        private void Albums_MetadataUpdated(object sender, IEnumerable<AlbumMetadata> e)
-        {
-            foreach (var metadata in e)
-            {
-                if (metadata.Id != Id)
-                    return;
-
-                Guard.IsNotNull(metadata.ArtistIds, nameof(metadata.ArtistIds));
-                Guard.IsNotNull(metadata.TrackIds, nameof(metadata.TrackIds));
-
-                var previousData = _albumMetadata;
-                _albumMetadata = metadata;
-
-                if (metadata.Title != previousData.Title)
-                    NameChanged?.Invoke(this, Name);
-
-                if (metadata.ImagePath != previousData.ImagePath)
-                    HandleImageChanged(metadata);
-
-                if (metadata.DatePublished != previousData.DatePublished)
-                    DatePublishedChanged?.Invoke(this, DatePublished);
-
-                if (metadata.Description != previousData.Description)
-                    DescriptionChanged?.Invoke(this, Description);
-
-                if (metadata.Duration != previousData.Duration)
-                    DurationChanged?.Invoke(this, Duration);
-
-                // TODO genres, post genres do-over
-
-                if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
-                    TrackItemsCountChanged?.Invoke(this, metadata.TrackIds.Count);
-
-                if (metadata.ArtistIds.Count != (previousData.ArtistIds?.Count ?? 0))
-                    ArtistItemsCountChanged?.Invoke(this, metadata.ArtistIds.Count);
-            }
-        }
-
-        private void HandleImageChanged(AlbumMetadata e)
-        {
-            var previousImage = _image;
-
-            var removed = new List<CollectionChangedItem<ICoreImage>>();
-            var added = new List<CollectionChangedItem<ICoreImage>>();
-
-            if (previousImage != null)
-                removed.Add(new CollectionChangedItem<ICoreImage>(previousImage, 0));
-
-            // ReSharper disable once ReplaceWithStringIsNullOrEmpty (breaks nullability check)
-            if (e.ImagePath != null && e.ImagePath.Length > 0)
-            {
-                var newImage = new ExternalCoreImage(SourceCore, new Uri(e.ImagePath));
-                InstanceCache.Images.Replace(Id, newImage);
-                added.Add(new CollectionChangedItem<ICoreImage>(newImage, 0));
-                _image = newImage;
-            }
-
-            if (added.Count > 0 || removed.Count > 0)
-            {
-                ImagesChanged?.Invoke(this, added, removed);
-
-                if (added.Count != removed.Count)
-                    ImagesCountChanged?.Invoke(this, TotalImageCount);
-            }
-        }
-
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler<string>? NameChanged;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler<string?>? DescriptionChanged;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler<Uri?>? UrlChanged;
 
-        /// <inheritdoc/>
-        public event EventHandler<DateTime?>? DatePublishedChanged;
-
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
@@ -228,302 +128,424 @@ namespace StrixMusic.Core.External.Models
         public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int>? TrackItemsCountChanged;
-
-        /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+        public event EventHandler<bool>? IsChangeDatePublishedAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
-
-        /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
-
-        /// <inheritdoc/>
-        public int TotalTracksCount => _albumMetadata.TrackIds?.Count ?? 0;
-
-        /// <inheritdoc/>
-        public ICore SourceCore { get; }
-
-        /// <inheritdoc/>
-        public string Id { get; }
-
-        /// <inheritdoc/>
-        public Uri? Url => null;
-
-        /// <inheritdoc/>
-        public string Name => _albumMetadata.Title ?? string.Empty;
-
-        /// <inheritdoc/>
-        public DateTime? DatePublished => _albumMetadata.DatePublished;
-
-        /// <inheritdoc/>
-        public string? Description => _albumMetadata.Description;
-
-        /// <inheritdoc/>
-        public PlaybackState PlaybackState { get; }
-
-        /// <inheritdoc/>
-        public TimeSpan Duration => _albumMetadata.Duration ?? new TimeSpan(0, 0, 0);
-
-        /// <inheritdoc />
-        public DateTime? LastPlayed { get; }
-
-        /// <inheritdoc />
-        public DateTime? AddedAt { get; }
-
-        /// <inheritdoc />
-        public int TotalImageCount => _albumMetadata.ImagePath != null ? 1 : 0;
-
-        /// <inheritdoc />
-        public int TotalArtistItemsCount => _albumMetadata.ArtistIds?.Count ?? 0;
-
-        /// <inheritdoc/>
-        public ICorePlayableCollectionGroup? RelatedItems { get; }
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres { get; }
-
-        /// <inheritdoc/>
-        public bool IsPlayTrackCollectionAsyncAvailable => false;
-
-        /// <inheritdoc/>
-        public bool IsPauseTrackCollectionAsyncAvailable => false;
-
-        /// <inheritdoc/>
-        public bool IsPlayArtistCollectionAsyncAvailable => false;
-
-        /// <inheritdoc/>
-        public bool IsPauseArtistCollectionAsyncAvailable => false;
-
-        /// <inheritdoc/>
-        public bool IsChangeNameAsyncAvailable => false;
-
-        /// <inheritdoc/>
-        public bool IsChangeDatePublishedAsyncAvailable => false;
-
-        /// <inheritdoc/>
-        public bool IsChangeDescriptionAsyncAvailable => false;
-
-        /// <inheritdoc/>
-        public bool IsChangeDurationAsyncAvailable => false;
+        public event EventHandler<int>? TrackItemsCountChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? ArtistItemsCountChanged;
 
-        /// <inheritdoc/>
-        public Task<bool> IsAddGenreAvailable(int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<bool> IsAddTrackAvailable(int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<bool> IsAddImageAvailable(int index)
-        {
-            throw new NotSupportedException();
-        }
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailable(int index)
-        {
-            throw new NotSupportedException();
-        }
+        public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailable(int index)
-        {
-            throw new NotSupportedException();
-        }
+        public event EventHandler<DateTime?>? DatePublishedChanged;
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistItemAvailable(int index)
-        {
-            throw new NotSupportedException();
-        }
+        public ICore SourceCore { get; set; }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemAvailable(int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeDescriptionAsync(string? description)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeDurationAsync(TimeSpan duration)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeDatePublishedAsync(DateTime datePublished)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ChangeNameAsync(string name)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task PauseArtistCollectionAsync()
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task PlayArtistCollectionAsync()
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task PauseTrackCollectionAsync()
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task PlayTrackCollectionAsync()
-        {
-            throw new NotSupportedException();
-        }
+        [RemoteProperty]
+        public string Id { get; set; }
 
         /// <inheritdoc />
-        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
+        [RemoteProperty]
+        public Uri? Url
         {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ICoreTrack track)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task AddTrackAsync(ICoreTrack track, int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task AddImageAsync(ICoreImage image, int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task RemoveArtistItemAsync(int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task RemoveTrackAsync(int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public Task RemoveImageAsync(int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
-        {
-            var tracksList = _fileMetadataManager.Tracks;
-
-            var tracks = await tracksList.GetTracksByAlbumId(Id, offset, limit);
-
-            foreach (var track in tracks)
+            get => _url;
+            set
             {
-                if (track.Id != null)
-                    yield return InstanceCache.Tracks.GetOrCreate(track.Id, SourceCore, track);
+                _url = value;
+                UrlChanged?.Invoke(this, value);
             }
         }
 
         /// <inheritdoc />
+        [RemoteProperty]
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                NameChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public string? Description
+        {
+            get => _description;
+            set
+            {
+                _description = value;
+                DescriptionChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public PlaybackState PlaybackState
+        {
+            get => _playbackState;
+            set
+            {
+                _playbackState = value;
+                PlaybackStateChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public TimeSpan Duration
+        {
+            get => _duration;
+            set
+            {
+                _duration = value;
+                DurationChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public DateTime? LastPlayed
+        {
+            get => _lastPlayed;
+            set
+            {
+                _lastPlayed = value;
+                LastPlayedChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public DateTime? AddedAt { get; set; }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public ICorePlayableCollectionGroup? RelatedItems { get; set; }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public DateTime? DatePublished
+        {
+            get => _datePublished;
+            set
+            {
+                _datePublished = value;
+                DatePublishedChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public SynchronizedObservableCollection<string>? Genres { get; set; }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public int TotalArtistItemsCount
+        {
+            get => _totalArtistItemsCount;
+            set
+            {
+                _totalArtistItemsCount = value;
+                ArtistItemsCountChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public int TotalTracksCount
+        {
+            get => _totalTracksCount;
+            set
+            {
+                _totalTracksCount = value;
+                TrackItemsCountChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public int TotalImageCount
+        {
+            get => _totalImageCount;
+            internal set
+            {
+                _totalImageCount = value;
+                ImagesCountChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public bool IsPlayArtistCollectionAsyncAvailable
+        {
+            get => _isPlayArtistCollectionAsyncAvailable;
+            set
+            {
+                _isPlayArtistCollectionAsyncAvailable = value;
+                IsPlayArtistCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public bool IsPauseArtistCollectionAsyncAvailable
+        {
+            get => _isPauseArtistCollectionAsyncAvailable;
+            set
+            {
+                _isPauseArtistCollectionAsyncAvailable = value;
+                IsPauseArtistCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        public bool IsPlayTrackCollectionAsyncAvailable
+        {
+            get => _isPlayTrackCollectionAsyncAvailable;
+            set
+            {
+                _isPlayTrackCollectionAsyncAvailable = value;
+                IsPlayTrackCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public bool IsPauseTrackCollectionAsyncAvailable
+        {
+            get => _isPauseTrackCollectionAsyncAvailable;
+            set
+            {
+                _isPauseTrackCollectionAsyncAvailable = value;
+                IsPauseTrackCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public bool IsChangeNameAsyncAvailable
+        {
+            get => _isChangeNameAsyncAvailable;
+            set
+            {
+                _isChangeNameAsyncAvailable = value;
+                IsChangeNameAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public bool IsChangeDescriptionAsyncAvailable
+        {
+            get => _isChangeDescriptionAsyncAvailable;
+            set
+            {
+                _isChangeDescriptionAsyncAvailable = value;
+                IsChangeDescriptionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc/>
+        [RemoteProperty]
+        public bool IsChangeDurationAsyncAvailable
+        {
+            get => _isChangeDurationAsyncAvailable;
+            set
+            {
+                _isChangeDurationAsyncAvailable = value;
+                IsChangeDurationAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc/>
+        [RemoteProperty]
+        public bool IsChangeDatePublishedAsyncAvailable
+        {
+            get => _isChangeDatePublishedAsyncAvailable;
+            set
+            {
+                _isChangeDatePublishedAsyncAvailable = value;
+                IsChangeDatePublishedAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc/>
+        [RemoteProperty]
+        public bool IsInitialized { get; set; }
+
+        /// <inheritdoc/>
+        [RemoteMethod]
+        public Task<bool> IsAddTrackAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddTrackAvailable));
+
+        /// <inheritdoc/>
+        [RemoteMethod]
+        public Task<bool> IsAddArtistItemAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddArtistItemAvailable));
+
+        /// <inheritdoc/>
+        [RemoteMethod]
+        public Task<bool> IsAddImageAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddImageAvailable));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task<bool> IsRemoveTrackAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveTrackAvailable));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task<bool> IsRemoveImageAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveImageAvailable));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task<bool> IsRemoveArtistItemAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveArtistItemAvailable));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task<bool> IsAddGenreAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsAddGenreAvailable));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task<bool> IsRemoveGenreAvailable(int index) => MemberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveGenreAvailable));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task ChangeDescriptionAsync(string? description) => MemberRemote.ReceiveDataAsync<object>(nameof(ChangeDescriptionAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task ChangeDurationAsync(TimeSpan duration) => MemberRemote.RemoteWaitAsync(nameof(ChangeDurationAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task ChangeNameAsync(string name) => MemberRemote.RemoteWaitAsync(nameof(ChangeNameAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task ChangeDatePublishedAsync(DateTime datePublished) => MemberRemote.RemoteWaitAsync(nameof(ChangeDatePublishedAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task PauseArtistCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PauseArtistCollectionAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task PlayArtistCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PlayArtistCollectionAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem) => MemberRemote.RemoteWaitAsync(nameof(PlayArtistCollectionAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task PlayTrackCollectionAsync(ICoreTrack track) => MemberRemote.RemoteWaitAsync(nameof(PlayTrackCollectionAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task PauseTrackCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PauseTrackCollectionAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task PlayTrackCollectionAsync() => MemberRemote.RemoteWaitAsync(nameof(PauseTrackCollectionAsync));
+
+        /// <inheritdoc/>
+        [RemoteMethod]
         public async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            var artistRepository = _fileMetadataManager.Artists;
-
-            var artists = await artistRepository.GetArtistsByAlbumId(Id, offset, limit);
-
-            foreach (var artist in artists)
+            using (await _getArtistsMutex.LockAsync())
             {
-                if (artist.Id != null)
-                {
-                    yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist);
-                }
+                var res = await MemberRemote.ReceiveDataAsync<IEnumerable<ICoreArtistCollectionItem>>(nameof(GetTracksAsync));
+
+                if (res is null)
+                    yield break;
+
+                foreach (var item in res)
+                    yield return item;
+            }
+        }
+
+        /// <inheritdoc/>
+        [RemoteMethod]
+        public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
+        {
+            using (await _getTracksMutex.LockAsync())
+            {
+                var res = await MemberRemote.ReceiveDataAsync<IEnumerable<ICoreTrack>>(nameof(GetTracksAsync));
+
+                if (res is null)
+                    yield break;
+
+                foreach (var item in res)
+                    yield return item;
             }
         }
 
         /// <inheritdoc />
+        [RemoteMethod]
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            if (_image != null)
-                yield return _image;
-
-            await Task.CompletedTask;
-        }
-
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
-        private void Dispose(bool disposing)
-        {
-            ReleaseUnmanagedResources();
-            if (disposing)
+            using (await _getImagesMutex.LockAsync())
             {
-                Genres?.Dispose();
+                var res = await MemberRemote.ReceiveDataAsync<IEnumerable<ICoreImage>>(nameof(GetImagesAsync));
+
+                if (res is null)
+                    yield break;
+
+                foreach (var item in res)
+                    yield return item;
             }
         }
 
         /// <inheritdoc />
-        public ValueTask DisposeAsync()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-
-            return default;
-        }
+        [RemoteMethod]
+        public Task AddTrackAsync(ICoreTrack track, int index) => MemberRemote.RemoteWaitAsync(nameof(AddTrackAsync));
 
         /// <inheritdoc />
-        ~ExternalCoreAlbum()
+        [RemoteMethod]
+        public Task AddArtistItemAsync(ICoreArtistCollectionItem artist, int index) => MemberRemote.RemoteWaitAsync(nameof(AddArtistItemAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task AddImageAsync(ICoreImage image, int index) => MemberRemote.RemoteWaitAsync(nameof(AddImageAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task RemoveTrackAsync(int index) => MemberRemote.RemoteWaitAsync(nameof(RemoveTrackAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task RemoveArtistItemAsync(int index) => MemberRemote.RemoteWaitAsync(nameof(RemoveArtistItemAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task RemoveImageAsync(int index) => MemberRemote.RemoteWaitAsync(nameof(RemoveImageAsync));
+
+        /// <summary>
+        /// Initializes the collection group base.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        [RemoteMethod]
+        public Task InitAsync() => MemberRemote.RemoteWaitAsync(nameof(InitAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public async ValueTask DisposeAsync()
         {
-            Dispose(false);
+            await MemberRemote.RemoteWaitAsync(nameof(DisposeAsync));
+            MemberRemote.Dispose();
         }
     }
 }

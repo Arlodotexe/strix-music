@@ -20,29 +20,87 @@ namespace StrixMusic.Core.External.Models
         private int _totalTracksCount;
         private int _totalPlaylistItemsCount;
         private int _totalChildrenCount;
+        private int _totalImageCount;
+
+        private Uri? _url;
+        private string _name;
+        private string? _description;
+        private PlaybackState _playbackState;
+        private TimeSpan _duration;
+        private DateTime? _lastPlayed;
+
+        private bool _isChangeDurationAsyncAvailable;
+        private bool _isChangeDescriptionAsyncAvailable;
+        private bool _isChangeNameAsyncAvailable;
+        private bool _isPauseTrackCollectionAsyncAvailable;
+        private bool _isPlayTrackCollectionAsyncAvailable;
+        private bool _isPausePlaylistCollectionAsyncAvailable;
+        private bool _isPlayPlaylistCollectionAsyncAvailable;
+        private bool _isPauseArtistCollectionAsyncAvailable;
+        private bool _isPlayArtistCollectionAsyncAvailable;
+        private bool _isPauseAlbumCollectionAsyncAvailable;
+        private bool _isPlayAlbumCollectionAsyncAvailable;
 
         private AsyncLock _getTracksMutex = new AsyncLock();
         private AsyncLock _getArtistsMutex = new AsyncLock();
         private AsyncLock _getAlbumsMutex = new AsyncLock();
         private AsyncLock _getPlaylistsMutex = new AsyncLock();
         private AsyncLock _getChildrenMutex = new AsyncLock();
+        private AsyncLock _getImagesMutex = new AsyncLock();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExternalCorePlayableCollectionGroupBase"/> class.
         /// </summary>
         /// <param name="sourceCore">The instance of the core this object was created in.</param>
-        protected ExternalCorePlayableCollectionGroupBase(ICore sourceCore)
+        /// <param name="name">
+        /// The name of the implementing collection. 
+        /// Predefined for some implementations (<see cref="ExternalCoreSearchResults"/>, <see cref="ExternalCoreLibrary"/>, etc.) so data is properly merged in the UI.
+        /// </param>
+        protected ExternalCorePlayableCollectionGroupBase(ICore sourceCore, string name)
         {
-            // TODO: Change all properties to fully backed props, fire event on set.
-            // TODO: Receive items changed events.
-
             // Properties assigned before MemberRemote is created won't be set remotely.
-            Name = string.Empty;
-            SourceCore = sourceCore;
+            SourceCore = sourceCore; // should be set remotely by the ctor.
+            _name = name;
 
-            MemberRemote = new MemberRemote(this, $"{sourceCore.InstanceId}.{GetType().Name}");
+            MemberRemote = new MemberRemote(this, $"{sourceCore.InstanceId}.{GetType().Name}.{name}");
 
             Id = MemberRemote.Id;
+        }
+
+        [RemoteMethod]
+        private void OnTrackItemsChanged(IReadOnlyList<CollectionChangedItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreTrack>> removedItems)
+        {
+            TrackItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        [RemoteMethod]
+        private void OnPlaylistItemsChanged(IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlaylistCollectionItem>> removedItems)
+        {
+            PlaylistItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        [RemoteMethod]
+        private void OnAlbumItemsChanged(IReadOnlyList<CollectionChangedItem<ICoreAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreAlbumCollectionItem>> removedItems)
+        {
+            AlbumItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        [RemoteMethod]
+        private void OnArtistItemsChanged(IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>> removedItems)
+        {
+            ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        [RemoteMethod]
+        private void OnChildItemsChanged(IReadOnlyList<CollectionChangedItem<ICorePlayableCollectionGroup>> addedItems, IReadOnlyList<CollectionChangedItem<ICorePlayableCollectionGroup>> removedItems)
+        {
+            ChildItemsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        [RemoteMethod]
+        private void OnImagesChanged(IReadOnlyList<CollectionChangedItem<ICoreImage>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreImage>> removedItems)
+        {
+            ImagesChanged?.Invoke(this, addedItems, removedItems);
         }
 
         /// <summary>
@@ -104,38 +162,38 @@ namespace StrixMusic.Core.External.Models
         /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged;
 
-        /// <inheritdoc />?
+        /// <inheritdoc />
         public event EventHandler<int>? PlaylistItemsCountChanged;
 
-        /// <inheritdoc />?
+        /// <inheritdoc />
         public event EventHandler<int>? TrackItemsCountChanged;
 
-        /// <inheritdoc />?
+        /// <inheritdoc />
         public event EventHandler<int>? AlbumItemsCountChanged;
 
-        /// <inheritdoc />?
+        /// <inheritdoc />
         public event EventHandler<int>? ArtistItemsCountChanged;
 
-        /// <inheritdoc />?
+        /// <inheritdoc />
         public event EventHandler<int>? TotalChildrenCountChanged;
 
-        /// <inheritdoc />?
-        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
-        /// <inheritdoc />?
-        public virtual event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
 
-        /// <inheritdoc />?
-        public virtual event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
 
-        /// <inheritdoc />?
-        public virtual event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
-        /// <inheritdoc />?
-        public virtual event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
-
-        /// <inheritdoc />?
+        /// <inheritdoc />
         public event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
 
         /// <inheritdoc />
         public ICore SourceCore { get; set; }
@@ -146,27 +204,75 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteProperty]
-        public Uri? Url { get; set; }
+        public Uri? Url
+        {
+            get => _url;
+            set
+            {
+                _url = value;
+                UrlChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                NameChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public string? Description { get; set; }
+        public string? Description
+        {
+            get => _description;
+            set
+            {
+                _description = value;
+                DescriptionChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public PlaybackState PlaybackState { get; set; }
+        public PlaybackState PlaybackState
+        {
+            get => _playbackState;
+            set
+            {
+                _playbackState = value;
+                PlaybackStateChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public TimeSpan Duration { get; set; }
+        public TimeSpan Duration
+        {
+            get => _duration;
+            set
+            {
+                _duration = value;
+                DurationChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public DateTime? LastPlayed { get; set; }
+        public DateTime? LastPlayed
+        {
+            get => _lastPlayed;
+            set
+            {
+                _lastPlayed = value;
+                LastPlayedChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
@@ -174,10 +280,10 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteProperty]
-        public virtual int TotalAlbumItemsCount
+        public int TotalAlbumItemsCount
         {
             get => _totalAlbumItemsCount;
-            internal set
+            set
             {
                 _totalAlbumItemsCount = value;
                 AlbumItemsCountChanged?.Invoke(this, value);
@@ -186,10 +292,10 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteProperty]
-        public virtual int TotalArtistItemsCount
+        public int TotalArtistItemsCount
         {
             get => _totalArtistItemsCount;
-            internal set
+            set
             {
                 _totalArtistItemsCount = value;
                 ArtistItemsCountChanged?.Invoke(this, value);
@@ -198,10 +304,10 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteProperty]
-        public virtual int TotalTracksCount
+        public int TotalTracksCount
         {
             get => _totalTracksCount;
-            internal set
+            set
             {
                 _totalTracksCount = value;
                 TrackItemsCountChanged?.Invoke(this, value);
@@ -210,10 +316,10 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteProperty]
-        public virtual int TotalPlaylistItemsCount
+        public int TotalPlaylistItemsCount
         {
             get => _totalPlaylistItemsCount;
-            internal set
+            set
             {
                 _totalPlaylistItemsCount = value;
                 PlaylistItemsCountChanged?.Invoke(this, value);
@@ -222,7 +328,7 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteProperty]
-        public virtual int TotalChildrenCount
+        public int TotalChildrenCount
         {
             get => _totalChildrenCount;
             internal set
@@ -236,56 +342,144 @@ namespace StrixMusic.Core.External.Models
         [RemoteProperty]
         public int TotalImageCount
         {
-            get => _totalChildrenCount;
+            get => _totalImageCount;
             internal set
             {
-                _totalChildrenCount = value;
+                _totalImageCount = value;
                 ImagesCountChanged?.Invoke(this, value);
             }
         }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPlayAlbumCollectionAsyncAvailable { get; set; }
+        public bool IsPlayAlbumCollectionAsyncAvailable
+        {
+            get => _isPlayAlbumCollectionAsyncAvailable;
+            set
+            {
+                _isPlayAlbumCollectionAsyncAvailable = value;
+                IsPlayAlbumCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPauseAlbumCollectionAsyncAvailable { get; set; }
+        public bool IsPauseAlbumCollectionAsyncAvailable
+        {
+            get => _isPauseAlbumCollectionAsyncAvailable;
+            set
+            {
+                _isPauseAlbumCollectionAsyncAvailable = value;
+                IsPauseAlbumCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPlayArtistCollectionAsyncAvailable { get; set; }
+        public bool IsPlayArtistCollectionAsyncAvailable
+        {
+            get => _isPlayArtistCollectionAsyncAvailable;
+            set
+            {
+                _isPlayArtistCollectionAsyncAvailable = value;
+                IsPlayArtistCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPauseArtistCollectionAsyncAvailable { get; set; }
+        public bool IsPauseArtistCollectionAsyncAvailable
+        {
+            get => _isPauseArtistCollectionAsyncAvailable;
+            set
+            {
+                _isPauseArtistCollectionAsyncAvailable = value;
+                IsPauseArtistCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPlayPlaylistCollectionAsyncAvailable { get; set; }
+        public bool IsPlayPlaylistCollectionAsyncAvailable
+        {
+            get => _isPlayPlaylistCollectionAsyncAvailable;
+            set
+            {
+                _isPlayPlaylistCollectionAsyncAvailable = value;
+                IsPlayPlaylistCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPausePlaylistCollectionAsyncAvailable { get; set; }
+        public bool IsPausePlaylistCollectionAsyncAvailable
+        {
+            get => _isPausePlaylistCollectionAsyncAvailable;
+            set
+            {
+                _isPausePlaylistCollectionAsyncAvailable = value;
+                IsPausePlaylistCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
-        public bool IsPlayTrackCollectionAsyncAvailable { get; set; }
+        public bool IsPlayTrackCollectionAsyncAvailable
+        {
+            get => _isPlayTrackCollectionAsyncAvailable;
+            set
+            {
+                _isPlayTrackCollectionAsyncAvailable = value;
+                IsPlayTrackCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsPauseTrackCollectionAsyncAvailable { get; set; }
+        public bool IsPauseTrackCollectionAsyncAvailable
+        {
+            get => _isPauseTrackCollectionAsyncAvailable;
+            set
+            {
+                _isPauseTrackCollectionAsyncAvailable = value;
+                IsPauseTrackCollectionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsChangeNameAsyncAvailable { get; set; }
+        public bool IsChangeNameAsyncAvailable
+        {
+            get => _isChangeNameAsyncAvailable;
+            set
+            {
+                _isChangeNameAsyncAvailable = value;
+                IsChangeNameAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         [RemoteProperty]
-        public bool IsChangeDescriptionAsyncAvailable { get; set; }
+        public bool IsChangeDescriptionAsyncAvailable
+        {
+            get => _isChangeDescriptionAsyncAvailable;
+            set
+            {
+                _isChangeDescriptionAsyncAvailable = value;
+                IsChangeDescriptionAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc/>
         [RemoteProperty]
-        public bool IsChangeDurationAsyncAvailable { get; set; }
+        public bool IsChangeDurationAsyncAvailable
+        {
+            get => _isChangeDurationAsyncAvailable;
+            set
+            {
+                _isChangeDurationAsyncAvailable = value;
+                IsChangeDurationAsyncAvailableChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc/>
         [RemoteProperty]
@@ -341,7 +535,7 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task ChangeDescriptionAsync(string? description) => MemberRemote.ReceiveDataAsync<object>(nameof(IsRemoveChildAvailable));
+        public Task ChangeDescriptionAsync(string? description) => MemberRemote.ReceiveDataAsync<object>(nameof(ChangeDescriptionAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
@@ -495,7 +689,7 @@ namespace StrixMusic.Core.External.Models
         [RemoteMethod]
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            using (await _getAlbumsMutex.LockAsync())
+            using (await _getImagesMutex.LockAsync())
             {
                 var res = await MemberRemote.ReceiveDataAsync<IEnumerable<ICoreImage>>(nameof(GetImagesAsync));
 
@@ -560,7 +754,7 @@ namespace StrixMusic.Core.External.Models
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [RemoteMethod]
-        public virtual Task InitAsync() => MemberRemote.RemoteWaitAsync(nameof(InitAsync));
+        public Task InitAsync() => MemberRemote.RemoteWaitAsync(nameof(InitAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
