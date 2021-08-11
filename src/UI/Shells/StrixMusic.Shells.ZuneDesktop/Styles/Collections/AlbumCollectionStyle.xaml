@@ -4,8 +4,9 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:a="using:OwlCore.Uno.Attached"
     xmlns:itemstyles="using:StrixMusic.Shells.ZuneDesktop.Styles.Items"
+    xmlns:unitconvert="using:StrixMusic.Sdk.Uno.Converters.Units"
+    xmlns:a="using:OwlCore.Uno.Attached"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Collections.AlbumCollectionStyle"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core">
@@ -23,12 +24,9 @@
             </Grid.RowDefinitions>
 
             <StackPanel Margin="24,0,0,12">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{x:Bind TotalAlbumItemsCount, Mode=OneWay}" FontSize="12" FontWeight="Bold"/>
-                    <TextBlock x:Uid="/Music/AlbumsTB" Text="ALBUMS" FontSize="12" FontWeight="Bold" Margin="4,0,0,0"
-                               a:TextHelpers.CharacterCasing="Upper"/>
-                </StackPanel>
-                
+                <TextBlock Text="{x:Bind unitconvert:CountToAlbumsConverter.Convert(TotalAlbumItemsCount), Mode=OneWay}"
+                           FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
+
                 <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreAlbumsCommand.IsRunning, Mode=OneWay}"/>
             </StackPanel>
 
@@ -36,7 +34,6 @@
                   ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}" Grid.Row="1"
                   Padding="16" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
                 <GridView.ItemTemplate>
-
                     <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle">
                         <items:AlbumItem>
                             <interactivity:Interaction.Behaviors>

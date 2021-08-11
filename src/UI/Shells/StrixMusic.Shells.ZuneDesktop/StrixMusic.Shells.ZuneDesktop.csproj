@@ -8,7 +8,7 @@
 		<RootNamespace>StrixMusic.Shells.ZuneDesktop</RootNamespace>
 		<AssemblyName>StrixMusic.Shells.ZuneDesktop</AssemblyName>
 		<Nullable>enable</Nullable>
-		<LangVersion>8.0</LangVersion>
+		<LangVersion>9.0</LangVersion>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
@@ -60,17 +60,22 @@
 		<None Remove="Controls\NowPlayingButtonContent.xaml" />
 		<None Remove="Controls\QuickplayContent.xaml" />
 		<None Remove="Controls\SettingsView.xaml" />
+		<None Remove="Controls\Views\Collection\PlaylistDetailsPane.xaml" />
 		<None Remove="Controls\Views\Settings\BackgroundSettings.xaml" />
 		<None Remove="Controls\ZuneShell.xaml" />
 		<None Remove="Preview.xaml" />
 		<None Remove="Resources.xaml" />
 		<None Remove="Resources\Brushes.xaml" />
 		<None Remove="Resources\ButtonStyles.xaml" />
+		<None Remove="Resources\ZuneDataGrid.xaml" />
 		<None Remove="Resources\ZuneSlider.xaml" />
 		<None Remove="Styles\AlbumCollectionStyle.xaml" />
 		<None Remove="Styles\AlbumItemStyle.xaml" />
 		<None Remove="Styles\ArtistCollectionStyle.xaml" />
 		<None Remove="Styles\ArtistItemStyle.xaml" />
+		<None Remove="Styles\Collections\PlaylistCollectionStyle.xaml" />
+		<None Remove="Styles\Collections\TrackTableStyle.xaml" />
+		<None Remove="Styles\Items\PlaylistItemStyle.xaml" />
 		<None Remove="Styles\NowPlayingBarStyle.xaml" />
 		<None Remove="Styles\NowPlayingViewStyle.xaml" />
 		<None Remove="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml" />
@@ -97,17 +102,22 @@
 		<UpToDateCheckInput Remove="Controls\NowPlayingButtonContent.xaml" />
 		<UpToDateCheckInput Remove="Controls\QuickplayContent.xaml" />
 		<UpToDateCheckInput Remove="Controls\SettingsView.xaml" />
+		<UpToDateCheckInput Remove="Controls\Views\Collection\PlaylistDetailsPane.xaml" />
 		<UpToDateCheckInput Remove="Controls\Views\Settings\BackgroundSettings.xaml" />
 		<UpToDateCheckInput Remove="Controls\ZuneShell.xaml" />
 		<UpToDateCheckInput Remove="Preview.xaml" />
 		<UpToDateCheckInput Remove="Resources.xaml" />
 		<UpToDateCheckInput Remove="Resources\Brushes.xaml" />
 		<UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
+		<UpToDateCheckInput Remove="Resources\ZuneDataGrid.xaml" />
 		<UpToDateCheckInput Remove="Resources\ZuneSlider.xaml" />
 		<UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\AlbumItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\ArtistCollectionStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\ArtistItemStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\Collections\PlaylistCollectionStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\Collections\TrackTableStyle.xaml" />
+		<UpToDateCheckInput Remove="Styles\Items\PlaylistItemStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
 		<UpToDateCheckInput Remove="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml" />
@@ -167,6 +177,9 @@
 		<Compile Update="Styles\Collections\AlbumCollectionStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
+		<Compile Update="Styles\Collections\PlaylistCollectionStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
 		<Compile Update="Styles\Items\AlbumItemStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
@@ -174,6 +187,9 @@
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 		<Compile Update="Styles\Items\ArtistItemStyle.xaml.cs">
+		  <DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+		<Compile Update="Styles\Items\PlaylistItemStyle.xaml.cs">
 		  <DependentUpon>%(Filename)</DependentUpon>
 		</Compile>
 		<Compile Update="Styles\NowPlaying\DefaultZuneMediaInfoStyle.xaml.cs">

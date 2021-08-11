@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -19,11 +20,33 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IArtistCollectionItem> Artists { get; }
 
         /// <summary>
+        /// Keeps the default artists collection while sorting.
+        /// </summary>
+        public ObservableCollection<IArtistCollectionItem> UnsortedArtists { get; }
+
+        /// <summary>
+        /// Sorts the artist collection by <see cref="ArtistSortingType"/>.
+        /// </summary>
+        /// <param name="artistSorting">The <see cref="ArtistSortingType"/> by which to sort.</param>
+        /// <param name="sortDirection">The direction by which to sort.</param>
+        public void SortArtistCollection(ArtistSortingType artistSorting, SortDirection sortDirection);
+
+        /// <summary>
         /// Populates the next set of artists into the collection.
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PopulateMoreArtistsAsync(int limit);
+
+        /// <summary>
+        /// The sorting direction of artists in the collection. 
+        /// </summary>
+        public ArtistSortingType CurrentArtistSortingType { get; }
+
+        /// <summary>
+        /// The sorting direction of artists in the collection. 
+        /// </summary>
+        public SortDirection CurrentArtistSortingDirection { get; }
 
         /// <summary>
         /// <inheritdoc cref="PopulateMoreArtistsAsync"/>
@@ -44,5 +67,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IArtistCollectionBase.PauseArtistCollectionAsync"/>
         /// </summary>
         public IAsyncRelayCommand PauseArtistCollectionAsyncCommand { get; }
+
+        /// <summary>
+        /// Adjustes sorting to maintain its direction, with a new type.
+        /// </summary>
+        public RelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand { get; }
+
+        /// <summary>
+        /// Sorts adjustes sorting to maintain its type, with a new direction.
+        /// </summary>
+        public RelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand { get; }
     }
 }
