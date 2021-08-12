@@ -93,7 +93,7 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// </summary>
         /// <param name="playlistCollection">The collection to initialize.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task PlaylistsCollection(IPlaylistCollectionViewModel playlistCollection)
+        public static async Task PlaylistCollection(IPlaylistCollectionViewModel playlistCollection)
         {
             if (playlistCollection.Playlists.Count < playlistCollection.TotalPlaylistItemsCount)
             {

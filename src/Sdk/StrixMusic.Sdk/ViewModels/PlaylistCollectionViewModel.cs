@@ -518,7 +518,7 @@ namespace StrixMusic.Sdk.ViewModels
 
             IsInitialized = true;
 
-            await CollectionInit.PlaylistsCollection(this);
+            await CollectionInit.PlaylistCollection(this);
         }
 
         /// <inheritdoc />

@@ -448,14 +448,14 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             foreach (var playlistItem in playlistCollection.Playlists)
             {
-                if (playlistItem is IPlaylist artist)
+                if (playlistItem is IPlaylist playlist)
                 {
-                    var playlistVm = (PlaylistViewModel)artist;
+                    var playlistVm = (PlaylistViewModel)playlist;
 
                     await playlistVm.InitAsync();
 
-                    // We expect an artist to have at least 1 track.
-                    Guard.IsGreaterThan(artist.TotalTracksCount, 0, nameof(artist.TotalTracksCount));
+                    // We expect an playlist to have at least 1 track.
+                    Guard.IsGreaterThan(playlist.TotalTracksCount, 0, nameof(playlist.TotalTracksCount));
 
                     var firstTrack = playlistVm.Tracks[0].Model;
 
