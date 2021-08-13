@@ -52,8 +52,6 @@ namespace StrixMusic.Core.External.Models
         public ExternalCoreAlbum(ICore sourceCore, string id)
         {
             // Genres refactor (switch from SyncCol to collection changed events)
-            // Finish implementing the new IsChangeDatePublishedAsyncAvailableChanged everywhere else in the project.
-
             _name = string.Empty;
             Id = id;
 

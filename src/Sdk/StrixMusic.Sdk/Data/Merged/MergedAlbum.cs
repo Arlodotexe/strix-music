@@ -68,6 +68,7 @@ namespace StrixMusic.Sdk.Data.Merged
             AttachPlayableEvents(source);
 
             source.DatePublishedChanged += DatePublishedChanged;
+            source.IsChangeDatePublishedAsyncAvailableChanged += IsChangeDatePublishedAsyncAvailableChanged;
 
             source.IsPlayTrackCollectionAsyncAvailableChanged += IsPlayTrackCollectionAsyncAvailableChanged;
             source.IsPauseTrackCollectionAsyncAvailableChanged += IsPauseTrackCollectionAsyncAvailableChanged;
@@ -87,6 +88,7 @@ namespace StrixMusic.Sdk.Data.Merged
             DetachPlayableEvents(source);
 
             source.DatePublishedChanged -= DatePublishedChanged;
+            source.IsChangeDatePublishedAsyncAvailableChanged -= IsChangeDatePublishedAsyncAvailableChanged;
 
             source.IsPlayTrackCollectionAsyncAvailableChanged -= IsPlayTrackCollectionAsyncAvailableChanged;
             source.IsPauseTrackCollectionAsyncAvailableChanged -= IsPauseTrackCollectionAsyncAvailableChanged;
@@ -291,6 +293,9 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsChangeDatePublishedAsyncAvailableChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? TrackItemsCountChanged;
