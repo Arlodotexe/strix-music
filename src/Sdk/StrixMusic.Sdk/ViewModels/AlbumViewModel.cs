@@ -49,11 +49,13 @@ namespace StrixMusic.Sdk.ViewModels
 
             using (Threading.PrimaryContext)
             {
-                Images = new ObservableCollection<IImage>();
                 Tracks = new ObservableCollection<TrackViewModel>();
                 Artists = new ObservableCollection<IArtistCollectionItem>();
                 UnsortedTracks = new ObservableCollection<TrackViewModel>();
                 UnsortedArtists = new ObservableCollection<IArtistCollectionItem>();
+
+                Images = new ObservableCollection<IImage>();
+                Genres = new ObservableCollection<IGenre>(); // TODO: Connect changed event
             }
 
             if (_album.RelatedItems != null)
@@ -89,6 +91,7 @@ namespace StrixMusic.Sdk.ViewModels
             DatePublishedChanged += AlbumDatePublishedChanged;
             NameChanged += AlbumNameChanged;
             UrlChanged += AlbumUrlChanged;
+            LastPlayedChanged += OnLastPlayedChanged;
 
             IsPlayTrackCollectionAsyncAvailableChanged += OnIsPlayTrackCollectionAsyncAvailableChanged;
             IsPauseTrackCollectionAsyncAvailableChanged += OnIsPauseTrackCollectionAsyncAvailableChanged;
@@ -99,13 +102,14 @@ namespace StrixMusic.Sdk.ViewModels
             IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
             IsChangeDatePublishedAsyncAvailableChanged += OnIsChangeDatePublishedAsyncAvailableChanged;
 
-            TrackItemsCountChanged += AlbumOnTrackItemsCountChanged;
+            TrackItemsCountChanged += OnTrackItemsCountChanged;
             TrackItemsChanged += AlbumViewModel_TrackItemsChanged;
             ArtistItemsCountChanged += OnArtistItemsCountChanged;
             ArtistItemsChanged += OnArtistItemsChanged;
-            ImagesCountChanged += AlbumViewModel_ImagesCountChanged;
+            ImagesCountChanged += OnImagesCountChanged;
             ImagesChanged += AlbumViewModel_ImagesChanged;
-            LastPlayedChanged += OnLastPlayedChanged;
+            GenresCountChanged += OnGenresItemsCountChanged;
+            GenresChanged += OnGenresChanged;
         }
 
         private void DetachEvents()
@@ -115,6 +119,7 @@ namespace StrixMusic.Sdk.ViewModels
             DatePublishedChanged -= AlbumDatePublishedChanged;
             NameChanged -= AlbumNameChanged;
             UrlChanged -= AlbumUrlChanged;
+            LastPlayedChanged -= OnLastPlayedChanged;
 
             IsPlayTrackCollectionAsyncAvailableChanged -= OnIsPlayTrackCollectionAsyncAvailableChanged;
             IsPauseTrackCollectionAsyncAvailableChanged -= OnIsPauseTrackCollectionAsyncAvailableChanged;
@@ -125,13 +130,14 @@ namespace StrixMusic.Sdk.ViewModels
             IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
             IsChangeDatePublishedAsyncAvailableChanged -= OnIsChangeDatePublishedAsyncAvailableChanged;
 
-            TrackItemsCountChanged += AlbumOnTrackItemsCountChanged;
+            TrackItemsCountChanged += OnTrackItemsCountChanged;
             TrackItemsChanged -= AlbumViewModel_TrackItemsChanged;
             ArtistItemsCountChanged -= OnArtistItemsCountChanged;
             ArtistItemsChanged -= OnArtistItemsChanged;
-            ImagesCountChanged -= AlbumViewModel_ImagesCountChanged;
+            ImagesCountChanged -= OnImagesCountChanged;
             ImagesChanged -= AlbumViewModel_ImagesChanged;
-            LastPlayedChanged -= OnLastPlayedChanged;
+            GenresCountChanged += OnGenresItemsCountChanged;
+            GenresChanged += OnGenresChanged;
         }
 
         /// <inheritdoc />
@@ -281,6 +287,20 @@ namespace StrixMusic.Sdk.ViewModels
             remove => _album.ArtistItemsChanged -= value;
         }
 
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IGenre>? GenresChanged
+        {
+            add => _album.GenresChanged += value;
+            remove => _album.GenresChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int>? GenresCountChanged
+        {
+            add => _album.GenresCountChanged += value;
+            remove => _album.GenresCountChanged -= value;
+        }
+
         private void AlbumUrlChanged(object sender, Uri? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Url)));
 
         private void AlbumNameChanged(object sender, string e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Name)));
@@ -291,11 +311,13 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void AlbumDatePublishedChanged(object sender, DateTime? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(DatePublished)));
 
-        private void AlbumOnTrackItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTracksCount)));
+        private void OnTrackItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTracksCount)));
 
-        private void AlbumViewModel_ImagesCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalImageCount)));
+        private void OnImagesCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalImageCount)));
 
         private void OnArtistItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalArtistItemsCount)));
+
+        private void OnGenresItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalGenreCount)));
 
         private void OnLastPlayedChanged(object sender, DateTime? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(LastPlayed)));
 
@@ -397,6 +419,14 @@ namespace StrixMusic.Sdk.ViewModels
             });
         }
 
+        private void OnGenresChanged(object sender, IReadOnlyList<CollectionChangedItem<IGenre>> addedItems, IReadOnlyList<CollectionChangedItem<IGenre>> removedItems)
+        {
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                Genres.ChangeCollection(addedItems, removedItems);
+            });
+        }
+
         /// <inheritdoc />
         public string Id => _album.Id;
 
@@ -429,6 +459,9 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreAlbumCollectionItem> IMerged<ICoreAlbumCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
+        IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => Sources;
+
+        /// <inheritdoc />
         public TimeSpan Duration => _album.Duration;
 
         /// <inheritdoc />
@@ -442,9 +475,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<string>? Genres => _album.Genres;
 
         /// <summary>
         /// The tracks for this album.
@@ -461,6 +491,9 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IArtistCollectionItem> Artists { get; }
 
         /// <inheritdoc />
+        public ObservableCollection<IGenre> Genres { get; }
+
+        /// <inheritdoc />
         public string Name => _album.Name;
 
         /// <inheritdoc />
@@ -471,6 +504,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public int TotalImageCount => _album.TotalImageCount;
+
+        /// <inheritdoc />
+        public int TotalGenreCount => _album.TotalGenreCount;
 
         /// <inheritdoc />
         public bool IsPlayTrackCollectionAsyncAvailable => _album.IsPlayTrackCollectionAsyncAvailable;
@@ -591,6 +627,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index) => _album.RemoveArtistItemAsync(index);
+
+        /// <inheritdoc/>
+        public Task AddGenreAsync(IGenre genre, int index) => _album.AddGenreAsync(genre, index);
+
+        /// <inheritdoc/>
+        public Task RemoveGenreAsync(int index) => _album.RemoveGenreAsync(index);
 
         ///<inheritdoc />
         public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
@@ -754,6 +796,9 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreTrackCollection other) => _album.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreGenreCollection other) => _album.Equals(other);
 
         /// <inheritdoc />
         public bool Equals(ICoreAlbum other) => _album.Equals(other);

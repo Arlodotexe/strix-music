@@ -291,13 +291,13 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
         {
-            return _imageMap.GetItems(limit, offset);
+            return _imageMap.GetItemsAsync(limit, offset);
         }
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset)
         {
-            return _albumMap.GetItems(limit, offset);
+            return _albumMap.GetItemsAsync(limit, offset);
         }
 
         /// <inheritdoc />

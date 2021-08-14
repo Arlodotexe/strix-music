@@ -102,6 +102,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
+        /// <inheritdoc/>
+        public event EventHandler<bool>? IsChangeDatePublishedAsyncAvailableChanged;
+
         /// <summary>
         /// The <see cref="Release"/> for this album.
         /// </summary>

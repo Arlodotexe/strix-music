@@ -241,22 +241,16 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task ChangeNameAsync(string name) => _preferredSource.ChangeNameAsync(name);
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _imageCollectionMap.GetItems(limit, offset);
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _imageCollectionMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _trackCollectionMap.GetItems(limit, offset);
-
-        /// <inheritdoc/>
-        public Task<bool> IsAddGenreAvailable(int index) => _preferredSource.IsAddGenreAvailable(index);
+        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _trackCollectionMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc/>
         public Task<bool> IsAddImageAvailable(int index) => _preferredSource.IsAddImageAvailable(index);
 
         /// <inheritdoc/>
         public Task<bool> IsAddTrackAvailable(int index) => _preferredSource.IsAddTrackAvailable(index);
-
-        /// <inheritdoc/>
-        public Task<bool> IsRemoveGenreAvailable(int index) => _preferredSource.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc/>
         public Task<bool> IsRemoveImageAvailable(int index) => _preferredSource.IsRemoveImageAvailable(index);
@@ -347,9 +341,6 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres => _preferredSource.Genres;
-
         /// <inheritdoc />
         IReadOnlyList<ICorePlaylistCollectionItem> IMerged<ICorePlaylistCollectionItem>.Sources => Sources;
 
@@ -358,9 +349,6 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc/>
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
-
-        /// <inheritdoc/>
-        IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => Sources;
 
         /// <inheritdoc/>
         public IReadOnlyList<ICorePlaylist> Sources => _sources;
@@ -390,12 +378,6 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public bool Equals(ICoreTrackCollection other)
-        {
-            return Equals(other as ICorePlaylistCollectionItem);
-        }
-
-        /// <inheritdoc />
-        public bool Equals(ICoreGenreCollection other)
         {
             return Equals(other as ICorePlaylistCollectionItem);
         }

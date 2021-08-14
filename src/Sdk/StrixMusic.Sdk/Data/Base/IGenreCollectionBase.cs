@@ -1,30 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using OwlCore.Collections;
+using OwlCore.Events;
 
 namespace StrixMusic.Sdk.Data.Base
 {
     /// <summary>
     /// Metadata about genres.
     /// </summary>
-    public interface IGenreCollectionBase: IAsyncDisposable
+    public interface IGenreCollectionBase : ICollectionBase, IAsyncDisposable
     {
         /// <summary>
-        /// A list of <see cref="string"/> describing the genres for this track.
+        /// The total number of genres in this collection.
         /// </summary>
-        /// <remarks>Data should be populated on object creation. Handle <see cref="SynchronizedObservableCollection{T}.CollectionChanged"/> to find out when a genre is added or removed.</remarks>
-        SynchronizedObservableCollection<string>? Genres { get; }
+        int TotalGenreCount { get; }
 
         /// <summary>
-        /// Checks if the backend supports adding a <see cref="string"/> at a specific position in <see cref="Genres"/>.
+        /// Removes a genre from the collection.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="string"/> can be added.</returns>
+        /// <param name="index">the position remove the genre from.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task RemoveGenreAsync(int index);
+
+        /// <summary>
+        /// Checks if adding a genre to the collection at at the given <paramref name="index"/> is supported.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="string"/> can be added to the collection.</returns>
         Task<bool> IsAddGenreAvailable(int index);
 
         /// <summary>
-        /// Checks if the backend supports removing a <see cref="string"/> at a specific index.
+        /// Checks if removing a genre to the collection at at the given <paramref name="index"/> is supported.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="string"/> can be removed.</returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="string"/> can be removed from the collection..</returns>
         Task<bool> IsRemoveGenreAvailable(int index);
+
+        /// <summary>
+        /// Fires when the merged number of genres in the collection changes.
+        /// </summary>
+        event EventHandler<int>? GenresCountChanged;
     }
 }

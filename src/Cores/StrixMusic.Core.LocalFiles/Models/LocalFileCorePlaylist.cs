@@ -128,9 +128,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         public bool IsChangeDurationAsyncAvailable => false;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<string>? Genres { get; }
-
-        /// <inheritdoc />
         public ICoreUserProfile? Owner { get; }
 
         /// <inheritdoc />
@@ -215,18 +212,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
-
-        /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailable(int index)
-        {
-            return Task.FromResult(false);
-        }
-
-        /// <inheritdoc />
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
@@ -296,38 +281,15 @@ namespace StrixMusic.Core.LocalFiles.Models
                 if (metadata.Duration != previousData.Duration)
                     DurationChanged?.Invoke(this, Duration);
 
-                // TODO genres, post genres do-over
-
                 if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
                     TrackItemsCountChanged?.Invoke(this, metadata.TrackIds.Count);
             }
         }
 
-        private void Dispose(bool disposing)
-        {
-            ReleaseUnmanagedResources();
-            if (disposing)
-            {
-                Genres?.Dispose();
-            }
-        }
-
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
-        /// <inheritdoc />
-        ~LocalFileCorePlaylist()
-        {
-            Dispose(false);
-        }
-
         /// <inheritdoc />
         public ValueTask DisposeAsync()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            DetachEvents();
             return default;
         }
     }

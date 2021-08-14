@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -29,6 +28,7 @@ namespace StrixMusic.Sdk.Extensions
                 IPlaylistCollectionBase _ => ((ICorePlaylistCollection)source).IsAddPlaylistItemAvailable(index),
                 ITrackCollectionBase _ => ((ICoreTrackCollection)source).IsAddTrackAvailable(index),
                 IImageCollectionBase _ => ((ICoreImageCollection)source).IsAddImageAvailable(index),
+                IGenreCollectionBase _ => ((ICoreGenreCollection)source).IsAddGenreAvailable(index),
                 _ => throw new NotSupportedException("Collection type not handled"),
             };
         }

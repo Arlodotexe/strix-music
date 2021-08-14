@@ -298,9 +298,6 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICorePlaylistCollectionItem> IMerged<ICorePlaylistCollectionItem>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => Sources;
-
-        /// <inheritdoc />
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
@@ -334,9 +331,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public ObservableCollection<IImage> Images { get; }
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<string>? Genres => _playlist.Genres;
 
         /// <inheritdoc />
         public IUserProfile? Owner => _owner;
@@ -378,16 +372,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsAddTrackAvailable(int index) => _playlist.IsAddTrackAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreAvailable(int index) => _playlist.IsAddGenreAvailable(index);
-
-        /// <inheritdoc />
         public Task<bool> IsAddImageAvailable(int index) => _playlist.IsAddImageAvailable(index);
 
         /// <inheritdoc />
         public Task<bool> IsRemoveImageAvailable(int index) => _playlist.IsRemoveImageAvailable(index);
-
-        /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailable(int index) => _playlist.IsRemoveGenreAvailable(index);
 
         ///<inheritdoc />
         public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
@@ -524,9 +512,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public bool Equals(ICoreTrackCollection other) => _playlist.Equals(other);
-
-        /// <inheritdoc />
-        public bool Equals(ICoreGenreCollection other) => _playlist.Equals(other);
 
         /// <inheritdoc />
         public bool Equals(ICorePlaylistCollectionItem other) => _playlist.Equals(other);

@@ -267,10 +267,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task AddImageAsync(IImage image, int index) => _imageMap.InsertItem(image, index);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _imageMap.GetItems(limit, offset);
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _imageMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _trackMap.GetItems(limit, offset);
+        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _trackMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc />
         public Task AddTrackAsync(ITrack track, int index) => _trackMap.InsertItem(track, index);

@@ -418,7 +418,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsAddGenreAvailable(int index) => _preferredSource.IsAddGenreAvailable(index);
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _artistMap.GetItems(limit, offset);
+        public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _artistMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc/>
         public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _artistMap.InsertItem(artist, index);
@@ -445,7 +445,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public override int GetHashCode() => _preferredSource.Id.GetHashCode();
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _imageCollectionMap.GetItems(limit, offset);
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _imageCollectionMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc />
         public Task AddImageAsync(IImage image, int index) => _imageCollectionMap.InsertItem(image, index);

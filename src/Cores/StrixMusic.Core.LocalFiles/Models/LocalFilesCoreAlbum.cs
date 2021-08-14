@@ -315,6 +315,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc/>
+        public event EventHandler<bool>? IsChangeDatePublishedAsyncAvailableChanged;
+
+        /// <inheritdoc/>
         public Task<bool> IsAddGenreAvailable(int index)
         {
             throw new NotSupportedException();

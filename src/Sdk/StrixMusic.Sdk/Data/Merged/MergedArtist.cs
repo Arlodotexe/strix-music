@@ -327,13 +327,13 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsRemoveGenreAvailable(int index) => _preferredSource.IsRemoveGenreAvailable(index);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => _albumCollectionItemMap.GetItems(limit, offset);
+        public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => _albumCollectionItemMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc />
         public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index) => _albumCollectionItemMap.InsertItem(album, index);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _trackCollectionMap.GetItems(limit, offset);
+        public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _trackCollectionMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc />
         public Task AddTrackAsync(ITrack track, int index) => _trackCollectionMap.InsertItem(track, index);
@@ -384,7 +384,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task ChangeNameAsync(string name) => _preferredSource.ChangeNameAsync(name);
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _imageCollectionMap.GetItems(limit, offset);
+        public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _imageCollectionMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc />
         public Task AddImageAsync(IImage image, int index) => _imageCollectionMap.InsertItem(image, index);

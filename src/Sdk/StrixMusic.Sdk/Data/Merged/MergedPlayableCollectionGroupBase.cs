@@ -574,37 +574,37 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc/>
         public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset)
         {
-            return _albumCollectionMap.GetItems(limit, offset);
+            return _albumCollectionMap.GetItemsAsync(limit, offset);
         }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset)
         {
-            return _artistCollectionMap.GetItems(limit, offset);
+            return _artistCollectionMap.GetItemsAsync(limit, offset);
         }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IPlayableCollectionGroup>> GetChildrenAsync(int limit, int offset = 0)
         {
-            return _playableCollectionGroupMap.GetItems(limit, offset);
+            return _playableCollectionGroupMap.GetItemsAsync(limit, offset);
         }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IPlaylistCollectionItem>> GetPlaylistItemsAsync(int limit, int offset)
         {
-            return _playlistCollectionMap.GetItems(limit, offset);
+            return _playlistCollectionMap.GetItemsAsync(limit, offset);
         }
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset = 0)
         {
-            return _trackCollectionMap.GetItems(limit, offset);
+            return _trackCollectionMap.GetItemsAsync(limit, offset);
         }
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
         {
-            return _imagesCollectionMap.GetItems(limit, offset);
+            return _imagesCollectionMap.GetItemsAsync(limit, offset);
         }
 
         /// <inheritdoc/>
