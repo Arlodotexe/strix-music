@@ -1197,14 +1197,14 @@ namespace StrixMusic.Sdk.ViewModels
         public bool Equals(ICorePlayableCollectionGroup other) => _collectionGroup.Equals(other);
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public Task InitAsync()
         {
             if (IsInitialized)
-                return;
+                return Task.CompletedTask;
 
             IsInitialized = true;
 
-            await CollectionInit.TrackCollection(this);
+            return Task.WhenAll(CollectionInit.AlbumCollection(this), CollectionInit.TrackCollection(this), CollectionInit.PlaylistCollection(this), CollectionInit.TrackCollection(this));
         }
 
         private Task ChangeNameInternalAsync(string? name)
