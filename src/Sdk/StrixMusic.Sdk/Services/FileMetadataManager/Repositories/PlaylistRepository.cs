@@ -61,7 +61,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 return;
             }
 
-            // await LoadDataFromDisk();
+             await LoadDataFromDisk();
 
             IsInitialized = true;
             _initMutex.Release();
