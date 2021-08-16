@@ -6,13 +6,13 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TagLib;
+
 using File = TagLib.File;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
@@ -24,47 +24,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     {
         private const int SCAN_BATCH_SIZE = 2;
         private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
-
-        private static readonly PictureType[] _albumPictureTypesRanking =
-        {
-            PictureType.FrontCover,
-            PictureType.Illustration,
-            PictureType.Other,
-            PictureType.Media,
-            PictureType.MovieScreenCapture,
-            PictureType.DuringPerformance,
-            PictureType.DuringRecording,
-            PictureType.Artist,
-            PictureType.LeadArtist,
-            PictureType.Band,
-            PictureType.BandLogo,
-            PictureType.Composer,
-            PictureType.Conductor,
-            PictureType.RecordingLocation,
-            PictureType.FileIcon,
-            PictureType.OtherFileIcon,
-        };
-
-        private static readonly PictureType[] _artistPictureTypesRanking =
-        {
-            PictureType.Artist,
-            PictureType.LeadArtist,
-            PictureType.FrontCover,
-            PictureType.Illustration,
-            PictureType.Media,
-            PictureType.MovieScreenCapture,
-            PictureType.DuringPerformance,
-            PictureType.DuringRecording,
-            PictureType.DuringPerformance,
-            PictureType.DuringRecording,
-            PictureType.Band,
-            PictureType.BandLogo,
-            PictureType.Composer,
-            PictureType.Conductor,
-            PictureType.RecordingLocation,
-            PictureType.FileIcon,
-            PictureType.OtherFileIcon,
-        };
 
         private readonly FileMetadataManager _metadataManager;
         private readonly IFileScanner _fileScanner;
@@ -186,34 +145,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 _scanningCancellationTokenSource.Dispose();
                 return new List<FileMetadata>();
             }
-        }
-
-        private static IPicture? GetAlbumArt(IPicture[] pics)
-        {
-            foreach (var type in _albumPictureTypesRanking)
-            {
-                foreach (var sourcePic in pics)
-                {
-                    if (sourcePic.Type == type)
-                        return sourcePic;
-                }
-            }
-
-            return null;
-        }
-
-        private static IPicture? GetArtistArt(IPicture[] pics)
-        {
-            foreach (var type in _artistPictureTypesRanking)
-            {
-                foreach (var sourcePic in pics)
-                {
-                    if (sourcePic.Type == type)
-                        return sourcePic;
-                }
-            }
-
-            return null;
         }
 
         private static void AssignMissingRequiredData(IFileData fileData, FileMetadata metadata)
@@ -368,65 +299,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 if (tags == null)
                     return null;
 
-                string? imagePath = null;
-                string? artistImagePath = null;
-
                 if (tags.Pictures != null)
                 {
-                    var albumArt = GetAlbumArt(tags.Pictures);
-
-                    if (albumArt != null)
-                    {
-                        byte[] imageData = albumArt.Data.Data;
-
-                        try
-                        {
-                            var imageFile = await CacheFolder.CreateFileAsync($"{fileData.Path.HashMD5Fast()}.png", CreationCollisionOption.ReplaceExisting);
-
-/*                            using var imgStream = new MemoryStream(imageData);
-                            using (Image image = Image.Load(imgStream))
-                            {
-                                image.Mutate(x => x.Resize(new ResizeOptions()
-                                {
-                                    Mode = ResizeMode.Min,
-                                    Size = new Size(150),
-                                }));
-
-                                image.SaveAsPng(imgStream);
-                            }*/
-
-                            await imageFile.WriteAllBytesAsync(imageData);
-
-                            imagePath = imageFile.Path;
-                        }
-                        catch (FileLoadException)
-                        {
-                            // Catch "The file is in use." error.
-                        }
-                    }
-
-                    var artistPic = GetArtistArt(tags.Pictures);
-
-                    if (artistPic?.Type == albumArt?.Type)
-                    {
-                        artistImagePath = imagePath;
-                    }
-                    else if (artistPic != null)
-                    {
-                        byte[] imageData = artistPic.Data.Data;
-
-                        try
-                        {
-                            var imageFile = await CacheFolder.CreateFileAsync($"{fileData.Path.HashMD5Fast()}_artist.thumb", CreationCollisionOption.ReplaceExisting);
-                            await imageFile.WriteAllBytesAsync(imageData);
-
-                            artistImagePath = imageFile.Path;
-                        }
-                        catch (FileLoadException)
-                        {
-                            // Catch "The file is in use." error.
-                        }
-                    }
+                    await HandleImagesAsync(fileData.Path, tags.Pictures);
                 }
                 
                 return new FileMetadata
@@ -484,6 +359,48 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             catch (ArgumentException)
             {
                 return null;
+            }
+        }
+
+        private async Task HandleImagesAsync(string filePath, IPicture[] pictures)
+        {
+            Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
+
+            foreach (var picture in pictures)
+            {
+                try
+                {
+                    /* 
+                     * TODO:
+                     * Rework this to determine what sizes the image needs to be resized to,
+                     * and save each of the resized images to a separate file.
+                     * Then, add them to the image repository and associate them with a corresponding
+                     * Album/Image/TrackMetadata instance.
+                     */
+
+                    using var imageStream = new MemoryStream(picture.Data.Data);
+
+                    using (var image = await Image.LoadAsync(imageStream))
+                    {
+                        image.Mutate(x => x.Resize(new ResizeOptions
+                        {
+                            Mode = ResizeMode.Min,
+                            Size = new Size(256),
+                        }));
+
+                        image.SaveAsPng(imageStream);
+                    }
+
+                    var imagePath = filePath + ":" + picture.Filename;
+                    var imageFile = await CacheFolder.CreateFileAsync($"{imagePath.HashMD5Fast()}.png", CreationCollisionOption.ReplaceExisting);
+
+                    using var stream = await imageFile.GetStreamAsync(FileAccessMode.ReadWrite);
+                    await imageStream.CopyToAsync(stream);
+                }
+                catch (FileLoadException)
+                {
+                    // Catch "The file is in use." error.
+                }
             }
         }
 
