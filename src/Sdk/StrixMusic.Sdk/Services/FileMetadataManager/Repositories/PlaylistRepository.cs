@@ -61,7 +61,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 return;
             }
 
-             await LoadDataFromDisk();
+            await LoadDataFromDisk();
 
             IsInitialized = true;
             _initMutex.Release();
@@ -118,6 +118,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private async void PlaylistMetadataScanner_PlaylistMetadataAdded(object sender, IEnumerable<PlaylistMetadata> e)
         {
             var addedPlaylists = new List<PlaylistMetadata>();
+            var updatedPlaylists = new List<PlaylistMetadata>();
+
+            await _storageMutex.WaitAsync();
 
             foreach (var metadata in e)
             {
@@ -125,21 +128,27 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 {
                     Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
 
-                    await _storageMutex.WaitAsync();
+                    var playlistExists = true;
+                    var workingMetadata = _inMemoryMetadata.GetOrAdd(metadata.Id, key =>
+                    {
+                        playlistExists = false;
+                        return metadata;
+                    });
 
-                    if (!_inMemoryMetadata.TryAdd(metadata.Id, metadata))
-                        ThrowHelper.ThrowInvalidOperationException($"Tried adding an item that already exists in {nameof(_inMemoryMetadata)}");
+                    if (playlistExists)
+                        updatedPlaylists.Add(metadata);
+                    else addedPlaylists.Add(metadata);
 
-                    _storageMutex.Release();
-                    addedPlaylists.Add(metadata);
+                    if (addedPlaylists.Count > 0)
+                        MetadataAdded?.Invoke(this, updatedPlaylists);
+
+                    if (updatedPlaylists.Count > 0)
+                        MetadataUpdated?.Invoke(this, addedPlaylists);
                 }
             }
 
-            if (addedPlaylists.Count > 0)
-            {
-                _ = CommitChangesAsync();
-                MetadataAdded?.Invoke(this, addedPlaylists);
-            }
+            _ = CommitChangesAsync();
+            _storageMutex.Release();
         }
 
         /// <inheritdoc />
