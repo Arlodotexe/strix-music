@@ -1,5 +1,6 @@
 ﻿using OwlCore.Events;
 using StrixMusic.Sdk.Data.Base;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Data.Core
@@ -9,20 +10,20 @@ namespace StrixMusic.Sdk.Data.Core
     public interface ICoreGenreCollection : ICoreCollection, IGenreCollectionBase, ICoreMember
     {
         /// <summary>
+        /// Gets a requested number of <see cref="ICoreGenre"/>s starting at the given offset in the backend.
+        /// </summary>
+        /// <param name="limit">The max number of items to return.</param>
+        /// <param name="offset">Get items starting at this index.</param>
+        /// <returns><see cref="IAsyncEnumerable{T}"/> containing the requested items.</returns>
+        IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset);
+
+        /// <summary>
         /// Adds a new genre to the collection.
         /// </summary>
         /// <param name="genre">The genre to insert.</param>
         /// <param name="index">the position to insert the genre at.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task AddGenreAsync(ICoreGenre genre, int index);
-
-        /// <summary>
-        /// Removes a genre from the collection.
-        /// </summary>
-        /// <param name="genre">The genre to remove.</param>
-        /// <param name="index">the position remove the genre from.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task RemoveGenreAsync(ICoreGenre genre, int index);
 
         /// <summary>
         /// Fires when the genres are changed.

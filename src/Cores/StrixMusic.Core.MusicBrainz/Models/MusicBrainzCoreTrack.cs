@@ -113,6 +113,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreGenre>? GenresChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? GenresCountChanged;
+
         /// <inheritdoc/>
         public string Id => _track.Id;
 
@@ -127,9 +133,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public ICoreAlbum? Album { get; }
-
-        /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres => new SynchronizedObservableCollection<string>();
 
         /// <inheritdoc/>
         /// <remarks>Is not passed into the constructor. Should be set on object creation.</remarks>
@@ -205,6 +208,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncAvailable => false;
+
+        /// <inheritdoc/>
+        public int TotalGenreCount { get; } = 0;
 
         /// <inheritdoc/>
         public Task<bool> IsAddImageAvailable(int index)
@@ -329,7 +335,19 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddGenreAsync(ICoreGenre genre, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveGenreAsync(int index)
+        {
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
@@ -346,6 +364,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        {
+            await Task.CompletedTask;
+            yield break;
+        }
+
+        /// <inheritdoc />
+        public async IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset)
         {
             await Task.CompletedTask;
             yield break;

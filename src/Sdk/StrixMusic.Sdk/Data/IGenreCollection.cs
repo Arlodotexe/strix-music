@@ -2,6 +2,7 @@
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Data
@@ -10,6 +11,14 @@ namespace StrixMusic.Sdk.Data
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
     public interface IGenreCollection : IGenreCollectionBase, ISdkMember, IMerged<ICoreGenreCollection>
     {
+        /// <summary>
+        /// Gets a requested number of <see cref="IGenreBase"/>s starting at the given offset.
+        /// </summary>
+        /// <param name="limit">The max number of items to return.</param>
+        /// <param name="offset">Get items starting at this index.</param>
+        /// <returns><see cref="IReadOnlyList{T}"/> containing the requested items.</returns>
+        Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset);
+
         /// <summary>
         /// Adds a new genre to the collection.
         /// </summary>

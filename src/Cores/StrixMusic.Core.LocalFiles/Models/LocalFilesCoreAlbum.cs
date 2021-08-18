@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Collections;
@@ -41,8 +42,6 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             if (albumMetadata.ImagePath != null)
                 _image = InstanceCache.Images.GetOrCreate(Id, sourceCore, new Uri(albumMetadata.ImagePath));
-
-            Genres = new SynchronizedObservableCollection<string>(albumMetadata.Genres);
 
             AttachEvents();
         }
@@ -285,9 +284,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         public ICorePlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres { get; }
-
-        /// <inheritdoc/>
         public bool IsPlayTrackCollectionAsyncAvailable => false;
 
         /// <inheritdoc/>
@@ -311,11 +307,20 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncAvailable => false;
 
+        /// <inheritdoc/>
+        public int TotalGenreCount => _albumMetadata.Genres?.Count ?? 0;
+
         /// <inheritdoc />
         public event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc/>
         public event EventHandler<bool>? IsChangeDatePublishedAsyncAvailableChanged;
+
+        /// <inheritdoc/>
+        public event CollectionChangedEventHandler<ICoreGenre>? GenresChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<int>? GenresCountChanged;
 
         /// <inheritdoc/>
         public Task<bool> IsAddGenreAvailable(int index)
@@ -462,6 +467,18 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
+        public Task AddGenreAsync(ICoreGenre genre, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public Task RemoveGenreAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
             var tracksList = _fileMetadataManager.Tracks;
@@ -500,33 +517,22 @@ namespace StrixMusic.Core.LocalFiles.Models
             await Task.CompletedTask;
         }
 
-        private void ReleaseUnmanagedResources()
+        /// <inheritdoc/>
+        public async IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset)
         {
-            DetachEvents();
-        }
-
-        private void Dispose(bool disposing)
-        {
-            ReleaseUnmanagedResources();
-            if (disposing)
+            foreach(var genre in _albumMetadata.Genres ?? Enumerable.Empty<string>())
             {
-                Genres?.Dispose();
+                yield return new LocalFilesCoreGenre(SourceCore, genre);
             }
+
+            await Task.CompletedTask;
         }
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-
+            DetachEvents();
             return default;
-        }
-
-        /// <inheritdoc />
-        ~LocalFilesCoreAlbum()
-        {
-            Dispose(false);
         }
     }
 }

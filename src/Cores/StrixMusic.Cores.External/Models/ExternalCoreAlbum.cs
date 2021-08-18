@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Provisos;
 using OwlCore.Remoting;
@@ -22,6 +21,7 @@ namespace StrixMusic.Core.External.Models
         private int _totalArtistItemsCount;
         private int _totalTracksCount;
         private int _totalImageCount;
+        private int _totalGenreCount;
 
         private Uri? _url;
         private string _name;
@@ -79,7 +79,7 @@ namespace StrixMusic.Core.External.Models
             ImagesChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void OnGenresChanged(IReadOnlyList<CollectionChangedItem<string>> addedItems, IReadOnlyList<CollectionChangedItem<string>> removedItems)
+        private void OnGenresChanged(IReadOnlyList<CollectionChangedItem<ICoreGenre>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreGenre>> removedItems)
         {
             GenresChanged?.Invoke(this, addedItems, removedItems);
         }
@@ -136,13 +136,16 @@ namespace StrixMusic.Core.External.Models
         public event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc />
+        public event EventHandler<int>? GenresCountChanged;
+
+        /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<string>? GenresChanged;
+        public event CollectionChangedEventHandler<ICoreGenre>? GenresChanged;
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
@@ -282,6 +285,17 @@ namespace StrixMusic.Core.External.Models
             {
                 _totalImageCount = value;
                 ImagesCountChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        public int TotalGenreCount
+        {
+            get => _totalGenreCount;
+            internal set
+            {
+                _totalGenreCount = value;
+                GenresCountChanged?.Invoke(this, value);
             }
         }
 
@@ -507,11 +521,11 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteMethod]
-        public async IAsyncEnumerable<string> GetGenresAsync(int limit, int offset)
+        public async IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset)
         {
             using (await _getGenresMutex.LockAsync())
             {
-                var res = await _memberRemote.ReceiveDataAsync<IReadOnlyList<string>>(nameof(GetGenresAsync));
+                var res = await _memberRemote.ReceiveDataAsync<IReadOnlyList<ICoreGenre>>(nameof(GetGenresAsync));
 
                 if (res is null)
                     yield break;
@@ -535,7 +549,7 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddGenreAsync(string genre, int index) => _memberRemote.RemoteWaitAsync(nameof(AddGenreAsync));
+        public Task AddGenreAsync(ICoreGenre genre, int index) => _memberRemote.RemoteWaitAsync(nameof(AddGenreAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
@@ -551,7 +565,7 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task RemoveGenreAsync(string genre, int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveGenreAsync));
+        public Task RemoveGenreAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveGenreAsync));
 
         /// <summary>
         /// Initializes the collection group base.

@@ -9,7 +9,6 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Nito.AsyncEx;
 using OwlCore;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
@@ -26,7 +25,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains bindable information about an <see cref="IAlbum"/>.
     /// </summary>
-    public class AlbumViewModel : ObservableObject, IAlbum, IArtistCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel
+    public class AlbumViewModel : ObservableObject, IAlbum, IArtistCollectionViewModel, ITrackCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel
     {
         private readonly IAlbum _album;
         private readonly IPlaybackHandlerService _playbackHandler;
@@ -34,6 +33,7 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly AsyncLock _populateTracksMutex = new AsyncLock();
         private readonly AsyncLock _populateArtistsMutex = new AsyncLock();
         private readonly AsyncLock _populateImagesMutex = new AsyncLock();
+        private readonly AsyncLock _populateGenresMutex = new AsyncLock();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AlbumViewModel"/> class.
@@ -55,7 +55,7 @@ namespace StrixMusic.Sdk.ViewModels
                 UnsortedArtists = new ObservableCollection<IArtistCollectionItem>();
 
                 Images = new ObservableCollection<IImage>();
-                Genres = new ObservableCollection<IGenre>(); // TODO: Connect changed event
+                Genres = new ObservableCollection<IGenre>();
             }
 
             if (_album.RelatedItems != null)
@@ -75,6 +75,7 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
+            PopulateMoreGenresCommand = new AsyncRelayCommand<int>(PopulateMoreGenresAsync);
 
             ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
             ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType, x));
@@ -680,23 +681,6 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public async Task PopulateMoreImagesAsync(int limit)
-        {
-            using (await _populateImagesMutex.LockAsync())
-            {
-                var items = await _album.GetImagesAsync(limit, Images.Count);
-
-                _ = Threading.OnPrimaryThread(() =>
-                {
-                    foreach (var item in items)
-                    {
-                        Images.Add(item);
-                    }
-                });
-            }
-        }
-
-        /// <inheritdoc />
         public async Task PopulateMoreArtistsAsync(int limit)
         {
             using (await _populateArtistsMutex.LockAsync())
@@ -717,6 +701,40 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public async Task PopulateMoreImagesAsync(int limit)
+        {
+            using (await _populateImagesMutex.LockAsync())
+            {
+                var items = await _album.GetImagesAsync(limit, Images.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
+                {
+                    foreach (var item in items)
+                    {
+                        Images.Add(item);
+                    }
+                });
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task PopulateMoreGenresAsync(int limit)
+        {
+            using (await _populateGenresMutex.LockAsync())
+            {
+                var items = await _album.GetGenresAsync(limit, Genres.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
+                {
+                    foreach (var item in items)
+                    {
+                        Genres.Add(item);
+                    }
+                });
+            }
+        }
+
+        /// <inheritdoc />
         public TrackSortingType CurrentTracksSortingType { get; private set; }
 
         /// <inheritdoc />
@@ -727,9 +745,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public SortDirection CurrentArtistSortingDirection { get; private set; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
 
         /// <inheritdoc />
         public RelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
@@ -745,6 +760,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreGenresCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand PlayTrackCollectionAsyncCommand { get; }
@@ -840,6 +861,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             DetachEvents();
             return _album.DisposeAsync();
+        }
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset)
+        {
+            return _album.GetGenresAsync(limit, offset);
         }
     }
 }

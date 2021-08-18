@@ -105,6 +105,12 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc/>
         public event EventHandler<bool>? IsChangeDatePublishedAsyncAvailableChanged;
 
+        /// <inheritdoc/>
+        public event CollectionChangedEventHandler<ICoreGenre>? GenresChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<int>? GenresCountChanged;
+
         /// <summary>
         /// The <see cref="Release"/> for this album.
         /// </summary>
@@ -153,9 +159,6 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public ICorePlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres { get; } = new SynchronizedObservableCollection<string>();
-
-        /// <inheritdoc/>
         public bool IsPlayTrackCollectionAsyncAvailable => false;
 
         /// <inheritdoc/>
@@ -178,6 +181,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncAvailable => false;
+
+        /// <inheritdoc/>
+        public int TotalGenreCount { get; } = 0;
 
         /// <inheritdoc/>
         public Task<bool> IsAddGenreAvailable(int index)
@@ -266,7 +272,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync(ICoreTrack track)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
@@ -334,7 +340,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         /// <inheritdoc />
         public Task PlayArtistCollectionAsync(ICoreArtistCollectionItem artistItem)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
@@ -347,6 +353,13 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
                 yield return new MusicBrainzCoreArtist(SourceCore, artistCredit.Artist, totalTrackCountForArtist);
             }
+        }
+
+        /// <inheritdoc />
+        public async IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset)
+        {
+            await Task.CompletedTask;
+            yield break;
         }
 
         /// <inheritdoc />
@@ -418,6 +431,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddGenreAsync(ICoreGenre genre, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveGenreAsync(int index)
         {
             throw new NotSupportedException();
         }

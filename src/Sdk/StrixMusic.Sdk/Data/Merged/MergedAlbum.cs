@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Base;
@@ -353,13 +352,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _artistCollectionMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc />
-        public async IAsyncEnumerable<IGenre> GetGenresAsync(int limit, int offset)
-        {
-            var items = await _genreCollectionMap.GetItemsAsync(limit, offset);
-
-            foreach (var item in items)
-                yield return item;
-        }
+        public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => _genreCollectionMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc/>
         public Task RemoveTrackAsync(int index) => _trackCollectionMap.RemoveAt(index);
@@ -410,10 +403,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        Task IPlayableBase.ChangeNameAsync(string name) => ChangeNameAsync(name);
-
-        /// <inheritdoc/>
-        public Task<bool> IsAddGenreAvailable(int index) => _preferredSource.IsAddGenreAvailable(index);
+        public Task<bool> IsAddGenreAvailable(int index) => _genreCollectionMap.IsAddItemAvailable(index);
 
         /// <inheritdoc/>
         public Task<bool> IsAddImageAvailable(int index) => _imageCollectionMap.IsAddItemAvailable(index);
@@ -425,16 +415,16 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsAddArtistItemAvailable(int index) => _artistCollectionMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemAvailable(int index) => _artistCollectionMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveArtistItemAvailable(int index) => _artistCollectionMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveGenreAvailable(int index) => _preferredSource.IsRemoveGenreAvailable(index);
+        public Task<bool> IsRemoveGenreAvailable(int index) => _genreCollectionMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveImageAvailable(int index) => _imageCollectionMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _imageCollectionMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveTrackAvailable(int index) => _trackCollectionMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveTrackAvailable(int index) => _trackCollectionMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc/>
         public Task PauseTrackCollectionAsync() => _preferredSource.PauseTrackCollectionAsync();
@@ -566,6 +556,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
             await _artistCollectionMap.DisposeAsync();
             await _imageCollectionMap.DisposeAsync();
+            await _genreCollectionMap.DisposeAsync();
 
             await Sources.InParallel(x => x.DisposeAsync().AsTask());
         }

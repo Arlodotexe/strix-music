@@ -235,13 +235,13 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsAddAlbumItemAvailable(int index) => _albumMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemAvailable(int index) => _albumMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveAlbumItemAvailable(int index) => _albumMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc />
         public Task<bool> IsAddImageAvailable(int index) => _imageMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailable(int index) => _imageMap.IsRemoveItemSupport(index);
+        public Task<bool> IsRemoveImageAvailable(int index) => _imageMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc />
         public Task PlayAlbumCollectionAsync() => _preferredSource.PlayAlbumCollectionAsync();

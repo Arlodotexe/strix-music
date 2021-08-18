@@ -522,7 +522,7 @@ namespace StrixMusic.Sdk.Data.Merged
                             await imageCollection.RemoveImageAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreGenreCollection genreCollection:
-                            await genreCollection.RemoveGenreAsync((ICoreGenre)source, mappedData.OriginalIndex);
+                            await genreCollection.RemoveGenreAsync(mappedData.OriginalIndex);
                         break;
                     default:
                         ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
@@ -551,7 +551,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         /// <param name="index">The index to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public async Task<bool> IsRemoveItemSupport(int index)
+        public async Task<bool> IsRemoveItemAvailable(int index)
         {
             await TryInitAsync();
 
