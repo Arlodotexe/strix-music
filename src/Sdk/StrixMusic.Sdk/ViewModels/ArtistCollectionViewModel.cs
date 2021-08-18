@@ -62,8 +62,8 @@ namespace StrixMusic.Sdk.ViewModels
 
             using (Threading.PrimaryContext)
             {
-                Images = new SynchronizedObservableCollection<IImage>();
-                Artists = new SynchronizedObservableCollection<IArtistCollectionItem>();
+                Images = new ObservableCollection<IImage>();
+                Artists = new ObservableCollection<IArtistCollectionItem>();
                 UnsortedArtists = new ObservableCollection<IArtistCollectionItem>();
             }
 
