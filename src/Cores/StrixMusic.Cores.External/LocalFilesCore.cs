@@ -30,7 +30,7 @@ namespace StrixMusic.Core.External
         {
             InstanceId = instanceId;
 
-            Devices = new SynchronizedObservableCollection<ICoreDevice>();
+            Devices = new List<ICoreDevice>();
             RecentlyPlayed = new ExternalCoreRecentlyPlayed(this);
             Discoverables = new ExternalCoreDiscoverables(this);
             CoreConfig = new ExternalCoreConfig(this);

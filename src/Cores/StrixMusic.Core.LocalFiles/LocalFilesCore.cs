@@ -30,7 +30,7 @@ namespace StrixMusic.Core.LocalFiles
         {
             InstanceId = instanceId;
 
-            Devices = new SynchronizedObservableCollection<ICoreDevice>();
+            Devices = new List<ICoreDevice>();
             RecentlyPlayed = new LocalFilesCoreRecentlyPlayed(this);
             Discoverables = new LocalFilesCoreDiscoverables(this);
             CoreConfig = new LocalFilesCoreConfig(this);

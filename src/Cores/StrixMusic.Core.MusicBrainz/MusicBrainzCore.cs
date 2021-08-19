@@ -36,7 +36,7 @@ namespace StrixMusic.Core.MusicBrainz
             // The library created here won't be used by the UI.
             // The UI isn't loaded until InitAsync is called, where we set up the actual library.
             Library = new MusicBrainzCoreLibrary(this);
-            Devices = new SynchronizedObservableCollection<ICoreDevice>();
+            Devices = new List<ICoreDevice>();
             RecentlyPlayed = new MusicBrainzCoreRecentlyPlayed(this);
             Discoverables = new MusicBrainzCoreDiscoverables(this);
             User = new MusicBrainzCoreUser(this);
