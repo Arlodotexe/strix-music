@@ -42,6 +42,9 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<DateTime>? BirthDateChanged;
 
         /// <inheritdoc />
+        public event CollectionChangedEventHandler<Uri>? UrlsChanged;
+
+        /// <inheritdoc />
         public ICore SourceCore { get; }
 
         /// <inheritdoc />
@@ -66,7 +69,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public int TotalImageCount { get; } = 0;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<Uri>? Urls { get; } = new SynchronizedObservableCollection<Uri>();
+        public IReadOnlyList<Uri>? Urls { get; } = new List<Uri>();
 
         /// <inheritdoc />
         public CultureInfo Region => CultureInfo.CurrentUICulture;
@@ -87,7 +90,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public bool IsChangeEmailAsyncAvailable => false;
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailable(int index)
+        public Task<bool> IsAddUrlAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
@@ -99,7 +102,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailable(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
@@ -148,6 +151,18 @@ namespace StrixMusic.Core.MusicBrainz.Models
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddUrlAsync(Uri url, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveUrlAsync(int index)
         {
             throw new NotSupportedException();
         }

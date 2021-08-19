@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
@@ -93,6 +92,13 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IImage>? ImagesChanged;
 
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<Uri>? UrlsChanged
+        {
+            add => _user.UrlsChanged += value;
+            remove => _user.UrlsChanged -= value;
+        }
+
         private void AttachEvents()
         {
             _imageMap.ItemsChanged += ImageMap_ItemsChanged;
@@ -121,7 +127,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public string? FullName => _user.FullName;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<Uri>? Urls => _user.Urls;
+        public IReadOnlyList<Uri>? Urls => _user.Urls;
 
         /// <inheritdoc />
         public string? Email => _user.Email;
@@ -148,9 +154,9 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool IsChangeEmailAsyncAvailable => _user.IsChangeEmailAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailable(int index)
+        public Task<bool> IsAddUrlAvailableAsync(int index)
         {
-            return _user.IsAddUrlAvailable(index);
+            return _user.IsAddUrlAvailableAsync(index);
         }
 
         /// <inheritdoc />
@@ -160,9 +166,9 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailable(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index)
         {
-            return _user.IsRemoveUrlAvailable(index);
+            return _user.IsRemoveUrlAvailableAsync(index);
         }
 
         /// <inheritdoc />
@@ -226,6 +232,18 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task AddImageAsync(IImage image, int index)
         {
             return _imageMap.InsertItem(image, index);
+        }
+
+        /// <inheritdoc />
+        public Task AddUrlAsync(Uri url, int index)
+        {
+            return _user.AddUrlAsync(url, index);
+        }
+
+        /// <inheritdoc />
+        public Task RemoveUrlAsync(int index)
+        {
+            return _user.RemoveUrlAsync(index);
         }
 
         /// <inheritdoc />

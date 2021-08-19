@@ -24,6 +24,8 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly IReadOnlyList<ICoreImageCollection> _sources;
         private readonly IReadOnlyList<ICore> _sourceCores;
 
+        private List<Uri> _urls = new List<Uri>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UserProfileViewModel"/> class.
         /// </summary>
@@ -40,7 +42,7 @@ namespace StrixMusic.Sdk.ViewModels
             using (Threading.PrimaryContext)
             {
                 if (userProfile.Urls != null)
-                    Urls = new SynchronizedObservableCollection<Uri>(userProfile.Urls);
+                    _urls.AddRange(userProfile.Urls);
 
                 Images = new ObservableCollection<IImage>();
             }
@@ -58,7 +60,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<DateTime>? BirthDateChanged
         {
             add => _userProfile.BirthDateChanged += value;
-
             remove => _userProfile.BirthDateChanged -= value;
         }
 
@@ -66,7 +67,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<string>? FullNameChanged
         {
             add => _userProfile.FullNameChanged += value;
-
             remove => _userProfile.FullNameChanged -= value;
         }
 
@@ -74,7 +74,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<CultureInfo>? RegionChanged
         {
             add => _userProfile.RegionChanged += value;
-
             remove => _userProfile.RegionChanged -= value;
         }
 
@@ -82,7 +81,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<string?>? EmailChanged
         {
             add => _userProfile.EmailChanged += value;
-
             remove => _userProfile.EmailChanged -= value;
         }
 
@@ -98,6 +96,13 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _userProfile.ImagesChanged += value;
             remove => _userProfile.ImagesChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<Uri>? UrlsChanged
+        {
+            add => _userProfile.UrlsChanged += value;
+            remove => _userProfile.UrlsChanged -= value;
         }
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
@@ -128,7 +133,7 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<Uri>? Urls { get; }
+        public IReadOnlyList<Uri>? Urls => _urls;
 
         /// <inheritdoc />
         public CultureInfo Region => _userProfile.Region;
@@ -149,7 +154,7 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeEmailAsyncAvailable => _userProfile.IsChangeEmailAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailable(int index) => _userProfile.IsAddUrlAvailable(index);
+        public Task<bool> IsAddUrlAvailableAsync(int index) => _userProfile.IsAddUrlAvailableAsync(index);
 
         /// <inheritdoc />
         public Task<bool> IsAddImageAvailable(int index) => _userProfile.IsAddImageAvailable(index);
@@ -158,7 +163,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveImageAvailable(int index) => _userProfile.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailable(int index) => _userProfile.IsRemoveUrlAvailable(index);
+        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _userProfile.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc />
         public Task ChangeDisplayNameAsync(string displayName) => _userProfile.ChangeDisplayNameAsync(displayName);
@@ -183,6 +188,12 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public Task AddImageAsync(IImage image, int index) => _userProfile.AddImageAsync(image, index);
+
+        /// <inheritdoc />
+        public Task AddUrlAsync(Uri url, int index) => _userProfile.AddUrlAsync(url, index);
+
+        /// <inheritdoc />
+        public Task RemoveUrlAsync(int index) => _userProfile.RemoveUrlAsync(index);
 
         /// <inheritdoc />
         public async Task PopulateMoreImagesAsync(int limit)

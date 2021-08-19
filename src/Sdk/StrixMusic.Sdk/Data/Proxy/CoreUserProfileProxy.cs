@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
@@ -82,6 +81,13 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IImage>? ImagesChanged;
 
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<Uri>? UrlsChanged
+        {
+            add => _userProfile.UrlsChanged += value;
+            remove => _userProfile.UrlsChanged -= value;
+        }
+
         private void AttachEvents()
         {
             _imageMap.ItemsChanged += ImageMap_ItemsChanged;
@@ -110,7 +116,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public string? FullName => _userProfile.FullName;
 
         /// <inheritdoc />
-        public SynchronizedObservableCollection<Uri>? Urls => _userProfile.Urls;
+        public IReadOnlyList<Uri>? Urls => _userProfile.Urls;
 
         /// <inheritdoc />
         public string? Email => _userProfile.Email;
@@ -137,9 +143,9 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool IsChangeEmailAsyncAvailable => _userProfile.IsChangeEmailAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailable(int index)
+        public Task<bool> IsAddUrlAvailableAsync(int index)
         {
-            return _userProfile.IsAddUrlAvailable(index);
+            return _userProfile.IsAddUrlAvailableAsync(index);
         }
 
         /// <inheritdoc />
@@ -149,9 +155,9 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailable(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index)
         {
-            return _userProfile.IsRemoveUrlAvailable(index);
+            return _userProfile.IsRemoveUrlAvailableAsync(index);
         }
 
         /// <inheritdoc />
@@ -164,6 +170,18 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task RemoveImageAsync(int index)
         {
             return _userProfile.RemoveImageAsync(index);
+        }
+
+        /// <inheritdoc />
+        public Task AddUrlAsync(Uri url, int index)
+        {
+            return _userProfile.AddUrlAsync(url, index);
+        }
+
+        /// <inheritdoc />
+        public Task RemoveUrlAsync(int index)
+        {
+            return _userProfile.RemoveUrlAsync(index);
         }
 
         /// <inheritdoc />
@@ -222,6 +240,10 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public ValueTask DisposeAsync() => _userProfile.DisposeAsync();
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return _userProfile.DisposeAsync();
+        }
     }
 }
