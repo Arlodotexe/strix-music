@@ -11,7 +11,9 @@ using StrixMusic.Sdk.MediaPlayback;
 
 namespace StrixMusic.Core.External.Models
 {
-    /// <inheritdoc cref="ICorePlayableCollectionGroup"/>
+    /// <summary>
+    /// An external, remotely synchronized implementation of <see cref="ICorePlayableCollectionGroup"/>
+    /// </summary>
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public abstract class ExternalCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup, IAsyncInit
     {
@@ -53,18 +55,18 @@ namespace StrixMusic.Core.External.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="ExternalCorePlayableCollectionGroupBase"/> class.
         /// </summary>
-        /// <param name="sourceCore">The instance of the core this object was created in.</param>
+        /// <param name="sourceCoreInstanceId">The ID of the instance of the core this object was created in.</param>
         /// <param name="name">
         /// The name of the implementing collection. 
         /// Predefined for some implementations (<see cref="ExternalCoreSearchResults"/>, <see cref="ExternalCoreLibrary"/>, etc.) so data is properly merged in the UI.
         /// </param>
-        protected ExternalCorePlayableCollectionGroupBase(ICore sourceCore, string name)
+        protected ExternalCorePlayableCollectionGroupBase(string sourceCoreInstanceId, string name)
         {
             // Properties assigned before MemberRemote is created won't be set remotely, and should be set remotely in the ctor.
-            SourceCore = sourceCore;
+            SourceCore = ExternalCore.GetInstance(sourceCoreInstanceId);
             _name = name;
 
-            _memberRemote = new MemberRemote(this, $"{sourceCore.InstanceId}.{GetType().Name}.{name}");
+            _memberRemote = new MemberRemote(this, $"{sourceCoreInstanceId}.{GetType().Name}.{name}");
 
             Id = _memberRemote.Id;
         }

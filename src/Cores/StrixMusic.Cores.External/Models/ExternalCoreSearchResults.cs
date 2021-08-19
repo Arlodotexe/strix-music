@@ -3,17 +3,17 @@
 namespace StrixMusic.Core.External.Models
 {
     /// <summary>
-    /// A LocalFileCore implementation of <see cref="ICoreSearchResults"/>.
+    /// An external, remotely synchronized implementation of <see cref="ICoreSearchResults"/>
     /// </summary>
     public class ExternalCoreSearchResults : ExternalCorePlayableCollectionGroupBase, ICoreSearchResults
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExternalCoreSearchResults"/> class.
+        /// Creates a new instance of <see cref="ExternalCoreSearchResults"/>.
         /// </summary>
         /// <param name="sourceCore">The core that created this object.</param>
         /// <param name="query">The query that was given to produce these results.</param>
-        public ExternalCoreSearchResults(ICore sourceCore, string query)
-            : base(sourceCore, "Search Results")
+        public ExternalCoreSearchResults(string sourceCoreInstanceId)
+            : base(sourceCoreInstanceId, "Search Results")
         {
         }
     }

@@ -12,7 +12,7 @@ using StrixMusic.Sdk.MediaPlayback;
 namespace StrixMusic.Core.External.Models
 {
     /// <summary>
-    /// Wraps around <see cref="AlbumMetadata"/> to provide album information extracted from a file to the Strix SDK.
+    /// An external, remotely synchronized implementation of <see cref="ICoreAlbum"/>
     /// </summary>
     public class ExternalCoreAlbum : ICoreAlbum, IAsyncInit
     {
@@ -46,19 +46,19 @@ namespace StrixMusic.Core.External.Models
         private AsyncLock _getGenresMutex = new AsyncLock();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExternalCoreAlbum"/> class.
+        /// Creates a new instance of <see cref="ExternalCoreAlbum"/>.
         /// </summary>
-        /// <param name="sourceCore">The core that created this object.</param>
+        /// <param name="sourceCoreInstanceId">The instance ID of the core that created this object.</param>
         /// <param name="id">A unique identifier for this instance.</param>
-        public ExternalCoreAlbum(ICore sourceCore, string name, string id)
+        public ExternalCoreAlbum(string sourceCoreInstanceId, string name, string id)
         {
             _name = name;
             Id = id;
 
             // Properties assigned before MemberRemote is created won't be set remotely.
-            SourceCore = sourceCore; // should be set remotely by the ctor.
+            SourceCore = ExternalCore.GetInstance(sourceCoreInstanceId); // should be set remotely by the ctor.
 
-            _memberRemote = new MemberRemote(this, $"{sourceCore.InstanceId}.{nameof(ExternalCoreAlbum)}.{id}");
+            _memberRemote = new MemberRemote(this, $"{sourceCoreInstanceId}.{nameof(ExternalCoreAlbum)}.{id}");
         }
 
         [RemoteMethod]
@@ -79,6 +79,7 @@ namespace StrixMusic.Core.External.Models
             ImagesChanged?.Invoke(this, addedItems, removedItems);
         }
 
+        [RemoteMethod]
         private void OnGenresChanged(IReadOnlyList<CollectionChangedItem<ICoreGenre>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreGenre>> removedItems)
         {
             GenresChanged?.Invoke(this, addedItems, removedItems);

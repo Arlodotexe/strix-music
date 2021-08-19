@@ -3,13 +3,13 @@
 namespace StrixMusic.Core.External.Models
 {
     /// <summary>
-    /// Discoverable music for the <see cref="ExternalCore"/>.
+    /// An external, remotely synchronized implementation of <see cref="ICoreDiscoverables"/>
     /// </summary>
     public class ExternalCoreDiscoverables : ExternalCorePlayableCollectionGroupBase, ICoreDiscoverables
     {
         /// <inheritdoc />
-        public ExternalCoreDiscoverables(ICore sourceCore)
-            : base(sourceCore, "Discoverables")
+        public ExternalCoreDiscoverables(string sourceCoreInstanceId)
+            : base(sourceCoreInstanceId, "Discoverables")
         {
         }
     }
