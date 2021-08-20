@@ -15,7 +15,7 @@ namespace StrixMusic.Core.External.Models
     /// An external, remotely synchronized implementation of <see cref="ICorePlayableCollectionGroup"/>
     /// </summary>
     [RemoteOptions(RemotingDirection.Bidirectional)]
-    public abstract class ExternalCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup, IAsyncInit
+    public abstract class ExternalCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup
     {
         private readonly MemberRemote _memberRemote;
 
@@ -481,10 +481,6 @@ namespace StrixMusic.Core.External.Models
         }
 
         /// <inheritdoc/>
-        [RemoteProperty]
-        public bool IsInitialized { get; set; }
-
-        /// <inheritdoc/>
         [RemoteMethod]
         public Task<bool> IsAddChildAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddChildAvailable));
 
@@ -747,13 +743,6 @@ namespace StrixMusic.Core.External.Models
         /// <inheritdoc />
         [RemoteMethod]
         public Task AddImageAsync(ICoreImage image, int index) => _memberRemote.RemoteWaitAsync(nameof(AddImageAsync));
-
-        /// <summary>
-        /// Initializes the collection group base.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        [RemoteMethod]
-        public Task InitAsync() => _memberRemote.RemoteWaitAsync(nameof(InitAsync));
 
         /// <inheritdoc />
         [RemoteMethod]

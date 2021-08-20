@@ -14,7 +14,7 @@ namespace StrixMusic.Core.External.Models
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICoreAlbum"/>
     /// </summary>
-    public class ExternalCoreAlbum : ICoreAlbum, IAsyncInit
+    public class ExternalCoreAlbum : ICoreAlbum
     {
         private readonly MemberRemote _memberRemote;
 
@@ -397,10 +397,6 @@ namespace StrixMusic.Core.External.Models
         }
 
         /// <inheritdoc/>
-        [RemoteProperty]
-        public bool IsInitialized { get; set; }
-
-        /// <inheritdoc/>
         [RemoteMethod]
         public Task<bool> IsAddTrackAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddTrackAvailable));
 
@@ -567,13 +563,6 @@ namespace StrixMusic.Core.External.Models
         /// <inheritdoc />
         [RemoteMethod]
         public Task RemoveGenreAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveGenreAsync));
-
-        /// <summary>
-        /// Initializes the collection group base.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        [RemoteMethod]
-        public Task InitAsync() => _memberRemote.RemoteWaitAsync(nameof(InitAsync));
 
         /// <inheritdoc />
         [RemoteMethod]

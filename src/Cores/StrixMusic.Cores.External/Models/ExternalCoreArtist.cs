@@ -10,7 +10,7 @@ namespace StrixMusic.Core.External.Models
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICoreArtist"/>
     /// </summary>
-    public class ExternalCoreArtist : ICoreArtist, IAsyncInit
+    public class ExternalCoreArtist : ICoreArtist
     {
 
     }

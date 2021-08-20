@@ -137,8 +137,8 @@ namespace StrixMusic.Core.External
             // for all SDK implementors (same class used in client/host from SDK)
 
             // INotificationsService -- YES! 
-            // ILocalizationService -- TBD.
-            // IFileSystemService -- TBD.
+            // ILocalizationService -- No.
+            // IFileSystemService -- No.
             //  - For picking a file and keeping access.
             //  - Requires remoting all IFileData and IFolderData implementations
 

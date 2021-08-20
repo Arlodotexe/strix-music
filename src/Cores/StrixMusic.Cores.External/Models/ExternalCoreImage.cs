@@ -7,7 +7,7 @@ namespace StrixMusic.Core.External.Models
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICoreImage"/>
     /// </summary>
-    public class ExternalCoreImage : ICoreImage, IAsyncInit
+    public class ExternalCoreImage : ICoreImage
     {
         /// <summary>
         /// Creates a new instance of <see cref="ExternalCoreImage"/>.
