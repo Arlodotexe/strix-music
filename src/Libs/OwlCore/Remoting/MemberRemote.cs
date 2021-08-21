@@ -80,14 +80,14 @@ namespace OwlCore.Remoting
             if (message is IRemoteMemberMessage memberMsg && memberMsg.MemberRemoteId != Id)
                 return;
 
-            lock (MemberHandleExpectancyMap)
-                MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
-
             var receivedArgs = new RemoteMessageReceivingEventArgs(message);
             MessageReceiving?.Invoke(this, receivedArgs);
 
             if (receivedArgs.Handled)
                 return;
+
+            lock (MemberHandleExpectancyMap)
+                MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
 
             if (message is RemoteMethodCallMessage methodCallMsg)
                 HandleIncomingRemoteMethodCall(methodCallMsg);
@@ -100,7 +100,7 @@ namespace OwlCore.Remoting
 
         private async void OnMethodEntered(object sender, MethodEnteredEventArgs e)
         {
-            if (e.Instance != Instance)
+            if (!ReferenceEquals(e.Instance, Instance))
                 return;
 
             if (!IsValidRemotingDirection(e.MethodBase, false))
@@ -126,7 +126,7 @@ namespace OwlCore.Remoting
 
         private async void OnPropertySetEntered(object sender, PropertySetEnteredEventArgs e)
         {
-            if (e.PropertyInterceptionInfo.Instance != Instance)
+            if (!ReferenceEquals(e.PropertyInterceptionInfo.Instance, Instance))
                 return;
 
             var propertyInfo = e.PropertyInterceptionInfo.ToPropertyInfo();

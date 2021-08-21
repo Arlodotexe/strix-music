@@ -22,7 +22,7 @@ namespace OwlCore.Remoting.Attributes
             // Don't re-emit "entered" to the library if so.
             lock (MemberRemote.MemberHandleExpectancyMap)
             {
-                if (MemberRemote.MemberHandleExpectancyMap.TryGetValue(Thread.CurrentThread.ManagedThreadId, out var expectedInstance) && expectedInstance == instance)
+                if (MemberRemote.MemberHandleExpectancyMap.TryGetValue(Thread.CurrentThread.ManagedThreadId, out var expectedInstance) && ReferenceEquals(expectedInstance, instance))
                 {
                     MemberRemote.MemberHandleExpectancyMap.Remove(Thread.CurrentThread.ManagedThreadId);
                     return;
