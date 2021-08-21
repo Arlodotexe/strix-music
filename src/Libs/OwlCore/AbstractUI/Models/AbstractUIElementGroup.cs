@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using OwlCore.Remoting;
 using OwlCore.Remoting.Attributes;
-using System.Linq;
-using System;
 
 namespace OwlCore.AbstractUI.Models
 {

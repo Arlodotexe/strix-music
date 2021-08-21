@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using OwlCore.Remoting.Attributes;
 
 namespace OwlCore.AbstractUI.Models
 {
@@ -12,11 +13,13 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// The label that is displayed in the button.
         /// </summary>
+        [RemoteProperty]
         public string Text { get; set; }
 
         /// <summary>
         /// The type of button.
         /// </summary>
+        [RemoteProperty]
         public AbstractButtonType Type { get; set; }
 
         /// <summary>
@@ -38,6 +41,7 @@ namespace OwlCore.AbstractUI.Models
         /// 
         /// </summary>
         /// <returns></returns>
+        [RemoteMethod]
         public Task Click()
         {
             Clicked?.Invoke(this, EventArgs.Empty);

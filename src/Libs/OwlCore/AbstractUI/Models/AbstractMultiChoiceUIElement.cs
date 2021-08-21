@@ -1,6 +1,6 @@
-﻿using System;
+﻿using OwlCore.Remoting.Attributes;
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace OwlCore.AbstractUI.Models
 {
@@ -9,6 +9,8 @@ namespace OwlCore.AbstractUI.Models
     /// </summary>
     public class AbstractMultiChoiceUIElement : AbstractUIElement
     {
+        private AbstractUIMetadata _selectedItem;
+
         /// <summary>
         /// Creates a new instance of a <see cref="AbstractMultiChoiceUIElement"/>.
         /// </summary>
@@ -19,7 +21,7 @@ namespace OwlCore.AbstractUI.Models
         public AbstractMultiChoiceUIElement(string id, AbstractUIMetadata defaultSelectedItem, IEnumerable<AbstractUIMetadata> items)
             : base(id)
         {
-            SelectedItem = defaultSelectedItem;
+            _selectedItem = defaultSelectedItem;
             Items = items;
         }
 
@@ -29,23 +31,22 @@ namespace OwlCore.AbstractUI.Models
         public IEnumerable<AbstractUIMetadata> Items { get; }
 
         /// <inheritdoc cref="AbstractMultiChoicePreferredDisplayMode"/>
+        [RemoteProperty]
         public AbstractMultiChoicePreferredDisplayMode PreferredDisplayMode { get; set; }
 
         /// <summary>
         /// The current selected item.
         /// </summary>
         /// <remarks>Must be specified on object creation, even if the item is just a prompt to choose something.</remarks>
-        public AbstractUIMetadata SelectedItem { get; set; }
-
-        /// <summary>
-        /// Called to change the <see cref="SelectedItem"/>.
-        /// </summary>
-        /// <param name="newValue"></param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public void SelectItem(AbstractUIMetadata newValue)
+        [RemoteProperty]
+        public AbstractUIMetadata SelectedItem
         {
-            SelectedItem = newValue;
-            ItemSelected?.Invoke(this, newValue);
+            get => _selectedItem; 
+            set
+            {
+                _selectedItem = value;
+                ItemSelected?.Invoke(this, value);
+            }
         }
 
         /// <summary>

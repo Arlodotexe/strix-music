@@ -36,6 +36,13 @@ namespace OwlCore.AbstractUI.ViewModels
             model.MaximumChanged += Model_MaximumChanged;
         }
 
+        private void DetachEvents(AbstractProgressUIElement model)
+        {
+            model.ValueChanged -= Model_ValueChanged;
+            model.MinimumChanged -= Model_MinimumChanged;
+            model.MaximumChanged -= Model_MaximumChanged;
+        }
+
         private void Model_ValueChanged(object sender, double? e)
         {
             _ = Threading.OnPrimaryThread(() =>
@@ -89,6 +96,13 @@ namespace OwlCore.AbstractUI.ViewModels
         {
             get => _isIndeterminate;
             set => SetProperty(ref _isIndeterminate, value);
+        }
+
+        /// <inheritdoc/>
+        public override void Dispose()
+        {
+            DetachEvents((AbstractProgressUIElement)Model);
+            base.Dispose();
         }
     }
 }

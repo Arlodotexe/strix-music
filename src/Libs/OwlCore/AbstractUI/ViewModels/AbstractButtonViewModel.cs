@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
@@ -9,7 +8,6 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// Abstract button viewmodel.
     /// </summary>
-    [Bindable(true)]
     public class AbstractButtonViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractButton _model;

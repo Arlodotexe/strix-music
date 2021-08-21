@@ -29,9 +29,10 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
 			--- 0.0.22 ---
+			Integrated AbstractUI with OwlCore.Remoting.
 			Fixed potential memory leak in OwlCore.Remoting when RemoteMessageReceivingEventArgs.Handled is set to true.
 			Fixed an issue where an instance with an overriden == operator handed to MemberRemote could interfere with instance reference checks.
-			
+
 			--- 0.0.21 ---
 			Fixed a crash in OwlCore.Remoting.MemberRemote when the library catches and prepares to send an exception.
 

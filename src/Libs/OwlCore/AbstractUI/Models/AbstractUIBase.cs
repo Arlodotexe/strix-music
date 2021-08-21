@@ -1,17 +1,23 @@
 ﻿using System;
+using OwlCore.Remoting;
+using OwlCore.Remoting.Attributes;
 
 namespace OwlCore.AbstractUI.Models
 {
     /// <summary>
     /// The base for all AbstractUI objects. Contains abstracted metadata.
     /// </summary>
-    public abstract class AbstractUIBase
+    [RemoteOptions(RemotingDirection.Bidirectional)]
+    public abstract class AbstractUIBase : IDisposable
     {
+        private readonly MemberRemote _memberRemote;
+
         private string? _title;
         private string? _subtitle;
         private string? _tooltipText;
         private string? _iconCode;
         private string? _imagePath;
+        private bool disposedValue;
 
         /// <summary>
         /// Creates a new instance of <see cref="AbstractUIBase"/>.
@@ -20,6 +26,7 @@ namespace OwlCore.AbstractUI.Models
         protected AbstractUIBase(string id)
         {
             Id = id;
+            _memberRemote = new MemberRemote(this, id);
         }
 
         /// <summary>
@@ -30,6 +37,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// A title to display for this item.
         /// </summary>
+        [RemoteProperty]
         public string? Title
         {
             get => _title;
@@ -43,6 +51,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// An optional subtitle to display with the title.
         /// </summary>
+        [RemoteProperty]
         public string? Subtitle
         {
             get => _subtitle;
@@ -56,6 +65,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// Extended markdown-formatted text to display in an info-focused tooltip.
         /// </summary>
+        [RemoteProperty]
         public string? TooltipText
         {
             get => _tooltipText;
@@ -70,6 +80,7 @@ namespace OwlCore.AbstractUI.Models
         /// A hex code representing an icon from the Segoe MDL2 Assets to display with this item (optional).
         /// </summary>
         /// <remarks>Example: <example><c>"\xE10F"</c></example></remarks>
+        [RemoteProperty]
         public string? IconCode
         {
             get => _iconCode;
@@ -83,6 +94,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// A local path or url pointing to an image associated with this item (optional).
         /// </summary>
+        [RemoteProperty]
         public string? ImagePath
         {
             get => _imagePath;
@@ -117,5 +129,28 @@ namespace OwlCore.AbstractUI.Models
         /// Raised when <see cref="ImagePath"/> is changed.
         /// </summary>
         public event EventHandler<string?>? ImagePathChanged;
+
+        /// <inheritdoc cref="IDisposable.Dispose" />
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _memberRemote.Dispose();
+                }
+
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        /// <inheritdoc cref="IDisposable.Dispose" />
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

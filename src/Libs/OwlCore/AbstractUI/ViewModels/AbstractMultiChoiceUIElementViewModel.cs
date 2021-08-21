@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -12,7 +11,6 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// A view model for an <see cref="AbstractMultiChoiceUIElement"/>.
     /// </summary>
-    [Bindable(true)]
     public class AbstractMultiChoiceUIElementViewModel : AbstractUIViewModelBase
     {
         private int _selectedIndex;
@@ -25,6 +23,8 @@ namespace OwlCore.AbstractUI.ViewModels
             Items = new ObservableCollection<AbstractMultiChoiceItemViewModel>(model.Items.Select(x => CreateItemViewModel(x, model)));
 
             SelectedIndex = model.Items.ToOrAsList().IndexOf(model.SelectedItem);
+
+            AttachEvents(model);
         }
 
         private AbstractMultiChoiceItemViewModel CreateItemViewModel(AbstractUIMetadata itemModel, AbstractMultiChoiceUIElement model)
@@ -33,8 +33,6 @@ namespace OwlCore.AbstractUI.ViewModels
             {
                 IsSelected = itemModel == model.SelectedItem
             };
-
-            AttachEvents(model);
 
             newItem.ItemSelected += ViewModelItem_OnSelected;
 
@@ -66,7 +64,7 @@ namespace OwlCore.AbstractUI.ViewModels
 
                 ItemSelected?.Invoke(this, selectedItem);
 
-                ((AbstractMultiChoiceUIElement)Model).SelectItem((AbstractUIMetadata)selectedItem.Model);
+                ((AbstractMultiChoiceUIElement)Model).SelectedItem = (AbstractUIMetadata)selectedItem.Model;
             }
         }
 
@@ -86,7 +84,7 @@ namespace OwlCore.AbstractUI.ViewModels
 
             ItemSelected?.Invoke(this, selectedItem);
 
-            Model.Cast<AbstractMultiChoiceUIElement>().SelectItem((AbstractUIMetadata)selectedItem.Model);
+            Model.Cast<AbstractMultiChoiceUIElement>().SelectedItem = (AbstractUIMetadata)selectedItem.Model;
         }
 
         /// <summary>
@@ -116,5 +114,13 @@ namespace OwlCore.AbstractUI.ViewModels
         /// RelayCommand that raises when the user chooses an item.
         /// </summary>
         public IRelayCommand<AbstractUIMetadataViewModel> ItemSelectedCommand;
+
+        /// <inheritdoc/>
+        public override void Dispose()
+        {
+            DetachEvents((AbstractMultiChoiceUIElement)Model);
+
+            base.Dispose();
+        }
     }
 }
