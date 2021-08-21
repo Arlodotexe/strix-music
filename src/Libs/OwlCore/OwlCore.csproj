@@ -8,7 +8,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Author>Arlo Godfrey</Author>
-		<Version>0.0.21</Version>
+		<Version>0.0.22</Version>
 		<Product>OwlCore</Product>
 		<Description>
 			Have you ever seen an owl do a barrel roll? Me neither.
@@ -28,6 +28,10 @@
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
+			--- 0.0.22 ---
+			Fixed potential memory leak in OwlCore.Remoting when RemoteMessageReceivingEventArgs.Handled is set to true.
+			Fixed an issue where an instance with an overriden == operator handed to MemberRemote could interfere with instance reference checks.
+			
 			--- 0.0.21 ---
 			Fixed a crash in OwlCore.Remoting.MemberRemote when the library catches and prepares to send an exception.
 
