@@ -6,7 +6,7 @@ namespace StrixMusic.Sdk.Services.Notifications
     /// <summary>
     /// A Service for handling notifications from Cores
     /// </summary>
-    public interface INotificationService
+    public interface INotificationService : IDisposable
     {
         /// <summary>
         /// The maximum number of notification that will be raised at once. Dismiss a notification to show remaining notifications in the queue.

@@ -16,6 +16,8 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public class NotificationService : INotificationService
     {
+        private readonly MemberRemote _memberRemote;
+
         private readonly List<Notification> _notifications;
         private int _activeNotifications;
 
@@ -41,6 +43,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         public NotificationService()
         {
             _notifications = new List<Notification>();
+            _memberRemote = new MemberRemote(this, nameof(NotificationService));
         }
 
         /// <inheritdoc cref="NotificationRaised"/>
@@ -63,16 +66,18 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// <inheritdoc/>
         public Notification RaiseNotification(string title, string message)
         {
-            string NewGuid() => Guid.NewGuid().ToString();
-            var eg = new AbstractUIElementGroup(NewGuid())
+            var id = Guid.NewGuid().ToString();
+            var elementGroup = new AbstractUIElementGroup(id)
             {
                 Title = title,
                 Subtitle = message,
             };
-            return RaiseNotification(eg);
+
+            return RaiseNotification(elementGroup);
         }
 
         /// <inheritdoc/>
+        [RemoteMethod]
         public Notification RaiseNotification(AbstractUIElementGroup elementGroup)
         {
             var notification = new Notification(elementGroup);
@@ -94,14 +99,14 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
                 if (index == -1)
                     return;
 
-                DismissNotification(index);
+                DismissNotificationInternal(index);
             }
         }
 
         /// <summary>
         /// Request that the notification margin be changed.
         /// </summary>
-        /// <param name="thickness"></param>
+        /// <param name="thickness">The margin to put around the notification panel.</param>
         public void ChangeNotificationMargins(Thickness thickness)
         {
             NotificationMarginChanged?.Invoke(this, thickness);
@@ -120,7 +125,10 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// <summary>
         /// Dismisses the top notification and raises the next notification.
         /// </summary>
-        public void DismissNotification(int? index = null)
+        [RemoteMethod]
+        public void DismissNotification(int? index = null) => DismissNotificationInternal(index);
+
+        private void DismissNotificationInternal(int? index = null)
         {
             var targetNotification = _notifications.ElementAtOrDefault(index ?? _notifications.Count - 1);
 
@@ -129,6 +137,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
             _notifications.Remove(targetNotification);
             NotificationDismissed?.Invoke(this, targetNotification);
             targetNotification.Dismissed -= Notification_Dismissed;
+            targetNotification.Dispose();
 
             _activeNotifications--;
 
@@ -147,9 +156,14 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
                     return;
 
                 nextNotification.IsDisplayed = true;
-
                 NotificationRaised?.Invoke(this, nextNotification);
             }
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _memberRemote.Dispose();
         }
     }
 }

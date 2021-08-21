@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Services.Notifications
     /// A Notification displayed by a Shell.
     /// </summary>
     [RemoteOptions(RemotingDirection.Bidirectional)]
-    public class Notification : IDisposable
+    public sealed class Notification : IDisposable
     {
         private readonly MemberRemote _memberRemote;
 
