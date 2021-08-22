@@ -691,7 +691,8 @@ namespace StrixMusic.Sdk.Data.Merged
 
             lock (_sortedMap)
             {
-                var relevantMergedMappedData = MergeMappedData(_sortedMap.ToArray()).Skip(offset).Take(limit);
+                // Simply take without skipping returned elements as they only contain new ones, otherwise it'll return an empty list and will not load next records on shell with virtualization.
+                var relevantMergedMappedData = MergeMappedData(_sortedMap.ToArray()).Take(limit);
                 var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
 
                 return merged;
