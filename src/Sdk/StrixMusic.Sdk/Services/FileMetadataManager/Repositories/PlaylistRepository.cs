@@ -140,10 +140,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     else addedPlaylists.Add(metadata);
 
                     if (addedPlaylists.Count > 0)
-                        MetadataAdded?.Invoke(this, updatedPlaylists);
+                        MetadataAdded?.Invoke(this, addedPlaylists);
 
                     if (updatedPlaylists.Count > 0)
-                        MetadataUpdated?.Invoke(this, addedPlaylists);
+                        MetadataUpdated?.Invoke(this, updatedPlaylists);
                 }
             }
 
