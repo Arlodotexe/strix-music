@@ -21,7 +21,7 @@ namespace StrixMusic.Core.LocalFiles
         private ISettingsService? _settingsService;
         private bool _baseServicesSetup;
         private FileMetadataManager? _fileMetadataManager;
-        private AbstractBooleanUIElement _initWithEmptyReposToggle;
+        private AbstractBooleanUIElement? _initWithEmptyReposToggle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreConfig"/> class.
@@ -92,6 +92,7 @@ namespace StrixMusic.Core.LocalFiles
             _fileSystemService = fileSystemService;
             _settingsService = new LocalFilesCoreSettingsService(SourceCore.InstanceId);
 
+            Guard.IsNotNull(_initWithEmptyReposToggle, nameof(_initWithEmptyReposToggle));
             _initWithEmptyReposToggle.State = await _settingsService.GetValue<bool>(nameof(LocalFilesCoreSettingsKeys.InitWithEmptyMetadataRepos));
 
             services.AddSingleton(_settingsService);

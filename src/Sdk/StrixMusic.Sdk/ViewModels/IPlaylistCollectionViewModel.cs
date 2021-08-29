@@ -1,10 +1,10 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.Input;
+using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using OwlCore.Provisos;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -13,7 +13,6 @@ namespace StrixMusic.Sdk.ViewModels
     /// </summary>
     public interface IPlaylistCollectionViewModel : IPlaylistCollection, IAsyncInit
     {
-
         /// <summary>
         /// Keeps the default track collection while sorting.
         /// </summary>

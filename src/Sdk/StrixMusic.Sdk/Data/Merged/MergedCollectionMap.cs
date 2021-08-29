@@ -800,6 +800,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private Task<MergedCollectionSorting> GetSortingMethod()
         {
             return Task.FromResult(MergedCollectionSorting.Ranked);
+
             //return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
         }
 

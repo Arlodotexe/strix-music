@@ -6,6 +6,7 @@ namespace StrixMusic.Sdk
     /// <summary>
     /// An attribute used to dynamically import a core.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Assembly)]
     public class CoreAttribute : Attribute
     {
         /// <summary>
