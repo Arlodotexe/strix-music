@@ -699,7 +699,12 @@ namespace StrixMusic.Sdk.Data.Merged
 
             lock (_sortedMap)
             {
-                var relevantMergedMappedData = MergeMappedData(_sortedMap.ToArray()).Skip(offset).Take(limit);
+                var allItems = MergeMappedData(_sortedMap.ToArray());
+
+                // This has the most accurate count.
+                ItemsCountChanged?.Invoke(this, allItems.Count);
+
+                var relevantMergedMappedData = allItems.Skip(offset).Take(limit);
                 var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
 
                 return merged;
@@ -726,11 +731,9 @@ namespace StrixMusic.Sdk.Data.Merged
                 if (!exists)
                     mergedItemMaps.Add(mergedInto, mergedMapItems);
             }
-
+          
             foreach (var item in mergedItemMaps)
                 _mergedMappedData.Add(new MergedMappedData(item.Key, item.Value));
-
-            ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
 
             return returnedData;
         }
