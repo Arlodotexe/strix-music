@@ -16,8 +16,6 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public class NotificationService : INotificationService
     {
-        private readonly MemberRemote _memberRemote;
-
         private readonly List<Notification> _notifications;
         private int _activeNotifications;
 
@@ -43,7 +41,6 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         public NotificationService()
         {
             _notifications = new List<Notification>();
-            _memberRemote = new MemberRemote(this, nameof(NotificationService));
         }
 
         /// <inheritdoc cref="NotificationRaised"/>
@@ -77,7 +74,6 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         }
 
         /// <inheritdoc/>
-        [RemoteMethod]
         public Notification RaiseNotification(AbstractUIElementGroup elementGroup)
         {
             var notification = new Notification(elementGroup);
@@ -125,7 +121,6 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// <summary>
         /// Dismisses the top notification and raises the next notification.
         /// </summary>
-        [RemoteMethod]
         public void DismissNotification(int? index = null) => DismissNotificationInternal(index);
 
         private void DismissNotificationInternal(int? index = null)
@@ -158,12 +153,6 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
                 nextNotification.IsDisplayed = true;
                 NotificationRaised?.Invoke(this, nextNotification);
             }
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            _memberRemote.Dispose();
         }
     }
 }

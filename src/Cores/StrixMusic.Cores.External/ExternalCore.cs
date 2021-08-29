@@ -20,7 +20,9 @@ namespace StrixMusic.Core.External
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public class ExternalCore : ICore
     {
-        private static readonly ConcurrentDictionary<string, ExternalCore> _externalCoreInstances = new ConcurrentDictionary<string, ExternalCore>();
+        private static readonly ConcurrentDictionary<string, ExternalCore> _externalCoreInstances
+            = new ConcurrentDictionary<string, ExternalCore>();
+
         private readonly MemberRemote _memberRemote;
 
         /// <summary>
@@ -136,7 +138,7 @@ namespace StrixMusic.Core.External
             // Any interface would need a Bidirectional-capable remote proxy class available
             // for all SDK implementors (same class used in client/host from SDK)
 
-            // INotificationsService -- YES! 
+            // INotificationsService -- YES! (Done)
             // ILocalizationService -- No.
             // IFileSystemService -- No.
             //  - For picking a file and keeping access.

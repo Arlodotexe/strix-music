@@ -65,7 +65,7 @@ namespace OwlCore.Remoting
         }
 
         /// <summary>
-        /// Publishes data 
+        /// Publishes data remotely, to be received by <see cref="ReceiveDataAsync{TResult}(MemberRemote, string, CancellationToken?)"/>.
         /// </summary>
         /// <typeparam name="T">The type of data being sent.</typeparam>
         /// <param name="memberRemote">The member remote used to send the message.</param>
