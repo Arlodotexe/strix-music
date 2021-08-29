@@ -990,7 +990,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem) => PlayPlaylistCollectionInternalAsync(playlistItem);
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync() => _collectionGroup.PlayPlaylistCollectionAsync();
+        public Task PlayPlaylistCollectionAsync()
+        {
+            return _playbackHandler.PlayAsync((IPlaylistCollectionViewModel)this, _collectionGroup);
+        }
 
         ///<inheritdoc />
         public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
@@ -1194,14 +1197,14 @@ namespace StrixMusic.Sdk.ViewModels
         public bool Equals(ICorePlayableCollectionGroup other) => _collectionGroup.Equals(other);
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public Task InitAsync()
         {
             if (IsInitialized)
-                return;
+                return Task.CompletedTask;
 
             IsInitialized = true;
 
-            await CollectionInit.TrackCollection(this);
+            return Task.WhenAll(CollectionInit.AlbumCollection(this), CollectionInit.TrackCollection(this), CollectionInit.PlaylistCollection(this), CollectionInit.TrackCollection(this));
         }
 
         private Task ChangeNameInternalAsync(string? name)
@@ -1232,7 +1235,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(playlistItem, nameof(playlistItem));
 
-            throw new NotImplementedException();
+            return _playbackHandler.PlayAsync(playlistItem, this, _collectionGroup);
         }
 
         private Task PlayPlayableCollectionGroupInternalAsync(IPlayableCollectionGroup? collectionGroup)

@@ -630,9 +630,17 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry.Count));
             Guard.IsGreaterThan(limit, 0, nameof(limit));
 
-            // Rebuild the sorted map so we're sure it's sorted correctly.
-            _sortedMap.Clear();
-            _sortedMap.AddRange(BuildSortedMapRanked());
+            var mappedData = new List<MappedData>();
+            if (_sortedMap.Count > 0)
+            {
+                mappedData = BuildSortedMapRanked(_sortedMap.Count);
+            }
+            else
+            {
+                mappedData = BuildSortedMapRanked();
+            }
+
+            _sortedMap.AddRange(mappedData);
 
             // If the offset exceeds the number of items we have, return nothing.
             if (offset >= _sortedMap.Count)
@@ -738,7 +746,7 @@ namespace StrixMusic.Sdk.Data.Merged
             };
         }
 
-        private List<MappedData> BuildSortedMapRanked()
+        private List<MappedData> BuildSortedMapRanked(int offset = 0)
         {
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
             Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
@@ -770,7 +778,7 @@ namespace StrixMusic.Sdk.Data.Merged
             {
                 var itemsCount = source.GetItemsCount<TCollection>();
 
-                for (var i = 0; i < itemsCount; i++)
+                for (var i = offset; i < itemsCount; i++)
                 {
                     itemsMap.Add(new MappedData(i, source));
                 }

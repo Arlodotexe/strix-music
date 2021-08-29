@@ -213,11 +213,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             var fileMetadata = await _audioMetadataScanner.ScanMusicFiles(discoveredFiles);
             scanningMusicNotif.Dismiss();
 
-            // Playlist scanning is disabled until bugs are fixed.
-            /*            _currentScanningType = FileScanningType.Playlists;
-                        var scanningPlaylistsNotif = RaiseProcessingNotification();
-                        await _playlistMetadataScanner.ScanPlaylists(discoveredFiles, fileMetadata);
-                        scanningPlaylistsNotif.Dismiss();*/
+
+            _currentScanningType = FileScanningType.Playlists;
+            var scanningPlaylistsNotif = RaiseProcessingNotification();
+            await _playlistMetadataScanner.ScanPlaylists(discoveredFiles, fileMetadata);
+            scanningPlaylistsNotif.Dismiss();
 
             ScanningCompleted?.Invoke(this, EventArgs.Empty);
         }
