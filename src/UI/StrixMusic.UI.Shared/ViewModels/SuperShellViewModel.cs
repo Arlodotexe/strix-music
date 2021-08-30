@@ -14,7 +14,10 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Settings;
+using StrixMusic.Sdk.Uno.Helpers;
+using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.ViewModels;
+using Windows.ApplicationModel;
 
 namespace StrixMusic.Shared.ViewModels
 {
@@ -26,6 +29,7 @@ namespace StrixMusic.Shared.ViewModels
         private readonly MainViewModel _mainViewModel;
         private readonly LoadedServicesItemViewModel _addNewItem;
         private readonly ICoreManagementService _coreManagementService;
+        private readonly LocalizationResourceLoader _localizationResourceLoader;
         private bool _disposedValue;
         private bool _isShowingAddNew;
         private int _selectedTabIndex;
@@ -38,6 +42,7 @@ namespace StrixMusic.Shared.ViewModels
         {
             _mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
             _coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
+            _localizationResourceLoader = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
 
             ShellSelectorViewModel = new ShellSelectorViewModel();
             Services = new ObservableCollection<LoadedServicesItemViewModel>();
@@ -194,6 +199,23 @@ namespace StrixMusic.Shared.ViewModels
 
         /// <inheritdoc cref="ShellSelectorViewModel" />
         public ShellSelectorViewModel ShellSelectorViewModel { get; }
+
+        /// <summary>
+        /// Gets the app's version number.
+        /// </summary>
+        public string AppVersion => string.Format(
+            "{0}.{1}.{2}",
+            Package.Current.Id.Version.Major,
+            Package.Current.Id.Version.Minor,
+            Package.Current.Id.Version.Build);
+
+        /// <summary>
+        /// Gets the last commit and branch used for build.
+        /// </summary>
+        public string CommitStatus => string.Format(
+            _localizationResourceLoader[Constants.Localization.SuperShellResource, "CommitFrom"],
+            ThisAssembly.Git.Commit,
+            ThisAssembly.Git.Branch);
 
         /// <summary>
         /// If true, the user has selected to add a new item and the UI should reflect this.
