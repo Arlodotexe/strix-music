@@ -17,7 +17,8 @@ namespace StrixMusic.Core.OneDriveCore.Models
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
         /// <param name="trackMetadata">The track metadata to wrap around</param>
-        public OneDriveCoreTrack(ICore sourceCore, TrackMetadata trackMetadata) : base(sourceCore, trackMetadata)
+        public OneDriveCoreTrack(ICore sourceCore, TrackMetadata trackMetadata) 
+            : base(sourceCore, trackMetadata)
         {
         }
     }

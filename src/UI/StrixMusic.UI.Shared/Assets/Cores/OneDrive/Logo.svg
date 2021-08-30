@@ -1,15 +1,34 @@
-<svg width="auto" height="auto" viewBox="0 0 65 85" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M43.8518 1H3.03226C1.90984 1 1 1.90984 1 3.03226V82.2903C1 83.4128 1.90984 84.3226 3.03226 84.3226H61.9678C63.0902 84.3226 64 83.4128 64 82.2903V21.1482C64 20.6093 63.7859 20.0924 63.4048 19.7112L45.2888 1.59525C44.9077 1.2141 44.3908 1 43.8518 1Z" fill="url(#paint0_linear)" stroke="#CCCCCC" stroke-width="0.555484" stroke-miterlimit="10"/>
-<path d="M43.6774 1V19.2903C43.6774 20.4127 44.5873 21.3226 45.7097 21.3226H64" fill="url(#paint1_linear)"/>
-<path d="M43.6774 1V19.2903C43.6774 20.4127 44.5873 21.3226 45.7097 21.3226H64" stroke="#CCCCCC" stroke-width="0.555484" stroke-miterlimit="10"/>
-<defs>
-<linearGradient id="paint0_linear" x1="64" y1="1" x2="-16.1688" y2="61.6155" gradientUnits="userSpaceOnUse">
-<stop stop-color="#9E18B4"/>
-<stop offset="1" stop-color="#B24FE3"/>
-</linearGradient>
-<linearGradient id="paint1_linear" x1="64" y1="1" x2="43.6774" y2="21.3226" gradientUnits="userSpaceOnUse">
-<stop stop-color="#9E18B4"/>
-<stop offset="1" stop-color="#B24FE3"/>
-</linearGradient>
-</defs>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Livello_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1030.04 659.922"
+	 enable-background="new 0 0 1030.04 659.922" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  bottomLeftOrigin="true" height="659.922" width="1030.04" x="-490" y="-344.922"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<g id="STYLE_COLOR_1_">
+	<path fill="#0364B8" d="M622.292,445.338l212.613-203.327C790.741,69.804,615.338-33.996,443.13,10.168
+		C365.58,30.056,298.224,78.13,254.209,145.005C257.5,144.922,622.292,445.338,622.292,445.338z"/>
+	<path fill="#0078D4" d="M392.776,183.283l-0.01,0.035c-40.626-25.162-87.479-38.462-135.267-38.397
+		c-1.104,0-2.189,0.07-3.291,0.083C112.064,146.765-1.74,263.423,0.02,405.567c0.638,51.562,16.749,101.743,46.244,144.04
+		l318.528-39.894l244.209-196.915L392.776,183.283z"/>
+	<path fill="#1490DF" d="M834.905,242.012c-4.674-0.312-9.371-0.528-14.123-0.528c-28.523-0.028-56.749,5.798-82.93,17.117
+		l-0.006-0.022l-128.844,54.22l142.041,175.456l253.934,61.728c54.799-101.732,16.752-228.625-84.98-283.424
+		c-26.287-14.16-55.301-22.529-85.091-24.546V242.012z"/>
+	<path fill="#28A8EA" d="M46.264,549.607C94.359,618.756,173.27,659.966,257.5,659.922h563.281
+		c76.946,0.022,147.691-42.202,184.195-109.937L609.001,312.798L46.264,549.607z"/>
+</g>
 </svg>

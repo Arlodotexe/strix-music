@@ -6,6 +6,7 @@ using System.Text;
 
 namespace StrixMusic.Core.OneDriveCore.Models
 {
+    /// <inheritdoc />
     public class OneDriveCoreImage : LocalFilesCoreImage
     {
         /// <summary>
