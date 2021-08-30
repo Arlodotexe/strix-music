@@ -12,7 +12,8 @@ namespace StrixMusic.Core.OneDriveCore
         /// Initializes a new instance of the <see cref="OneDriveCore"/> class.
         /// </summary>
         /// <param name="instanceId"></param>
-        public OneDriveCore(string instanceId) : base(instanceId)
+        public OneDriveCore(string instanceId) 
+            : base(instanceId)
         {
         }
     }

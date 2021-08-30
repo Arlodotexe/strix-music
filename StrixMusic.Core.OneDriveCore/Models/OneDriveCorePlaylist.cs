@@ -15,7 +15,6 @@ namespace StrixMusic.Core.OneDriveCore.Models
         public OneDriveCorePlaylist(ICore sourceCore, PlaylistMetadata playlistMetadata)
             : base(sourceCore, playlistMetadata)
         {
-
         }
     }
 }
