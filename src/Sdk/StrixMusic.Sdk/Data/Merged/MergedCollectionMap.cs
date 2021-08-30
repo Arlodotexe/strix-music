@@ -630,9 +630,17 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry.Count));
             Guard.IsGreaterThan(limit, 0, nameof(limit));
 
-            // Rebuild the sorted map so we're sure it's sorted correctly.
-            _sortedMap.Clear();
-            _sortedMap.AddRange(BuildSortedMapRanked());
+            var mappedData = new List<MappedData>();
+            if (_sortedMap.Count > 0)
+            {
+                mappedData = BuildSortedMapRanked(_sortedMap.Count);
+            }
+            else
+            {
+                mappedData = BuildSortedMapRanked();
+            }
+
+            _sortedMap.AddRange(mappedData);
 
             // If the offset exceeds the number of items we have, return nothing.
             if (offset >= _sortedMap.Count)
@@ -691,7 +699,15 @@ namespace StrixMusic.Sdk.Data.Merged
 
             lock (_sortedMap)
             {
-                var relevantMergedMappedData = MergeMappedData(_sortedMap.ToArray()).Skip(offset).Take(limit);
+                var allItems = MergeMappedData(_sortedMap.ToArray());
+
+#warning TODO Re-do of merged collection item handling. 
+
+                // Since we don't get all items from the API, we don't know which are merged until we get the data. 
+                // This problem may require a fundamental re-think of how we handle collection items, likely getting and processing the entire collection before emitting any items count.
+                ItemsCountChanged?.Invoke(this, allItems.Count);
+
+                var relevantMergedMappedData = allItems.Skip(offset).Take(limit);
                 var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
 
                 return merged;
@@ -718,11 +734,9 @@ namespace StrixMusic.Sdk.Data.Merged
                 if (!exists)
                     mergedItemMaps.Add(mergedInto, mergedMapItems);
             }
-
+          
             foreach (var item in mergedItemMaps)
                 _mergedMappedData.Add(new MergedMappedData(item.Key, item.Value));
-
-            ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
 
             return returnedData;
         }
@@ -738,7 +752,7 @@ namespace StrixMusic.Sdk.Data.Merged
             };
         }
 
-        private List<MappedData> BuildSortedMapRanked()
+        private List<MappedData> BuildSortedMapRanked(int offset = 0)
         {
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
             Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
@@ -770,7 +784,7 @@ namespace StrixMusic.Sdk.Data.Merged
             {
                 var itemsCount = source.GetItemsCount<TCollection>();
 
-                for (var i = 0; i < itemsCount; i++)
+                for (var i = offset; i < itemsCount; i++)
                 {
                     itemsMap.Add(new MappedData(i, source));
                 }
@@ -792,6 +806,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private Task<MergedCollectionSorting> GetSortingMethod()
         {
             return Task.FromResult(MergedCollectionSorting.Ranked);
+
             //return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
         }
 

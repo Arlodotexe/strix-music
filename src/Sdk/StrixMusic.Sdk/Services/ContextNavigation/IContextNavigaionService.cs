@@ -16,6 +16,7 @@ namespace StrixMusic.Sdk.Services.ContextNavigation
         /// </summary>
         /// <param name="coreInstanceId">The name of the core.</param>
         /// <param name="contextId">The payload which can be a Uri or Id.</param>
+        /// <returns>A <see cref="Task"/> that represents the asychronous operation.</returns>
         Task RequestNavigation(string coreInstanceId, string contextId);
 
         /// <summary>

@@ -13,6 +13,7 @@ namespace StrixMusic.Sdk.Data.Core
         /// <param name="name">The user-friendly name of this core.</param>
         /// <param name="logoSvgUrl">The logo for this core.</param>
         /// <param name="coreTypeAssemblyQualifiedName">The full name of the core type associated with this attribute.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1054:URI-like parameters should not be strings", Justification = "Needs to be string for defining in AssemblyInfo.")]
         public CoreAttributeData(string name, string logoSvgUrl, string coreTypeAssemblyQualifiedName)
         {
             Name = name;

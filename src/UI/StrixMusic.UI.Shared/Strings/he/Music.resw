@@ -381,4 +381,10 @@
   <data name="LengthCOL.Header" xml:space="preserve">
     <value>משך</value>
   </data>
+  <data name="DateAddedCOL.Header" xml:space="preserve">
+    <value>תאריך הוסף</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>תאריך הוסף</value>
+  </data>
 </root>

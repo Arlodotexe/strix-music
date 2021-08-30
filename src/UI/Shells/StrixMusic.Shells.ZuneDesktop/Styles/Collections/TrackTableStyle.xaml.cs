@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using StrixMusic.Sdk.ViewModels;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 using System;
 using Windows.UI.Xaml;
 
@@ -28,21 +29,48 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles.Collections
 
         private void DataGrid_Sorting(object sender, DataGridColumnEventArgs e)
         {
-            DataGridSortDirection? oldSortDirection = e.Column.SortDirection;
-            ClearSortings((DataGrid)sender);
+            DataGrid grid = (DataGrid)sender;
+            SortColumn(grid, e.Column);
+        }
 
+        private void SortColumn(DataGrid grid, DataGridColumn column)
+        {
+            ITrackCollectionViewModel viewModel = (ITrackCollectionViewModel)grid.DataContext;
+
+            TrackSortingType sortingType = TrackSortingType.Unsorted;
+            SortDirection sortingDirection = SortDirection.Unsorted;
+
+            switch (column.Tag)
+            {
+                case "Song":
+                    sortingType = TrackSortingType.Alphanumerical;
+                    break;
+                case "Length":
+                    sortingType = TrackSortingType.Duration;
+                    break;
+                case "DateAdded":
+                    sortingType = TrackSortingType.DateAdded;
+                    break;
+                default:
+                    return;
+            }
+
+            DataGridSortDirection? oldSortDirection = column.SortDirection;
+            ClearSortings(grid);
             switch (oldSortDirection)
             {
                 case null:
-                    e.Column.SortDirection = DataGridSortDirection.Ascending;
+                case DataGridSortDirection.Descending:
+                    column.SortDirection = DataGridSortDirection.Ascending;
+                    sortingDirection = SortDirection.Ascending;
                     break;
                 case DataGridSortDirection.Ascending:
-                    e.Column.SortDirection = DataGridSortDirection.Descending;
-                    break;
-                case DataGridSortDirection.Descending:
-                    e.Column.SortDirection = null;
+                    column.SortDirection = DataGridSortDirection.Descending;
+                    sortingDirection = SortDirection.Descending;
                     break;
             }
+
+            viewModel.SortTrackCollection(sortingType, sortingDirection);
         }
     }
 }
