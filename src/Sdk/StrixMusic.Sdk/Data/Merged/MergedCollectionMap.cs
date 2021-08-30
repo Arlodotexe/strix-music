@@ -701,7 +701,10 @@ namespace StrixMusic.Sdk.Data.Merged
             {
                 var allItems = MergeMappedData(_sortedMap.ToArray());
 
-                // This has the most accurate count.
+#warning TODO Re-do of merged collection item handling. 
+
+                // Since we don't get all items from the API, we don't know which are merged until we get the data. 
+                // This problem may require a fundamental re-think of how we handle collection items, likely getting and processing the entire collection before emitting any items count.
                 ItemsCountChanged?.Invoke(this, allItems.Count);
 
                 var relevantMergedMappedData = allItems.Skip(offset).Take(limit);
