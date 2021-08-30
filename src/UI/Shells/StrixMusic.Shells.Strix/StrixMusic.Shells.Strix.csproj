@@ -7,7 +7,7 @@
     <RootNamespace>StrixMusic.Shells.Strix</RootNamespace>
     <AssemblyName>StrixMusic.Shells.Strix</AssemblyName>
     <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
