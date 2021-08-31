@@ -19,7 +19,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Views.Secondary
             this.DefaultStyleKey = typeof(PlaylistView);
             DataContext = playlistViewModel;
 
-            LoadAsync().FireAndForget();
+            LoadAsync().Forget();
         }
 
         /// <summary>

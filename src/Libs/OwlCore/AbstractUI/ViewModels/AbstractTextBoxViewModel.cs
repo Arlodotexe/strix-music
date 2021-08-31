@@ -60,7 +60,7 @@ namespace OwlCore.AbstractUI.ViewModels
 
         private void HandleValueChanged()
         {
-            SaveValue().FireAndForget();
+            SaveValue().Forget();
         }
 
         /// <summary>

@@ -896,13 +896,13 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </remarks>
         void IMergedMutable<TCoreCollection>.AddSource(TCoreCollection itemToMerge)
         {
-            ResetDataRanked().FireAndForget();
+            ResetDataRanked().Forget();
         }
 
         /// <inheritdoc />
         void IMergedMutable<TCoreCollection>.RemoveSource(TCoreCollection itemToRemove)
         {
-            ResetDataRanked().FireAndForget();
+            ResetDataRanked().Forget();
         }
 
         /// <inheritdoc />
