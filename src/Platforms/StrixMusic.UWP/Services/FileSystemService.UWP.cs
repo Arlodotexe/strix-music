@@ -162,9 +162,20 @@ namespace OwlCore.AbstractStorage
 
             foreach (var accessEntry in persistentAccessEntries)
             {
-                var folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(accessEntry.Token);
+                StorageFolder? folder = null;
+
+                try
+                {
+                    folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(accessEntry.Token);
+                }
+                catch
+                {
+                    // Folder may have been removed.
+                    StorageApplicationPermissions.FutureAccessList.Remove(accessEntry.Token);
+                }
+                    
                 if (folder == null)
-                    return;
+                    continue;
 
                 var folderData = new FolderData(folder);
 
