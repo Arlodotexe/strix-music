@@ -66,7 +66,7 @@ namespace StrixMusic.Core.LocalFiles
             _fileMetadataManager.SkipRepoInit = await _settingsService.GetValue<bool>(nameof(LocalFilesCoreSettingsKeys.InitWithEmptyMetadataRepos));
 
             await _fileMetadataManager.InitAsync();
-            _ = _fileMetadataManager.StartScan();
+            _ = Task.Run(_fileMetadataManager.StartScan);
 
             services.AddSingleton<IFileMetadataManager>(_fileMetadataManager);
 

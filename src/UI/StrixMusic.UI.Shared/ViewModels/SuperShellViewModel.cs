@@ -212,10 +212,10 @@ namespace StrixMusic.Shared.ViewModels
         /// <summary>
         /// Gets the last commit and branch used for build.
         /// </summary>
-        public string CommitStatus => string.Format(
+        public string CommitStatus => string.Empty;/*string.Format(
             _localizationResourceLoader[Constants.Localization.SuperShellResource, "CommitFrom"],
             ThisAssembly.Git.Commit,
-            ThisAssembly.Git.Branch);
+            ThisAssembly.Git.Branch);*/
 
         /// <summary>
         /// If true, the user has selected to add a new item and the UI should reflect this.
