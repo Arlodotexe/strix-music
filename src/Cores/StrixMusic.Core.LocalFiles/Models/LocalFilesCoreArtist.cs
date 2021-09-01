@@ -464,12 +464,17 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            var images = await _fileMetadataManager.Images.GetImagesByArtistIdAsync(Id, offset, limit);
-
-            foreach (var image in images)
+            if (_artistMetadata.ImageIds == null)
             {
-                Guard.IsNotNullOrWhiteSpace(image.Id, nameof(image.Id));
-                yield return InstanceCache.Images.GetOrCreate(image.Id, SourceCore, image);
+                yield break;
+            }
+
+            foreach (var imageId in _artistMetadata.ImageIds)
+            {
+                yield return InstanceCache.Images.GetOrCreate(
+                    imageId,
+                    SourceCore,
+                    await _fileMetadataManager.Images.GetImageByIdAsync(imageId));
             }
         }
 
