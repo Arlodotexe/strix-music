@@ -11,7 +11,7 @@
     <AssemblyName>StrixMusic.Shells.Groove</AssemblyName>
     <RootNamespace>StrixMusic.Shells.Groove</RootNamespace>
     <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>

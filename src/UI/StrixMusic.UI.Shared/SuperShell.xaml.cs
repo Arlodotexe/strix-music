@@ -16,15 +16,6 @@ namespace StrixMusic.Shared
             DependencyProperty.Register(nameof(ViewModel), typeof(SuperShellViewModel), typeof(SuperShell), new PropertyMetadata(new SuperShellViewModel()));
 
         /// <summary>
-        /// ViewModel for this control.
-        /// </summary>
-        public SuperShellViewModel ViewModel
-        {
-            get => (SuperShellViewModel)GetValue(ViewModelProperty);
-            set => SetValue(ViewModelProperty, value);
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SuperShell"/> class.
         /// </summary>
         public SuperShell()
@@ -32,6 +23,15 @@ namespace StrixMusic.Shared
             InitializeComponent();
 
             _ = ViewModel.InitAsync();
+        }
+
+        /// <summary>
+        /// ViewModel for this control.
+        /// </summary>
+        public SuperShellViewModel ViewModel
+        {
+            get => (SuperShellViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
     }
 }

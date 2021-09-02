@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Extensions;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
@@ -66,7 +67,7 @@ namespace StrixMusic.Core.LocalFiles
             _fileMetadataManager.SkipRepoInit = await _settingsService.GetValue<bool>(nameof(LocalFilesCoreSettingsKeys.InitWithEmptyMetadataRepos));
 
             await _fileMetadataManager.InitAsync();
-            _ = _fileMetadataManager.StartScan();
+            Task.Run(_fileMetadataManager.StartScan).Forget();
 
             services.AddSingleton<IFileMetadataManager>(_fileMetadataManager);
 

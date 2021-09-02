@@ -7,7 +7,7 @@
     <AssemblyName>StrixMusic.Shells.ZuneHD</AssemblyName>
     <RootNamespace>StrixMusic.Shells.ZuneHD</RootNamespace>
     <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
