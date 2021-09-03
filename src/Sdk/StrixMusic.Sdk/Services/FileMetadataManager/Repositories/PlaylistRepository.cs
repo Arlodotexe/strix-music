@@ -137,7 +137,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
                     if (playlistExists)
                         updatedPlaylists.Add(metadata);
-                    else addedPlaylists.Add(metadata);
+                    else
+                        addedPlaylists.Add(metadata);
 
                     if (addedPlaylists.Count > 0)
                         MetadataAdded?.Invoke(this, addedPlaylists);
