@@ -11,7 +11,7 @@ using StrixMusic.Sdk.MediaPlayback;
 namespace StrixMusic.Core.External
 {
     ///  <inheritdoc/>
-    public class ExternalCoreConfig : ICoreConfig, IAsyncInit
+    public class ExternalCoreConfig : ICoreConfig
     {
         /// <summary>
         /// Creates a new instance of <see cref="ExternalCoreConfig"/>.
@@ -32,19 +32,10 @@ namespace StrixMusic.Core.External
         public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; private set; }
 
         /// <inheritdoc />
-        public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
-
-        /// <inheritdoc />
-        public bool IsInitialized => throw new NotImplementedException();
+        public MediaPlayerType PlaybackType { get; set; }
 
         /// <inheritdoc/>
         public event EventHandler? AbstractUIElementsChanged;
-
-        /// <inheritdoc />
-        public Task InitAsync()
-        {
-            throw new NotImplementedException();
-        }
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()

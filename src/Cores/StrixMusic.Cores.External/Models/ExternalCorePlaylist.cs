@@ -10,7 +10,7 @@ namespace StrixMusic.Core.External.Models
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICorePlaylist"/>
     /// </summary>
-    public class ExternalCorePlaylist : ICorePlaylist
+/*    public class ExternalCorePlaylist : ICorePlaylist
     {
-    }
+    }*/
 }

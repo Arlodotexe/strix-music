@@ -128,6 +128,7 @@ namespace StrixMusic.Core.External
         /// <inheritdoc/>
         public async Task InitAsync(IServiceCollection services)
         {
+
             // ==========================
             // Train of thought for later:
             // ==========================
@@ -148,20 +149,19 @@ namespace StrixMusic.Core.External
 
             // Should we call InitAsync manually on every model?
             // Do we even need InitAsync on everything?
-            // They should be able to call InitAsync when they need it, like when (/if) an item is retrieved from the API but needs extra init beyond the constructor (see MusicBrainz)
+            // They should be able to call InitAsync when they need it, like when (/if) an item is retrieved from the API but needs extra init beyond the constructor
             // Their own API should determine if init async is even needed at all
 
             // answer:
-            // The asynchronous nature of how items returned from an API + remote lock mean they always have the chance to call initasync and we always wait for async calls on their end
-            // Remote properties means we don't care how or when it's called or what it even does
             // No.
+            // The asynchronous nature of how items returned from an API + remote lock mean they always have the chance to call initasync and we always wait for async calls on their end to finish.
+            // Remote properties mean we don't care how or when it's called or what it even does
 
             // ============
             // TODO:
-            // Remove any manually added InitAsync from all ExternalCore models.
             // Remaining remoting implementation for ExternalCore models
             // Generic PlayableCollectionGroup implementation for e.g. RelatedItems
-            // Set up two way remote proxy wrapper for INotificationsService.
+            // Set up remote notification service here.
             // ============
             await _memberRemote.RemoteWaitAsync(nameof(InitAsync));
         }

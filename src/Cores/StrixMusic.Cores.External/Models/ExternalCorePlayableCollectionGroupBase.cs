@@ -174,7 +174,7 @@ namespace StrixMusic.Core.External.Models
         public event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int>? TotalChildrenCountChanged;
+        public event EventHandler<int>? ChildrenCountChanged;
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
@@ -333,7 +333,7 @@ namespace StrixMusic.Core.External.Models
             internal set
             {
                 _totalChildrenCount = value;
-                TotalChildrenCountChanged?.Invoke(this, value);
+                ChildrenCountChanged?.Invoke(this, value);
             }
         }
 

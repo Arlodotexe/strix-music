@@ -13,7 +13,7 @@ namespace StrixMusic.Core.External.Models
     /// <summary>
     /// An external, remotely synchronized implementation of <see cref="ICoreTrack"/>
     /// </summary>
-    public class ExternalCoreTrack : ICoreTrack
+/*    public class ExternalCoreTrack : ICoreTrack
     {
-    }
+    }*/
 }
