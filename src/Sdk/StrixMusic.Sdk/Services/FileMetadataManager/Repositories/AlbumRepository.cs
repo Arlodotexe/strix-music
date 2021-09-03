@@ -160,22 +160,22 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     workingMetadata.ArtistIds ??= new List<string>();
                     workingMetadata.TrackIds ??= new List<string>();
 
-                    var newArtist = !workingMetadata.ArtistIds.Contains(metadata.ArtistMetadata.Id);
-                    var newTrack = !workingMetadata.TrackIds.Contains(metadata.TrackMetadata.Id);
+                    if (!workingMetadata.ArtistIds.Contains(metadata.ArtistMetadata.Id))
+                    {
+                        workingMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
+                        updatedArtistItems.Add(new CollectionChangedItem<(AlbumMetadata, ArtistMetadata)>((workingMetadata, metadata.ArtistMetadata), updatedAlbums.Count));
+                    }
 
-                    workingMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
-                    workingMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
+                    if (!workingMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
+                    {
+                        workingMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
+                        addedTrackItems.Add(new CollectionChangedItem<(AlbumMetadata, TrackMetadata)>((workingMetadata, metadata.TrackMetadata), addedTrackItems.Count));
+                    }
 
                     if (albumExists)
                         updatedAlbums.Add(workingMetadata);
                     else
                         addedAlbums.Add(workingMetadata);
-
-                    if (newArtist)
-                        updatedArtistItems.Add(new CollectionChangedItem<(AlbumMetadata, ArtistMetadata)>((workingMetadata, metadata.ArtistMetadata), updatedAlbums.Count));
-
-                    if (newTrack)
-                        addedTrackItems.Add(new CollectionChangedItem<(AlbumMetadata, TrackMetadata)>((workingMetadata, metadata.TrackMetadata), addedTrackItems.Count));
                 }
             }
 

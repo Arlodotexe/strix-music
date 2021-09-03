@@ -158,20 +158,17 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     workingMetadata.AlbumIds ??= new List<string>();
                     workingMetadata.TrackIds ??= new List<string>();
 
-                    var newAlbum = !workingMetadata.AlbumIds.Contains(metadata.AlbumMetadata.Id);
-                    var newTrack = !workingMetadata.TrackIds.Contains(metadata.TrackMetadata.Id);
-
-                    if (newAlbum)
-                        workingMetadata.AlbumIds.Add(metadata.AlbumMetadata.Id);
-
-                    if (newTrack)
-                        workingMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
-
-                    if (newAlbum)
+                    if (!workingMetadata.AlbumIds.Contains(metadata.AlbumMetadata.Id))
+                    {
                         addedAlbumItems.Add(new CollectionChangedItem<(ArtistMetadata, AlbumMetadata)>((workingMetadata, metadata.AlbumMetadata), addedAlbumItems.Count));
+                        workingMetadata.AlbumIds.Add(metadata.AlbumMetadata.Id);
+                    }
 
-                    if (newTrack)
+                    if (!workingMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
+                    {
                         addedTrackItems.Add(new CollectionChangedItem<(ArtistMetadata, TrackMetadata)>((workingMetadata, metadata.TrackMetadata), addedTrackItems.Count));
+                        workingMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
+                    }
 
                     if (artistExists)
                         updatedArtists.Add(workingMetadata);
