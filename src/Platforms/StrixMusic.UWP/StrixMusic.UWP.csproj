@@ -242,10 +242,6 @@
       <Project>{617f1778-92f9-454a-b041-d71b4b63a221}</Project>
       <Name>StrixMusic.Core.LocalFiles</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj">
-      <Project>{d0618335-d56c-419d-b9fa-98e475338efc}</Project>
-      <Name>StrixMusic.Core.MusicBrainz</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
       <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>
       <Name>OwlCore</Name>
