@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Sdk.Data.Merged
 {
     /// <summary>
-    /// Maps indices for sources in an an <see cref="IMerged{T}"/>.
+    /// Manages the merging of multiple <typeparamref name="TCoreCollection"/>s and presents them as single <typeparamref name="TCollection"/>.
     /// </summary>
     /// <typeparam name="TCollection">The collection type that this is part of.</typeparam>
     /// <typeparam name="TCoreCollection">The types of items that were merged to form <typeparamref name="TCollection"/>.</typeparam>
