@@ -113,7 +113,7 @@ namespace StrixMusic.Sdk.ViewModels
             TrackItemsCountChanged += CollectionGroupOnTrackItemsCountChanged;
             ArtistItemsCountChanged += CollectionGroupOnArtistItemsCountChanged;
             PlaylistItemsCountChanged += CollectionGroupOnPlaylistItemsCountChanged;
-            TotalChildrenCountChanged += CollectionGroupOnTotalChildrenCountChanged;
+            ChildrenCountChanged += CollectionGroupOnTotalChildrenCountChanged;
             ImagesCountChanged += PlayableCollectionGroupViewModel_ImagesCountChanged;
 
             IsPlayAlbumCollectionAsyncAvailableChanged += OnIsPlayAlbumCollectionAsyncAvailableChanged;
@@ -149,7 +149,7 @@ namespace StrixMusic.Sdk.ViewModels
             TrackItemsCountChanged -= CollectionGroupOnTrackItemsCountChanged;
             ArtistItemsCountChanged -= CollectionGroupOnArtistItemsCountChanged;
             PlaylistItemsCountChanged -= CollectionGroupOnPlaylistItemsCountChanged;
-            TotalChildrenCountChanged -= CollectionGroupOnTotalChildrenCountChanged;
+            ChildrenCountChanged -= CollectionGroupOnTotalChildrenCountChanged;
             ImagesCountChanged += PlayableCollectionGroupViewModel_ImagesCountChanged;
 
             IsPlayAlbumCollectionAsyncAvailableChanged -= OnIsPlayAlbumCollectionAsyncAvailableChanged;
@@ -342,10 +342,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int>? TotalChildrenCountChanged
+        public event EventHandler<int>? ChildrenCountChanged
         {
-            add => _collectionGroup.TotalChildrenCountChanged += value;
-            remove => _collectionGroup.TotalChildrenCountChanged -= value;
+            add => _collectionGroup.ChildrenCountChanged += value;
+            remove => _collectionGroup.ChildrenCountChanged -= value;
         }
 
         private void CollectionGroupUrlChanged(object sender, Uri? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Url)));

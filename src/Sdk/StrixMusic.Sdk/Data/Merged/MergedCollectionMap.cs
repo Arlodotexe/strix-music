@@ -219,7 +219,7 @@ namespace StrixMusic.Sdk.Data.Merged
             if (typeof(TCoreCollection) == typeof(ICorePlayableCollectionGroup))
             {
                 ((ICorePlayableCollectionGroup)item).ChildItemsChanged += MergedCollectionMap_ChildItemsChanged;
-                ((ICorePlayableCollectionGroup)item).TotalChildrenCountChanged += MergedCollectionMap_CountChanged;
+                ((ICorePlayableCollectionGroup)item).ChildrenCountChanged += MergedCollectionMap_CountChanged;
             }
             else if (typeof(TCoreCollection) == typeof(ICoreAlbumCollection))
             {
@@ -258,7 +258,7 @@ namespace StrixMusic.Sdk.Data.Merged
             if (typeof(TCoreCollection) == typeof(ICorePlayableCollectionGroup))
             {
                 ((ICorePlayableCollectionGroup)item).ChildItemsChanged -= MergedCollectionMap_ChildItemsChanged;
-                ((ICorePlayableCollectionGroup)item).TotalChildrenCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICorePlayableCollectionGroup)item).ChildrenCountChanged -= MergedCollectionMap_CountChanged;
             }
             else if (typeof(TCoreCollection) == typeof(ICoreAlbumCollection))
             {

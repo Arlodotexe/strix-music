@@ -89,7 +89,7 @@ namespace StrixMusic.Core.MusicBrainz.Models
         public event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc />?
-        public event EventHandler<int>? TotalChildrenCountChanged;
+        public event EventHandler<int>? ChildrenCountChanged;
 
         /// <inheritdoc />?
         public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
