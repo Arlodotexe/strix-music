@@ -23,6 +23,7 @@ namespace StrixMusic.Core.LocalFiles
         private bool _baseServicesSetup;
         private FileMetadataManager? _fileMetadataManager;
         private AbstractBooleanUIElement? _initWithEmptyReposToggle;
+        private AbstractButton? _configDoneButton;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalFilesCoreConfig"/> class.
@@ -93,6 +94,7 @@ namespace StrixMusic.Core.LocalFiles
             _fileSystemService = fileSystemService;
             _settingsService = new LocalFilesCoreSettingsService(SourceCore.InstanceId);
 
+            Guard.IsNotNull(_configDoneButton, nameof(_configDoneButton));
             Guard.IsNotNull(_initWithEmptyReposToggle, nameof(_initWithEmptyReposToggle));
             _initWithEmptyReposToggle.State = await _settingsService.GetValue<bool>(nameof(LocalFilesCoreSettingsKeys.InitWithEmptyMetadataRepos));
 
@@ -126,11 +128,14 @@ namespace StrixMusic.Core.LocalFiles
         {
             _initWithEmptyReposToggle = new AbstractBooleanUIElement("InitWithEmptyMetadataRepos", string.Empty)
             {
-                Title = "Ignore previously scanned metadata",
-                Subtitle = "Requires an app restart",
+                Title = "Ignore cache",
+                Subtitle = "Don't use any previously scanned metadata when scanning files on startup. Requires an app restart",
             };
 
+            _configDoneButton = new AbstractButton("LocalFilesCoreDoneButton", "Done", null, AbstractButtonType.Confirm);
+
             _initWithEmptyReposToggle.StateChanged += InitWithEmptyReposToggleOnStateChanged;
+            _configDoneButton.Clicked += ConfigDoneButton_Clicked;
 
             AbstractUIElements = new List<AbstractUIElementGroup>
             {
@@ -139,9 +144,15 @@ namespace StrixMusic.Core.LocalFiles
                     Items = new List<AbstractUIElement>
                     {
                         _initWithEmptyReposToggle,
+                        _configDoneButton,
                     },
-                }
+                },
             };
+        }
+
+        private void ConfigDoneButton_Clicked(object sender, EventArgs e)
+        {
+            SourceCore.Cast<LocalFilesCore>().ChangeCoreState(Sdk.Data.CoreState.Configured);
         }
 
         private async void InitWithEmptyReposToggleOnStateChanged(object sender, bool e)
