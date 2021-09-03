@@ -87,7 +87,10 @@ namespace StrixMusic.Core.LocalFiles.Models
             }
 
             if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
+            {
                 TrackItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
+                TrackItemsCountChanged?.Invoke(this, TotalTracksCount);
+            }
         }
 
         private void Albums_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>> addedItems, IReadOnlyList<CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>> removedItems)
@@ -116,7 +119,10 @@ namespace StrixMusic.Core.LocalFiles.Models
             }
 
             if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
+            {
                 ArtistItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
+                ArtistItemsCountChanged?.Invoke(this, TotalArtistItemsCount);
+            }
         }
 
         private void Albums_MetadataUpdated(object sender, IEnumerable<AlbumMetadata> e)
