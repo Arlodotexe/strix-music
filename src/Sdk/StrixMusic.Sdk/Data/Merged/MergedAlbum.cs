@@ -403,7 +403,7 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreAvailable(int index) => _genreCollectionMap.IsAddItemAvailable(index);
+        public Task<bool> IsAddGenreAvailableAsync(int index) => _genreCollectionMap.IsAddItemAvailable(index);
 
         /// <inheritdoc/>
         public Task<bool> IsAddImageAvailable(int index) => _imageCollectionMap.IsAddItemAvailable(index);
@@ -418,7 +418,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsRemoveArtistItemAvailable(int index) => _artistCollectionMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveGenreAvailable(int index) => _genreCollectionMap.IsRemoveItemAvailable(index);
+        public Task<bool> IsRemoveGenreAvailableAsync(int index) => _genreCollectionMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc/>
         public Task<bool> IsRemoveImageAvailable(int index) => _imageCollectionMap.IsRemoveItemAvailable(index);

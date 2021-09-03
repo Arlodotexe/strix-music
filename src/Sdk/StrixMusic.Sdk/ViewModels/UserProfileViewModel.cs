@@ -9,6 +9,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
 using OwlCore.Collections;
 using OwlCore.Events;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
@@ -21,7 +22,7 @@ namespace StrixMusic.Sdk.ViewModels
     public class UserProfileViewModel : ObservableObject, IUserProfile, IImageCollectionViewModel
     {
         private readonly IUserProfile _userProfile;
-        private readonly IReadOnlyList<ICoreImageCollection> _sources;
+        private readonly IReadOnlyList<ICoreUserProfile> _sources;
         private readonly IReadOnlyList<ICore> _sourceCores;
 
         private List<Uri> _urls = new List<Uri>();
@@ -32,10 +33,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
         public UserProfileViewModel(IUserProfile userProfile)
         {
+            // NOTES FOR LATER -- this class is WIP.
+            // Finish refactoring user profile and user to use new IUrlCollection
+            // !!! Cannot add IUrlCollection to (example) both an IAlbumCollection and ITrackCollection, you can't differentiate on an artist. (maybe you don't need to? evaluate me.)
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
-            _sourceCores = userProfile.SourceCores.Select(MainViewModel.GetLoadedCore).ToList();
-            _sources = userProfile.Sources;
+            var userProfileImpl = userProfile.Cast<CoreUserProfileProxy>();
+
+            _sourceCores = userProfileImpl.SourceCores.Select(MainViewModel.GetLoadedCore).ToList();
+            _sources = userProfileImpl.Sources;
 
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
 
@@ -52,7 +58,6 @@ namespace StrixMusic.Sdk.ViewModels
         public event EventHandler<string>? DisplayNameChanged
         {
             add => _userProfile.DisplayNameChanged += value;
-
             remove => _userProfile.DisplayNameChanged -= value;
         }
 

@@ -91,8 +91,12 @@ namespace StrixMusic.Sdk.Data.Merged
                         await imageCollection.AddImageAsync((ICoreImage)itemToAdd, originalIndex);
                     break;
                 case ICoreGenreCollection genreCollection:
-                    if (await genreCollection.IsAddGenreAvailable(originalIndex))
+                    if (await genreCollection.IsAddGenreAvailableAsync(originalIndex))
                         await genreCollection.AddGenreAsync((ICoreGenre)itemToAdd, originalIndex);
+                    break;
+                case ICoreUrlCollection urlCollection:
+                    if (await urlCollection.IsAddUrlAvailableAsync(originalIndex))
+                        await urlCollection.AddUrlAsync((ICoreUrl)itemToAdd, originalIndex);
                     break;
                 default:
                     ThrowHelper.ThrowNotSupportedException<IMergedMutable<TCoreCollection>>($"Couldn't add item to collection. Type {sourceCollection.GetType()} not supported.");
@@ -255,6 +259,11 @@ namespace StrixMusic.Sdk.Data.Merged
                 ((ICoreGenreCollection)item).GenresCountChanged += MergedCollectionMap_CountChanged;
                 ((ICoreGenreCollection)item).GenresChanged += MergedCollectionMap_GenresChanged;
             }
+            else if (typeof(TCoreCollection) == typeof(ICoreUrlCollection))
+            {
+                ((ICoreUrlCollection)item).UrlsCountChanged += MergedCollectionMap_CountChanged;
+                ((ICoreUrlCollection)item).UrlsChanged += MergedCollectionMap_UrlsChanged;
+            }
             else
             {
                 ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>(
@@ -294,10 +303,20 @@ namespace StrixMusic.Sdk.Data.Merged
                 ((ICoreImageCollection)item).ImagesCountChanged -= MergedCollectionMap_CountChanged;
                 ((ICoreImageCollection)item).ImagesChanged -= MergedCollectionMap_ImagesChanged;
             }
+            else if (typeof(TCoreCollection) == typeof(ICoreGenreCollection))
+            {
+                ((ICoreGenreCollection)item).GenresCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICoreGenreCollection)item).GenresChanged -= MergedCollectionMap_GenresChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreUrlCollection))
+            {
+                ((ICoreUrlCollection)item).UrlsCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICoreUrlCollection)item).UrlsChanged -= MergedCollectionMap_UrlsChanged;
+            }
             else
             {
                 ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>(
-                    "Couldn't attach events. Type not supported.");
+                    "Couldn't detach events. Type not supported.");
             }
         }
 
@@ -307,6 +326,11 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         private void MergedCollectionMap_GenresChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreGenre>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreGenre>> removedItems)
+        {
+            MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
+        }
+
+        private void MergedCollectionMap_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreUrl>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreUrl>> removedItems)
         {
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
@@ -516,13 +540,16 @@ namespace StrixMusic.Sdk.Data.Merged
                             await playlistCollection.RemovePlaylistItemAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreTrackCollection trackCollection:
-                            await trackCollection.AddTrackAsync((ICoreTrack)source, mappedData.OriginalIndex);
+                            await trackCollection.RemoveTrackAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreImageCollection imageCollection:
                             await imageCollection.RemoveImageAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreGenreCollection genreCollection:
-                            await genreCollection.RemoveGenreAsync(mappedData.OriginalIndex);
+                        await genreCollection.RemoveGenreAsync(mappedData.OriginalIndex);
+                        break;
+                    case ICoreUrlCollection urlCollection:
+                        await urlCollection.RemoveUrlAsync(mappedData.OriginalIndex);
                         break;
                     default:
                         ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
@@ -612,6 +639,10 @@ namespace StrixMusic.Sdk.Data.Merged
                     break;
                 case ICoreGenre coreGenre:
                     returnData = (IMergedMutable<TCoreCollectionItem>)new MergedGenre(coreGenre.IntoList());
+                    collection.Add(returnData);
+                    break;
+                case ICoreUrl coreUrl:
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedUrl(coreUrl.IntoList());
                     collection.Add(returnData);
                     break;
 

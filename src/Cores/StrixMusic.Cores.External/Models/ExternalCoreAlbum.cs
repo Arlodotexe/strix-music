@@ -422,11 +422,11 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsAddGenreAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddGenreAvailable));
+        public Task<bool> IsAddGenreAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddGenreAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveGenreAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveGenreAvailable));
+        public Task<bool> IsRemoveGenreAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveGenreAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]

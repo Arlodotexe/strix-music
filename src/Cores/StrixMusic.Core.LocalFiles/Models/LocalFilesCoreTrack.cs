@@ -318,7 +318,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreAvailable(int index)
+        public Task<bool> IsAddGenreAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
@@ -342,7 +342,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailable(int index)
+        public Task<bool> IsRemoveGenreAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }

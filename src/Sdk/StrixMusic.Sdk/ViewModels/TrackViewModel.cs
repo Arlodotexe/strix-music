@@ -539,7 +539,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsAddArtistItemAvailable(int index) => Model.IsAddArtistItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreAvailable(int index) => Model.IsAddGenreAvailable(index);
+        public Task<bool> IsAddGenreAvailableAsync(int index) => Model.IsAddGenreAvailableAsync(index);
 
         /// <inheritdoc />
         public Task<bool> IsAddImageAvailable(int index) => Model.IsAddImageAvailable(index);
@@ -548,7 +548,7 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsRemoveImageAvailable(int index) => Model.IsRemoveImageAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailable(int index) => Model.IsRemoveGenreAvailable(index);
+        public Task<bool> IsRemoveGenreAvailableAsync(int index) => Model.IsRemoveGenreAvailableAsync(index);
 
         /// <inheritdoc />
         public Task<bool> IsRemoveArtistItemAvailable(int index) => Model.IsRemoveArtistItemAvailable(index);

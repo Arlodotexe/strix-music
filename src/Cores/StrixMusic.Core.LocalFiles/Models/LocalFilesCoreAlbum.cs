@@ -329,7 +329,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<int>? GenresCountChanged;
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreAvailable(int index)
+        public Task<bool> IsAddGenreAvailableAsync(int index)
         {
             throw new NotSupportedException();
         }
@@ -359,7 +359,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailable(int index)
+        public Task<bool> IsRemoveGenreAvailableAsync(int index)
         {
             throw new NotSupportedException();
         }

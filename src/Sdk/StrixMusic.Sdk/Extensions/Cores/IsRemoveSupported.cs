@@ -28,7 +28,8 @@ namespace StrixMusic.Sdk.Extensions
                 IPlaylistCollectionBase _ => ((ICorePlaylistCollection)source).IsRemovePlaylistItemAvailable(index),
                 ITrackCollectionBase _ => ((ICoreTrackCollection)source).IsRemoveTrackAvailable(index),
                 IImageCollectionBase _ => ((ICoreImageCollection)source).IsRemoveImageAvailable(index),
-                IGenreCollectionBase _ => ((ICoreGenreCollection)source).IsRemoveGenreAvailable(index),
+                IGenreCollectionBase _ => ((ICoreGenreCollection)source).IsRemoveGenreAvailableAsync(index),
+                IUrlCollectionBase _ => ((ICoreUrlCollection)source).IsRemoveUrlAvailableAsync(index),
                 _ => throw new NotSupportedException("Collection type not handled"),
             };
         }

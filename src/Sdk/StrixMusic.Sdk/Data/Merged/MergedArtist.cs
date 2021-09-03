@@ -335,7 +335,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsAddImageAvailable(int index) => _imageCollectionMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreAvailable(int index) => _genreCollectionMap.IsAddItemAvailable(index);
+        public Task<bool> IsAddGenreAvailableAsync(int index) => _genreCollectionMap.IsAddItemAvailable(index);
 
         /// <inheritdoc />
         public Task<bool> IsRemoveTrackAvailable(int index) => _trackCollectionMap.IsRemoveItemAvailable(index);
@@ -347,7 +347,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsRemoveImageAvailable(int index) => _imageCollectionMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailable(int index) => _genreCollectionMap.IsRemoveItemAvailable(index);
+        public Task<bool> IsRemoveGenreAvailableAsync(int index) => _genreCollectionMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IAlbumCollectionItem>> GetAlbumItemsAsync(int limit, int offset) => _albumCollectionItemMap.GetItemsAsync(limit, offset);

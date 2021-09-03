@@ -435,10 +435,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task<bool> IsAddImageAvailable(int index) => _preferredSource.IsAddImageAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreAvailable(int index) => _genreCollectionMap.IsAddItemAvailable(index);
+        public Task<bool> IsAddGenreAvailableAsync(int index) => _genreCollectionMap.IsAddItemAvailable(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveGenreAvailable(int index) => _genreCollectionMap.IsRemoveItemAvailable(index);
+        public Task<bool> IsRemoveGenreAvailableAsync(int index) => _genreCollectionMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _artistMap.GetItemsAsync(limit, offset);
