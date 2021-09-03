@@ -14,9 +14,8 @@ namespace OwlCore.AbstractUI.Models
     /// You can then create <see cref="AbstractUIElementGroup"/>s inside of each of these to group your settings, "About" data, etc.
     /// </remarks>
     [RemoteOptions(RemotingDirection.Bidirectional)]
-    public class AbstractUIElementGroup : AbstractUIElement, IDisposable
+    public class AbstractUIElementGroup : AbstractUIElement
     {
-        private readonly MemberRemote _memberRemote;
         private readonly List<AbstractUIElement> _items = new List<AbstractUIElement>();
 
         /// <summary>
@@ -58,12 +57,5 @@ namespace OwlCore.AbstractUI.Models
 
         /// <inheritdoc cref="Models.PreferredOrientation"/>
         public PreferredOrientation PreferredOrientation { get; }
-
-        /// <inheritdoc/>
-        [RemoteMethod]
-        public void Dispose()
-        {
-            _memberRemote.Dispose();
-        }
     }
 }

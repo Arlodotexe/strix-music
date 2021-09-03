@@ -8,14 +8,13 @@ namespace OwlCore.AbstractUI.Models
     /// The base for all AbstractUI objects. Contains abstracted metadata.
     /// </summary>
     [RemoteOptions(RemotingDirection.Bidirectional)]
-    public abstract class AbstractUIBase : IDisposable
+    public abstract class AbstractUIBase
     {
         private string? _title;
         private string? _subtitle;
         private string? _tooltipText;
         private string? _iconCode;
         private string? _imagePath;
-        private bool disposedValue;
 
         /// <summary>
         /// Creates a new instance of <see cref="AbstractUIBase"/>.
@@ -126,28 +125,5 @@ namespace OwlCore.AbstractUI.Models
         /// Raised when <see cref="ImagePath"/> is changed.
         /// </summary>
         public event EventHandler<string?>? ImagePathChanged;
-
-        /// <inheritdoc cref="IDisposable.Dispose" />
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    _memberRemote.Dispose();
-                }
-
-                // TODO: set large fields to null
-                disposedValue = true;
-            }
-        }
-
-        /// <inheritdoc cref="IDisposable.Dispose" />
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
     }
 }
