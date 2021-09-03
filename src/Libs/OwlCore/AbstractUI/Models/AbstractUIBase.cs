@@ -10,8 +10,6 @@ namespace OwlCore.AbstractUI.Models
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public abstract class AbstractUIBase : IDisposable
     {
-        private readonly MemberRemote _memberRemote;
-
         private string? _title;
         private string? _subtitle;
         private string? _tooltipText;
@@ -26,7 +24,6 @@ namespace OwlCore.AbstractUI.Models
         protected AbstractUIBase(string id)
         {
             Id = id;
-            _memberRemote = new MemberRemote(this, id);
         }
 
         /// <summary>

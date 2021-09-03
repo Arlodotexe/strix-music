@@ -28,7 +28,6 @@ namespace OwlCore.AbstractUI.Models
             : base(id)
         {
             PreferredOrientation = preferredOrientation;
-            _memberRemote = new MemberRemote(this, id);
         }
 
         /// <summary>
