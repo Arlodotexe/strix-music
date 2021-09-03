@@ -273,8 +273,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (limit == -1)
                 return Task.FromResult<IReadOnlyList<AlbumMetadata>>(allAlbums);
 
-            if (offset + limit > allAlbums.Count)
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= allAlbums.Count)
                 return Task.FromResult<IReadOnlyList<AlbumMetadata>>(new List<AlbumMetadata>());
+
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > allAlbums.Count)
+                limit = allAlbums.Count - offset;
 
             return Task.FromResult<IReadOnlyList<AlbumMetadata>>(allAlbums.GetRange(offset, limit));
         }
@@ -294,8 +299,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     results.Add(item);
             }
 
-            if (offset + limit > allArtists.Count)
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= results.Count)
                 return new List<AlbumMetadata>();
+
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > results.Count)
+                limit = results.Count - offset;
 
             return results.GetRange(offset, limit).ToList();
         }
