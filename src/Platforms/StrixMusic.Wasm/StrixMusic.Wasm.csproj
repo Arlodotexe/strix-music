@@ -9,7 +9,7 @@
     <RootNamespace>StrixMusic.Wasm</RootNamespace>
     <AssemblyName>StrixMusic.Wasm</AssemblyName>
     <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <UnoUIUseRoslynSourceGenerators>false</UnoUIUseRoslynSourceGenerators>
   </PropertyGroup>
@@ -42,41 +42,44 @@
 
     You can safely remove this ItemGroup completely.
     -->
-    <None Include="Program.cs" />
-    <None Include="LinkerConfig.xml" />
-    <None Include="wwwroot\web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <!-- Note that for WebAssembly version 1.1.1 of the console logger required -->
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
-    <PackageReference Include="Refit" Version="5.2.4" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+		<None Include="Program.cs" />
+		<None Include="LinkerConfig.xml" />
+		<None Include="wwwroot\web.config" />
+	</ItemGroup>
+	<ItemGroup>
+		<!-- Note that for WebAssembly version 1.1.1 of the console logger required -->
+    <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="5.0.0" />
-    <PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.5-dev.13" />
-    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.0-build.2.g0e224f133a" />
-    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.1.0-build.2.g0e224f133a" />
-    <PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.0-build.2.g0e224f133a" />
-    <PackageReference Include="Uno.UI" Version="3.8.6" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.5.1" Condition="'$(Configuration)'=='Debug'" />
-    <PackageReference Include="Uno.UI.WebAssembly" Version="3.5.1" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0" PrivateAssets="all" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Core.LocalFiles.csproj" />
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj" />
-    <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
-    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
-    <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
-    <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj" />
-    <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />
-  </ItemGroup>
-  <Import Project="..\..\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems" Label="Shared" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
+		<PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
+		<PackageReference Include="Refit" Version="5.2.4" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Text.Json" Version="5.0.0" />
+		<PackageReference Include="Uno.Diagnostics.Eventing" Version="1.0.5-dev.13" />
+		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI" Version="7.1.0-build.2.g0e224f133a" />
+		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Animations" Version="7.1.0-build.2.g0e224f133a" />
+		<PackageReference Include="Uno.Microsoft.Toolkit.Uwp.UI.Controls" Version="7.1.0-build.2.g0e224f133a" />
+		<PackageReference Include="Uno.UI" Version="3.8.6" />
+		<PackageReference Include="Uno.UI.RemoteControl" Version="3.5.1" Condition="'$(Configuration)'=='Debug'" />
+		<PackageReference Include="Uno.UI.WebAssembly" Version="3.5.1" />
+		<PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0" />
+		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0" PrivateAssets="all" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Core.LocalFiles.csproj" />
+		<ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
+		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
+		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />
+		<ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.Groove\StrixMusic.Shells.Groove.csproj" />
+		<ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj" />
+	</ItemGroup>
+	<Import Project="..\..\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems" Label="Shared" />
 </Project>

@@ -113,7 +113,7 @@ namespace StrixMusic.Sdk.ViewModels
             TrackItemsCountChanged += CollectionGroupOnTrackItemsCountChanged;
             ArtistItemsCountChanged += CollectionGroupOnArtistItemsCountChanged;
             PlaylistItemsCountChanged += CollectionGroupOnPlaylistItemsCountChanged;
-            TotalChildrenCountChanged += CollectionGroupOnTotalChildrenCountChanged;
+            ChildrenCountChanged += CollectionGroupOnTotalChildrenCountChanged;
             ImagesCountChanged += PlayableCollectionGroupViewModel_ImagesCountChanged;
 
             IsPlayAlbumCollectionAsyncAvailableChanged += OnIsPlayAlbumCollectionAsyncAvailableChanged;
@@ -149,7 +149,7 @@ namespace StrixMusic.Sdk.ViewModels
             TrackItemsCountChanged -= CollectionGroupOnTrackItemsCountChanged;
             ArtistItemsCountChanged -= CollectionGroupOnArtistItemsCountChanged;
             PlaylistItemsCountChanged -= CollectionGroupOnPlaylistItemsCountChanged;
-            TotalChildrenCountChanged -= CollectionGroupOnTotalChildrenCountChanged;
+            ChildrenCountChanged -= CollectionGroupOnTotalChildrenCountChanged;
             ImagesCountChanged += PlayableCollectionGroupViewModel_ImagesCountChanged;
 
             IsPlayAlbumCollectionAsyncAvailableChanged -= OnIsPlayAlbumCollectionAsyncAvailableChanged;
@@ -342,10 +342,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int>? TotalChildrenCountChanged
+        public event EventHandler<int>? ChildrenCountChanged
         {
-            add => _collectionGroup.TotalChildrenCountChanged += value;
-            remove => _collectionGroup.TotalChildrenCountChanged -= value;
+            add => _collectionGroup.ChildrenCountChanged += value;
+            remove => _collectionGroup.ChildrenCountChanged -= value;
         }
 
         private void CollectionGroupUrlChanged(object sender, Uri? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Url)));
@@ -990,7 +990,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem) => PlayPlaylistCollectionInternalAsync(playlistItem);
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync() => _collectionGroup.PlayPlaylistCollectionAsync();
+        public Task PlayPlaylistCollectionAsync()
+        {
+            return _playbackHandler.PlayAsync((IPlaylistCollectionViewModel)this, _collectionGroup);
+        }
 
         ///<inheritdoc />
         public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
@@ -1194,14 +1197,14 @@ namespace StrixMusic.Sdk.ViewModels
         public bool Equals(ICorePlayableCollectionGroup other) => _collectionGroup.Equals(other);
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public Task InitAsync()
         {
             if (IsInitialized)
-                return;
+                return Task.CompletedTask;
 
             IsInitialized = true;
 
-            await CollectionInit.TrackCollection(this);
+            return Task.WhenAll(CollectionInit.AlbumCollection(this), CollectionInit.TrackCollection(this), CollectionInit.PlaylistCollection(this), CollectionInit.TrackCollection(this));
         }
 
         private Task ChangeNameInternalAsync(string? name)
@@ -1232,7 +1235,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             Guard.IsNotNull(playlistItem, nameof(playlistItem));
 
-            throw new NotImplementedException();
+            return _playbackHandler.PlayAsync(playlistItem, this, _collectionGroup);
         }
 
         private Task PlayPlayableCollectionGroupInternalAsync(IPlayableCollectionGroup? collectionGroup)

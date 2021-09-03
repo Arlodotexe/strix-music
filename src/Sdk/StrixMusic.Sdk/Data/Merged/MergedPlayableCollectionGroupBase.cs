@@ -103,7 +103,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.ArtistItemsCountChanged += ArtistItemsCountChanged;
             source.PlaylistItemsCountChanged += PlaylistItemsCountChanged;
             source.TrackItemsCountChanged += TrackItemsCountChanged;
-            source.TotalChildrenCountChanged += TotalChildrenCountChanged;
+            source.ChildrenCountChanged += ChildrenCountChanged;
         }
 
         private void DetachPropertyChangedEvents(ICorePlayableCollectionGroup source)
@@ -128,7 +128,7 @@ namespace StrixMusic.Sdk.Data.Merged
             source.ArtistItemsCountChanged -= ArtistItemsCountChanged;
             source.PlaylistItemsCountChanged -= PlaylistItemsCountChanged;
             source.TrackItemsCountChanged -= TrackItemsCountChanged;
-            source.TotalChildrenCountChanged -= TotalChildrenCountChanged;
+            source.ChildrenCountChanged -= ChildrenCountChanged;
         }
 
         private void AttachCollectionChangedEvents()
@@ -229,7 +229,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public event EventHandler<int>? PlaylistItemsCountChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int>? TotalChildrenCountChanged;
+        public event EventHandler<int>? ChildrenCountChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged;
@@ -261,7 +261,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private void PlayableCollectionGroupMap_ItemsCountChanged(object sender, int e)
         {
             TotalChildrenCount = e;
-            TotalChildrenCountChanged?.Invoke(this, e);
+            ChildrenCountChanged?.Invoke(this, e);
         }
 
         private void PlaylistCollectionMap_ItemsCountChanged(object sender, int e)

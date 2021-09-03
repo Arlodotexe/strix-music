@@ -61,7 +61,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 return;
             }
 
-            // await LoadDataFromDisk();
+            await LoadDataFromDisk();
 
             IsInitialized = true;
             _initMutex.Release();
@@ -118,6 +118,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private async void PlaylistMetadataScanner_PlaylistMetadataAdded(object sender, IEnumerable<PlaylistMetadata> e)
         {
             var addedPlaylists = new List<PlaylistMetadata>();
+            var updatedPlaylists = new List<PlaylistMetadata>();
+
+            await _storageMutex.WaitAsync();
 
             foreach (var metadata in e)
             {
@@ -125,21 +128,28 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 {
                     Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
 
-                    await _storageMutex.WaitAsync();
+                    var playlistExists = true;
+                    var workingMetadata = _inMemoryMetadata.GetOrAdd(metadata.Id, key =>
+                    {
+                        playlistExists = false;
+                        return metadata;
+                    });
 
-                    if (!_inMemoryMetadata.TryAdd(metadata.Id, metadata))
-                        ThrowHelper.ThrowInvalidOperationException($"Tried adding an item that already exists in {nameof(_inMemoryMetadata)}");
+                    if (playlistExists)
+                        updatedPlaylists.Add(metadata);
+                    else
+                        addedPlaylists.Add(metadata);
 
-                    _storageMutex.Release();
-                    addedPlaylists.Add(metadata);
+                    if (addedPlaylists.Count > 0)
+                        MetadataAdded?.Invoke(this, addedPlaylists);
+
+                    if (updatedPlaylists.Count > 0)
+                        MetadataUpdated?.Invoke(this, updatedPlaylists);
                 }
             }
 
-            if (addedPlaylists.Count > 0)
-            {
-                _ = CommitChangesAsync();
-                MetadataAdded?.Invoke(this, addedPlaylists);
-            }
+            _ = CommitChangesAsync();
+            _storageMutex.Release();
         }
 
         /// <inheritdoc />
@@ -221,7 +231,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             var allPlaylists = _inMemoryMetadata.Values.ToList();
 
             if (limit == -1)
-                return Task.FromResult<IReadOnlyList<PlaylistMetadata>>(allPlaylists.GetRange(offset, allPlaylists.Count - offset));
+                return Task.FromResult<IReadOnlyList<PlaylistMetadata>>(allPlaylists);
+
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= allPlaylists.Count)
+                return Task.FromResult<IReadOnlyList<PlaylistMetadata>>(new List<PlaylistMetadata>());
+
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > allPlaylists.Count)
+                limit = allPlaylists.Count - offset;
 
             return Task.FromResult<IReadOnlyList<PlaylistMetadata>>(allPlaylists.GetRange(offset, limit));
         }

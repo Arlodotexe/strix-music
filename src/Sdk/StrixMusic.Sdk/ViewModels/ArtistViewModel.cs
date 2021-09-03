@@ -797,14 +797,14 @@ namespace StrixMusic.Sdk.ViewModels
         public bool Equals(ICoreArtist other) => _artist.Equals(other);
 
         /// <inheritdoc />
-        public async Task InitAsync()
+        public Task InitAsync()
         {
             if (IsInitialized)
-                return;
+                return Task.CompletedTask;
 
             IsInitialized = true;
 
-            await CollectionInit.TrackCollection(this);
+            return Task.WhenAll(CollectionInit.AlbumCollection(this), CollectionInit.TrackCollection(this));
         }
 
         /// <inheritdoc />

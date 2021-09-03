@@ -749,9 +749,12 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task InitAsync()
+        public async Task InitAsync()
         {
-            throw new NotImplementedException();
+            if (!IsInitialized)
+                return;
+
+            await CollectionInit.ArtistCollection(this);
         }
 
         /// <inheritdoc />

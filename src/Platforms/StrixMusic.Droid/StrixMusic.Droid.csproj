@@ -23,7 +23,7 @@
     <AndroidUseIntermediateDesignerFile>True</AndroidUseIntermediateDesignerFile>
     <ResourcesDirectory>..\StrixMusic.Shared\Strings</ResourcesDirectory>
     <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -64,9 +64,6 @@
     <BundleAssemblies>false</BundleAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Hqub.MusicBrainz.API">
-      <HintPath>..\..\Cores\StrixMusic.Core.MusicBrainz\Dependencies\Hqub.MusicBrainz.API.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="Mono.Android.Export" />
     <Reference Include="mscorlib" />
@@ -76,6 +73,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="GitInfo">
+      <Version>2.1.2</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Mvvm">
       <Version>7.0.0-preview4</Version>
     </PackageReference>
@@ -127,10 +129,6 @@
       <Project>{617F1778-92F9-454A-B041-D71B4B63A221}</Project>
       <Name>StrixMusic.Core.LocalFiles</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj">
-      <Project>{d0618335-d56c-419d-b9fa-98e475338efc}</Project>
-      <Name>StrixMusic.Core.MusicBrainz</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
       <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>
       <Name>OwlCore</Name>
@@ -146,10 +144,6 @@
     <ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj">
       <Project>{b1fad5f0-4361-4d32-84ab-a809f121f50c}</Project>
       <Name>StrixMusic.Sdk</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.Strix\StrixMusic.Shells.Strix.csproj">
-      <Project>{892f59a6-d988-4e50-a8b6-b5beb501d1d1}</Project>
-      <Name>StrixMusic.Shells.Strix</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\UI\Shells\StrixMusic.Shells.ZuneDesktop\StrixMusic.Shells.ZuneDesktop.csproj">
       <Project>{063715b5-1765-4269-8fb0-699fadc840e1}</Project>

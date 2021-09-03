@@ -78,25 +78,25 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int>? ImagesCountChanged;
+        public virtual event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />?
-        public event EventHandler<int>? PlaylistItemsCountChanged;
+        public virtual event EventHandler<int>? PlaylistItemsCountChanged;
 
         /// <inheritdoc />?
-        public event EventHandler<int>? TrackItemsCountChanged;
+        public virtual event EventHandler<int>? TrackItemsCountChanged;
 
         /// <inheritdoc />?
-        public event EventHandler<int>? AlbumItemsCountChanged;
+        public virtual event EventHandler<int>? AlbumItemsCountChanged;
 
         /// <inheritdoc />?
-        public event EventHandler<int>? ArtistItemsCountChanged;
+        public virtual event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc />?
-        public event EventHandler<int>? TotalChildrenCountChanged;
+        public virtual event EventHandler<int>? ChildrenCountChanged;
 
         /// <inheritdoc />?
-        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+        public virtual event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
 
         /// <inheritdoc />?
         public virtual event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
@@ -111,7 +111,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public virtual event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
         /// <inheritdoc />?
-        public  event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
+        public virtual event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
 
         /// <inheritdoc />
         public ICore SourceCore { get; private set; }
@@ -191,7 +191,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             internal set
             {
                 _totalChildrenCount = value;
-                TotalChildrenCountChanged?.Invoke(this, value);
+                ChildrenCountChanged?.Invoke(this, value);
             }
         }
 

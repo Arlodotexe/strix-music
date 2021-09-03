@@ -62,7 +62,7 @@ namespace OwlCore.AbstractUI.ViewModels
         /// <param name="e"></param>
         private void ButtonClicked()
         {
-            _model.Click().FireAndForget();
+            _model.Click().Forget();
         }
     }
 }
