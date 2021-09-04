@@ -38,10 +38,10 @@ namespace StrixMusic.Core.LocalFiles
         public ICore SourceCore { get; }
 
         /// <inheritdoc/>
-        public IServiceProvider? Services { get; private set; }
+        public IServiceProvider? Services { get; protected set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; private set; }
+        public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; protected set; }
 
         /// <inheritdoc />
         public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
@@ -79,7 +79,7 @@ namespace StrixMusic.Core.LocalFiles
         /// Configures the minimum required services for core configuration in a safe manner.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SetupConfigurationServices(IServiceCollection services)
+        public virtual async Task SetupConfigurationServices(IServiceCollection services)
         {
             if (_baseServicesSetup)
                 return;
@@ -122,7 +122,10 @@ namespace StrixMusic.Core.LocalFiles
             return folderData;
         }
 
-        private void SetupAbstractUISettings()
+        /// <summary>
+        /// Sets up the configurable UI for the core.
+        /// </summary>
+        public virtual void SetupAbstractUISettings()
         {
             _initWithEmptyReposToggle = new AbstractBooleanUIElement("InitWithEmptyMetadataRepos", string.Empty)
             {

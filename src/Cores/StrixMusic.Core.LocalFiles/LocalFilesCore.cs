@@ -41,7 +41,7 @@ namespace StrixMusic.Core.LocalFiles
         public string InstanceId { get; }
 
         /// <inheritdoc/>
-        public ICoreConfig CoreConfig { get; }
+        public ICoreConfig CoreConfig { get; protected set; }
 
         /// <inheritdoc />
         public ICore SourceCore => this;
@@ -86,7 +86,7 @@ namespace StrixMusic.Core.LocalFiles
         /// Change the <see cref="CoreState"/>.
         /// </summary>
         /// <param name="state">The new state.</param>
-        internal void ChangeCoreState(CoreState state)
+        public virtual void ChangeCoreState(CoreState state)
         {
             CoreState = state;
             CoreStateChanged?.Invoke(this, state);
@@ -101,7 +101,7 @@ namespace StrixMusic.Core.LocalFiles
         }
 
         /// <inheritdoc/>
-        public async Task InitAsync(IServiceCollection services)
+        public virtual async Task InitAsync(IServiceCollection services)
         {
             Guard.IsNotNull(services, nameof(services));
 

@@ -9,11 +9,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Core.LocalFiles.csproj" />
+    <PackageReference Include="Microsoft.Graph" Version="2.0.5" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.36.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\src\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Core.LocalFiles.csproj" />
   </ItemGroup>
 
 </Project>
