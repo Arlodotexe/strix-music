@@ -366,6 +366,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         {
             Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
 
+            // We store images for a file in the following structure:
+            // CacheFolder/Images/{hashed file path}/{image ID}-{size}.png
+            var baseImagesFolder = await CacheFolder.CreateFolderAsync("Images", CreationCollisionOption.OpenIfExists);
+            var fileImagesFolder = await baseImagesFolder.CreateFolderAsync(filePath.HashMD5Fast(), CreationCollisionOption.OpenIfExists);
+
             foreach (var picture in pictures)
             {
                 try
@@ -378,22 +383,25 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                      * Album/Image/TrackMetadata instance.
                      */
 
-                    using var imageStream = new MemoryStream(picture.Data.Data);
+                    var imageData = picture.Data.Data;
 
-                    using (var image = await Image.LoadAsync(imageStream))
-                    {
-                        image.Mutate(x => x.Resize(new ResizeOptions
-                        {
-                            Mode = ResizeMode.Min,
-                            Size = new Size(256),
-                        }));
+                    // Create a unique ID for the image by collecting every 16th byte in the data
+                    // and calculating an MD5 hash for it.
+                    // This will form the base file name for the image.
+                    // Each resized version will use this name with its size appended.
+                    var hashData = new byte[imageData.Length / 16];
+                    for (var i = 0; i < hashData.Length; i++)
+					{
+                        hashData[i] = imageData[i * 16];
+					}
 
-                        image.SaveAsPng(imageStream);
-                    }
+                    var imageId = hashData.HashMD5Fast();
 
-                    var imagePath = filePath + ":" + picture.Filename;
-                    var imageFile = await CacheFolder.CreateFileAsync($"{imagePath.HashMD5Fast()}.png", CreationCollisionOption.ReplaceExisting);
+                    // TODO: Resize the image.
+                    // Right now we're just saving the original image. :-)
 
+                    using var imageStream = new MemoryStream(imageData);
+                    var imageFile = await fileImagesFolder.CreateFileAsync($"{imageId}.png", CreationCollisionOption.ReplaceExisting);
                     using var stream = await imageFile.GetStreamAsync(FileAccessMode.ReadWrite);
                     await imageStream.CopyToAsync(stream);
                 }
