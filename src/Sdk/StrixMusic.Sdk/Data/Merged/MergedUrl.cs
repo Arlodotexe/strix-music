@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
+using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Sdk.Data.Merged
@@ -36,6 +37,9 @@ namespace StrixMusic.Sdk.Data.Merged
         public Uri Url => _preferredSource.Url;
 
         /// <inheritdoc/>
+        public UrlType Type => _preferredSource.Type;
+
+        /// <inheritdoc/>
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
 
         /// <inheritdoc cref="IMerged{T}.Sources"/>
@@ -63,6 +67,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool Equals(ICoreUrl other)
         {
             return other?.Url == Url && 
+                   other?.Type == Type &&
                    other?.Label == Label;
         }
 

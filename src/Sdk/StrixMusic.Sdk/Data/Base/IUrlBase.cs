@@ -18,23 +18,8 @@ namespace StrixMusic.Sdk.Data.Base
         public Uri Url { get; }
 
         /// <summary>
-        /// Classifies this as a specific type of URL.
+        /// Classifies this as a specific kind of URL.
         /// </summary>
         public UrlType Type { get; }
-    }
-
-    public enum UrlType
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        Generic,
-
-        /// <summary>
-        /// 
-        /// </summary>
-        Social,
-
-        // TODO
     }
 }
