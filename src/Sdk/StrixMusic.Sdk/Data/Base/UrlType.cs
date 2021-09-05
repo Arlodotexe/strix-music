@@ -21,7 +21,7 @@
         SocialNetwork,
 
         /// <summary>
-        /// A streaming service (free or paid) where the user can listen to the linked music.
+        /// A streaming service (free or paid) where the user can listen to music.
         /// </summary>
         MusicStreaming,
 
