@@ -7,6 +7,7 @@ using SixLabors.ImageSharp.Processing;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -24,6 +25,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     {
         private const int SCAN_BATCH_SIZE = 2;
         private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
+        private static readonly IReadOnlyList<int> _standardImageSizes = ((int[]) Enum.GetValues(typeof(ImageSize))).ToList();
 
         private readonly FileMetadataManager _metadataManager;
         private readonly IFileScanner _fileScanner;
@@ -377,9 +379,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     /* 
                      * TODO:
-                     * Rework this to determine what sizes the image needs to be resized to,
-                     * and save each of the resized images to a separate file.
-                     * Then, add them to the image repository and associate them with a corresponding
+                     * Add each image to the image repository and associate it with a corresponding
                      * Album/Image/TrackMetadata instance.
                      */
 
@@ -391,19 +391,70 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     // Each resized version will use this name with its size appended.
                     var hashData = new byte[imageData.Length / 16];
                     for (var i = 0; i < hashData.Length; i++)
-					{
+                    {
                         hashData[i] = imageData[i * 16];
-					}
+                    }
 
                     var imageId = hashData.HashMD5Fast();
 
-                    // TODO: Resize the image.
-                    // Right now we're just saving the original image. :-)
-
                     using var imageStream = new MemoryStream(imageData);
-                    var imageFile = await fileImagesFolder.CreateFileAsync($"{imageId}.png", CreationCollisionOption.ReplaceExisting);
-                    using var stream = await imageFile.GetStreamAsync(FileAccessMode.ReadWrite);
-                    await imageStream.CopyToAsync(stream);
+                    using var image = await Image.LoadAsync(imageStream);
+
+                    // We don't want to scale the image up (only scale down if necessary), so we have to determine which of the
+                    // standard image sizes we have to resize to using the size of the original image.
+
+                    // Use the maximum of the width and height for the ceiling to handle cases where the image isn't a 1:1 aspect ratio.
+                    var ceiling = Math.Max(image.Width, image.Height);
+
+                    // Loop through the standard image sizes (in ascending order) and determine the maximum size
+                    // that the original image is larger than. We'll scale it down to that size and all the sizes smaller than it.
+                    var useOriginal = false;
+                    var ceilingSizeIndex = -1;
+                    for (var i = 0; i < _standardImageSizes.Count; i++)
+                    {
+                        if (ceiling > _standardImageSizes[i])
+                        {
+                            ceilingSizeIndex = i;
+                        }
+                        else
+                        {
+                            if (ceiling == _standardImageSizes[i])
+						    {
+                                // If the size of the image is equal to one of the standard image sizes,
+                                // we can skip the expensive resize operation and just copy the original image.
+
+                                useOriginal = true;
+						    }
+
+                            break;
+                        }
+                    }
+
+                    // If the ceiling size index is -1, the image is smaller than all of the standard image sizes.
+                    // In this case, we'll just use the original image size and copy the image into the cache folder
+                    // rather than resizing it.
+                    // We can also use this same logic when useOriginal is true.
+                    if (ceilingSizeIndex == -1 || useOriginal)
+                    {
+                        var imageFile = await fileImagesFolder.CreateFileAsync($"{imageId}-{ceiling}.png", CreationCollisionOption.ReplaceExisting);
+                        using var stream = await imageFile.GetStreamAsync(FileAccessMode.ReadWrite);
+                        await image.SaveAsPngAsync(stream);
+                    }
+
+                    if (ceilingSizeIndex != -1)
+					{
+                        for (var i = ceilingSizeIndex; i >= 0; i--)
+						{
+                            var resizedSize = _standardImageSizes[i];
+
+                            var imageFile = await fileImagesFolder.CreateFileAsync($"{imageId}-{resizedSize}.png", CreationCollisionOption.ReplaceExisting);
+                            using var stream = await imageFile.GetStreamAsync(FileAccessMode.ReadWrite);
+
+                            image.Mutate(x => x.Resize(resizedSize, resizedSize));
+
+                            await image.SaveAsPngAsync(stream);
+                        }
+					}
                 }
                 catch (FileLoadException)
                 {
