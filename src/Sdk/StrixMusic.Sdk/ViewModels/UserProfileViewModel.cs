@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data;
@@ -19,13 +18,11 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// Contains bindable information about an <see cref="IUserProfile"/>
     /// </summary>
-    public class UserProfileViewModel : ObservableObject, IUserProfile, IImageCollectionViewModel
+    public class UserProfileViewModel : ObservableObject, IUserProfile, IImageCollectionViewModel, IUrlCollectionViewModel
     {
         private readonly IUserProfile _userProfile;
         private readonly IReadOnlyList<ICoreUserProfile> _sources;
         private readonly IReadOnlyList<ICore> _sourceCores;
-
-        private List<Uri> _urls = new List<Uri>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserProfileViewModel"/> class.
@@ -33,9 +30,6 @@ namespace StrixMusic.Sdk.ViewModels
         /// <param name="userProfile">The base <see cref="IUserProfile"/></param>
         public UserProfileViewModel(IUserProfile userProfile)
         {
-            // NOTES FOR LATER -- this class is WIP.
-            // Finish refactoring user profile and user to use new IUrlCollection
-            // !!! Cannot add IUrlCollection to (example) both an IAlbumCollection and ITrackCollection, you can't differentiate on an artist. (maybe you don't need to? evaluate me.)
             _userProfile = userProfile ?? throw new ArgumentNullException(nameof(userProfile));
 
             var userProfileImpl = userProfile.Cast<CoreUserProfileProxy>();
@@ -44,13 +38,12 @@ namespace StrixMusic.Sdk.ViewModels
             _sources = userProfileImpl.Sources;
 
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
+            PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
 
             using (Threading.PrimaryContext)
             {
-                if (userProfile.Urls != null)
-                    _urls.AddRange(userProfile.Urls);
-
                 Images = new ObservableCollection<IImage>();
+                Urls = new ObservableCollection<IUrl>();
             }
         }
 
@@ -104,7 +97,14 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<Uri>? UrlsChanged
+        public event EventHandler<int>? UrlsCountChanged
+        {
+            add => _userProfile.UrlsCountChanged += value;
+            remove => _userProfile.UrlsCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IUrl>? UrlsChanged
         {
             add => _userProfile.UrlsChanged += value;
             remove => _userProfile.UrlsChanged -= value;
@@ -113,14 +113,23 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         IReadOnlyList<ICore> IMerged<ICoreImageCollection>.SourceCores => _sourceCores;
 
+        /// <inheritdoc cref="IMerged{T}.SourceCores" />
+        IReadOnlyList<ICore> IMerged<ICoreUrlCollection>.SourceCores => _sourceCores;
+
         /// <inheritdoc />
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => _sources;
 
         /// <inheritdoc />
         public string Id => _userProfile.Id;
 
         /// <inheritdoc />
         public int TotalImageCount => _userProfile.TotalImageCount;
+
+        /// <inheritdoc />
+        public int TotalUrlCount => _userProfile.TotalUrlCount;
 
         /// <inheritdoc />
         public string DisplayName => _userProfile.DisplayName;
@@ -138,7 +147,7 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
-        public IReadOnlyList<Uri>? Urls => _urls;
+        public ObservableCollection<IUrl> Urls { get; }
 
         /// <inheritdoc />
         public CultureInfo Region => _userProfile.Region;
@@ -189,13 +198,16 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _userProfile.GetImagesAsync(limit, offset);
 
         /// <inheritdoc />
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _userProfile.GetUrlsAsync(limit, offset);
+
+        /// <inheritdoc />
         public Task RemoveImageAsync(int index) => _userProfile.RemoveImageAsync(index);
 
         /// <inheritdoc />
         public Task AddImageAsync(IImage image, int index) => _userProfile.AddImageAsync(image, index);
 
         /// <inheritdoc />
-        public Task AddUrlAsync(Uri url, int index) => _userProfile.AddUrlAsync(url, index);
+        public Task AddUrlAsync(IUrl url, int index) => _userProfile.AddUrlAsync(url, index);
 
         /// <inheritdoc />
         public Task RemoveUrlAsync(int index) => _userProfile.RemoveUrlAsync(index);
@@ -215,13 +227,30 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public async Task PopulateMoreUrlsAsync(int limit)
+        {
+            var items = await GetUrlsAsync(limit, Urls.Count);
+
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                foreach (var item in items)
+                {
+                    Urls.Add(item);
+                }
+            });
+        }
+
+        /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other)
-        {
-            return _userProfile.Equals(other);
-        }
+        public IAsyncRelayCommand<int> PopulateMoreUrlsCommand { get; }
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other) => _userProfile.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreUrlCollection other) => _userProfile.Equals(other);
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()
