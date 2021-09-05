@@ -21,9 +21,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override string Id { get; protected set; } = "discoverables";
 
         /// <inheritdoc />
-        public override Uri? Url { get; protected set; } = null;
-
-        /// <inheritdoc />
         public override string Name { get; protected set; } = "Discoverables";
 
         /// <inheritdoc />
@@ -36,7 +33,7 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override int TotalPlaylistItemsCount { get; internal set; } = 0;
 
         /// <inheritdoc />
-        public override int TotalTracksCount { get; internal set; } = 0;
+        public override int TotalTrackCount { get; internal set; } = 0;
 
         /// <inheritdoc />
         public override int TotalAlbumItemsCount { get; internal set; } = 0;
@@ -72,6 +69,12 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
             return AsyncEnumerable.Empty<ICoreTrack>();
+        }
+
+        /// <inheritdoc />
+        public override IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset = 0)
+        {
+            return AsyncEnumerable.Empty<ICoreUrl>();
         }
     }
 }

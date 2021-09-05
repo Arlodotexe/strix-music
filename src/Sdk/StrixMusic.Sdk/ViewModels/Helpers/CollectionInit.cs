@@ -23,9 +23,9 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         public static async Task TrackCollection(ITrackCollectionViewModel trackCollection)
         {
             // TODO Save/get to collection cache. All tracks collections should be cached to disk.
-            if (trackCollection.Tracks.Count < trackCollection.TotalTracksCount)
+            if (trackCollection.Tracks.Count < trackCollection.TotalTrackCount)
             {
-                var allTracks = await APIs.GetAllItemsAsync<ITrack>(trackCollection.TotalTracksCount, async offset => await trackCollection.GetTracksAsync(trackCollection.TotalTracksCount, offset));
+                var allTracks = await APIs.GetAllItemsAsync<ITrack>(trackCollection.TotalTrackCount, async offset => await trackCollection.GetTracksAsync(trackCollection.TotalTrackCount, offset));
 
                 foreach (var track in allTracks)
                 {

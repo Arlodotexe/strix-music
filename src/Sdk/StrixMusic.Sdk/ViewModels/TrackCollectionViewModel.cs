@@ -32,6 +32,7 @@ namespace StrixMusic.Sdk.ViewModels
 
         private readonly AsyncLock _populateTracksMutex = new AsyncLock();
         private readonly AsyncLock _populateImagesMutex = new AsyncLock();
+        private readonly AsyncLock _populateUrlsMutex = new AsyncLock();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ITrackCollectionViewModel"/> class.
@@ -43,13 +44,16 @@ namespace StrixMusic.Sdk.ViewModels
 
             using (Threading.PrimaryContext)
             {
-                Images = new ObservableCollection<IImage>();
                 Tracks = new ObservableCollection<TrackViewModel>();
+                Images = new ObservableCollection<IImage>();
+                Urls = new ObservableCollection<IUrl>();
+
                 UnsortedTracks = new ObservableCollection<TrackViewModel>();
             }
 
             PopulateMoreTracksCommand = new AsyncRelayCommand<int>(PopulateMoreTracksAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
+            PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
 
             PauseTrackCollectionAsyncCommand = new AsyncRelayCommand(PauseTrackCollectionAsync);
             PlayTrackCollectionAsyncCommand = new AsyncRelayCommand(PlayTrackCollectionAsync);
@@ -69,12 +73,22 @@ namespace StrixMusic.Sdk.ViewModels
             AttachEvents();
         }
 
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            if (IsInitialized)
+                return;
+
+            IsInitialized = true;
+
+            await CollectionInit.TrackCollection(this);
+        }
+
         private void AttachEvents()
         {
             PlaybackStateChanged += OnPlaybackStateChanged;
             NameChanged += OnNameChanged;
             DescriptionChanged += OnDescriptionChanged;
-            UrlChanged += OnUrlChanged;
             LastPlayedChanged += OnLastPlayedChanged;
 
             IsPlayTrackCollectionAsyncAvailableChanged += OnIsPlayTrackCollectionAsyncAvailableChanged;
@@ -84,10 +98,12 @@ namespace StrixMusic.Sdk.ViewModels
             IsChangeDurationAsyncAvailableChanged += OnIsChangeDurationAsyncAvailableChanged;
             IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
 
-            TrackItemsCountChanged += OnTrackItemsCountChanged;
-            TrackItemsChanged += TrackCollectionViewModel_TrackItemsChanged;
+            TracksCountChanged += OnTrackItemsCountChanged;
+            TracksChanged += TrackCollectionViewModel_TrackItemsChanged;
             ImagesChanged += TrackCollectionViewModel_ImagesChanged;
             ImagesCountChanged += TrackCollectionViewModel_ImagesCountChanged;
+            UrlsChanged += TrackCollectionViewModel_UrlsChanged;
+            UrlsCountChanged += TrackCollectionViewModel_UrlsCountChanged;
         }
 
         private void DetachEvents()
@@ -95,7 +111,6 @@ namespace StrixMusic.Sdk.ViewModels
             PlaybackStateChanged -= OnPlaybackStateChanged;
             NameChanged -= OnNameChanged;
             DescriptionChanged -= OnDescriptionChanged;
-            UrlChanged -= OnUrlChanged;
             LastPlayedChanged -= OnLastPlayedChanged;
 
             IsPlayTrackCollectionAsyncAvailableChanged -= OnIsPlayTrackCollectionAsyncAvailableChanged;
@@ -105,13 +120,13 @@ namespace StrixMusic.Sdk.ViewModels
             IsChangeDurationAsyncAvailableChanged -= OnIsChangeDurationAsyncAvailableChanged;
             IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
 
-            TrackItemsCountChanged -= OnTrackItemsCountChanged;
-            TrackItemsChanged -= TrackCollectionViewModel_TrackItemsChanged;
+            TracksCountChanged -= OnTrackItemsCountChanged;
+            TracksChanged -= TrackCollectionViewModel_TrackItemsChanged;
             ImagesChanged -= TrackCollectionViewModel_ImagesChanged;
             ImagesCountChanged -= TrackCollectionViewModel_ImagesCountChanged;
+            UrlsChanged -= TrackCollectionViewModel_UrlsChanged;
+            UrlsCountChanged -= TrackCollectionViewModel_UrlsCountChanged;
         }
-
-        private void OnUrlChanged(object sender, Uri? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Url)));
 
         private void OnNameChanged(object sender, string e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Name)));
 
@@ -121,9 +136,11 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnLastPlayedChanged(object sender, DateTime? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(LastPlayed)));
 
-        private void OnTrackItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTracksCount)));
+        private void OnTrackItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTrackCount)));
 
         private void TrackCollectionViewModel_ImagesCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalImageCount)));
+
+        private void TrackCollectionViewModel_UrlsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalUrlCount)));
 
         private void OnIsChangeDescriptionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsChangeDescriptionAsyncAvailable)));
 
@@ -134,14 +151,6 @@ namespace StrixMusic.Sdk.ViewModels
         private void OnIsPauseTrackCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPauseTrackCollectionAsyncAvailable)));
 
         private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayTrackCollectionAsyncAvailable)));
-
-        private void TrackCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
-        {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Images.ChangeCollection(addedItems, removedItems);
-            });
-        }
 
         private void TrackCollectionViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
         {
@@ -171,6 +180,22 @@ namespace StrixMusic.Sdk.ViewModels
 
                     SortTrackCollection(CurrentTracksSortingType, CurrentTracksSortingDirection);
                 }
+            });
+        }
+
+        private void TrackCollectionViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        {
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                Images.ChangeCollection(addedItems, removedItems);
+            });
+        }
+
+        private void TrackCollectionViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+        {
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                Urls.ChangeCollection(addedItems, removedItems);
             });
         }
 
@@ -210,13 +235,6 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<Uri?>? UrlChanged
-        {
-            add => _collection.UrlChanged += value;
-            remove => _collection.UrlChanged -= value;
-        }
-
-        /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged
         {
             add => _collection.DurationChanged += value;
@@ -252,10 +270,17 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int>? TrackItemsCountChanged
+        public event EventHandler<int>? TracksCountChanged
         {
-            add => _collection.TrackItemsCountChanged += value;
-            remove => _collection.TrackItemsCountChanged -= value;
+            add => _collection.TracksCountChanged += value;
+            remove => _collection.TracksCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ITrack>? TracksChanged
+        {
+            add => _collection.TracksChanged += value;
+            remove => _collection.TracksChanged -= value;
         }
 
         /// <inheritdoc />
@@ -273,11 +298,21 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ITrack>? TrackItemsChanged
+        public event EventHandler<int>? UrlsCountChanged
         {
-            add => _collection.TrackItemsChanged += value;
-            remove => _collection.TrackItemsChanged -= value;
+            add => _collection.UrlsCountChanged += value;
+            remove => _collection.UrlsCountChanged -= value;
         }
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IUrl>? UrlsChanged
+        {
+            add => _collection.UrlsChanged += value;
+            remove => _collection.UrlsChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
 
         /// <inheritdoc />
         public string Id => _collection.Id;
@@ -298,16 +333,16 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeDurationAsyncAvailable => _collection.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public Uri? Url => _collection.Url;
-
-        /// <inheritdoc />
         public string Name => _collection.Name;
 
         /// <inheritdoc />
-        public int TotalTracksCount => _collection.TotalTracksCount;
+        public int TotalTrackCount => _collection.TotalTrackCount;
 
         /// <inheritdoc />
         public int TotalImageCount => _collection.TotalImageCount;
+
+        /// <inheritdoc />
+        public int TotalUrlCount => _collection.TotalUrlCount;
 
         /// <inheritdoc />
         public string? Description => _collection.Description;
@@ -325,13 +360,22 @@ namespace StrixMusic.Sdk.ViewModels
         public DateTime? AddedAt => _collection.AddedAt;
 
         /// <inheritdoc />
+        public TrackSortingType CurrentTracksSortingType { get; private set; }
+
+        /// <inheritdoc />
+        public SortDirection CurrentTracksSortingDirection { get; private set; }
+
+        /// <inheritdoc />
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get; }
+
+        /// <inheritdoc />
         public ObservableCollection<TrackViewModel> Tracks { get; set; }
 
         /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> UnsortedTracks { get;  }
+        public ObservableCollection<IImage> Images { get; }
 
         /// <inheritdoc />
-        public ObservableCollection<IImage> Images { get; }
+        public ObservableCollection<IUrl> Urls { get; }
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
@@ -342,22 +386,31 @@ namespace StrixMusic.Sdk.ViewModels
         public IReadOnlyList<ICoreTrackCollection> Sources => _collection.GetSources<ICoreTrackCollection>();
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
-
-        /// <inheritdoc />
         IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackAvailable(int index) => _collection.IsAddTrackAvailable(index);
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailable(int index) => _collection.IsRemoveTrackAvailable(index);
+        IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => Sources;
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailable(int index) => _collection.IsAddImageAvailable(index);
+        public Task<bool> IsAddTrackAvailableAsync(int index) => _collection.IsAddTrackAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailable(int index) => _collection.IsRemoveImageAvailable(index);
+        public Task<bool> IsRemoveTrackAvailableAsync(int index) => _collection.IsRemoveTrackAvailableAsync(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsAddImageAvailableAsync(int index) => _collection.IsAddImageAvailableAsync(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveImageAvailableAsync(int index) => _collection.IsRemoveImageAvailableAsync(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsAddUrlAvailableAsync(int index) => _collection.IsAddUrlAvailableAsync(index);
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _collection.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
@@ -375,25 +428,28 @@ namespace StrixMusic.Sdk.ViewModels
         public Task RemoveImageAsync(int index) => _collection.RemoveImageAsync(index);
 
         /// <inheritdoc />
+        public Task AddUrlAsync(IUrl image, int index) => _collection.AddUrlAsync(image, index);
+
+        /// <inheritdoc />
+        public Task RemoveUrlAsync(int index) => _collection.RemoveUrlAsync(index);
+
+        /// <inheritdoc />
         public Task<IReadOnlyList<ITrack>> GetTracksAsync(int limit, int offset) => _collection.GetTracksAsync(limit, offset);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _collection.GetImagesAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task PlayTrackCollectionAsync()
-        {
-            return _playbackHandler.PlayAsync(this, _collection);
-        }
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _collection.GetUrlsAsync(limit, offset);
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync() => _playbackHandler.PlayAsync(this, _collection);
 
         /// <inheritdoc />
         public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackCollectionInternalAsync(track);
 
         /// <inheritdoc />
-        public Task PauseTrackCollectionAsync()
-        {
-            return _collection.PauseTrackCollectionAsync();
-        }
+        public Task PauseTrackCollectionAsync() => _playbackHandler.PauseAsync();
 
         /// <inheritdoc />
         public Task ChangeDescriptionAsync(string? description) => _collection.ChangeDescriptionAsync(description);
@@ -445,22 +501,36 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public TrackSortingType CurrentTracksSortingType { get; private set; }
+        public async Task PopulateMoreUrlsAsync(int limit)
+        {
+            using (await _populateUrlsMutex.LockAsync())
+            {
+                var items = await _collection.GetUrlsAsync(limit, Urls.Count);
+
+                _ = Threading.OnPrimaryThread(() =>
+                {
+                    foreach (var item in items)
+                    {
+                        Urls.Add(item);
+                    }
+                });
+            }
+        }
 
         /// <inheritdoc />
-        public SortDirection CurrentTracksSortingDirection { get; private set; }
+        public IRelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
 
         /// <inheritdoc />
-        public RelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
+        public IRelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreUrlsCommand { get; }
 
         /// <inheritdoc />
         public IAsyncRelayCommand PlayTrackCollectionAsyncCommand { get; }
@@ -487,24 +557,13 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => _collection.Equals(other);
-
-        /// <inheritdoc />
         public bool Equals(ICoreTrackCollection other) => _collection.Equals(other);
 
         /// <inheritdoc />
-        public async Task InitAsync()
-        {
-            if (IsInitialized)
-                return;
-
-            IsInitialized = true;
-
-            await CollectionInit.TrackCollection(this);
-        }
+        public bool Equals(ICoreImageCollection other) => _collection.Equals(other);
 
         /// <inheritdoc />
-        public bool IsInitialized { get; private set; }
+        public bool Equals(ICoreUrlCollection other) => _collection.Equals(other);
 
         /// <inheritdoc />
         private Task PlayTrackCollectionInternalAsync(ITrack? track)

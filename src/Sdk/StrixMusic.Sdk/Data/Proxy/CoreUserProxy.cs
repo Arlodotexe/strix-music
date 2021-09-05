@@ -179,15 +179,15 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool IsChangeEmailAsyncAvailable => _user.IsChangeEmailAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailable(int index)
+        public Task<bool> IsAddImageAvailableAsync(int index)
         {
-            return _user.IsAddImageAvailable(index);
+            return _user.IsAddImageAvailableAsync(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailable(int index)
+        public Task<bool> IsRemoveImageAvailableAsync(int index)
         {
-            return _user.IsRemoveImageAvailable(index);
+            return _user.IsRemoveImageAvailableAsync(index);
         }
 
         /// <inheritdoc />

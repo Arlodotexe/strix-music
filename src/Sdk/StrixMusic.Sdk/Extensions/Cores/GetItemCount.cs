@@ -31,7 +31,7 @@ namespace StrixMusic.Sdk.Extensions
                 return ((IPlaylistCollectionBase)source).TotalPlaylistItemsCount;
 
             if (typeof(TCollection) == typeof(ITrackCollection))
-                return ((ITrackCollectionBase)source).TotalTracksCount;
+                return ((ITrackCollectionBase)source).TotalTrackCount;
 
             if (typeof(TCollection) == typeof(IImageCollection))
                 return ((IImageCollectionBase)source).TotalImageCount;

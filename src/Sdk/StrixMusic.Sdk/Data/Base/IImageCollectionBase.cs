@@ -15,13 +15,13 @@ namespace StrixMusic.Sdk.Data.Base
         /// Checks if adding a <see cref="IImageBase"/> to the collection at at the given <paramref name="index"/> is supported.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IImageBase"/> can be added.</returns>
-        Task<bool> IsAddImageAvailable(int index);
+        Task<bool> IsAddImageAvailableAsync(int index);
 
         /// <summary>
         /// Checks if removing a <see cref="IImageBase"/> to the collection at at the given <paramref name="index"/> is supported.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IImageBase"/> can be removed.</returns>
-        Task<bool> IsRemoveImageAvailable(int index);
+        Task<bool> IsRemoveImageAvailableAsync(int index);
 
         /// <summary>
         /// Removes the image from the collection on the backend.

@@ -329,7 +329,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     await albumVm.InitAsync();
 
                     // We expect an album to have at least 1 track.
-                    Guard.IsGreaterThan(album.TotalTracksCount, 0, nameof(album.TotalTracksCount));
+                    Guard.IsGreaterThan(album.TotalTrackCount, 0, nameof(album.TotalTrackCount));
 
                     var firstTrack = albumVm.Tracks[0].Model;
 
@@ -392,7 +392,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     await artistVm.InitAsync();
 
                     // We expect an artist to have at least 1 track.
-                    Guard.IsGreaterThan(artist.TotalTracksCount, 0, nameof(artist.TotalTracksCount));
+                    Guard.IsGreaterThan(artist.TotalTrackCount, 0, nameof(artist.TotalTrackCount));
 
                     var firstTrack = artistVm.Tracks[0].Model;
 
@@ -455,7 +455,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     await playlistVm.InitAsync();
 
                     // We expect an playlist to have at least 1 track.
-                    Guard.IsGreaterThan(playlist.TotalTracksCount, 0, nameof(playlist.TotalTracksCount));
+                    Guard.IsGreaterThan(playlist.TotalTrackCount, 0, nameof(playlist.TotalTrackCount));
 
                     var firstTrack = playlistVm.Tracks[0].Model;
 

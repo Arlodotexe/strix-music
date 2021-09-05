@@ -171,10 +171,10 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<bool> IsAddUrlAvailableAsync(int index) => _userProfile.IsAddUrlAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailable(int index) => _userProfile.IsAddImageAvailable(index);
+        public Task<bool> IsAddImageAvailableAsync(int index) => _userProfile.IsAddImageAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailable(int index) => _userProfile.IsRemoveImageAvailable(index);
+        public Task<bool> IsRemoveImageAvailableAsync(int index) => _userProfile.IsRemoveImageAvailableAsync(index);
 
         /// <inheritdoc />
         public Task<bool> IsRemoveUrlAvailableAsync(int index) => _userProfile.IsRemoveUrlAvailableAsync(index);

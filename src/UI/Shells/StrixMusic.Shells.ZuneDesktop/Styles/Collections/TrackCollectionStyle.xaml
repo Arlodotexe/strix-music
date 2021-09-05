@@ -22,7 +22,7 @@
             </Grid.RowDefinitions>
 
             <StackPanel Margin="24,0,0,12">
-                <TextBlock Text="{x:Bind unitconvert:CountToSongsConverter.Convert(TotalTracksCount), Mode=OneWay}"
+                <TextBlock Text="{x:Bind unitconvert:CountToSongsConverter.Convert(TotalTrackCount), Mode=OneWay}"
                            FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
 
                 <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>

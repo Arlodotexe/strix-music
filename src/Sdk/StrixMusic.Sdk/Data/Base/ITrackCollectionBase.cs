@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// The total number of available Tracks.
         /// </summary>
-        int TotalTracksCount { get; }
+        int TotalTrackCount { get; }
 
         /// <summary>
         /// If true, <see cref="PlayTrackCollectionAsync()"/> can be used.
@@ -46,13 +46,13 @@ namespace StrixMusic.Sdk.Data.Base
         /// Checks if the backend supports adding an <see cref="ITrackBase"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="ITrackBase"/> can be added.</returns>
-        Task<bool> IsAddTrackAvailable(int index);
+        Task<bool> IsAddTrackAvailableAsync(int index);
 
         /// <summary>
         /// Checks if the backend supports removing an <see cref="ITrackBase"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="ITrackBase"/> can be removed.</returns>
-        Task<bool> IsRemoveTrackAvailable(int index);
+        Task<bool> IsRemoveTrackAvailableAsync(int index);
 
         /// <summary>
         /// Raised when <see cref="IsPlayTrackCollectionAsyncAvailable"/> changes.
@@ -65,8 +65,8 @@ namespace StrixMusic.Sdk.Data.Base
         event EventHandler<bool>? IsPauseTrackCollectionAsyncAvailableChanged;
 
         /// <summary>
-        /// Fires when the merged <see cref="TotalTracksCount"/> changes.
+        /// Fires when the merged <see cref="TotalTrackCount"/> changes.
         /// </summary>
-        event EventHandler<int>? TrackItemsCountChanged;
+        event EventHandler<int>? TracksCountChanged;
     }
 }

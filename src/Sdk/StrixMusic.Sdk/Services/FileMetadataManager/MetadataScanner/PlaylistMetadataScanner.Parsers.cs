@@ -121,7 +121,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     }
                 }
 
-                playlist.TotalTracksCount++;
+                playlist.TotalTrackCount++;
             }
 
             return playlist;
@@ -201,7 +201,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 Id = playlistFile.Path.HashMD5Fast(),
                 Title = xmlRoot.Element(XName.Get("title", xmlns))?.Value,
-                TotalTracksCount = listElements.Length,
+                TotalTrackCount = listElements.Length,
                 Description = xmlRoot.Element(XName.Get("annotation", xmlns))?.Value,
             };
             var url = xmlRoot.Element(XName.Get("info", xmlns))?.Value;

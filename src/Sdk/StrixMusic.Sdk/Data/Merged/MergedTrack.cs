@@ -24,6 +24,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private readonly MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem> _artistMap;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageCollectionMap;
         private readonly MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre> _genreCollectionMap;
+        private readonly MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl> _urlCollectionMap;
 
         private readonly List<ICore> _sourceCores;
 
@@ -42,12 +43,14 @@ namespace StrixMusic.Sdk.Data.Merged
             _artistMap = new MergedCollectionMap<IArtistCollection, ICoreArtistCollection, IArtistCollectionItem, ICoreArtistCollectionItem>(this);
             _imageCollectionMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
             _genreCollectionMap = new MergedCollectionMap<IGenreCollection, ICoreGenreCollection, IGenre, ICoreGenre>(this);
+            _urlCollectionMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this);
 
             foreach (var item in _sources)
             {
                 TotalArtistItemsCount += item.TotalArtistItemsCount;
                 TotalImageCount += item.TotalImageCount;
                 TotalGenreCount += item.TotalGenreCount;
+                TotalUrlCount += item.TotalUrlCount;
 
                 if (item.IsExplicit)
                     IsExplicit = true;
@@ -75,6 +78,8 @@ namespace StrixMusic.Sdk.Data.Merged
             _artistMap.ItemsCountChanged += ArtistMap_ItemsCountChanged;
             _genreCollectionMap.ItemsChanged += GenreCollectionMap_ItemsChanged;
             _genreCollectionMap.ItemsCountChanged += GenreCollectionMap_ItemsCountChanged;
+            _urlCollectionMap.ItemsChanged += UrlCollectionMap_ItemsChanged;
+            _urlCollectionMap.ItemsCountChanged += UrlCollectionMap_ItemsCountChanged;
         }
 
         private void DetachEvents(ICoreTrack source)
@@ -96,6 +101,8 @@ namespace StrixMusic.Sdk.Data.Merged
             _artistMap.ItemsCountChanged -= ArtistMap_ItemsCountChanged;
             _genreCollectionMap.ItemsChanged -= GenreCollectionMap_ItemsChanged;
             _genreCollectionMap.ItemsCountChanged -= GenreCollectionMap_ItemsCountChanged;
+            _urlCollectionMap.ItemsChanged -= UrlCollectionMap_ItemsChanged;
+            _urlCollectionMap.ItemsCountChanged -= UrlCollectionMap_ItemsCountChanged;
         }
 
         private void AttachPlayableEvents(IPlayableBase source)
@@ -103,7 +110,6 @@ namespace StrixMusic.Sdk.Data.Merged
             source.PlaybackStateChanged += PlaybackStateChanged;
             source.NameChanged += NameChanged;
             source.DescriptionChanged += DescriptionChanged;
-            source.UrlChanged += UrlChanged;
             source.DurationChanged += DurationChanged;
             source.LastPlayedChanged += LastPlayedChanged;
             source.IsChangeNameAsyncAvailableChanged += IsChangeNameAsyncAvailableChanged;
@@ -116,18 +122,11 @@ namespace StrixMusic.Sdk.Data.Merged
             source.PlaybackStateChanged -= PlaybackStateChanged;
             source.NameChanged -= NameChanged;
             source.DescriptionChanged -= DescriptionChanged;
-            source.UrlChanged -= UrlChanged;
             source.DurationChanged -= DurationChanged;
             source.LastPlayedChanged -= LastPlayedChanged;
             source.IsChangeNameAsyncAvailableChanged -= IsChangeNameAsyncAvailableChanged;
             source.IsChangeDurationAsyncAvailableChanged -= IsChangeDurationAsyncAvailableChanged;
             source.IsChangeDescriptionAsyncAvailableChanged -= IsChangeDescriptionAsyncAvailableChanged;
-        }
-
-        private void ImageCollectionMap_ItemsCountChanged(object sender, int e)
-        {
-            TotalImageCount = e;
-            ImagesCountChanged?.Invoke(this, e);
         }
 
         private void ArtistMap_ItemsCountChanged(object sender, int e)
@@ -136,9 +135,22 @@ namespace StrixMusic.Sdk.Data.Merged
             ArtistItemsCountChanged?.Invoke(this, e);
         }
 
-        private void ImageCollectionMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        private void ImageCollectionMap_ItemsCountChanged(object sender, int e)
         {
-            ImagesChanged?.Invoke(this, addedItems, removedItems);
+            TotalImageCount = e;
+            ImagesCountChanged?.Invoke(this, e);
+        }
+
+        private void GenreCollectionMap_ItemsCountChanged(object sender, int e)
+        {
+            TotalGenreCount = e;
+            GenresCountChanged?.Invoke(this, e);
+        }
+
+        private void UrlCollectionMap_ItemsCountChanged(object sender, int e)
+        {
+            TotalUrlCount = e;
+            UrlsCountChanged?.Invoke(this, e);
         }
 
         private void ArtistMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
@@ -151,10 +163,14 @@ namespace StrixMusic.Sdk.Data.Merged
             GenresChanged?.Invoke(this, addedItems, removedItems);
         }
 
-        private void GenreCollectionMap_ItemsCountChanged(object sender, int e)
+        private void ImageCollectionMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
         {
-            TotalGenreCount = e;
-            GenresCountChanged?.Invoke(this, e);
+            ImagesChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        private void UrlCollectionMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+        {
+            UrlsChanged?.Invoke(this, addedItems, removedItems);
         }
 
         private void Source_LyricsChanged(object sender, ICoreLyrics? e)
@@ -200,9 +216,6 @@ namespace StrixMusic.Sdk.Data.Merged
         public event EventHandler<string?>? DescriptionChanged;
 
         /// <inheritdoc />
-        public event EventHandler<Uri?>? UrlChanged;
-
-        /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged;
 
         /// <inheritdoc />
@@ -227,10 +240,13 @@ namespace StrixMusic.Sdk.Data.Merged
         public event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc />
+        public event EventHandler<int>? GenresCountChanged;
+
+        /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IImage>? ImagesChanged;
+        public event EventHandler<int>? UrlsCountChanged;
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<IArtistCollectionItem>? ArtistItemsChanged;
@@ -239,7 +255,10 @@ namespace StrixMusic.Sdk.Data.Merged
         public event CollectionChangedEventHandler<IGenre>? GenresChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int>? GenresCountChanged;
+        public event CollectionChangedEventHandler<IImage>? ImagesChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IUrl>? UrlsChanged;
 
         /// <inheritdoc cref="IMerged{T}.SourceCores"/>
         public IReadOnlyList<ICore> SourceCores => _sourceCores;
@@ -248,13 +267,16 @@ namespace StrixMusic.Sdk.Data.Merged
         IReadOnlyList<ICoreTrack> IMerged<ICoreTrack>.Sources => Sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => Sources;
-
-        /// <inheritdoc />
         IReadOnlyList<ICoreArtistCollection> IMerged<ICoreArtistCollection>.Sources => Sources;
 
         /// <inheritdoc />
+        IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => Sources;
+
+        /// <inheritdoc />
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => Sources;
 
         /// <inheritdoc />
         IReadOnlyList<ICoreArtistCollectionItem> IMerged<ICoreArtistCollectionItem>.Sources => Sources;
@@ -266,9 +288,6 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc/>
         public string Id => _preferredSource.Id;
-
-        /// <inheritdoc/>
-        public Uri? Url => _preferredSource.Url;
 
         /// <inheritdoc/>
         public string Name => _preferredSource.Name;
@@ -284,6 +303,9 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public int TotalGenreCount { get; private set; }
+
+        /// <inheritdoc />
+        public int TotalUrlCount { get; private set; }
 
         /// <inheritdoc/>
         public IPlayableCollectionGroup? RelatedItems { get; }
@@ -350,12 +372,6 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncAvailable => _preferredSource.IsChangeDurationAsyncAvailable;
-
-        /// <inheritdoc/>
-        public Task<bool> IsRemoveImageAvailable(int index) => _imageCollectionMap.IsRemoveItemAvailable(index);
-
-        /// <inheritdoc/>
-        public Task<bool> IsRemoveArtistItemAvailable(int index) => _artistMap.IsRemoveItemAvailable(index);
 
         /// <inheritdoc/>
         public Task PauseArtistCollectionAsync() => _preferredSource.PauseArtistCollectionAsync();
@@ -429,16 +445,28 @@ namespace StrixMusic.Sdk.Data.Merged
         public Task ChangeDurationAsync(TimeSpan duration) => _preferredSource.ChangeDurationAsync(duration);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddArtistItemAvailable(int index) => _preferredSource.IsAddArtistItemAvailable(index);
+        public Task<bool> IsAddArtistItemAvailableAsync(int index) => _preferredSource.IsAddArtistItemAvailableAsync(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageAvailable(int index) => _preferredSource.IsAddImageAvailable(index);
+        public Task<bool> IsAddImageAvailableAsync(int index) => _preferredSource.IsAddImageAvailableAsync(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreAvailableAsync(int index) => _genreCollectionMap.IsAddItemAvailable(index);
+        public Task<bool> IsAddGenreAvailableAsync(int index) => _genreCollectionMap.IsAddItemAvailableAsync(index);
 
         /// <inheritdoc/>
-        public Task<bool> IsRemoveGenreAvailableAsync(int index) => _genreCollectionMap.IsRemoveItemAvailable(index);
+        public Task<bool> IsAddUrlAvailableAsync(int index) => _urlCollectionMap.IsAddItemAvailableAsync(index);
+
+        /// <inheritdoc/>
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => _artistMap.IsRemoveItemAvailableAsync(index);
+
+        /// <inheritdoc/>
+        public Task<bool> IsRemoveImageAvailableAsync(int index) => _imageCollectionMap.IsRemoveItemAvailableAsync(index);
+
+        /// <inheritdoc/>
+        public Task<bool> IsRemoveGenreAvailableAsync(int index) => _genreCollectionMap.IsRemoveItemAvailableAsync(index);
+
+        /// <inheritdoc/>
+        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _urlCollectionMap.IsRemoveItemAvailableAsync(index);
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _artistMap.GetItemsAsync(limit, offset);
@@ -449,29 +477,41 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public Task<IReadOnlyList<IGenre>> GetGenresAsync(int limit, int offset) => _genreCollectionMap.GetItemsAsync(limit, offset);
 
-        /// <inheritdoc/>
-        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _artistMap.InsertItem(artist, index);
+        /// <inheritdoc />
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _urlCollectionMap.GetItemsAsync(limit, offset);
 
         /// <inheritdoc/>
-        public Task RemoveArtistItemAsync(int index) => _preferredSource.RemoveArtistItemAsync(index);
+        public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _artistMap.InsertItem(artist, index);
 
         /// <inheritdoc />
         public Task AddImageAsync(IImage image, int index) => _imageCollectionMap.InsertItem(image, index);
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index) => _imageCollectionMap.RemoveAt(index);
-
-        /// <inheritdoc />
         public Task AddGenreAsync(IGenre genre, int index) => _genreCollectionMap.InsertItem(genre, index);
 
         /// <inheritdoc />
+        public Task AddUrlAsync(IUrl genre, int index) => _urlCollectionMap.InsertItem(genre, index);
+
+        /// <inheritdoc/>
+        public Task RemoveArtistItemAsync(int index) => _artistMap.RemoveAt(index);
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index) => _imageCollectionMap.RemoveAt(index);
+
+        /// <inheritdoc />
         public Task RemoveGenreAsync(int index) => _genreCollectionMap.RemoveAt(index);
+
+        /// <inheritdoc />
+        public Task RemoveUrlAsync(int index) => _urlCollectionMap.RemoveAt(index);
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollectionItem other) => Equals(other as ICoreTrack);
 
         /// <inheritdoc />
         public bool Equals(ICoreImageCollection other) => Equals(other as ICoreTrack);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreUrlCollection other) => Equals(other as ICoreTrack);
 
         /// <inheritdoc />
         public bool Equals(ICoreArtistCollection other) => Equals(other as ICoreTrack);
@@ -495,6 +535,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
             _artistMap.Cast<IMergedMutable<ICoreArtistCollection>>().AddSource(itemToMerge);
             _imageCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().AddSource(itemToMerge);
+            _urlCollectionMap.Cast<IMergedMutable<ICoreUrlCollection>>().AddSource(itemToMerge);
         }
 
         /// <inheritdoc />
@@ -507,6 +548,7 @@ namespace StrixMusic.Sdk.Data.Merged
 
             _artistMap.Cast<IMergedMutable<ICoreArtistCollection>>().RemoveSource(itemToRemove);
             _imageCollectionMap.Cast<IMergedMutable<ICoreImageCollection>>().RemoveSource(itemToRemove);
+            _urlCollectionMap.Cast<IMergedMutable<ICoreUrlCollection>>().RemoveSource(itemToRemove);
         }
 
         /// <inheritdoc />
@@ -533,6 +575,7 @@ namespace StrixMusic.Sdk.Data.Merged
             await _imageCollectionMap.DisposeAsync();
             await _artistMap.DisposeAsync();
             await _genreCollectionMap.DisposeAsync();
+            await _urlCollectionMap.DisposeAsync();
         }
     }
 }

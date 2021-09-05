@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
 using OwlCore.Events;
-using OwlCore.Provisos;
 using OwlCore.Remoting;
 using OwlCore.Remoting.Attributes;
 using StrixMusic.Sdk.Data.Core;
@@ -21,10 +20,11 @@ namespace StrixMusic.Core.External.Models
 
         private int _totalAlbumItemsCount;
         private int _totalArtistItemsCount;
-        private int _totalTracksCount;
+        private int _totalTrackCount;
         private int _totalPlaylistItemsCount;
         private int _totalChildrenCount;
         private int _totalImageCount;
+        private int _totalUrlCount;
 
         private Uri? _url;
         private string _name;
@@ -51,6 +51,7 @@ namespace StrixMusic.Core.External.Models
         private AsyncLock _getPlaylistsMutex = new AsyncLock();
         private AsyncLock _getChildrenMutex = new AsyncLock();
         private AsyncLock _getImagesMutex = new AsyncLock();
+        private AsyncLock _getUrlsMutex = new AsyncLock();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExternalCorePlayableCollectionGroupBase"/> class.
@@ -74,7 +75,7 @@ namespace StrixMusic.Core.External.Models
         [RemoteMethod]
         private void OnTrackItemsChanged(IReadOnlyList<CollectionChangedItem<ICoreTrack>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreTrack>> removedItems)
         {
-            TrackItemsChanged?.Invoke(this, addedItems, removedItems);
+            TracksChanged?.Invoke(this, addedItems, removedItems);
         }
 
         [RemoteMethod]
@@ -107,6 +108,12 @@ namespace StrixMusic.Core.External.Models
             ImagesChanged?.Invoke(this, addedItems, removedItems);
         }
 
+        [RemoteMethod]
+        private void OnUrlsChanged(IReadOnlyList<CollectionChangedItem<ICoreUrl>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreUrl>> removedItems)
+        {
+            UrlsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
@@ -115,9 +122,6 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         public event EventHandler<string?>? DescriptionChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged;
@@ -162,10 +166,13 @@ namespace StrixMusic.Core.External.Models
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
+        public event EventHandler<int>? UrlsCountChanged;
+
+        /// <inheritdoc />
         public event EventHandler<int>? PlaylistItemsCountChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int>? TrackItemsCountChanged;
+        public event EventHandler<int>? TracksCountChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? AlbumItemsCountChanged;
@@ -177,7 +184,7 @@ namespace StrixMusic.Core.External.Models
         public event EventHandler<int>? ChildrenCountChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+        public event CollectionChangedEventHandler<ICoreTrack>? TracksChanged;
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
@@ -195,23 +202,14 @@ namespace StrixMusic.Core.External.Models
         public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
 
         /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreUrl>? UrlsChanged;
+
+        /// <inheritdoc />
         public ICore SourceCore { get; set; }
 
         /// <inheritdoc />
         [RemoteProperty]
         public string Id { get; set; }
-
-        /// <inheritdoc />
-        [RemoteProperty]
-        public Uri? Url
-        {
-            get => _url;
-            set
-            {
-                _url = value;
-                UrlChanged?.Invoke(this, value);
-            }
-        }
 
         /// <inheritdoc />
         [RemoteProperty]
@@ -303,13 +301,13 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteProperty]
-        public int TotalTracksCount
+        public int TotalTrackCount
         {
-            get => _totalTracksCount;
+            get => _totalTrackCount;
             set
             {
-                _totalTracksCount = value;
-                TrackItemsCountChanged?.Invoke(this, value);
+                _totalTrackCount = value;
+                TracksCountChanged?.Invoke(this, value);
             }
         }
 
@@ -346,6 +344,18 @@ namespace StrixMusic.Core.External.Models
             {
                 _totalImageCount = value;
                 ImagesCountChanged?.Invoke(this, value);
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteProperty]
+        public int TotalUrlCount
+        {
+            get => _totalUrlCount;
+            internal set
+            {
+                _totalUrlCount = value;
+                UrlsCountChanged?.Invoke(this, value);
             }
         }
 
@@ -482,51 +492,59 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddChildAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddChildAvailable));
+        public Task<bool> IsAddChildAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddChildAvailableAsync));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddPlaylistItemAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddPlaylistItemAvailable));
+        public Task<bool> IsAddPlaylistItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddPlaylistItemAvailableAsync));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddTrackAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddTrackAvailable));
+        public Task<bool> IsAddTrackAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddTrackAvailableAsync));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddArtistItemAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddArtistItemAvailable));
+        public Task<bool> IsAddArtistItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddArtistItemAvailableAsync));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddAlbumItemAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddAlbumItemAvailable));
+        public Task<bool> IsAddAlbumItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddAlbumItemAvailableAsync));
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public Task<bool> IsAddImageAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddImageAvailable));
+        public Task<bool> IsAddImageAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddImageAvailableAsync));
+
+        /// <inheritdoc/>
+        [RemoteMethod]
+        public Task<bool> IsAddUrlAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsAddUrlAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveTrackAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveTrackAvailable));
+        public Task<bool> IsRemoveTrackAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveTrackAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveImageAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveImageAvailable));
+        public Task<bool> IsRemoveImageAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveImageAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemovePlaylistItemAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemovePlaylistItemAvailable));
+        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveUrlAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveAlbumItemAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveAlbumItemAvailable));
+        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemovePlaylistItemAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveArtistItemAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveArtistItemAvailable));
+        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveAlbumItemAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task<bool> IsRemoveChildAvailable(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveChildAvailable));
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveArtistItemAvailableAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task<bool> IsRemoveChildAvailableAsync(int index) => _memberRemote.ReceiveDataAsync<bool>(nameof(IsRemoveChildAvailableAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
@@ -698,6 +716,22 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteMethod]
+        public async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
+        {
+            using (await _getUrlsMutex.LockAsync())
+            {
+                var res = await _memberRemote.ReceiveDataAsync<IEnumerable<ICoreUrl>>(nameof(GetUrlsAsync));
+
+                if (res is null)
+                    yield break;
+
+                foreach (var item in res)
+                    yield return item;
+            }
+        }
+
+        /// <inheritdoc />
+        [RemoteMethod]
         public Task AddTrackAsync(ICoreTrack track, int index) => _memberRemote.RemoteWaitAsync(nameof(AddTrackAsync));
 
         /// <inheritdoc />
@@ -715,6 +749,14 @@ namespace StrixMusic.Core.External.Models
         /// <inheritdoc />
         [RemoteMethod]
         public Task AddChildAsync(ICorePlayableCollectionGroup child, int index) => _memberRemote.RemoteWaitAsync(nameof(AddChildAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task AddImageAsync(ICoreImage image, int index) => _memberRemote.RemoteWaitAsync(nameof(AddImageAsync));
+
+        /// <inheritdoc />
+        [RemoteMethod]
+        public Task AddUrlAsync(ICoreUrl url, int index) => _memberRemote.RemoteWaitAsync(nameof(AddUrlAsync));
 
         /// <inheritdoc />
         [RemoteMethod]
@@ -742,7 +784,7 @@ namespace StrixMusic.Core.External.Models
 
         /// <inheritdoc />
         [RemoteMethod]
-        public Task AddImageAsync(ICoreImage image, int index) => _memberRemote.RemoteWaitAsync(nameof(AddImageAsync));
+        public Task RemoveUrlAsync(int index) => _memberRemote.RemoteWaitAsync(nameof(RemoveUrlAsync));
 
         /// <inheritdoc />
         [RemoteMethod]

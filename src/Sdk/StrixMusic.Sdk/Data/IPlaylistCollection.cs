@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Data
     /// <inheritdoc cref="IPlaylistCollectionBase"/>
     /// <remarks>This interface should be implemented by the Sdk.</remarks>
     [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
-    public interface IPlaylistCollection : IPlaylistCollectionBase, IImageCollection, IPlaylistCollectionItem, ISdkMember, IMerged<ICorePlaylistCollection>
+    public interface IPlaylistCollection : IPlaylistCollectionBase, IImageCollection, IUrlCollection, IPlaylistCollectionItem, ISdkMember, IMerged<ICorePlaylistCollection>
     {
         /// <summary>
         /// Attempts to play a specific item in the playlist collection. Restarts playback if already playing.

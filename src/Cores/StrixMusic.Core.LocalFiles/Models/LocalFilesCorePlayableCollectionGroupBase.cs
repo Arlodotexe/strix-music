@@ -13,7 +13,7 @@ namespace StrixMusic.Core.LocalFiles.Models
     {
         private int _totalAlbumItemsCount;
         private int _totalArtistItemsCount;
-        private int _totalTracksCount;
+        private int _totalTrackCount;
         private int _totalPlaylistItemsCount;
         private int _totalChildrenCount;
 
@@ -26,6 +26,16 @@ namespace StrixMusic.Core.LocalFiles.Models
             SourceCore = sourceCore;
         }
 
+        /// <summary>
+        /// Initializes the collection group base.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public virtual Task InitAsync()
+        {
+            IsInitialized = true;
+            return Task.CompletedTask;
+        }
+
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
@@ -34,9 +44,6 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc />
         public event EventHandler<string?>? DescriptionChanged;
-
-        /// <inheritdoc />
-        public event EventHandler<Uri?>? UrlChanged;
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? DurationChanged;
@@ -77,15 +84,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
 
-        /// <inheritdoc />
-        public virtual event EventHandler<int>? ImagesCountChanged;
-
-        /// <inheritdoc />?
-        public virtual event EventHandler<int>? PlaylistItemsCountChanged;
-
-        /// <inheritdoc />?
-        public virtual event EventHandler<int>? TrackItemsCountChanged;
-
         /// <inheritdoc />?
         public virtual event EventHandler<int>? AlbumItemsCountChanged;
 
@@ -93,16 +91,25 @@ namespace StrixMusic.Core.LocalFiles.Models
         public virtual event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc />?
-        public virtual event EventHandler<int>? ChildrenCountChanged;
+        public virtual event EventHandler<int>? PlaylistItemsCountChanged;
 
         /// <inheritdoc />?
-        public virtual event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+        public virtual event EventHandler<int>? TracksCountChanged;
+
+        /// <inheritdoc />?
+        public virtual event EventHandler<int>? ChildrenCountChanged;
+
+        /// <inheritdoc />
+        public virtual event EventHandler<int>? ImagesCountChanged;
+
+        /// <inheritdoc />
+        public virtual event EventHandler<int>? UrlsCountChanged;
 
         /// <inheritdoc />?
         public virtual event CollectionChangedEventHandler<ICorePlaylistCollectionItem>? PlaylistItemsChanged;
 
         /// <inheritdoc />?
-        public virtual event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+        public virtual event CollectionChangedEventHandler<ICoreTrack>? TracksChanged;
 
         /// <inheritdoc />?
         public virtual event CollectionChangedEventHandler<ICoreAlbumCollectionItem>? AlbumItemsChanged;
@@ -113,14 +120,17 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />?
         public virtual event CollectionChangedEventHandler<ICorePlayableCollectionGroup>? ChildItemsChanged;
 
+        /// <inheritdoc />?
+        public virtual event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+
+        /// <inheritdoc />?
+        public virtual event CollectionChangedEventHandler<ICoreUrl>? UrlsChanged;
+
         /// <inheritdoc />
         public ICore SourceCore { get; private set; }
 
         /// <inheritdoc />
         public abstract string Id { get; protected set; }
-
-        /// <inheritdoc />
-        public abstract Uri? Url { get; protected set; }
 
         /// <inheritdoc />
         public abstract string Name { get; protected set; }
@@ -163,13 +173,13 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public virtual int TotalTracksCount
+        public virtual int TotalTrackCount
         {
-            get => _totalTracksCount;
+            get => _totalTrackCount;
             internal set
             {
-                _totalTracksCount = value;
-                TrackItemsCountChanged?.Invoke(this, value);
+                _totalTrackCount = value;
+                TracksCountChanged?.Invoke(this, value);
             }
         }
 
@@ -197,6 +207,9 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc />
         public int TotalImageCount { get; } = 0;
+
+        /// <inheritdoc />
+        public int TotalUrlCount { get; } = 0;
 
         /// <inheritdoc />
         public bool IsPlayAlbumCollectionAsyncAvailable => false;
@@ -235,73 +248,85 @@ namespace StrixMusic.Core.LocalFiles.Models
         public virtual bool IsInitialized { get; protected set; }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddChildAvailable(int index)
+        public Task<bool> IsAddChildAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddPlaylistItemAvailable(int index)
+        public Task<bool> IsAddPlaylistItemAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddTrackAvailable(int index)
+        public Task<bool> IsAddTrackAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddArtistItemAvailable(int index)
+        public Task<bool> IsAddArtistItemAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddAlbumItemAvailable(int index)
+        public Task<bool> IsAddAlbumItemAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageAvailable(int index)
+        public Task<bool> IsAddImageAvailableAsync(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddUrlAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailable(int index)
+        public Task<bool> IsRemoveTrackAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailable(int index)
+        public Task<bool> IsRemoveImageAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemovePlaylistItemAvailable(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemAvailable(int index)
+        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemAvailable(int index)
+        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveChildAvailable(int index)
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveChildAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
@@ -430,6 +455,15 @@ namespace StrixMusic.Core.LocalFiles.Models
         public abstract IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0);
 
         /// <inheritdoc />
+        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public abstract IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset = 0);
+
+        /// <inheritdoc />
         public Task AddTrackAsync(ICoreTrack track, int index)
         {
             throw new NotSupportedException();
@@ -455,6 +489,18 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc />
         public Task AddChildAsync(ICorePlayableCollectionGroup child, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddImageAsync(ICoreImage image, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task AddUrlAsync(ICoreUrl url, int index)
         {
             throw new NotSupportedException();
         }
@@ -496,24 +542,9 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
-        public IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public Task AddImageAsync(ICoreImage image, int index)
+        public Task RemoveUrlAsync(int index)
         {
             throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Initializes the collection group base.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public virtual Task InitAsync()
-        {
-            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

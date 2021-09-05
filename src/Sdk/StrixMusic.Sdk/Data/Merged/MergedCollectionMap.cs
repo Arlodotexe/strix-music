@@ -67,27 +67,27 @@ namespace StrixMusic.Sdk.Data.Merged
             switch (sourceCollection)
             {
                 case ICorePlayableCollectionGroup playableCollection:
-                    if (await playableCollection.IsAddChildAvailable(originalIndex))
+                    if (await playableCollection.IsAddChildAvailableAsync(originalIndex))
                         await playableCollection.AddChildAsync((ICorePlayableCollectionGroup)itemToAdd, originalIndex);
                     break;
                 case ICoreAlbumCollection albumCollection:
-                    if (await albumCollection.IsAddAlbumItemAvailable(originalIndex))
+                    if (await albumCollection.IsAddAlbumItemAvailableAsync(originalIndex))
                         await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)itemToAdd, originalIndex);
                     break;
                 case ICoreArtistCollection artistCollection:
-                    if (await artistCollection.IsAddArtistItemAvailable(originalIndex))
+                    if (await artistCollection.IsAddArtistItemAvailableAsync(originalIndex))
                         await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)itemToAdd, originalIndex);
                     break;
                 case ICorePlaylistCollection playlistCollection:
-                    if (await playlistCollection.IsAddPlaylistItemAvailable(originalIndex))
+                    if (await playlistCollection.IsAddPlaylistItemAvailableAsync(originalIndex))
                         await playlistCollection.AddPlaylistItemAsync((ICorePlaylistCollectionItem)itemToAdd, originalIndex);
                     break;
                 case ICoreTrackCollection trackCollection:
-                    if (await trackCollection.IsAddTrackAvailable(originalIndex))
+                    if (await trackCollection.IsAddTrackAvailableAsync(originalIndex))
                         await trackCollection.AddTrackAsync((ICoreTrack)itemToAdd, originalIndex);
                     break;
                 case ICoreImageCollection imageCollection:
-                    if (await imageCollection.IsAddImageAvailable(originalIndex))
+                    if (await imageCollection.IsAddImageAvailableAsync(originalIndex))
                         await imageCollection.AddImageAsync((ICoreImage)itemToAdd, originalIndex);
                     break;
                 case ICoreGenreCollection genreCollection:
@@ -246,8 +246,8 @@ namespace StrixMusic.Sdk.Data.Merged
             }
             else if (typeof(TCoreCollection) == typeof(ICoreTrackCollection))
             {
-                ((ICoreTrackCollection)item).TrackItemsCountChanged += MergedCollectionMap_CountChanged;
-                ((ICoreTrackCollection)item).TrackItemsChanged += MergedCollectionMap_TrackItemsChanged;
+                ((ICoreTrackCollection)item).TracksCountChanged += MergedCollectionMap_CountChanged;
+                ((ICoreTrackCollection)item).TracksChanged += MergedCollectionMap_TrackItemsChanged;
             }
             else if (typeof(TCoreCollection) == typeof(ICoreImageCollection))
             {
@@ -295,8 +295,8 @@ namespace StrixMusic.Sdk.Data.Merged
             }
             else if (typeof(TCoreCollection) == typeof(ICoreTrackCollection))
             {
-                ((ICoreTrackCollection)item).TrackItemsCountChanged -= MergedCollectionMap_CountChanged;
-                ((ICoreTrackCollection)item).TrackItemsChanged -= MergedCollectionMap_TrackItemsChanged;
+                ((ICoreTrackCollection)item).TracksCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICoreTrackCollection)item).TracksChanged -= MergedCollectionMap_TrackItemsChanged;
             }
             else if (typeof(TCoreCollection) == typeof(ICoreImageCollection))
             {
@@ -454,7 +454,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private void MergedCollectionMap_CountChanged(object sender, int e)
         {
             // This is sent from each core.
-            // The count would be wrong if we tried to re-emit it as is.
+            // The count would be wrong if we tried to re-emit it as is due to merging.
             // We emit CountChanged (for the MergedCollectionMap) when items are changed.
 
             // TODO: Maybe we can use it this event verify the size of the collection is correct?
@@ -563,7 +563,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         /// <param name="index">The index to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public async Task<bool> IsAddItemAvailable(int index)
+        public async Task<bool> IsAddItemAvailableAsync(int index)
         {
             await TryInitAsync();
 
@@ -578,7 +578,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         /// <param name="index">The index to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public async Task<bool> IsRemoveItemAvailable(int index)
+        public async Task<bool> IsRemoveItemAvailableAsync(int index)
         {
             await TryInitAsync();
 
