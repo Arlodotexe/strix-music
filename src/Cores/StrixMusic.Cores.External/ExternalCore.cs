@@ -130,6 +130,11 @@ namespace StrixMusic.Core.External
         {
 
             // ==========================
+            // WARNING
+            // ==========================
+            // This class is still very WIP. Do not attempt to use it
+
+            // ==========================
             // Train of thought for later:
             // ==========================
 
@@ -156,6 +161,15 @@ namespace StrixMusic.Core.External
             // No.
             // The asynchronous nature of how items returned from an API + remote lock mean they always have the chance to call initasync and we always wait for async calls on their end to finish.
             // Remote properties mean we don't care how or when it's called or what it even does
+
+            // ---------------------------
+
+            // Should the dev need to create their own ExternalCore from scratch every time, or can we reduce the work?
+            // Base classes?
+            //   - Would allow us to update core/remoting functionality with a nuget package (!!)
+            //   - Remoting may not work if the name of the derived classes are different in host/client.
+            //       - Need to adjust OwlCore.Remoting to have a "loose" mode option where only the ID and property/method names need to match.
+            //   - Use the same ExternalCore project for both host/client, or create a new project with separate code for host / client?
 
             // ============
             // TODO:
