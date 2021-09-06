@@ -9,10 +9,8 @@ namespace StrixMusic.Sdk.Services.Notifications
     /// A Notification displayed by a Shell.
     /// </summary>
     [RemoteOptions(RemotingDirection.Bidirectional)]
-    public sealed class Notification : IDisposable
+    public sealed class Notification
     {
-        private readonly MemberRemote _memberRemote;
-
         /// <summary>
         /// Raised when the Notification is dismissed.
         /// </summary>
@@ -25,7 +23,6 @@ namespace StrixMusic.Sdk.Services.Notifications
         public Notification(AbstractUIElementGroup abstractUIElementGroup)
         {
             AbstractUIElementGroup = abstractUIElementGroup;
-            _memberRemote = new MemberRemote(this, abstractUIElementGroup.Id);
         }
 
         /// <summary>
@@ -45,12 +42,6 @@ namespace StrixMusic.Sdk.Services.Notifications
         public void Dismiss()
         {
             Dismissed?.Invoke(this, EventArgs.Empty);
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            _memberRemote.Dispose();
         }
     }
 }

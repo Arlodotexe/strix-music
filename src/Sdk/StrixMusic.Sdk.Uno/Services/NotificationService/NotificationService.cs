@@ -132,7 +132,6 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
             _notifications.Remove(targetNotification);
             NotificationDismissed?.Invoke(this, targetNotification);
             targetNotification.Dismissed -= Notification_Dismissed;
-            targetNotification.Dispose();
 
             _activeNotifications--;
 

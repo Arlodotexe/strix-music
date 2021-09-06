@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
@@ -15,6 +17,7 @@ namespace StrixMusic.Sdk.Services.Notifications
     {
         private readonly INotificationService? _notificationService;
         private readonly MemberRemote _memberRemote;
+        private readonly List<MemberRemote> _notificationMemberRemotes;
 
         /// <summary>
         /// Increments when a notification is displayed from this service, to provide unique IDs for remoting.
@@ -42,6 +45,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         public RemoteNotificationService(string id)
         {
             _memberRemote = new MemberRemote(this, $"{nameof(RemoteNotificationService)}.{id}");
+            _notificationMemberRemotes = new List<MemberRemote>();
         }
 
         private void AttachEvents()
@@ -76,6 +80,12 @@ namespace StrixMusic.Sdk.Services.Notifications
         private void OnNotificationDismissed_Internal(Notification notification)
         {
             NotificationDismissed?.Invoke(this, notification);
+
+            var target = _notificationMemberRemotes.FirstOrDefault(x => x.Id == notification.AbstractUIElementGroup.Id);
+            if (!(target is null))
+                _notificationMemberRemotes.Remove(target);
+
+            target?.Dispose();
         }
 
         /// <inheritdoc cref="INotificationService.NotificationRaised"/>
@@ -92,6 +102,8 @@ namespace StrixMusic.Sdk.Services.Notifications
             {
                 Guard.IsNotNull(_notificationService, nameof(_notificationService));
                 var notification = _notificationService.RaiseNotification(title, message);
+
+                _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUIElementGroup.Id));
 
                 await _memberRemote.PublishDataAsync(notification, $"{_notificationTick++}");
 
@@ -114,6 +126,8 @@ namespace StrixMusic.Sdk.Services.Notifications
             {
                 Guard.IsNotNull(_notificationService, nameof(_notificationService));
                 var notification = _notificationService.RaiseNotification(elementGroup);
+
+                _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUIElementGroup.Id));
 
                 await _memberRemote.PublishDataAsync(notification, $"{_notificationTick++}");
 
