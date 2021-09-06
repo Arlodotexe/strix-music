@@ -238,10 +238,6 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\StrixMusic.Core.OneDriveCore\StrixMusic.Core.OneDriveCore.csproj">
-      <Project>{cdfd1746-43be-4e31-b8c5-c33d9946c50e}</Project>
-      <Name>StrixMusic.Core.OneDriveCore</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Core.LocalFiles.csproj">
       <Project>{617f1778-92f9-454a-b041-d71b4b63a221}</Project>
       <Name>StrixMusic.Core.LocalFiles</Name>
