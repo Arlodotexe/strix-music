@@ -15,6 +15,7 @@ namespace StrixMusic.Core.OneDriveCore
     {
         private AbstractTextBox _clientIdTb;
         private AbstractTextBox _tenantTb;
+        private AbstractTextBox _redirectUriTb;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OneDriveCoreConfig"/> class.
@@ -47,6 +48,10 @@ namespace StrixMusic.Core.OneDriveCore
                 PlaceholderText = "Enter tenant id here.",
             };
 
+            _redirectUriTb = new AbstractTextBox("Redirect Uri", string.Empty)
+            {
+                PlaceholderText = "Enter redirect uri (If Any).",
+            };
 
             var startButton = new AbstractButton("Start", "Get Started");
 
@@ -56,10 +61,13 @@ namespace StrixMusic.Core.OneDriveCore
             {
                 new AbstractUIElementGroup("SettingsGroup")
                 {
+                    Title="OneDrive Settings.",
+
                     Items = new List<AbstractUIElement>
                     {
                         _clientIdTb,
                         _tenantTb,
+                        _redirectUriTb,
                         startButton
                     },
                 }
@@ -72,7 +80,7 @@ namespace StrixMusic.Core.OneDriveCore
 
             if (!string.IsNullOrWhiteSpace(_clientIdTb.Value) && !string.IsNullOrWhiteSpace(_tenantTb.Value))
             {
-                authManager.Init(_clientIdTb.Value, _tenantTb.Value);
+                authManager.Init(_clientIdTb.Value, _tenantTb.Value, _redirectUriTb.Value);
 
                 await authManager.GenerateGraphToken();
             }
