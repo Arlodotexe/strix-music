@@ -7,6 +7,7 @@ using OwlCore.AbstractUI.Models;
 using StrixMusic.Core.OneDriveCore.Services;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using StrixMusic.Sdk.Components;
 
 namespace StrixMusic.Core.OneDriveCore
 {
@@ -29,6 +30,8 @@ namespace StrixMusic.Core.OneDriveCore
         public override Task SetupConfigurationServices(IServiceCollection services)
         {
             services.AddTransient(typeof(AuthenticationManager));
+            services.AddTransient(typeof(OneDriveCoreStorageService));
+            services.AddTransient(typeof(DefaultFileExplorer));
 
             Services = services.BuildServiceProvider();
 
@@ -81,8 +84,14 @@ namespace StrixMusic.Core.OneDriveCore
             if (!string.IsNullOrWhiteSpace(_clientIdTb.Value) && !string.IsNullOrWhiteSpace(_tenantTb.Value))
             {
                 authManager.Init(_clientIdTb.Value, _tenantTb.Value, _redirectUriTb.Value);
+                var client = await authManager.GenerateGraphToken();
 
-                await authManager.GenerateGraphToken();
+
+                // TEST Code
+                var oneDriveService = Services.GetService<OneDriveCoreStorageService>();
+                oneDriveService.Init(client);
+
+                var root = await oneDriveService.GetRootFolderAsync();
             }
             else
             {

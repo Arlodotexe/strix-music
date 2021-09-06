@@ -14,7 +14,7 @@ namespace StrixMusic.Core.OneDriveCore.Storage
         /// <summary>
         /// OneDrive folder id.
         /// </summary>
-        public int OneDriveFolderId { get; }
+        public string OneDriveFolderId { get; }
 
         ///<inheritdoc />
         public string Name { get; }

@@ -242,6 +242,10 @@
       <Project>{617f1778-92f9-454a-b041-d71b4b63a221}</Project>
       <Name>StrixMusic.Core.LocalFiles</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Core.OneDriveCore.csproj">
+      <Project>{113fd74a-31a3-4180-bdb0-f0fc27f1339c}</Project>
+      <Name>StrixMusic.Core.OneDriveCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
       <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>
       <Name>OwlCore</Name>
@@ -266,12 +270,6 @@
       <Project>{063715b5-1765-4269-8fb0-699fadc840e1}</Project>
       <Name>StrixMusic.Shells.ZuneDesktop</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Hqub.MusicBrainz.API, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Cores\StrixMusic.Core.MusicBrainz\Dependencies\Hqub.MusicBrainz.API.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
