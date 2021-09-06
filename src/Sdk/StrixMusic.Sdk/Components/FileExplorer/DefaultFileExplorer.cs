@@ -9,7 +9,7 @@ namespace StrixMusic.Sdk.Components
     public class DefaultFileExplorer
     {
         /// <summary>
-        /// Initializes and 
+        /// Initializes the file explorer. 
         /// </summary>
         public DefaultFileExplorer(IFolderData folderData)
         {
