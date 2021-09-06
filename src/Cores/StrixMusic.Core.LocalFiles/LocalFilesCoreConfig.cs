@@ -153,6 +153,7 @@ namespace StrixMusic.Core.LocalFiles
         private void ConfigDoneButton_Clicked(object sender, EventArgs e)
         {
             SourceCore.Cast<LocalFilesCore>().ChangeCoreState(Sdk.Data.CoreState.Configured);
+            SourceCore.Cast<LocalFilesCore>().ChangeCoreState(Sdk.Data.CoreState.Loaded);
         }
 
         private async void InitWithEmptyReposToggleOnStateChanged(object sender, bool e)
