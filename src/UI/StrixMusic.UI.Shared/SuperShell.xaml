@@ -151,7 +151,8 @@
                         <StackPanel Visibility="{x:Bind ViewModel.IsShowingAddNew, Mode=OneWay}" Padding="20,30">
 
                             <GridView ItemsSource="{x:Bind ViewModel.AvailableServices}" ItemTemplate="{StaticResource NewCoreItemTemplate}"
-                                  SelectionMode="None">
+                                      HorizontalAlignment="Center"
+                                      SelectionMode="None">
                                 <GridView.ItemContainerStyle>
                                     <Style TargetType="FrameworkElement">
                                         <Setter Property="Margin" Value="0 0 20 20"/>
@@ -159,7 +160,7 @@
                                 </GridView.ItemContainerStyle>
                             </GridView>
 
-                            <Grid VerticalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" Spacing="10">
                                 <Button Command="{x:Bind ViewModel.CancelAddNewCommand}" HorizontalAlignment="Left" Opacity="0.7"
                                         Background="Transparent" BorderBrush="{ThemeResource CoreItemBorderBrush}" BorderThickness="2" Width="38" Padding="8">
                                     <Button.Content>
@@ -168,7 +169,7 @@
                                 </Button>
 
                                 <TextBlock x:Uid="/SuperShell/ConnectANewServiceTB" Text="CONNECT A NEW SERVICE" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.5" FontWeight="SemiBold" CharacterSpacing="60"/>
-                            </Grid>
+                            </StackPanel>
                         </StackPanel>
                     </Grid>
 
