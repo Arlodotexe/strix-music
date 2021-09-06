@@ -56,11 +56,10 @@ namespace StrixMusic.Core.OneDriveCore.Services
         /// Performs user authorization and returns the a valid token for the app.
         /// </summary>
         /// <returns></returns>
-        public async Task<GraphServiceClient> GenerateGraphToken()
+        public async Task GenerateGraphToken()
         {
             Guard.IsNotNull(typeof(IPublicClientApplication), "Client application not initialized. Make sure you initliaze the app before acquiring token.");
 
-            GraphServiceClient graphClient = new GraphServiceClient(null);
             var accounts = await _clientApp.GetAccountsAsync();
 
             AuthenticationResult result;
@@ -89,8 +88,6 @@ namespace StrixMusic.Core.OneDriveCore.Services
                     // TODO: Show a dialog with the error.
                 }
             }
-
-            return graphClient;
         }
 
     }
