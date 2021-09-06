@@ -106,6 +106,8 @@ namespace StrixMusic.Shared
 
         private async void AppLoadingView_OnLoaded(object sender, RoutedEventArgs e)
         {
+            PrereleaseNoticeContainer.Visibility = Visibility.Collapsed;
+
             await InitializeAssemblies();
             await InitializeServices();
             await InitializeInstanceRegistry();
@@ -371,7 +373,7 @@ namespace StrixMusic.Shared
             var notification = notifService.RaiseNotification(new AbstractUIElementGroup($"{nameof(AppLoadingView)}.OOBEElementGroup", PreferredOrientation.Horizontal)
             {
                 Title = "First time?",
-                Subtitle = "Set up your skins and services to get started.",
+                Subtitle = "Set up your skins and services before proceeding.",
                 Items = new List<AbstractUIElement>()
                 {
                     doneButton,

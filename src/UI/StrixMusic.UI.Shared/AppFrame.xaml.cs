@@ -72,6 +72,11 @@ namespace StrixMusic.Shared
             AttachEvents(notificationService);
         }
 
+        public void NavigateTo(FrameworkElement element)
+        {
+            PART_ContentPresenter.Content = element;
+        }
+
         private void AttachEvents()
         {
             CurrentWindow.NavigationService.NavigationRequested += NavServiceOnNavigationRequested;
@@ -184,7 +189,7 @@ namespace StrixMusic.Shared
 
         private void AppFrame_OnLoaded(object sender, RoutedEventArgs e)
         {
-            PART_ContentPresenter.Content = new AppLoadingView();
+            NavigateTo(new AppLoadingView());
         }
 
         private void NavServiceOnNavigationRequested(object sender, NavigateEventArgs<Control> e)
