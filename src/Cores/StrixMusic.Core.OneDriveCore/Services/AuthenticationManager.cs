@@ -35,7 +35,7 @@ namespace StrixMusic.Core.OneDriveCore.Services
         {
             _authority = new Uri($"{_authorityUri}/{tenantId}");
 
-            if (!string.IsNullOrEmpty(redirectUri))
+            if (string.IsNullOrEmpty(redirectUri))
             {
                 _clientApp = PublicClientApplicationBuilder
                      .Create(clientId)
