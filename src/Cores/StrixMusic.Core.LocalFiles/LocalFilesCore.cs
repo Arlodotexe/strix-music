@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Core.LocalFiles.Models;
@@ -30,7 +29,7 @@ namespace StrixMusic.Core.LocalFiles
         {
             InstanceId = instanceId;
 
-            Devices = new SynchronizedObservableCollection<ICoreDevice>();
+            Devices = new List<ICoreDevice>();
             RecentlyPlayed = new LocalFilesCoreRecentlyPlayed(this);
             Discoverables = new LocalFilesCoreDiscoverables(this);
             CoreConfig = new LocalFilesCoreConfig(this);

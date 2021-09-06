@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// An interfaced ViewModel for <see cref="IPlaylistCollection" />. This is needed so because multiple view models implement <see cref="IPlaylistCollection"/>, and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IPlaylistCollection"/>.
     /// </summary>
-    public interface IPlaylistCollectionViewModel : IPlaylistCollection, IAsyncInit
+    public interface IPlaylistCollectionViewModel : IPlaylistCollection, IUrlCollectionViewModel, IAsyncInit
     {
         /// <summary>
         /// Keeps the default track collection while sorting.
@@ -68,11 +68,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Adjustes sorting to maintain its direction, with a new type.
         /// </summary>
-        public RelayCommand<PlaylistSortingType> ChangePlaylistCollectionSortingTypeCommand { get; }
+        public IRelayCommand<PlaylistSortingType> ChangePlaylistCollectionSortingTypeCommand { get; }
 
         /// <summary>
         /// Adjustes sorting to maintain its type, with a new direction.
         /// </summary>
-        public RelayCommand<SortDirection> ChangePlaylistCollectionSortingDirectionCommand { get; }
+        public IRelayCommand<SortDirection> ChangePlaylistCollectionSortingDirectionCommand { get; }
     }
 }

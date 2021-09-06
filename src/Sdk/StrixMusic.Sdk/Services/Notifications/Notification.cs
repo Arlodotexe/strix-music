@@ -1,13 +1,18 @@
 ﻿using System;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Remoting;
+using OwlCore.Remoting.Attributes;
 
 namespace StrixMusic.Sdk.Services.Notifications
 {
     /// <summary>
     /// A Notification displayed by a Shell.
     /// </summary>
-    public class Notification
+    [RemoteOptions(RemotingDirection.Bidirectional)]
+    public sealed class Notification : IDisposable
     {
+        private readonly MemberRemote _memberRemote;
+
         /// <summary>
         /// Raised when the Notification is dismissed.
         /// </summary>
@@ -16,10 +21,11 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="Notification"/> class.
         /// </summary>
-        /// <param name="elementGroup">The <see cref="AbstractUIElementGroup"/> to display for the notification content.</param>
-        public Notification(AbstractUIElementGroup elementGroup)
+        /// <param name="abstractUIElementGroup">The <see cref="AbstractUIElementGroup"/> to display for the notification content.</param>
+        public Notification(AbstractUIElementGroup abstractUIElementGroup)
         {
-            AbstractUIElementGroup = elementGroup;
+            AbstractUIElementGroup = abstractUIElementGroup;
+            _memberRemote = new MemberRemote(this, abstractUIElementGroup.Id);
         }
 
         /// <summary>
@@ -35,9 +41,16 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// <summary>
         /// Raises the <see cref="Dismissed"/> event for the Core.
         /// </summary>
+        [RemoteMethod]
         public void Dismiss()
         {
             Dismissed?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            _memberRemote.Dispose();
         }
     }
 }

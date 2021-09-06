@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
 using Cauldron.Interception;
 using OwlCore.Remoting.EventArgs;
 
@@ -11,21 +12,25 @@ namespace OwlCore.Remoting.Attributes
     /// Attribute used in conjuction with <see cref="MemberRemote"/>.
     /// Mark a method with this attribute to opt into remote method changes.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
     public class RemoteMethodAttribute : Attribute, IMethodInterceptor
     {
         /// <inheritdoc/>
         public void OnEnter(Type declaringType, object instance, MethodBase methodbase, object[] values)
         {
-            var trace = new StackTrace(true);
-            var frames = trace.GetFrames();
+            // Check if the invoker was the OwlCore.Remoting library.
+            // Don't re-emit "entered" to the library if so.
+            lock (MemberRemote.MemberHandleExpectancyMap)
+            {
+                if (MemberRemote.MemberHandleExpectancyMap.TryGetValue(Thread.CurrentThread.ManagedThreadId, out var expectedInstance) && ReferenceEquals(expectedInstance, instance))
+                {
+                    MemberRemote.MemberHandleExpectancyMap.Remove(Thread.CurrentThread.ManagedThreadId);
+                    return;
+                }
+            }
 
-            if (frames.Length > 8 &&
-                frames[3].GetMethod().Name == nameof(MethodBase.Invoke) &&
-                frames[8].GetMethod().Name == nameof(MemberRemote.MessageHandler_DataReceived))
-                return;
-
-            Entered?.Invoke(this, new MethodEnteredEventArgs(declaringType, instance, methodbase, values));
+            var args = new MethodEnteredEventArgs(declaringType, instance, methodbase, values);
+            Entered?.Invoke(this, args);
         }
 
         /// <inheritdoc/>

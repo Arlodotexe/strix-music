@@ -46,13 +46,13 @@ namespace StrixMusic.Sdk.Data.Base
         /// Checks if the backend supports adding an <see cref="IPlaylistCollectionItemBase"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IPlaylistCollectionItemBase"/> can be added.</returns>
-        Task<bool> IsAddPlaylistItemAvailable(int index);
+        Task<bool> IsAddPlaylistItemAvailableAsync(int index);
 
         /// <summary>
         /// Checks if the backend supports removing an <see cref="IPlaylistCollectionItemBase"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IPlaylistCollectionItemBase"/> can be removed.</returns>
-        Task<bool> IsRemovePlaylistItemAvailable(int index);
+        Task<bool> IsRemovePlaylistItemAvailableAsync(int index);
 
         /// <summary>
         /// Raised when <see cref="IsPlayPlaylistCollectionAsyncAvailable"/> changes.

@@ -26,7 +26,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// An observable wrapper for a <see cref="IPlayableCollectionGroupBase"/>.
     /// </summary>
-    public class PlayableCollectionGroupViewModel : ObservableObject, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel
+    public class PlayableCollectionGroupViewModel : ObservableObject, IPlayableCollectionGroup, IPlayableCollectionGroupChildrenViewModel, IAlbumCollectionViewModel, IArtistCollectionViewModel, ITrackCollectionViewModel, IPlaylistCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel
     {
         private readonly IPlayableCollectionGroup _collectionGroup;
         private readonly IPlaybackHandlerService _playbackHandler;
@@ -37,6 +37,7 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly AsyncLock _populatePlaylistsMutex = new AsyncLock();
         private readonly AsyncLock _populateChildrenMutex = new AsyncLock();
         private readonly AsyncLock _populateImagesMutex = new AsyncLock();
+        private readonly AsyncLock _populateUrlsMutex = new AsyncLock();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayableCollectionGroupViewModel"/> class.
@@ -74,6 +75,7 @@ namespace StrixMusic.Sdk.ViewModels
             PopulateMoreArtistsCommand = new AsyncRelayCommand<int>(PopulateMoreArtistsAsync);
             PopulateMoreChildrenCommand = new AsyncRelayCommand<int>(PopulateMoreChildrenAsync);
             PopulateMoreImagesCommand = new AsyncRelayCommand<int>(PopulateMoreImagesAsync);
+            PopulateMoreUrlsCommand = new AsyncRelayCommand<int>(PopulateMoreUrlsAsync);
 
             ChangeTrackCollectionSortingTypeCommand = new RelayCommand<TrackSortingType>(x => SortTrackCollection(x, CurrentTracksSortingDirection));
             ChangeTrackCollectionSortingDirectionCommand = new RelayCommand<SortDirection>(x => SortTrackCollection(CurrentTracksSortingType, x));
@@ -86,16 +88,18 @@ namespace StrixMusic.Sdk.ViewModels
 
             using (Threading.PrimaryContext)
             {
-                Images = new ObservableCollection<IImage>();
-                Tracks = new ObservableCollection<TrackViewModel>();
-                UnsortedTracks = new ObservableCollection<TrackViewModel>();
+                Albums = new ObservableCollection<IAlbumCollectionItem>();
                 Artists = new ObservableCollection<IArtistCollectionItem>();
                 Children = new ObservableCollection<PlayableCollectionGroupViewModel>();
                 Playlists = new ObservableCollection<IPlaylistCollectionItem>();
-                Albums = new ObservableCollection<IAlbumCollectionItem>();
+                Tracks = new ObservableCollection<TrackViewModel>();
+                Images = new ObservableCollection<IImage>();
+                Urls = new ObservableCollection<IUrl>();
+
                 UnsortedAlbums = new ObservableCollection<IAlbumCollectionItem>();
                 UnsortedArtists = new ObservableCollection<IArtistCollectionItem>();
                 UnsortedPlaylists = new ObservableCollection<IPlaylistCollectionItem>();
+                UnsortedTracks = new ObservableCollection<TrackViewModel>();
             }
 
             AttachPropertyEvents();
@@ -106,15 +110,15 @@ namespace StrixMusic.Sdk.ViewModels
             PlaybackStateChanged += CollectionGroupPlaybackStateChanged;
             DescriptionChanged += CollectionGroupDescriptionChanged;
             NameChanged += CollectionGroupNameChanged;
-            UrlChanged += CollectionGroupUrlChanged;
             LastPlayedChanged += CollectionGroupLastPlayedChanged;
 
             AlbumItemsCountChanged += CollectionGroupOnAlbumItemsCountChanged;
-            TrackItemsCountChanged += CollectionGroupOnTrackItemsCountChanged;
+            TracksCountChanged += CollectionGroupOnTrackItemsCountChanged;
             ArtistItemsCountChanged += CollectionGroupOnArtistItemsCountChanged;
             PlaylistItemsCountChanged += CollectionGroupOnPlaylistItemsCountChanged;
-            TotalChildrenCountChanged += CollectionGroupOnTotalChildrenCountChanged;
+            ChildrenCountChanged += CollectionGroupOnTotalChildrenCountChanged;
             ImagesCountChanged += PlayableCollectionGroupViewModel_ImagesCountChanged;
+            UrlsCountChanged += PlayableCollectionGroupViewModel_UrlsCountChanged;
 
             IsPlayAlbumCollectionAsyncAvailableChanged += OnIsPlayAlbumCollectionAsyncAvailableChanged;
             IsPauseAlbumCollectionAsyncAvailableChanged += OnIsPauseAlbumCollectionAsyncAvailableChanged;
@@ -130,11 +134,12 @@ namespace StrixMusic.Sdk.ViewModels
             IsChangeDescriptionAsyncAvailableChanged += OnIsChangeDescriptionAsyncAvailableChanged;
 
             AlbumItemsChanged += PlayableCollectionGroupViewModel_AlbumItemsChanged;
-            TrackItemsChanged += PlayableCollectionGroupViewModel_TrackItemsChanged;
+            TracksChanged += PlayableCollectionGroupViewModel_TrackItemsChanged;
             ArtistItemsChanged += PlayableCollectionGroupViewModel_ArtistItemsChanged;
             PlaylistItemsChanged += PlayableCollectionGroupViewModel_PlaylistItemsChanged;
             ChildItemsChanged += PlayableCollectionGroupViewModel_ChildItemsChanged;
             ImagesChanged += PlayableCollectionGroupViewModel_ImagesChanged;
+            UrlsChanged += PlayableCollectionGroupViewModel_UrlsChanged;
         }
 
         private void DetachPropertyEvents()
@@ -142,14 +147,13 @@ namespace StrixMusic.Sdk.ViewModels
             PlaybackStateChanged -= CollectionGroupPlaybackStateChanged;
             DescriptionChanged -= CollectionGroupDescriptionChanged;
             NameChanged -= CollectionGroupNameChanged;
-            UrlChanged -= CollectionGroupUrlChanged;
             LastPlayedChanged -= CollectionGroupLastPlayedChanged;
 
             AlbumItemsCountChanged -= CollectionGroupOnAlbumItemsCountChanged;
-            TrackItemsCountChanged -= CollectionGroupOnTrackItemsCountChanged;
+            TracksCountChanged -= CollectionGroupOnTrackItemsCountChanged;
             ArtistItemsCountChanged -= CollectionGroupOnArtistItemsCountChanged;
             PlaylistItemsCountChanged -= CollectionGroupOnPlaylistItemsCountChanged;
-            TotalChildrenCountChanged -= CollectionGroupOnTotalChildrenCountChanged;
+            ChildrenCountChanged -= CollectionGroupOnTotalChildrenCountChanged;
             ImagesCountChanged += PlayableCollectionGroupViewModel_ImagesCountChanged;
 
             IsPlayAlbumCollectionAsyncAvailableChanged -= OnIsPlayAlbumCollectionAsyncAvailableChanged;
@@ -166,7 +170,7 @@ namespace StrixMusic.Sdk.ViewModels
             IsChangeDescriptionAsyncAvailableChanged -= OnIsChangeDescriptionAsyncAvailableChanged;
 
             AlbumItemsChanged -= PlayableCollectionGroupViewModel_AlbumItemsChanged;
-            TrackItemsChanged -= PlayableCollectionGroupViewModel_TrackItemsChanged;
+            TracksChanged -= PlayableCollectionGroupViewModel_TrackItemsChanged;
             ArtistItemsChanged -= PlayableCollectionGroupViewModel_ArtistItemsChanged;
             PlaylistItemsChanged -= PlayableCollectionGroupViewModel_PlaylistItemsChanged;
             ChildItemsChanged -= PlayableCollectionGroupViewModel_ChildItemsChanged;
@@ -185,13 +189,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             add => _collectionGroup.DescriptionChanged += value;
             remove => _collectionGroup.DescriptionChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<Uri?>? UrlChanged
-        {
-            add => _collectionGroup.UrlChanged += value;
-            remove => _collectionGroup.UrlChanged -= value;
         }
 
         /// <inheritdoc />
@@ -237,17 +234,31 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPauseTrackCollectionAsyncAvailableChanged
+        public event EventHandler<bool>? IsPlayAlbumCollectionAsyncAvailableChanged
         {
-            add => _collectionGroup.IsPauseTrackCollectionAsyncAvailableChanged += value;
-            remove => _collectionGroup.IsPauseTrackCollectionAsyncAvailableChanged -= value;
+            add => _collectionGroup.IsPlayAlbumCollectionAsyncAvailableChanged += value;
+            remove => _collectionGroup.IsPlayAlbumCollectionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
-        public event EventHandler<int>? TrackItemsCountChanged
+        public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged
         {
-            add => _collectionGroup.TrackItemsCountChanged += value;
-            remove => _collectionGroup.TrackItemsCountChanged -= value;
+            add => _collectionGroup.IsPlayArtistCollectionAsyncAvailableChanged += value;
+            remove => _collectionGroup.IsPlayArtistCollectionAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayPlaylistCollectionAsyncAvailableChanged
+        {
+            add => _collectionGroup.IsPlayPlaylistCollectionAsyncAvailableChanged += value;
+            remove => _collectionGroup.IsPlayPlaylistCollectionAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged
+        {
+            add => _collectionGroup.IsPlayTrackCollectionAsyncAvailableChanged += value;
+            remove => _collectionGroup.IsPlayTrackCollectionAsyncAvailableChanged -= value;
         }
 
         /// <inheritdoc />
@@ -258,13 +269,6 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int>? ArtistItemsCountChanged
-        {
-            add => _collectionGroup.ArtistItemsCountChanged += value;
-            remove => _collectionGroup.ArtistItemsCountChanged -= value;
-        }
-
-        /// <inheritdoc />
         public event EventHandler<bool>? IsPauseAlbumCollectionAsyncAvailableChanged
         {
             add => _collectionGroup.IsPauseAlbumCollectionAsyncAvailableChanged += value;
@@ -272,17 +276,38 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int>? AlbumItemsCountChanged
-        {
-            add => _collectionGroup.AlbumItemsCountChanged += value;
-            remove => _collectionGroup.AlbumItemsCountChanged -= value;
-        }
-
-        /// <inheritdoc />
         public event EventHandler<bool>? IsPausePlaylistCollectionAsyncAvailableChanged
         {
             add => _collectionGroup.IsPausePlaylistCollectionAsyncAvailableChanged += value;
             remove => _collectionGroup.IsPausePlaylistCollectionAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<bool>? IsPauseTrackCollectionAsyncAvailableChanged
+        {
+            add => _collectionGroup.IsPauseTrackCollectionAsyncAvailableChanged += value;
+            remove => _collectionGroup.IsPauseTrackCollectionAsyncAvailableChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int>? TracksCountChanged
+        {
+            add => _collectionGroup.TracksCountChanged += value;
+            remove => _collectionGroup.TracksCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int>? ArtistItemsCountChanged
+        {
+            add => _collectionGroup.ArtistItemsCountChanged += value;
+            remove => _collectionGroup.ArtistItemsCountChanged -= value;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<int>? AlbumItemsCountChanged
+        {
+            add => _collectionGroup.AlbumItemsCountChanged += value;
+            remove => _collectionGroup.AlbumItemsCountChanged -= value;
         }
 
         /// <inheritdoc />
@@ -300,6 +325,13 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
+        public event EventHandler<int>? UrlsCountChanged
+        {
+            add => _collectionGroup.UrlsCountChanged += value;
+            remove => _collectionGroup.UrlsCountChanged -= value;
+        }
+
+        /// <inheritdoc />
         public event CollectionChangedEventHandler<IImage>? ImagesChanged
         {
             add => _collectionGroup.ImagesChanged += value;
@@ -314,10 +346,10 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ITrack>? TrackItemsChanged
+        public event CollectionChangedEventHandler<ITrack>? TracksChanged
         {
-            add => _collectionGroup.TrackItemsChanged += value;
-            remove => _collectionGroup.TrackItemsChanged -= value;
+            add => _collectionGroup.TracksChanged += value;
+            remove => _collectionGroup.TracksChanged -= value;
         }
 
         /// <inheritdoc />
@@ -342,13 +374,18 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public event EventHandler<int>? TotalChildrenCountChanged
+        public event EventHandler<int>? ChildrenCountChanged
         {
-            add => _collectionGroup.TotalChildrenCountChanged += value;
-            remove => _collectionGroup.TotalChildrenCountChanged -= value;
+            add => _collectionGroup.ChildrenCountChanged += value;
+            remove => _collectionGroup.ChildrenCountChanged -= value;
         }
 
-        private void CollectionGroupUrlChanged(object sender, Uri? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Url)));
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<IUrl>? UrlsChanged
+        {
+            add => _collectionGroup.UrlsChanged += value;
+            remove => _collectionGroup.UrlsChanged -= value;
+        }
 
         private void CollectionGroupNameChanged(object sender, string e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(Name)));
 
@@ -362,11 +399,13 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void CollectionGroupOnArtistItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalArtistItemsCount)));
 
-        private void CollectionGroupOnTrackItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTracksCount)));
+        private void CollectionGroupOnTrackItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalTrackCount)));
 
         private void CollectionGroupOnAlbumItemsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalAlbumItemsCount)));
 
         private void PlayableCollectionGroupViewModel_ImagesCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalImageCount)));
+
+        private void PlayableCollectionGroupViewModel_UrlsCountChanged(object sender, int e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(TotalUrlCount)));
 
         private void CollectionGroupLastPlayedChanged(object sender, DateTime? e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(LastPlayed)));
 
@@ -392,11 +431,59 @@ namespace StrixMusic.Sdk.ViewModels
 
         private void OnIsPlayTrackCollectionAsyncAvailableChanged(object sender, bool e) => _ = Threading.OnPrimaryThread(() => OnPropertyChanged(nameof(IsPlayTrackCollectionAsyncAvailable)));
 
-        private void PlayableCollectionGroupViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
+        private void PlayableCollectionGroupViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                Images.ChangeCollection(addedItems, removedItems);
+                if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
+                {
+                    Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                    {
+                        IAlbum album => new AlbumViewModel(album),
+                        IAlbumCollection collection => new AlbumCollectionViewModel(collection),
+                        _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
+                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                    });
+                }
+                else
+                {
+                    // Preventing index issues during albums emission from the core, also making sure that unordered albums updated. 
+                    UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                    {
+                        IAlbum album => new AlbumViewModel(album),
+                        IAlbumCollection collection => new AlbumCollectionViewModel(collection),
+                        _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
+                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
+                    });
+
+                    // Avoiding direct assignment to prevent effect on UI.
+                    foreach (var item in UnsortedAlbums)
+                    {
+                        if (!Albums.Contains(item))
+                            Albums.Add(item);
+                    }
+
+                    foreach (var item in Albums)
+                    {
+                        if (!UnsortedAlbums.Contains(item))
+                            Albums.Remove(item);
+                    }
+
+                    SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
+                }
+            });
+        }
+
+        private void PlayableCollectionGroupViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
+        {
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
+                {
+                    IArtist artist => new ArtistViewModel(artist),
+                    IArtistCollection collection => new ArtistCollectionViewModel(collection),
+                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
+                });
             });
         }
 
@@ -451,19 +538,6 @@ namespace StrixMusic.Sdk.ViewModels
             });
         }
 
-        private void PlayableCollectionGroupViewModel_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IArtistCollectionItem>> removedItems)
-        {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Artists.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                {
-                    IArtist artist => new ArtistViewModel(artist),
-                    IArtistCollection collection => new ArtistCollectionViewModel(collection),
-                    _ => ThrowHelper.ThrowNotSupportedException<IArtistCollectionItem>($"{item.Data.GetType()} not supported for adding to {GetType()}")
-                });
-            });
-        }
-
         private void PlayableCollectionGroupViewModel_TrackItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<ITrack>> addedItems, IReadOnlyList<CollectionChangedItem<ITrack>> removedItems)
         {
             _ = Threading.OnPrimaryThread((Action)(() =>
@@ -495,46 +569,19 @@ namespace StrixMusic.Sdk.ViewModels
             }));
         }
 
-        private void PlayableCollectionGroupViewModel_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> addedItems, IReadOnlyList<CollectionChangedItem<IAlbumCollectionItem>> removedItems)
+        private void PlayableCollectionGroupViewModel_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
         {
             _ = Threading.OnPrimaryThread(() =>
             {
-                if (CurrentAlbumSortingType == AlbumSortingType.Unsorted)
-                {
-                    Albums.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IAlbum album => new AlbumViewModel(album),
-                        IAlbumCollection collection => new AlbumCollectionViewModel(collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
-                }
-                else
-                {
-                    // Preventing index issues during albums emission from the core, also making sure that unordered albums updated. 
-                    UnsortedAlbums.ChangeCollection(addedItems, removedItems, item => item.Data switch
-                    {
-                        IAlbum album => new AlbumViewModel(album),
-                        IAlbumCollection collection => new AlbumCollectionViewModel(collection),
-                        _ => ThrowHelper.ThrowNotSupportedException<IAlbumCollectionItem>(
-                            $"{item.Data.GetType()} not supported for adding to {GetType()}")
-                    });
+                Images.ChangeCollection(addedItems, removedItems);
+            });
+        }
 
-                    // Avoiding direct assignment to prevent effect on UI.
-                    foreach (var item in UnsortedAlbums)
-                    {
-                        if (!Albums.Contains(item))
-                            Albums.Add(item);
-                    }
-
-                    foreach (var item in Albums)
-                    {
-                        if (!UnsortedAlbums.Contains(item))
-                            Albums.Remove(item);
-                    }
-
-                    SortAlbumCollection(CurrentAlbumSortingType, CurrentAlbumSortingDirection);
-                }
+        private void PlayableCollectionGroupViewModel_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+        {
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                Urls.ChangeCollection(addedItems, removedItems);
             });
         }
 
@@ -580,6 +627,9 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => Sources;
 
         /// <inheritdoc />
+        IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => Sources;
+
+        /// <inheritdoc />
         public TimeSpan Duration => _collectionGroup.Duration;
 
         /// <inheritdoc />
@@ -587,15 +637,6 @@ namespace StrixMusic.Sdk.ViewModels
 
         /// <inheritdoc />
         public DateTime? AddedAt => _collectionGroup.AddedAt;
-
-        /// <inheritdoc />
-        public ObservableCollection<IImage> Images { get; }
-
-        /// <inheritdoc />
-        public ObservableCollection<IPlaylistCollectionItem> Playlists { get; }
-
-        /// <inheritdoc />
-        public ObservableCollection<TrackViewModel> Tracks { get; set; }
 
         /// <inheritdoc />
         public ObservableCollection<TrackViewModel> UnsortedTracks { get; }
@@ -608,6 +649,31 @@ namespace StrixMusic.Sdk.ViewModels
 
         ///<inheritdoc />
         public ObservableCollection<IPlaylistCollectionItem> UnsortedPlaylists { get; }
+
+        /// <summary>
+        /// The albums in this collection.
+        /// </summary>
+        public ObservableCollection<IAlbumCollectionItem> Albums { get; }
+
+        /// <inheritdoc />
+        public ObservableCollection<IArtistCollectionItem> Artists { get; }
+
+        /// <summary>
+        /// The nested <see cref="IPlayableCollectionGroupBase"/> items in this collection.
+        /// </summary>
+        public ObservableCollection<PlayableCollectionGroupViewModel> Children { get; }
+
+        /// <inheritdoc />
+        public ObservableCollection<IPlaylistCollectionItem> Playlists { get; }
+
+        /// <inheritdoc />
+        public ObservableCollection<TrackViewModel> Tracks { get; set; }
+
+        /// <inheritdoc />
+        public ObservableCollection<IImage> Images { get; }
+
+        /// <inheritdoc />
+        public ObservableCollection<IUrl> Urls { get; }
 
         /// <inheritdoc />
         public TrackSortingType CurrentTracksSortingType { get; private set; }
@@ -633,42 +699,29 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc />
         public SortDirection CurrentAlbumSortingDirection { get; private set; }
 
-        /// <summary>
-        /// The albums in this collection.
-        /// </summary>
-        public ObservableCollection<IAlbumCollectionItem> Albums { get; }
-
-        /// <inheritdoc />
-        public ObservableCollection<IArtistCollectionItem> Artists { get; }
-
-        /// <summary>
-        /// The nested <see cref="IPlayableCollectionGroupBase"/> items in this collection.
-        /// </summary>
-        public ObservableCollection<PlayableCollectionGroupViewModel> Children { get; }
-
         /// <inheritdoc />
         public string Name => _collectionGroup.Name;
 
         /// <inheritdoc />
-        public int TotalPlaylistItemsCount => _collectionGroup.TotalPlaylistItemsCount;
-
-        /// <inheritdoc />
-        public int TotalArtistItemsCount => _collectionGroup.TotalArtistItemsCount;
+        public int TotalTrackCount => _collectionGroup.TotalTrackCount;
 
         /// <inheritdoc />
         public int TotalAlbumItemsCount => _collectionGroup.TotalAlbumItemsCount;
 
         /// <inheritdoc />
-        public int TotalTracksCount => _collectionGroup.TotalTracksCount;
+        public int TotalArtistItemsCount => _collectionGroup.TotalArtistItemsCount;
 
         /// <inheritdoc />
         public int TotalChildrenCount => _collectionGroup.TotalChildrenCount;
 
         /// <inheritdoc />
+        public int TotalPlaylistItemsCount => _collectionGroup.TotalPlaylistItemsCount;
+
+        /// <inheritdoc />
         public int TotalImageCount => _collectionGroup.TotalImageCount;
 
         /// <inheritdoc />
-        public Uri? Url => _collectionGroup.Url;
+        public int TotalUrlCount => _collectionGroup.TotalUrlCount;
 
         /// <inheritdoc />
         public string? Description => _collectionGroup.Description;
@@ -710,68 +763,46 @@ namespace StrixMusic.Sdk.ViewModels
         public bool IsChangeDurationAsyncAvailable => _collectionGroup.IsChangeDurationAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailable(int index) => _collectionGroup.IsAddImageAvailable(index);
+        public Task<bool> IsAddAlbumItemAvailableAsync(int index) => _collectionGroup.IsAddAlbumItemAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddPlaylistItemAvailable(int index) => _collectionGroup.IsAddPlaylistItemAvailable(index);
+        public Task<bool> IsAddArtistItemAvailableAsync(int index) => _collectionGroup.IsAddArtistItemAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackAvailable(int index) => _collectionGroup.IsAddTrackAvailable(index);
+        public Task<bool> IsAddChildAvailableAsync(int index) => _collectionGroup.IsAddChildAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddAlbumItemAvailable(int index) => _collectionGroup.IsAddAlbumItemAvailable(index);
+        public Task<bool> IsAddPlaylistItemAvailableAsync(int index) => _collectionGroup.IsAddPlaylistItemAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistItemAvailable(int index) => _collectionGroup.IsAddArtistItemAvailable(index);
+        public Task<bool> IsAddTrackAvailableAsync(int index) => _collectionGroup.IsAddTrackAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsAddChildAvailable(int index) => _collectionGroup.IsAddChildAvailable(index);
+        public Task<bool> IsAddImageAvailableAsync(int index) => _collectionGroup.IsAddImageAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailable(int index) => _collectionGroup.IsRemoveImageAvailable(index);
+        public Task<bool> IsAddUrlAvailableAsync(int index) => _collectionGroup.IsAddUrlAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemovePlaylistItemAvailable(int index) => _collectionGroup.IsRemovePlaylistItemAvailable(index);
+        public Task<bool> IsRemoveAlbumItemAvailableAsync(int index) => _collectionGroup.IsRemoveAlbumItemAvailableAsync(index);
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayPlaylistCollectionAsyncAvailableChanged
-        {
-            add => _collectionGroup.IsPlayPlaylistCollectionAsyncAvailableChanged += value;
-            remove => _collectionGroup.IsPlayPlaylistCollectionAsyncAvailableChanged -= value;
-        }
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index) => _collectionGroup.IsRemoveArtistItemAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailable(int index) => _collectionGroup.IsRemoveTrackAvailable(index);
+        public Task<bool> IsRemoveChildAvailableAsync(int index) => _collectionGroup.IsRemoveChildAvailableAsync(index);
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayTrackCollectionAsyncAvailableChanged
-        {
-            add => _collectionGroup.IsPlayTrackCollectionAsyncAvailableChanged += value;
-            remove => _collectionGroup.IsPlayTrackCollectionAsyncAvailableChanged -= value;
-        }
+        public Task<bool> IsRemovePlaylistItemAvailableAsync(int index) => _collectionGroup.IsRemovePlaylistItemAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemAvailable(int index) => _collectionGroup.IsRemoveArtistItemAvailable(index);
+        public Task<bool> IsRemoveTrackAvailableAsync(int index) => _collectionGroup.IsRemoveTrackAvailableAsync(index);
 
         /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayArtistCollectionAsyncAvailableChanged
-        {
-            add => _collectionGroup.IsPlayArtistCollectionAsyncAvailableChanged += value;
-            remove => _collectionGroup.IsPlayArtistCollectionAsyncAvailableChanged -= value;
-        }
+        public Task<bool> IsRemoveImageAvailableAsync(int index) => _collectionGroup.IsRemoveImageAvailableAsync(index);
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveAlbumItemAvailable(int index) => _collectionGroup.IsRemoveAlbumItemAvailable(index);
-
-        /// <inheritdoc />
-        public event EventHandler<bool>? IsPlayAlbumCollectionAsyncAvailableChanged
-        {
-            add => _collectionGroup.IsPlayAlbumCollectionAsyncAvailableChanged += value;
-            remove => _collectionGroup.IsPlayAlbumCollectionAsyncAvailableChanged -= value;
-        }
-
-        /// <inheritdoc />
-        public Task<bool> IsRemoveChildAvailable(int index) => _collectionGroup.IsRemoveChildAvailable(index);
+        public Task<bool> IsRemoveUrlAvailableAsync(int index) => _collectionGroup.IsRemoveUrlAvailableAsync(index);
 
         /// <inheritdoc />
         public Task ChangeNameAsync(string name) => ChangeNameInternalAsync(name);
@@ -783,34 +814,43 @@ namespace StrixMusic.Sdk.ViewModels
         public Task ChangeDurationAsync(TimeSpan duration) => _collectionGroup.ChangeDurationAsync(duration);
 
         /// <inheritdoc />
-        public Task AddTrackAsync(ITrack track, int index) => _collectionGroup.AddTrackAsync(track, index);
+        public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index) => _collectionGroup.AddAlbumItemAsync(album, index);
 
         /// <inheritdoc />
         public Task AddArtistItemAsync(IArtistCollectionItem artist, int index) => _collectionGroup.AddArtistItemAsync(artist, index);
 
         /// <inheritdoc />
-        public Task AddAlbumItemAsync(IAlbumCollectionItem album, int index) => _collectionGroup.AddAlbumItemAsync(album, index);
+        public Task AddChildAsync(IPlayableCollectionGroup child, int index) => _collectionGroup.AddChildAsync(child, index);
 
         /// <inheritdoc />
         public Task AddPlaylistItemAsync(IPlaylistCollectionItem playlist, int index) => _collectionGroup.AddPlaylistItemAsync(playlist, index);
 
         /// <inheritdoc />
-        public Task AddChildAsync(IPlayableCollectionGroup child, int index) => _collectionGroup.AddChildAsync(child, index);
+        public Task AddTrackAsync(ITrack track, int index) => _collectionGroup.AddTrackAsync(track, index);
 
         /// <inheritdoc />
-        public Task RemoveTrackAsync(int index) => _collectionGroup.RemoveTrackAsync(index);
-
-        /// <inheritdoc />
-        public Task RemoveArtistItemAsync(int index) => _collectionGroup.RemoveArtistItemAsync(index);
+        public Task AddUrlAsync(IUrl url, int index) => _collectionGroup.AddUrlAsync(url, index);
 
         /// <inheritdoc />
         public Task RemoveAlbumItemAsync(int index) => _collectionGroup.RemoveAlbumItemAsync(index);
 
         /// <inheritdoc />
-        public Task RemovePlaylistItemAsync(int index) => _collectionGroup.RemovePlaylistItemAsync(index);
+        public Task RemoveArtistItemAsync(int index) => _collectionGroup.RemoveArtistItemAsync(index);
 
         /// <inheritdoc />
         public Task RemoveChildAsync(int index) => _collectionGroup.RemoveChildAsync(index);
+
+        /// <inheritdoc />
+        public Task RemovePlaylistItemAsync(int index) => _collectionGroup.RemovePlaylistItemAsync(index);
+
+        /// <inheritdoc />
+        public Task RemoveTrackAsync(int index) => _collectionGroup.RemoveTrackAsync(index);
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index) => _collectionGroup.RemoveImageAsync(index);
+
+        /// <inheritdoc />
+        public Task RemoveUrlAsync(int index) => _collectionGroup.RemoveUrlAsync(index);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IPlayableCollectionGroup>> GetChildrenAsync(int limit, int offset) => _collectionGroup.GetChildrenAsync(limit, offset);
@@ -828,13 +868,13 @@ namespace StrixMusic.Sdk.ViewModels
         public Task<IReadOnlyList<IArtistCollectionItem>> GetArtistItemsAsync(int limit, int offset) => _collectionGroup.GetArtistItemsAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task RemoveImageAsync(int index) => _collectionGroup.RemoveImageAsync(index);
+        public Task AddImageAsync(IImage image, int index) => _collectionGroup.AddImageAsync(image, index);
 
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset) => _collectionGroup.GetImagesAsync(limit, offset);
 
         /// <inheritdoc />
-        public Task AddImageAsync(IImage image, int index) => _collectionGroup.AddImageAsync(image, index);
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset) => _collectionGroup.GetUrlsAsync(limit, offset);
 
         /// <inheritdoc />
         public async Task PopulateMorePlaylistsAsync(int limit)
@@ -963,46 +1003,66 @@ namespace StrixMusic.Sdk.ViewModels
         }
 
         /// <inheritdoc />
-        public Task PlayPlayableCollectionGroupAsync()
+        public async Task PopulateMoreUrlsAsync(int limit)
         {
-            return _collectionGroup.PlayPlayableCollectionGroupAsync();
+            using (await _populateUrlsMutex.LockAsync())
+            {
+                var items = await Task.Run(() => _collectionGroup.GetUrlsAsync(limit, Urls.Count));
+
+                _ = Threading.OnPrimaryThread(() =>
+                {
+                    foreach (var item in items)
+                    {
+                        Urls.Add(item);
+                    }
+                });
+            }
         }
-
-        /// <inheritdoc />
-        public Task PlayPlayableCollectionGroupAsync(IPlayableCollectionGroup collectionGroup) => PlayPlayableCollectionGroupInternalAsync(collectionGroup);
-
-        /// <inheritdoc />
-        public Task PausePlayableCollectionGroupAsync()
-        {
-            return _collectionGroup.PausePlayableCollectionGroupAsync();
-        }
-
-        /// <inheritdoc />
-        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackCollectionInternalAsync(track);
 
         /// <inheritdoc />
         public Task PlayAlbumCollectionAsync(IAlbumCollectionItem albumItem) => PlayAlbumCollectionInternalAsync(albumItem);
 
         /// <inheritdoc />
+        public Task PlayAlbumCollectionAsync() => _playbackHandler.PlayAsync((IAlbumCollectionViewModel)this, _collectionGroup);
+
+        /// <inheritdoc />
+        public Task PauseAlbumCollectionAsync() => _playbackHandler.PauseAsync();
+
+        /// <inheritdoc />
         public Task PlayArtistCollectionAsync(IArtistCollectionItem artistItem) => PlayArtistCollectionInternalAsync(artistItem);
+
+        /// <inheritdoc />
+        public Task PlayArtistCollectionAsync() => _playbackHandler.PlayAsync((IArtistCollectionViewModel)this, _collectionGroup);
+
+        /// <inheritdoc />
+        public Task PauseArtistCollectionAsync() => _playbackHandler.PauseAsync();
+
+        /// <inheritdoc />
+        public Task PlayPlayableCollectionGroupAsync(IPlayableCollectionGroup collectionGroup) => PlayPlayableCollectionGroupInternalAsync(collectionGroup);
+
+        /// <inheritdoc />
+        public Task PlayPlayableCollectionGroupAsync() => _collectionGroup.PlayPlayableCollectionGroupAsync();
+
+        /// <inheritdoc />
+        public Task PausePlayableCollectionGroupAsync() => _collectionGroup.PausePlayableCollectionGroupAsync();
 
         /// <inheritdoc />
         public Task PlayPlaylistCollectionAsync(IPlaylistCollectionItem playlistItem) => PlayPlaylistCollectionInternalAsync(playlistItem);
 
         /// <inheritdoc />
-        public Task PlayPlaylistCollectionAsync()
-        {
-            return _playbackHandler.PlayAsync((IPlaylistCollectionViewModel)this, _collectionGroup);
-        }
+        public Task PlayPlaylistCollectionAsync() => _playbackHandler.PlayAsync((IPlaylistCollectionViewModel)this, _collectionGroup);
 
-        ///<inheritdoc />
-        public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
-        {
-            CurrentTracksSortingType = trackSorting;
-            CurrentTracksSortingDirection = sortDirection;
+        /// <inheritdoc />
+        public Task PausePlaylistCollectionAsync() => _playbackHandler.PauseAsync();
 
-            CollectionSorting.SortTracks(Tracks, trackSorting, sortDirection, UnsortedTracks);
-        }
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync(ITrack track) => PlayTrackCollectionInternalAsync(track);
+
+        /// <inheritdoc />
+        public Task PlayTrackCollectionAsync() => _playbackHandler.PlayAsync((ITrackCollectionViewModel)this, this);
+
+        /// <inheritdoc />
+        public Task PauseTrackCollectionAsync() => _playbackHandler.PauseAsync();
 
         /// <inheritdoc />
         public void SortAlbumCollection(AlbumSortingType albumSorting, SortDirection sortDirection)
@@ -1031,125 +1091,14 @@ namespace StrixMusic.Sdk.ViewModels
             CollectionSorting.SortPlaylists(Playlists, playlistSorting, sortDirection, UnsortedPlaylists);
         }
 
-        /// <inheritdoc />
-        public Task PausePlaylistCollectionAsync()
+        ///<inheritdoc />
+        public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection)
         {
-            return _playbackHandler.PauseAsync();
+            CurrentTracksSortingType = trackSorting;
+            CurrentTracksSortingDirection = sortDirection;
+
+            CollectionSorting.SortTracks(Tracks, trackSorting, sortDirection, UnsortedTracks);
         }
-
-        /// <inheritdoc />
-        public Task PlayTrackCollectionAsync()
-        {
-            return _playbackHandler.PlayAsync((ITrackCollectionViewModel)this, this);
-        }
-
-        /// <inheritdoc />
-        public Task PauseTrackCollectionAsync()
-        {
-            return _playbackHandler.PauseAsync();
-        }
-
-        /// <inheritdoc />
-        public Task PlayAlbumCollectionAsync()
-        {
-            return _playbackHandler.PlayAsync((IAlbumCollectionViewModel)this, _collectionGroup);
-        }
-
-        /// <inheritdoc />
-        public Task PauseAlbumCollectionAsync()
-        {
-            return _playbackHandler.PauseAsync();
-        }
-
-        /// <inheritdoc />
-        public Task PlayArtistCollectionAsync()
-        {
-            return _playbackHandler.PlayAsync((IArtistCollectionViewModel)this, _collectionGroup);
-        }
-
-        /// <inheritdoc />
-        public Task PauseArtistCollectionAsync()
-        {
-            return _playbackHandler.PauseAsync();
-        }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand PlayTrackCollectionAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<ITrack> PlayTrackAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand PlayPlaylistCollectionAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<AlbumSortingType> ChangeAlbumCollectionSortingTypeCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<SortDirection> ChangeAlbumCollectionSortingDirectionCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<PlaylistSortingType> ChangePlaylistCollectionSortingTypeCommand { get; }
-
-        /// <inheritdoc />
-        public RelayCommand<SortDirection> ChangePlaylistCollectionSortingDirectionCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<IPlaylistCollectionItem> PlayPlaylistAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand PausePlaylistCollectionAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand PlayAlbumCollectionAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<IAlbumCollectionItem> PlayAlbumAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand PlayArtistCollectionAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<IArtistCollectionItem> PlayArtistAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand PauseArtistCollectionAsyncCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<int> PopulateMoreChildrenCommand { get; }
-
-        /// <inheritdoc />
-        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
 
         /// <summary>
         /// Command to change the name. It triggers <see cref="ChangeNameAsync"/>.
@@ -1167,16 +1116,85 @@ namespace StrixMusic.Sdk.ViewModels
         public IAsyncRelayCommand<TimeSpan> ChangeDurationAsyncCommand { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICoreImageCollection other) => _collectionGroup.Equals(other);
+        public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICorePlaylistCollectionItem other) => _collectionGroup.Equals(other);
+        public IAsyncRelayCommand<int> PopulateMorePlaylistsCommand { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICorePlaylistCollection other) => _collectionGroup.Equals(other);
+        public IAsyncRelayCommand<int> PopulateMoreAlbumsCommand { get; }
 
         /// <inheritdoc />
-        public bool Equals(ICoreTrackCollection other) => _collectionGroup.Equals(other);
+        public IAsyncRelayCommand<int> PopulateMoreArtistsCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreChildrenCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreImagesCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<int> PopulateMoreUrlsCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<IAlbumCollectionItem> PlayAlbumAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PlayAlbumCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PauseAlbumCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<IArtistCollectionItem> PlayArtistAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PlayArtistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PauseArtistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<IPlaylistCollectionItem> PlayPlaylistAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PlayPlaylistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PausePlaylistCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand<ITrack> PlayTrackAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PlayTrackCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
+
+        /// <inheritdoc />
+        public IRelayCommand<AlbumSortingType> ChangeAlbumCollectionSortingTypeCommand { get; }
+
+        /// <inheritdoc />
+        public IRelayCommand<SortDirection> ChangeAlbumCollectionSortingDirectionCommand { get; }
+
+        /// <inheritdoc />
+        public IRelayCommand<ArtistSortingType> ChangeArtistCollectionSortingTypeCommand { get; }
+
+        /// <inheritdoc />
+        public IRelayCommand<SortDirection> ChangeArtistCollectionSortingDirectionCommand { get; }
+
+        /// <inheritdoc />
+        public IRelayCommand<PlaylistSortingType> ChangePlaylistCollectionSortingTypeCommand { get; }
+
+        /// <inheritdoc />
+        public IRelayCommand<SortDirection> ChangePlaylistCollectionSortingDirectionCommand { get; }
+
+        /// <inheritdoc />
+        public IRelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
+
+        /// <inheritdoc />
+        public IRelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
 
         /// <inheritdoc />
         public bool Equals(ICoreAlbumCollectionItem other) => _collectionGroup.Equals(other);
@@ -1197,7 +1215,22 @@ namespace StrixMusic.Sdk.ViewModels
         public bool Equals(ICorePlayableCollectionGroup other) => _collectionGroup.Equals(other);
 
         /// <inheritdoc />
-        public Task InitAsync()
+        public bool Equals(ICorePlaylistCollectionItem other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICorePlaylistCollection other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreTrackCollection other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreImageCollection other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public bool Equals(ICoreUrlCollection other) => _collectionGroup.Equals(other);
+
+        /// <inheritdoc />
+        public virtual Task InitAsync()
         {
             if (IsInitialized)
                 return Task.CompletedTask;

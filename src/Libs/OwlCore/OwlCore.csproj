@@ -1,68 +1,108 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
-    <WarningsAsErrors>nullable</WarningsAsErrors>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Author>Arlo Godfrey</Author>
-    <Version>0.0.10</Version>
-    <Product>OwlCore</Product>
-    <Description>
-Have you ever seen an owl do a barrel roll? Me neither.
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>9.0</LangVersion>
+		<WarningsAsErrors>nullable</WarningsAsErrors>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<Author>Arlo Godfrey</Author>
+		<Version>0.0.22</Version>
+		<Product>OwlCore</Product>
+		<Description>
+			Have you ever seen an owl do a barrel roll? Me neither.
 
-This project is a constant work in progress. Until a stable release, breaking changes are possible at any time.
+			This project is a constant work in progress. Until a stable release, breaking changes are possible.
 
-- AbstractUI - Abstract away simple UI elements as pure data. Let something else decide how to display it.
-- AbstractStorage - Completely abstract away your storage needs, no matter how you access it.
-- OwlCore.Remoting - Painlessly sync member changes in C# with an external source via magic (reflection + IL weaving).
-- Provisos - IAsyncInit, C# 9-in-8 features.
-- Debouncer - For when something fires repeatedly. but you only care about when it stops.
-- CompositeHttpClientHandler - Combine multiple HttpClientHandlers together.
-- CachedHttpClientHandler - Cache http requests to disk and return them as needed.
-- RateLimitedHttpClientHandler - Limit the number of requests within a window of time.
-- Countless extension methods. PruneNull, Shuffle, InParallel, ChangeDate, HashMD5Fast, DistinctBy, InsertOrAdd, and more.</Description>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageIcon>logo.png</PackageIcon>
-    <PackageReleaseNotes>Added missing documentation. Replaced RemoteMethodProxy with PublishDataAsync and ReceiveDataAsync extension methods. Added cancellation tokens to Remoting.</PackageReleaseNotes>
-  </PropertyGroup>
+			- AbstractUI - Abstract away simple UI elements as pure data. Let something else decide how to display it.
+			- AbstractStorage - Completely abstract away your storage needs, no matter how you access it.
+			- OwlCore.Remoting - Painlessly sync member changes in C# with an external source via magic (reflection + IL weaving).
+			- Provisos - IAsyncInit, C# 9-in-8 features.
+			- Debouncer - For when something fires repeatedly. but you only care about when it stops.
+			- CompositeHttpClientHandler - Combine multiple HttpClientHandlers together.
+			- CachedHttpClientHandler - Cache http requests to disk and return them as needed.
+			- RateLimitedHttpClientHandler - Limit the number of requests within a window of time.
+			- Countless extension methods. PruneNull, Shuffle, InParallel, ChangeDate, HashMD5Fast, DistinctBy, InsertOrAdd, and more.
+		</Description>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<PackageIcon>logo.png</PackageIcon>
+		<PackageReleaseNotes>
+			--- 0.0.22 ---
+			Integrated AbstractUI with OwlCore.Remoting.
+			Fixed potential memory leak in OwlCore.Remoting when RemoteMessageReceivingEventArgs.Handled is set to true.
+			Fixed an issue where an instance with an overriden == operator handed to MemberRemote could interfere with instance reference checks.
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+			--- 0.0.21 ---
+			Fixed a crash in OwlCore.Remoting.MemberRemote when the library catches and prepares to send an exception.
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+			--- 0.0.20 ---
+			Fixed threading issue with OwlCore.Remoting introduced in 0.0.19.
 
-  <ItemGroup>
-    <None Remove="logo.png" />
-    <None Include="LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-	  <None Include="logo.png">
-		  <Pack>True</Pack>
-		  <PackagePath></PackagePath>
-	  </None>
-  </ItemGroup>
+			--- 0.0.19 ---
+			Fixed a crash with OwlCore.Remoting when compiled with optimizations.
 
-  <ItemGroup>
-    <PackageReference Include="Cauldron.BasicInterceptors" Version="3.2.3" />
-    <PackageReference Include="Cauldron.Interception.Fody" Version="3.2.3" />
-    <PackageReference Include="MessagePack" Version="2.2.85" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
-    <PackageReference Include="System.Text.Json" Version="4.7.2" />
-    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="5.0.0" />
-  </ItemGroup>
+			--- 0.0.18 ---
+			Fixed an issue where remote member change messages were not scoping to specific MemberRemote instances without manually implementing IRemoteMemberMessage.
+
+			--- 0.0.17 ---
+			Re-release of 0.0.16 to fix freezing visual studio when building.
+
+			--- 0.0.16 ---
+			Hardened the fix introduced in 0.0.15.
+
+			--- 0.0.15 ---
+			Fixed an issue where bidirectional remoting causes a loop for method calls and property changes.
+
+			--- 0.0.14 ---
+			Added empty constructors to classes in OwlCore.Remoting.Transfer.Messages for deserializers.
+
+			--- 0.0.13 ---
+			Added additional checks, exceptions and instructions for mismatched data types in remote properties and method parameters.
+			Fixed and improved type handling for NewtonsoftRemoteMessageConverter.
+			Exposed a new SerializerSettings property for NewtonsoftRemoteMessageConverter.
+		</PackageReleaseNotes>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<DebugType>full</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Optimize>true</Optimize>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="logo.png" />
+		<None Include="LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="logo.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Cauldron.BasicInterceptors" Version="3.2.3" />
+		<PackageReference Include="Cauldron.Interception.Fody" Version="3.2.3" />
+		<PackageReference Include="MessagePack" Version="2.2.85" />
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Toolkit" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
+		<PackageReference Include="System.Text.Json" Version="4.7.2" />
+		<PackageReference Include="System.Threading.Tasks.Dataflow" Version="5.0.0" />
+	</ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Data.Core
 {
     /// <inheritdoc cref="IAlbumCollectionBase"/>
     /// <remarks>This interface should be implemented in a core.</remarks>
-    public interface ICoreAlbumCollection : ICorePlayableCollection, IAlbumCollectionBase, ICoreAlbumCollectionItem, ICoreImageCollection, ICoreMember
+    public interface ICoreAlbumCollection : ICorePlayableCollection, IAlbumCollectionBase, ICoreAlbumCollectionItem, ICoreImageCollection, ICoreUrlCollection, ICoreMember
     {
         /// <summary>
         /// Attempts to play a specific item in the album collection. Restarts playback if already playing.

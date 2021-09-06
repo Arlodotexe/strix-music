@@ -1,4 +1,5 @@
 ﻿using System;
+using OwlCore.Remoting.Attributes;
 
 namespace OwlCore.AbstractUI.Models
 {
@@ -7,6 +8,9 @@ namespace OwlCore.AbstractUI.Models
     /// </summary>
     public class AbstractTextBox : AbstractUIElement
     {
+        private string _value = string.Empty;
+        private string _placeholderText = string.Empty;
+
         /// <summary>
         /// Creates a new instance of <see cref="AbstractTextBox"/>.
         /// </summary>
@@ -22,9 +26,9 @@ namespace OwlCore.AbstractUI.Models
         /// <param name="id"></param>
         /// <param name="value">The initial value of the text box.</param>
         public AbstractTextBox(string id, string value)
-            : base(id)
+            : this(id)
         {
-            Value = value;
+            _value = value;
         }
 
         /// <summary>
@@ -34,35 +38,47 @@ namespace OwlCore.AbstractUI.Models
         /// <param name="value">The initial value of the text box.</param>
         /// <param name="placeholderText">Placeholder text to show when the text box is empty.</param>
         public AbstractTextBox(string id, string value, string placeholderText)
-            : base(id)
+            : this(id, value)
         {
-            Value = value;
             PlaceholderText = placeholderText;
         }
 
         /// <summary>
         /// Placeholder text to show when the text box is empty.
         /// </summary>
-        public string PlaceholderText { get; set; } = string.Empty;
+        [RemoteProperty]
+        public string PlaceholderText
+        {
+            get => _placeholderText;
+            set
+            {
+                _placeholderText = value;
+                PlaceholderTextChanged?.Invoke(this, value);
+            }
+        }
 
         /// <summary>
         /// The initial or current value of the text box.
         /// </summary>
-        public string Value { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Called to notify listeners about the new value.
-        /// </summary>
-        /// <param name="newValue">The new value.</param>
-        public void SaveValue(string newValue)
+        [RemoteProperty]
+        public string Value
         {
-            Value = newValue;
-            ValueChanged?.Invoke(this, newValue);
+            get => _value;
+            set
+            {
+                _value = value;
+                ValueChanged?.Invoke(this, value);
+            }
         }
 
         /// <summary>
         /// Fires when <see cref="Value"/> is changed.
         /// </summary>
         public event EventHandler<string>? ValueChanged;
+
+        /// <summary>
+        /// Fires when <see cref="Value"/> is changed.
+        /// </summary>
+        public event EventHandler<string>? PlaceholderTextChanged;
     }
 }

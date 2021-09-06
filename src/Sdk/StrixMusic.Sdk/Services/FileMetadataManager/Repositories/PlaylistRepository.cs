@@ -137,7 +137,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
                     if (playlistExists)
                         updatedPlaylists.Add(metadata);
-                    else addedPlaylists.Add(metadata);
+                    else
+                        addedPlaylists.Add(metadata);
 
                     if (addedPlaylists.Count > 0)
                         MetadataAdded?.Invoke(this, addedPlaylists);
@@ -230,7 +231,15 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             var allPlaylists = _inMemoryMetadata.Values.ToList();
 
             if (limit == -1)
-                return Task.FromResult<IReadOnlyList<PlaylistMetadata>>(allPlaylists.GetRange(offset, allPlaylists.Count - offset));
+                return Task.FromResult<IReadOnlyList<PlaylistMetadata>>(allPlaylists);
+
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= allPlaylists.Count)
+                return Task.FromResult<IReadOnlyList<PlaylistMetadata>>(new List<PlaylistMetadata>());
+
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > allPlaylists.Count)
+                limit = allPlaylists.Count - offset;
 
             return Task.FromResult<IReadOnlyList<PlaylistMetadata>>(allPlaylists.GetRange(offset, limit));
         }

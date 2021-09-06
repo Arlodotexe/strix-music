@@ -26,8 +26,13 @@ namespace StrixMusic.Sdk.Data.Base
         Task ChangeDatePublishedAsync(DateTime datePublished);
 
         /// <summary>
-        /// Fires when the <see cref="DatePublished"/> metadata changes.
+        /// Raised when <see cref="DatePublished"/> is changed.
         /// </summary>
         event EventHandler<DateTime?>? DatePublishedChanged;
+
+        /// <summary>
+        /// Raised when <see cref="IsChangeDatePublishedAsyncAvailable"/> is changed.
+        /// </summary>
+        event EventHandler<bool>? IsChangeDatePublishedAsyncAvailableChanged;
     }
 }

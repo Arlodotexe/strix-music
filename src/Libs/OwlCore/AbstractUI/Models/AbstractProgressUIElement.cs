@@ -1,4 +1,5 @@
 ﻿using System;
+using OwlCore.Remoting.Attributes;
 
 namespace OwlCore.AbstractUI.Models
 {
@@ -21,9 +22,9 @@ namespace OwlCore.AbstractUI.Models
         public AbstractProgressUIElement(string id, double? val, double max = 100, double min = 0)
             : base(id)
         {
-            Value = val;
-            Maximum = max;
-            Minimum = min;
+            _value = val;
+            _maximum = max;
+            _minimum = min;
         }
 
         /// <summary>
@@ -47,6 +48,7 @@ namespace OwlCore.AbstractUI.Models
         /// <remarks>
         /// Value is null if indeterminate.
         /// </remarks>
+        [RemoteProperty]
         public double? Value
         {
             get => _value;
@@ -60,6 +62,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// Gets or sets the maximum value for the progress to be.
         /// </summary>
+        [RemoteProperty]
         public double Maximum
         {
             get => _maximum;
@@ -73,6 +76,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// Gets or sets the minimum value for the progress to be.
         /// </summary>
+        [RemoteProperty]
         public double Minimum
         {
             get => _minimum;

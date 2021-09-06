@@ -6,6 +6,7 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.Notifications;
 
@@ -243,7 +244,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             {
                 Title = "Discovering files",
                 Subtitle = $"Found {FilesFound} in {_rootFolder.Path}",
-                Items = { new AbstractProgressUIElement(NewGuid(), null) },
+                Items = new AbstractProgressUIElement(NewGuid(), null).IntoList(),
             };
 
             return _filesFoundNotification = _notificationService.RaiseNotification(elementGroup);
@@ -266,7 +267,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             {
                 Title = $"Scanning {scanningTypeStr}",
                 Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolder.Path}",
-                Items = { _progressUIElement },
+                Items = _progressUIElement.IntoList(),
             };
 
             return _filesScannedNotification = _notificationService.RaiseNotification(elementGroup);

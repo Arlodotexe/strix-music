@@ -71,11 +71,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Adjustes sorting to maintain its direction, with a new type.
         /// </summary>
-        public RelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
+        public IRelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
 
         /// <summary>
         /// Sorts adjustes sorting to maintain its type, with a new direction.
         /// </summary>
-        public RelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
+        public IRelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
     }
 }

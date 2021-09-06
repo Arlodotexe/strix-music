@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Remoting;
+using OwlCore.Remoting.Attributes;
 using StrixMusic.Sdk.Services.Notifications;
 using Windows.UI.Xaml;
 
@@ -11,6 +13,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
     /// <summary>
     /// A Service for handling notifications between the Cores and Shell.
     /// </summary>
+    [RemoteOptions(RemotingDirection.Bidirectional)]
     public class NotificationService : INotificationService
     {
         private readonly List<Notification> _notifications;
@@ -60,13 +63,14 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// <inheritdoc/>
         public Notification RaiseNotification(string title, string message)
         {
-            string NewGuid() => Guid.NewGuid().ToString();
-            var eg = new AbstractUIElementGroup(NewGuid())
+            var id = Guid.NewGuid().ToString();
+            var elementGroup = new AbstractUIElementGroup(id)
             {
                 Title = title,
                 Subtitle = message,
             };
-            return RaiseNotification(eg);
+
+            return RaiseNotification(elementGroup);
         }
 
         /// <inheritdoc/>
@@ -91,14 +95,14 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
                 if (index == -1)
                     return;
 
-                DismissNotification(index);
+                DismissNotificationInternal(index);
             }
         }
 
         /// <summary>
         /// Request that the notification margin be changed.
         /// </summary>
-        /// <param name="thickness"></param>
+        /// <param name="thickness">The margin to put around the notification panel.</param>
         public void ChangeNotificationMargins(Thickness thickness)
         {
             NotificationMarginChanged?.Invoke(this, thickness);
@@ -117,7 +121,9 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// <summary>
         /// Dismisses the top notification and raises the next notification.
         /// </summary>
-        public void DismissNotification(int? index = null)
+        public void DismissNotification(int? index = null) => DismissNotificationInternal(index);
+
+        private void DismissNotificationInternal(int? index = null)
         {
             var targetNotification = _notifications.ElementAtOrDefault(index ?? _notifications.Count - 1);
 
@@ -126,6 +132,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
             _notifications.Remove(targetNotification);
             NotificationDismissed?.Invoke(this, targetNotification);
             targetNotification.Dismissed -= Notification_Dismissed;
+            targetNotification.Dispose();
 
             _activeNotifications--;
 
@@ -144,7 +151,6 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
                     return;
 
                 nextNotification.IsDisplayed = true;
-
                 NotificationRaised?.Invoke(this, nextNotification);
             }
         }

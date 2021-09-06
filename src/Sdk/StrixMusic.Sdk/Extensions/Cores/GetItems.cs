@@ -40,6 +40,12 @@ namespace StrixMusic.Sdk.Extensions
             if (typeof(TCollection) == typeof(ICoreImageCollection))
                 return (IAsyncEnumerable<TResult>)((ICoreImageCollection)source).GetImagesAsync(limit, offset);
 
+            if (typeof(TCollection) == typeof(ICoreGenreCollection))
+                return (IAsyncEnumerable<TResult>)((ICoreGenreCollection)source).GetGenresAsync(limit, offset);
+
+            if (typeof(TCollection) == typeof(ICoreUrlCollection))
+                return (IAsyncEnumerable<TResult>)((ICoreUrlCollection)source).GetUrlsAsync(limit, offset);
+
             throw new NotSupportedException("Collection type not handled");
         }
     }

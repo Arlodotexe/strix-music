@@ -36,7 +36,7 @@ namespace StrixMusic.Core.LocalFiles.Models
             TotalAlbumItemsCount = await _fileMetadataManager.Albums.GetItemCount();
             TotalArtistItemsCount = await _fileMetadataManager.Artists.GetItemCount();
             TotalPlaylistItemsCount = await _fileMetadataManager.Playlists.GetItemCount();
-            TotalTracksCount = await _fileMetadataManager.Tracks.GetItemCount();
+            TotalTrackCount = await _fileMetadataManager.Tracks.GetItemCount();
 
             await base.InitAsync();
 
@@ -88,6 +88,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             TotalPlaylistItemsCount += addedItems.Count - removedItems.Count;
             PlaylistItemsChanged?.Invoke(this, addedItems, removedItems);
+            PlaylistItemsCountChanged?.Invoke(this, TotalPlaylistItemsCount);
         }
 
         private void Tracks_MetadataAdded(object sender, IEnumerable<TrackMetadata> e)
@@ -103,8 +104,9 @@ namespace StrixMusic.Core.LocalFiles.Models
                 addedItems.Add(new CollectionChangedItem<ICoreTrack>(InstanceCache.Tracks.GetOrCreate(item.Id, SourceCore, item), addedItems.Count));
             }
 
-            TotalTracksCount += addedItems.Count - removedItems.Count;
-            TrackItemsChanged?.Invoke(this, addedItems, removedItems);
+            TotalTrackCount += addedItems.Count - removedItems.Count;
+            TracksChanged?.Invoke(this, addedItems, removedItems);
+            TracksCountChanged?.Invoke(this, TotalTrackCount);
         }
 
         private void Artists_MetadataAdded(object sender, IEnumerable<ArtistMetadata> e)
@@ -122,6 +124,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             TotalArtistItemsCount += addedItems.Count - removedItems.Count;
             ArtistItemsChanged?.Invoke(this, addedItems, removedItems);
+            ArtistItemsCountChanged?.Invoke(this, TotalAlbumItemsCount);
         }
 
         private void Albums_MetadataAdded(object sender, IEnumerable<AlbumMetadata> e)
@@ -138,6 +141,7 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             TotalAlbumItemsCount += addedItems.Count - removedItems.Count;
             AlbumItemsChanged?.Invoke(this, addedItems, removedItems);
+            AlbumItemsCountChanged?.Invoke(this, TotalAlbumItemsCount);
         }
 
         private void Tracks_MetadataRemoved(object sender, IEnumerable<TrackMetadata> e)
@@ -173,9 +177,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         public override string Id { get; protected set; } = "library";
 
         /// <inheritdoc />
-        public override Uri? Url { get; protected set; } = null;
-
-        /// <inheritdoc />
         public override string Name { get; protected set; } = "Library";
 
         /// <inheritdoc />
@@ -190,8 +191,26 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc />
         public override event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
-        /// <inheritdoc />?
-        public override event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+        /// <inheritdoc />
+        public override event CollectionChangedEventHandler<ICoreTrack>? TracksChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<int>? AlbumItemsCountChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<int>? ArtistItemsCountChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<int>? TracksCountChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<int>? PlaylistItemsCountChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<int>? ChildrenCountChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc/>
         public override IAsyncEnumerable<ICorePlayableCollectionGroup> GetChildrenAsync(int limit, int offset = 0)
@@ -260,6 +279,12 @@ namespace StrixMusic.Core.LocalFiles.Models
                 Guard.IsNotNullOrWhiteSpace(track.Id, nameof(track.Id));
                 yield return InstanceCache.Tracks.GetOrCreate(track.Id, SourceCore, track);
             }
+        }
+
+        /// <inheritdoc/>
+        public override IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset = 0)
+        {
+            return AsyncEnumerable.Empty<ICoreUrl>();
         }
     }
 }

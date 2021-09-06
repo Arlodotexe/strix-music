@@ -12,7 +12,7 @@ namespace StrixMusic.Sdk.ViewModels
     /// <summary>
     /// An interfaced ViewModel for <see cref="IAlbumCollection" />. This is needed so because multiple view models implement <see cref="IAlbumCollection"/>, and the UI needs to create controls that handle only the ViewModels properties for an <see cref="IAlbumCollection"/>.
     /// </summary>
-    public interface IAlbumCollectionViewModel : IAlbumCollection, IPlayableCollectionViewModel, IImageCollectionViewModel, IAsyncInit
+    public interface IAlbumCollectionViewModel : IAlbumCollection, IPlayableCollectionViewModel, IImageCollectionViewModel, IUrlCollectionViewModel, IAsyncInit
     {
         /// <summary>
         /// The albums in this collection.
@@ -67,11 +67,11 @@ namespace StrixMusic.Sdk.ViewModels
         /// <summary>
         /// Adjustes sorting to maintain its direction, with a new type.
         /// </summary>
-        public RelayCommand<AlbumSortingType> ChangeAlbumCollectionSortingTypeCommand { get; }
+        public IRelayCommand<AlbumSortingType> ChangeAlbumCollectionSortingTypeCommand { get; }
 
         /// <summary>
         /// Sorts adjustes sorting to maintain its type, with a new direction.
         /// </summary>
-        public RelayCommand<SortDirection> ChangeAlbumCollectionSortingDirectionCommand { get; }
+        public IRelayCommand<SortDirection> ChangeAlbumCollectionSortingDirectionCommand { get; }
     }
 }

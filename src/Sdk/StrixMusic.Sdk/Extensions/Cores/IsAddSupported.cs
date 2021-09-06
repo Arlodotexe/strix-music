@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Data.Base;
 using StrixMusic.Sdk.Data.Core;
@@ -23,12 +22,14 @@ namespace StrixMusic.Sdk.Extensions
 
             return typeof(TCollection) switch
             {
-                IPlayableCollectionGroupBase _ => ((ICorePlayableCollectionGroup)source).IsAddChildAvailable(index),
-                IAlbumCollectionBase _ => ((ICoreAlbumCollection)source).IsAddAlbumItemAvailable(index),
-                IArtistCollectionBase _ => ((ICoreArtistCollection)source).IsAddArtistItemAvailable(index),
-                IPlaylistCollectionBase _ => ((ICorePlaylistCollection)source).IsAddPlaylistItemAvailable(index),
-                ITrackCollectionBase _ => ((ICoreTrackCollection)source).IsAddTrackAvailable(index),
-                IImageCollectionBase _ => ((ICoreImageCollection)source).IsAddImageAvailable(index),
+                IPlayableCollectionGroupBase _ => ((ICorePlayableCollectionGroup)source).IsAddChildAvailableAsync(index),
+                IAlbumCollectionBase _ => ((ICoreAlbumCollection)source).IsAddAlbumItemAvailableAsync(index),
+                IArtistCollectionBase _ => ((ICoreArtistCollection)source).IsAddArtistItemAvailableAsync(index),
+                IPlaylistCollectionBase _ => ((ICorePlaylistCollection)source).IsAddPlaylistItemAvailableAsync(index),
+                ITrackCollectionBase _ => ((ICoreTrackCollection)source).IsAddTrackAvailableAsync(index),
+                IImageCollectionBase _ => ((ICoreImageCollection)source).IsAddImageAvailableAsync(index),
+                IGenreCollectionBase _ => ((ICoreGenreCollection)source).IsAddGenreAvailableAsync(index),
+                IUrlCollectionBase _ => ((ICoreUrlCollection)source).IsAddUrlAvailableAsync(index),
                 _ => throw new NotSupportedException("Collection type not handled"),
             };
         }

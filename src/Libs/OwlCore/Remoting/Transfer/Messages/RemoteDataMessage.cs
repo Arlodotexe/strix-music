@@ -1,12 +1,14 @@
-﻿namespace OwlCore.Remoting.Transfer
+﻿using System;
+
+namespace OwlCore.Remoting.Transfer
 {
     /// <summary>
     /// Contains information for sending and receiving a single object tied to a token.
     /// </summary>
-    public class RemoteDataMessage : IRemoteMemberMessage
+    public class RemoteDataMessage : RemoteMessageBase, IRemoteMemberMessage
     {
         /// <summary>
-        /// Creates a new instance of <see cref="RemoteMemberMessageBase"/>.
+        /// Creates a new instance of <see cref="RemoteMessageBase"/>.
         /// </summary>
         /// <param name="memberInstanceId">A unique identifier for this instance, consistent between hosts and clients.</param>
         /// <param name="token">The name of the target member being changed or invoked.</param>
@@ -18,6 +20,21 @@
             TargetMemberSignature = memberSignature;
             Token = token;
             Result = result;
+
+            Action = RemotingAction.RemoteDataProxy;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RemoteMessageBase"/>.
+        /// </summary>
+        /// <remarks>Should only be used by deserializers.</remarks>
+        public RemoteDataMessage()
+        {
+            Token = string.Empty;
+            MemberRemoteId = string.Empty;
+            TargetMemberSignature = string.Empty;
+
+            Action = RemotingAction.RemoteDataProxy;
         }
 
         /// <inheritdoc/>
@@ -26,20 +43,14 @@
         /// <inheritdoc/>
         public string TargetMemberSignature { get; set; }
 
-        /// <inheritdoc/>
-        public RemotingAction Action { get; set; } = RemotingAction.RemoteDataProxy;
-
         /// <summary>
         /// A unique identifier for this member.
         /// </summary>
         public string Token { get; set; }
 
-        /// <summary>
+        /// <summary>s
         /// The result value.
         /// </summary>
         public object? Result { get; set; }
-
-        /// <inheritdoc/>
-        public string? CustomActionName { get; set; }
     }
 }

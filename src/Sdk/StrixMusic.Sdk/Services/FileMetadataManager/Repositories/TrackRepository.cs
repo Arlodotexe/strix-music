@@ -263,7 +263,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             var allTracks = _inMemoryMetadata.Values.OrderBy(c => c.TrackNumber).ToList();
 
             if (limit == -1)
-                return Task.FromResult<IReadOnlyList<TrackMetadata>>(allTracks.GetRange(offset, allTracks.Count - offset));
+                return Task.FromResult<IReadOnlyList<TrackMetadata>>(allTracks);
 
             return Task.FromResult<IReadOnlyList<TrackMetadata>>(allTracks.GetRange(offset, limit));
         }
@@ -272,7 +272,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public async Task<IReadOnlyList<TrackMetadata>> GetTracksByArtistId(string artistId, int offset, int limit)
         {
             var allTracks = await GetTracks(offset, -1);
-            var filteredTracks = new List<TrackMetadata>();
+            var results = new List<TrackMetadata>();
 
             foreach (var item in allTracks)
             {
@@ -280,19 +280,24 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 Guard.HasSizeGreaterThan(item.ArtistIds, 0, nameof(TrackMetadata.ArtistIds));
 
                 if (item.ArtistIds.Contains(artistId))
-                    filteredTracks.Add(item);
+                    results.Add(item);
             }
 
-            if (offset + limit > allTracks.Count)
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= results.Count)
                 return new List<TrackMetadata>();
 
-            return filteredTracks.GetRange(offset, limit).ToList();
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > results.Count)
+                limit = results.Count - offset;
+
+            return results.GetRange(offset, limit).ToList();
         }
 
         /// <inheritdoc />
         public async Task<IReadOnlyList<TrackMetadata>> GetTracksByAlbumId(string albumId, int offset, int limit)
         {
-            var filteredTracks = new List<TrackMetadata>();
+            var results = new List<TrackMetadata>();
             var allTracks = await GetTracks(offset, -1);
 
             foreach (var item in allTracks)
@@ -300,13 +305,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 Guard.IsNotNull(item.AlbumId, nameof(item.AlbumId));
 
                 if (item.AlbumId == albumId)
-                    filteredTracks.Add(item);
+                    results.Add(item);
             }
 
-            if (offset + limit > allTracks.Count)
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= results.Count)
                 return new List<TrackMetadata>();
 
-            return filteredTracks.Skip(offset).Take(limit).ToList();
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > results.Count)
+                limit = results.Count - offset;
+
+            return results.Skip(offset).Take(limit).ToList();
         }
 
         /// <summary>

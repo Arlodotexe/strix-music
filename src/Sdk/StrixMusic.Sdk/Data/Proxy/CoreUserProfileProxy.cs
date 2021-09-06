@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
@@ -20,6 +19,8 @@ namespace StrixMusic.Sdk.Data.Merged
     {
         private readonly ICoreUserProfile _userProfile;
         private readonly MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage> _imageMap;
+        private readonly MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl> _urlMap;
+        private readonly IReadOnlyList<ICoreUserProfile> _sources;
 
         /// <summary>
         /// Creates a new instance of <see cref="CoreUserProfileProxy"/>.
@@ -29,10 +30,14 @@ namespace StrixMusic.Sdk.Data.Merged
         {
             _userProfile = userProfile ?? ThrowHelper.ThrowArgumentNullException<ICoreUserProfile>(nameof(userProfile));
 
-            Sources = _userProfile.IntoList();
+            _sources = _userProfile.IntoList();
             SourceCores = _userProfile.SourceCore.IntoList();
 
+            TotalImageCount = _userProfile.TotalImageCount;
+            TotalUrlCount = _userProfile.TotalUrlCount;
+
             _imageMap = new MergedCollectionMap<IImageCollection, ICoreImageCollection, IImage, ICoreImage>(this);
+            _urlMap = new MergedCollectionMap<IUrlCollection, ICoreUrlCollection, IUrl, ICoreUrl>(this);
 
             AttachEvents();
         }
@@ -73,23 +78,33 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public event EventHandler<int>? ImagesCountChanged
-        {
-            add => _userProfile.ImagesCountChanged += value;
-            remove => _userProfile.ImagesCountChanged -= value;
-        }
+        public event CollectionChangedEventHandler<IImage>? ImagesChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<IImage>? ImagesChanged;
+        public event CollectionChangedEventHandler<IUrl>? UrlsChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? ImagesCountChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<int>? UrlsCountChanged;
 
         private void AttachEvents()
         {
             _imageMap.ItemsChanged += ImageMap_ItemsChanged;
+            _imageMap.ItemsCountChanged += ImageMap_ItemsCountChanged;
+
+            _urlMap.ItemsChanged += UrlMap_ItemsChanged;
+            _urlMap.ItemsCountChanged += UrlMap_ItemsCountChanged;
         }
 
         private void DetachEvents()
         {
             _imageMap.ItemsChanged -= ImageMap_ItemsChanged;
+            _imageMap.ItemsCountChanged -= ImageMap_ItemsCountChanged;
+
+            _urlMap.ItemsChanged -= UrlMap_ItemsChanged;
+            _urlMap.ItemsCountChanged -= UrlMap_ItemsCountChanged;
         }
 
         private void ImageMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IImage>> addedItems, IReadOnlyList<CollectionChangedItem<IImage>> removedItems)
@@ -97,8 +112,28 @@ namespace StrixMusic.Sdk.Data.Merged
             ImagesChanged?.Invoke(this, addedItems, removedItems);
         }
 
+        private void UrlMap_ItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<IUrl>> addedItems, IReadOnlyList<CollectionChangedItem<IUrl>> removedItems)
+        {
+            UrlsChanged?.Invoke(this, addedItems, removedItems);
+        }
+
+        private void UrlMap_ItemsCountChanged(object sender, int e)
+        {
+            TotalUrlCount = e;
+            UrlsCountChanged?.Invoke(this, TotalUrlCount);
+        }
+
+        private void ImageMap_ItemsCountChanged(object sender, int e)
+        {
+            TotalImageCount = e;
+            ImagesCountChanged?.Invoke(this, TotalImageCount);
+        }
+
         /// <inheritdoc />
-        public int TotalImageCount => _userProfile.TotalImageCount;
+        public int TotalImageCount { get; private set; }
+
+        /// <inheritdoc/>
+        public int TotalUrlCount { get; private set; }
 
         /// <inheritdoc />
         public string Id => _userProfile.Id;
@@ -108,9 +143,6 @@ namespace StrixMusic.Sdk.Data.Merged
 
         /// <inheritdoc />
         public string? FullName => _userProfile.FullName;
-
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<Uri>? Urls => _userProfile.Urls;
 
         /// <inheritdoc />
         public string? Email => _userProfile.Email;
@@ -137,33 +169,27 @@ namespace StrixMusic.Sdk.Data.Merged
         public bool IsChangeEmailAsyncAvailable => _userProfile.IsChangeEmailAsyncAvailable;
 
         /// <inheritdoc />
-        public Task<bool> IsAddUrlAvailable(int index)
+        public Task<bool> IsAddImageAvailableAsync(int index)
         {
-            return _userProfile.IsAddUrlAvailable(index);
+            return _userProfile.IsAddImageAvailableAsync(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailable(int index)
+        public Task<bool> IsRemoveImageAvailableAsync(int index)
         {
-            return _userProfile.IsAddImageAvailable(index);
+            return _userProfile.IsRemoveImageAvailableAsync(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveUrlAvailable(int index)
+        public Task<bool> IsAddUrlAvailableAsync(int index)
         {
-            return _userProfile.IsRemoveUrlAvailable(index);
+            return _userProfile.IsAddUrlAvailableAsync(index);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailable(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index)
         {
-            return _userProfile.IsRemoveImageAvailable(index);
-        }
-
-        /// <inheritdoc />
-        public Task RemoveImageAsync(int index)
-        {
-            return _userProfile.RemoveImageAsync(index);
+            return _userProfile.IsRemoveUrlAvailableAsync(index);
         }
 
         /// <inheritdoc />
@@ -196,8 +222,19 @@ namespace StrixMusic.Sdk.Data.Merged
             return _userProfile.ChangeEmailAsync(email);
         }
 
+        /// <summary>
+        /// The sources that were combined to form the data in this instance.
+        /// </summary>
+        /// <remarks>
+        /// Use this properly, but do not yet rely on it. Merging of users and user profiles are TODO.
+        /// </remarks>
+        public IReadOnlyList<ICoreUserProfile> Sources => _sources; 
+
         /// <inheritdoc />
-        public IReadOnlyList<ICoreImageCollection> Sources { get; }
+        IReadOnlyList<ICoreImageCollection> IMerged<ICoreImageCollection>.Sources => _sources;
+
+        /// <inheritdoc />
+        IReadOnlyList<ICoreUrlCollection> IMerged<ICoreUrlCollection>.Sources => _sources;
 
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; }
@@ -205,13 +242,37 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
         {
-            return _imageMap.GetItems(limit, offset);
+            return _imageMap.GetItemsAsync(limit, offset);
+        }
+
+        /// <inheritdoc />
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset)
+        {
+            return _urlMap.GetItemsAsync(limit, offset);
         }
 
         /// <inheritdoc />
         public Task AddImageAsync(IImage image, int index)
         {
             return _imageMap.InsertItem(image, index);
+        }
+
+        /// <inheritdoc />
+        public Task RemoveImageAsync(int index)
+        {
+            return _userProfile.RemoveImageAsync(index);
+        }
+
+        /// <inheritdoc />
+        public Task AddUrlAsync(IUrl url, int index)
+        {
+            return _urlMap.InsertItem(url, index);
+        }
+
+        /// <inheritdoc />
+        public Task RemoveUrlAsync(int index)
+        {
+            return _urlMap.RemoveAt(index);
         }
 
         /// <inheritdoc />
@@ -222,6 +283,17 @@ namespace StrixMusic.Sdk.Data.Merged
         }
 
         /// <inheritdoc />
-        public ValueTask DisposeAsync() => _userProfile.DisposeAsync();
+        public bool Equals(ICoreUrlCollection other)
+        {
+            // User profiles are never merged.
+            return false;
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return _userProfile.DisposeAsync();
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
 
@@ -8,7 +7,6 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// A view model for items that are shown in a <see cref="AbstractDataListViewModel"/>.
     /// </summary>
-    [Bindable(true)]
     public class AbstractMultiChoiceItemViewModel : AbstractUIMetadataViewModel
     {
         private bool _isSelected;

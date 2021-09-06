@@ -1,13 +1,11 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
-using System.ComponentModel;
 
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
     /// Contains bindable information about an <see cref="AbstractBooleanUIElement"/>.
     /// </summary>
-    [Bindable(true)]
     public class AbstractBooleanViewModel : AbstractUIViewModelBase
     {
         private bool _isToggled;
@@ -41,7 +39,7 @@ namespace OwlCore.AbstractUI.ViewModels
 
         private void OnToggled()
         {
-            ((AbstractBooleanUIElement)Model).ChangeState(IsToggled);
+            ((AbstractBooleanUIElement)Model).State = IsToggled;
         }
 
         private void Model_LabelChanged(object sender, string e) => Label = e;
@@ -61,12 +59,27 @@ namespace OwlCore.AbstractUI.ViewModels
         public bool IsToggled
         {
             get => _isToggled;
-            set => SetProperty(ref _isToggled, value);
+            set
+            {
+                if (value == _isToggled)
+                    return;
+
+                ((AbstractBooleanUIElement)Model).State = value;
+
+                SetProperty(ref _isToggled, value);
+            }
         }
 
         /// <summary>
         /// Run this command when the user toggles the UI element.
         /// </summary>
         public IRelayCommand ToggledCommand { get; }
+
+        /// <inheritdoc/>
+        public override void Dispose()
+        {
+            DetachEvents((AbstractBooleanUIElement)Model);
+            base.Dispose();
+        }
     }
 }

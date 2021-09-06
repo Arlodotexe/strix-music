@@ -7,7 +7,7 @@ namespace StrixMusic.Sdk.Data.Core
 {
     /// <inheritdoc cref="ITrackCollectionBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
-    public interface ICoreTrackCollection : ICorePlayableCollection, ITrackCollectionBase, ICoreImageCollection, ICoreMember
+    public interface ICoreTrackCollection : ICorePlayableCollection, ITrackCollectionBase, ICoreImageCollection, ICoreUrlCollection, ICoreMember
     {
         /// <summary>
         /// Attempts to play a specific item in the track collection. Restarts playback if already playing.
@@ -34,6 +34,6 @@ namespace StrixMusic.Sdk.Data.Core
         /// <summary>
         /// Fires when the items in the backend are changed by something external.
         /// </summary>
-        event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+        event CollectionChangedEventHandler<ICoreTrack>? TracksChanged;
     }
 }

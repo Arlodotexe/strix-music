@@ -8,7 +8,7 @@
     /// </remarks>
     public interface IRemoteMessage
     {
-        /// <inheritdoc cref="Action"/>
+        /// <inheritdoc cref="RemotingAction"/>
         public RemotingAction Action { get; }
 
         /// <summary>

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.Events;
+using OwlCore.Remoting.Attributes;
 
 namespace OwlCore.AbstractUI.Models
 {
@@ -60,6 +60,7 @@ namespace OwlCore.AbstractUI.Models
         /// <summary>
         /// If true, the user is able to add or remove items from the list.
         /// </summary>
+        [RemoteProperty]
         public bool IsUserEditingEnabled
         {
             get => _isUserEditingEnabled;
@@ -71,12 +72,14 @@ namespace OwlCore.AbstractUI.Models
         }
 
         /// <inheritdoc cref="AbstractDataListPreferredDisplayMode"/>
+        [RemoteProperty]
         public AbstractDataListPreferredDisplayMode PreferredDisplayMode { get; set; }
 
         /// <summary>
         /// Called when the user wants to add a new item in the list.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the added item.</returns>
+        [RemoteMethod]
         public void RequestNewItem()
         {
             AddRequested?.Invoke(this, EventArgs.Empty);
@@ -86,6 +89,7 @@ namespace OwlCore.AbstractUI.Models
         /// Simulates the tapping of a specific item in <see cref="Items"/>.
         /// </summary>
         /// <param name="item">The item to relay as tapped.</param>
+        [RemoteMethod]
         public void TapItem(AbstractUIMetadata item)
         {
             ItemTapped?.Invoke(this, item);
@@ -105,6 +109,7 @@ namespace OwlCore.AbstractUI.Models
         /// </summary>
         /// <param name="index">The index to insert at.</param>
         /// <param name="item">The item to add.</param>
+        [RemoteMethod]
         public void InsertItem(AbstractUIMetadata item, int index)
         {
             Items.Add(item);
@@ -133,6 +138,7 @@ namespace OwlCore.AbstractUI.Models
         /// </summary>
         /// <param name="index">The index of the item to be removed.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        [RemoteMethod]
         public void RemoveItemAt(int index)
         {
             var item = Items.ElementAt(index);

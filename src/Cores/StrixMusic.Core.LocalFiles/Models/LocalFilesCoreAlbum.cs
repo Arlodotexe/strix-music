@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Collections;
 using OwlCore.Events;
 using StrixMusic.Core.LocalFiles.Services;
 using StrixMusic.Sdk.Data.Core;
@@ -41,8 +41,6 @@ namespace StrixMusic.Core.LocalFiles.Models
 
             if (albumMetadata.ImagePath != null)
                 _image = InstanceCache.Images.GetOrCreate(Id, sourceCore, new Uri(albumMetadata.ImagePath));
-
-            Genres = new SynchronizedObservableCollection<string>(albumMetadata.Genres);
 
             AttachEvents();
         }
@@ -87,7 +85,10 @@ namespace StrixMusic.Core.LocalFiles.Models
             }
 
             if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
-                TrackItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
+            {
+                TracksChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
+                TracksCountChanged?.Invoke(this, TotalTrackCount);
+            }
         }
 
         private void Albums_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>> addedItems, IReadOnlyList<CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>> removedItems)
@@ -116,7 +117,10 @@ namespace StrixMusic.Core.LocalFiles.Models
             }
 
             if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
+            {
                 ArtistItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
+                ArtistItemsCountChanged?.Invoke(this, TotalArtistItemsCount);
+            }
         }
 
         private void Albums_MetadataUpdated(object sender, IEnumerable<AlbumMetadata> e)
@@ -150,7 +154,7 @@ namespace StrixMusic.Core.LocalFiles.Models
                 // TODO genres, post genres do-over
 
                 if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
-                    TrackItemsCountChanged?.Invoke(this, metadata.TrackIds.Count);
+                    TracksCountChanged?.Invoke(this, metadata.TrackIds.Count);
 
                 if (metadata.ArtistIds.Count != (previousData.ArtistIds?.Count ?? 0))
                     ArtistItemsCountChanged?.Invoke(this, metadata.ArtistIds.Count);
@@ -195,9 +199,6 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<string?>? DescriptionChanged;
 
         /// <inheritdoc/>
-        public event EventHandler<Uri?>? UrlChanged;
-
-        /// <inheritdoc/>
         public event EventHandler<DateTime?>? DatePublishedChanged;
 
         /// <inheritdoc/>
@@ -228,22 +229,34 @@ namespace StrixMusic.Core.LocalFiles.Models
         public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int>? TrackItemsCountChanged;
+        public event EventHandler<int>? ArtistItemsCountChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreTrack>? TrackItemsChanged;
+        public event EventHandler<int>? TracksCountChanged;
 
         /// <inheritdoc />
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+        public event EventHandler<int>? UrlsCountChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<int>? GenresCountChanged;
 
         /// <inheritdoc />
         public event CollectionChangedEventHandler<ICoreArtistCollectionItem>? ArtistItemsChanged;
 
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreTrack>? TracksChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreImage>? ImagesChanged;
+
+        /// <inheritdoc />
+        public event CollectionChangedEventHandler<ICoreUrl>? UrlsChanged;
+
         /// <inheritdoc/>
-        public int TotalTracksCount => _albumMetadata.TrackIds?.Count ?? 0;
+        public event CollectionChangedEventHandler<ICoreGenre>? GenresChanged;
 
         /// <inheritdoc/>
         public ICore SourceCore { get; }
@@ -282,10 +295,16 @@ namespace StrixMusic.Core.LocalFiles.Models
         public int TotalArtistItemsCount => _albumMetadata.ArtistIds?.Count ?? 0;
 
         /// <inheritdoc/>
-        public ICorePlayableCollectionGroup? RelatedItems { get; }
+        public int TotalTrackCount => _albumMetadata.TrackIds?.Count ?? 0;
 
         /// <inheritdoc/>
-        public SynchronizedObservableCollection<string>? Genres { get; }
+        public int TotalGenreCount => _albumMetadata.Genres?.Count ?? 0;
+
+        /// <inheritdoc/>
+        public int TotalUrlCount => 0;
+
+        /// <inheritdoc/>
+        public ICorePlayableCollectionGroup? RelatedItems { get; }
 
         /// <inheritdoc/>
         public bool IsPlayTrackCollectionAsyncAvailable => false;
@@ -311,53 +330,65 @@ namespace StrixMusic.Core.LocalFiles.Models
         /// <inheritdoc/>
         public bool IsChangeDurationAsyncAvailable => false;
 
-        /// <inheritdoc />
-        public event EventHandler<int>? ArtistItemsCountChanged;
+        /// <inheritdoc/>
+        public event EventHandler<bool>? IsChangeDatePublishedAsyncAvailableChanged;
 
         /// <inheritdoc/>
-        public Task<bool> IsAddGenreAvailable(int index)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<bool> IsAddTrackAvailable(int index)
+        public Task<bool> IsAddGenreAvailableAsync(int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsAddImageAvailable(int index)
+        public Task<bool> IsAddTrackAvailableAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddImageAvailableAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> IsAddUrlAvailableAsync(int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailable(int index)
+        public Task<bool> IsRemoveTrackAvailableAsync(int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailable(int index)
+        public Task<bool> IsRemoveImageAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailable(int index)
+        public Task<bool> IsRemoveUrlAvailableAsync(int index)
+        {
+            return Task.FromResult(false);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveGenreAvailableAsync(int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddArtistItemAvailable(int index)
+        public Task<bool> IsAddArtistItemAvailableAsync(int index)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveArtistItemAvailable(int index)
+        public Task<bool> IsRemoveArtistItemAvailableAsync(int index)
         {
             throw new NotSupportedException();
         }
@@ -441,6 +472,12 @@ namespace StrixMusic.Core.LocalFiles.Models
         }
 
         /// <inheritdoc />
+        public Task AddUrlAsync(ICoreUrl image, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
         public Task RemoveArtistItemAsync(int index)
         {
             throw new NotSupportedException();
@@ -454,6 +491,24 @@ namespace StrixMusic.Core.LocalFiles.Models
 
         /// <inheritdoc />
         public Task RemoveImageAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc />
+        public Task RemoveUrlAsync(int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public Task AddGenreAsync(ICoreGenre genre, int index)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public Task RemoveGenreAsync(int index)
         {
             throw new NotSupportedException();
         }
@@ -497,33 +552,29 @@ namespace StrixMusic.Core.LocalFiles.Models
             await Task.CompletedTask;
         }
 
-        private void ReleaseUnmanagedResources()
+        /// <inheritdoc />
+        public async IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset)
         {
-            DetachEvents();
+            await Task.CompletedTask;
+            yield break;
         }
 
-        private void Dispose(bool disposing)
+        /// <inheritdoc/>
+        public async IAsyncEnumerable<ICoreGenre> GetGenresAsync(int limit, int offset)
         {
-            ReleaseUnmanagedResources();
-            if (disposing)
+            foreach(var genre in _albumMetadata.Genres ?? Enumerable.Empty<string>())
             {
-                Genres?.Dispose();
+                yield return new LocalFilesCoreGenre(SourceCore, genre);
             }
+
+            await Task.CompletedTask;
         }
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-
+            DetachEvents();
             return default;
-        }
-
-        /// <inheritdoc />
-        ~LocalFilesCoreAlbum()
-        {
-            Dispose(false);
         }
     }
 }
