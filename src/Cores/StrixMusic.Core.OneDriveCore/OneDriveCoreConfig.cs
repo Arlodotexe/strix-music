@@ -31,7 +31,7 @@ namespace StrixMusic.Core.OneDriveCore
         {
             services.AddTransient(typeof(AuthenticationManager));
             services.AddTransient(typeof(OneDriveCoreStorageService));
-            services.AddTransient(typeof(DefaultFileExplorer));
+            services.AddTransient(typeof(IFileExplorer));
 
             Services = services.BuildServiceProvider();
 
@@ -86,12 +86,12 @@ namespace StrixMusic.Core.OneDriveCore
                 authManager.Init(_clientIdTb.Value, _tenantTb.Value, _redirectUriTb.Value);
                 var client = await authManager.GenerateGraphToken();
 
-
-                // TEST Code
                 var oneDriveService = Services.GetService<OneDriveCoreStorageService>();
                 oneDriveService.Init(client);
+                var rootFolder = await oneDriveService.GetRootFolderAsync();
 
-                var root = await oneDriveService.GetRootFolderAsync();
+                var fileExplorerService = Services.GetService<IFileExplorer>();
+                await fileExplorerService.SetupFileExplorerAsync(rootFolder);
             }
             else
             {

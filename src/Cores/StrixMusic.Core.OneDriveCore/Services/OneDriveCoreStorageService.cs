@@ -40,34 +40,39 @@ namespace StrixMusic.Core.OneDriveCore.Services
             _graphClient = graphClient;
         }
 
+        public async Task<IFolderData> GetRootFolderAsync()
+        {
+            var driveItem = await _graphClient.Drive.Root.Request().Expand(ExplandString).GetAsync();
+
+            return new OneDriveFolderData(driveItem.Name, driveItem.WebUrl, driveItem.Id, true);
+
+        }
 
         /// <summary>
         /// Gets the folder details for the provide <see cref="folderId"/>.
         /// </summary>
         /// <param name="folderId">The provided folderId</param>
-        public async Task<IFolderData> GetRootFolderAsync()
+        public async Task<IEnumerable<IFolderData>> GetFolderChildren(bool isRoot = false)
         {
             try
             {
-                Guard.IsNotNull(typeof(GraphServiceClient), "Graph client should be provided.");
-
-                var fileData = new List<OneDriveFolderData>();
-                var clientType = new ClientType();
-
-                var expandValue = clientType == ClientType.Consumer
-                    ? "thumbnails,children($expand=thumbnails)"
-                    : "thumbnails,children";
-
-                var driveItem = await _graphClient.Drive.Root.Request().Expand(ExplandString).GetAsync();
-                foreach (var item in driveItem.Children)
+                var fileData = new List<IFolderData>();
+                if (isRoot)
                 {
-                    if (item.Folder != null && item.Children != null && item.Children.CurrentPage != null)
+                    Guard.IsNotNull(typeof(GraphServiceClient), "Graph client should be provided.");
+
+                    var driveItem = await _graphClient.Drive.Root.Request().Expand(ExplandString).GetAsync();
+
+                    foreach (var item in driveItem.Children)
                     {
-                        var folderData = new OneDriveFolderData();
+                        if (item.Folder != null)
+                        {
+                            fileData.Add(new OneDriveFolderData(item.Name, item.WebUrl, item.Id));
+                        }
                     }
                 }
 
-                return null;
+                return fileData;
             }
             catch
             {

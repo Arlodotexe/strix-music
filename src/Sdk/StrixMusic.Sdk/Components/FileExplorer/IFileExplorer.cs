@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Components
 {
@@ -18,12 +19,7 @@ namespace StrixMusic.Sdk.Components
         /// <summary>
         /// Initializes the <see cref="IFileExplorer"/> with <see cref="IFolderData"/>.
         /// </summary>
-        /// <param name="folder">The folder.</param>
-        public void InitializeFileExplorer(IFolderData folder);
-
-        /// <summary>
-        /// Setsup the UI For fileExplorer.
-        /// </summary>
-        public void SetupFileExplorerUIComponents();
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        public Task SetupFileExplorerAsync(IFolderData folder);
     }
 }

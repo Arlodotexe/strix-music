@@ -2,17 +2,34 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Components
 {
     /// <inheritdoc/>
-    public class DefaultFileExplorer
+    public class DefaultFileExplorer : IFileExplorer
     {
         /// <summary>
-        /// Initializes the file explorer. 
+        /// The currently selected folder.
         /// </summary>
-        public DefaultFileExplorer(IFolderData folderData)
+        public IFolderData SelectedFolder { get; private set; }
+
+
+        /// <summary>
+        /// Initializes the <see cref="IFileExplorer"/>.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        public async Task SetupFileExplorerAsync(IFolderData folder)
         {
+            SelectedFolder = folder;
+            var folders = await folder.GetFoldersAsync();
+
+        }
+
+        private void SetupFileExplorerUIComponents()
+        {
+            //TODO: create a ui for file explorer.
         }
     }
 }
