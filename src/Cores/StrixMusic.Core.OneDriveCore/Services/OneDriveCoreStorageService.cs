@@ -23,15 +23,6 @@ namespace StrixMusic.Core.OneDriveCore.Services
         public string ExplandString => "children";
 
         /// <summary>
-        /// Creates an ew instance for <see cref="OneDriveCore"/>.
-        /// </summary>
-        /// <param name="graphClient">The MS graph client.</param>
-        public OneDriveCoreStorageService()
-        {
-
-        }
-
-        /// <summary>
         /// Initializes the OneDrive service with a <see cref="GraphServiceClient"/>.
         /// </summary>
         /// <param name="graphClient"></param>
@@ -48,49 +39,46 @@ namespace StrixMusic.Core.OneDriveCore.Services
         }
 
         /// <summary>
-        /// Gets the folder details for the provide <see cref="folderId"/>.
+        /// Gets the folder details.
         /// </summary>
-        /// <param name="Id"></param>
+        /// <param name="id"></param>
         /// <param name="isRoot"></param>
-        public async Task<IEnumerable<IFolderData>> GetFolderChildren(string Id, bool isRoot = false)
+        public async Task<IEnumerable<IFolderData>> GetFolderChildrenAsync(string id, bool isRoot = false)
         {
             try
             {
+                Guard.IsNotNull(typeof(GraphServiceClient), "Graph client should be provided.");
                 var fileData = new List<IFolderData>();
+
+                DriveItem driveItem;
+
                 if (isRoot)
                 {
-                    Guard.IsNotNull(typeof(GraphServiceClient), "Graph client should be provided.");
-
-                    var driveItem = await _graphClient.Drive.Root.Request().Expand(ExplandString).GetAsync();
-
-                    foreach (var item in driveItem.Children)
-                    {
-                        if (item.Folder != null)
-                        {
-                            fileData.Add(new OneDriveFolderData(this, item.Name, item.WebUrl, item.Id));
-                        }
-                    }
+                    driveItem = await _graphClient.Drive.Root.Request().Expand(ExplandString).GetAsync();
                 }
                 else
                 {
-                    Guard.IsNotNull(typeof(GraphServiceClient), "Graph client should be provided.");
-
-                    var driveItem = await _graphClient.Drive.Items[Id].Request().Expand(ExplandString).GetAsync();
-
-                    foreach (var item in driveItem.Children)
-                    {
-                        if (item.Folder != null)
-                        {
-                            fileData.Add(new OneDriveFolderData(this, item.Name, item.WebUrl, item.Id));
-                        }
-                    }
+                    driveItem = await _graphClient.Drive.Items[id].Request().Expand(ExplandString).GetAsync();
                 }
+
+                fileData = new List<IFolderData>(FillChildren(driveItem, fileData));
 
                 return fileData;
             }
             catch
             {
                 return null;
+            }
+        }
+
+        private IEnumerable<IFolderData> FillChildren(DriveItem driveItem, List<IFolderData> fileData)
+        {
+            foreach (var item in driveItem.Children)
+            {
+                if (item.Folder != null)
+                {
+                    yield return new OneDriveFolderData(this, item.Name, item.WebUrl, item.Id);
+                }
             }
         }
 

@@ -113,7 +113,7 @@ namespace StrixMusic.Core.OneDriveCore.Storage
         {
             if (ChildrenCache == null)
             {
-                ChildrenCache = await _oneDriveStorageService.GetFolderChildren(OneDriveFolderId, IsRoot);
+                ChildrenCache = await _oneDriveStorageService.GetFolderChildrenAsync(OneDriveFolderId, IsRoot);
 
                 return ChildrenCache;
             }

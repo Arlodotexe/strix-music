@@ -110,6 +110,8 @@ namespace StrixMusic.Core.OneDriveCore
 
         private async Task UpdateSettingsUI(IFolderData folder)
         {
+            Guard.IsNotNull(Services, "Services is null.");
+
             var fileExplorerService = Services.GetService<DefaultFileExplorer>();
 
             Guard.IsNotNull(fileExplorerService, "FileExplorer is not registered.");
@@ -129,6 +131,7 @@ namespace StrixMusic.Core.OneDriveCore
                 }
             };
 
+            Guard.IsNotNull(dataList, "FileExplorer is not registered.");
             dataList.ItemTapped += DataList_ItemTapped;
 
             AbstractUIElementChanged();
@@ -137,7 +140,14 @@ namespace StrixMusic.Core.OneDriveCore
         private async void DataList_ItemTapped(object sender, AbstractUIMetadata e)
         {
             ((AbstractDataList)sender).ItemTapped -= DataList_ItemTapped;
+
+            Guard.IsNotNull(Services, "Services is null.");
+
             var fileExplorerService = Services.GetService<DefaultFileExplorer>();
+
+            Guard.IsNotNull(fileExplorerService, "FileExplorer not registered.");
+
+            Guard.IsNotNull(fileExplorerService.CurrentFolder, "No current folder.");
 
             var folder = await fileExplorerService.CurrentFolder.GetFolderAsync(e.Title);
             await UpdateSettingsUI(folder);
