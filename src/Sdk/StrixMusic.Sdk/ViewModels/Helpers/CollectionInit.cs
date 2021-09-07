@@ -22,17 +22,9 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task TrackCollection(ITrackCollectionViewModel trackCollection)
         {
-            // TODO Save/get to collection cache. All tracks collections should be cached to disk.
-            if (trackCollection.Tracks.Count < trackCollection.TotalTrackCount)
+            while (trackCollection.Tracks.Count < trackCollection.TotalTrackCount)
             {
-                var allTracks = await APIs.GetAllItemsAsync<ITrack>(trackCollection.TotalTrackCount, async offset => await trackCollection.GetTracksAsync(trackCollection.TotalTrackCount, offset));
-
-                foreach (var track in allTracks)
-                {
-                    Guard.IsAssignableToType(track, typeof(MergedTrack), nameof(track));
-
-                    trackCollection.Tracks.Add(new TrackViewModel(track));
-                }
+                await trackCollection.PopulateMoreTracksAsync(trackCollection.TotalTrackCount);
             }
         }
 
@@ -43,22 +35,9 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task AlbumCollection(IAlbumCollectionViewModel albumCollection)
         {
-            if (albumCollection.Albums.Count < albumCollection.TotalAlbumItemsCount)
+            while (albumCollection.Albums.Count < albumCollection.TotalAlbumItemsCount)
             {
-                var albumCollectionList = await APIs.GetAllItemsAsync<IAlbumCollectionItem>(albumCollection.TotalAlbumItemsCount, async offset => await albumCollection.GetAlbumItemsAsync(albumCollection.TotalAlbumItemsCount, offset));
-
-                foreach (var item in albumCollectionList)
-                {
-                    switch (item)
-                    {
-                        case IAlbum album:
-                            albumCollection.Albums.Add(new AlbumViewModel(album));
-                            break;
-                        case IAlbumCollection collection:
-                            albumCollection.Albums.Add(new AlbumCollectionViewModel(collection));
-                            break;
-                    }
-                }
+                await albumCollection.PopulateMoreAlbumsAsync(albumCollection.TotalAlbumItemsCount);
             }
         }
 
@@ -69,22 +48,9 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task ArtistCollection(IArtistCollectionViewModel artistCollection)
         {
-            if (artistCollection.Artists.Count < artistCollection.TotalArtistItemsCount)
+            while (artistCollection.Artists.Count < artistCollection.TotalArtistItemsCount)
             {
-                var albumCollectionList = await APIs.GetAllItemsAsync<IArtistCollectionItem>(artistCollection.TotalArtistItemsCount, async offset => await artistCollection.GetArtistItemsAsync(artistCollection.TotalArtistItemsCount, offset));
-
-                foreach (var item in albumCollectionList)
-                {
-                    switch (item)
-                    {
-                        case IArtist artist:
-                            artistCollection.Artists.Add(new ArtistViewModel(artist));
-                            break;
-                        case IArtistCollection collection:
-                            artistCollection.Artists.Add(new ArtistCollectionViewModel(collection));
-                            break;
-                    }
-                }
+                await artistCollection.PopulateMoreArtistsAsync(artistCollection.TotalArtistItemsCount);
             }
         }
 
@@ -95,22 +61,9 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task PlaylistCollection(IPlaylistCollectionViewModel playlistCollection)
         {
-            if (playlistCollection.Playlists.Count < playlistCollection.TotalPlaylistItemsCount)
+            while (playlistCollection.Playlists.Count < playlistCollection.TotalPlaylistItemsCount)
             {
-                var playlistCollectionList = await APIs.GetAllItemsAsync<IPlaylistCollectionItem>(playlistCollection.TotalPlaylistItemsCount, async offset => await playlistCollection.GetPlaylistItemsAsync(playlistCollection.TotalPlaylistItemsCount, offset));
-
-                foreach (var item in playlistCollectionList)
-                {
-                    switch (item)
-                    {
-                        case IPlaylist playlist:
-                            playlistCollection.Playlists.Add(new PlaylistViewModel(playlist));
-                            break;
-                        case IPlaylistCollection collection:
-                            playlistCollection.Playlists.Add(new PlaylistCollectionViewModel(collection));
-                            break;
-                    }
-                }
+                await playlistCollection.PopulateMorePlaylistsAsync(playlistCollection.TotalPlaylistItemsCount);
             }
         }
     }
