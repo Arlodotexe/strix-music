@@ -7,7 +7,6 @@ using SixLabors.ImageSharp.Processing;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -25,7 +24,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     {
         private const int SCAN_BATCH_SIZE = 2;
         private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
-        private static readonly IReadOnlyList<int> _standardImageSizes = ((int[]) Enum.GetValues(typeof(ImageSize))).ToList();
+        private static readonly IReadOnlyList<int> _standardImageSizes = new int[] { 64, 128, 256, 512, 1024 };
 
         private readonly FileMetadataManager _metadataManager;
         private readonly IFileScanner _fileScanner;
