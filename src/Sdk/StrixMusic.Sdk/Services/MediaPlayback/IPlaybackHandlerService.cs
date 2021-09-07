@@ -211,7 +211,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <summary>
         /// Fires when the <see cref="CurrentItem"/> is changed.
         /// </summary>
-        event EventHandler<IMediaSourceConfig>? CurrentItemChanged;
+        event EventHandler<IMediaSourceConfig?>? CurrentItemChanged;
 
         /// <summary>
         /// Raised when a quantum of data is processed. 

@@ -109,6 +109,9 @@ namespace StrixMusic.Sdk.ViewModels
             GenresCountChanged += OnGenresCountChanged;
             UrlsChanged += TrackViewModel_UrlsChanged;
             UrlsCountChanged += OnUrlsCountChanged;
+
+            _playbackHandler.PlaybackStateChanged += OnPlaybackStateChanged;
+            Model.PlaybackStateChanged += OnPlaybackStateChanged;
         }
 
         private void DetachEvents()
@@ -138,14 +141,13 @@ namespace StrixMusic.Sdk.ViewModels
             GenresCountChanged -= OnGenresCountChanged;
             UrlsChanged -= TrackViewModel_UrlsChanged;
             UrlsCountChanged -= OnUrlsCountChanged;
+
+            _playbackHandler.PlaybackStateChanged -= OnPlaybackStateChanged;
+            Model.PlaybackStateChanged -= OnPlaybackStateChanged;
         }
 
         /// <inheritdoc />
-        public event EventHandler<PlaybackState>? PlaybackStateChanged
-        {
-            add => Model.PlaybackStateChanged += value;
-            remove => Model.PlaybackStateChanged -= value;
-        }
+        public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
         /// <inheritdoc />
         public event EventHandler<IAlbum?>? AlbumChanged
@@ -408,6 +410,15 @@ namespace StrixMusic.Sdk.ViewModels
             });
         }
 
+        private void OnPlaybackStateChanged(object sender, PlaybackState e)
+        {
+            _ = Threading.OnPrimaryThread(() =>
+            {
+                PlaybackStateChanged?.Invoke(this, PlaybackState);
+                OnPropertyChanged(nameof(PlaybackState));
+            });
+        }
+
         ///<inheritdoc />
         public void SortArtistCollection(ArtistSortingType artistSorting, SortDirection sortDirection)
         {
@@ -529,7 +540,7 @@ namespace StrixMusic.Sdk.ViewModels
         public string? Description => Model.Description;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState => Model.PlaybackState;
+        public PlaybackState PlaybackState => MainViewModel.Singleton?.ActiveDevice?.NowPlaying?.Id == Id ? MainViewModel.Singleton?.ActiveDevice?.PlaybackState ?? PlaybackState.None : PlaybackState.None;
 
         /// <inheritdoc />
         public bool IsPlayArtistCollectionAsyncAvailable => Model.IsPlayArtistCollectionAsyncAvailable;
