@@ -48,9 +48,9 @@ namespace StrixMusic.Sdk.ViewModels
             _coreConfig.AbstractUIElementsChanged -= CoreConfig_AbstractUIElementsChanged;
         }
 
-        private void CoreConfig_AbstractUIElementsChanged(object sender, EventArgs e)
+        private async void CoreConfig_AbstractUIElementsChanged(object sender, EventArgs e)
         {
-            _ = Threading.OnPrimaryThread(() =>
+            await Threading.OnPrimaryThread(() =>
             {
                 foreach (var abstractUIElement in _coreConfig.AbstractUIElements)
                 {
