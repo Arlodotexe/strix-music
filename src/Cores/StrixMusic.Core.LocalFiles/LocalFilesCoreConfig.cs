@@ -125,6 +125,14 @@ namespace StrixMusic.Core.LocalFiles
         }
 
         /// <summary>
+        /// Invokes abstract ui change event.
+        /// </summary>
+        protected void AbstractUIElementChanged()
+        {
+            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// Sets up the configurable UI for the core.
         /// </summary>
         public virtual void SetupAbstractUISettings()

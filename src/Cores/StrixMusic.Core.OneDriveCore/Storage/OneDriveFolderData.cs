@@ -2,6 +2,7 @@
 using StrixMusic.Core.OneDriveCore.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,17 +16,24 @@ namespace StrixMusic.Core.OneDriveCore.Storage
         private OneDriveCoreStorageService _oneDriveStorageService;
 
         /// <summary>
+        /// Holds the children of the folder.
+        /// </summary>
+        public IEnumerable<IFolderData> ChildrenCache { get; set; }
+
+        /// <summary>
         /// Creates a new instance of <see cref="OneDriveFolderData"/>.
         /// </summary>
         /// <param name="name">The name of the folder.</param>
         /// <param name="path">The web url of the folder.</param>
-        /// <param name="folderId">The id of the folder.</param>
-        public OneDriveFolderData(string name, string path, string folderId, bool isRoot = false)
+        /// <param name="oneDriveFolderId">The id of the folder.</param>
+        public OneDriveFolderData(OneDriveCoreStorageService oneDriveCoreStorageService, string name, string path, string oneDriveFolderId, bool isRoot = false)
         {
             Name = name;
             Path = path;
-            OneDriveFolderId = folderId;
+            OneDriveFolderId = oneDriveFolderId;
             IsRoot = isRoot;
+
+            _oneDriveStorageService = oneDriveCoreStorageService;
         }
 
         /// <summary>
@@ -95,17 +103,22 @@ namespace StrixMusic.Core.OneDriveCore.Storage
         ///<inheritdoc />
         public Task<IFolderData> GetFolderAsync(string name)
         {
-            throw new NotImplementedException();
+            var folder = ChildrenCache.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+            return Task.FromResult(folder);
         }
 
         ///<inheritdoc />
         public async Task<IEnumerable<IFolderData>> GetFoldersAsync()
         {
-            if (IsRoot)
-                return await _oneDriveStorageService.GetFolderChildren(IsRoot);
+            if (ChildrenCache == null)
+            {
+                ChildrenCache = await _oneDriveStorageService.GetFolderChildren(OneDriveFolderId, IsRoot);
 
-            throw new NotImplementedException();
+                return ChildrenCache;
+            }
 
+            return ChildrenCache;
         }
 
         ///<inheritdoc />

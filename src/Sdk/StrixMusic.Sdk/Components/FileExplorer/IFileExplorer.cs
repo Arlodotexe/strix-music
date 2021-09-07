@@ -1,4 +1,5 @@
 ﻿using OwlCore.AbstractStorage;
+using OwlCore.AbstractUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,12 +15,17 @@ namespace StrixMusic.Sdk.Components
         /// <summary>
         /// Selected path of the <see cref="IFileExplorer"/>.
         /// </summary>
-        public IFolderData SelectedFolder { get; }
+        public IFolderData? SelectedFolder { get; }
+
+        /// <summary>
+        /// Currently opened folder of <see cref="IFileExplorer"/>.
+        /// </summary>
+        public IFolderData? CurrentFolder { get; }
 
         /// <summary>
         /// Initializes the <see cref="IFileExplorer"/> with <see cref="IFolderData"/>.
         /// </summary>
         /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
-        public Task SetupFileExplorerAsync(IFolderData folder);
+        public Task<AbstractDataList?> SetupFileExplorerAsync(IFolderData folder);
     }
 }

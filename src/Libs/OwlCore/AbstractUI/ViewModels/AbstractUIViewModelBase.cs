@@ -15,6 +15,12 @@ namespace OwlCore.AbstractUI.ViewModels
         /// <param name="model"></param>
         public AbstractUIViewModelBase(AbstractUIBase model)
         {
+            if (model.ImagePath != null)
+            {
+                //TODO: Check for a valid image.
+                ImageSourceIsValid = true;
+            }
+
             Model = model;
             AttachEvents();
         }
