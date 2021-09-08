@@ -32,10 +32,13 @@
 			[Breaking changes]
 			Moved EventAsTask from Threading to Flow.
 			Removed ExclusiveSynchronizationContext.
+			Removed "UIElement" from class names of all AbstractUI elements and ViewModels.
+			Renamed AbstractUIElementGroup to AbstractUICollection.
 			Refactored CachedHttpClientHandler to use events instead of Action callbacks in the constructor. Added CachedRequestFound and CachedRequestSaving events. Set e.Handled on these instead of returning true or false.
 
 			[Improvements]
 			AbstractUI now works with OwlCore.Remoting when you pass an instance to a MemberRemote.
+			AbstractUICollection now implements ICollection{AbstractUIElement}.
 			Added CancellationToken parameter to EventAsTask.
 
 			[Fixes]
