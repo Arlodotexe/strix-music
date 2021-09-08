@@ -196,7 +196,7 @@
                         <ItemsControl ItemsSource="{x:Bind ViewModel.CurrentCoreConfig.CoreConfig.AbstractUIElements, Mode=OneWay}" Margin="0">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <controls:AbstractUIGroupPresenter />
+                                    <controls:AbstractUICollectionPresenter />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>

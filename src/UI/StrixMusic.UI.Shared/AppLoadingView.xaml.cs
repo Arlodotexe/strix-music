@@ -384,7 +384,7 @@ namespace StrixMusic.Shared
             CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell), true);
 
             // TODO Temp, not great. Need a proper flow here.
-            await Threading.EventAsTask(x => doneButton.Clicked += x, x => doneButton.Clicked -= x, TimeSpan.FromDays(1));
+            await Flow.EventAsTask(x => doneButton.Clicked += x, x => doneButton.Clicked -= x, TimeSpan.FromDays(1));
 
             notification.Dismiss();
         }

@@ -7,14 +7,14 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.Uno.AbstractUI.Themes
 {
     /// <summary>
-    /// Default template for the <see cref="AbstractUIGroupPresenterStyle"/>
+    /// Default template for the <see cref="AbstractUICollectionPresenterStyle"/>
     /// </summary>
-    public sealed partial class AbstractUIGroupPresenterStyle : ResourceDictionary
+    public sealed partial class AbstractUICollectionPresenterStyle : ResourceDictionary
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractUIGroupPresenterStyle"/> class.
+        /// Initializes a new instance of the <see cref="AbstractUICollectionPresenterStyle"/> class.
         /// </summary>
-        public AbstractUIGroupPresenterStyle()
+        public AbstractUICollectionPresenterStyle()
         {
             this.InitializeComponent();
         }

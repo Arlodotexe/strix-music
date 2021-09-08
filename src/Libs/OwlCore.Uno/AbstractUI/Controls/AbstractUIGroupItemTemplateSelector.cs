@@ -92,7 +92,7 @@ namespace OwlCore.Uno.AbstractUI.Controls
         /// <inheritdoc />
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            if (!new Themes.AbstractUIGroupPresenterStyle().TryGetValue("DefaultAbstractUIElementGroupTemplate", out var elementGroupTemplate))
+            if (!new Themes.AbstractUICollectionPresenterStyle().TryGetValue("DefaultAbstractUIElementGroupTemplate", out var elementGroupTemplate))
                 ElementGroupTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(elementGroupTemplate));
 
             ElementGroupTemplate = (DataTemplate)elementGroupTemplate;

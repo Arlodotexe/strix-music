@@ -50,8 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="AbstractUI\AbstractUIGroupListPresenter.xaml" />
-    <None Remove="AbstractUI\AbstractUIGroupPresenterTemplateSelector.xaml" />
-    <None Remove="AbstractUI\Controls\AbstractUIGroupPresenter.xaml" />
+    <None Remove="AbstractUI\AbstractUICollectionPresenterTemplateSelector.xaml" />
+    <None Remove="AbstractUI\Controls\AbstractUICollectionPresenter.xaml" />
     <None Remove="AbstractUI\Themes\AbstractBooleanStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
@@ -66,8 +66,8 @@
     <None Remove="Themes\Generic.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenter.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUIGroupPresenterTemplateSelector.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUICollectionPresenter.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Controls\AbstractUICollectionPresenterTemplateSelector.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractBooleanStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
@@ -75,7 +75,7 @@
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressStyleAbstractProgressStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIGroupPresenterStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUICollectionPresenterStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
     <UpToDateCheckInput Remove="Controls\ContentOverlay.xaml" />
     <UpToDateCheckInput Remove="Controls\MarqueeTextBlock\MarqueeTextBlock.xaml" />
@@ -86,7 +86,7 @@
     <ProjectReference Include="..\OwlCore\OwlCore.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="AbstractUI\Controls\AbstractUIGroupPresenter.cs">
+    <Compile Update="AbstractUI\Controls\AbstractUICollectionPresenter.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractBooleanStyle.xaml.cs">

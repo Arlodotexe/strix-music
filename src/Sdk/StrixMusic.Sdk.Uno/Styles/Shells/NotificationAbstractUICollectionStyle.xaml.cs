@@ -1,9 +1,7 @@
-﻿using OwlCore.Uno.AbstractUI.Controls;
-using OwlCore.Uno.Controls;
+﻿using StrixMusic.Sdk.Uno.Controls;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
 
-namespace StrixMusic.Shells.Groove.Styles.Shells
+namespace StrixMusic.Sdk.Uno.Styles.Shells
 {
     /// <summary>
     /// A <see cref="ResourceDictionary"/> containing the default style for the <see cref="AbstractUICollectionPresenter"/>.
@@ -16,11 +14,6 @@ namespace StrixMusic.Shells.Groove.Styles.Shells
         public NotificationAbstractUICollectionStyle()
         {   
             this.InitializeComponent();
-        }
-
-        private void MarqueeTextControl_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            ((MarqueeTextBlock)sender).IsStopped = false;
         }
     }
 }
