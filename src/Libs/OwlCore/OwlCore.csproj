@@ -29,9 +29,16 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
 			--- 0.0.22 ---
-			Added CancellationToken parameter to EventAsTask.
+			[Breaking changes]
 			Moved EventAsTask from Threading to Flow.
+			Removed ExclusiveSynchronizationContext.
+			Refactored CachedHttpClientHandler to use events instead of Action callbacks in the constructor. Added CachedRequestFound and CachedRequestSaving events. Set e.Handled on these instead of returning true or false.
+
+			[Improvements]
 			AbstractUI now works with OwlCore.Remoting when you pass an instance to a MemberRemote.
+			Added CancellationToken parameter to EventAsTask.
+
+			[Fixes]
 			Fixed potential memory leak in OwlCore.Remoting when RemoteMessageReceivingEventArgs.Handled is set to true.
 			Fixed an issue where an instance with an overriden == operator handed to MemberRemote could interfere with instance reference checks.
 
