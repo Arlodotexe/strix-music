@@ -378,6 +378,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     /* 
                      * TODO:
+                     * 
+                     * Properly handle resizing for images that aren't in a 1:1 aspect ratio.
+                     * 
                      * Add each image to the image repository and associate it with a corresponding
                      * Album/Image/TrackMetadata instance.
                      */
@@ -421,7 +424,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 						    {
                                 // If the size of the image is equal to one of the standard image sizes,
                                 // we can skip the expensive resize operation and just copy the original image.
-
                                 useOriginal = true;
 						    }
 
@@ -459,6 +461,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     // Catch "The file is in use." error.
                 }
+                catch (UnknownImageFormatException)
+				{
+                    // TODO: Handle this better? Might be easier to just skip unsupported image formats.
+                    // Perhaps just filter them out before calling this method?
+				}
             }
         }
 
