@@ -11,6 +11,7 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using StrixMusic.Core.OneDriveCore.Storage;
 using StrixMusic.Sdk.Components;
+using StrixMusic.Sdk.Components.Explorers;
 
 namespace StrixMusic.Core.OneDriveCore
 {
@@ -34,7 +35,8 @@ namespace StrixMusic.Core.OneDriveCore
         {
             services.AddScoped(typeof(AuthenticationManager));
             services.AddScoped(typeof(OneDriveCoreStorageService));
-            services.AddScoped(x => new DefaultFileExplorer(Services));
+            services.AddScoped(typeof(FolderExplorerUIHandler));
+            services.AddScoped(x => new FolderExplorer(Services));
 
             Services = services.BuildServiceProvider();
 
@@ -100,7 +102,7 @@ namespace StrixMusic.Core.OneDriveCore
 
                 var rootFolder = await oneDriveService.GetRootFolderAsync();
 
-                await UpdateSettingsUI(rootFolder, true);
+                await InitFileExplorer(rootFolder, true);
             }
             else
             {
@@ -108,60 +110,32 @@ namespace StrixMusic.Core.OneDriveCore
             }
         }
 
-        private async Task UpdateSettingsUI(IFolderData folder, bool isRoot = false)
+        private Task InitFileExplorer(IFolderData folder, bool isRoot = false)
         {
             Guard.IsNotNull(Services, nameof(Services));
 
-            var fileExplorerService = Services.GetService<DefaultFileExplorer>();
+            var fileExplorerService = Services.GetService<FolderExplorer>();
+            var folderExplorerUIHandler = Services.GetService<FolderExplorerUIHandler>();
 
             Guard.IsNotNull(fileExplorerService, nameof(fileExplorerService));
 
-            var abstractUIElementGroup = await fileExplorerService.SetupFileExplorerAsync(folder, isRoot);
+            _ = fileExplorerService.SetupFileExplorerAsync(folder, isRoot);
 
-            AbstractUIElements = new List<AbstractUIElementGroup>
-            {
-                abstractUIElementGroup
-            };
+            Guard.IsNotNull(folderExplorerUIHandler, nameof(folderExplorerUIHandler));
 
-            Guard.IsNotNull(abstractUIElementGroup, nameof(abstractUIElementGroup));
+            folderExplorerUIHandler.FolderExplorerUIUpdated += FolderExplorerUIHandler_FolderExplorerUIUpdated;
 
-            fileExplorerService.DirectoryChanged += DataList_ItemTapped;
-
-            AbstractUIElementChanged();
+            return Task.CompletedTask;
         }
 
-        private async void DataList_ItemTapped(object sender, AbstractUIMetadata e)
+        private void FolderExplorerUIHandler_FolderExplorerUIUpdated(object sender, AbstractUIElementGroup e)
         {
-            // TODO: Move this logic to the fileExplorer.
-
-            if (sender is DefaultFileExplorer fileExplorerService)
+            AbstractUIElements = new List<AbstractUIElementGroup>
             {
-                fileExplorerService.DirectoryChanged -= DataList_ItemTapped;
+                e
+            };
 
-
-                Guard.IsNotNull(fileExplorerService, nameof(fileExplorerService));
-
-                Guard.IsNotNull(fileExplorerService.CurrentFolder, nameof(fileExplorerService.CurrentFolder));
-
-                IFolderData targetFolder;
-
-                if (!e.Id.Equals(fileExplorerService.BackBtnId))
-                {
-                    targetFolder = await fileExplorerService.CurrentFolder.GetFolderAsync(e.Title);
-                }
-                else
-                {
-                    Guard.IsNotNull(fileExplorerService.PreviousFolder, nameof(fileExplorerService.PreviousFolder));
-
-                    targetFolder = fileExplorerService.PreviousFolder;
-                }
-
-                if (targetFolder is OneDriveFolderData oneDriveFolder)
-                {
-                    await UpdateSettingsUI(targetFolder, oneDriveFolder.IsRoot);
-                }
-                else Guard.IsNotOfType<OneDriveFolderData>(targetFolder, nameof(targetFolder));
-            }
+            AbstractUIElementChanged();
         }
     }
 }

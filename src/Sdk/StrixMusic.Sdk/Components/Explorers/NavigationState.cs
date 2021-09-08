@@ -1,7 +1,7 @@
 ﻿using StrixMusic.Sdk.Components;
 
 /// <summary>
-/// Tells the state of the navigation of <see cref="IFileExplorer"/>
+/// Tells the state of the navigation of <see cref="IFolderExplorer"/>
 /// </summary>
 public enum NavigationState
 {

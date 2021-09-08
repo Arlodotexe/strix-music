@@ -9,6 +9,11 @@ namespace OwlCore.AbstractStorage
     public interface IFolderData
     {
         /// <summary>
+        /// Flag that indicates whether a folder is at the root or not, useful in file explorers/>.
+        /// </summary>
+        public bool? IsRoot { get; set; }
+
+        /// <summary>
         /// The name of the folder.
         /// </summary>
         public string Name { get; }

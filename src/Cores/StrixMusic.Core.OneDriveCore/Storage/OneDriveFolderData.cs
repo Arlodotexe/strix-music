@@ -38,11 +38,6 @@ namespace StrixMusic.Core.OneDriveCore.Storage
         }
 
         /// <summary>
-        /// Flag that indicates whether a folder is at the root or not.
-        /// </summary>
-        public bool IsRoot { get; set; }
-
-        /// <summary>
         /// OneDrive folder id.
         /// </summary>
         public string OneDriveFolderId { get; }
@@ -52,6 +47,9 @@ namespace StrixMusic.Core.OneDriveCore.Storage
 
         ///<inheritdoc />
         public string Path { get; }
+
+        ///<inheritdoc />
+        public bool? IsRoot { get; set; }
 
         ///<inheritdoc />
         public Task<IFileData> CreateFileAsync(string desiredName)
@@ -114,7 +112,7 @@ namespace StrixMusic.Core.OneDriveCore.Storage
         {
             if (ChildrenCache == null)
             {
-                ChildrenCache = await _oneDriveStorageService.GetFolderChildrenAsync(OneDriveFolderId, IsRoot);
+                ChildrenCache = await _oneDriveStorageService.GetFolderChildrenAsync(OneDriveFolderId, IsRoot.Value);
 
                 return ChildrenCache;
             }
