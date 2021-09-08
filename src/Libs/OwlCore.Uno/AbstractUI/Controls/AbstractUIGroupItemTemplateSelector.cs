@@ -31,7 +31,7 @@ namespace OwlCore.Uno.AbstractUI.Controls
                 ButtonTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(buttonTemplate));
             }
 
-            if (!new Themes.AbstractMultiChoiceUIElementStyle().TryGetValue("DefaultAbstractMultipleChoiceTemplate", out var multiChoiceTemplate))
+            if (!new Themes.AbstractMultiChoiceStyle().TryGetValue("DefaultAbstractMultipleChoiceTemplate", out var multiChoiceTemplate))
             {
                 MultiChoiceTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(multiChoiceTemplate));
             }
@@ -41,7 +41,7 @@ namespace OwlCore.Uno.AbstractUI.Controls
                 BooleanTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(booleanTemplate));
             }
 
-            if (!new Themes.AbstractProgressUIElementStyle().TryGetValue("DefaultAbstractProgressUIElementTemplate", out var progressTemplate))
+            if (!new Themes.AbstractProgressStyle().TryGetValue("DefaultAbstractProgressUIElementTemplate", out var progressTemplate))
             {
                 ProgressTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(progressTemplate));
             }
@@ -55,7 +55,7 @@ namespace OwlCore.Uno.AbstractUI.Controls
         }
 
         /// <summary>
-        /// The data template used to display an <see cref="AbstractUIElementGroup"/>.
+        /// The data template used to display an <see cref="AbstractUICollection"/>.
         /// </summary>
         public DataTemplate? ElementGroupTemplate { get; set; }
 
@@ -75,17 +75,17 @@ namespace OwlCore.Uno.AbstractUI.Controls
         public DataTemplate ButtonTemplate { get; set; }
 
         /// <summary>
-        /// The data template used to display an <see cref="AbstractBooleanUIElement"/>.
+        /// The data template used to display an <see cref="AbstractBoolean"/>.
         /// </summary>
         public DataTemplate BooleanTemplate { get; set; }
 
         /// <summary>
-        /// The data template used to display an <see cref="AbstractProgressUIElement"/>.
+        /// The data template used to display an <see cref="AbstractProgress"/>.
         /// </summary>
         public DataTemplate ProgressTemplate { get; set; }
 
         /// <summary>
-        /// The data template used to display an <see cref="AbstractMultiChoiceUIElement"/>.
+        /// The data template used to display an <see cref="AbstractMultiChoice"/>.
         /// </summary>
         public DataTemplate MultiChoiceTemplate { get; set; }
 
@@ -102,10 +102,10 @@ namespace OwlCore.Uno.AbstractUI.Controls
                 AbstractTextBoxViewModel _ => TextBoxTemplate,
                 AbstractDataListViewModel _ => DataListTemplate,
                 AbstractButtonViewModel _ => ButtonTemplate,
-                AbstractMultiChoiceUIElementViewModel _ => MultiChoiceTemplate,
+                AbstractMultiChoiceViewModel _ => MultiChoiceTemplate,
                 AbstractBooleanViewModel _ => BooleanTemplate,
-                AbstractProgressUIElementViewModel _ => ProgressTemplate,
-                AbstractUIElementGroupViewModel _ => ElementGroupTemplate,
+                AbstractProgressViewModel _ => ProgressTemplate,
+                AbstractUICollectionViewModel _ => ElementGroupTemplate,
                 _ => base.SelectTemplateCore(item, container)
             };
         }

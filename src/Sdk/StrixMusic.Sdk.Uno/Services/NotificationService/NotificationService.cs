@@ -64,7 +64,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         public Notification RaiseNotification(string title, string message)
         {
             var id = Guid.NewGuid().ToString();
-            var elementGroup = new AbstractUIElementGroup(id)
+            var elementGroup = new AbstractUICollection(id)
             {
                 Title = title,
                 Subtitle = message,
@@ -74,7 +74,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         }
 
         /// <inheritdoc/>
-        public Notification RaiseNotification(AbstractUIElementGroup elementGroup)
+        public Notification RaiseNotification(AbstractUICollection elementGroup)
         {
             var notification = new Notification(elementGroup);
 

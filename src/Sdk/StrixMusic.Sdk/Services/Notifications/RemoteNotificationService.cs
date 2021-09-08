@@ -120,7 +120,7 @@ namespace StrixMusic.Sdk.Services.Notifications
 
         /// <inheritdoc/>
         [RemoteMethod]
-        public async Task<Notification?> RaiseNotification(AbstractUIElementGroup elementGroup)
+        public async Task<Notification?> RaiseNotification(AbstractUICollection elementGroup)
         {
             if (_memberRemote.Mode == RemotingMode.Client)
             {

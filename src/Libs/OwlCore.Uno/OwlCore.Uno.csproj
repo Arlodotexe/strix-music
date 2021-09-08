@@ -55,8 +55,8 @@
     <None Remove="AbstractUI\Themes\AbstractBooleanStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractProgressUIElementStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractProgressStyleAbstractProgressStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
@@ -71,8 +71,8 @@
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractBooleanStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressUIElementStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressStyleAbstractProgressStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUIGroupPresenterStyle.xaml" />
@@ -95,8 +95,11 @@
     <Compile Update="AbstractUI\Themes\AbstractButtonStyle.xaml.cs">
       <DependentUpon>AbstractButtonStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractMultiChoiceUIElementStyle.xaml.cs">
-      <DependentUpon>AbstractMultiChoiceUIElementStyle.xaml</DependentUpon>
+    <Compile Update="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml.cs">
+      <DependentUpon>AbstractMultiChoiceStyle.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="AbstractUI\Themes\AbstractProgressStyle.xaml.cs">
+      <DependentUpon>AbstractProgressStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml.cs">
       <DependentUpon>AbstractRichTextBlockStyle.xaml</DependentUpon>

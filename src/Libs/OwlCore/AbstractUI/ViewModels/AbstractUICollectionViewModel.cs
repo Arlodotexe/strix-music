@@ -6,14 +6,14 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// A view model for <see cref="AbstractUIElementGroup"/>.
+    /// A view model for <see cref="AbstractUICollection"/>.
     /// </summary>
-    public class AbstractUIElementGroupViewModel : AbstractUIViewModelBase
+    public class AbstractUICollectionViewModel : AbstractUIViewModelBase
     {
-        private readonly AbstractUIElementGroup _model;
+        private readonly AbstractUICollection _model;
 
         /// <inheritdoc />
-        public AbstractUIElementGroupViewModel(AbstractUIElementGroup model) : base(model)
+        public AbstractUICollectionViewModel(AbstractUICollection model) : base(model)
         {
             _model = model;
             Items = SetupItemViewModels();
@@ -28,16 +28,16 @@ namespace OwlCore.AbstractUI.ViewModels
                     AbstractTextBox textBox => new AbstractTextBoxViewModel(textBox),
                     AbstractDataList dataList => new AbstractDataListViewModel(dataList),
                     AbstractButton button => new AbstractButtonViewModel(button),
-                    AbstractBooleanUIElement boolean => new AbstractBooleanViewModel(boolean),
-                    AbstractMultiChoiceUIElement multiChoiceUIElement => new AbstractMultiChoiceUIElementViewModel(multiChoiceUIElement),
-                    AbstractUIElementGroup elementGroup => new AbstractUIElementGroupViewModel(elementGroup),
+                    AbstractBoolean boolean => new AbstractBooleanViewModel(boolean),
+                    AbstractMultiChoice multiChoiceUIElement => new AbstractMultiChoiceViewModel(multiChoiceUIElement),
+                    AbstractUICollection elementGroup => new AbstractUICollectionViewModel(elementGroup),
                     _ => throw new NotImplementedException(),
                 };
             }
         }
 
         /// <summary>
-        /// Get an item from this <see cref="AbstractUIElementGroup"/>.
+        /// Get an item from this <see cref="AbstractUICollection"/>.
         /// </summary>
         /// <param name="i">The index</param>
         public AbstractUIViewModelBase this[int i] => Items.ElementAt(i);

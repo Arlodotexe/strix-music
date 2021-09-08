@@ -16,8 +16,8 @@
         <themes:AbstractBooleanStyle />
         <themes:AbstractButtonStyle />
         <themes:AbstractDataListStyle />
-        <themes:AbstractMultiChoiceUIElementStyle />
-        <themes:AbstractProgressUIElementStyle />
+        <themes:AbstractMultiChoiceStyle />
+        <themes:AbstractProgressStyle />
         <themes:AbstractRichTextBlockStyle />
         <themes:AbstractTextBoxStyle />
     </ResourceDictionary.MergedDictionaries>
@@ -42,14 +42,14 @@
         </controls:AbstractUIGroupItemTemplateSelector.DataListTemplate>
 
         <controls:AbstractUIGroupItemTemplateSelector.MultiChoiceTemplate>
-            <DataTemplate x:DataType="abstractUIVm:AbstractMultiChoiceUIElementViewModel">
+            <DataTemplate x:DataType="abstractUIVm:AbstractMultiChoiceViewModel">
                 <controls:AbstractMultiChoicePresenter />
             </DataTemplate>
         </controls:AbstractUIGroupItemTemplateSelector.MultiChoiceTemplate>
 
         <controls:AbstractUIGroupItemTemplateSelector.ProgressTemplate>
-            <DataTemplate x:DataType="abstractUIVm:AbstractProgressUIElementViewModel">
-                <controls:AbstractProgessUIElementPresenter />
+            <DataTemplate x:DataType="abstractUIVm:AbstractProgressViewModel">
+                <controls:AbstractProgessPresenter />
             </DataTemplate>
         </controls:AbstractUIGroupItemTemplateSelector.ProgressTemplate>
 

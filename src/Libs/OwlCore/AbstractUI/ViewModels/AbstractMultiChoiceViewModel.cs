@@ -9,14 +9,14 @@ using OwlCore.Extensions;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// A view model for an <see cref="AbstractMultiChoiceUIElement"/>.
+    /// A view model for an <see cref="AbstractMultiChoice"/>.
     /// </summary>
-    public class AbstractMultiChoiceUIElementViewModel : AbstractUIViewModelBase
+    public class AbstractMultiChoiceViewModel : AbstractUIViewModelBase
     {
         private int _selectedIndex;
 
         /// <inheritdoc />
-        public AbstractMultiChoiceUIElementViewModel(AbstractMultiChoiceUIElement model)
+        public AbstractMultiChoiceViewModel(AbstractMultiChoice model)
             : base(model)
         {
             ItemSelectedCommand = new RelayCommand<AbstractUIMetadataViewModel>(OnItemSelected);
@@ -27,7 +27,7 @@ namespace OwlCore.AbstractUI.ViewModels
             AttachEvents(model);
         }
 
-        private AbstractMultiChoiceItemViewModel CreateItemViewModel(AbstractUIMetadata itemModel, AbstractMultiChoiceUIElement model)
+        private AbstractMultiChoiceItemViewModel CreateItemViewModel(AbstractUIMetadata itemModel, AbstractMultiChoice model)
         {
             var newItem = new AbstractMultiChoiceItemViewModel(itemModel, Id)
             {
@@ -39,12 +39,12 @@ namespace OwlCore.AbstractUI.ViewModels
             return newItem;
         }
 
-        private void AttachEvents(AbstractMultiChoiceUIElement model)
+        private void AttachEvents(AbstractMultiChoice model)
         {
             model.ItemSelected += Model_ItemSelected;
         }
 
-        private void DetachEvents(AbstractMultiChoiceUIElement model)
+        private void DetachEvents(AbstractMultiChoice model)
         {
             model.ItemSelected -= Model_ItemSelected;
         }
@@ -64,7 +64,7 @@ namespace OwlCore.AbstractUI.ViewModels
 
                 ItemSelected?.Invoke(this, selectedItem);
 
-                ((AbstractMultiChoiceUIElement)Model).SelectedItem = (AbstractUIMetadata)selectedItem.Model;
+                ((AbstractMultiChoice)Model).SelectedItem = (AbstractUIMetadata)selectedItem.Model;
             }
         }
 
@@ -84,7 +84,7 @@ namespace OwlCore.AbstractUI.ViewModels
 
             ItemSelected?.Invoke(this, selectedItem);
 
-            Model.Cast<AbstractMultiChoiceUIElement>().SelectedItem = (AbstractUIMetadata)selectedItem.Model;
+            Model.Cast<AbstractMultiChoice>().SelectedItem = (AbstractUIMetadata)selectedItem.Model;
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace OwlCore.AbstractUI.ViewModels
         public ObservableCollection<AbstractMultiChoiceItemViewModel> Items { get; }
 
         /// <inheritdoc cref="AbstractMultiChoicePreferredDisplayMode"/>
-        public AbstractMultiChoicePreferredDisplayMode PreferredDisplayMode => ((AbstractMultiChoiceUIElement)Model).PreferredDisplayMode;
+        public AbstractMultiChoicePreferredDisplayMode PreferredDisplayMode => ((AbstractMultiChoice)Model).PreferredDisplayMode;
 
         /// <summary>
         /// The current selected item.
@@ -118,7 +118,7 @@ namespace OwlCore.AbstractUI.ViewModels
         /// <inheritdoc/>
         public override void Dispose()
         {
-            DetachEvents((AbstractMultiChoiceUIElement)Model);
+            DetachEvents((AbstractMultiChoice)Model);
 
             base.Dispose();
         }

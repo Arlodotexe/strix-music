@@ -6,12 +6,12 @@ namespace OwlCore.Uno.AbstractUI.Themes
     /// <summary>
     /// Default template for the <see cref="AbstractDataList"/>
     /// </summary>
-    public sealed partial class AbstractMultiChoiceUIElementStyle : ResourceDictionary
+    public sealed partial class AbstractMultiChoiceStyle : ResourceDictionary
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractMultiChoiceUIElementStyle"/> class.
+        /// Initializes a new instance of the <see cref="AbstractMultiChoiceStyle"/> class.
         /// </summary>
-        public AbstractMultiChoiceUIElementStyle()
+        public AbstractMultiChoiceStyle()
         {
             this.InitializeComponent();
         }

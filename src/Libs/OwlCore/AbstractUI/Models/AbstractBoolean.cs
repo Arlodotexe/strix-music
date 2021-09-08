@@ -6,17 +6,17 @@ namespace OwlCore.AbstractUI.Models
     /// <summary>
     /// Represents a UI element that has a changeable boolean value. (Checkbox, Toggle Buttons, Switches, etc)
     /// </summary>
-    public class AbstractBooleanUIElement : AbstractUIElement
+    public class AbstractBoolean : AbstractUIElement
     {
         private bool _state;
         private string _label;
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbstractBooleanUIElement"/>/
+        /// Creates a new instance of <see cref="AbstractBoolean"/>/
         /// </summary>
         /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
         /// <param name="label"><inheritdoc cref="Label"/></param>
-        public AbstractBooleanUIElement(string id, string label)
+        public AbstractBoolean(string id, string label)
             : base(id)
         {
             _label = label;

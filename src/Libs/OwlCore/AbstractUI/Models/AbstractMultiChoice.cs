@@ -7,18 +7,18 @@ namespace OwlCore.AbstractUI.Models
     /// <summary>
     /// Presents a list of multiple choices to the user for selection.
     /// </summary>
-    public class AbstractMultiChoiceUIElement : AbstractUIElement
+    public class AbstractMultiChoice : AbstractUIElement
     {
         private AbstractUIMetadata _selectedItem;
 
         /// <summary>
-        /// Creates a new instance of a <see cref="AbstractMultiChoiceUIElement"/>.
+        /// Creates a new instance of a <see cref="AbstractMultiChoice"/>.
         /// </summary>
         /// <param name="id"><inheritdoc cref="AbstractUIBase.Id"/></param>
         /// <param name="defaultSelectedItem"><inheritdoc cref="SelectedItem"/></param>
         /// <param name="items"><inheritdoc cref="Items"/></param>
 
-        public AbstractMultiChoiceUIElement(string id, AbstractUIMetadata defaultSelectedItem, IEnumerable<AbstractUIMetadata> items)
+        public AbstractMultiChoice(string id, AbstractUIMetadata defaultSelectedItem, IEnumerable<AbstractUIMetadata> items)
             : base(id)
         {
             _selectedItem = defaultSelectedItem;

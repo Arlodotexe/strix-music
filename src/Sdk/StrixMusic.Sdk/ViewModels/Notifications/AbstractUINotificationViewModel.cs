@@ -7,17 +7,17 @@ using System.Linq;
 namespace StrixMusic.Sdk.ViewModels.Notifications
 {
     /// <summary>
-    /// A view model for <see cref="AbstractUIElementGroup"/> being used as a Notification.
+    /// A view model for <see cref="AbstractUICollection"/> being used as a Notification.
     /// </summary>
     [Bindable(true)]
-    public class AbstractUINotificationViewModel : AbstractUIElementGroupViewModel
+    public class AbstractUINotificationViewModel : AbstractUICollectionViewModel
     {
         private const int MAX_BUTTONS = 3;
-        private readonly AbstractUIElementGroup _model;
+        private readonly AbstractUICollection _model;
         private ObservableCollection<AbstractButtonViewModel> _buttons;
 
         /// <inheritdoc />
-        public AbstractUINotificationViewModel(AbstractUIElementGroup model)
+        public AbstractUINotificationViewModel(AbstractUICollection model)
             : base(model)
         {
             _model = model;
@@ -33,9 +33,9 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
             // TODO: Track one ProgressBar, 2 or 3 buttons, and TBD Elements.
             foreach (var value in _model.Items)
             {
-                if (value is AbstractProgressUIElement progressUIElement)
+                if (value is AbstractProgress progressUIElement)
                 {
-                    ProgressBarViewModel = new AbstractProgressUIElementViewModel(progressUIElement);
+                    ProgressBarViewModel = new AbstractProgressViewModel(progressUIElement);
                 }
                 else if (value is AbstractButton buttonElement && ButtonViewModels.Count < MAX_BUTTONS)
                 {
@@ -56,9 +56,9 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
         public ObservableCollection<AbstractUIBase> UnhandledItems { get; set; } = new ObservableCollection<AbstractUIBase>();
 
         /// <summary>
-        /// A <see cref="AbstractProgressUIElement"/> that may appear in a notification.
+        /// A <see cref="AbstractProgress"/> that may appear in a notification.
         /// </summary>
-        public AbstractProgressUIElementViewModel? ProgressBarViewModel { get; set; }
+        public AbstractProgressViewModel? ProgressBarViewModel { get; set; }
 
         /// <summary>
         /// A list of <see cref="AbstractButton"/>s that may appear in a notification
