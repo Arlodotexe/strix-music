@@ -29,7 +29,9 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
 			--- 0.0.22 ---
-			Integrated AbstractUI with OwlCore.Remoting.
+			Added CancellationToken parameter to EventAsTask.
+			Moved EventAsTask from Threading to Flow.
+			AbstractUI now works with OwlCore.Remoting when you pass an instance to a MemberRemote.
 			Fixed potential memory leak in OwlCore.Remoting when RemoteMessageReceivingEventArgs.Handled is set to true.
 			Fixed an issue where an instance with an overriden == operator handed to MemberRemote could interfere with instance reference checks.
 
