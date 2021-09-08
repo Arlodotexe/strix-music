@@ -134,34 +134,34 @@ namespace StrixMusic.Core.OneDriveCore
         {
             // TODO: Move this logic to the fileExplorer.
 
-            ((AbstractDataList)sender).ItemTapped -= DataList_ItemTapped;
-
-            Guard.IsNotNull(Services, "Services is null.");
-
-            var fileExplorerService = Services.GetService<DefaultFileExplorer>();
-
-            Guard.IsNotNull(fileExplorerService, nameof(fileExplorerService));
-
-            Guard.IsNotNull(fileExplorerService.CurrentFolder, nameof(fileExplorerService.CurrentFolder));
-
-            IFolderData targetFolder;
-
-            if (!e.Id.Equals(fileExplorerService.BackBtnId))
+            if (sender is DefaultFileExplorer fileExplorerService)
             {
-                targetFolder = await fileExplorerService.CurrentFolder.GetFolderAsync(e.Title);
-            }
-            else
-            {
-                Guard.IsNotNull(fileExplorerService.PreviousFolder, nameof(fileExplorerService.PreviousFolder));
+                fileExplorerService.DirectoryChanged -= DataList_ItemTapped;
 
-                targetFolder = fileExplorerService.PreviousFolder;
-            }
 
-            if (targetFolder is OneDriveFolderData oneDriveFolder)
-            {
-                await UpdateSettingsUI(targetFolder, oneDriveFolder.IsRoot);
+                Guard.IsNotNull(fileExplorerService, nameof(fileExplorerService));
+
+                Guard.IsNotNull(fileExplorerService.CurrentFolder, nameof(fileExplorerService.CurrentFolder));
+
+                IFolderData targetFolder;
+
+                if (!e.Id.Equals(fileExplorerService.BackBtnId))
+                {
+                    targetFolder = await fileExplorerService.CurrentFolder.GetFolderAsync(e.Title);
+                }
+                else
+                {
+                    Guard.IsNotNull(fileExplorerService.PreviousFolder, nameof(fileExplorerService.PreviousFolder));
+
+                    targetFolder = fileExplorerService.PreviousFolder;
+                }
+
+                if (targetFolder is OneDriveFolderData oneDriveFolder)
+                {
+                    await UpdateSettingsUI(targetFolder, oneDriveFolder.IsRoot);
+                }
+                else Guard.IsNotOfType<OneDriveFolderData>(targetFolder, nameof(targetFolder));
             }
-            else Guard.IsNotOfType<OneDriveFolderData>(targetFolder, nameof(targetFolder));
         }
     }
 }

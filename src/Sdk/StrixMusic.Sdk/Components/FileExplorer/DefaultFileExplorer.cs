@@ -98,10 +98,7 @@ namespace StrixMusic.Sdk.Components
 
             var abstractDataList = new AbstractDataList("Directory", abstractMetadatas);
 
-            var selectFolder = new AbstractButton("SelectBtn", "Select Current Button")
-            {
-                Title = "Select Current Folder",
-            };
+            var selectFolder = new AbstractButton("SelectBtn", "Select Current Folder");
 
             var abstractUIGroup = new AbstractUIElementGroup("FileExplorer")
             {

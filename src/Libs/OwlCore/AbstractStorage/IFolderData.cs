@@ -9,11 +9,6 @@ namespace OwlCore.AbstractStorage
     public interface IFolderData
     {
         /// <summary>
-        /// Should be used to set unique id to a folder (Optional).
-        /// </summary>
-        public int? FolderId { get; set; }
-
-        /// <summary>
         /// The name of the folder.
         /// </summary>
         public string Name { get; }
