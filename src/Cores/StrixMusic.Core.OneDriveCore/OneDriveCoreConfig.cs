@@ -32,9 +32,9 @@ namespace StrixMusic.Core.OneDriveCore
 
         public override Task SetupConfigurationServices(IServiceCollection services)
         {
-            services.AddTransient(typeof(AuthenticationManager));
-            services.AddTransient(typeof(OneDriveCoreStorageService));
-            services.AddSingleton(typeof(DefaultFileExplorer));
+            services.AddScoped(typeof(AuthenticationManager));
+            services.AddScoped(typeof(OneDriveCoreStorageService));
+            services.AddScoped(x => new DefaultFileExplorer(Services));
 
             Services = services.BuildServiceProvider();
 
@@ -88,69 +88,80 @@ namespace StrixMusic.Core.OneDriveCore
 
             if (!string.IsNullOrWhiteSpace(_clientIdTb.Value) && !string.IsNullOrWhiteSpace(_tenantTb.Value))
             {
-                Guard.IsNotNull(authManager, "AuthenticationManager is not registered.");
+                Guard.IsNotNull(authManager, nameof(authManager));
                 authManager.Init(_clientIdTb.Value, _tenantTb.Value, _redirectUriTb.Value);
 
                 var client = await authManager.GenerateGraphToken();
 
                 var oneDriveService = Services.GetService<OneDriveCoreStorageService>();
-                Guard.IsNotNull(oneDriveService, "OneDriveService is not registered.");
+                Guard.IsNotNull(oneDriveService, nameof(oneDriveService));
 
                 oneDriveService.Init(client);
 
                 var rootFolder = await oneDriveService.GetRootFolderAsync();
 
-                await UpdateSettingsUI(rootFolder);
+                await UpdateSettingsUI(rootFolder, true);
             }
             else
             {
-                //TODO: Show error.
+                // TODO: Show error.
             }
         }
 
-        private async Task UpdateSettingsUI(IFolderData folder)
+        private async Task UpdateSettingsUI(IFolderData folder, bool isRoot = false)
         {
-            Guard.IsNotNull(Services, "Services is null.");
+            Guard.IsNotNull(Services, nameof(Services));
 
             var fileExplorerService = Services.GetService<DefaultFileExplorer>();
 
-            Guard.IsNotNull(fileExplorerService, "FileExplorer is not registered.");
+            Guard.IsNotNull(fileExplorerService, nameof(fileExplorerService));
 
-            var dataList = await fileExplorerService.SetupFileExplorerAsync(folder);
+            var abstractUIElementGroup = await fileExplorerService.SetupFileExplorerAsync(folder, isRoot);
 
             AbstractUIElements = new List<AbstractUIElementGroup>
             {
-                new AbstractUIElementGroup("SettingsGroup")
-                {
-                    Title = "OneDrive Settings.",
-
-                    Items = new List<AbstractUIElement>
-                    {
-                        dataList
-                    },
-                }
+                abstractUIElementGroup
             };
 
-            Guard.IsNotNull(dataList, "FileExplorer is not registered.");
-            dataList.ItemTapped += DataList_ItemTapped;
+            Guard.IsNotNull(abstractUIElementGroup, nameof(abstractUIElementGroup));
+
+            fileExplorerService.DirectoryChanged += DataList_ItemTapped;
 
             AbstractUIElementChanged();
         }
 
         private async void DataList_ItemTapped(object sender, AbstractUIMetadata e)
         {
+            // TODO: Move this logic to the fileExplorer.
+
             ((AbstractDataList)sender).ItemTapped -= DataList_ItemTapped;
 
             Guard.IsNotNull(Services, "Services is null.");
 
             var fileExplorerService = Services.GetService<DefaultFileExplorer>();
 
-            Guard.IsNotNull(fileExplorerService, "FileExplorer not registered.");
+            Guard.IsNotNull(fileExplorerService, nameof(fileExplorerService));
 
-            Guard.IsNotNull(fileExplorerService.CurrentFolder, "No current folder.");
+            Guard.IsNotNull(fileExplorerService.CurrentFolder, nameof(fileExplorerService.CurrentFolder));
 
-            var folder = await fileExplorerService.CurrentFolder.GetFolderAsync(e.Title);
-            await UpdateSettingsUI(folder);
+            IFolderData targetFolder;
+
+            if (!e.Id.Equals(fileExplorerService.BackBtnId))
+            {
+                targetFolder = await fileExplorerService.CurrentFolder.GetFolderAsync(e.Title);
+            }
+            else
+            {
+                Guard.IsNotNull(fileExplorerService.PreviousFolder, nameof(fileExplorerService.PreviousFolder));
+
+                targetFolder = fileExplorerService.PreviousFolder;
+            }
+
+            if (targetFolder is OneDriveFolderData oneDriveFolder)
+            {
+                await UpdateSettingsUI(targetFolder, oneDriveFolder.IsRoot);
+            }
+            else Guard.IsNotOfType<OneDriveFolderData>(targetFolder, nameof(targetFolder));
         }
     }
 }

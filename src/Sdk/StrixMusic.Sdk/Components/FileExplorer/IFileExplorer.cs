@@ -13,6 +13,36 @@ namespace StrixMusic.Sdk.Components
     public interface IFileExplorer
     {
         /// <summary>
+        /// Occurs on every directory navigation.
+        /// </summary>
+        public event EventHandler<AbstractUIMetadata>? DirectoryChanged;
+
+        /// <summary>
+        /// The navigation state of the <see cref="IFileExplorer"/>.
+        /// </summary>
+        public NavigationState NavigationState { get; }
+
+        /// <summary>
+        /// The folder queue used for navigation.
+        /// </summary>
+        public Stack<IFolderData> FolderStack { get; }
+
+        /// <summary>
+        /// Back button id.
+        /// </summary>
+        public string BackBtnId { get; }
+
+        /// <summary>
+        /// Determines whether the current directory is root or not.
+        /// </summary>
+        public bool IsRootDirectory { get; }
+
+        /// <summary>
+        /// The previous folder in queue.
+        /// </summary>
+        public IFolderData? PreviousFolder { get; }
+
+        /// <summary>
         /// Selected path of the <see cref="IFileExplorer"/>.
         /// </summary>
         public IFolderData? SelectedFolder { get; }
@@ -23,9 +53,11 @@ namespace StrixMusic.Sdk.Components
         public IFolderData? CurrentFolder { get; }
 
         /// <summary>
-        /// Initializes the <see cref="IFileExplorer"/> with <see cref="IFolderData"/>.
+        /// Setups the <see cref="IFileExplorer"/>.
         /// </summary>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
-        public Task<AbstractDataList?> SetupFileExplorerAsync(IFolderData folder);
+        /// <param name="folder">The current directory to open.</param>
+        /// <param name="isRoot">Root folder indicator.</param>
+        /// <returns>Created datalist for the UI to display.</returns>
+        public Task<AbstractUIElementGroup?> SetupFileExplorerAsync(IFolderData folder, bool isRoot = false);
     }
 }

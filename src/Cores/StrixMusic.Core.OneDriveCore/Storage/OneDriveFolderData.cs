@@ -13,7 +13,7 @@ namespace StrixMusic.Core.OneDriveCore.Storage
     /// </summary>
     public class OneDriveFolderData : IFolderData
     {
-        private OneDriveCoreStorageService _oneDriveStorageService;
+        private readonly OneDriveCoreStorageService _oneDriveStorageService;
 
         /// <summary>
         /// Holds the children of the folder.
@@ -23,6 +23,7 @@ namespace StrixMusic.Core.OneDriveCore.Storage
         /// <summary>
         /// Creates a new instance of <see cref="OneDriveFolderData"/>.
         /// </summary>
+        /// <param name="oneDriveCoreStorageService">The service that handles graph api requests.</param>
         /// <param name="name">The name of the folder.</param>
         /// <param name="path">The web url of the folder.</param>
         /// <param name="oneDriveFolderId">The id of the folder.</param>
