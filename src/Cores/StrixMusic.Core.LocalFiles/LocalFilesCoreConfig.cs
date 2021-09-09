@@ -48,7 +48,7 @@ namespace StrixMusic.Core.LocalFiles
         public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
 
         /// <inheritdoc/>
-        public event EventHandler? AbstractUIElementsChanged;
+        public virtual event EventHandler? AbstractUIElementsChanged;
 
         /// <summary>
         /// Configures services for this instance of the core.
@@ -122,14 +122,6 @@ namespace StrixMusic.Core.LocalFiles
             var folderData = await _fileSystemService.GetFolderFromPathAsync(configuredPath);
 
             return folderData;
-        }
-
-        /// <summary>
-        /// Invokes abstract ui change event.
-        /// </summary>
-        protected void AbstractUIElementChanged()
-        {
-            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

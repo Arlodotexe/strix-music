@@ -1,9 +1,9 @@
 ﻿using StrixMusic.Sdk.Components;
 
 /// <summary>
-/// Tells the state of the navigation of <see cref="IFolderExplorer"/>
+/// The most recent navigation action.
 /// </summary>
-public enum NavigationState
+public enum NavigationAction
 {
     /// <summary>
     /// No navigation occurred.

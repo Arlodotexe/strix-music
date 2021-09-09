@@ -19,15 +19,15 @@ namespace StrixMusic.Core.OneDriveCore.Services
     public class AuthenticationManager
     {
         private readonly string _authorityUri = "https://login.microsoftonline.com/consumers";
+        private readonly string[] _scopes = { "Files.Read.All" };
 
-        private string[] _scopes = { "Files.Read.All" };
         private IPublicClientApplication _clientApp;
         private Uri _authority;
 
         public string AccessToken { get; private set; }
 
         /// <summary>
-        /// Initalizes the <see cref="IPublicClientApplication"/>.
+        /// Initializes the <see cref="IPublicClientApplication"/>.
         /// </summary>
         /// <param name="clientId">The client id of the app in azure portal.</param>
         /// <param name="tenantId">The tenent id generated.</param>
@@ -97,7 +97,6 @@ namespace StrixMusic.Core.OneDriveCore.Services
                         async (requestMessage) =>
                         {
                             requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", AccessToken);
-
                         }));
                     }
 

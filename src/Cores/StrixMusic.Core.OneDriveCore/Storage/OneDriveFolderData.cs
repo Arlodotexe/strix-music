@@ -14,11 +14,7 @@ namespace StrixMusic.Core.OneDriveCore.Storage
     public class OneDriveFolderData : IFolderData
     {
         private readonly OneDriveCoreStorageService _oneDriveStorageService;
-
-        /// <summary>
-        /// Holds the children of the folder.
-        /// </summary>
-        public IEnumerable<IFolderData> ChildrenCache { get; set; }
+        private IEnumerable<IFolderData> _childrenCache { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="OneDriveFolderData"/>.
@@ -33,12 +29,13 @@ namespace StrixMusic.Core.OneDriveCore.Storage
             Path = path;
             OneDriveFolderId = oneDriveFolderId;
             IsRoot = isRoot;
+            _childrenCache = new List<IFolderData>();
 
             _oneDriveStorageService = oneDriveCoreStorageService;
         }
 
         /// <summary>
-        /// OneDrive folder id.
+        /// A unique identifier returned from OneDrive api, a folder can be uniquely identified by this id. Helpful during record reads.
         /// </summary>
         public string OneDriveFolderId { get; }
 
@@ -54,13 +51,13 @@ namespace StrixMusic.Core.OneDriveCore.Storage
         ///<inheritdoc />
         public Task<IFileData> CreateFileAsync(string desiredName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         ///<inheritdoc />
         public Task<IFileData> CreateFileAsync(string desiredName, CreationCollisionOption options)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         ///<inheritdoc />
@@ -84,7 +81,7 @@ namespace StrixMusic.Core.OneDriveCore.Storage
         ///<inheritdoc />
         public Task EnsureExists()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         ///<inheritdoc />
@@ -102,7 +99,7 @@ namespace StrixMusic.Core.OneDriveCore.Storage
         ///<inheritdoc />
         public Task<IFolderData> GetFolderAsync(string name)
         {
-            var folder = ChildrenCache.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var folder = _childrenCache.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             return Task.FromResult(folder);
         }
@@ -110,14 +107,13 @@ namespace StrixMusic.Core.OneDriveCore.Storage
         ///<inheritdoc />
         public async Task<IEnumerable<IFolderData>> GetFoldersAsync()
         {
-            if (ChildrenCache == null)
-            {
-                ChildrenCache = await _oneDriveStorageService.GetFolderChildrenAsync(OneDriveFolderId, IsRoot.Value);
+            if (_childrenCache.Any())
+                return _childrenCache;
 
-                return ChildrenCache;
-            }
+            _childrenCache = await _oneDriveStorageService.GetItemsAsync(this, IsRoot.Value);
 
-            return ChildrenCache;
+            return _childrenCache;
+
         }
 
         ///<inheritdoc />

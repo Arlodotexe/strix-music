@@ -26,10 +26,10 @@ namespace StrixMusic.Sdk.Components
         /// <summary>
         /// The navigation state of the <see cref="IFolderExplorer"/>.
         /// </summary>
-        public NavigationState NavigationState { get; }
+        public NavigationAction NavigationAction { get; }
 
         /// <summary>
-        /// The folder queue used for navigation.
+        /// The stack that holds all navigated directories, the top of the stack has the recently opened folder, the last item in the stack has the root folder.
         /// </summary>
         public Stack<IFolderData> FolderStack { get; }
 
@@ -49,7 +49,7 @@ namespace StrixMusic.Sdk.Components
         public IFolderData? SelectedFolder { get; }
 
         /// <summary>
-        /// Currently opened folder of <see cref="IFolderExplorer"/>.
+        /// Currently opened folder.
         /// </summary>
         public IFolderData? CurrentFolder { get; }
 

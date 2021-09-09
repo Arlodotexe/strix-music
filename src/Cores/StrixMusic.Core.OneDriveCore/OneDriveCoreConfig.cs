@@ -2,6 +2,7 @@
 using StrixMusic.Sdk.Data.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Core.OneDriveCore.Services;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
+using OwlCore.Extensions;
 using StrixMusic.Core.OneDriveCore.Storage;
 using StrixMusic.Sdk.Components;
 using StrixMusic.Sdk.Components.Explorers;
@@ -18,9 +20,13 @@ namespace StrixMusic.Core.OneDriveCore
     ///  <inheritdoc/>
     public class OneDriveCoreConfig : LocalFilesCoreConfig
     {
-        private AbstractTextBox _clientIdTb;
-        private AbstractTextBox _tenantTb;
-        private AbstractTextBox _redirectUriTb;
+        private AbstractTextBox? _clientIdTb;
+        private AbstractTextBox? _tenantTb;
+        private AbstractTextBox? _redirectUriTb;
+
+        /// <inheritdoc/>
+        public override event EventHandler? AbstractUIElementsChanged;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OneDriveCoreConfig"/> class.
@@ -36,7 +42,7 @@ namespace StrixMusic.Core.OneDriveCore
             services.AddSingleton(typeof(AuthenticationManager));
             services.AddSingleton(typeof(OneDriveCoreStorageService));
             services.AddSingleton(typeof(FolderExplorerUIHandler));
-            services.AddSingleton(x => new FolderExplorer(Services));
+            services.AddSingleton(new FolderExplorer(Services));
 
             Services = services.BuildServiceProvider();
 
@@ -69,8 +75,7 @@ namespace StrixMusic.Core.OneDriveCore
             {
                 new AbstractUICollection("SettingsGroup")
                 {
-                    Title="OneDrive Settings.",
-
+                    Title = "OneDrive Settings.",
                     Items = new List<AbstractUIElement>
                     {
                         _clientIdTb,
@@ -84,67 +89,70 @@ namespace StrixMusic.Core.OneDriveCore
 
         private async void StartButton_Clicked(object sender, EventArgs e)
         {
-            Guard.IsNotNull(Services, "Services are null.");
+            Guard.IsNotNull(Services, nameof(Services));
+            Guard.IsNotNull(_clientIdTb, nameof(_clientIdTb));
+            Guard.IsNotNull(_tenantTb, nameof(_tenantTb));
+            Guard.IsNotNull(_redirectUriTb, nameof(_redirectUriTb));
+
+            if (string.IsNullOrWhiteSpace(_clientIdTb.Value) || string.IsNullOrWhiteSpace(_tenantTb.Value))
+                return;
 
             var authManager = Services.GetService<AuthenticationManager>();
 
-            if (!string.IsNullOrWhiteSpace(_clientIdTb.Value) && !string.IsNullOrWhiteSpace(_tenantTb.Value))
-            {
-                Guard.IsNotNull(authManager, nameof(authManager));
-                authManager.Init(_clientIdTb.Value, _tenantTb.Value, _redirectUriTb.Value);
+            Guard.IsNotNull(authManager, nameof(authManager));
+            authManager.Init(_clientIdTb.Value, _tenantTb.Value, _redirectUriTb.Value);
 
-                var client = await authManager.GenerateGraphToken();
+            var client = await authManager.GenerateGraphToken();
 
-                var oneDriveService = Services.GetService<OneDriveCoreStorageService>();
-                Guard.IsNotNull(oneDriveService, nameof(oneDriveService));
+            var oneDriveService = Services.GetService<OneDriveCoreStorageService>();
+            Guard.IsNotNull(oneDriveService, nameof(oneDriveService));
 
-                oneDriveService.Init(client);
+            oneDriveService.Init(client);
 
-                var rootFolder = await oneDriveService.GetRootFolderAsync();
+            var rootFolder = await oneDriveService.GetRootFolderAsync();
 
-                await InitFileExplorer(rootFolder, true);
-            }
-            else
-            {
-                // TODO: Show error.
-            }
+            await InitFileExplorer(rootFolder, true);
         }
 
         private Task InitFileExplorer(IFolderData folder, bool isRoot = false)
         {
             Guard.IsNotNull(Services, nameof(Services));
 
-            var fileExplorerService = Services.GetService<FolderExplorer>();
+            var folderExplorerService = Services.GetService<FolderExplorer>();
             var folderExplorerUIHandler = Services.GetService<FolderExplorerUIHandler>();
 
-            Guard.IsNotNull(fileExplorerService, nameof(fileExplorerService));
-
-            _ = fileExplorerService.SetupFolderExplorerAsync(folder, isRoot);
-
+            Guard.IsNotNull(folderExplorerService, nameof(folderExplorerService));
             Guard.IsNotNull(folderExplorerUIHandler, nameof(folderExplorerUIHandler));
 
-            folderExplorerUIHandler.FolderExplorerUIUpdated += FolderExplorerUIHandler_FolderExplorerUIUpdated;
+            _ = folderExplorerService.SetupFolderExplorerAsync(folder, isRoot);
 
-            fileExplorerService.FolderSelected += FileExplorerService_FolderSelected;
+            AttachEvents(folderExplorerUIHandler, folderExplorerService);
 
             return Task.CompletedTask;
         }
 
-        private void FileExplorerService_FolderSelected(object sender, IFolderData e)
+        private void AttachEvents(FolderExplorerUIHandler? folderExplorerUIHandler, FolderExplorer? folderExplorerService)
+        {
+            Guard.IsNotNull(folderExplorerService, nameof(folderExplorerService));
+            Guard.IsNotNull(folderExplorerUIHandler, nameof(folderExplorerUIHandler));
+
+            folderExplorerUIHandler.FolderExplorerUIUpdated += FolderExplorerUIHandler_FolderExplorerUIUpdated;
+
+            folderExplorerService.FolderSelected += FolderExplorerService_FolderSelected;
+        }
+
+        private void FolderExplorerService_FolderSelected(object sender, IFolderData e)
         {
             AbstractUIElements = new List<AbstractUICollection>();
 
-            AbstractUIElementChanged();
+            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void FolderExplorerUIHandler_FolderExplorerUIUpdated(object sender, AbstractUICollection e)
         {
-            AbstractUIElements = new List<AbstractUICollection>
-            {
-                e
-            };
+            AbstractUIElements = e.IntoList();
 
-            AbstractUIElementChanged();
+            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -73,7 +73,7 @@ namespace StrixMusic.Shared
         }
 
         /// <summary>
-        /// Navigates the frame to <see cref="FrameworkElement"/>.
+        /// Navigates top the primary app content to the given <paramref name="element" />.
         /// </summary>
         /// <param name="element"></param>
         public void NavigateTo(FrameworkElement element)

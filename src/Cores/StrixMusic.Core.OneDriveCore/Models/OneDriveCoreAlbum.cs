@@ -15,7 +15,7 @@ namespace StrixMusic.Core.OneDriveCore.Models
         /// <param name="sourceCore">The core that created this object.</param>
         /// <param name="albumMetadata">The source album metadata to wrap around.</param>
         public OneDriveCoreAlbum(ICore sourceCore, AlbumMetadata albumMetadata)
-            :base(sourceCore,albumMetadata)
+            : base(sourceCore, albumMetadata)
         {
 
         }

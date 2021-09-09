@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.Components.Explorers
         public bool IsRootDirectory { get; private set; }
 
         ///<inheritdoc />
-        public NavigationState NavigationState { get; private set; }
+        public NavigationAction NavigationAction { get; private set; }
 
         ///<inheritdoc />
         public event EventHandler<IFolderData>? DirectoryChanged;
@@ -47,7 +47,7 @@ namespace StrixMusic.Sdk.Components.Explorers
         {
             _services = services;
 
-            NavigationState = NavigationState.None;
+            NavigationAction = NavigationAction.None;
             FolderStack = new Stack<IFolderData>();
         }
 
@@ -61,7 +61,7 @@ namespace StrixMusic.Sdk.Components.Explorers
 
             Guard.IsNotNull(_folderExplorerUIHandler, nameof(_folderExplorerUIHandler));
 
-            if (NavigationState != NavigationState.Back)
+            if (NavigationAction != NavigationAction.Back)
                 FolderStack.Push(folder);
 
             CurrentFolder = folder;
@@ -95,10 +95,9 @@ namespace StrixMusic.Sdk.Components.Explorers
             {
                 FolderStack.Pop();
                 PreviousFolder = FolderStack.FirstOrDefault();
-                NavigationState = NavigationState.Back;
+                NavigationAction = NavigationAction.Back;
 
                 Guard.IsNotNull(PreviousFolder, nameof(PreviousFolder));
-
                 Guard.IsNotNull(PreviousFolder.IsRoot, nameof(PreviousFolder.IsRoot));
 
                 await SetupFolderExplorerAsync(PreviousFolder, PreviousFolder.IsRoot.Value);
@@ -109,7 +108,7 @@ namespace StrixMusic.Sdk.Components.Explorers
             {
                 Guard.IsNotNull(e.TappedFolder, nameof(e.TappedFolder));
 
-                NavigationState = NavigationState.Forward;
+                NavigationAction = NavigationAction.Forward;
 
                 Guard.IsNotNull(e.TappedFolder.IsRoot, nameof(e.TappedFolder.IsRoot));
                 await SetupFolderExplorerAsync(e.TappedFolder, e.TappedFolder.IsRoot.Value);
