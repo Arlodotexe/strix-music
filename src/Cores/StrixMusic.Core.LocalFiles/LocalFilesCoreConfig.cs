@@ -22,7 +22,7 @@ namespace StrixMusic.Core.LocalFiles
         private ISettingsService? _settingsService;
         private bool _baseServicesSetup;
         private FileMetadataManager? _fileMetadataManager;
-        private AbstractBooleanUIElement? _initWithEmptyReposToggle;
+        private AbstractBoolean? _initWithEmptyReposToggle;
         private AbstractButton? _configDoneButton;
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace StrixMusic.Core.LocalFiles
         public LocalFilesCoreConfig(ICore sourceCore)
         {
             SourceCore = sourceCore;
-            AbstractUIElements = new List<AbstractUIElementGroup>();
+            AbstractUIElements = new List<AbstractUICollection>();
             SetupAbstractUISettings();
         }
 
@@ -42,7 +42,7 @@ namespace StrixMusic.Core.LocalFiles
         public IServiceProvider? Services { get; protected set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; protected set; }
+        public IReadOnlyList<AbstractUICollection> AbstractUIElements { get; protected set; }
 
         /// <inheritdoc />
         public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
@@ -137,7 +137,7 @@ namespace StrixMusic.Core.LocalFiles
         /// </summary>
         public virtual void SetupAbstractUISettings()
         {
-            _initWithEmptyReposToggle = new AbstractBooleanUIElement("InitWithEmptyMetadataRepos", string.Empty)
+            _initWithEmptyReposToggle = new AbstractBoolean("InitWithEmptyMetadataRepos", string.Empty)
             {
                 Title = "Ignore cache",
                 Subtitle = "Don't use any previously scanned metadata when scanning files on startup. Requires an app restart",
@@ -148,15 +148,12 @@ namespace StrixMusic.Core.LocalFiles
             _initWithEmptyReposToggle.StateChanged += InitWithEmptyReposToggleOnStateChanged;
             _configDoneButton.Clicked += ConfigDoneButton_Clicked;
 
-            AbstractUIElements = new List<AbstractUIElementGroup>
+            AbstractUIElements = new List<AbstractUICollection>
             {
-                new AbstractUIElementGroup("SettingsGroup")
+                new AbstractUICollection("SettingsGroup")
                 {
-                    Items = new List<AbstractUIElement>
-                    {
-                        _initWithEmptyReposToggle,
-                        _configDoneButton,
-                    },
+                    _initWithEmptyReposToggle,
+                    _configDoneButton,
                 },
             };
         }
@@ -164,6 +161,7 @@ namespace StrixMusic.Core.LocalFiles
         private void ConfigDoneButton_Clicked(object sender, EventArgs e)
         {
             SourceCore.Cast<LocalFilesCore>().ChangeCoreState(Sdk.Data.CoreState.Configured);
+            SourceCore.Cast<LocalFilesCore>().ChangeCoreState(Sdk.Data.CoreState.Loaded);
         }
 
         private async void InitWithEmptyReposToggleOnStateChanged(object sender, bool e)

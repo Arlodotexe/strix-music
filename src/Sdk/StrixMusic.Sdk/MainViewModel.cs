@@ -268,7 +268,7 @@ namespace StrixMusic.Sdk
                     {
                         // Wait for the configuration to complete.
                         var timeAllowedForUISetup = TimeSpan.FromMinutes(10);
-                        var updatedState = await Threading.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, timeAllowedForUISetup);
+                        var updatedState = await Flow.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, timeAllowedForUISetup);
 
                         // Timed out or cancelled.
                         if (updatedState is null || updatedState.Value.Result == CoreState.Unloaded)

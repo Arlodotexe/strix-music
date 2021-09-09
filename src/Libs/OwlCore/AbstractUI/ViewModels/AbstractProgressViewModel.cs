@@ -4,10 +4,10 @@ using System.ComponentModel;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="AbstractProgressUIElement"/>.
+    /// Contains bindable information about an <see cref="AbstractProgress"/>.
     /// </summary>
     [Bindable(true)]
-    public class AbstractProgressUIElementViewModel : AbstractUIViewModelBase
+    public class AbstractProgressViewModel : AbstractUIViewModelBase
     {
         private bool _isIndeterminate;
         private double _value;
@@ -15,41 +15,39 @@ namespace OwlCore.AbstractUI.ViewModels
         private double _maximum;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractProgressUIElementViewModel"/> class.
+        /// Initializes a new instance of the <see cref="AbstractProgressViewModel"/> class.
         /// </summary>
         /// <param name="model">The model to wrap around.</param>
-        public AbstractProgressUIElementViewModel(AbstractProgressUIElement model)
+        public AbstractProgressViewModel(AbstractProgress model)
             : base(model)
         {
             _value = model.Value ?? 0;
             _minimum = model.Minimum;
             _maximum = model.Maximum;
-            _isIndeterminate = model.Value == null;
+            _isIndeterminate = model.IsIndeterminate;
 
             AttachEvents(model);
         }
 
-        private void AttachEvents(AbstractProgressUIElement model)
+        private void AttachEvents(AbstractProgress model)
         {
             model.ValueChanged += Model_ValueChanged;
             model.MinimumChanged += Model_MinimumChanged;
             model.MaximumChanged += Model_MaximumChanged;
+            model.IsIndeterminateChanged += Model_IsIndeterminateChanged;
         }
 
-        private void DetachEvents(AbstractProgressUIElement model)
+        private void DetachEvents(AbstractProgress model)
         {
             model.ValueChanged -= Model_ValueChanged;
             model.MinimumChanged -= Model_MinimumChanged;
             model.MaximumChanged -= Model_MaximumChanged;
+            model.IsIndeterminateChanged -= Model_IsIndeterminateChanged;
         }
 
         private void Model_ValueChanged(object sender, double? e)
         {
-            _ = Threading.OnPrimaryThread(() =>
-            {
-                Value = e ?? 0;
-                IsIndeterminate = e == null;
-            });
+            _ = Threading.OnPrimaryThread(() => Value = e ?? 0);
         }
 
         private void Model_MinimumChanged(object sender, double e)
@@ -60,6 +58,11 @@ namespace OwlCore.AbstractUI.ViewModels
         private void Model_MaximumChanged(object sender, double e)
         {
             _ = Threading.OnPrimaryThread(() => Maximum = e);
+        }
+
+        private void Model_IsIndeterminateChanged(object sender, bool e)
+        {
+            _ = Threading.OnPrimaryThread(() => IsIndeterminate = e);
         }
 
         /// <summary>
@@ -101,7 +104,7 @@ namespace OwlCore.AbstractUI.ViewModels
         /// <inheritdoc/>
         public override void Dispose()
         {
-            DetachEvents((AbstractProgressUIElement)Model);
+            DetachEvents((AbstractProgress)Model);
             base.Dispose();
         }
     }

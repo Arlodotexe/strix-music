@@ -20,7 +20,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// Initializes a new instance of the <see cref="Notification"/> class.
         /// </summary>
         /// <param name="abstractUIElementGroup">The <see cref="AbstractUIElementGroup"/> to display for the notification content.</param>
-        public Notification(AbstractUIElementGroup abstractUIElementGroup)
+        public Notification(AbstractUICollection abstractUIElementGroup)
         {
             AbstractUIElementGroup = abstractUIElementGroup;
         }
@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// <summary>
         /// The <see cref="AbstractUIElementGroup"/> to be displayed for the notification.
         /// </summary>
-        public AbstractUIElementGroup AbstractUIElementGroup { get; }
+        public AbstractUICollection AbstractUIElementGroup { get; }
 
         /// <summary>
         /// If true, the notification is being displayed to the user.

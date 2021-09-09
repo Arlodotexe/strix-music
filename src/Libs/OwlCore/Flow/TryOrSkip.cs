@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace OwlCore
 {
     /// <summary>
-    /// Helper methods related to exceptions.
+    /// Helper methods related to code flow.
     /// </summary>
     public static partial class Flow
     {

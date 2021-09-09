@@ -5,8 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    mc:Ignorable="d"
-    Loaded="AppLoadingView_OnLoaded">
+    mc:Ignorable="d">
 
     <Grid Background="#1E1E23">
 
@@ -40,5 +39,38 @@
                 </GridView.ItemTemplate>
             </GridView>
         </StackPanel>
+
+        <Grid MaxWidth="425" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="6" x:Name="PrereleaseNoticeContainer">
+            <Border Background="Black" Opacity="0.8"/>
+            <StackPanel Spacing="25" Padding="40,0,40,40">
+                <Image Stretch="UniformToFill" Height="160" HorizontalAlignment="Center" CacheMode="BitmapCache">
+                    <Image.Source>
+                        <SvgImageSource x:Uid="/Startup/SplashScreenImageSVGIS" UriSource="ms-appx:///Assets/Strix/en/Wide.svg"
+                                    RasterizePixelHeight="160" RasterizePixelWidth="425" />
+                    </Image.Source>
+                </Image>
+
+                <StackPanel Spacing="10" Margin="0,-45,0,0">
+                    <StackPanel Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center">
+                        <FontIcon FontSize="23" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE98F;" />
+                        <TextBlock Text="Unfinished software ahead" FontWeight="SemiLight" FontSize="24" TextAlignment="Center" Foreground="White" />
+                    </StackPanel>
+                    <Border BorderBrush="White" Opacity="0.5" BorderThickness="1" />
+                </StackPanel>
+
+                <StackPanel Spacing="15">
+                    <TextBlock Text="This is an unfinished prerelease build of Strix Music v2." FontSize="16" TextWrapping="WrapWholeWords" />
+
+                    <TextBlock Text="We've spent over a year to get here, and we're just getting started." FontSize="16" TextWrapping="WrapWholeWords" />
+
+                    <TextBlock Text="Thank you x3000 for your support as a Patreon. Your support helps me keep this project and our community alive." FontSize="16" TextWrapping="WrapWholeWords" />
+
+                    <TextBlock Text="This software may be buggy, or have missing or incomplete features." FontSize="16" FontWeight="Bold" TextWrapping="WrapWholeWords" />
+                </StackPanel>
+
+                <Button Content="I understand" Click="AppLoadingView_OnLoaded" />
+            </StackPanel>
+        </Grid>
+
     </Grid>
 </UserControl>

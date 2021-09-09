@@ -6,13 +6,13 @@
     xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:abstractUIVm="using:OwlCore.AbstractUI.ViewModels"
     xmlns:notificationVms="using:StrixMusic.Sdk.ViewModels.Notifications"
-    x:Class="StrixMusic.Sdk.Uno.Styles.Shells.NotificationAbstractUIGroupStyle">
+    x:Class="StrixMusic.Sdk.Uno.Styles.Shells.NotificationAbstractUICollectionStyle">
 
-    <Style x:Key="DefaultNotificationAbstractUIGroupStyle" TargetType="controls:AbstractUIGroupPresenter">
+    <Style x:Key="DefaultNotificationAbstractUICollectionStyle" TargetType="controls:AbstractUICollectionPresenter">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="controls:AbstractUIGroupPresenter">
+                    <ControlTemplate TargetType="controls:AbstractUICollectionPresenter">
                         <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                             <ContentControl.ContentTemplate>
                                 <DataTemplate x:DataType="notificationVms:AbstractUINotificationViewModel">

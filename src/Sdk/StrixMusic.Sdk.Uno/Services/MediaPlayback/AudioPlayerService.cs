@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.MediaPlayback;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using Windows.Media.Core;
 using Windows.Media.Playback;
@@ -21,6 +22,8 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         private readonly MediaPlayerElement _player;
         private readonly Dictionary<string, IMediaSourceConfig> _preloadedSources;
         private readonly AudioGraphLeech _leech;
+        private IMediaSourceConfig? _currentSource;
+        private PlaybackState _playbackState;
 
         /// <summary>
         /// Creates a new instance of <see cref="AudioPlayerService"/>.
@@ -28,8 +31,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         /// <param name="player">The <see cref="MediaPlayerElement"/> to wrap around.</param>
         public AudioPlayerService(MediaPlayerElement player)
         {
-            if (player.MediaPlayer is null)
-                throw new ArgumentException(@"MediaPlayer is not present", nameof(player));
+            Guard.IsNotNull(player.MediaPlayer, nameof(player.MediaPlayer));
 
             _player = player;
             _preloadedSources = new Dictionary<string, IMediaSourceConfig>();
@@ -48,23 +50,14 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             _player.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
         }
 
-        private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
-        {
-            // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
-            PlaybackStateChanged?.Invoke(this, PlaybackState.Queued);
-        }
-
-        private void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
-        {
-            Debug.WriteLine(args.ErrorMessage);
-        }
-
         private void DetachEvents()
         {
             _player.MediaPlayer.PlaybackSession.PositionChanged -= PlaybackSessionOnPositionChanged;
             _player.MediaPlayer.PlaybackSession.PlaybackRateChanged -= PlaybackSessionOnPlaybackRateChanged;
             _player.MediaPlayer.PlaybackSession.PlaybackStateChanged -= PlaybackSessionOnPlaybackStateChanged;
             _player.MediaPlayer.VolumeChanged -= MediaPlayerOnVolumeChanged;
+            _player.MediaPlayer.MediaFailed -= MediaPlayer_MediaFailed;
+            _player.MediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
         }
 
         private void PlaybackSessionOnPlaybackStateChanged(MediaPlaybackSession sender, object args)
@@ -78,8 +71,6 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
                 MediaPlaybackState.None => PlaybackState.None,
                 _ => PlaybackState.None,
             };
-
-            PlaybackStateChanged?.Invoke(this, PlaybackState);
         }
 
         private void PlaybackSessionOnPositionChanged(MediaPlaybackSession sender, object args)
@@ -97,6 +88,17 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             VolumeChanged?.Invoke(this, sender.Volume);
         }
 
+        private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
+        {
+            // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
+            PlaybackStateChanged?.Invoke(this, PlaybackState.Queued);
+        }
+
+        private void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
+        {
+            Debug.WriteLine(args.ErrorMessage);
+        }
+
         /// <inheritdoc />
         public event EventHandler<PlaybackState>? PlaybackStateChanged;
 
@@ -112,14 +114,33 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
         /// <inheritdoc />
         public event EventHandler<float[]>? QuantumProcessed;
 
+        /// <inheritdoc/>
+        public event EventHandler<IMediaSourceConfig?>? CurrentSourceChanged;
+
         /// <inheritdoc />
-        public IMediaSourceConfig? CurrentSource { get; set; }
+        public IMediaSourceConfig? CurrentSource
+        {
+            get => _currentSource;
+            set
+            {
+                _currentSource = value;
+                CurrentSourceChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         public TimeSpan Position => _player.MediaPlayer.PlaybackSession.Position;
 
         /// <inheritdoc />
-        public PlaybackState PlaybackState { get; private set; }
+        public PlaybackState PlaybackState
+        {
+            get => _playbackState;
+            private set
+            {
+                _playbackState = value;
+                PlaybackStateChanged?.Invoke(this, value);
+            }
+        }
 
         /// <inheritdoc />
         public double Volume => _player.MediaPlayer.Volume;
@@ -165,6 +186,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
                 }
 
                 CurrentSource = sourceConfig;
+
                 _player.MediaPlayer.Play();
                 _leech.Begin();
             });

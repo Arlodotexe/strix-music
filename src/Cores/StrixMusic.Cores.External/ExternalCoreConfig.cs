@@ -19,7 +19,7 @@ namespace StrixMusic.Core.External
         public ExternalCoreConfig(string sourceCoreInstanceId)
         {
             SourceCore = ExternalCore.GetInstance(sourceCoreInstanceId);
-            AbstractUIElements = new List<AbstractUIElementGroup>();
+            AbstractUIElements = new List<AbstractUICollection>();
         }
 
         /// <inheritdoc />
@@ -29,7 +29,7 @@ namespace StrixMusic.Core.External
         public IServiceProvider? Services { get; private set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; private set; }
+        public IReadOnlyList<AbstractUICollection> AbstractUIElements { get; private set; }
 
         /// <inheritdoc />
         public MediaPlayerType PlaybackType { get; set; }

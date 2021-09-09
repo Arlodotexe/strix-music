@@ -687,15 +687,7 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry.Count));
             Guard.IsGreaterThan(limit, 0, nameof(limit));
 
-            var mappedData = new List<MappedData>();
-            if (_sortedMap.Count > 0)
-            {
-                mappedData = BuildSortedMapRanked(_sortedMap.Count);
-            }
-            else
-            {
-                mappedData = BuildSortedMapRanked();
-            }
+            var mappedData = BuildSortedMapRanked(_sortedMap.Count);
 
             _sortedMap.AddRange(mappedData);
 

@@ -883,7 +883,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await Task.Run(() => _collectionGroup.GetPlaylistItemsAsync(limit, Playlists.Count));
 
-                _ = Threading.OnPrimaryThread(() =>
+                await Threading.OnPrimaryThread(() =>
                 {
                     foreach (var item in items)
                     {
@@ -908,7 +908,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await Task.Run(() => _collectionGroup.GetTracksAsync(limit, Tracks.Count));
 
-                _ = Threading.OnPrimaryThread(() =>
+                await Threading.OnPrimaryThread(() =>
                 {
                     foreach (var item in items)
                     {
@@ -925,7 +925,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await Task.Run(() => _collectionGroup.GetAlbumItemsAsync(limit, Albums.Count));
 
-                _ = Threading.OnPrimaryThread(() =>
+                await Threading.OnPrimaryThread(() =>
                 {
                     foreach (var item in items)
                     {
@@ -950,7 +950,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await Task.Run(() => _collectionGroup.GetArtistItemsAsync(limit, Artists.Count));
 
-                _ = Threading.OnPrimaryThread(() =>
+                await Threading.OnPrimaryThread(() =>
                 {
                     foreach (var item in items)
                     {
@@ -975,7 +975,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await Task.Run(() => _collectionGroup.GetChildrenAsync(limit, Albums.Count));
 
-                _ = Threading.OnPrimaryThread(() =>
+                await Threading.OnPrimaryThread(() =>
                 {
                     foreach (var item in items)
                     {
@@ -1009,7 +1009,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await Task.Run(() => _collectionGroup.GetUrlsAsync(limit, Urls.Count));
 
-                _ = Threading.OnPrimaryThread(() =>
+                await Threading.OnPrimaryThread(() =>
                 {
                     foreach (var item in items)
                     {

@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// </summary>
         /// <returns>The created notification.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1030:Use events where appropriate", Justification = "Method raises event")]
-        Notification RaiseNotification(AbstractUIElementGroup elementGroup);
+        Notification RaiseNotification(AbstractUICollection elementGroup);
 
         /// <summary>
         /// Raised when a new notification needs to be displayed.

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Extensions;
 
 namespace OwlCore.Net.HttpClientHandlers
@@ -17,8 +18,6 @@ namespace OwlCore.Net.HttpClientHandlers
     {
         private readonly string _cacheFolderPath;
         private readonly TimeSpan _defaultCacheTime;
-        private readonly CacheRequestFilter? _shouldReturnFromCacheFilter;
-        private readonly CacheRequestFilter? _shouldSaveToCacheFilter;
 
         /// <summary>
         /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
@@ -30,25 +29,14 @@ namespace OwlCore.Net.HttpClientHandlers
         }
 
         /// <summary>
-        /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
+        /// Raised when cache is found and is about to be used.
         /// </summary>
-        public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter shouldReturnFromCacheFilter)
-        {
-            _cacheFolderPath = cacheFolderPath;
-            _defaultCacheTime = defaultCacheTime;
-            _shouldReturnFromCacheFilter = shouldReturnFromCacheFilter;
-        }
+        public event EventHandler<CachedRequestEventArgs>? CachedRequestFound;
 
         /// <summary>
-        /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
+        /// Raised when new data is retrieved and is about to be saved.
         /// </summary>
-        public CachedHttpClientHandlerAction(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter shouldReturnFromCacheFilter, CacheRequestFilter shouldSaveToCacheFilter)
-        {
-            _cacheFolderPath = cacheFolderPath;
-            _defaultCacheTime = defaultCacheTime;
-            _shouldReturnFromCacheFilter = shouldReturnFromCacheFilter;
-            _shouldSaveToCacheFilter = shouldSaveToCacheFilter;
-        }
+        public event EventHandler<CachedRequestEventArgs>? CachedRequestSaving;
 
         /// <inheritdoc cref="HttpClientHandler.SendAsync(HttpRequestMessage, CancellationToken)"/>
         public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> baseSendAsync)
@@ -59,17 +47,24 @@ namespace OwlCore.Net.HttpClientHandlers
                 Directory.CreateDirectory(path);
 
             // check if item is cached
-            var cachedEntry = ReadCachedFile(path, request.RequestUri.AbsoluteUri);
+            var cachedData = ReadCachedFile(path, request.RequestUri.AbsoluteUri);
 
-            var shouldUseCache = _shouldReturnFromCacheFilter?.Invoke(request.RequestUri, cachedEntry) ?? false;
+            var shouldUseCache = true;
+            if (cachedData != null)
+            {
+                var requestFoundEventArgs = new CachedRequestEventArgs(request.RequestUri, cachedData);
+                CachedRequestFound?.Invoke(this, requestFoundEventArgs);
 
-            if (cachedEntry != null && shouldUseCache)
+                shouldUseCache = !requestFoundEventArgs.Handled;
+            }
+
+            if (cachedData != null && shouldUseCache)
             {
                 // if cache found and not expired
-                if (cachedEntry.TimeStamp + _defaultCacheTime > DateTime.UtcNow && cachedEntry.ContentBytes != null)
+                if (cachedData.TimeStamp + _defaultCacheTime > DateTime.UtcNow && cachedData.ContentBytes != null)
                 {
                     var response = new HttpResponseMessage(HttpStatusCode.OK);
-                    response.Content = new ByteArrayContent(cachedEntry.ContentBytes);
+                    response.Content = new ByteArrayContent(cachedData.ContentBytes);
 
                     return response;
                 }
@@ -88,31 +83,46 @@ namespace OwlCore.Net.HttpClientHandlers
             }
 
             var result = await baseSendAsync();
+            var freshCacheData = await CreateCachedData(request.RequestUri.AbsoluteUri, result);
 
-            if (_shouldSaveToCacheFilter == null || _shouldSaveToCacheFilter.Invoke(request.RequestUri, cachedEntry))
-                await WriteCachedFile(path, request.RequestUri.AbsoluteUri, result);
+            var shouldSaveEventArgs = new CachedRequestEventArgs(request.RequestUri, freshCacheData);
+            CachedRequestSaving?.Invoke(this, shouldSaveEventArgs);
+
+            if (!shouldSaveEventArgs.Handled)
+                WriteCachedFile(path, freshCacheData);
 
             return result;
+        }
+
+        /// <summary>
+        /// Creates cached data.
+        /// </summary>
+        /// <param name="request">API request information.</param>
+        /// <param name="response">The response string to be cached.</param>
+        /// <returns>Returns a <see cref="Task" /> that represents the asynchronous operation.</returns>
+        public static async Task<CacheEntry> CreateCachedData(string request, HttpResponseMessage response)
+        {
+            var contentBytes = await response.Content.ReadAsByteArrayAsync();
+
+            return new CacheEntry
+            {
+                ContentBytes = contentBytes,
+                RequestUri = request,
+                TimeStamp = DateTime.UtcNow,
+            };
         }
 
         /// <summary>
         /// Writes cache to the file.
         /// </summary>
         /// <param name="path">Path to cache file.</param>
-        /// <param name="request">API request information.</param>
-        /// <param name="response">The response string to be cached.</param>
-        /// <returns>Returns a <see cref="Task" /></returns>
-        public static async Task WriteCachedFile(string path, string request, HttpResponseMessage response)
+        /// <param name="cacheEntry">The cache data to write to disk.</param>
+        /// <returns>Returns a <see cref="Task" /> that represents the asynchronous operation.</returns>
+        public static void WriteCachedFile(string path, CacheEntry cacheEntry)
         {
-            var cachedFilePath = GetCachedFilePath(path, request);
-            var contentBytes = await response.Content.ReadAsByteArrayAsync();
+            Guard.IsNotNull(cacheEntry.RequestUri, nameof(cacheEntry.RequestUri));
 
-            var cacheEntry = new CacheEntry
-            {
-                ContentBytes = contentBytes,
-                RequestUri = request,
-                TimeStamp = DateTime.UtcNow,
-            };
+            var cachedFilePath = GetCachedFilePath(path, cacheEntry.RequestUri);
 
             var serializedData = JsonSerializer.Serialize(cacheEntry);
 
@@ -170,14 +180,6 @@ namespace OwlCore.Net.HttpClientHandlers
     }
 
     /// <summary>
-    /// Decides if the given URL should return data from cache.
-    /// </summary>
-    /// <param name="uri">The URL to decide against.</param>
-    /// <param name="cacheEntry">The cache entry for this request, if found.</param>
-    /// <returns><see langword="true"/> if a cached value should be returned/cached, otherwise false.</returns>
-    public delegate bool CacheRequestFilter(Uri uri, CacheEntry? cacheEntry = null);
-
-    /// <summary>
     /// A class to hold and save cached data.
     /// </summary>
     public class CacheEntry
@@ -196,5 +198,35 @@ namespace OwlCore.Net.HttpClientHandlers
         /// Timestamp for the cache.
         /// </summary>
         public DateTime TimeStamp { get; set; }
+    }
+
+    /// <summary>
+    /// <see cref="EventArgs"/> used to handled if a request should be saved to disk or used in <see cref="CachedHttpClientHandlerAction"/>.
+    /// </summary>
+    public class CachedRequestEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref="CachedRequestEventArgs"/>.
+        /// </summary>
+        public CachedRequestEventArgs(Uri requestUri, CacheEntry cacheEntry)
+        {
+            RequestUri = requestUri;
+            CacheEntry = cacheEntry;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the event was handled.
+        /// </summary>
+        public bool Handled { get; set; }
+
+        /// <summary>
+        /// The uri of the current request.
+        /// </summary>
+        public Uri RequestUri { get; set; }
+
+        /// <summary>
+        /// The cached data, if present.
+        /// </summary>
+        public CacheEntry CacheEntry { get; set; }
     }
 }
