@@ -447,11 +447,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         for (var i = ceilingSizeIndex; i >= 0; i--)
 						{
                             var resizedSize = _standardImageSizes[i];
+                            var resizedWidth = image.Width > image.Height ? 0 : resizedSize;
+                            var resizedHeight = image.Height > image.Width ? 0 : resizedSize;
 
                             var imageFile = await fileImagesFolder.CreateFileAsync($"{imageId}-{resizedSize}.png", CreationCollisionOption.ReplaceExisting);
                             using var stream = await imageFile.GetStreamAsync(FileAccessMode.ReadWrite);
 
-                            image.Mutate(x => x.Resize(resizedSize, resizedSize));
+                            image.Mutate(x => x.Resize(resizedWidth, resizedHeight));
 
                             await image.SaveAsPngAsync(stream);
                         }
