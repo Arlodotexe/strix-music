@@ -33,10 +33,10 @@ namespace StrixMusic.Core.OneDriveCore
 
         public override Task SetupConfigurationServices(IServiceCollection services)
         {
-            services.AddScoped(typeof(AuthenticationManager));
-            services.AddScoped(typeof(OneDriveCoreStorageService));
-            services.AddScoped(typeof(FolderExplorerUIHandler));
-            services.AddScoped(x => new FolderExplorer(Services));
+            services.AddSingleton(typeof(AuthenticationManager));
+            services.AddSingleton(typeof(OneDriveCoreStorageService));
+            services.AddSingleton(typeof(FolderExplorerUIHandler));
+            services.AddSingleton(x => new FolderExplorer(Services));
 
             Services = services.BuildServiceProvider();
 
@@ -119,13 +119,22 @@ namespace StrixMusic.Core.OneDriveCore
 
             Guard.IsNotNull(fileExplorerService, nameof(fileExplorerService));
 
-            _ = fileExplorerService.SetupFileExplorerAsync(folder, isRoot);
+            _ = fileExplorerService.SetupFolderExplorerAsync(folder, isRoot);
 
             Guard.IsNotNull(folderExplorerUIHandler, nameof(folderExplorerUIHandler));
 
             folderExplorerUIHandler.FolderExplorerUIUpdated += FolderExplorerUIHandler_FolderExplorerUIUpdated;
 
+            fileExplorerService.FolderSelected += FileExplorerService_FolderSelected;
+
             return Task.CompletedTask;
+        }
+
+        private void FileExplorerService_FolderSelected(object sender, IFolderData e)
+        {
+            AbstractUIElements = new List<AbstractUIElementGroup>();
+
+            AbstractUIElementChanged();
         }
 
         private void FolderExplorerUIHandler_FolderExplorerUIUpdated(object sender, AbstractUIElementGroup e)

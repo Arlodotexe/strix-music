@@ -23,12 +23,12 @@ namespace StrixMusic.Sdk.Components.Explorers
         /// <summary>
         /// Occurs on every directory navigation.
         /// </summary>
-        public event EventHandler<NavigationEventArgs>? DirectoryChanged;
+        public event EventHandler<NavigationEventArgs>? FolderItemTapped;
 
         /// <summary>
         /// Occurs when folder selection.
         /// </summary>
-        public event EventHandler<IFolderData>? FolderSelected;
+        public event EventHandler? FolderSelectedTapped;
 
         /// <summary>
         /// Back button id.
@@ -71,18 +71,32 @@ namespace StrixMusic.Sdk.Components.Explorers
 
             var selectFolder = new AbstractButton("SelectBtn", "Select Current Folder");
 
-            var abstractUIGroup = new AbstractUIElementGroup("FileExplorer")
+            var abstractUIGroup = new AbstractUIElementGroup("Folder")
             {
-                Title = "File Explorer",
+                Title = "Folder Explorer",
                 Items = new List<AbstractUIElement>()
                 {
                     selectFolder,
                     abstractDataList
                 }
             };
+
             abstractDataList.ItemTapped += AbstractDataList_ItemTapped;
+            selectFolder.Clicked += SelectFolder_Clicked;
 
             FolderExplorerUIUpdated?.Invoke(this, abstractUIGroup);
+        }
+
+        private void SelectFolder_Clicked(object sender, EventArgs e)
+        {
+            if (sender is AbstractButton button)
+            {
+                Guard.IsNotNull(_folderDatas, nameof(_folderDatas));
+
+                button.Clicked -= SelectFolder_Clicked;
+
+                FolderSelectedTapped?.Invoke(this, e);
+            }
         }
 
         private void AbstractDataList_ItemTapped(object sender, AbstractUIMetadata e)
@@ -103,7 +117,7 @@ namespace StrixMusic.Sdk.Components.Explorers
             }
             else
             {
-                var folder = _folderDatas.FirstOrDefault(c => c.Name.Equals(e.Title));
+                var folder = _folderDatas.FirstOrDefault(c => c.Name.Equals(e.Id));
                 navEventsArgs = new NavigationEventArgs()
                 {
                     TappedFolder = folder,
@@ -111,7 +125,7 @@ namespace StrixMusic.Sdk.Components.Explorers
                 };
             }
 
-            DirectoryChanged?.Invoke(this, navEventsArgs);
+            FolderItemTapped?.Invoke(this, navEventsArgs);
         }
     }
 }

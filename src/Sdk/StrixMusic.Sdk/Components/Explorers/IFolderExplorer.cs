@@ -12,6 +12,12 @@ namespace StrixMusic.Sdk.Components
     /// </summary>
     public interface IFolderExplorer
     {
+
+        /// <summary>
+        /// Occurs won every folder selection.
+        /// </summary>
+        public event EventHandler<IFolderData>? FolderSelected;
+
         /// <summary>
         /// Occurs on every directory navigation.
         /// </summary>
@@ -53,6 +59,6 @@ namespace StrixMusic.Sdk.Components
         /// <param name="folder">The current directory to open.</param>
         /// <param name="isRoot">Root folder indicator.</param>
         /// <returns>Created datalist for the UI to display.</returns>
-        public Task SetupFileExplorerAsync(IFolderData folder, bool isRoot = false);
+        public Task SetupFolderExplorerAsync(IFolderData folder, bool isRoot = false);
     }
 }

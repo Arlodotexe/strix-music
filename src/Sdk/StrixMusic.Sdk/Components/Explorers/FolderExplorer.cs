@@ -16,6 +16,9 @@ namespace StrixMusic.Sdk.Components.Explorers
         private FolderExplorerUIHandler? _folderExplorerUIHandler;
 
         ///<inheritdoc />
+        public event EventHandler<IFolderData>? FolderSelected;
+
+        ///<inheritdoc />
         public Stack<IFolderData> FolderStack { get; private set; }
 
         ///<inheritdoc />
@@ -49,7 +52,7 @@ namespace StrixMusic.Sdk.Components.Explorers
         }
 
         ///<inheritdoc />
-        public async Task SetupFileExplorerAsync(IFolderData folder, bool isRoot = false)
+        public async Task SetupFolderExplorerAsync(IFolderData folder, bool isRoot = false)
         {
             IsRootDirectory = isRoot;
             folder.IsRoot = IsRootDirectory;
@@ -67,13 +70,26 @@ namespace StrixMusic.Sdk.Components.Explorers
 
             _folderExplorerUIHandler.SetupFileExplorerUIComponents(folders, IsRootDirectory);
 
-            _folderExplorerUIHandler.DirectoryChanged += FolderUIHandler_ItemTapped;
+            _folderExplorerUIHandler.FolderItemTapped += FolderUIHandler_ItemTapped;
+            _folderExplorerUIHandler.FolderSelectedTapped += _folderExplorerUIHandler_FolderSelectedTapped;
+        }
+
+        private void _folderExplorerUIHandler_FolderSelectedTapped(object sender, EventArgs e)
+        {
+            Guard.IsNotNull(_folderExplorerUIHandler, nameof(_folderExplorerUIHandler));
+
+            _folderExplorerUIHandler.FolderSelectedTapped -= _folderExplorerUIHandler_FolderSelectedTapped;
+
+            SelectedFolder = CurrentFolder;
+
+            Guard.IsNotNull(SelectedFolder, nameof(SelectedFolder));
+            FolderSelected?.Invoke(this, SelectedFolder);
         }
 
         private async void FolderUIHandler_ItemTapped(object sender, NavigationEventArgs e)
         {
             Guard.IsNotNull(_folderExplorerUIHandler, nameof(_folderExplorerUIHandler));
-            _folderExplorerUIHandler.DirectoryChanged -= FolderUIHandler_ItemTapped;
+            _folderExplorerUIHandler.FolderItemTapped -= FolderUIHandler_ItemTapped;
 
             if (e.BackNavigationOccurred)
             {
@@ -85,7 +101,7 @@ namespace StrixMusic.Sdk.Components.Explorers
 
                 Guard.IsNotNull(PreviousFolder.IsRoot, nameof(PreviousFolder.IsRoot));
 
-                await SetupFileExplorerAsync(PreviousFolder, PreviousFolder.IsRoot.Value);
+                await SetupFolderExplorerAsync(PreviousFolder, PreviousFolder.IsRoot.Value);
 
                 DirectoryChanged?.Invoke(this, PreviousFolder);
             }
@@ -96,7 +112,7 @@ namespace StrixMusic.Sdk.Components.Explorers
                 NavigationState = NavigationState.Forward;
 
                 Guard.IsNotNull(e.TappedFolder.IsRoot, nameof(e.TappedFolder.IsRoot));
-                await SetupFileExplorerAsync(e.TappedFolder, e.TappedFolder.IsRoot.Value);
+                await SetupFolderExplorerAsync(e.TappedFolder, e.TappedFolder.IsRoot.Value);
 
                 DirectoryChanged?.Invoke(this, e.TappedFolder);
             }
