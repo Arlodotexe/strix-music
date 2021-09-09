@@ -72,6 +72,10 @@ namespace StrixMusic.Shared
             AttachEvents(notificationService);
         }
 
+        /// <summary>
+        /// Navigates the frame to <see cref="FrameworkElement"/>.
+        /// </summary>
+        /// <param name="element"></param>
         public void NavigateTo(FrameworkElement element)
         {
             PART_ContentPresenter.Content = element;

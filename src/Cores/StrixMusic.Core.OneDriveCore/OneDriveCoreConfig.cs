@@ -65,9 +65,9 @@ namespace StrixMusic.Core.OneDriveCore
 
             startButton.Clicked += StartButton_Clicked;
 
-            AbstractUIElements = new List<AbstractUIElementGroup>
+            AbstractUIElements = new List<AbstractUICollection>
             {
-                new AbstractUIElementGroup("SettingsGroup")
+                new AbstractUICollection("SettingsGroup")
                 {
                     Title="OneDrive Settings.",
 
@@ -132,14 +132,14 @@ namespace StrixMusic.Core.OneDriveCore
 
         private void FileExplorerService_FolderSelected(object sender, IFolderData e)
         {
-            AbstractUIElements = new List<AbstractUIElementGroup>();
+            AbstractUIElements = new List<AbstractUICollection>();
 
             AbstractUIElementChanged();
         }
 
-        private void FolderExplorerUIHandler_FolderExplorerUIUpdated(object sender, AbstractUIElementGroup e)
+        private void FolderExplorerUIHandler_FolderExplorerUIUpdated(object sender, AbstractUICollection e)
         {
-            AbstractUIElements = new List<AbstractUIElementGroup>
+            AbstractUIElements = new List<AbstractUICollection>
             {
                 e
             };

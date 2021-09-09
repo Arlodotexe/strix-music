@@ -18,7 +18,7 @@ namespace StrixMusic.Sdk.Components.Explorers
         /// <summary>
         /// It's raised whenever the folder explorer ui is updated.
         /// </summary>
-        public event EventHandler<AbstractUIElementGroup>? FolderExplorerUIUpdated;
+        public event EventHandler<AbstractUICollection>? FolderExplorerUIUpdated;
 
         /// <summary>
         /// Occurs on every directory navigation.
@@ -71,7 +71,7 @@ namespace StrixMusic.Sdk.Components.Explorers
 
             var selectFolder = new AbstractButton("SelectBtn", "Select Current Folder");
 
-            var abstractUIGroup = new AbstractUIElementGroup("Folder")
+            var abstractUIGroup = new AbstractUICollection("Folder")
             {
                 Title = "Folder Explorer",
                 Items = new List<AbstractUIElement>()
