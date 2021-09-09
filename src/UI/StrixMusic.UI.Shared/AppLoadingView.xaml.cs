@@ -106,8 +106,6 @@ namespace StrixMusic.Shared
 
         private async void AppLoadingView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            PrereleaseNoticeContainer.Visibility = Visibility.Collapsed;
-
             await InitializeAssemblies();
             await InitializeServices();
             await InitializeInstanceRegistry();

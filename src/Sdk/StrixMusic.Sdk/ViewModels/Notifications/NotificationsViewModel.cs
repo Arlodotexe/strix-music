@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
         public ObservableCollection<NotificationViewModel> Notifications { get; set; } = new ObservableCollection<NotificationViewModel>();
 
         /// <summary>
-        /// Gets or sets whether or not notifications are handled by the Shell. Therefore not displayed in the AppFrame.
+        /// Gets or sets whether or not notifications are handled and shouldn't be displayed.
         /// </summary>
         public bool IsHandled
         {

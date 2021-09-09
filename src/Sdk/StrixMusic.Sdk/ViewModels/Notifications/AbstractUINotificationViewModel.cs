@@ -2,75 +2,60 @@
 using OwlCore.AbstractUI.ViewModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 
 namespace StrixMusic.Sdk.ViewModels.Notifications
 {
     /// <summary>
-    /// A view model for <see cref="AbstractUICollection"/> being used as a Notification.
+    /// Wraps an <see cref="AbstractUICollection"/> intended for Notifications and parses supported elements for rendering.
     /// </summary>
     [Bindable(true)]
     public class AbstractUINotificationViewModel : AbstractUICollectionViewModel
     {
         private const int MAX_BUTTONS = 3;
         private readonly AbstractUICollection _model;
-        private ObservableCollection<AbstractButtonViewModel> _buttons;
 
         /// <inheritdoc />
         public AbstractUINotificationViewModel(AbstractUICollection model)
             : base(model)
         {
             _model = model;
-            _buttons = new ObservableCollection<AbstractButtonViewModel>();
 
-            EvaluateExpectedElements();
+            EvaluateSupportedItems();
         }
 
-        private void EvaluateExpectedElements()
+        private void EvaluateSupportedItems()
         {
-            System.Diagnostics.Debug.WriteLine($"Evaluating notification elements ({_model.Items.Count} total)");
-
-            // TODO: Track one ProgressBar, 2 or 3 buttons, and TBD Elements.
             foreach (var value in _model.Items)
             {
-                if (value is AbstractProgress progressUIElement)
+                if (value is AbstractProgress progressUIElement && ProgressBar is null)
                 {
-                    ProgressBarViewModel = new AbstractProgressViewModel(progressUIElement);
+                    ProgressBar = new AbstractProgressViewModel(progressUIElement);
                 }
-                else if (value is AbstractButton buttonElement && ButtonViewModels.Count < MAX_BUTTONS)
+                else if (value is AbstractButton buttonElement && Buttons.Count < MAX_BUTTONS)
                 {
-                    ButtonViewModels.Add(new AbstractButtonViewModel(buttonElement));
+                    Buttons.Add(new AbstractButtonViewModel(buttonElement));
                 }
                 else
                 {
-                    UnhandledItems.Add(value);
+                    UnsupportedItems.Add(value);
                 }
             }
-
-            System.Diagnostics.Debug.WriteLine($"Finished evaluating notification elements ({ButtonViewModels.Count} total)");
         }
 
         /// <summary>
-        /// A list of <see cref="AbstractUIBase"/>s that may appear in a notification that weren't explicitly handled.
+        /// A list of <see cref="AbstractUIBase"/>s were given to the notification that aren't explicitly supported.
+        /// The can be displayed in popout window if desired.
         /// </summary>
-        public ObservableCollection<AbstractUIBase> UnhandledItems { get; set; } = new ObservableCollection<AbstractUIBase>();
+        public ObservableCollection<AbstractUIBase> UnsupportedItems { get; set; } = new ObservableCollection<AbstractUIBase>();
 
         /// <summary>
-        /// A <see cref="AbstractProgress"/> that may appear in a notification.
+        /// An <see cref="AbstractProgress"/> that may appear in a notification.
         /// </summary>
-        public AbstractProgressViewModel? ProgressBarViewModel { get; set; }
+        public AbstractProgressViewModel? ProgressBar { get; set; }
 
         /// <summary>
         /// A list of <see cref="AbstractButton"/>s that may appear in a notification
         /// </summary>
-        public ObservableCollection<AbstractButtonViewModel> ButtonViewModels
-        {
-            get => _buttons; 
-            set
-            {
-                System.Diagnostics.Debug.WriteLine($"Set {nameof(ButtonViewModels)} to {value}");
-                _buttons = value;
-            }
-        }
+        public ObservableCollection<AbstractButtonViewModel> Buttons { get; set; } = new ObservableCollection<AbstractButtonViewModel>();
     }
 }
