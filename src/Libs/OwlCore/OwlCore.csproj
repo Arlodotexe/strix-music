@@ -13,7 +13,7 @@
 		<Description>
 			Have you ever seen an owl do a barrel roll? Me neither.
 
-			This project is a constant work in progress. Until a stable release, breaking changes are possible.
+			OwlCore is a constant work in progress. Until a stable release, breaking changes are possible.
 
 			- AbstractUI - Abstract away simple UI elements as pure data. Let something else decide how to display it.
 			- AbstractStorage - Completely abstract away your storage needs, no matter how you access it.
