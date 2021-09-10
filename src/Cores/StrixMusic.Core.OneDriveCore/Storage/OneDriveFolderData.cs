@@ -1,12 +1,12 @@
 ﻿using OwlCore.AbstractStorage;
-using StrixMusic.Core.OneDriveCore.Services;
+using StrixMusic.Cores.OneDrive.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.OneDriveCore.Storage
+namespace StrixMusic.Cores.OneDrive.Storage
 {
     /// <summary>
     /// Implementation of <see cref="IFolderData"/> for OneDrive.

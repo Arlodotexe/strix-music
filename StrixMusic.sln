@@ -51,7 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Shells.ZuneHD", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Cores.External", "src\Cores\StrixMusic.Cores.External\StrixMusic.Cores.External.csproj", "{605FE63C-CA63-4F47-B27D-B36E4B0E6211}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Core.OneDriveCore", "src\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Core.OneDriveCore.csproj", "{113FD74A-31A3-4180-BDB0-F0FC27F1339C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrixMusic.Cores.OneDrive", "src\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Cores.OneDrive.csproj", "{113FD74A-31A3-4180-BDB0-F0FC27F1339C}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

@@ -1,13 +1,13 @@
 ﻿using Microsoft.Graph;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
-using StrixMusic.Core.OneDriveCore.Storage;
+using StrixMusic.Cores.OneDrive.Storage;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.OneDriveCore.Services
+namespace StrixMusic.Cores.OneDrive.Services
 {
     /// <summary>
     /// Handles are requests for OneDrive.

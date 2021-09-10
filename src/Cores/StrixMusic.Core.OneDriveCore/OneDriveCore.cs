@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrixMusic.Core.OneDriveCore
+namespace StrixMusic.Cores.OneDrive
 {
     ///<inheritdoc/>
     public class OneDriveCore : LocalFilesCore

@@ -11,7 +11,7 @@ using System.Threading;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Provisos;
 
-namespace StrixMusic.Core.OneDriveCore.Services
+namespace StrixMusic.Cores.OneDrive.Services
 {
     /// <summary>
     /// Manages MSAL authentication.

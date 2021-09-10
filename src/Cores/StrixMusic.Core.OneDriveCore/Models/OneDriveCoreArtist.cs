@@ -2,7 +2,7 @@
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Core.OneDriveCore.Models
+namespace StrixMusic.Cores.OneDrive.Models
 {
     /// <summary>
     /// Wraps around <see cref="ArtistMetadata"/> to provide artist information extracted from a file to the Strix SDK.

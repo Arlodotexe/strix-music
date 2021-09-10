@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace StrixMusic.Core.OneDriveCore.Models
+namespace StrixMusic.Cores.OneDrive.Models
 {
     /// <summary>
     /// Wraps around <see cref="TrackMetadata"/> to provide track information extracted from a file to the Strix SDK.

@@ -1,7 +1,7 @@
 ﻿using StrixMusic.Core.LocalFiles.Models;
 using StrixMusic.Sdk.Data.Core;
 
-namespace StrixMusic.Core.OneDriveCore.Models
+namespace StrixMusic.Cores.OneDrive.Models
 {
     /// <summary>
     /// The recently played items for the <see cref="OneDriveCore"/>.

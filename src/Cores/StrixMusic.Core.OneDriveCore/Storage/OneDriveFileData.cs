@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StrixMusic.Core.OneDriveCore.Storage
+namespace StrixMusic.Cores.OneDrive.Storage
 {
     public class OneDriveFileData
     {

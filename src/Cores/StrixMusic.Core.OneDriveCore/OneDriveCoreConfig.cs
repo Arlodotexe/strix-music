@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OwlCore.AbstractUI.Models;
-using StrixMusic.Core.OneDriveCore.Services;
+using StrixMusic.Cores.OneDrive.Services;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
-using StrixMusic.Core.OneDriveCore.Storage;
+using StrixMusic.Cores.OneDrive.Storage;
 using StrixMusic.Sdk.Components;
 using StrixMusic.Sdk.Components.Explorers;
 
-namespace StrixMusic.Core.OneDriveCore
+namespace StrixMusic.Cores.OneDrive
 {
     ///  <inheritdoc/>
     public class OneDriveCoreConfig : LocalFilesCoreConfig

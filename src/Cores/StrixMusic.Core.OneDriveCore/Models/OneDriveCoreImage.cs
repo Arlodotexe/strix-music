@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace StrixMusic.Core.OneDriveCore.Models
+namespace StrixMusic.Cores.OneDrive.Models
 {
     /// <inheritdoc />
     public class OneDriveCoreImage : LocalFilesCoreImage

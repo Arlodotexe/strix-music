@@ -242,9 +242,9 @@
       <Project>{617f1778-92f9-454a-b041-d71b4b63a221}</Project>
       <Name>StrixMusic.Core.LocalFiles</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Core.OneDriveCore.csproj">
+    <ProjectReference Include="..\..\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Cores.OneDrive.csproj">
       <Project>{113fd74a-31a3-4180-bdb0-f0fc27f1339c}</Project>
-      <Name>StrixMusic.Core.OneDriveCore</Name>
+      <Name>StrixMusic.Cores.OneDrive</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
       <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>
