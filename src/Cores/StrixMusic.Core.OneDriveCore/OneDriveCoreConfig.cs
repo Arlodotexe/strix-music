@@ -24,6 +24,7 @@ namespace StrixMusic.Cores.OneDrive
         private AbstractTextBox? _tenantTb;
         private AbstractTextBox? _redirectUriTb;
 
+        private AuthenticationManager? _authenticationManager;
         /// <inheritdoc/>
         public override event EventHandler? AbstractUIElementsChanged;
 
@@ -39,7 +40,6 @@ namespace StrixMusic.Cores.OneDrive
 
         public override Task SetupConfigurationServices(IServiceCollection services)
         {
-            services.AddSingleton(typeof(AuthenticationManager));
             services.AddSingleton(typeof(OneDriveCoreStorageService));
             services.AddSingleton(typeof(FolderExplorerUIHandler));
             services.AddSingleton(x => new AbstractFolderExplorer(Services));
@@ -98,12 +98,10 @@ namespace StrixMusic.Cores.OneDrive
             if (string.IsNullOrWhiteSpace(_clientIdTb.Value) || string.IsNullOrWhiteSpace(_tenantTb.Value))
                 return;
 
-            var authManager = Services.GetService<AuthenticationManager>();
+            _authenticationManager =
+                new AuthenticationManager(_clientIdTb.Value.Trim(), _tenantTb.Value.Trim(), _redirectUriTb.Value.Trim());
 
-            Guard.IsNotNull(authManager, nameof(authManager));
-            authManager.Init(_clientIdTb.Value, _tenantTb.Value, _redirectUriTb.Value);
-
-            var client = await authManager.GenerateGraphToken();
+            var client = await _authenticationManager.GenerateGraphToken();
 
             var oneDriveService = Services.GetService<OneDriveCoreStorageService>();
             Guard.IsNotNull(oneDriveService, nameof(oneDriveService));

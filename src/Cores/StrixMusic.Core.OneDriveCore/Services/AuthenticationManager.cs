@@ -24,23 +24,23 @@ namespace StrixMusic.Cores.OneDrive.Services
         private IPublicClientApplication _clientApp;
         private Uri _authority;
 
-        public string AccessToken { get; private set; }
+        public string? AccessToken { get; private set; }
 
         /// <summary>
         /// Initializes the <see cref="IPublicClientApplication"/>.
         /// </summary>
         /// <param name="clientId">The client id of the app in azure portal.</param>
-        /// <param name="tenantId">The tenent id generated.</param>
-        public void Init(string clientId, string tenantId, string redirectUri = null)
+        /// <param name="tenantId">The tenant id generated.</param>
+        public AuthenticationManager(string clientId, string tenantId, string redirectUri = null)
         {
             _authority = new Uri($"{_authorityUri}/{tenantId}");
 
             if (string.IsNullOrEmpty(redirectUri))
             {
                 _clientApp = PublicClientApplicationBuilder
-                     .Create(clientId)
-                     .WithAuthority(_authority, false)
-                     .Build();
+                    .Create(clientId)
+                    .WithAuthority(_authority, false)
+                    .Build();
             }
             else
             {
