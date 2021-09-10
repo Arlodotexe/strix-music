@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
+using StrixMusic.Sdk.Components;
+using StrixMusic.Sdk.Components.Explorers;
 
-namespace StrixMusic.Sdk.Components.Explorers
+namespace OwlCore.Services.AbstractUIStorageExplorers
 {
     /// <inheritdoc/>
-    public class FolderExplorer : IFolderExplorer
+    public class AbstractFolderExplorer : IFolderExplorer
     {
         private IServiceProvider _services;
 
@@ -40,10 +42,10 @@ namespace StrixMusic.Sdk.Components.Explorers
         public event EventHandler<IFolderData>? DirectoryChanged;
 
         /// <summary>
-        /// Creates a new instance of <see cref="FolderExplorer"/>.
+        /// Creates a new instance of <see cref="AbstractFolderExplorer"/>.
         /// </summary>
         /// <param name="services"></param>
-        public FolderExplorer(IServiceProvider services)
+        public AbstractFolderExplorer(IServiceProvider services)
         {
             _services = services;
 

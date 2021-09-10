@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
+using OwlCore.Services.AbstractUIStorageExplorers;
 using StrixMusic.Cores.OneDrive.Storage;
 using StrixMusic.Sdk.Components;
 using StrixMusic.Sdk.Components.Explorers;
@@ -42,7 +43,7 @@ namespace StrixMusic.Cores.OneDrive
             services.AddSingleton(typeof(AuthenticationManager));
             services.AddSingleton(typeof(OneDriveCoreStorageService));
             services.AddSingleton(typeof(FolderExplorerUIHandler));
-            services.AddSingleton(x => new FolderExplorer(Services));
+            services.AddSingleton(x => new AbstractFolderExplorer(Services));
 
 
             Services = services.BuildServiceProvider();
@@ -119,7 +120,7 @@ namespace StrixMusic.Cores.OneDrive
         {
             Guard.IsNotNull(Services, nameof(Services));
 
-            var folderExplorerService = Services.GetService<FolderExplorer>();
+            var folderExplorerService = Services.GetService<AbstractFolderExplorer>();
             var folderExplorerUIHandler = Services.GetService<FolderExplorerUIHandler>();
 
             Guard.IsNotNull(folderExplorerService, nameof(folderExplorerService));
@@ -132,7 +133,7 @@ namespace StrixMusic.Cores.OneDrive
             return Task.CompletedTask;
         }
 
-        private void AttachEvents(FolderExplorerUIHandler? folderExplorerUIHandler, FolderExplorer? folderExplorerService)
+        private void AttachEvents(FolderExplorerUIHandler? folderExplorerUIHandler, AbstractFolderExplorer? folderExplorerService)
         {
             Guard.IsNotNull(folderExplorerService, nameof(folderExplorerService));
             Guard.IsNotNull(folderExplorerUIHandler, nameof(folderExplorerUIHandler));
