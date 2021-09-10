@@ -66,19 +66,19 @@ namespace StrixMusic.Cores.OneDrive.Storage
         ///<inheritdoc />
         public Task<IFolderData> CreateFolderAsync(string desiredName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         ///<inheritdoc />
         public Task<IFolderData> CreateFolderAsync(string desiredName, CreationCollisionOption options)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         ///<inheritdoc />
         public Task DeleteAsync()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         ///<inheritdoc />
