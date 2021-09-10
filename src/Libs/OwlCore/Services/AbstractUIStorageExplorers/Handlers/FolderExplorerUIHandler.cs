@@ -116,7 +116,7 @@ namespace OwlCore.Services.AbstractUIStorageExplorers.Handlers
             }
             else
             {
-                var folder = _folderDatas.FirstOrDefault(c => c.Name.Equals(e.Id));
+                var folder = _folderDatas.FirstOrDefault(c => c.Name.Equals(e.Title));
                 navEventsArgs = new NavigationEventArgs()
                 {
                     TappedFolder = folder,
