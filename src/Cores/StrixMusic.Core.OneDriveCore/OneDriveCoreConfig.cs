@@ -42,7 +42,8 @@ namespace StrixMusic.Cores.OneDrive
             services.AddSingleton(typeof(AuthenticationManager));
             services.AddSingleton(typeof(OneDriveCoreStorageService));
             services.AddSingleton(typeof(FolderExplorerUIHandler));
-            services.AddSingleton(new FolderExplorer(Services));
+            services.AddSingleton(x => new FolderExplorer(Services));
+
 
             Services = services.BuildServiceProvider();
 
