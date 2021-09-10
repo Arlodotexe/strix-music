@@ -56,7 +56,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         }
 
         /// <inheritdoc/>
-        public int MaxActiveNotifications { get; set; } = 1;
+        public int MaxActiveNotifications { get; set; } = 3;
 
         /// <inheritdoc/>
         public Notification RaiseNotification(string title, string message)
@@ -145,6 +145,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
                 if (nextNotification == null)
                     return;
 
+                _pendingNotifications.Remove(nextNotification);
                 _activeNotifications.Add(nextNotification);
                 NotificationRaised?.Invoke(this, nextNotification);
             }
