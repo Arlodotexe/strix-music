@@ -8,7 +8,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Author>Arlo Godfrey</Author>
-		<Version>0.0.23</Version>
+		<Version>0.0.24</Version>
 		<Product>OwlCore</Product>
 		<Description>
 			Have you ever seen an owl do a barrel roll? Me neither.
@@ -28,6 +28,10 @@
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
+			--- 0.0.24 ---
+			[Fixes]
+			Fixed issue where "isIndeterminate" parameter of AbstractProgressIndicator wasn't being set from the ctor.
+			
 			--- 0.0.23 ---
 			[Breaking changes]
 			Renamed OwlCore.AbstractUI.Models.AbstractProgress to OwlCore.AbstractUI.Models.AbstractProgressIndicator.

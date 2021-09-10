@@ -36,7 +36,7 @@ namespace OwlCore.AbstractUI.Models
         public AbstractProgressIndicator(string id, bool isIndeterminate)
             : base(id)
         {
-
+            IsIndeterminate = isIndeterminate;
         }
 
         /// <summary>
