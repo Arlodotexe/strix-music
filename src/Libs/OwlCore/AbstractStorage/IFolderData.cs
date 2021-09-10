@@ -19,11 +19,6 @@ namespace OwlCore.AbstractStorage
         public string Path { get; }
 
         /// <summary>
-        /// Flag that determines if the folder is root or not. Useful when dealing with folder explorers.
-        /// </summary>
-        public bool? IsRoot { get; set; }
-
-        /// <summary>
         /// The parent folder that contains this file.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the parent folder.</returns>

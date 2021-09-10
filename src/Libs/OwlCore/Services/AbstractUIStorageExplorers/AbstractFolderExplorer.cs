@@ -33,11 +33,13 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
         /// </summary>
         public Stack<IFolderData> FolderStack { get; private set; }
 
-        ///<inheritdoc />
+        /// <summary>
+        /// Holds the previous folder when navigating back.
+        /// </summary>
         public IFolderData? PreviousFolder { get; private set; }
 
         /// <summary>
-        /// Selected path of the <see cref="IFolderExplorer"/>.
+        /// Selected path of the <see cref="AbstractFolderExplorer"/>.
         /// </summary>
         public IFolderData? SelectedFolder { get; private set; }
 
@@ -52,7 +54,7 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
         public bool IsRootDirectory { get; private set; }
 
         /// <summary>
-        /// The navigation state of the <see cref="IFolderExplorer"/>.
+        /// The navigation state of the <see cref="AbstractFolderExplorer"/>.
         /// </summary>
         public NavigationAction NavigationAction { get; private set; }
 
@@ -69,7 +71,7 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
         }
 
         /// <summary>
-        /// Setups the <see cref="IFolderExplorer"/>.
+        /// Setups the <see cref="AbstractFolderExplorer"/>.
         /// </summary>
         /// <param name="folder">The current directory to open.</param>
         /// <param name="isRoot">Root folder indicator.</param>
@@ -77,7 +79,6 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
         public async Task SetupFolderExplorerAsync(IFolderData folder, bool isRoot = false)
         {
             IsRootDirectory = isRoot;
-            folder.IsRoot = IsRootDirectory;
 
             _folderExplorerUIHandler = _services.GetService<FolderExplorerUIHandler>();
 
@@ -120,9 +121,9 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
                 NavigationAction = NavigationAction.Back;
 
                 Guard.IsNotNull(PreviousFolder, nameof(PreviousFolder));
-                Guard.IsNotNull(PreviousFolder.IsRoot, nameof(PreviousFolder.IsRoot));
 
-                await SetupFolderExplorerAsync(PreviousFolder, PreviousFolder.IsRoot.Value);
+
+                await SetupFolderExplorerAsync(PreviousFolder, PreviousFolder.Name.Equals("root", StringComparison.OrdinalIgnoreCase));
 
                 DirectoryChanged?.Invoke(this, PreviousFolder);
             }
@@ -132,8 +133,7 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
 
                 NavigationAction = NavigationAction.Forward;
 
-                Guard.IsNotNull(e.TappedFolder.IsRoot, nameof(e.TappedFolder.IsRoot));
-                await SetupFolderExplorerAsync(e.TappedFolder, e.TappedFolder.IsRoot.Value);
+                await SetupFolderExplorerAsync(e.TappedFolder, e.TappedFolder.Name.Equals("root", StringComparison.OrdinalIgnoreCase));
 
                 DirectoryChanged?.Invoke(this, e.TappedFolder);
             }

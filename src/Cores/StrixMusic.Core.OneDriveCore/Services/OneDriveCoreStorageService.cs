@@ -31,7 +31,7 @@ namespace StrixMusic.Cores.OneDrive.Services
         {
             var driveItem = await _graphClient.Drive.Root.Request().Expand(_expandString).GetAsync();
 
-            return new OneDriveFolderData(this, driveItem.Name, driveItem.WebUrl, driveItem.Id, true);
+            return new OneDriveFolderData(this, driveItem.Name, driveItem.WebUrl, driveItem.Id);
         }
 
         /// <summary>

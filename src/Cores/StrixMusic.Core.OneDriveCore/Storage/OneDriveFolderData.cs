@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cauldron.Interception;
 
 namespace StrixMusic.Cores.OneDrive.Storage
 {
@@ -28,9 +29,9 @@ namespace StrixMusic.Cores.OneDrive.Storage
             Name = name;
             Path = path;
             OneDriveFolderId = oneDriveFolderId;
-            IsRoot = isRoot;
             _childrenCache = new List<IFolderData>();
 
+            IsRoot = isRoot;
             _oneDriveStorageService = oneDriveCoreStorageService;
         }
 
@@ -45,8 +46,10 @@ namespace StrixMusic.Cores.OneDrive.Storage
         ///<inheritdoc />
         public string Path { get; }
 
-        ///<inheritdoc />
-        public bool? IsRoot { get; set; }
+        /// <summary>
+        /// Flag that determines if the folder is root or not. Useful when dealing with folder explorers.
+        /// </summary>
+        public bool IsRoot { get; set; }
 
         ///<inheritdoc />
         public Task<IFileData> CreateFileAsync(string desiredName)
@@ -110,7 +113,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
             if (_childrenCache.Any())
                 return _childrenCache;
 
-            _childrenCache = await _oneDriveStorageService.GetItemsAsync(this, IsRoot.Value);
+            _childrenCache = await _oneDriveStorageService.GetItemsAsync(this, IsRoot);
 
             return _childrenCache;
 
