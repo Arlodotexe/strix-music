@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 
-namespace StrixMusic.Sdk.Components.Explorers
+namespace OwlCore.Services.AbstractUIStorageExplorers.Handlers
 {
     /// <summary>
     /// Creates and handles events for <see cref="IFolderExplorer"/>

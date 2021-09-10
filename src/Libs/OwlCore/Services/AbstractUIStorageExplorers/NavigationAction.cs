@@ -1,6 +1,4 @@
-﻿using StrixMusic.Sdk.Components;
-
-/// <summary>
+﻿/// <summary>
 /// The most recent navigation action.
 /// </summary>
 public enum NavigationAction

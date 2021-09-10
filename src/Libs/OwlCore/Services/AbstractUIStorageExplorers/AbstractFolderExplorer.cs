@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
+using OwlCore.Services.AbstractUIStorageExplorers.Handlers;
 using StrixMusic.Sdk.Components;
-using StrixMusic.Sdk.Components.Explorers;
 
 namespace OwlCore.Services.AbstractUIStorageExplorers
 {

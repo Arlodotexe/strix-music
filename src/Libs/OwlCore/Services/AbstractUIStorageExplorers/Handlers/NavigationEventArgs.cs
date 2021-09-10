@@ -1,7 +1,7 @@
 ﻿using System;
 using OwlCore.AbstractStorage;
 
-namespace StrixMusic.Sdk.Components.Explorers
+namespace OwlCore.Services.AbstractUIStorageExplorers.Handlers
 {
     /// <summary>
     /// Event arguments for navigation.

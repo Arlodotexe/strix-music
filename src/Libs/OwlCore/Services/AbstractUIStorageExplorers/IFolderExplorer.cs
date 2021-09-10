@@ -1,11 +1,9 @@
-﻿using OwlCore.AbstractStorage;
-using OwlCore.AbstractUI.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using OwlCore.AbstractStorage;
 
-namespace StrixMusic.Sdk.Components
+namespace OwlCore.Services.AbstractUIStorageExplorers
 {
     /// <summary>
     /// File explorer that lets user choose a folder using <see cref="IFolderData"/> and <see cref="IFileData"/>
