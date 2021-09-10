@@ -14,7 +14,7 @@ namespace StrixMusic.Cores.OneDrive.Services
     /// </summary>
     public class OneDriveCoreStorageService
     {
-        private GraphServiceClient _graphClient;
+        private GraphServiceClient? _graphClient;
 
         private string _expandString => "children";
 
@@ -24,6 +24,8 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// <param name="graphClient"></param>
         public void Init(GraphServiceClient graphClient)
         {
+            Guard.IsNotNull(graphClient, nameof(graphClient));
+
             _graphClient = graphClient;
         }
 

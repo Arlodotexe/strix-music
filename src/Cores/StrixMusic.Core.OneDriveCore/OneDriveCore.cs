@@ -6,12 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using StrixMusic.Cores.OneDrive.Services;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Cores.OneDrive
 {
     ///<inheritdoc/>
     public class OneDriveCore : LocalFilesCore
     {
+        private ISettingsService? _settingsService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OneDriveCore"/> class.
         /// </summary>
@@ -28,13 +32,40 @@ namespace StrixMusic.Cores.OneDrive
         {
             ChangeCoreState(Sdk.Data.CoreState.Loading);
 
-            if (!(CoreConfig is LocalFilesCoreConfig coreConfig))
+            if (!(CoreConfig is OneDriveCoreConfig coreConfig))
                 return;
 
-            await coreConfig.SetupConfigurationServices(services);
-            coreConfig.SetupAbstractUISettings();
+            _settingsService = new OneDriveCoreSettingsService(InstanceId);
 
-            ChangeCoreState(Sdk.Data.CoreState.NeedsSetup);
+            // TODO: they can happen in parallel.
+            var clientId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId));
+            var folderPath = await _settingsService.GetValue<string>( nameof(OneDriveCoreSettingsKeys.FolderPath));
+            var tenantId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId));
+            var redirectUri = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri));
+
+            await coreConfig.SetupConfigurationServices(services);
+
+            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(folderPath) || string.IsNullOrEmpty(tenantId))
+            {
+                coreConfig.SetupAbstractUISettings();
+
+                ChangeCoreState(Sdk.Data.CoreState.NeedsSetup);
+            }
+            else
+            {
+                var tokenAcquired = await coreConfig.SetupAuthenticationManager(clientId, tenantId, redirectUri);
+
+                if (tokenAcquired)
+                {
+                    ChangeCoreState(Sdk.Data.CoreState.Configured);
+                    return;
+                }
+
+                ChangeCoreState(Sdk.Data.CoreState.NeedsSetup);
+                coreConfig.SetupAbstractUISettings();
+            }
+
+
         }
     }
 }

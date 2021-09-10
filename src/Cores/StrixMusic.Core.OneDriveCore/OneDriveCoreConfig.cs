@@ -8,12 +8,15 @@ using OwlCore.AbstractUI.Models;
 using StrixMusic.Cores.OneDrive.Services;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Graph;
 using Microsoft.Toolkit.Diagnostics;
+using Nito.AsyncEx;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using OwlCore.Services.AbstractUIStorageExplorers;
 using OwlCore.Services.AbstractUIStorageExplorers.Handlers;
 using StrixMusic.Cores.OneDrive.Storage;
+using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Cores.OneDrive
 {
@@ -23,7 +26,9 @@ namespace StrixMusic.Cores.OneDrive
         private AbstractTextBox? _clientIdTb;
         private AbstractTextBox? _tenantTb;
         private AbstractTextBox? _redirectUriTb;
+        private GraphServiceClient? _graphServiceClient;
 
+        private ISettingsService? _settingsService;
         private AuthenticationManager? _authenticationManager;
         /// <inheritdoc/>
         public override event EventHandler? AbstractUIElementsChanged;
@@ -41,8 +46,9 @@ namespace StrixMusic.Cores.OneDrive
         {
             services.AddSingleton(typeof(OneDriveCoreStorageService));
             services.AddSingleton(typeof(FolderExplorerUIHandler));
+
             services.AddSingleton(x => new AbstractFolderExplorer(Services));
-           
+
             Services = services.BuildServiceProvider();
 
             return Task.CompletedTask;
@@ -51,6 +57,7 @@ namespace StrixMusic.Cores.OneDrive
         ///<inheritdoc/>
         public override void SetupAbstractUISettings()
         {
+
             _clientIdTb = new AbstractTextBox("ClientId", string.Empty)
             {
                 PlaceholderText = "Enter client id here.",
@@ -84,6 +91,24 @@ namespace StrixMusic.Cores.OneDrive
                     },
                 }
             };
+
+            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Setups the graph client using the credentials, and prepares an action for access token.
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <param name="tenantId"></param>
+        /// <param name="redirectUri"></param>
+        /// <returns></returns>
+        public async Task<bool> SetupAuthenticationManager(string clientId, string tenantId, string redirectUri = null)
+        {
+            _authenticationManager =
+                new AuthenticationManager(clientId, tenantId, redirectUri);
+
+            _graphServiceClient = await _authenticationManager.GenerateGraphToken();
+            return _graphServiceClient != null;
         }
 
         private async void StartButton_Clicked(object sender, EventArgs e)
@@ -93,18 +118,34 @@ namespace StrixMusic.Cores.OneDrive
             Guard.IsNotNull(_tenantTb, nameof(_tenantTb));
             Guard.IsNotNull(_redirectUriTb, nameof(_redirectUriTb));
 
+
             if (string.IsNullOrWhiteSpace(_clientIdTb.Value) || string.IsNullOrWhiteSpace(_tenantTb.Value))
                 return;
 
-            _authenticationManager =
-                new AuthenticationManager(_clientIdTb.Value.Trim(), _tenantTb.Value.Trim(), _redirectUriTb.Value.Trim());
+            var tokenAcquired = await SetupAuthenticationManager(_clientIdTb.Value.Trim(), _tenantTb.Value.Trim(), _redirectUriTb.Value.Trim());
 
-            var client = await _authenticationManager.GenerateGraphToken();
+            if (!tokenAcquired)
+            {
+                // TODO: Show error: Unauthorized to get access token.
+                return;
+            }
+
+            _settingsService = new OneDriveCoreSettingsService(SourceCore.InstanceId);
+
+            var saveTasks = new List<Task>
+            {
+                _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri), _redirectUriTb.Value.Trim()),
+                _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId), _clientIdTb.Value.Trim()),
+                _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId), _tenantTb.Value.Trim()),
+            };
+
+            await saveTasks.WhenAll();
 
             var oneDriveService = Services.GetService<OneDriveCoreStorageService>();
             Guard.IsNotNull(oneDriveService, nameof(oneDriveService));
+            Guard.IsNotNull(_graphServiceClient, nameof(_graphServiceClient));
 
-            oneDriveService.Init(client);
+            oneDriveService.Init(_graphServiceClient);
 
             var rootFolder = await oneDriveService.GetRootFolderAsync();
 
@@ -141,6 +182,16 @@ namespace StrixMusic.Cores.OneDrive
         private void FolderExplorerService_FolderSelected(object sender, IFolderData e)
         {
             AbstractUIElements = new List<AbstractUICollection>();
+
+            var folderExplorerService = Services.GetService<AbstractFolderExplorer>();
+
+            Guard.IsNotNull(folderExplorerService, nameof(folderExplorerService));
+            folderExplorerService.FolderSelected -= FolderExplorerService_FolderSelected;
+
+            Guard.IsNotNull(_settingsService, nameof(OneDriveCoreSettingsService));
+            _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.FolderPath), e.Path);
+
+            SourceCore.Cast<LocalFilesCore>().ChangeCoreState(Sdk.Data.CoreState.Configured);
 
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
