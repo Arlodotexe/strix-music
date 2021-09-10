@@ -32,7 +32,6 @@ namespace StrixMusic.Core.LocalFiles
         {
             SourceCore = sourceCore;
             AbstractUIElements = new List<AbstractUICollection>();
-            SetupAbstractUISettings();
         }
 
         /// <inheritdoc />

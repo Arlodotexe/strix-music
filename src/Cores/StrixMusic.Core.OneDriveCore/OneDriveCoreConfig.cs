@@ -35,7 +35,6 @@ namespace StrixMusic.Cores.OneDrive
         public OneDriveCoreConfig(ICore sourceCore)
             : base(sourceCore)
         {
-            SetupAbstractUISettings();
         }
 
         public override Task SetupConfigurationServices(IServiceCollection services)
@@ -43,8 +42,7 @@ namespace StrixMusic.Cores.OneDrive
             services.AddSingleton(typeof(OneDriveCoreStorageService));
             services.AddSingleton(typeof(FolderExplorerUIHandler));
             services.AddSingleton(x => new AbstractFolderExplorer(Services));
-
-
+           
             Services = services.BuildServiceProvider();
 
             return Task.CompletedTask;

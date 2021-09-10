@@ -32,6 +32,7 @@ namespace StrixMusic.Cores.OneDrive
                 return;
 
             await coreConfig.SetupConfigurationServices(services);
+            coreConfig.SetupAbstractUISettings();
 
             ChangeCoreState(Sdk.Data.CoreState.NeedsSetup);
         }

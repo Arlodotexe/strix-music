@@ -122,6 +122,7 @@ namespace StrixMusic.Core.LocalFiles
             InstanceDescriptor = configuredFolder.Path;
             InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
 
+            coreConfig.SetupAbstractUISettings();
             await coreConfig.SetupServices(services);
             await Library.Cast<LocalFilesCoreLibrary>().InitAsync();
 
