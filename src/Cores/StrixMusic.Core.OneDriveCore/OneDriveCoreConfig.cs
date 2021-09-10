@@ -14,7 +14,6 @@ using OwlCore.Extensions;
 using OwlCore.Services.AbstractUIStorageExplorers;
 using OwlCore.Services.AbstractUIStorageExplorers.Handlers;
 using StrixMusic.Cores.OneDrive.Storage;
-using StrixMusic.Sdk.Components;
 
 namespace StrixMusic.Cores.OneDrive
 {

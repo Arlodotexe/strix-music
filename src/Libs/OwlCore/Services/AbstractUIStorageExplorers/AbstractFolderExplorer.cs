@@ -6,40 +6,55 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Services.AbstractUIStorageExplorers.Handlers;
-using StrixMusic.Sdk.Components;
 
 namespace OwlCore.Services.AbstractUIStorageExplorers
 {
-    /// <inheritdoc/>
-    public class AbstractFolderExplorer : IFolderExplorer
+    /// <summary>
+    /// File explorer that lets user choose a folder using <see cref="IFolderData"/> and <see cref="IFileData"/>
+    /// </summary>
+    public class AbstractFolderExplorer
     {
         private IServiceProvider _services;
 
         private FolderExplorerUIHandler? _folderExplorerUIHandler;
 
-        ///<inheritdoc />
+        /// <summary>
+        /// Occurs won every folder selection.
+        /// </summary>
         public event EventHandler<IFolderData>? FolderSelected;
 
-        ///<inheritdoc />
+        /// <summary>
+        /// Occurs on every directory navigation.
+        /// </summary>
+        public event EventHandler<IFolderData>? DirectoryChanged;
+
+        /// <summary>
+        /// The stack that holds all navigated directories, the top of the stack has the recently opened folder, the last item in the stack has the root folder.
+        /// </summary>
         public Stack<IFolderData> FolderStack { get; private set; }
 
         ///<inheritdoc />
         public IFolderData? PreviousFolder { get; private set; }
 
-        ///<inheritdoc />
+        /// <summary>
+        /// Selected path of the <see cref="IFolderExplorer"/>.
+        /// </summary>
         public IFolderData? SelectedFolder { get; private set; }
 
-        ///<inheritdoc />
+        /// <summary>
+        /// Currently opened folder.
+        /// </summary>
         public IFolderData? CurrentFolder { get; private set; }
 
-        ///<inheritdoc />
+        /// <summary>
+        /// Determines whether the current directory is root or not.
+        /// </summary>
         public bool IsRootDirectory { get; private set; }
 
-        ///<inheritdoc />
+        /// <summary>
+        /// The navigation state of the <see cref="IFolderExplorer"/>.
+        /// </summary>
         public NavigationAction NavigationAction { get; private set; }
-
-        ///<inheritdoc />
-        public event EventHandler<IFolderData>? DirectoryChanged;
 
         /// <summary>
         /// Creates a new instance of <see cref="AbstractFolderExplorer"/>.
@@ -53,7 +68,12 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
             FolderStack = new Stack<IFolderData>();
         }
 
-        ///<inheritdoc />
+        /// <summary>
+        /// Setups the <see cref="IFolderExplorer"/>.
+        /// </summary>
+        /// <param name="folder">The current directory to open.</param>
+        /// <param name="isRoot">Root folder indicator.</param>
+        /// <returns>Created datalist for the UI to display.</returns>
         public async Task SetupFolderExplorerAsync(IFolderData folder, bool isRoot = false)
         {
             IsRootDirectory = isRoot;

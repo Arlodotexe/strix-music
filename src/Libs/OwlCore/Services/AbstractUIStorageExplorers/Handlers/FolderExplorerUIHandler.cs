@@ -8,7 +8,7 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.Services.AbstractUIStorageExplorers.Handlers
 {
     /// <summary>
-    /// Creates and handles events for <see cref="IFolderExplorer"/>
+    /// Creates and handles events for <see cref="FolderExplorerUIHandler"/>
     /// </summary>
     public class FolderExplorerUIHandler
     {
@@ -35,7 +35,7 @@ namespace OwlCore.Services.AbstractUIStorageExplorers.Handlers
         public const string BACK_BTN_ID = "BackBtn";
 
         /// <summary>
-        /// Creates the <see cref="AbstractUIElementGroup"/> for <see cref="IFolderExplorer"/>.
+        /// Creates the <see cref="AbstractUICollection"/> for <see cref="FolderExplorerUIHandler"/>.
         /// </summary>
         /// <param name="folderDatas">The folder listing.</param>
         /// <param name="isRoot">Determines whether current directory is a root directory or not.</param>
