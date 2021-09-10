@@ -4,10 +4,10 @@ using System.ComponentModel;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="AbstractProgress"/>.
+    /// Contains bindable information about an <see cref="AbstractProgressIndicator"/>.
     /// </summary>
     [Bindable(true)]
-    public class AbstractProgressViewModel : AbstractUIViewModelBase
+    public class AbstractProgressIndicatorViewModel : AbstractUIViewModelBase
     {
         private bool _isIndeterminate;
         private double _value;
@@ -15,10 +15,10 @@ namespace OwlCore.AbstractUI.ViewModels
         private double _maximum;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractProgressViewModel"/> class.
+        /// Initializes a new instance of the <see cref="AbstractProgressIndicatorViewModel"/> class.
         /// </summary>
         /// <param name="model">The model to wrap around.</param>
-        public AbstractProgressViewModel(AbstractProgress model)
+        public AbstractProgressIndicatorViewModel(AbstractProgressIndicator model)
             : base(model)
         {
             _value = model.Value ?? 0;
@@ -29,7 +29,7 @@ namespace OwlCore.AbstractUI.ViewModels
             AttachEvents(model);
         }
 
-        private void AttachEvents(AbstractProgress model)
+        private void AttachEvents(AbstractProgressIndicator model)
         {
             model.ValueChanged += Model_ValueChanged;
             model.MinimumChanged += Model_MinimumChanged;
@@ -37,7 +37,7 @@ namespace OwlCore.AbstractUI.ViewModels
             model.IsIndeterminateChanged += Model_IsIndeterminateChanged;
         }
 
-        private void DetachEvents(AbstractProgress model)
+        private void DetachEvents(AbstractProgressIndicator model)
         {
             model.ValueChanged -= Model_ValueChanged;
             model.MinimumChanged -= Model_MinimumChanged;
@@ -104,7 +104,7 @@ namespace OwlCore.AbstractUI.ViewModels
         /// <inheritdoc/>
         public override void Dispose()
         {
-            DetachEvents((AbstractProgress)Model);
+            DetachEvents((AbstractProgressIndicator)Model);
             base.Dispose();
         }
     }

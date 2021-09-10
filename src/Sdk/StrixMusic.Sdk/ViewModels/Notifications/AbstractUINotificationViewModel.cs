@@ -27,9 +27,9 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
         {
             foreach (var value in _model.Items)
             {
-                if (value is AbstractProgress progressUIElement && ProgressBar is null)
+                if (value is AbstractProgressIndicator progressUIElement && ProgressIndicator is null)
                 {
-                    ProgressBar = new AbstractProgressViewModel(progressUIElement);
+                    ProgressIndicator = new AbstractProgressIndicatorViewModel(progressUIElement);
                 }
                 else if (value is AbstractButton buttonElement && Buttons.Count < MAX_BUTTONS)
                 {
@@ -49,9 +49,9 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
         public ObservableCollection<AbstractUIBase> UnsupportedItems { get; set; } = new ObservableCollection<AbstractUIBase>();
 
         /// <summary>
-        /// An <see cref="AbstractProgress"/> that may appear in a notification.
+        /// An <see cref="AbstractProgressIndicator"/> that may appear in a notification.
         /// </summary>
-        public AbstractProgressViewModel? ProgressBar { get; set; }
+        public AbstractProgressIndicatorViewModel? ProgressIndicator { get; set; }
 
         /// <summary>
         /// A list of <see cref="AbstractButton"/>s that may appear in a notification

@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Remoting;
-using OwlCore.Remoting.Attributes;
 using StrixMusic.Sdk.Services.Notifications;
 using Windows.UI.Xaml;
 
-namespace Bedrock.SDK.Services.Notifications
+namespace StrixMusic.Sdk.Uno.Services.NotificationService
 {
     /// <summary>
     /// A Service for handling notifications between the Cores and Shell.
     /// </summary>
-    [RemoteOptions(RemotingDirection.Bidirectional)]
     public class NotificationService : INotificationService
     {
         private readonly List<Notification> _pendingNotifications;

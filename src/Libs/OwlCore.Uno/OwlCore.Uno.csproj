@@ -56,7 +56,7 @@
     <None Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml" />
-    <None Remove="AbstractUI\Themes\AbstractProgressStyleAbstractProgressStyle.xaml" />
+    <None Remove="AbstractUI\Themes\AbstractProgressIndicatorStyleAbstractProgressIndicatorStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
     <None Remove="AbstractUI\Themes\AbstractUIResources.xaml" />
@@ -72,7 +72,8 @@
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractButtonStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractDataListStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml" />
-    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressStyleAbstractProgressStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressIndicatorStyle.xaml" />
+    <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractProgressIndicatorStyleAbstractProgressIndicatorStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractTextBoxStyle.xaml" />
     <UpToDateCheckInput Remove="AbstractUI\Themes\AbstractUICollectionPresenterStyle.xaml" />
@@ -98,14 +99,20 @@
     <Compile Update="AbstractUI\Themes\AbstractMultiChoiceStyle.xaml.cs">
       <DependentUpon>AbstractMultiChoiceStyle.xaml</DependentUpon>
     </Compile>
-    <Compile Update="AbstractUI\Themes\AbstractProgressStyle.xaml.cs">
-      <DependentUpon>AbstractProgressStyle.xaml</DependentUpon>
+    <Compile Update="AbstractUI\Themes\AbstractProgressIndicatorStyle.xaml.cs">
+      <DependentUpon>AbstractProgressIndicatorStyle.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="AbstractUI\Themes\AbstractProgressIndicatorStyle.xaml.cs">
+      <DependentUpon>AbstractProgressIndicatorStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractRichTextBlockStyle.xaml.cs">
       <DependentUpon>AbstractRichTextBlockStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="AbstractUI\Themes\AbstractDataListStyle.xaml.cs">
       <DependentUpon>AbstractDataListStyle.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="AbstractUI\Themes\AbstractUICollectionPresenterStyle.xaml.cs">
+      <DependentUpon>AbstractUICollectionPresenterStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Controls\ContentOverlay.xaml.cs">
       <DependentUpon>ContentOverlay.xaml</DependentUpon>

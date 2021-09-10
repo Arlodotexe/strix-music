@@ -17,61 +17,61 @@
         <themes:AbstractButtonStyle />
         <themes:AbstractDataListStyle />
         <themes:AbstractMultiChoiceStyle />
-        <themes:AbstractProgressStyle />
+        <themes:AbstractProgressIndicatorStyle />
         <themes:AbstractRichTextBlockStyle />
         <themes:AbstractTextBoxStyle />
     </ResourceDictionary.MergedDictionaries>
 
-    <controls:AbstractUIGroupItemTemplateSelector x:Key="GroupTemplateSelector">
-        <controls:AbstractUIGroupItemTemplateSelector.BooleanTemplate>
+    <controls:AbstractUICollectionItemTemplateSelector x:Key="CollectionTemplateSelector">
+        <controls:AbstractUICollectionItemTemplateSelector.BooleanTemplate>
             <DataTemplate x:DataType="abstractUIVm:AbstractBooleanViewModel">
                 <controls:AbstractBooleanPresenter />
             </DataTemplate>
-        </controls:AbstractUIGroupItemTemplateSelector.BooleanTemplate>
+        </controls:AbstractUICollectionItemTemplateSelector.BooleanTemplate>
 
-        <controls:AbstractUIGroupItemTemplateSelector.ButtonTemplate>
+        <controls:AbstractUICollectionItemTemplateSelector.ButtonTemplate>
             <DataTemplate x:DataType="abstractUIVm:AbstractButtonViewModel">
                 <controls:AbstractButtonPresenter />
             </DataTemplate>
-        </controls:AbstractUIGroupItemTemplateSelector.ButtonTemplate>
+        </controls:AbstractUICollectionItemTemplateSelector.ButtonTemplate>
 
-        <controls:AbstractUIGroupItemTemplateSelector.DataListTemplate>
+        <controls:AbstractUICollectionItemTemplateSelector.DataListTemplate>
             <DataTemplate x:DataType="abstractUIVm:AbstractDataListViewModel">
                 <controls:AbstractDataListPresenter />
             </DataTemplate>
-        </controls:AbstractUIGroupItemTemplateSelector.DataListTemplate>
+        </controls:AbstractUICollectionItemTemplateSelector.DataListTemplate>
 
-        <controls:AbstractUIGroupItemTemplateSelector.MultiChoiceTemplate>
+        <controls:AbstractUICollectionItemTemplateSelector.MultiChoiceTemplate>
             <DataTemplate x:DataType="abstractUIVm:AbstractMultiChoiceViewModel">
                 <controls:AbstractMultiChoicePresenter />
             </DataTemplate>
-        </controls:AbstractUIGroupItemTemplateSelector.MultiChoiceTemplate>
+        </controls:AbstractUICollectionItemTemplateSelector.MultiChoiceTemplate>
 
-        <controls:AbstractUIGroupItemTemplateSelector.ProgressTemplate>
-            <DataTemplate x:DataType="abstractUIVm:AbstractProgressViewModel">
-                <controls:AbstractProgessPresenter />
+        <controls:AbstractUICollectionItemTemplateSelector.ProgressTemplate>
+            <DataTemplate x:DataType="abstractUIVm:AbstractProgressIndicatorViewModel">
+                <controls:AbstractProgressIndicatorPresenter />
             </DataTemplate>
-        </controls:AbstractUIGroupItemTemplateSelector.ProgressTemplate>
+        </controls:AbstractUICollectionItemTemplateSelector.ProgressTemplate>
 
-        <controls:AbstractUIGroupItemTemplateSelector.TextBoxTemplate>
+        <controls:AbstractUICollectionItemTemplateSelector.TextBoxTemplate>
             <DataTemplate x:DataType="abstractUIVm:AbstractTextBoxViewModel">
                 <controls:AbstractTextBoxPresenter />
             </DataTemplate>
-        </controls:AbstractUIGroupItemTemplateSelector.TextBoxTemplate>
+        </controls:AbstractUICollectionItemTemplateSelector.TextBoxTemplate>
 
-        <controls:AbstractUIGroupItemTemplateSelector.ElementGroupTemplate>
+        <controls:AbstractUICollectionItemTemplateSelector.ElementCollection>
             <DataTemplate x:DataType="abstractUIVm:AbstractUICollectionViewModel">
                 <controls:AbstractUICollectionPresenter />
             </DataTemplate>
-        </controls:AbstractUIGroupItemTemplateSelector.ElementGroupTemplate>
-    </controls:AbstractUIGroupItemTemplateSelector>
+        </controls:AbstractUICollectionItemTemplateSelector.ElementCollection>
+    </controls:AbstractUICollectionItemTemplateSelector>
 
     <Style TargetType="controls:AbstractUICollectionPresenter">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="controls:AbstractUICollectionPresenter">
-                        <ContentControl  ContentTemplate="{StaticResource DefaultAbstractUIElementGroupTemplate}"
+                        <ContentControl  ContentTemplate="{StaticResource DefaultAbstractUICollectionTemplate}"
                                          HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                     </ControlTemplate>
                 </Setter.Value>
@@ -79,7 +79,7 @@
         </Style.Setters>
     </Style>
 
-    <DataTemplate x:Key="DefaultAbstractUIElementGroupTemplate" x:DataType="abstractUIVm:AbstractUICollectionViewModel">
+    <DataTemplate x:Key="DefaultAbstractUICollectionTemplate" x:DataType="abstractUIVm:AbstractUICollectionViewModel">
         <StackPanel Margin="10,20">
 
             <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="30" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" 
@@ -90,7 +90,7 @@
 
             <ItemsControl ItemsSource="{x:Bind Items}"
                           Margin="0,20,0,0"
-                          ItemTemplateSelector="{StaticResource GroupTemplateSelector}" />
+                          ItemTemplateSelector="{StaticResource CollectionTemplateSelector}" />
         </StackPanel>
     </DataTemplate>
     
