@@ -106,8 +106,6 @@ namespace StrixMusic.Shared
 
         private async void AppLoadingView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            PrereleaseNoticeContainer.Visibility = Visibility.Collapsed;
-
             await InitializeAssemblies();
             await InitializeServices();
             await InitializeInstanceRegistry();
@@ -370,7 +368,7 @@ namespace StrixMusic.Shared
             var notifService = Ioc.Default.GetRequiredService<INotificationService>();
 
             var doneButton = new AbstractButton($"{nameof(AppLoadingView)}.OOBEFinishedButton", "Done", null, AbstractButtonType.Confirm);
-            var notification = notifService.RaiseNotification(new AbstractUIElementGroup($"{nameof(AppLoadingView)}.OOBEElementGroup", PreferredOrientation.Horizontal)
+            var notification = notifService.RaiseNotification(new AbstractUICollection($"{nameof(AppLoadingView)}.OOBEElementGroup", PreferredOrientation.Horizontal)
             {
                 Title = "First time?",
                 Subtitle = "Set up your skins and services before proceeding.",
@@ -384,7 +382,7 @@ namespace StrixMusic.Shared
             CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell), true);
 
             // TODO Temp, not great. Need a proper flow here.
-            await Threading.EventAsTask(x => doneButton.Clicked += x, x => doneButton.Clicked -= x, TimeSpan.FromDays(1));
+            await Flow.EventAsTask(x => doneButton.Clicked += x, x => doneButton.Clicked -= x, TimeSpan.FromDays(1));
 
             notification.Dismiss();
         }

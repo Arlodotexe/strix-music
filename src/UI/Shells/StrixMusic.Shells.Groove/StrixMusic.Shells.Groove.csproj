@@ -35,7 +35,7 @@
     <None Remove="Resources\ButtonStyles.xaml" />
     <None Remove="Resources\TextBoxStyles.xaml" />
     <None Remove="Styles\AlbumCollectionStyle.xaml" />
-    <None Remove="Styles\NotificationAbstractUIGroupStyle.xaml" />
+    <None Remove="Styles\NotificationAbstractUICollectionStyle.xaml" />
     <None Remove="Styles\NowPlaying\MediaInfoStyle.xaml" />
     <None Remove="Styles\NowPlaying\MediaTransportStyle.xaml" />
     <None Remove="Styles\PanePlaylistCollectionStyle.xaml" />
@@ -55,7 +55,7 @@
     <UpToDateCheckInput Remove="Resources\ButtonStyles.xaml" />
     <UpToDateCheckInput Remove="Resources\TextBoxStyles.xaml" />
     <UpToDateCheckInput Remove="Styles\AlbumCollectionStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\NotificationAbstractUIGroupStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\NotificationAbstractUICollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlaying\MediaInfoStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlaying\MediaSliderStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlaying\MediaTransportStyle.xaml" />
@@ -88,7 +88,7 @@
     <Compile Update="Styles\NowPlaying\MediaInfoStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Styles\Shells\NotificationAbstractUIGroupStyle.xaml.cs">
+    <Compile Update="Styles\Shells\NotificationAbstractUICollectionStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Update="Styles\Collections\PanePlaylistCollectionStyle.xaml.cs">

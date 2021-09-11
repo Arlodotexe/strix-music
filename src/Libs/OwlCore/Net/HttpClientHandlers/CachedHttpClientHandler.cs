@@ -20,22 +20,6 @@ namespace OwlCore.Net.HttpClientHandlers
             _cachedHttpClientHandler = new CachedHttpClientHandlerAction(cacheFolderPath, defaultCacheTime);
         }
 
-        /// <summary>
-        /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
-        /// </summary>
-        public CachedHttpClientHandler(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter shouldReturnFromCacheFilter)
-        {
-            _cachedHttpClientHandler = new CachedHttpClientHandlerAction(cacheFolderPath, defaultCacheTime, shouldReturnFromCacheFilter);
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="CachedHttpClientHandlerAction"/>.
-        /// </summary>
-        public CachedHttpClientHandler(string cacheFolderPath, TimeSpan defaultCacheTime, CacheRequestFilter shouldReturnFromCacheFilter, CacheRequestFilter shouldSaveToCacheFilter)
-        {
-            _cachedHttpClientHandler = new CachedHttpClientHandlerAction(cacheFolderPath, defaultCacheTime, shouldReturnFromCacheFilter, shouldSaveToCacheFilter);
-        }
-
         /// <inheritdoc />
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {

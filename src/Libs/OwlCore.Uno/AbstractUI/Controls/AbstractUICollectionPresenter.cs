@@ -20,7 +20,7 @@ namespace OwlCore.Uno.AbstractUI.Controls
     /// <summary>
     /// Displays a group of abstract UI elements.
     /// </summary>
-    public sealed partial class AbstractUIGroupPresenter : Control
+    public sealed partial class AbstractUICollectionPresenter : Control
     {
         private bool _dataContextBeingSet;
 
@@ -28,20 +28,20 @@ namespace OwlCore.Uno.AbstractUI.Controls
         /// Backing property for <see cref="ViewModel"/>.
         /// </summary>
         public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(nameof(ViewModel), typeof(AbstractUIElementGroupViewModel), typeof(AbstractUIGroupPresenter), new PropertyMetadata(null, (d, e) => ((AbstractUIGroupPresenter)d).OnViewModelChanged()));
+            DependencyProperty.Register(nameof(ViewModel), typeof(AbstractUICollectionViewModel), typeof(AbstractUICollectionPresenter), new PropertyMetadata(null, (d, e) => ((AbstractUICollectionPresenter)d).OnViewModelChanged()));
 
         /// <summary>
         /// Backing property for <see cref="TemplateSelector"/>.
         /// </summary>
         public static readonly DependencyProperty TemplateSelectorProperty =
-            DependencyProperty.Register(nameof(TemplateSelector), typeof(DataTemplateSelector), typeof(AbstractUIGroupPresenter), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(TemplateSelector), typeof(DataTemplateSelector), typeof(AbstractUICollectionPresenter), new PropertyMetadata(null));
 
         /// <summary>
         /// The ViewModel for this UserControl.
         /// </summary>
-        public AbstractUIElementGroupViewModel? ViewModel
+        public AbstractUICollectionViewModel? ViewModel
         {
-            get => (AbstractUIElementGroupViewModel)GetValue(ViewModelProperty);
+            get => (AbstractUICollectionViewModel)GetValue(ViewModelProperty);
             set => SetValue(ViewModelProperty, value);
         }
 
@@ -55,11 +55,11 @@ namespace OwlCore.Uno.AbstractUI.Controls
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbstractUIGroupPresenter"/>.
+        /// Creates a new instance of <see cref="AbstractUICollectionPresenter"/>.
         /// </summary>
-        public AbstractUIGroupPresenter()
+        public AbstractUICollectionPresenter()
         {
-            this.DefaultStyleKey = typeof(AbstractUIGroupPresenter);
+            this.DefaultStyleKey = typeof(AbstractUICollectionPresenter);
 
             AttachEvents();
         }
@@ -83,10 +83,10 @@ namespace OwlCore.Uno.AbstractUI.Controls
 
             _dataContextBeingSet = true;
 
-            if (DataContext is AbstractUIElementGroup elementGroup)
-                ViewModel = new AbstractUIElementGroupViewModel(elementGroup);
+            if (DataContext is AbstractUICollection elementGroup)
+                ViewModel = new AbstractUICollectionViewModel(elementGroup);
 
-            if (DataContext is AbstractUIElementGroupViewModel elementGroupViewModel)
+            if (DataContext is AbstractUICollectionViewModel elementGroupViewModel)
                 ViewModel = elementGroupViewModel;
 
             _dataContextBeingSet = false;

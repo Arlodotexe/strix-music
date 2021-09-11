@@ -4,9 +4,9 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.Uno.AbstractUI.Controls
 {
     /// <summary>
-    /// A control that displays an <see cref="AbstractProgressUIElement"/>.
+    /// A control that displays an <see cref="AbstractProgressIndicator"/>.
     /// </summary>
-    public partial class AbstractProgessUIElementPresenter : Control
+    public partial class AbstractProgressIndicatorPresenter : Control
     {
     }
 }

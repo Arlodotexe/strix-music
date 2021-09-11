@@ -9,12 +9,12 @@ namespace OwlCore.Uno.AbstractUI.Controls
     /// <summary>
     /// The template selector used to display Abstract UI elements. Use this to define your own custom styles for each control. You may specify the existing, default styles for those you don't want to override.
     /// </summary>
-    public class AbstractUIGroupItemTemplateSelector : DataTemplateSelector
+    public class AbstractUICollectionItemTemplateSelector : DataTemplateSelector
     {
         /// <summary>
-        /// Creates a new instance of <see cref="AbstractUIGroupItemTemplateSelector"/>.
+        /// Creates a new instance of <see cref="AbstractUICollectionItemTemplateSelector"/>.
         /// </summary>
-        public AbstractUIGroupItemTemplateSelector()
+        public AbstractUICollectionItemTemplateSelector()
         {
             if (!new Themes.AbstractTextBoxStyle().TryGetValue("DefaultAbstractTextBoxTemplate", out var textBoxTemplate))
             {
@@ -31,7 +31,7 @@ namespace OwlCore.Uno.AbstractUI.Controls
                 ButtonTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(buttonTemplate));
             }
 
-            if (!new Themes.AbstractMultiChoiceUIElementStyle().TryGetValue("DefaultAbstractMultipleChoiceTemplate", out var multiChoiceTemplate))
+            if (!new Themes.AbstractMultiChoiceStyle().TryGetValue("DefaultAbstractMultipleChoiceTemplate", out var multiChoiceTemplate))
             {
                 MultiChoiceTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(multiChoiceTemplate));
             }
@@ -41,7 +41,7 @@ namespace OwlCore.Uno.AbstractUI.Controls
                 BooleanTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(booleanTemplate));
             }
 
-            if (!new Themes.AbstractProgressUIElementStyle().TryGetValue("DefaultAbstractProgressUIElementTemplate", out var progressTemplate))
+            if (!new Themes.AbstractProgressIndicatorStyle().TryGetValue("DefaultAbstractProgressIndicatorTemplate", out var progressTemplate))
             {
                 ProgressTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(progressTemplate));
             }
@@ -55,9 +55,9 @@ namespace OwlCore.Uno.AbstractUI.Controls
         }
 
         /// <summary>
-        /// The data template used to display an <see cref="AbstractUIElementGroup"/>.
+        /// The data template used to display an <see cref="AbstractUICollection"/>.
         /// </summary>
-        public DataTemplate? ElementGroupTemplate { get; set; }
+        public DataTemplate? ElementCollection { get; set; }
 
         /// <summary>
         /// The data template used to display an <see cref="AbstractTextBox"/>.
@@ -75,37 +75,37 @@ namespace OwlCore.Uno.AbstractUI.Controls
         public DataTemplate ButtonTemplate { get; set; }
 
         /// <summary>
-        /// The data template used to display an <see cref="AbstractBooleanUIElement"/>.
+        /// The data template used to display an <see cref="AbstractBoolean"/>.
         /// </summary>
         public DataTemplate BooleanTemplate { get; set; }
 
         /// <summary>
-        /// The data template used to display an <see cref="AbstractProgressUIElement"/>.
+        /// The data template used to display an <see cref="AbstractProgressIndicator"/>.
         /// </summary>
         public DataTemplate ProgressTemplate { get; set; }
 
         /// <summary>
-        /// The data template used to display an <see cref="AbstractMultiChoiceUIElement"/>.
+        /// The data template used to display an <see cref="AbstractMultiChoice"/>.
         /// </summary>
         public DataTemplate MultiChoiceTemplate { get; set; }
 
         /// <inheritdoc />
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            if (!new Themes.AbstractUIGroupPresenterStyle().TryGetValue("DefaultAbstractUIElementGroupTemplate", out var elementGroupTemplate))
-                ElementGroupTemplate = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(elementGroupTemplate));
+            if (!new Themes.AbstractUICollectionPresenterStyle().TryGetValue("DefaultAbstractUICollectionTemplate", out var elementCollection))
+                ElementCollection = ThrowHelper.ThrowArgumentNullException<DataTemplate>(nameof(elementCollection));
 
-            ElementGroupTemplate = (DataTemplate)elementGroupTemplate;
+            ElementCollection = (DataTemplate)elementCollection;
 
             return item switch
             {
                 AbstractTextBoxViewModel _ => TextBoxTemplate,
                 AbstractDataListViewModel _ => DataListTemplate,
                 AbstractButtonViewModel _ => ButtonTemplate,
-                AbstractMultiChoiceUIElementViewModel _ => MultiChoiceTemplate,
+                AbstractMultiChoiceViewModel _ => MultiChoiceTemplate,
                 AbstractBooleanViewModel _ => BooleanTemplate,
-                AbstractProgressUIElementViewModel _ => ProgressTemplate,
-                AbstractUIElementGroupViewModel _ => ElementGroupTemplate,
+                AbstractProgressIndicatorViewModel _ => ProgressTemplate,
+                AbstractUICollectionViewModel _ => ElementCollection,
                 _ => base.SelectTemplateCore(item, container)
             };
         }

@@ -54,19 +54,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             _currentPlayerService.PositionChanged += PositionChanged;
             _currentPlayerService.PlaybackSpeedChanged += PlaybackSpeedChanged;
-            _currentPlayerService.PlaybackStateChanged += PlaybackStateChanged;
             _currentPlayerService.PlaybackStateChanged += CurrentPlayerService_PlaybackStateChanged;
+            _currentPlayerService.CurrentSourceChanged += CurrentPlayerService_CurrentSourceChanged;
             _currentPlayerService.VolumeChanged += VolumeChanged;
             _currentPlayerService.QuantumProcessed += QuantumProcessed;
-        }
-
-        private async void CurrentPlayerService_PlaybackStateChanged(object sender, PlaybackState e)
-        {
-            // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
-            if (e == PlaybackState.Queued)
-            {
-                await AutoAdvanceQueue();
-            }
         }
 
         private void DetachEvents()
@@ -76,10 +67,27 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             _currentPlayerService.PositionChanged -= PositionChanged;
             _currentPlayerService.PlaybackSpeedChanged -= PlaybackSpeedChanged;
-            _currentPlayerService.PlaybackStateChanged -= PlaybackStateChanged;
             _currentPlayerService.PlaybackStateChanged -= CurrentPlayerService_PlaybackStateChanged;
+            _currentPlayerService.CurrentSourceChanged -= CurrentPlayerService_CurrentSourceChanged;
             _currentPlayerService.VolumeChanged -= VolumeChanged;
             _currentPlayerService.QuantumProcessed -= QuantumProcessed;
+        }
+
+        private void CurrentPlayerService_CurrentSourceChanged(object sender, IMediaSourceConfig? e)
+        {
+            CurrentItem = e;
+            CurrentItemChanged?.Invoke(this, e);
+        }
+
+        private async void CurrentPlayerService_PlaybackStateChanged(object sender, PlaybackState e)
+        {
+            // Since the player itself can't be queued, we use this as a sentinel value for advancing the queue.
+            if (e == PlaybackState.Queued)
+            {
+                await AutoAdvanceQueue();
+            }
+
+            PlaybackStateChanged?.Invoke(this, e);
         }
 
         private async Task AutoAdvanceQueue()
@@ -118,7 +126,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public event CollectionChangedEventHandler<IMediaSourceConfig>? PreviousItemsChanged;
 
         /// <inheritdoc />
-        public event EventHandler<IMediaSourceConfig>? CurrentItemChanged;
+        public event EventHandler<IMediaSourceConfig?>? CurrentItemChanged;
 
         /// <inheritdoc />
         public event EventHandler<TimeSpan>? PositionChanged;
@@ -203,8 +211,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             // also account for shuffle
             _nextItems.Remove(mediaSource);
             await _currentPlayerService.Play(mediaSource);
-            CurrentItem = mediaSource;
-            CurrentItemChanged?.Invoke(this, mediaSource);
         }
 
         /// <inheritdoc />
@@ -224,8 +230,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             // TODO shift queue, move tracks after the played item into next
             await _currentPlayerService.Play(mediaSource);
-            CurrentItem = mediaSource;
-            CurrentItemChanged?.Invoke(this, mediaSource);
         }
 
         /// <inheritdoc />

@@ -28,7 +28,7 @@ namespace StrixMusic.Sdk.Services.Settings
 
             ThemeSettings = CreateThemeSettingItems();
 
-            AllElementGroups = new List<AbstractUIElementGroup>()
+            AllElementGroups = new List<AbstractUICollection>()
             {
                 ThemeSettings,
             };
@@ -40,14 +40,14 @@ namespace StrixMusic.Sdk.Services.Settings
         /// <summary>
         /// The Abstract UI elements for the default settings.
         /// </summary>
-        public List<AbstractUIElementGroup> AllElementGroups { get; private set; }
+        public List<AbstractUICollection> AllElementGroups { get; private set; }
 
         /// <summary>
         /// The AbstractUI element group for theme settings.
         /// </summary>
-        public AbstractUIElementGroup ThemeSettings { get; private set; }
+        public AbstractUICollection ThemeSettings { get; private set; }
 
-        private AbstractUIElementGroup CreateThemeSettingItems()
+        private AbstractUICollection CreateThemeSettingItems()
         {
             Guard.IsNotNull(_shellRegistry, nameof(_shellRegistry));
 
@@ -61,11 +61,11 @@ namespace StrixMusic.Sdk.Services.Settings
                 });
             }
 
-            var shellSelector = new AbstractMultiChoiceUIElement("shellSelector", shellSelectorItems[0], shellSelectorItems);
+            var shellSelector = new AbstractMultiChoice("shellSelector", shellSelectorItems[0], shellSelectorItems);
 
             shellSelector.ItemSelected += ShellSelector_ItemSelected;
 
-            return new AbstractUIElementGroup(Guid.NewGuid().ToString(), PreferredOrientation.Vertical)
+            return new AbstractUICollection(Guid.NewGuid().ToString(), PreferredOrientation.Vertical)
             {
                 Title = "Theme",
                 IconCode = "\uE2B1",

@@ -4,7 +4,7 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.AbstractUI.ViewModels
 {
     /// <summary>
-    /// Contains bindable information about an <see cref="AbstractBooleanUIElement"/>.
+    /// Contains bindable information about an <see cref="AbstractBoolean"/>.
     /// </summary>
     public class AbstractBooleanViewModel : AbstractUIViewModelBase
     {
@@ -15,7 +15,7 @@ namespace OwlCore.AbstractUI.ViewModels
         /// Initializes a new instance of the <see cref="AbstractBooleanViewModel"/> class.
         /// </summary>
         /// <param name="model">The model to wrap around.</param>
-        public AbstractBooleanViewModel(AbstractBooleanUIElement model)
+        public AbstractBooleanViewModel(AbstractBoolean model)
             : base(model)
         {
             ToggledCommand = new RelayCommand(OnToggled);
@@ -25,13 +25,13 @@ namespace OwlCore.AbstractUI.ViewModels
             AttachEvents(model);
         }
 
-        private void AttachEvents(AbstractBooleanUIElement model)
+        private void AttachEvents(AbstractBoolean model)
         {
             model.StateChanged += Model_StateChanged;
             model.LabelChanged += Model_LabelChanged;
         }
 
-        private void DetachEvents(AbstractBooleanUIElement model)
+        private void DetachEvents(AbstractBoolean model)
         {
             model.StateChanged -= Model_StateChanged;
             model.LabelChanged -= Model_LabelChanged;
@@ -39,14 +39,14 @@ namespace OwlCore.AbstractUI.ViewModels
 
         private void OnToggled()
         {
-            ((AbstractBooleanUIElement)Model).State = IsToggled;
+            ((AbstractBoolean)Model).State = IsToggled;
         }
 
         private void Model_LabelChanged(object sender, string e) => Label = e;
 
         private void Model_StateChanged(object sender, bool e) => IsToggled = e;
 
-        /// <inheritdoc cref="AbstractBooleanUIElement.Label"/>
+        /// <inheritdoc cref="AbstractBoolean.Label"/>
         public string Label
         {
             get => _label;
@@ -64,7 +64,7 @@ namespace OwlCore.AbstractUI.ViewModels
                 if (value == _isToggled)
                     return;
 
-                ((AbstractBooleanUIElement)Model).State = value;
+                ((AbstractBoolean)Model).State = value;
 
                 SetProperty(ref _isToggled, value);
             }
@@ -78,7 +78,7 @@ namespace OwlCore.AbstractUI.ViewModels
         /// <inheritdoc/>
         public override void Dispose()
         {
-            DetachEvents((AbstractBooleanUIElement)Model);
+            DetachEvents((AbstractBoolean)Model);
             base.Dispose();
         }
     }

@@ -493,7 +493,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await _playlist.GetTracksAsync(limit, Tracks.Count);
 
-                _ = Threading.OnPrimaryThread(() =>
+                await Threading.OnPrimaryThread(() =>
                 {
                     foreach (var item in items)
                     {
@@ -512,7 +512,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await _playlist.GetImagesAsync(limit, Images.Count);
 
-                _ = Threading.OnPrimaryThread(() =>
+                await Threading.OnPrimaryThread(() =>
                 {
                     foreach (var item in items)
                     {
@@ -529,7 +529,7 @@ namespace StrixMusic.Sdk.ViewModels
             {
                 var items = await _playlist.GetUrlsAsync(limit, Urls.Count);
 
-                _ = Threading.OnPrimaryThread(() =>
+                await Threading.OnPrimaryThread(() =>
                 {
                     foreach (var item in items)
                     {

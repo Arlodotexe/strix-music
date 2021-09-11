@@ -46,7 +46,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         private Notification? _filesScannedNotification;
         private Notification? _filesFoundNotification;
-        private AbstractProgressUIElement? _progressUIElement;
+        private AbstractProgressIndicator? _progressUIElement;
 
         private FileScanningType _currentScanningType;
         private IFolderData _rootFolder;
@@ -226,25 +226,25 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             Guard.IsNotNull(_filesScannedNotification, nameof(_filesScannedNotification));
 
-            _filesScannedNotification.AbstractUIElementGroup.Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolder.Path}";
+            _filesScannedNotification.AbstractUICollection.Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolder.Path}";
         }
 
         private void UpdateFilesFoundNotification()
         {
             Guard.IsNotNull(_filesFoundNotification, nameof(_filesFoundNotification));
 
-            _filesFoundNotification.AbstractUIElementGroup.Subtitle = $"Found {FilesFound} in {_rootFolder.Path}";
+            _filesFoundNotification.AbstractUICollection.Subtitle = $"Found {FilesFound} in {_rootFolder.Path}";
         }
 
         private Notification RaiseFileDiscoveryNotification()
         {
             Guard.IsNotNull(_notificationService, nameof(_notificationService));
 
-            var elementGroup = new AbstractUIElementGroup(NewGuid())
+            var elementGroup = new AbstractUICollection(NewGuid())
             {
                 Title = "Discovering files",
                 Subtitle = $"Found {FilesFound} in {_rootFolder.Path}",
-                Items = new AbstractProgressUIElement(NewGuid(), null).IntoList(),
+                Items = new AbstractProgressIndicator(NewGuid(), null).IntoList(),
             };
 
             return _filesFoundNotification = _notificationService.RaiseNotification(elementGroup);
@@ -254,7 +254,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             Guard.IsNotNull(_notificationService, nameof(_notificationService));
 
-            _progressUIElement = new AbstractProgressUIElement(NewGuid(), FilesProcessed, FilesFound);
+            _progressUIElement = new AbstractProgressIndicator(NewGuid(), FilesProcessed, FilesFound);
 
             var scanningTypeStr = _currentScanningType switch
             {
@@ -263,7 +263,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 _ => ThrowHelper.ThrowArgumentOutOfRangeException<string>(),
             };
 
-            var elementGroup = new AbstractUIElementGroup(NewGuid())
+            var elementGroup = new AbstractUICollection(NewGuid())
             {
                 Title = $"Scanning {scanningTypeStr}",
                 Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolder.Path}",

@@ -58,8 +58,8 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
 
             if (args.NewValue is TrackViewModel viewModel)
             {
-
                 viewModel.PlaybackStateChanged += ViewModel_PlaybackStateChanged;
+                PlaybackState = viewModel.PlaybackState;
             }
         }
 

@@ -6,13 +6,13 @@
     xmlns:controls="using:OwlCore.Uno.AbstractUI.Controls"
     xmlns:abstractUIVm="using:OwlCore.AbstractUI.ViewModels"
     xmlns:notificationVms="using:StrixMusic.Sdk.ViewModels.Notifications"
-    x:Class="StrixMusic.Sdk.Uno.Styles.Shells.NotificationAbstractUIGroupStyle">
+    x:Class="StrixMusic.Sdk.Uno.Styles.Shells.NotificationAbstractUICollectionStyle">
 
-    <Style x:Key="DefaultNotificationAbstractUIGroupStyle" TargetType="controls:AbstractUIGroupPresenter">
+    <Style x:Key="DefaultNotificationAbstractUICollectionStyle" TargetType="controls:AbstractUICollectionPresenter">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="controls:AbstractUIGroupPresenter">
+                    <ControlTemplate TargetType="controls:AbstractUICollectionPresenter">
                         <ContentControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                             <ContentControl.ContentTemplate>
                                 <DataTemplate x:DataType="notificationVms:AbstractUINotificationViewModel">
@@ -23,7 +23,7 @@
                                             <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextWrapping="WrapWholeWords"
                                                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
-                                            <ItemsControl ItemsSource="{Binding ButtonViewModels}">
+                                            <ItemsControl ItemsSource="{Binding Buttons}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate x:DataType="abstractUIVm:AbstractButtonViewModel">
                                                         <controls:AbstractButtonPresenter Margin="8,0"/>
@@ -37,11 +37,11 @@
                                             </ItemsControl>
                                         </StackPanel>
 
-                                        <ProgressBar Value="{x:Bind ProgressBarViewModel.Value, Mode=OneWay}"
-                                                     Minimum="{x:Bind ProgressBarViewModel.Minimum, Mode=OneWay}"
-                                                     Maximum="{x:Bind ProgressBarViewModel.Maximum, Mode=OneWay}"
-                                                     IsIndeterminate="{x:Bind ProgressBarViewModel.IsIndeterminate, Mode=OneWay}"
-                                                     Visibility="{x:Bind convertvis:NotNullToVisibilityConverter.Convert(ProgressBarViewModel)}"
+                                        <ProgressBar Value="{x:Bind ProgressIndicator.Value, Mode=OneWay}"
+                                                     Minimum="{x:Bind ProgressIndicator.Minimum, Mode=OneWay}"
+                                                     Maximum="{x:Bind ProgressIndicator.Maximum, Mode=OneWay}"
+                                                     IsIndeterminate="{x:Bind ProgressIndicator.IsIndeterminate, Mode=OneWay}"
+                                                     Visibility="{x:Bind convertvis:NotNullToVisibilityConverter.Convert(ProgressIndicator)}"
                                                      VerticalAlignment="Bottom"/>
                                     </Grid>
                                 </DataTemplate>
