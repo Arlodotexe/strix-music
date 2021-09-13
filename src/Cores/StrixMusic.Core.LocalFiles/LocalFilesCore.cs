@@ -6,8 +6,8 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Core.LocalFiles.Models;
-using StrixMusic.Core.LocalFiles.Services;
+using StrixMusic.Cores.LocalFiles.Models;
+using StrixMusic.Cores.LocalFiles.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -16,7 +16,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 
-namespace StrixMusic.Core.LocalFiles
+namespace StrixMusic.Cores.LocalFiles
 {
     /// <inheritdoc />
     public class LocalFilesCore : ICore

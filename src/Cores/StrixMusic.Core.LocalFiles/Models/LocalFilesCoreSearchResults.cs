@@ -7,7 +7,7 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Core.LocalFiles.Models
+namespace StrixMusic.Cores.LocalFiles.Models
 {
     /// <summary>
     /// A LocalFileCore implementation of <see cref="ICoreSearchResults"/>.

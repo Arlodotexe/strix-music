@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace StrixMusic.Core.LocalFiles.Models
+namespace StrixMusic.Cores.LocalFiles.Models
 {
     /// <summary>
     /// The recently played items for the <see cref="LocalFilesCore"/>.

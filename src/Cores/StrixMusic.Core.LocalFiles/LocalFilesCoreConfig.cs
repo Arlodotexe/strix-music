@@ -7,13 +7,13 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
-using StrixMusic.Core.LocalFiles.Services;
+using StrixMusic.Cores.LocalFiles.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.Settings;
 
-namespace StrixMusic.Core.LocalFiles
+namespace StrixMusic.Cores.LocalFiles
 {
     ///  <inheritdoc/>
     public class LocalFilesCoreConfig : ICoreConfig

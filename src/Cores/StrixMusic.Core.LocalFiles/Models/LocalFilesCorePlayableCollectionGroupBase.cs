@@ -6,7 +6,7 @@ using OwlCore.Provisos;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 
-namespace StrixMusic.Core.LocalFiles.Models
+namespace StrixMusic.Cores.LocalFiles.Models
 {
     /// <inheritdoc cref="ICorePlayableCollectionGroup"/>
     public abstract class LocalFilesCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup, IAsyncInit

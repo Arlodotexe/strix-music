@@ -1,4 +1,4 @@
-﻿namespace StrixMusic.Core.LocalFiles.Services
+﻿namespace StrixMusic.Cores.LocalFiles.Services
 {
     /// <summary>
     /// The setting keys for <see cref="LocalFilesCore"/>.

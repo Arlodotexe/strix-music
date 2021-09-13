@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.Settings;
 
-namespace StrixMusic.Core.LocalFiles.Services
+namespace StrixMusic.Cores.LocalFiles.Services
 {
     /// <inheritdoc />
     internal class LocalFilesCoreSettingsService : SettingsServiceBase

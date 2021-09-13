@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
-using StrixMusic.Core.LocalFiles;
+using StrixMusic.Cores.LocalFiles;
 using System;
 using System.Collections.Generic;
 using System.Text;

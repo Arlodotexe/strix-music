@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace StrixMusic.Core.LocalFiles.Models
+namespace StrixMusic.Cores.LocalFiles.Models
 {
     /// <summary>
     /// Discoverable music for the <see cref="LocalFilesCore"/>.

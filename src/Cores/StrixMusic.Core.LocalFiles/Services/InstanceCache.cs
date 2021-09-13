@@ -1,10 +1,10 @@
 ﻿using System;
 using OwlCore.Services;
-using StrixMusic.Core.LocalFiles.Models;
+using StrixMusic.Cores.LocalFiles.Models;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Core.LocalFiles.Services
+namespace StrixMusic.Cores.LocalFiles.Services
 {
     /// <summary>
     /// Contains caches for all instance created across the core.

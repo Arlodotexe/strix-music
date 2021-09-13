@@ -1,4 +1,4 @@
-﻿using StrixMusic.Core.LocalFiles.Models;
+﻿using StrixMusic.Cores.LocalFiles.Models;
 using StrixMusic.Sdk.Data.Core;
 
 namespace StrixMusic.Cores.OneDrive.Models

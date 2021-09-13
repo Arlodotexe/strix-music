@@ -1,4 +1,4 @@
-﻿using StrixMusic.Core.LocalFiles;
+﻿using StrixMusic.Cores.LocalFiles;
 using StrixMusic.Sdk.Data.Core;
 using System;
 using System.Collections.Generic;

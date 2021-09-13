@@ -208,8 +208,6 @@ namespace StrixMusic.Shared
         {
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
-            // TODO: IMPORTANT
-            // Need to rename all core namespaces to StrixMusic.Cores.Something, and change the below when done. #723
             const string coreAssemblyRegex = @"^(?:StrixMusic\.Cores\.)(\w{3,})[^.]";
             var coreRegistryData = new List<CoreAssemblyInfo>();
 

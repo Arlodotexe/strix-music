@@ -2,7 +2,7 @@
 using StrixMusic.Sdk.Data.Core;
 
 
-namespace StrixMusic.Core.LocalFiles.Models
+namespace StrixMusic.Cores.LocalFiles.Models
 {
     /// <inheritdoc/>
     public class LocalFilesCoreGenre : ICoreGenre

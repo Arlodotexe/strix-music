@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using StrixMusic.Sdk.Data.Core;
 
 
-namespace StrixMusic.Core.LocalFiles.Models
+namespace StrixMusic.Cores.LocalFiles.Models
 {
     ///<inheritdoc/>
     public class LocalFilesCoreImage : ICoreImage
