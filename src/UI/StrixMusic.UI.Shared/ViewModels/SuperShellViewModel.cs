@@ -201,21 +201,9 @@ namespace StrixMusic.Shared.ViewModels
         public ShellSelectorViewModel ShellSelectorViewModel { get; }
 
         /// <summary>
-        /// Gets the app's version number.
+        /// Gets the app version number.
         /// </summary>
-        public string AppVersion => string.Format(
-            "{0}.{1}.{2}",
-            Package.Current.Id.Version.Major,
-            Package.Current.Id.Version.Minor,
-            Package.Current.Id.Version.Build);
-
-        /// <summary>
-        /// Gets the last commit and branch used for build.
-        /// </summary>
-        public string CommitStatus => string.Empty;/*string.Format(
-            _localizationResourceLoader[Constants.Localization.SuperShellResource, "CommitFrom"],
-            ThisAssembly.Git.Commit,
-            ThisAssembly.Git.Branch);*/
+        public string AppVersion =>  $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}";
 
         /// <summary>
         /// If true, the user has selected to add a new item and the UI should reflect this.

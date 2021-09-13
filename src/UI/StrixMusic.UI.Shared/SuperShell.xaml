@@ -56,62 +56,6 @@
             <visibilityConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
 
 
-            <Style x:Key="PromotionalLinkStyle" TargetType="HyperlinkButton">
-                <Setter Property="Margin" Value="12,8"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="HyperlinkButton">
-                            <Grid x:Name="RootGrid">
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="CommonStates">
-                                        <VisualState x:Name="Normal">
-                                            <Storyboard>
-                                                <DoubleAnimation Duration="0:0:0.2" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentPresenter">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CircleEase EasingMode="EaseOut"/>
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                            </Storyboard>
-                                        </VisualState>
-                                        <VisualState x:Name="PointerOver">
-                                            <Storyboard>
-                                                <DoubleAnimation Duration="0:0:0.2" To="0.75" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentPresenter">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CircleEase EasingMode="EaseOut"/>
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                            </Storyboard>
-                                        </VisualState>
-                                        <VisualState x:Name="Pressed">
-                                            <Storyboard>
-                                                <DoubleAnimation Duration="0:0:0.2" To="0.5" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentPresenter">
-                                                    <DoubleAnimation.EasingFunction>
-                                                        <CircleEase EasingMode="EaseOut"/>
-                                                    </DoubleAnimation.EasingFunction>
-                                                </DoubleAnimation>
-                                            </Storyboard>
-                                        </VisualState>
-                                        <VisualState x:Name="Disabled">
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource HyperlinkButtonForegroundDisabled}"/>
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ContentPresenter">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource HyperlinkButtonBackgroundDisabled}"/>
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource HyperlinkButtonBorderBrushDisabled}"/>
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </VisualState>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
-                                <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -210,11 +154,10 @@
                             <Run Text="Strix Music Version:" FontWeight="SemiBold"/>
                             <Run Text="{x:Bind ViewModel.AppVersion}" FontWeight="SemiLight"/>
                         </TextBlock>
-                        <TextBlock Text="{x:Bind ViewModel.CommitStatus}" FontSize="11" Opacity=".4" HorizontalAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                        <HyperlinkButton Foreground="#FFFFFF" Background="Transparent" NavigateUri="https://github.com/Arlodotexe/strix-music" Style="{StaticResource PromotionalLinkStyle}">
+                        <HyperlinkButton Foreground="#FFFFFF" Background="Transparent" NavigateUri="https://github.com/Arlodotexe/strix-music">
                             <StackPanel Orientation="Horizontal">
                                 <PathIcon Data="M 8 0 C 3.58 0 0 3.58 0 8 c 0 3.54 2.29 6.53 5.47 7.59 c 0.4 0.07 0.55 -0.17 0.55 -0.38 c 0 -0.19 -0.01 -0.82 -0.01 -1.49 c -2.01 0.37 -2.53 -0.49 -2.69 -0.94 c -0.09 -0.23 -0.48 -0.94 -0.82 -1.13 c -0.28 -0.15 -0.68 -0.52 -0.01 -0.53 c 0.63 -0.01 1.08 0.58 1.23 0.82 c 0.72 1.21 1.87 0.87 2.33 0.66 c 0.07 -0.52 0.28 -0.87 0.51 -1.07 c -1.78 -0.2 -3.64 -0.89 -3.64 -3.95 c 0 -0.87 0.31 -1.59 0.82 -2.15 c -0.08 -0.2 -0.36 -1.02 0.08 -2.12 c 0 0 0.67 -0.21 2.2 0.82 c 0.64 -0.18 1.32 -0.27 2 -0.27 c 0.68 0 1.36 0.09 2 0.27 c 1.53 -1.04 2.2 -0.82 2.2 -0.82 c 0.44 1.1 0.16 1.92 0.08 2.12 c 0.51 0.56 0.82 1.27 0.82 2.15 c 0 3.07 -1.87 3.75 -3.65 3.95 c 0.29 0.25 0.54 0.73 0.54 1.48 c 0 1.07 -0.01 1.93 -0.01 2.2 c 0 0.21 0.15 0.46 0.55 0.38 A 8.013 8.013 0 0 0 16 8 c 0 -4.42 -3.58 -8 -8 -8 Z"
                                           Margin="0,2,0,0"/>
@@ -222,7 +165,7 @@
                             </StackPanel>
                         </HyperlinkButton>
                         <!--In case we want to add the Feedback Hub link-->
-                        <!--<HyperlinkButton Opacity="0.75" Style="{StaticResource PromotionalLinkStyle}">
+                        <!--<HyperlinkButton Opacity="0.75">
                             <StackPanel Orientation="Horizontal">
                                 <FontIcon Glyph="&#xE939;" Width="20" Height="20" FontSize="16" Margin="0,-2,0,-2"/>
                                 <TextBlock Text="Leave Feedback" Margin="8,0,0,0"/>
