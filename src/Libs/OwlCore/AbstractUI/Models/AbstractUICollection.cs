@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using OwlCore.Extensions;
 using OwlCore.Remoting;
 using OwlCore.Remoting.Attributes;
 
@@ -17,7 +18,7 @@ namespace OwlCore.AbstractUI.Models
     [RemoteOptions(RemotingDirection.Bidirectional)]
     public class AbstractUICollection : AbstractUIElement, ICollection<AbstractUIElement>
     {
-        private readonly List<AbstractUIElement> _items = new List<AbstractUIElement>();
+        private List<AbstractUIElement> _items;
 
         /// <summary>
         /// Creates a new instance of an <see cref="AbstractUICollection"/>.
@@ -28,6 +29,7 @@ namespace OwlCore.AbstractUI.Models
             : base(id)
         {
             PreferredOrientation = preferredOrientation;
+            _items = new List<AbstractUIElement>();
         }
 
         /// <summary>
@@ -49,7 +51,11 @@ namespace OwlCore.AbstractUI.Models
         /// The items in this group.
         /// </summary>
         [RemoteProperty]
-        public IReadOnlyList<AbstractUIElement> Items { get; set; } = new List<AbstractUIElement>();
+        public IReadOnlyList<AbstractUIElement> Items
+        {
+            get => _items;
+            set => _items = value.ToOrAsList();
+        }
 
         /// <summary>
         /// Adds the given <paramref name="abstractUIElement"/> to <see cref="Items" />.
