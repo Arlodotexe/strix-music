@@ -94,6 +94,8 @@ namespace StrixMusic.Cores.LocalFiles
             _fileSystemService = fileSystemService;
             _settingsService = new LocalFilesCoreSettingsService(SourceCore.InstanceId);
 
+            SetupAbstractUISettings();
+
             Guard.IsNotNull(_configDoneButton, nameof(_configDoneButton));
             Guard.IsNotNull(_initWithEmptyReposToggle, nameof(_initWithEmptyReposToggle));
             _initWithEmptyReposToggle.State = await _settingsService.GetValue<bool>(nameof(LocalFilesCoreSettingsKeys.InitWithEmptyMetadataRepos));

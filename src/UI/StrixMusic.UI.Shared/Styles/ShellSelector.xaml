@@ -106,10 +106,10 @@
                                       Height="225"
                                       Background="Transparent">
                                 <FlipView.ItemTemplate>
-                                    <DataTemplate x:DataType="s:Uri">
+                                    <DataTemplate>
                                         <Image Stretch="Uniform">
                                             <Image.Source>
-                                                <BitmapImage UriSource="{x:Bind}" />
+                                                <BitmapImage UriSource="{Binding}" />
                                             </Image.Source>
                                         </Image>
                                     </DataTemplate>
