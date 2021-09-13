@@ -8,12 +8,12 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Author>Arlo Godfrey</Author>
-		<Version>0.0.22</Version>
+		<Version>0.0.24</Version>
 		<Product>OwlCore</Product>
 		<Description>
 			Have you ever seen an owl do a barrel roll? Me neither.
 
-			This project is a constant work in progress. Until a stable release, breaking changes are possible.
+			OwlCore is a constant work in progress. Until a stable release, breaking changes are possible.
 
 			- AbstractUI - Abstract away simple UI elements as pure data. Let something else decide how to display it.
 			- AbstractStorage - Completely abstract away your storage needs, no matter how you access it.
@@ -28,6 +28,15 @@
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReleaseNotes>
+			--- 0.0.24 ---
+			[Fixes]
+			Fixed issue where "isIndeterminate" parameter of AbstractProgressIndicator wasn't being set from the ctor.
+			
+			--- 0.0.23 ---
+			[Breaking changes]
+			Renamed OwlCore.AbstractUI.Models.AbstractProgress to OwlCore.AbstractUI.Models.AbstractProgressIndicator.
+			Renamed OwlCore.AbstractUI.Models.AbstractProgressViewModel to OwlCore.AbstractUI.Models.AbstractProgressIndictatorViewModel.
+			
 			--- 0.0.22 ---
 			[Breaking changes]
 			Moved EventAsTask from Threading to Flow.

@@ -14,7 +14,6 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
     public sealed class NotificationViewModel : ObservableObject, IDisposable
     {
         private AbstractUINotificationViewModel _abstractUINotificationViewModel;
-        private bool _disposedValue;
 
         /// <summary>
         /// The original notification model.
@@ -29,7 +28,7 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
         {
             Model = model;
 
-            _abstractUINotificationViewModel = new AbstractUINotificationViewModel(model.AbstractUIElementGroup);
+            _abstractUINotificationViewModel = new AbstractUINotificationViewModel(model.AbstractUICollection);
             DismissCommand = new RelayCommand(model.Dismiss);
         }
 
@@ -51,36 +50,10 @@ namespace StrixMusic.Sdk.ViewModels.Notifications
         /// </summary>
         public IRelayCommand DismissCommand { get; set; }
 
-        private void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects)
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
-                _disposedValue = true;
-            }
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="NotificationViewModel"/> class.
-        /// </summary>
-        ~NotificationViewModel()
-         {
-             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-             Dispose(disposing: false);
-         }
-
         /// <inheritdoc/>
         public void Dispose()
         {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            _abstractUINotificationViewModel?.Dispose();
         }
     }
 }

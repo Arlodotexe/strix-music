@@ -6,7 +6,7 @@ namespace OwlCore.AbstractUI.Models
     /// <summary>
     /// Represents a UI element that displays a progress state. (ProgressBar, ProgressRing)
     /// </summary>
-    public class AbstractProgress : AbstractUIElement
+    public class AbstractProgressIndicator : AbstractUIElement
     {
         private double _minimum;
         private double _maximum;
@@ -14,13 +14,13 @@ namespace OwlCore.AbstractUI.Models
         private bool _isIndeterminate;
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbstractProgress"/>.
+        /// Creates a new instance of <see cref="AbstractProgressIndicator"/>.
         /// </summary>
         /// <param name="id">A unique identifier for this UI element.</param>
         /// <param name="val">The value of the progess.</param>
         /// <param name="max">The maximum value of the progess.</param>
         /// <param name="min">The minimum value of the progess.</param>
-        public AbstractProgress(string id, double? val, double max = 100, double min = 0)
+        public AbstractProgressIndicator(string id, double? val, double max = 100, double min = 0)
             : base(id)
         {
             _value = val;
@@ -29,14 +29,14 @@ namespace OwlCore.AbstractUI.Models
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbstractProgress"/>.
+        /// Creates a new instance of <see cref="AbstractProgressIndicator"/>.
         /// </summary>
         /// <param name="id">A unique identifier for this UI element.</param>
         /// <param name="isIndeterminate">If true, the progress value is indeterminate. <see cref="Value"/> must be null</param>
-        public AbstractProgress(string id, bool isIndeterminate)
+        public AbstractProgressIndicator(string id, bool isIndeterminate)
             : base(id)
         {
-
+            IsIndeterminate = isIndeterminate;
         }
 
         /// <summary>

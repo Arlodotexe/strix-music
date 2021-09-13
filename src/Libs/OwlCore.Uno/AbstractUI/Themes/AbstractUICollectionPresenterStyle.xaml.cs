@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using OwlCore.Uno.AbstractUI.Controls;
 using Windows.UI.Xaml;
-using OwlCore.AbstractUI.Models;
 
 namespace OwlCore.Uno.AbstractUI.Themes
 {
     /// <summary>
-    /// Default template for the <see cref="AbstractUICollectionPresenterStyle"/>
+    /// Default template for an <see cref="AbstractUICollectionPresenter"/>.
     /// </summary>
     public sealed partial class AbstractUICollectionPresenterStyle : ResourceDictionary
     {

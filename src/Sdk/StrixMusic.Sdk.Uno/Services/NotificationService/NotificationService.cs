@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
-using OwlCore.Remoting;
-using OwlCore.Remoting.Attributes;
 using StrixMusic.Sdk.Services.Notifications;
 using Windows.UI.Xaml;
 
@@ -13,11 +11,10 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
     /// <summary>
     /// A Service for handling notifications between the Cores and Shell.
     /// </summary>
-    [RemoteOptions(RemotingDirection.Bidirectional)]
     public class NotificationService : INotificationService
     {
-        private readonly List<Notification> _notifications;
-        private int _activeNotifications;
+        private readonly List<Notification> _pendingNotifications;
+        private readonly List<Notification> _activeNotifications;
 
         /// <inheritdoc cref="INotificationService.NotificationRaised" />
         public event EventHandler<Notification>? NotificationRaised;
@@ -40,7 +37,8 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// </summary>
         public NotificationService()
         {
-            _notifications = new List<Notification>();
+            _pendingNotifications = new List<Notification>();
+            _activeNotifications = new List<Notification>();
         }
 
         /// <inheritdoc cref="NotificationRaised"/>
@@ -58,7 +56,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         }
 
         /// <inheritdoc/>
-        public int MaxActiveNotifications { get; set; } = 1;
+        public int MaxActiveNotifications { get; set; } = 3;
 
         /// <inheritdoc/>
         public Notification RaiseNotification(string title, string message)
@@ -80,7 +78,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
 
             notification.Dismissed += Notification_Dismissed;
 
-            _notifications.Add(notification);
+            _pendingNotifications.Add(notification);
 
             FireIfReady();
             return notification;
@@ -90,7 +88,7 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         {
             if (sender is Notification notification)
             {
-                var index = _notifications.FindIndex(x => ReferenceEquals(x, notification));
+                var index = _activeNotifications.FindIndex(x => ReferenceEquals(x, notification));
 
                 if (index == -1)
                     return;
@@ -125,15 +123,13 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
 
         private void DismissNotificationInternal(int? index = null)
         {
-            var targetNotification = _notifications.ElementAtOrDefault(index ?? _notifications.Count - 1);
+            var targetNotification = _activeNotifications.ElementAtOrDefault(index ?? _pendingNotifications.Count - 1);
 
             Guard.IsNotNull(targetNotification, nameof(targetNotification));
 
-            _notifications.Remove(targetNotification);
+            _activeNotifications.Remove(targetNotification);
             NotificationDismissed?.Invoke(this, targetNotification);
             targetNotification.Dismissed -= Notification_Dismissed;
-
-            _activeNotifications--;
 
             FireIfReady();
         }
@@ -143,13 +139,14 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// </summary>
         private void FireIfReady()
         {
-            if (_notifications.Count > 0 && _activeNotifications < MaxActiveNotifications)
+            if (_pendingNotifications.Count > 0 && _activeNotifications.Count < MaxActiveNotifications)
             {
-                var nextNotification = _notifications.FirstOrDefault(x => !x.IsDisplayed);
+                var nextNotification = _pendingNotifications.FirstOrDefault();
                 if (nextNotification == null)
                     return;
 
-                nextNotification.IsDisplayed = true;
+                _pendingNotifications.Remove(nextNotification);
+                _activeNotifications.Add(nextNotification);
                 NotificationRaised?.Invoke(this, nextNotification);
             }
         }

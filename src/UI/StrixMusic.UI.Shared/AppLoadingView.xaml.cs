@@ -104,9 +104,14 @@ namespace StrixMusic.Shared
             PART_Status.Text = text;
         }
 
+        private bool _isInit;
+
         private async void AppLoadingView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            PrereleaseNoticeContainer.Visibility = Visibility.Collapsed;
+            if (_isInit)
+                return;
+
+            _isInit = true;
 
             await InitializeAssemblies();
             await InitializeServices();

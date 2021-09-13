@@ -81,7 +81,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         {
             NotificationDismissed?.Invoke(this, notification);
 
-            var target = _notificationMemberRemotes.FirstOrDefault(x => x.Id == notification.AbstractUIElementGroup.Id);
+            var target = _notificationMemberRemotes.FirstOrDefault(x => x.Id == notification.AbstractUICollection.Id);
             if (!(target is null))
                 _notificationMemberRemotes.Remove(target);
 
@@ -103,7 +103,7 @@ namespace StrixMusic.Sdk.Services.Notifications
                 Guard.IsNotNull(_notificationService, nameof(_notificationService));
                 var notification = _notificationService.RaiseNotification(title, message);
 
-                _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUIElementGroup.Id));
+                _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUICollection.Id));
 
                 await _memberRemote.PublishDataAsync(notification, $"{_notificationTick++}");
 
@@ -127,7 +127,7 @@ namespace StrixMusic.Sdk.Services.Notifications
                 Guard.IsNotNull(_notificationService, nameof(_notificationService));
                 var notification = _notificationService.RaiseNotification(elementGroup);
 
-                _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUIElementGroup.Id));
+                _notificationMemberRemotes.Add(new MemberRemote(notification, notification.AbstractUICollection.Id));
 
                 await _memberRemote.PublishDataAsync(notification, $"{_notificationTick++}");
 
