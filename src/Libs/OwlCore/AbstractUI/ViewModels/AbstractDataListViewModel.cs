@@ -232,6 +232,7 @@ namespace OwlCore.AbstractUI.ViewModels
         /// </summary>
         public IRelayCommand<AbstractDataListItemViewModel> ItemTappedCommand { get; set; }
 
+        /// <inheritdoc />
         public override void Dispose()
         {
             DetachEvents();
