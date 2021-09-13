@@ -42,7 +42,7 @@ namespace StrixMusic.Cores.Files
         public virtual CoreState CoreState { get; protected set; }
 
         /// <inheritdoc />
-        public string InstanceDescriptor { get; protected set; } = string.Empty;
+        public virtual string InstanceDescriptor { get; set; } = string.Empty;
 
         /// <inheritdoc/>
         public ICoreUser? User => null;
