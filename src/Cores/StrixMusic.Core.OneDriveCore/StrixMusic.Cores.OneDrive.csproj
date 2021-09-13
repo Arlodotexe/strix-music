@@ -15,8 +15,4 @@
     <PackageReference Include="Microsoft.Identity.Client" Version="4.36.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\StrixMusic.Core.LocalFiles\StrixMusic.Cores.Files.csproj" />
-  </ItemGroup>
-
 </Project>
