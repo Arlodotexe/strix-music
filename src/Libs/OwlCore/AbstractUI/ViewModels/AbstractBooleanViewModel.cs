@@ -8,7 +8,6 @@ namespace OwlCore.AbstractUI.ViewModels
     /// </summary>
     public class AbstractBooleanViewModel : AbstractUIViewModelBase
     {
-        private bool _isToggled;
         private string _label;
 
         /// <summary>
@@ -20,7 +19,6 @@ namespace OwlCore.AbstractUI.ViewModels
         {
             ToggledCommand = new RelayCommand(OnToggled);
             _label = model.Label ?? string.Empty;
-            _isToggled = model.State;
 
             AttachEvents(model);
         }
@@ -58,13 +56,12 @@ namespace OwlCore.AbstractUI.ViewModels
         /// </summary>
         public bool IsToggled
         {
-            get => _isToggled;
+            get => ((AbstractBoolean)Model).State;
             set
             {
-                if (value == _isToggled)
+                if (value == ((AbstractBoolean)Model).State)
                     return;
 
-                SetProperty(ref _isToggled, value);
                 ((AbstractBoolean)Model).State = value;
             }
         }
