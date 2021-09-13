@@ -28,7 +28,7 @@ namespace StrixMusic.Cores.OneDrive
 
 
         /// <inheritdoc/>
-        public async override Task InitAsync(IServiceCollection services)
+        public override async Task InitAsync(IServiceCollection services)
         {
             ChangeCoreState(Sdk.Data.CoreState.Loading);
 
@@ -48,7 +48,6 @@ namespace StrixMusic.Cores.OneDrive
             if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(folderPath) || string.IsNullOrEmpty(tenantId))
             {
                 coreConfig.SetupAbstractUISettings();
-
                 ChangeCoreState(Sdk.Data.CoreState.NeedsSetup);
             }
             else
@@ -64,8 +63,6 @@ namespace StrixMusic.Cores.OneDrive
                 ChangeCoreState(Sdk.Data.CoreState.NeedsSetup);
                 coreConfig.SetupAbstractUISettings();
             }
-
-
         }
     }
 }
