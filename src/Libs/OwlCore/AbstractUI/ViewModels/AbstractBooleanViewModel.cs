@@ -64,9 +64,8 @@ namespace OwlCore.AbstractUI.ViewModels
                 if (value == _isToggled)
                     return;
 
-                ((AbstractBoolean)Model).State = value;
-
                 SetProperty(ref _isToggled, value);
+                ((AbstractBoolean)Model).State = value;
             }
         }
 
