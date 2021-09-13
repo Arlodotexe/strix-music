@@ -54,12 +54,19 @@ namespace StrixMusic.Cores.OneDrive
 
             if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(folderPath) || string.IsNullOrEmpty(tenantId))
             {
+                // TODO: Wipe all data, include metadata scanning, in case core instance gets into a bad state.
+                await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId), "");
+                await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.FolderPath), "");
+                await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId), "");
+
                 coreConfig.SetupAbstractUIForFirstSetup();
                 ChangeCoreState(CoreState.NeedsSetup);
             }
             else
             {
                 await coreConfig.LoginAsync();
+
+                // TODO: Start metadata scanner.
             }
         }
 
