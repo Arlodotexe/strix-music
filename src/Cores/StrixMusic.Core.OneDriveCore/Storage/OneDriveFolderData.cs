@@ -1,11 +1,8 @@
-﻿using OwlCore.AbstractStorage;
-using StrixMusic.Cores.OneDrive.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cauldron.Interception;
+using Microsoft.Graph;
+using OwlCore.AbstractStorage;
 
 namespace StrixMusic.Cores.OneDrive.Storage
 {
@@ -14,42 +11,31 @@ namespace StrixMusic.Cores.OneDrive.Storage
     /// </summary>
     public class OneDriveFolderData : IFolderData
     {
-        private readonly OneDriveCoreStorageService _oneDriveStorageService;
-        private IEnumerable<IFolderData> _childrenCache { get; set; }
+        private const string EXPAND_STRING = "children";
+        private readonly GraphServiceClient _graphClient;
+        private readonly DriveItem _driveItem;
 
         /// <summary>
         /// Creates a new instance of <see cref="OneDriveFolderData"/>.
         /// </summary>
-        /// <param name="oneDriveCoreStorageService">The service that handles graph api requests.</param>
-        /// <param name="name">The name of the folder.</param>
-        /// <param name="path">The web url of the folder.</param>
-        /// <param name="oneDriveFolderId">The id of the folder.</param>
-        public OneDriveFolderData(OneDriveCoreStorageService oneDriveCoreStorageService, string name, string path, string oneDriveFolderId, bool isRoot = false)
+        /// <param name="graphClient">The service that handles API requests to Microsoft Graph.</param>
+        /// <param name="driveItem">An instance of <see cref="DriveItem"/> that represents the underlying OneDrive folder.</param>
+        public OneDriveFolderData(GraphServiceClient graphClient, DriveItem driveItem)
         {
-            Name = name;
-            Path = path;
-            OneDriveFolderId = oneDriveFolderId;
-            _childrenCache = new List<IFolderData>();
-
-            IsRoot = isRoot;
-            _oneDriveStorageService = oneDriveCoreStorageService;
+            _graphClient = graphClient;
+            _driveItem = driveItem;
         }
 
         /// <summary>
         /// A unique identifier returned from OneDrive api, a folder can be uniquely identified by this id. Helpful during record reads.
         /// </summary>
-        public string OneDriveFolderId { get; }
+        public string OneDriveFolderId => _driveItem.Id;
 
         ///<inheritdoc />
-        public string Name { get; }
+        public string Name => _driveItem.Name;
 
         ///<inheritdoc />
-        public string Path { get; }
-
-        /// <summary>
-        /// Flag that determines if the folder is root or not. Useful when dealing with folder explorers.
-        /// </summary>
-        public bool IsRoot { get; set; }
+        public string Path => _driveItem.WebUrl;
 
         ///<inheritdoc />
         public Task<IFileData> CreateFileAsync(string desiredName)
@@ -88,7 +74,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
         }
 
         ///<inheritdoc />
-        public Task<IFileData> GetFileAsync(string name)
+        public Task<IFileData?> GetFileAsync(string name)
         {
             throw new NotImplementedException();
         }
@@ -100,29 +86,49 @@ namespace StrixMusic.Cores.OneDrive.Storage
         }
 
         ///<inheritdoc />
-        public Task<IFolderData> GetFolderAsync(string name)
+        public async Task<IFolderData?> GetFolderAsync(string name)
         {
-            var folder = _childrenCache.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var driveItem = await _graphClient.Drive.Items[OneDriveFolderId].Request().Expand(EXPAND_STRING).GetAsync();
 
-            return Task.FromResult(folder);
+            foreach (var item in driveItem.Children)
+            {
+                if (item.Folder is null)
+                    continue;
+
+                if (item.Name == name)
+                    return new OneDriveFolderData(_graphClient, item);
+            }
+
+            return null;
         }
 
         ///<inheritdoc />
         public async Task<IEnumerable<IFolderData>> GetFoldersAsync()
         {
-            if (_childrenCache.Any())
-                return _childrenCache;
+            var driveItem = await _graphClient.Drive.Items[OneDriveFolderId].Request().Expand(EXPAND_STRING).GetAsync();
 
-            _childrenCache = await _oneDriveStorageService.GetItemsAsync(this, IsRoot);
+            var results = new List<IFolderData>();
 
-            return _childrenCache;
+            foreach (var item in driveItem.Children)
+            {
+                if (item.Folder is null)
+                    continue;
 
+                results.Add(new OneDriveFolderData(_graphClient, item));
+            }
+
+            return results;
         }
 
         ///<inheritdoc />
-        public Task<IFolderData> GetParentAsync()
+        public async Task<IFolderData?> GetParentAsync()
         {
-            throw new NotImplementedException();
+            if (_driveItem.ParentReference is null)
+                return null;
+
+            var parent = await _graphClient.Drive.Items[_driveItem.ParentReference.DriveId].Request().GetAsync();
+
+            return new OneDriveFolderData(_graphClient, parent);
         }
     }
 }

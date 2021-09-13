@@ -1,15 +1,11 @@
 ﻿using Microsoft.Graph;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Identity.Client;
-using System.Linq;
-using System.Threading;
 using Microsoft.Toolkit.Diagnostics;
-using OwlCore.Provisos;
+using System;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace StrixMusic.Cores.OneDrive.Services
 {
@@ -21,35 +17,33 @@ namespace StrixMusic.Cores.OneDrive.Services
         private readonly string _authorityUri = "https://login.microsoftonline.com/consumers";
         private readonly string[] _scopes = { "Files.Read.All" };
 
-        private IPublicClientApplication _clientApp;
-        private Uri _authority;
-
-        public string? AccessToken { get; private set; }
+        private readonly IPublicClientApplication _clientApp;
 
         /// <summary>
-        /// Initializes the <see cref="IPublicClientApplication"/>.
+        /// The access token used to authenticate with OneDrive.
+        /// </summary>
+        internal string? AccessToken { get; private set; }
+
+        public string? EmailAddress { get; private set; }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="AuthenticationManager"/>.
         /// </summary>
         /// <param name="clientId">The client id of the app in azure portal.</param>
         /// <param name="tenantId">The tenant id generated.</param>
-        public AuthenticationManager(string clientId, string tenantId, string redirectUri = null)
+        /// <param name="redirectUri">The redirect URI to use with the connected application, if any.</param>
+        public AuthenticationManager(string clientId, string tenantId, string? redirectUri = null)
         {
-            _authority = new Uri($"{_authorityUri}/{tenantId}");
+            var authority = new Uri($"{_authorityUri}/{tenantId}");
 
-            if (string.IsNullOrEmpty(redirectUri))
-            {
-                _clientApp = PublicClientApplicationBuilder
-                    .Create(clientId)
-                    .WithAuthority(_authority, false)
-                    .Build();
-            }
-            else
-            {
-                _clientApp = PublicClientApplicationBuilder
-                    .Create(clientId)
-                    .WithRedirectUri(redirectUri)
-                    .WithAuthority(_authority, false)
-                    .Build();
-            }
+            var builder = PublicClientApplicationBuilder
+                .Create(clientId)
+                .WithAuthority(authority, false);
+
+            if (!string.IsNullOrWhiteSpace(redirectUri))
+                builder.WithRedirectUri(redirectUri);
+
+            _clientApp = builder.Build();
         }
 
         /// <summary>
@@ -58,26 +52,23 @@ namespace StrixMusic.Cores.OneDrive.Services
         /// <returns></returns>
         public async Task<GraphServiceClient?> GenerateGraphToken()
         {
-            Guard.IsNotNull(typeof(IPublicClientApplication), "Client application not initialized. Make sure you initliaze the app before acquiring token.");
-
-            GraphServiceClient graphClient = null;
+            GraphServiceClient? graphClient = null;
             var accounts = await _clientApp.GetAccountsAsync();
             AuthenticationResult result;
 
             try
             {
-                result = await _clientApp.AcquireTokenSilent(_scopes, accounts.FirstOrDefault())
-                    .ExecuteAsync();
+                result = await _clientApp.AcquireTokenSilent(_scopes, accounts.FirstOrDefault()).ExecuteAsync();
 
                 AccessToken = result.AccessToken;
-
-                graphClient = new GraphServiceClient(
-            "https://graph.microsoft.com/v1.0",
-            new DelegateAuthenticationProvider(
-                async (requestMessage) =>
+                
+                var authProvider = new DelegateAuthenticationProvider(requestMessage =>
                 {
                     requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", AccessToken);
-                }));
+                    return Task.CompletedTask;
+                });
+
+                graphClient = new GraphServiceClient("https://graph.microsoft.com/v1.0", authProvider);
             }
             catch (MsalUiRequiredException)
             {
@@ -89,15 +80,15 @@ namespace StrixMusic.Cores.OneDrive.Services
                     if (result != null && !string.IsNullOrWhiteSpace(result.AccessToken))
                     {
                         AccessToken = result.AccessToken;
+                        EmailAddress = result.Account.Username;
 
-
-                        graphClient = new GraphServiceClient(
-                    "https://graph.microsoft.com/v1.0",
-                    new DelegateAuthenticationProvider(
-                        async (requestMessage) =>
+                        var authProvider = new DelegateAuthenticationProvider(requestMessage =>
                         {
                             requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", AccessToken);
-                        }));
+                            return Task.CompletedTask;
+                        });
+
+                        graphClient = new GraphServiceClient("https://graph.microsoft.com/v1.0", authProvider);
                     }
 
                 }

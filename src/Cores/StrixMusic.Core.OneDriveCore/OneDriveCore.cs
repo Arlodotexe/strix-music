@@ -28,6 +28,9 @@ namespace StrixMusic.Cores.OneDrive
         public override ICoreConfig CoreConfig { get; protected set; }
 
         /// <inheritdoc/>
+        public override string InstanceDescriptor { get; set; } = string.Empty;
+
+        /// <inheritdoc/>
         public override event EventHandler<CoreState>? CoreStateChanged;
 
         /// <inheritdoc/>
@@ -43,31 +46,20 @@ namespace StrixMusic.Cores.OneDrive
 
             _settingsService = new OneDriveCoreSettingsService(InstanceId);
 
-            // TODO: they can happen in parallel.
             var clientId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId));
-            var folderPath = await _settingsService.GetValue<string>( nameof(OneDriveCoreSettingsKeys.FolderPath));
+            var folderPath = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.FolderPath));
             var tenantId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId));
-            var redirectUri = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri));
 
             await coreConfig.SetupConfigurationServices(services);
 
             if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(folderPath) || string.IsNullOrEmpty(tenantId))
             {
-                coreConfig.SetupAbstractUIForConfig();
+                coreConfig.SetupAbstractUIForFirstSetup();
                 ChangeCoreState(CoreState.NeedsSetup);
             }
             else
             {
-                var tokenAcquired = await coreConfig.SetupAuthenticationManager(clientId, tenantId, redirectUri);
-
-                if (tokenAcquired)
-                {
-                    ChangeCoreState(CoreState.Configured);
-                    return;
-                }
-
-                ChangeCoreState(CoreState.NeedsSetup);
-                coreConfig.SetupAbstractUIForConfig();
+                await coreConfig.LoginAsync();
             }
         }
 
@@ -75,6 +67,12 @@ namespace StrixMusic.Cores.OneDrive
         {
             CoreState = state;
             CoreStateChanged?.Invoke(this, state);
+        }
+
+        internal void ChangeInstanceDescriptor(string instanceDescriptor)
+        {
+            InstanceDescriptor = instanceDescriptor;
+            InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
         }
     }
 }

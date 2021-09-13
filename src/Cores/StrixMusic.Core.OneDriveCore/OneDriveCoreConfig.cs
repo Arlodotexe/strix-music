@@ -4,15 +4,16 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graph;
 using Microsoft.Toolkit.Diagnostics;
-using Nito.AsyncEx;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Services.AbstractUIStorageExplorers;
 using StrixMusic.Cores.OneDrive.Services;
+using StrixMusic.Cores.OneDrive.Storage;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Cores.OneDrive
@@ -20,10 +21,9 @@ namespace StrixMusic.Cores.OneDrive
     ///  <inheritdoc/>
     public sealed class OneDriveCoreConfig : ICoreConfig
     {
-        private AbstractTextBox? _clientIdTb;
-        private AbstractTextBox? _tenantTb;
-        private AbstractTextBox? _redirectUriTb;
-        private GraphServiceClient? _graphServiceClient;
+        private GraphServiceClient? _graphClient;
+        private IFolderData? _rootFolder;
+        private readonly TaskCompletionSource<object?> _filePickerTaskCompletionSource = new TaskCompletionSource<object?>();
 
         private ISettingsService? _settingsService;
         private AuthenticationManager? _authenticationManager;
@@ -53,119 +53,156 @@ namespace StrixMusic.Cores.OneDrive
 
         public Task SetupConfigurationServices(IServiceCollection services)
         {
-            services.AddSingleton(typeof(OneDriveCoreStorageService));
+            _settingsService = new OneDriveCoreSettingsService(SourceCore.InstanceId);
+            services.AddSingleton(_settingsService);
 
             Services = services.BuildServiceProvider();
 
             return Task.CompletedTask;
         }
-        
-        /// <summary>
-        /// Set up <see cref="AbstractUIElements"/> for configuration.
-        /// </summary>
-        public void SetupAbstractUIForConfig()
+
+        public void SetupAbstractUIForFirstSetup()
         {
-            _clientIdTb = new AbstractTextBox("ClientId", string.Empty)
+            var showAdvanced = new AbstractBoolean("showAdvanced", "Show advanced");
+            var continueButton = new AbstractButton("continueButton", "Continue");
+
+            showAdvanced.StateChanged += OnShowAdvancedClicked;
+            continueButton.Clicked += OnContinueClicked;
+
+            var initialSettings = BuildSimpleSettings();
+            SaveAbstractUI(initialSettings);
+
+            void OnContinueClicked(object sender, EventArgs e)
             {
-                PlaceholderText = "Enter client id here.",
-            };
+                continueButton.Clicked -= OnContinueClicked;
+                showAdvanced.StateChanged -= OnShowAdvancedClicked;
 
-            _tenantTb = new AbstractTextBox("Tenant Id", string.Empty)
+                // Detaches any events related to advanced settings.
+                if (showAdvanced.State)
+                    showAdvanced.State = false;
+            }
+
+            void OnShowAdvancedClicked(object sender, bool newState)
             {
-                PlaceholderText = "Enter tenant id here.",
-            };
+                var ui = newState ?
+                    BuildAdvancedSettings() :
+                    BuildSimpleSettings();
 
-            _redirectUriTb = new AbstractTextBox("Redirect Uri", string.Empty)
+                SaveAbstractUI(ui);
+            }
+
+            void SaveAbstractUI(AbstractUICollection collection)
             {
-                PlaceholderText = "Enter redirect uri (If Any).",
-            };
+                AbstractUIElements = collection.IntoList();
+                AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+            }
 
-            var startButton = new AbstractButton("Start", "Get Started");
-
-            startButton.Clicked += StartButton_Clicked;
-
-            AbstractUIElements = new List<AbstractUICollection>
+            AbstractUICollection BuildSimpleSettings()
             {
-                new AbstractUICollection("SettingsGroup")
+                return new AbstractUICollection("SettingsGroup")
                 {
-                    Title = "OneDrive Settings.",
-                    Items = new List<AbstractUIElement>
-                    {
-                        _clientIdTb,
-                        _tenantTb,
-                        _redirectUriTb,
-                        startButton
-                    },
-                }
-            };
+                    new AbstractRichTextBlock("IntroText", "To get set up with OneDrive, you'll need to log in with your Microsoft account."),
+                    showAdvanced,
+                    continueButton,
+                };
+            }
 
-            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+            AbstractUICollection BuildAdvancedSettings()
+            {
+                Guard.IsNotNull(showAdvanced, nameof(showAdvanced));
+                Guard.IsNotNull(continueButton, nameof(continueButton));
+
+                var clientIdTb = new AbstractTextBox("ClientId", string.Empty, "Enter client id");
+                var tenantTb = new AbstractTextBox("Tenant Id", string.Empty, "Enter tenant id");
+                var redirectUriTb = new AbstractTextBox("Redirect Uri", string.Empty, "Enter redirect uri (if any)");
+
+                clientIdTb.ValueChanged += OnTextBoxChanged;
+                showAdvanced.StateChanged += OnAdvancedTurnedOff;
+
+                async void OnTextBoxChanged(object sender, string value)
+                {
+                    Guard.IsNotNull(_settingsService, nameof(_settingsService));
+
+                    if (sender == clientIdTb)
+                        await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId), value.Trim());
+
+                    if (sender == tenantTb)
+                        await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId), value.Trim());
+
+                    if (sender == redirectUriTb)
+                        await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri), value.Trim());
+                }
+
+                void OnAdvancedTurnedOff(object sender, bool newState)
+                {
+                    clientIdTb.ValueChanged -= OnTextBoxChanged;
+                    showAdvanced.StateChanged -= OnAdvancedTurnedOff;
+                }
+
+                return new AbstractUICollection("SettingsGroup")
+                {
+                    new AbstractRichTextBlock("IntroText", "To get set up with OneDrive, you'll need to log in with your Microsoft account."),
+                    showAdvanced,
+                    clientIdTb,
+                    tenantTb,
+                    redirectUriTb,
+                    continueButton,
+                };
+            }
         }
 
         /// <summary>
-        /// Setups the graph client using the credentials, and prepares an action for access token.
+        /// Logs the user in.
         /// </summary>
-        /// <param name="clientId"></param>
-        /// <param name="tenantId"></param>
-        /// <param name="redirectUri"></param>
-        /// <returns></returns>
-        public async Task<bool> SetupAuthenticationManager(string clientId, string tenantId, string redirectUri)
-        {
-            _authenticationManager =
-                new AuthenticationManager(clientId, tenantId, redirectUri);
-
-            _graphServiceClient = await _authenticationManager.GenerateGraphToken();
-            return _graphServiceClient != null;
-        }
-
-        private async void StartButton_Clicked(object sender, EventArgs e)
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        public async Task LoginAsync()
         {
             Guard.IsNotNull(Services, nameof(Services));
-            Guard.IsNotNull(_clientIdTb, nameof(_clientIdTb));
-            Guard.IsNotNull(_tenantTb, nameof(_tenantTb));
-            Guard.IsNotNull(_redirectUriTb, nameof(_redirectUriTb));
+            Guard.IsNotNull(_settingsService, nameof(_settingsService));
+            Guard.IsNotNull(_graphClient, nameof(_graphClient));
 
-            if (string.IsNullOrWhiteSpace(_clientIdTb.Value) || string.IsNullOrWhiteSpace(_tenantTb.Value))
-                return;
+            var notificationService = Services.GetRequiredService<INotificationService>();
 
-            var tokenAcquired = await SetupAuthenticationManager(_clientIdTb.Value.Trim(), _tenantTb.Value.Trim(), _redirectUriTb.Value.Trim());
+            var clientId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId));
+            var tenantId = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId));
+            var redirectUri = await _settingsService.GetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri));
 
-            if (!tokenAcquired)
+            _authenticationManager = new AuthenticationManager(clientId, tenantId, redirectUri);
+            _graphClient = await _authenticationManager.GenerateGraphToken();
+
+            if (_graphClient is null)
             {
-                // TODO: Show error: Unauthorized to get access token.
+                notificationService.RaiseNotification("Error", "OneDrive encountered an error while logging in.");
                 return;
             }
 
-            _settingsService = new OneDriveCoreSettingsService(SourceCore.InstanceId);
+            SourceCore.Cast<OneDriveCore>().ChangeInstanceDescriptor(_authenticationManager.EmailAddress ?? string.Empty);
 
-            var saveTasks = new List<Task>
-            {
-                _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.RedirectUri), _redirectUriTb.Value.Trim()),
-                _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.ClientId), _clientIdTb.Value.Trim()),
-                _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.TenantId), _tenantTb.Value.Trim()),
-            };
+            // Get root OneDrive folder.
+            var driveItem = await _graphClient.Drive.Root.Request().Expand("children").GetAsync();
+            _rootFolder = new OneDriveFolderData(_graphClient, driveItem);
 
-            await saveTasks.WhenAll();
+            await InitAbstractFolderExplorer(_rootFolder);
 
-            var oneDriveService = Services.GetService<OneDriveCoreStorageService>();
-            Guard.IsNotNull(oneDriveService, nameof(oneDriveService));
-            Guard.IsNotNull(_graphServiceClient, nameof(_graphServiceClient));
+            // Wait until the user has picked a file.
+            await _filePickerTaskCompletionSource.Task;
 
-            oneDriveService.Init(_graphServiceClient);
+            SourceCore.Cast<OneDriveCore>().ChangeCoreState(CoreState.Configured);
+            SourceCore.Cast<OneDriveCore>().ChangeCoreState(CoreState.Loaded);
 
-            var rootFolder = await oneDriveService.GetRootFolderAsync();
-
-            await InitFileExplorer(rootFolder);
+            AbstractUIElements = new AbstractUICollection(string.Empty).IntoList();
+            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private async Task InitFileExplorer(IFolderData folder)
+        private async Task InitAbstractFolderExplorer(IFolderData folder)
         {
             var fileExplorer = new AbstractFolderExplorer(folder);
-
             await fileExplorer.InitAsync();
+
             Guard.IsNotNull(fileExplorer.AbstractUI, nameof(fileExplorer.AbstractUI));
 
             AbstractUIElements = fileExplorer.AbstractUI.IntoList();
+            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
 
             fileExplorer.FolderSelected += FolderExplorerService_FolderSelected;
             fileExplorer.DirectoryChanged += FileExplorer_DirectoryChanged;
@@ -187,13 +224,10 @@ namespace StrixMusic.Cores.OneDrive
             var fileExplorer = (AbstractFolderExplorer)sender;
             fileExplorer.FolderSelected -= FolderExplorerService_FolderSelected;
 
-            SetupAbstractUIForConfig();
-
             _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.FolderPath), e.Path);
-            SourceCore.Cast<OneDriveCore>().ChangeCoreState(CoreState.Configured);
-            SourceCore.Cast<OneDriveCore>().ChangeCoreState(CoreState.Loaded);
 
-            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+            // Let listeners know that the user has picked a file.
+            _filePickerTaskCompletionSource.SetResult(null);
         }
 
         public ValueTask DisposeAsync()
