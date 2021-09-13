@@ -1,4 +1,4 @@
-﻿using StrixMusic.Cores.LocalFiles;
+﻿using StrixMusic.Cores.Files;
 using StrixMusic.Sdk.Data.Core;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ using StrixMusic.Sdk.Services.Settings;
 namespace StrixMusic.Cores.OneDrive
 {
     ///  <inheritdoc/>
-    public class OneDriveCoreConfig : LocalFilesCoreConfig
+    public class OneDriveCoreConfig : FilesCoreConfig
     {
         private AbstractTextBox? _clientIdTb;
         private AbstractTextBox? _tenantTb;
@@ -57,7 +57,6 @@ namespace StrixMusic.Cores.OneDrive
         ///<inheritdoc/>
         public override void SetupAbstractUISettings()
         {
-
             _clientIdTb = new AbstractTextBox("ClientId", string.Empty)
             {
                 PlaceholderText = "Enter client id here.",
@@ -117,7 +116,6 @@ namespace StrixMusic.Cores.OneDrive
             Guard.IsNotNull(_clientIdTb, nameof(_clientIdTb));
             Guard.IsNotNull(_tenantTb, nameof(_tenantTb));
             Guard.IsNotNull(_redirectUriTb, nameof(_redirectUriTb));
-
 
             if (string.IsNullOrWhiteSpace(_clientIdTb.Value) || string.IsNullOrWhiteSpace(_tenantTb.Value))
                 return;
@@ -191,7 +189,7 @@ namespace StrixMusic.Cores.OneDrive
             Guard.IsNotNull(_settingsService, nameof(OneDriveCoreSettingsService));
             _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.FolderPath), e.Path);
 
-            SourceCore.Cast<LocalFilesCore>().ChangeCoreState(Sdk.Data.CoreState.Configured);
+            SourceCore.Cast<FilesCore>().ChangeCoreState(Sdk.Data.CoreState.Configured);
 
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }

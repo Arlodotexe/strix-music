@@ -6,10 +6,10 @@ using OwlCore.Provisos;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
 
-namespace StrixMusic.Cores.LocalFiles.Models
+namespace StrixMusic.Cores.Files.Models
 {
     /// <inheritdoc cref="ICorePlayableCollectionGroup"/>
-    public abstract class LocalFilesCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup, IAsyncInit
+    public abstract class FilesCorePlayableCollectionGroupBase : ICorePlayableCollectionGroup, IAsyncInit
     {
         private int _totalAlbumItemsCount;
         private int _totalArtistItemsCount;
@@ -18,10 +18,10 @@ namespace StrixMusic.Cores.LocalFiles.Models
         private int _totalChildrenCount;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFilesCorePlayableCollectionGroupBase"/> class.
+        /// Initializes a new instance of the <see cref="FilesCorePlayableCollectionGroupBase"/> class.
         /// </summary>
         /// <param name="sourceCore">The instance of the core this object was created in.</param>
-        protected LocalFilesCorePlayableCollectionGroupBase(ICore sourceCore)
+        protected FilesCorePlayableCollectionGroupBase(ICore sourceCore)
         {
             SourceCore = sourceCore;
         }

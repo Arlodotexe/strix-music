@@ -4,24 +4,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
-using StrixMusic.Cores.LocalFiles.Services;
+using StrixMusic.Cores.Files.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Cores.LocalFiles.Models
+namespace StrixMusic.Cores.Files.Models
 {
     /// <inheritdoc cref="ICoreLibrary"/>
-    public class LocalFilesCoreLibrary : LocalFilesCorePlayableCollectionGroupBase, ICoreLibrary
+    public class FilesCoreLibrary : FilesCorePlayableCollectionGroupBase, ICoreLibrary
     {
         private IFileMetadataManager? _fileMetadataManager;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFilesCoreLibrary"/> class.
+        /// Initializes a new instance of the <see cref="FilesCoreLibrary"/> class.
         /// </summary>
         /// <param name="sourceCore">The core that created this instance.</param>
-        public LocalFilesCoreLibrary(ICore sourceCore)
+        public FilesCoreLibrary(ICore sourceCore)
             : base(sourceCore)
         {
         }
@@ -83,7 +83,7 @@ namespace StrixMusic.Cores.LocalFiles.Models
             {
                 Guard.IsNotNullOrWhiteSpace(item.Id, nameof(item.Id));
 
-                addedItems.Add(new CollectionChangedItem<ICorePlaylistCollectionItem>(InstanceCache.PlayLists.GetOrCreate(item.Id, SourceCore, item), addedItems.Count));
+                addedItems.Add(new CollectionChangedItem<ICorePlaylistCollectionItem>(InstanceCache.Playlists.GetOrCreate(item.Id, SourceCore, item), addedItems.Count));
             }
 
             TotalPlaylistItemsCount += addedItems.Count - removedItems.Count;
@@ -228,7 +228,7 @@ namespace StrixMusic.Cores.LocalFiles.Models
             {
                 Guard.IsNotNullOrWhiteSpace(playList.Id, nameof(playList.Id));
 
-                yield return InstanceCache.PlayLists.GetOrCreate(playList.Id, SourceCore, playList);
+                yield return InstanceCache.Playlists.GetOrCreate(playList.Id, SourceCore, playList);
             }
         }
 

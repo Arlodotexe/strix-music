@@ -7,12 +7,12 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Cores.LocalFiles.Models
+namespace StrixMusic.Cores.Files.Models
 {
     /// <summary>
     /// A LocalFileCore implementation of <see cref="ICoreSearchResults"/>.
     /// </summary>
-    public class LocalFilesCoreSearchResults : LocalFilesCorePlayableCollectionGroupBase, ICoreSearchResults
+    public class FilesCoreSearchResults : FilesCorePlayableCollectionGroupBase, ICoreSearchResults
     {
         private readonly string _query;
         private readonly IFileMetadataManager _fileMetadataManager;
@@ -22,11 +22,11 @@ namespace StrixMusic.Cores.LocalFiles.Models
         private IEnumerable<ArtistMetadata> _artistMetadata;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFilesCoreSearchResults"/> class.
+        /// Initializes a new instance of the <see cref="FilesCoreSearchResults"/> class.
         /// </summary>
         /// <param name="sourceCore">The core that created this object.</param>
         /// <param name="query">The query that was given to produce these results.</param>
-        public LocalFilesCoreSearchResults(ICore sourceCore, string query)
+        public FilesCoreSearchResults(ICore sourceCore, string query)
             : base(sourceCore)
         {
             _albumMetadata = new List<AlbumMetadata>();
@@ -85,7 +85,7 @@ namespace StrixMusic.Cores.LocalFiles.Models
             {
                 Guard.IsNotNull(album.Id, nameof(album.Id));
 
-                yield return new LocalFilesCoreAlbum(SourceCore, album);
+                yield return new FilesCoreAlbum(SourceCore, album);
             }
         }
 
@@ -98,7 +98,7 @@ namespace StrixMusic.Cores.LocalFiles.Models
 
             foreach (var artist in _artistMetadata)
             {
-                yield return new LocalFilesCoreArtist(SourceCore, artist);
+                yield return new FilesCoreArtist(SourceCore, artist);
             }
         }
 
@@ -111,7 +111,7 @@ namespace StrixMusic.Cores.LocalFiles.Models
 
             foreach (var track in _trackMetadata)
             {
-                yield return new LocalFilesCoreTrack(SourceCore, track);
+                yield return new FilesCoreTrack(SourceCore, track);
             }
         }
 

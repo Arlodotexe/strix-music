@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractUI.Models;
-using StrixMusic.Cores.LocalFiles;
+using StrixMusic.Cores.Files;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +12,7 @@ using StrixMusic.Sdk.Services.Settings;
 namespace StrixMusic.Cores.OneDrive
 {
     ///<inheritdoc/>
-    public class OneDriveCore : LocalFilesCore
+    public class OneDriveCore : FilesCore
     {
         private ISettingsService? _settingsService;
 
@@ -25,7 +25,6 @@ namespace StrixMusic.Cores.OneDrive
         {
             CoreConfig = new OneDriveCoreConfig(this);
         }
-
 
         /// <inheritdoc/>
         public override async Task InitAsync(IServiceCollection services)

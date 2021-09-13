@@ -1,18 +1,16 @@
-﻿using StrixMusic.Sdk.Data.Core;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using StrixMusic.Sdk.Data.Core;
 
-
-namespace StrixMusic.Cores.LocalFiles.Models
+namespace StrixMusic.Cores.Files.Models
 {
     /// <summary>
-    /// Discoverable music for the <see cref="LocalFilesCore"/>.
+    /// Discoverable music for the <see cref="FilesCore"/>.
     /// </summary>
-    public class LocalFilesCoreDiscoverables : LocalFilesCorePlayableCollectionGroupBase, ICoreDiscoverables
+    public class FilesCoreDiscoverables : FilesCorePlayableCollectionGroupBase, ICoreDiscoverables
     {
         /// <inheritdoc />
-        public LocalFilesCoreDiscoverables(ICore sourceCore)
+        public FilesCoreDiscoverables(ICore sourceCore)
             : base(sourceCore)
         {
         }

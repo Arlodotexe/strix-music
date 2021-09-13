@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using OwlCore.Extensions;
-using StrixMusic.Cores.LocalFiles;
+using StrixMusic.Cores.Files;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Cores.OneDrive.Services

@@ -6,8 +6,8 @@ using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Cores.LocalFiles.Models;
-using StrixMusic.Cores.LocalFiles.Services;
+using StrixMusic.Cores.Files.Models;
+using StrixMusic.Cores.Files.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
@@ -16,24 +16,24 @@ using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 
-namespace StrixMusic.Cores.LocalFiles
+namespace StrixMusic.Cores.Files
 {
     /// <inheritdoc />
-    public class LocalFilesCore : ICore
+    public class FilesCore : ICore
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFilesCore"/> class.
+        /// Initializes a new instance of the <see cref="FilesCore"/> class.
         /// </summary>
         /// <param name="instanceId"></param>
-        public LocalFilesCore(string instanceId)
+        public FilesCore(string instanceId)
         {
             InstanceId = instanceId;
 
             Devices = new List<ICoreDevice>();
-            RecentlyPlayed = new LocalFilesCoreRecentlyPlayed(this);
-            Discoverables = new LocalFilesCoreDiscoverables(this);
-            CoreConfig = new LocalFilesCoreConfig(this);
-            Library = new LocalFilesCoreLibrary(this);
+            RecentlyPlayed = new FilesCoreRecentlyPlayed(this);
+            Discoverables = new FilesCoreDiscoverables(this);
+            CoreConfig = new FilesCoreConfig(this);
+            Library = new FilesCoreLibrary(this);
         }
 
         /// <inheritdoc/>
@@ -106,7 +106,7 @@ namespace StrixMusic.Cores.LocalFiles
 
             ChangeCoreState(CoreState.Loading);
 
-            if (!(CoreConfig is LocalFilesCoreConfig coreConfig))
+            if (!(CoreConfig is FilesCoreConfig coreConfig))
                 return;
 
             await coreConfig.SetupConfigurationServices(services);
@@ -124,7 +124,7 @@ namespace StrixMusic.Cores.LocalFiles
 
             coreConfig.SetupAbstractUISettings();
             await coreConfig.SetupServices(services);
-            await Library.Cast<LocalFilesCoreLibrary>().InitAsync();
+            await Library.Cast<FilesCoreLibrary>().InitAsync();
 
             Guard.IsNotNull(CoreConfig.Services, nameof(CoreConfig.Services));
             ChangeCoreState(CoreState.Loaded);
@@ -143,7 +143,7 @@ namespace StrixMusic.Cores.LocalFiles
                 return;
             }
 
-            await this.GetService<ISettingsService>().SetValue<string?>(nameof(LocalFilesCoreSettingsKeys.FolderPath), pickedFolder.Path);
+            await this.GetService<ISettingsService>().SetValue<string?>(nameof(FilesCoreSettingsKeys.FolderPath), pickedFolder.Path);
 
             ChangeCoreState(CoreState.Configured);
         }
@@ -163,7 +163,7 @@ namespace StrixMusic.Cores.LocalFiles
 
             var track = await fileMetadataManager.Tracks.GetTrackById(id);
             if (track != null)
-                return new LocalFilesCoreTrack(SourceCore, track);
+                return new FilesCoreTrack(SourceCore, track);
 
             return null;
         }
@@ -171,7 +171,7 @@ namespace StrixMusic.Cores.LocalFiles
         /// <inheritdoc/>
         public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
         {
-            if (!(track is LocalFilesCoreTrack t))
+            if (!(track is FilesCoreTrack t))
                 return Task.FromResult<IMediaSourceConfig?>(null);
 
             Guard.IsNotNull(t.LocalTrackPath, nameof(t.LocalTrackPath));

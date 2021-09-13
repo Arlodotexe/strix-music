@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.Settings;
 
-namespace StrixMusic.Cores.LocalFiles.Services
+namespace StrixMusic.Cores.Files.Services
 {
     /// <inheritdoc />
-    internal class LocalFilesCoreSettingsService : SettingsServiceBase
+    internal class FilesCoreSettingsService : SettingsServiceBase
     {
         /// <summary>
-        /// Creates a new instance of <see cref="LocalFilesCoreSettingsService"/>.
+        /// Creates a new instance of <see cref="FilesCoreSettingsService"/>.
         /// </summary>
-        /// <param name="instanceId">The ID of the current <see cref="LocalFilesCore"/> instance.</param>
-        public LocalFilesCoreSettingsService(string instanceId)
+        /// <param name="instanceId">The ID of the current <see cref="FilesCore"/> instance.</param>
+        public FilesCoreSettingsService(string instanceId)
         {
             Id = instanceId;
         }
@@ -21,6 +21,6 @@ namespace StrixMusic.Cores.LocalFiles.Services
         public override string Id { get; }
 
         /// <inheritdoc/>
-        public override IEnumerable<Type> SettingsKeysTypes => typeof(LocalFilesCoreSettingsKeys).IntoList();
+        public override IEnumerable<Type> SettingsKeysTypes => typeof(FilesCoreSettingsKeys).IntoList();
     }
 }

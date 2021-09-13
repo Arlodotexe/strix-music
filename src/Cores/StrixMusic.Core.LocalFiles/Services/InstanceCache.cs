@@ -1,18 +1,16 @@
 ﻿using System;
 using OwlCore.Services;
-using StrixMusic.Cores.LocalFiles.Models;
+using StrixMusic.Cores.Files.Models;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Cores.LocalFiles.Services
+namespace StrixMusic.Cores.Files.Services
 {
     /// <summary>
     /// Contains caches for all instance created across the core.
     /// </summary>
     public static class InstanceCache
     {
-        //public static InstanceCacheRepository<LocalFilesCoreAlbum> PlaylistCache = new InstanceCacheRepository<LocalFilesCorePlaylist>();
-
         /// <summary>
         /// A cache of all albums across all core instances.
         /// </summary>
@@ -36,54 +34,54 @@ namespace StrixMusic.Cores.LocalFiles.Services
         /// <summary>
         /// A cache of all playlists across all core instances.
         /// </summary>
-        public static PlaylistCacheRepo PlayLists { get; set; } = new PlaylistCacheRepo();
+        public static PlaylistCacheRepo Playlists { get; set; } = new PlaylistCacheRepo();
     }
 
     /// <summary>
     /// A cache of all albums across all core instances.
     /// </summary>
-    public class AlbumCacheRepo : InstanceCacheRepository<LocalFilesCoreAlbum>
+    public class AlbumCacheRepo : InstanceCacheRepository<FilesCoreAlbum>
     {
         /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, Func{T})"/>
-        public LocalFilesCoreAlbum GetOrCreate(string id, ICore sourceCore, AlbumMetadata albumMetadata)
+        public FilesCoreAlbum GetOrCreate(string id, ICore sourceCore, AlbumMetadata albumMetadata)
         {
-            return GetOrCreate(id, () => new LocalFilesCoreAlbum(sourceCore, albumMetadata));
+            return GetOrCreate(id, () => new FilesCoreAlbum(sourceCore, albumMetadata));
         }
     }
 
     /// <summary>
     /// A cache of all artists across all core instances.
     /// </summary>
-    public class ArtistCacheRepo : InstanceCacheRepository<LocalFilesCoreArtist>
+    public class ArtistCacheRepo : InstanceCacheRepository<FilesCoreArtist>
     {
         /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, Func{T})"/>
-        public LocalFilesCoreArtist GetOrCreate(string id, ICore sourceCore, ArtistMetadata artistMetadata)
+        public FilesCoreArtist GetOrCreate(string id, ICore sourceCore, ArtistMetadata artistMetadata)
         {
-            return GetOrCreate(id, () => new LocalFilesCoreArtist(sourceCore, artistMetadata));
+            return GetOrCreate(id, () => new FilesCoreArtist(sourceCore, artistMetadata));
         }
     }
 
     /// <summary>
     /// A cache of all tracks across all core instances.
     /// </summary>
-    public class TrackCacheRepo : InstanceCacheRepository<LocalFilesCoreTrack>
+    public class TrackCacheRepo : InstanceCacheRepository<FilesCoreTrack>
     {
         /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, Func{T})"/>
-        public LocalFilesCoreTrack GetOrCreate(string id, ICore sourceCore, TrackMetadata trackMetadata)
+        public FilesCoreTrack GetOrCreate(string id, ICore sourceCore, TrackMetadata trackMetadata)
         {
-            return GetOrCreate(id, () => new LocalFilesCoreTrack(sourceCore, trackMetadata));
+            return GetOrCreate(id, () => new FilesCoreTrack(sourceCore, trackMetadata));
         }
     }
 
     /// <summary>
     /// A cache of all images across all core instances.
     /// </summary>
-    public class ImageCacheRepo : InstanceCacheRepository<LocalFilesCoreImage>
+    public class ImageCacheRepo : InstanceCacheRepository<FilesCoreImage>
     {
-        /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, System.Func{T})"/>
-        public LocalFilesCoreImage GetOrCreate(string id, ICore sourceCore, Uri uri, double? width = null, double? height = null)
+        /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, Func{T})"/>
+        public FilesCoreImage GetOrCreate(string id, ICore sourceCore, Uri uri, double? width = null, double? height = null)
         {
-            return GetOrCreate(id, () => new LocalFilesCoreImage(sourceCore, uri, width, height));
+            return GetOrCreate(id, () => new FilesCoreImage(sourceCore, uri, width, height));
         }
     }
 
@@ -92,7 +90,7 @@ namespace StrixMusic.Cores.LocalFiles.Services
     /// </summary>
     public class PlaylistCacheRepo : InstanceCacheRepository<LocalFileCorePlaylist>
     {
-        /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, System.Func{T})"/>
+        /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, Func{T})"/>
         public LocalFileCorePlaylist GetOrCreate(string id, ICore sourceCore, PlaylistMetadata playlistMetadata)
         {
             return GetOrCreate(id, () => new LocalFileCorePlaylist(sourceCore, playlistMetadata));

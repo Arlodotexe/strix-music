@@ -1,17 +1,16 @@
 ﻿using StrixMusic.Sdk.Data.Core;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace StrixMusic.Cores.LocalFiles.Models
+namespace StrixMusic.Cores.Files.Models
 {
     /// <summary>
-    /// The recently played items for the <see cref="LocalFilesCore"/>.
+    /// The recently played items for the <see cref="FilesCore"/>.
     /// </summary>
-    public class LocalFilesCoreRecentlyPlayed : LocalFilesCorePlayableCollectionGroupBase, ICoreRecentlyPlayed
+    public class FilesCoreRecentlyPlayed : FilesCorePlayableCollectionGroupBase, ICoreRecentlyPlayed
     {
         /// <inheritdoc />
-        public LocalFilesCoreRecentlyPlayed(ICore sourceCore)
+        public FilesCoreRecentlyPlayed(ICore sourceCore)
             : base(sourceCore)
         {
         }

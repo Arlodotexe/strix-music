@@ -4,30 +4,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.Events;
-using StrixMusic.Cores.LocalFiles.Services;
+using StrixMusic.Cores.Files.Services;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Cores.LocalFiles.Models
+namespace StrixMusic.Cores.Files.Models
 {
     /// <summary>
     /// Wraps around <see cref="ArtistMetadata"/> to provide artist information extracted from a file to the Strix SDK.
     /// </summary>
-    public class LocalFilesCoreArtist : ICoreArtist
+    public class FilesCoreArtist : ICoreArtist
     {
         private readonly IFileMetadataManager _fileMetadataManager;
         private ArtistMetadata _artistMetadata;
-        private LocalFilesCoreImage? _image;
+        private FilesCoreImage? _image;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFilesCoreArtist"/> class.
+        /// Initializes a new instance of the <see cref="FilesCoreArtist"/> class.
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
         /// <param name="artistMetadata">The artist metadata to wrap around.</param>
-        public LocalFilesCoreArtist(ICore sourceCore, ArtistMetadata artistMetadata)
+        public FilesCoreArtist(ICore sourceCore, ArtistMetadata artistMetadata)
         {
             SourceCore = sourceCore;
             _artistMetadata = artistMetadata;
@@ -162,7 +162,7 @@ namespace StrixMusic.Cores.LocalFiles.Models
             // ReSharper disable once ReplaceWithStringIsNullOrEmpty (breaks nullability check)
             if (e.ImagePath != null && e.ImagePath.Length > 0)
             {
-                var newImage = new LocalFilesCoreImage(SourceCore, new Uri(e.ImagePath));
+                var newImage = new FilesCoreImage(SourceCore, new Uri(e.ImagePath));
                 InstanceCache.Images.Replace(Id, newImage);
                 added.Add(new CollectionChangedItem<ICoreImage>(newImage, 0));
                 _image = newImage;
@@ -530,7 +530,7 @@ namespace StrixMusic.Cores.LocalFiles.Models
             Guard.IsNotNull(_artistMetadata, nameof(_artistMetadata));
 
             foreach (var genre in _artistMetadata.Genres ?? Enumerable.Empty<string>())
-                yield return new LocalFilesCoreGenre(SourceCore, genre);
+                yield return new FilesCoreGenre(SourceCore, genre);
 
             await Task.CompletedTask;
         }

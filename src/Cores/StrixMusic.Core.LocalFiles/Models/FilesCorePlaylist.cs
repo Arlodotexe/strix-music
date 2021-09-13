@@ -10,7 +10,7 @@ using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Cores.LocalFiles.Models
+namespace StrixMusic.Cores.Files.Models
 {
     /// <summary>
     /// Wraps around <see cref="PlaylistMetadata"/> to provide playlist information extracted from a file to the Strix SDK.
@@ -277,7 +277,7 @@ namespace StrixMusic.Cores.LocalFiles.Models
 
             foreach (var item in tracks)
             {
-                yield return new LocalFilesCoreTrack(SourceCore, item);
+                yield return new FilesCoreTrack(SourceCore, item);
             }
         }
 
