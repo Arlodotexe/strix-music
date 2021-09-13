@@ -1,27 +1,25 @@
-﻿using StrixMusic.Cores.Files;
-using StrixMusic.Sdk.Data.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OwlCore.AbstractUI.Models;
-using StrixMusic.Cores.OneDrive.Services;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graph;
 using Microsoft.Toolkit.Diagnostics;
 using Nito.AsyncEx;
 using OwlCore.AbstractStorage;
+using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Services.AbstractUIStorageExplorers;
 using OwlCore.Services.AbstractUIStorageExplorers.Handlers;
-using StrixMusic.Cores.OneDrive.Storage;
+using StrixMusic.Cores.OneDrive.Services;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Cores.OneDrive
 {
     ///  <inheritdoc/>
-    public class OneDriveCoreConfig : FilesCoreConfig
+    public sealed class OneDriveCoreConfig : ICoreConfig
     {
         private AbstractTextBox? _clientIdTb;
         private AbstractTextBox? _tenantTb;
@@ -30,32 +28,47 @@ namespace StrixMusic.Cores.OneDrive
 
         private ISettingsService? _settingsService;
         private AuthenticationManager? _authenticationManager;
-        /// <inheritdoc/>
-        public override event EventHandler? AbstractUIElementsChanged;
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OneDriveCoreConfig"/> class.
         /// </summary>
         public OneDriveCoreConfig(ICore sourceCore)
-            : base(sourceCore)
         {
+            SourceCore = sourceCore;
         }
 
-        public override Task SetupConfigurationServices(IServiceCollection services)
+        /// <inheritdoc />
+        public IReadOnlyList<AbstractUICollection> AbstractUIElements { get; private set; } = new List<AbstractUICollection>();
+
+        /// <inheritdoc />
+        public MediaPlayerType PlaybackType => MediaPlayerType.Standard;
+
+        /// <inheritdoc />
+        public ICore SourceCore { get; }
+
+        /// <inheritdoc />
+        public IServiceProvider? Services { get; private set; }
+
+        /// <inheritdoc/>
+        public event EventHandler? AbstractUIElementsChanged;
+
+        public Task SetupConfigurationServices(IServiceCollection services)
         {
             services.AddSingleton(typeof(OneDriveCoreStorageService));
             services.AddSingleton(typeof(FolderExplorerUIHandler));
 
+            // TODO: Don't pass an entire IoC into an ABSTRACTED folder explorer just for a single class instance.
             services.AddSingleton(x => new AbstractFolderExplorer(Services));
 
             Services = services.BuildServiceProvider();
 
             return Task.CompletedTask;
         }
-
-        ///<inheritdoc/>
-        public override void SetupAbstractUISettings()
+        
+        /// <summary>
+        /// Set up <see cref="AbstractUIElements"/> for configuration.
+        /// </summary>
+        public void SetupAbstractUIForConfig()
         {
             _clientIdTb = new AbstractTextBox("ClientId", string.Empty)
             {
@@ -101,7 +114,7 @@ namespace StrixMusic.Cores.OneDrive
         /// <param name="tenantId"></param>
         /// <param name="redirectUri"></param>
         /// <returns></returns>
-        public async Task<bool> SetupAuthenticationManager(string clientId, string tenantId, string redirectUri = null)
+        public async Task<bool> SetupAuthenticationManager(string clientId, string tenantId, string redirectUri)
         {
             _authenticationManager =
                 new AuthenticationManager(clientId, tenantId, redirectUri);
@@ -179,17 +192,17 @@ namespace StrixMusic.Cores.OneDrive
 
         private void FolderExplorerService_FolderSelected(object sender, IFolderData e)
         {
+            Guard.IsNotNull(Services, nameof(Services));
             AbstractUIElements = new List<AbstractUICollection>();
 
-            var folderExplorerService = Services.GetService<AbstractFolderExplorer>();
+            var folderExplorerService = Services.GetRequiredService<AbstractFolderExplorer>();
 
-            Guard.IsNotNull(folderExplorerService, nameof(folderExplorerService));
             folderExplorerService.FolderSelected -= FolderExplorerService_FolderSelected;
 
             Guard.IsNotNull(_settingsService, nameof(OneDriveCoreSettingsService));
             _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.FolderPath), e.Path);
 
-            SourceCore.Cast<FilesCore>().ChangeCoreState(Sdk.Data.CoreState.Configured);
+            SourceCore.Cast<OneDriveCore>().ChangeCoreState(CoreState.Configured);
 
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -199,6 +212,11 @@ namespace StrixMusic.Cores.OneDrive
             AbstractUIElements = e.IntoList();
 
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return default;
         }
     }
 }

@@ -88,12 +88,12 @@ namespace StrixMusic.Cores.Files.Services
     /// <summary>
     /// A cache of all playlists across all core instances.
     /// </summary>
-    public class PlaylistCacheRepo : InstanceCacheRepository<LocalFileCorePlaylist>
+    public class PlaylistCacheRepo : InstanceCacheRepository<LocalFilesCorePlaylist>
     {
         /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, Func{T})"/>
-        public LocalFileCorePlaylist GetOrCreate(string id, ICore sourceCore, PlaylistMetadata playlistMetadata)
+        public LocalFilesCorePlaylist GetOrCreate(string id, ICore sourceCore, PlaylistMetadata playlistMetadata)
         {
-            return GetOrCreate(id, () => new LocalFileCorePlaylist(sourceCore, playlistMetadata));
+            return GetOrCreate(id, () => new LocalFilesCorePlaylist(sourceCore, playlistMetadata));
         }
     }
 }

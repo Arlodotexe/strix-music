@@ -5,7 +5,7 @@ using StrixMusic.Sdk.Data.Core;
 namespace StrixMusic.Cores.Files.Models
 {
     ///<inheritdoc/>
-    public class FilesCoreImage : ICoreImage
+    public sealed class FilesCoreImage : ICoreImage
     {
         /// <summary>
         /// Creates a new instance of <see cref="FilesCoreImage"/>.

@@ -18,7 +18,7 @@ namespace StrixMusic.Cores.Files.Models
     /// <summary>
     /// Wraps around <see cref="TrackMetadata"/> to provide track information extracted from a file to the Strix SDK.
     /// </summary>
-    public class FilesCoreTrack : ICoreTrack
+    public sealed class FilesCoreTrack : ICoreTrack
     {
         private readonly IFileMetadataManager _fileMetadataManager;
         private TrackMetadata _trackMetadata;

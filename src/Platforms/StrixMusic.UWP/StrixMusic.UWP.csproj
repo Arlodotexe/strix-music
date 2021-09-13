@@ -238,6 +238,10 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Core.Files\StrixMusic.Cores.Files.csproj">
+      <Project>{f78f9f2b-2449-471a-b66a-8e42770a7ad0}</Project>
+      <Name>StrixMusic.Cores.Files</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Cores.Files.csproj">
       <Project>{617f1778-92f9-454a-b041-d71b4b63a221}</Project>
       <Name>StrixMusic.Cores.Files</Name>
@@ -245,6 +249,18 @@
     <ProjectReference Include="..\..\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Cores.OneDrive.csproj">
       <Project>{113fd74a-31a3-4180-bdb0-f0fc27f1339c}</Project>
       <Name>StrixMusic.Cores.OneDrive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.External\StrixMusic.Cores.External.csproj">
+      <Project>{605fe63c-ca63-4f47-b27d-b36e4b0e6211}</Project>
+      <Name>StrixMusic.Cores.External</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.Files\StrixMusic.Cores.Files.csproj">
+      <Project>{18f15e5e-9e8a-4f97-89cf-db66f568f075}</Project>
+      <Name>StrixMusic.Cores.Files</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj">
+      <Project>{8c8f6e30-ab41-41a1-8172-9c237e0ac592}</Project>
+      <Name>StrixMusic.Cores.LocalFiles</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
       <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>

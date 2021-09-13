@@ -1,9 +1,9 @@
-﻿namespace StrixMusic.Cores.Files.Services
+﻿namespace StrixMusic.Cores.LocalFiles.Services
 {
     /// <summary>
-    /// The setting keys for <see cref="FilesCore"/>.
+    /// The setting keys for <see cref="LocalFilesCore"/>.
     /// </summary>
-    public static class FilesCoreSettingsKeys
+    public static class LocalFilesCoreSettingsKeys
     {
         /// <summary>
         /// The folder that the user has chosen to scan for this core instance.

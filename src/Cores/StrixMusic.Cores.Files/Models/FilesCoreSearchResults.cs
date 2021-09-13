@@ -12,7 +12,7 @@ namespace StrixMusic.Cores.Files.Models
     /// <summary>
     /// A LocalFileCore implementation of <see cref="ICoreSearchResults"/>.
     /// </summary>
-    public class FilesCoreSearchResults : FilesCorePlayableCollectionGroupBase, ICoreSearchResults
+    public sealed class FilesCoreSearchResults : FilesCorePlayableCollectionGroupBase, ICoreSearchResults
     {
         private readonly string _query;
         private readonly IFileMetadataManager _fileMetadataManager;

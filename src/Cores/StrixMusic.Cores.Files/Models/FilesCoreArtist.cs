@@ -16,7 +16,7 @@ namespace StrixMusic.Cores.Files.Models
     /// <summary>
     /// Wraps around <see cref="ArtistMetadata"/> to provide artist information extracted from a file to the Strix SDK.
     /// </summary>
-    public class FilesCoreArtist : ICoreArtist
+    public sealed class FilesCoreArtist : ICoreArtist
     {
         private readonly IFileMetadataManager _fileMetadataManager;
         private ArtistMetadata _artistMetadata;

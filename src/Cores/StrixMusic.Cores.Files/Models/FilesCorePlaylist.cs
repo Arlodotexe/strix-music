@@ -15,15 +15,15 @@ namespace StrixMusic.Cores.Files.Models
     /// <summary>
     /// Wraps around <see cref="PlaylistMetadata"/> to provide playlist information extracted from a file to the Strix SDK.
     /// </summary>
-    public class LocalFileCorePlaylist : ICorePlaylist
+    public sealed class LocalFilesCorePlaylist : ICorePlaylist
     {
         private readonly IFileMetadataManager _fileMetadataManager;
         private PlaylistMetadata _playlistMetadata;
 
         /// <summary>
-        /// Creates a new instance of <see cref="LocalFileCorePlaylist"/>
+        /// Creates a new instance of <see cref="LocalFilesCorePlaylist"/>
         /// </summary>
-        public LocalFileCorePlaylist(ICore sourceCore, PlaylistMetadata playlistMetadata)
+        public LocalFilesCorePlaylist(ICore sourceCore, PlaylistMetadata playlistMetadata)
         {
             SourceCore = sourceCore;
             _playlistMetadata = playlistMetadata;

@@ -4,7 +4,7 @@ using StrixMusic.Sdk.Data.Core;
 namespace StrixMusic.Cores.Files.Models
 {
     /// <inheritdoc/>
-    public class FilesCoreGenre : ICoreGenre
+    public sealed class FilesCoreGenre : ICoreGenre
     {
         /// <summary>
         /// Creates a new instance of <see cref="FilesCoreGenre"/>.

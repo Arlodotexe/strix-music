@@ -13,7 +13,7 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Cores.Files.Models
 {
     /// <inheritdoc cref="ICoreLibrary"/>
-    public class FilesCoreLibrary : FilesCorePlayableCollectionGroupBase, ICoreLibrary
+    public sealed class FilesCoreLibrary : FilesCorePlayableCollectionGroupBase, ICoreLibrary
     {
         private IFileMetadataManager? _fileMetadataManager;
 

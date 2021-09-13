@@ -1,18 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Diagnostics;
-using OwlCore.AbstractUI.Models;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Cores.Files;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using StrixMusic.Cores.OneDrive.Services;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Cores.OneDrive
 {
-    ///<inheritdoc/>
-    public class OneDriveCore : FilesCore
+    /// <inheritdoc/>
+    public sealed class OneDriveCore : FilesCore
     {
         private ISettingsService? _settingsService;
 
@@ -27,9 +25,18 @@ namespace StrixMusic.Cores.OneDrive
         }
 
         /// <inheritdoc/>
+        public override ICoreConfig CoreConfig { get; protected set; }
+
+        /// <inheritdoc/>
+        public override event EventHandler<CoreState>? CoreStateChanged;
+
+        /// <inheritdoc/>
+        public override event EventHandler<string>? InstanceDescriptorChanged;
+
+        /// <inheritdoc/>
         public override async Task InitAsync(IServiceCollection services)
         {
-            ChangeCoreState(Sdk.Data.CoreState.Loading);
+            ChangeCoreState(CoreState.Loading);
 
             if (!(CoreConfig is OneDriveCoreConfig coreConfig))
                 return;
@@ -46,8 +53,8 @@ namespace StrixMusic.Cores.OneDrive
 
             if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(folderPath) || string.IsNullOrEmpty(tenantId))
             {
-                coreConfig.SetupAbstractUISettings();
-                ChangeCoreState(Sdk.Data.CoreState.NeedsSetup);
+                coreConfig.SetupAbstractUIForConfig();
+                ChangeCoreState(CoreState.NeedsSetup);
             }
             else
             {
@@ -55,13 +62,19 @@ namespace StrixMusic.Cores.OneDrive
 
                 if (tokenAcquired)
                 {
-                    ChangeCoreState(Sdk.Data.CoreState.Configured);
+                    ChangeCoreState(CoreState.Configured);
                     return;
                 }
 
-                ChangeCoreState(Sdk.Data.CoreState.NeedsSetup);
-                coreConfig.SetupAbstractUISettings();
+                ChangeCoreState(CoreState.NeedsSetup);
+                coreConfig.SetupAbstractUIForConfig();
             }
+        }
+
+        internal void ChangeCoreState(CoreState state)
+        {
+            CoreState = state;
+            CoreStateChanged?.Invoke(this, state);
         }
     }
 }
