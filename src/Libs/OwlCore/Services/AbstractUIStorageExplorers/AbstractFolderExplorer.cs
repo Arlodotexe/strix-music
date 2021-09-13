@@ -2,44 +2,79 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
-using OwlCore.Services.AbstractUIStorageExplorers.Handlers;
+using OwlCore.AbstractUI.Models;
+using OwlCore.Extensions;
+using OwlCore.Provisos;
 
 namespace OwlCore.Services.AbstractUIStorageExplorers
 {
     /// <summary>
     /// File explorer that lets user choose a folder using <see cref="IFolderData"/> and <see cref="IFileData"/>
     /// </summary>
-    public class AbstractFolderExplorer
+    public class AbstractFolderExplorer : IAsyncInit, IDisposable
     {
-        private IServiceProvider _services;
+        private readonly AbstractUIMetadata _backUIMetadata = new("BackBtn")
+        {
+            Title = "Go back",
+            IconCode = "\uE7EA",
+        };
 
-        private FolderExplorerUIHandler? _folderExplorerUIHandler;
+        private readonly IFolderData _rootFolder;
+        private readonly AbstractButton _selectButton;
+        private readonly AbstractButton _cancelButton;
+
+        private IFolderData[]? _currentDisplayedFolders;
+        private AbstractDataList? _currentDataList;
+        private bool _isRootFolder;
 
         /// <summary>
-        /// Occurs won every folder selection.
+        /// Creates a new instance of <see cref="AbstractFolderExplorer"/>.
         /// </summary>
-        public event EventHandler<IFolderData>? FolderSelected;
+        public AbstractFolderExplorer(IFolderData rootFolder)
+        {
+            _rootFolder = rootFolder;
+            _cancelButton = new AbstractButton("cancelFolderExplorerButton", "Cancel", type: AbstractButtonType.Cancel);
+            _selectButton = new AbstractButton("selectFolderButton", "Select", type: AbstractButtonType.Confirm);
+
+            FolderStack = new Stack<IFolderData>();
+
+            AttachEvents();
+        }
+
+        /// <inheritdoc />
+        public async Task InitAsync()
+        {
+            await SetupFolderAsync(_rootFolder);
+            IsInitialized = true;
+        }
+
+        private void AttachEvents()
+        {
+            _cancelButton.Clicked += Canceled;
+            _selectButton.Clicked += SelectFolderButtonOnClicked;
+        }
+
+        private void DetachEvents()
+        {
+            _cancelButton.Clicked -= Canceled;
+            _selectButton.Clicked -= SelectFolderButtonOnClicked;
+
+            if (_currentDataList is not null)
+                _currentDataList.ItemTapped -= AbstractDataListOnItemTapped;
+        }
+
+        /// <inheritdoc />
+        public bool IsInitialized { get; private set; }
 
         /// <summary>
-        /// Occurs on every directory navigation.
+        /// Holds all navigated directories. The top of the stack has the current folder. The last item in the stack has the root folder.
         /// </summary>
-        public event EventHandler<IFolderData>? DirectoryChanged;
+        public Stack<IFolderData> FolderStack { get; }
 
         /// <summary>
-        /// The stack that holds all navigated directories, the top of the stack has the recently opened folder, the last item in the stack has the root folder.
-        /// </summary>
-        public Stack<IFolderData> FolderStack { get; private set; }
-
-        /// <summary>
-        /// Holds the previous folder when navigating back.
-        /// </summary>
-        public IFolderData? PreviousFolder { get; private set; }
-
-        /// <summary>
-        /// Selected path of the <see cref="AbstractFolderExplorer"/>.
+        /// The folder that the user has selected, if any.
         /// </summary>
         public IFolderData? SelectedFolder { get; private set; }
 
@@ -49,94 +84,125 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
         public IFolderData? CurrentFolder { get; private set; }
 
         /// <summary>
-        /// Determines whether the current directory is root or not.
+        /// Raised when the user has selected a folder.
         /// </summary>
-        public bool IsRootDirectory { get; private set; }
+        public event EventHandler<IFolderData>? FolderSelected;
 
         /// <summary>
-        /// The navigation state of the <see cref="AbstractFolderExplorer"/>.
+        /// Raised when the user has canceled folder picking.
         /// </summary>
-        public NavigationAction NavigationAction { get; private set; }
+        public event EventHandler? Canceled;
 
         /// <summary>
-        /// Creates a new instance of <see cref="AbstractFolderExplorer"/>.
+        /// Raised on directory navigation.
         /// </summary>
-        /// <param name="services"></param>
-        public AbstractFolderExplorer(IServiceProvider services)
-        {
-            _services = services;
+        public event EventHandler<IFolderData>? DirectoryChanged;
 
-            NavigationAction = NavigationAction.None;
-            FolderStack = new Stack<IFolderData>();
-        }
+        /// <summary>
+        /// The AbstractUI that should be displayed to the user for navigating the structure of the given root folder.
+        /// </summary>
+        /// <remarks>
+        /// Display this after calling <see cref="InitAsync"/> or when <see cref="DirectoryChanged"/> is fired.
+        /// </remarks>
+        public AbstractUICollection? AbstractUI { get; private set; }
 
         /// <summary>
         /// Setups the <see cref="AbstractFolderExplorer"/>.
         /// </summary>
         /// <param name="folder">The current directory to open.</param>
-        /// <param name="isRoot">Root folder indicator.</param>
+        /// <param name="lastNavigationAction">The navigation action that was performed by the user.</param>
         /// <returns>Created datalist for the UI to display.</returns>
-        public async Task SetupFolderExplorerAsync(IFolderData folder, bool isRoot = false)
+        private async Task SetupFolderAsync(IFolderData folder, NavigationAction lastNavigationAction = NavigationAction.None)
         {
-            IsRootDirectory = isRoot;
+            CurrentFolder = folder;
+            _isRootFolder = ReferenceEquals(folder, _rootFolder);
 
-            _folderExplorerUIHandler = _services.GetService<FolderExplorerUIHandler>();
-
-            Guard.IsNotNull(_folderExplorerUIHandler, nameof(_folderExplorerUIHandler));
-
-            if (NavigationAction != NavigationAction.Back)
+            if (lastNavigationAction != NavigationAction.Back)
                 FolderStack.Push(folder);
 
-            CurrentFolder = folder;
-
             var folders = await folder.GetFoldersAsync();
+            var folderData = folders.ToArray();
 
-            _folderExplorerUIHandler.SetupFileExplorerUIComponents(folders, IsRootDirectory);
+            if (!folderData.Any())
+                return;
 
-            _folderExplorerUIHandler.FolderItemTapped += FolderUIHandler_ItemTapped;
-            _folderExplorerUIHandler.FolderSelectedTapped += _folderExplorerUIHandler_FolderSelectedTapped;
+            _currentDisplayedFolders = folderData;
+
+            AbstractUI = CreateAndSetupAbstractUIForFolders(folderData);
+            DirectoryChanged?.Invoke(this, folder);
         }
 
-        private void _folderExplorerUIHandler_FolderSelectedTapped(object sender, EventArgs e)
+        private AbstractUICollection CreateAndSetupAbstractUIForFolders(IFolderData[] folderData)
         {
-            Guard.IsNotNull(_folderExplorerUIHandler, nameof(_folderExplorerUIHandler));
+            var abstractMetadataItems = new List<AbstractUIMetadata>();
 
-            _folderExplorerUIHandler.FolderSelectedTapped -= _folderExplorerUIHandler_FolderSelectedTapped;
+            if (!_isRootFolder)
+                abstractMetadataItems.Add(_backUIMetadata);
 
-            SelectedFolder = CurrentFolder;
-
-            Guard.IsNotNull(SelectedFolder, nameof(SelectedFolder));
-            FolderSelected?.Invoke(this, SelectedFolder);
-        }
-
-        private async void FolderUIHandler_ItemTapped(object sender, NavigationEventArgs e)
-        {
-            Guard.IsNotNull(_folderExplorerUIHandler, nameof(_folderExplorerUIHandler));
-            _folderExplorerUIHandler.FolderItemTapped -= FolderUIHandler_ItemTapped;
-
-            if (e.BackNavigationOccurred)
+            var folderUIMetadata = folderData.Select(item => new AbstractUIMetadata(item.Name)
             {
+                Title = item.Name,
+                IconCode = "\uE8B7",
+            }).ToArray();
+
+            var uniqueIdForFolders = string.Join(".", folderUIMetadata.Select(x => x.Id)).HashMD5Fast();
+
+            abstractMetadataItems.AddRange(folderUIMetadata);
+
+            if (_currentDataList is not null)
+                _currentDataList.ItemTapped -= AbstractDataListOnItemTapped;
+
+            _currentDataList = new AbstractDataList(uniqueIdForFolders, abstractMetadataItems);
+
+            var abstractUIGroup = new AbstractUICollection(nameof(AbstractFolderExplorer))
+            {
+                _currentDataList,
+                new AbstractUICollection("ActionButtons", PreferredOrientation.Horizontal)
+                {
+                    _cancelButton,
+                    _selectButton,
+                },
+            };
+
+            _currentDataList.ItemTapped += AbstractDataListOnItemTapped;
+
+            return abstractUIGroup;
+        }
+
+        private void SelectFolderButtonOnClicked(object sender, EventArgs e)
+        {
+            Guard.IsNotNull(CurrentFolder, nameof(CurrentFolder));
+            SelectedFolder = CurrentFolder;
+            FolderSelected?.Invoke(this, CurrentFolder);
+        }
+
+        private async void AbstractDataListOnItemTapped(object sender, AbstractUIMetadata e)
+        {
+            Guard.IsNotNull(_currentDisplayedFolders, nameof(_currentDisplayedFolders));
+            var lastNavigationAction = ReferenceEquals(e, _backUIMetadata) ? NavigationAction.Back : NavigationAction.Forward;
+
+            IFolderData targetFolder;
+
+            if (lastNavigationAction == NavigationAction.Back)
+            { 
                 FolderStack.Pop();
-                PreviousFolder = FolderStack.FirstOrDefault();
-                NavigationAction = NavigationAction.Back;
-
-                Guard.IsNotNull(PreviousFolder, nameof(PreviousFolder));
-
-
-                await SetupFolderExplorerAsync(PreviousFolder, PreviousFolder.Name.Equals("root", StringComparison.OrdinalIgnoreCase));
-
-                DirectoryChanged?.Invoke(this, PreviousFolder);
+                targetFolder = FolderStack.Peek();
             }
             else
             {
-                Guard.IsNotNull(e.TappedFolder, nameof(e.TappedFolder));
-
-                NavigationAction = NavigationAction.Forward;
-
-                await SetupFolderExplorerAsync(e.TappedFolder, e.TappedFolder.Name.Equals("root", StringComparison.OrdinalIgnoreCase));
-
-                DirectoryChanged?.Invoke(this, e.TappedFolder);
+                targetFolder = _currentDisplayedFolders.First(x => x.Name == e.Id);
+                FolderStack.Push(targetFolder);
             }
+
+            await SetupFolderAsync(targetFolder, lastNavigationAction);
+
+            DirectoryChanged?.Invoke(this, targetFolder);
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            DetachEvents();
         }
     }
 

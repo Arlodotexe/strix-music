@@ -1,20 +1,23 @@
-﻿/// <summary>
-/// The most recent navigation action.
-/// </summary>
-public enum NavigationAction
+﻿namespace OwlCore.Services.AbstractUIStorageExplorers
 {
     /// <summary>
-    /// No navigation occurred.
+    /// The most recent navigation action.
     /// </summary>
-    None,
+    public enum NavigationAction
+    {
+        /// <summary>
+        /// No navigation occurred.
+        /// </summary>
+        None,
 
-    /// <summary>
-    /// The navigation to the next folder in hierarchy requested.
-    /// </summary>
-    Forward,
+        /// <summary>
+        /// The navigation to the next folder in hierarchy requested.
+        /// </summary>
+        Forward,
 
-    /// <summary>
-    /// The navigation back requested.
-    /// </summary>
-    Back,
+        /// <summary>
+        /// The navigation back requested.
+        /// </summary>
+        Back,
+    }
 }

@@ -9,7 +9,6 @@ using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Services.AbstractUIStorageExplorers;
-using OwlCore.Services.AbstractUIStorageExplorers.Handlers;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
@@ -55,10 +54,6 @@ namespace StrixMusic.Cores.OneDrive
         public Task SetupConfigurationServices(IServiceCollection services)
         {
             services.AddSingleton(typeof(OneDriveCoreStorageService));
-            services.AddSingleton(typeof(FolderExplorerUIHandler));
-
-            // TODO: Don't pass an entire IoC into an ABSTRACTED folder explorer just for a single class instance.
-            services.AddSingleton(x => new AbstractFolderExplorer(Services));
 
             Services = services.BuildServiceProvider();
 
@@ -160,56 +155,43 @@ namespace StrixMusic.Cores.OneDrive
 
             var rootFolder = await oneDriveService.GetRootFolderAsync();
 
-            await InitFileExplorer(rootFolder, true);
+            await InitFileExplorer(rootFolder);
         }
 
-        private Task InitFileExplorer(IFolderData folder, bool isRoot = false)
+        private async Task InitFileExplorer(IFolderData folder)
         {
-            Guard.IsNotNull(Services, nameof(Services));
+            var fileExplorer = new AbstractFolderExplorer(folder);
 
-            var folderExplorerService = Services.GetService<AbstractFolderExplorer>();
-            var folderExplorerUIHandler = Services.GetService<FolderExplorerUIHandler>();
+            await fileExplorer.InitAsync();
+            Guard.IsNotNull(fileExplorer.AbstractUI, nameof(fileExplorer.AbstractUI));
 
-            Guard.IsNotNull(folderExplorerService, nameof(folderExplorerService));
-            Guard.IsNotNull(folderExplorerUIHandler, nameof(folderExplorerUIHandler));
+            AbstractUIElements = fileExplorer.AbstractUI.IntoList();
 
-            _ = folderExplorerService.SetupFolderExplorerAsync(folder, isRoot);
-
-            AttachEvents(folderExplorerUIHandler, folderExplorerService);
-
-            return Task.CompletedTask;
+            fileExplorer.FolderSelected += FolderExplorerService_FolderSelected;
+            fileExplorer.DirectoryChanged += FileExplorer_DirectoryChanged;
         }
 
-        private void AttachEvents(FolderExplorerUIHandler? folderExplorerUIHandler, AbstractFolderExplorer? folderExplorerService)
+        private void FileExplorer_DirectoryChanged(object sender, IFolderData e)
         {
-            Guard.IsNotNull(folderExplorerService, nameof(folderExplorerService));
-            Guard.IsNotNull(folderExplorerUIHandler, nameof(folderExplorerUIHandler));
+            var fileExplorer = (AbstractFolderExplorer)sender;
 
-            folderExplorerUIHandler.FolderExplorerUIUpdated += FolderExplorerUIHandler_FolderExplorerUIUpdated;
+            Guard.IsNotNull(fileExplorer.AbstractUI, nameof(fileExplorer.AbstractUI));
 
-            folderExplorerService.FolderSelected += FolderExplorerService_FolderSelected;
+            AbstractUIElements = fileExplorer.AbstractUI.IntoList();
+            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void FolderExplorerService_FolderSelected(object sender, IFolderData e)
         {
-            Guard.IsNotNull(Services, nameof(Services));
-            AbstractUIElements = new List<AbstractUICollection>();
-
-            var folderExplorerService = Services.GetRequiredService<AbstractFolderExplorer>();
-
-            folderExplorerService.FolderSelected -= FolderExplorerService_FolderSelected;
-
             Guard.IsNotNull(_settingsService, nameof(OneDriveCoreSettingsService));
+            var fileExplorer = (AbstractFolderExplorer)sender;
+            fileExplorer.FolderSelected -= FolderExplorerService_FolderSelected;
+
+            SetupAbstractUIForConfig();
+
             _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.FolderPath), e.Path);
-
             SourceCore.Cast<OneDriveCore>().ChangeCoreState(CoreState.Configured);
-
-            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void FolderExplorerUIHandler_FolderExplorerUIUpdated(object sender, AbstractUICollection e)
-        {
-            AbstractUIElements = e.IntoList();
+            SourceCore.Cast<OneDriveCore>().ChangeCoreState(CoreState.Loaded);
 
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
