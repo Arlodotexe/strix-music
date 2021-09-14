@@ -106,7 +106,10 @@ namespace StrixMusic.Cores.Files
         }
 
         /// <inheritdoc/>
-        public Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
+        /// <remarks>
+        /// You may override this and return a different MediaSourceConfig if needed, such as a Stream instead of a file path.
+        /// </remarks>
+        public virtual Task<IMediaSourceConfig?> GetMediaSource(ICoreTrack track)
         {
             if (!(track is FilesCoreTrack t))
                 return Task.FromResult<IMediaSourceConfig?>(null);
