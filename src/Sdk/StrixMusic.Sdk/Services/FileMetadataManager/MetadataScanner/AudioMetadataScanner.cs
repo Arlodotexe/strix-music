@@ -357,6 +357,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 using var stream = await fileData.GetStreamAsync();
 
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                // Some underlying libs without nullable checks may return null by mistake.
+                if (stream is null)
+                    return null;
+                
+                stream.Seek(0, SeekOrigin.Begin);
+
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
                 // Read the raw tags
@@ -527,7 +534,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             bool IsEnoughMetadataToEmit() => _batchMetadataToEmit.Count >= 100;
             bool IsFinishedScanning() => _filesProcessed == _filesToScanCount;
 
-            if (!IsFinishedScanning() && !IsEnoughMetadataToEmit())
+            if (!(IsFinishedScanning() || IsEnoughMetadataToEmit()))
             {
                 _batchLock.Release();
                 return;
