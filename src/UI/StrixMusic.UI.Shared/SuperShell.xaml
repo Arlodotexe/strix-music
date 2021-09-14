@@ -175,7 +175,10 @@
                 </Grid>
             </PivotItem>
             <PivotItem x:Uid="/SuperShell/AdvancedPVI" Header="Advanced">
-                <TextBlock Text="Todo" FontSize="18" />
+                <StackPanel Spacing="15" HorizontalAlignment="Center">
+                    <ProgressRing IsActive="{x:Bind ViewModel.ResetAppCommand.IsRunning}" Height="30" Width="30" />
+                    <Button Content="Reset app" Command="{x:Bind ViewModel.ResetAppCommand}" />
+                </StackPanel>
             </PivotItem>
         </Pivot>
     </Grid>

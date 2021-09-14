@@ -126,7 +126,11 @@ namespace StrixMusic.Sdk.Services.Settings
                 {
                     try
                     {
-                        return (T)type.GetField(key).GetValue(null);
+                        var field = type.GetField(key);
+                        if (field is null)
+                            continue;
+
+                        return (T)field.GetValue(null);
                     }
                     catch (Exception)
                     {
