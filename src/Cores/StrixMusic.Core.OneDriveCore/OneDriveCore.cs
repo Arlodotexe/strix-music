@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Cores.Files;
 using System.Threading.Tasks;
@@ -9,7 +10,6 @@ using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
-using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Cores.OneDrive
 {
@@ -67,22 +67,34 @@ namespace StrixMusic.Cores.OneDrive
                 var confirmButton = (AbstractButton)actionButtons.First(x => x is AbstractButton { Type: AbstractButtonType.Confirm });
                 var cancelButton = (AbstractButton)actionButtons.First(x => x is AbstractButton { Type: AbstractButtonType.Cancel });
 
+                var oobeCompletionSemaphore = new SemaphoreSlim(0, 1);
+
                 confirmButton.Clicked += OnConfirmClicked;
                 cancelButton.Clicked += OnCancelClicked;
 
-                // Hack, configured should only be emitted if everything is configured. The SDK re-runs InitAsync regardless and our code below will catch that the remaining config isn't set up.
-                void OnConfirmClicked(object sender, EventArgs e) => Finished(CoreState.Configured);
-                void OnCancelClicked(object sender, EventArgs e) => Finished(CoreState.Unloaded);
+                coreConfig.SaveAbstractUI(oobeUI);
 
-                void Finished(CoreState state)
+                await oobeCompletionSemaphore.WaitAsync();
+
+                return;
+
+                async void OnConfirmClicked(object sender, EventArgs e)
                 {
                     confirmButton.Clicked -= OnConfirmClicked;
                     cancelButton.Clicked -= OnCancelClicked;
-                    ChangeCoreState(state);
+
+                    await InitAsync(services);
+                    oobeCompletionSemaphore.Release();
                 }
 
-                coreConfig.SaveAbstractUI(oobeUI);
-                return;
+                void OnCancelClicked(object sender, EventArgs e)
+                {
+                    confirmButton.Clicked -= OnConfirmClicked;
+                    cancelButton.Clicked -= OnCancelClicked;
+
+                    ChangeCoreState(CoreState.Unloaded);
+                    oobeCompletionSemaphore.Release();
+                }
             }
 
             var loggedIn = await coreConfig.TryLoginAsync();
@@ -100,11 +112,12 @@ namespace StrixMusic.Cores.OneDrive
                 var folder = await coreConfig.PickSingleFolderAsync();
                 if (folder is null)
                 {
+                    // User canceled folder picking.
                     ChangeCoreState(CoreState.Unloaded);
                     return;
                 }
 
-                ChangeCoreState(CoreState.Configured);
+                await InitAsync(services);
                 return;
             }
 
@@ -121,7 +134,7 @@ namespace StrixMusic.Cores.OneDrive
                     return;
                 }
 
-                ChangeCoreState(CoreState.Configured);
+                await InitAsync(services);
                 return;
             }
 
