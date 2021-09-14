@@ -27,7 +27,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
         }
 
         /// <inheritdoc />
-        public string Path => _driveItem.WebUrl;
+        public string Path => _driveItem.AdditionalData["@microsoft.graph.downloadUrl"].ToString().Replace("ValueKind = String : ", string.Empty).Replace("\"", string.Empty);
 
         /// <inheritdoc />
         public string Name => _driveItem.Name;
@@ -52,7 +52,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
         /// <inheritdoc />
         public Task<Stream> GetStreamAsync(FileAccessMode accessMode = FileAccessMode.Read)
         {
-            return Task.FromResult(_driveItem.Content);
+            return _graphClient.Drive.Items[_driveItem.Id].Content.Request().GetAsync();
         }
 
         /// <inheritdoc />
