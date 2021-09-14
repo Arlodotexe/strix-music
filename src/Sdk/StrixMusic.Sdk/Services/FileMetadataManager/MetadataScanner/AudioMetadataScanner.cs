@@ -67,7 +67,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         };
 
         private readonly FileMetadataManager _metadataManager;
-        private readonly IFileScanner _fileScanner;
         private readonly SemaphoreSlim _batchLock;
 
         private readonly string _emitDebouncerId = Guid.NewGuid().ToString();
@@ -81,12 +80,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioMetadataScanner"/> class.
         /// </summary>
-        /// <param name="fileScanner">The instance of <see cref="DepthFirstFileScanner"/> that will discover files to scan.</param>
         /// <param name="metadataManager">The metadata manager that handles this scanner.</param>       
-        public AudioMetadataScanner(IFileScanner fileScanner, FileMetadataManager metadataManager)
+        public AudioMetadataScanner(FileMetadataManager metadataManager)
         {
             _metadataManager = metadataManager;
-            _fileScanner = fileScanner;
 
             _batchLock = new SemaphoreSlim(1, 1);
 

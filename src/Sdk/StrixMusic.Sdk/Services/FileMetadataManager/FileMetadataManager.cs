@@ -64,7 +64,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _fileScanner = new DepthFirstFileScanner(rootFolder);
-            _audioMetadataScanner = new AudioMetadataScanner(_fileScanner, this);
+            _audioMetadataScanner = new AudioMetadataScanner(this);
             _playlistMetadataScanner = new PlaylistMetadataScanner(this, _audioMetadataScanner, _fileScanner);
 
             Tracks = new TrackRepository(_audioMetadataScanner);
