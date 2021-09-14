@@ -208,9 +208,7 @@ namespace StrixMusic.Shared
         {
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
-            // TODO: IMPORTANT
-            // Need to rename all core namespaces to StrixMusic.Cores.Something, and change the below when done. #723
-            const string shellAssemblyRegex = @"^(?:StrixMusic\.Core\.)(\w{3,})[^.]";
+            const string coreAssemblyRegex = @"^(?:StrixMusic\.Cores\.)(\w{3,})[^.]";
             var coreRegistryData = new List<CoreAssemblyInfo>();
 
             foreach (Assembly assembly in assemblies)
@@ -225,7 +223,7 @@ namespace StrixMusic.Shared
                 Guard.IsNotNullOrWhiteSpace(coreAttribute.CoreType.AssemblyQualifiedName, nameof(coreAttribute.CoreType.AssemblyQualifiedName));
 
                 // Check if the namespace is for a core.
-                var match = Regex.Match(coreAttribute.CoreType.Namespace, shellAssemblyRegex);
+                var match = Regex.Match(coreAttribute.CoreType.Namespace, coreAssemblyRegex);
                 if (!match.Success)
                     continue;
 

@@ -33,8 +33,7 @@
                        Opacity="{StaticResource DefaultAbstractUISubtitleOpacity}"
                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
-            <!-- Disabled until we can resolve the namespace conflicts caused by the Windows Community Toolkit v7 prerelease4 -->
-            <!--<controls:MarkdownTextBlock Text="{x:Bind RichText}"/>-->
+            <tkcontrols:MarkdownTextBlock Text="{x:Bind RichText}"/>
         </StackPanel>
     </DataTemplate>
 

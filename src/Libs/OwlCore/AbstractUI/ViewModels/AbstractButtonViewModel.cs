@@ -59,7 +59,6 @@ namespace OwlCore.AbstractUI.ViewModels
         /// <summary>
         /// Button clicked command.
         /// </summary>
-        /// <param name="e"></param>
         private void ButtonClicked()
         {
             _model.Click().Forget();

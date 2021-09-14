@@ -29,9 +29,13 @@ namespace OwlCore.AbstractUI.Models
         public string Label
         {
             get => _label;
-            private set
+            set
             {
+                if (_label == value)
+                    return;
+
                 _label = value;
+
                 LabelChanged?.Invoke(this, value);
             }
         }
@@ -42,8 +46,12 @@ namespace OwlCore.AbstractUI.Models
         [RemoteProperty]
         public bool State
         {
-            get => _state; set
+            get => _state;
+            set
             {
+                if (_state == value)
+                    return;
+
                 _state = value;
                 StateChanged?.Invoke(this, value);
             }

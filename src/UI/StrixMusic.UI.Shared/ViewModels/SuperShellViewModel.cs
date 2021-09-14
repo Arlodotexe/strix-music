@@ -123,9 +123,7 @@ namespace StrixMusic.Shared.ViewModels
             foreach (var core in _mainViewModel.Cores)
             {
                 if (core.CoreState == CoreState.Unloaded || core.CoreState == CoreState.NeedsSetup)
-                {
                     await core.DisposeAsync();
-                }
             }
 
             IsShowingAddNew = false;
@@ -139,9 +137,14 @@ namespace StrixMusic.Shared.ViewModels
         private async void Core_CoreStateChanged(object sender, CoreState e)
         {
             var core = (ICore)sender;
-
-            var mainPage = Ioc.Default.GetRequiredService<MainPage>();
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
+
+            if (e == CoreState.Configured || e == CoreState.Unloaded)
+            {
+                await Threading.OnPrimaryThread(() => CurrentCoreConfig = null);
+                return;
+            }
+
             var relevantCore = mainViewModel.Cores.First(x => x.InstanceId == core.InstanceId);
 
             if (e == CoreState.NeedsSetup)
@@ -151,11 +154,6 @@ namespace StrixMusic.Shared.ViewModels
 
             if (CurrentCoreConfig?.InstanceId != relevantCore.InstanceId)
                 return;
-
-            if (e == CoreState.Configured || e == CoreState.Unloaded)
-            {
-                await Threading.OnPrimaryThread(() => CurrentCoreConfig = null);
-            }
         }
 
         private void Cores_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

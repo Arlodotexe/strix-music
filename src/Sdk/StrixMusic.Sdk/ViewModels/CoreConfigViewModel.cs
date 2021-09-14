@@ -67,7 +67,7 @@ namespace StrixMusic.Sdk.ViewModels
         IReadOnlyList<AbstractUICollection> ICoreConfigBase.AbstractUIElements => _coreConfig.AbstractUIElements;
 
         /// <inheritdoc cref="ICoreConfigBase.AbstractUIElements" />
-        public ObservableCollection<AbstractUICollectionViewModel> AbstractUIElements { get; private set; }
+        public ObservableCollection<AbstractUICollectionViewModel> AbstractUIElements { get; }
 
         /// <inheritdoc/>
         public MediaPlayerType PlaybackType => _coreConfig.PlaybackType;

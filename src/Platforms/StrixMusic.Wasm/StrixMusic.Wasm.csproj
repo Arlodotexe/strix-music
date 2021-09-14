@@ -74,7 +74,9 @@
 		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0" PrivateAssets="all" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Core.LocalFiles.csproj" />
+		<ProjectReference Include="..\..\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Cores.OneDrive.csproj" />
+		<ProjectReference Include="..\..\Cores\StrixMusic.Cores.External\StrixMusic.Cores.External.csproj" />
+		<ProjectReference Include="..\..\Cores\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj" />
 		<ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj" />
 		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk.Uno\StrixMusic.Sdk.Uno.csproj" />
 		<ProjectReference Include="..\..\Sdk\StrixMusic.Sdk\StrixMusic.Sdk.csproj" />

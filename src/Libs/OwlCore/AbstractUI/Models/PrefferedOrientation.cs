@@ -9,13 +9,13 @@
     public enum PreferredOrientation
     {
         /// <summary>
-        /// Horizontal orientation.
-        /// </summary>
-        Horizontal,
-
-        /// <summary>
         /// Vertical orientation.
         /// </summary>
         Vertical,
+
+        /// <summary>
+        /// Horizontal orientation.
+        /// </summary>
+        Horizontal,
     }
 }

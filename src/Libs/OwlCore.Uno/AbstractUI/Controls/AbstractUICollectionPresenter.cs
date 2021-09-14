@@ -91,7 +91,7 @@ namespace OwlCore.Uno.AbstractUI.Controls
 
             _dataContextBeingSet = false;
         }
-
+         
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;

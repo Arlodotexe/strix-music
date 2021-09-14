@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using OwlCore.AbstractUI.Models;
@@ -8,7 +9,7 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// A view model for <see cref="AbstractUICollection"/>.
     /// </summary>
-    public class AbstractUICollectionViewModel : AbstractUIViewModelBase
+    public class AbstractUICollectionViewModel : AbstractUIViewModelBase, IEnumerable<AbstractUIViewModelBase>
     {
         private readonly AbstractUICollection _model;
 
@@ -29,6 +30,7 @@ namespace OwlCore.AbstractUI.ViewModels
                     AbstractDataList dataList => new AbstractDataListViewModel(dataList),
                     AbstractButton button => new AbstractButtonViewModel(button),
                     AbstractBoolean boolean => new AbstractBooleanViewModel(boolean),
+                    AbstractRichTextBlock richText => new AbstractRichTextBlockViewModel(richText),
                     AbstractMultiChoice multiChoiceUIElement => new AbstractMultiChoiceViewModel(multiChoiceUIElement),
                     AbstractUICollection elementGroup => new AbstractUICollectionViewModel(elementGroup),
                     _ => throw new NotImplementedException(),
@@ -49,5 +51,11 @@ namespace OwlCore.AbstractUI.ViewModels
 
         /// <inheritdoc cref="Models.PreferredOrientation"/>
         public PreferredOrientation PreferredOrientation => _model.PreferredOrientation;
+
+        /// <inheritdoc />
+        public IEnumerator<AbstractUIViewModelBase> GetEnumerator() => Items.GetEnumerator();
+
+        /// <inheritdoc />
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

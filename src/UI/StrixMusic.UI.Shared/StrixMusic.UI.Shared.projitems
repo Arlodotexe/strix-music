@@ -75,6 +75,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\OneDrive\Logo.svg" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SegoeMDL2.ttf" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\ShellPreviews\Default\1.png" />
@@ -109,8 +110,5 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\Cores\MusicBrainz\logo.svg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Assets\Cores\" />
   </ItemGroup>
 </Project>
