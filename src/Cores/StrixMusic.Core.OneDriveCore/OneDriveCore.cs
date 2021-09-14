@@ -141,6 +141,7 @@ namespace StrixMusic.Cores.OneDrive
             await coreConfig.SetupMetadataScannerAsync(services, selectedFolder);
             await Library.Cast<FilesCoreLibrary>().InitAsync();
 
+            ChangeCoreState(CoreState.Configured);
             ChangeCoreState(CoreState.Loaded);
         }
 
