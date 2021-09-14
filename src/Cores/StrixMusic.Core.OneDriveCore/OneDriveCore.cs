@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using StrixMusic.Cores.Files;
 using System.Threading.Tasks;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Extensions;
+using StrixMusic.Cores.Files.Models;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
@@ -123,7 +125,9 @@ namespace StrixMusic.Cores.OneDrive
                 return;
             }
 
-            await coreConfig.SetupMetadataScannerAsync(selectedFolder);
+            await coreConfig.SetupMetadataScannerAsync(services, selectedFolder);
+            await Library.Cast<FilesCoreLibrary>().InitAsync();
+
             ChangeCoreState(CoreState.Loaded);
         }
 

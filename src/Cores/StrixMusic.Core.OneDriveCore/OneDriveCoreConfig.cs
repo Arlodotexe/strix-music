@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graph;
 using Microsoft.Toolkit.Diagnostics;
-using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
@@ -215,9 +214,15 @@ namespace StrixMusic.Cores.OneDrive
             return true;
         }
 
-        public async Task SetupMetadataScannerAsync(IFolderData folder)
+        public async Task SetupMetadataScannerAsync(IServiceCollection services, IFolderData folder)
         {
             _fileMetadataManager = new FileMetadataManager(SourceCore.InstanceId, folder);
+
+            // Must be on the Core IoC for FileCore base classes to get access to it.
+            services.AddSingleton<IFileMetadataManager>(_fileMetadataManager);
+
+            Services = null;
+            Services = services.BuildServiceProvider();
 
             await _fileMetadataManager.InitAsync();
             Task.Run(_fileMetadataManager.StartScan).Forget();
