@@ -27,7 +27,6 @@ namespace StrixMusic.Sdk
     /// <summary>
     /// The MainViewModel used throughout the app
     /// </summary>
-    [Bindable(true)]
     public partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
     {
         private readonly Dictionary<string, CancellationTokenSource> _coreInitCancellationTokens = new Dictionary<string, CancellationTokenSource>();
@@ -99,22 +98,20 @@ namespace StrixMusic.Sdk
                 return;
 
             await InitCore(core);
-
+            
             // If added core after Initialized, we need to manually finish setting up the core.
             // If adding core before Initialized, InitAsync will finish setup.
             if (!IsInitialized)
                 return;
 
             Guard.IsNotNull(_mergedLibrary, nameof(_mergedLibrary));
-            Guard.IsNotNull(_mergedDiscoverables, nameof(_mergedLibrary));
-            Guard.IsNotNull(_mergedRecentlyPlayed, nameof(_mergedRecentlyPlayed));
 
             _mergedLibrary.Cast<IMergedMutable<ICoreLibrary>>().AddSource(core.Library);
 
-            if (core.Discoverables != null)
+            if (core.Discoverables != null && _mergedDiscoverables != null)
                 _mergedDiscoverables.Cast<IMergedMutable<ICoreDiscoverables>>().AddSource(core.Discoverables);
 
-            if (core.RecentlyPlayed != null)
+            if (core.RecentlyPlayed != null && _mergedRecentlyPlayed != null)
                 _mergedRecentlyPlayed.Cast<IMergedMutable<ICoreRecentlyPlayed>>().AddSource(core.RecentlyPlayed);
 
             await Threading.OnPrimaryThread(() =>
@@ -313,6 +310,9 @@ namespace StrixMusic.Sdk
             setupCancellationTokenSource.Dispose();
         }
 
+        /// <summary>
+        /// Method fires if core configuration is requested during InitAsync.
+        /// </summary>
         private void OnCoreStateChanged_HandleConfigRequest(object sender, CoreState e)
         {
             if (!(sender is ICore core))

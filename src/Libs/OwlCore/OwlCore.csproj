@@ -31,6 +31,8 @@
 			--- 0.0.24 ---
 			[Fixes]
 			Fixed issue where "isIndeterminate" parameter of AbstractProgressIndicator wasn't being set from the ctor.
+			Fixed an issue where AbstractUICollectionViewModel wasn't relaying underlying item to the public Items property.
+			Fixed an issue where setting state in AbstractBooleanViewModel caused a StackOverflow.
 			
 			--- 0.0.23 ---
 			[Breaking changes]

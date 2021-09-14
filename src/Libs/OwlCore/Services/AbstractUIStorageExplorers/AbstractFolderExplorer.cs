@@ -13,7 +13,7 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
     /// <summary>
     /// File explorer that lets user choose a folder using <see cref="IFolderData"/> and <see cref="IFileData"/>
     /// </summary>
-    public class AbstractFolderExplorer : IAsyncInit, IDisposable
+    public class AbstractFolderExplorer : AbstractUICollection, IAsyncInit, IDisposable
     {
         private readonly AbstractUIMetadata _backUIMetadata = new("BackBtn")
         {
@@ -33,10 +33,11 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
         /// Creates a new instance of <see cref="AbstractFolderExplorer"/>.
         /// </summary>
         public AbstractFolderExplorer(IFolderData rootFolder)
+            : base($"{rootFolder.Path}.{nameof(AbstractFolderExplorer)}")
         {
             _rootFolder = rootFolder;
             _cancelButton = new AbstractButton("cancelFolderExplorerButton", "Cancel", type: AbstractButtonType.Cancel);
-            _selectButton = new AbstractButton("selectFolderButton", "Select", type: AbstractButtonType.Confirm);
+            _selectButton = new AbstractButton("selectFolderButton", "Select folder", type: AbstractButtonType.Confirm);
 
             FolderStack = new Stack<IFolderData>();
 
@@ -99,14 +100,6 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
         public event EventHandler<IFolderData>? DirectoryChanged;
 
         /// <summary>
-        /// The AbstractUI that should be displayed to the user for navigating the structure of the given root folder.
-        /// </summary>
-        /// <remarks>
-        /// Display this after calling <see cref="InitAsync"/> or when <see cref="DirectoryChanged"/> is fired.
-        /// </remarks>
-        public AbstractUICollection? AbstractUI { get; private set; }
-
-        /// <summary>
         /// Setups the <see cref="AbstractFolderExplorer"/>.
         /// </summary>
         /// <param name="folder">The current directory to open.</param>
@@ -128,16 +121,16 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
 
             _currentDisplayedFolders = folderData;
 
-            AbstractUI = CreateAndSetupAbstractUIForFolders(folderData);
+            CreateAndSetupAbstractUIForFolders(folderData);
             DirectoryChanged?.Invoke(this, folder);
         }
 
-        private AbstractUICollection CreateAndSetupAbstractUIForFolders(IFolderData[] folderData)
+        private void CreateAndSetupAbstractUIForFolders(IFolderData[] folderData)
         {
-            var abstractMetadataItems = new List<AbstractUIMetadata>();
+            var folderListMetadata = new List<AbstractUIMetadata>();
 
             if (!_isRootFolder)
-                abstractMetadataItems.Add(_backUIMetadata);
+                folderListMetadata.Add(_backUIMetadata);
 
             var folderUIMetadata = folderData.Select(item => new AbstractUIMetadata(item.Name)
             {
@@ -147,26 +140,23 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
 
             var uniqueIdForFolders = string.Join(".", folderUIMetadata.Select(x => x.Id)).HashMD5Fast();
 
-            abstractMetadataItems.AddRange(folderUIMetadata);
+            folderListMetadata.AddRange(folderUIMetadata);
 
             if (_currentDataList is not null)
                 _currentDataList.ItemTapped -= AbstractDataListOnItemTapped;
 
-            _currentDataList = new AbstractDataList(uniqueIdForFolders, abstractMetadataItems);
+            _currentDataList = new AbstractDataList(uniqueIdForFolders, folderListMetadata);
 
-            var abstractUIGroup = new AbstractUICollection(nameof(AbstractFolderExplorer))
+            Clear();
+
+            Add(_currentDataList);
+            Add(new AbstractUICollection("ActionButtons", PreferredOrientation.Horizontal)
             {
-                _currentDataList,
-                new AbstractUICollection("ActionButtons", PreferredOrientation.Horizontal)
-                {
-                    _cancelButton,
-                    _selectButton,
-                },
-            };
+                _cancelButton,
+                _selectButton,
+            });
 
             _currentDataList.ItemTapped += AbstractDataListOnItemTapped;
-
-            return abstractUIGroup;
         }
 
         private void SelectFolderButtonOnClicked(object sender, EventArgs e)
@@ -184,7 +174,7 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
             IFolderData targetFolder;
 
             if (lastNavigationAction == NavigationAction.Back)
-            { 
+            {
                 FolderStack.Pop();
                 targetFolder = FolderStack.Peek();
             }

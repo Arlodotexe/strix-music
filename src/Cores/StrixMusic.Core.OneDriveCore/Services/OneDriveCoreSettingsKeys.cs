@@ -5,7 +5,7 @@
     /// </summary>
     public class OneDriveCoreSettingsKeys
     {
-        public static readonly string FolderPath = string.Empty;
+        public static readonly string SelectedFolderId = string.Empty;
         public static readonly string TenantId = string.Empty;
         public static readonly string RedirectUri = string.Empty;
         public static readonly string ClientId = string.Empty;

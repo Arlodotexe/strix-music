@@ -74,15 +74,38 @@ namespace StrixMusic.Cores.OneDrive.Storage
         }
 
         ///<inheritdoc />
-        public Task<IFileData?> GetFileAsync(string name)
+        public async Task<IFileData?> GetFileAsync(string name)
         {
-            throw new NotImplementedException();
+            var driveItem = await _graphClient.Drive.Items[OneDriveFolderId].Request().Expand(EXPAND_STRING).GetAsync();
+
+            foreach (var item in driveItem.Children)
+            {
+                if (item.File is null)
+                    continue;
+
+                if (item.Name == name)
+                    return new OneDriveFileData(_graphClient, item);
+            }
+
+            return null;
         }
 
         ///<inheritdoc />
-        public Task<IEnumerable<IFileData>> GetFilesAsync()
+        public async Task<IEnumerable<IFileData>> GetFilesAsync()
         {
-            throw new NotImplementedException();
+            var driveItem = await _graphClient.Drive.Items[OneDriveFolderId].Request().Expand(EXPAND_STRING).GetAsync();
+
+            var results = new List<IFileData>();
+
+            foreach (var item in driveItem.Children)
+            {
+                if (item.File is null)
+                    continue;
+
+                results.Add(new OneDriveFileData(_graphClient, item));
+            }
+
+            return results;
         }
 
         ///<inheritdoc />

@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graph;
 using Microsoft.Toolkit.Diagnostics;
+using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Services.AbstractUIStorageExplorers;
 using StrixMusic.Cores.OneDrive.Services;
 using StrixMusic.Cores.OneDrive.Storage;
-using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 
@@ -23,10 +25,10 @@ namespace StrixMusic.Cores.OneDrive
     {
         private GraphServiceClient? _graphClient;
         private IFolderData? _rootFolder;
-        private readonly TaskCompletionSource<object?> _filePickerTaskCompletionSource = new TaskCompletionSource<object?>();
 
         private ISettingsService? _settingsService;
         private AuthenticationManager? _authenticationManager;
+        private FileMetadataManager? _fileMetadataManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OneDriveCoreConfig"/> class.
@@ -61,25 +63,43 @@ namespace StrixMusic.Cores.OneDrive
             return Task.CompletedTask;
         }
 
-        public void SetupAbstractUIForFirstSetup()
+        /// <summary>
+        /// Shows the out of box setup page.
+        /// </summary>
+        /// <remarks>
+        /// This heavily uses local function scopes to avoid making a new class. To "Dispose" and detach events / prevent memory leaks, either the continue or cancel button must be "Clicked".
+        /// </remarks>
+        /// <returns>An <see cref="AbstractUICollection"/> containing all the interactive AbstractUI components needed for out of box setup.</returns>
+        public AbstractUICollection CreateOutOfBoxSetupAsync()
         {
             var showAdvanced = new AbstractBoolean("showAdvanced", "Show advanced");
-            var continueButton = new AbstractButton("continueButton", "Continue");
+            var continueButton = new AbstractButton("continueButton", "Continue", type: AbstractButtonType.Confirm);
+            var cancelButton = new AbstractButton("cancelButton", "Cancel", type: AbstractButtonType.Cancel);
+            var actionButtons = new AbstractUICollection("actionButtons", PreferredOrientation.Horizontal)
+            {
+                cancelButton,
+                continueButton,
+            };
 
             showAdvanced.StateChanged += OnShowAdvancedClicked;
-            continueButton.Clicked += OnContinueClicked;
+            continueButton.Clicked += OnNavigationButtonClicked;
+            cancelButton.Clicked += OnNavigationButtonClicked;
 
             var initialSettings = BuildSimpleSettings();
-            SaveAbstractUI(initialSettings);
+            SetupTitle(initialSettings);
 
-            void OnContinueClicked(object sender, EventArgs e)
+            void OnNavigationButtonClicked(object sender, EventArgs e) => DetachEvents();
+
+            void DetachEvents()
             {
-                continueButton.Clicked -= OnContinueClicked;
-                showAdvanced.StateChanged -= OnShowAdvancedClicked;
+                continueButton.Clicked -= OnNavigationButtonClicked;
+                cancelButton.Clicked -= OnNavigationButtonClicked;
 
                 // Detaches any events related to advanced settings.
                 if (showAdvanced.State)
                     showAdvanced.State = false;
+
+                showAdvanced.StateChanged -= OnShowAdvancedClicked;
             }
 
             void OnShowAdvancedClicked(object sender, bool newState)
@@ -88,22 +108,22 @@ namespace StrixMusic.Cores.OneDrive
                     BuildAdvancedSettings() :
                     BuildSimpleSettings();
 
+                SetupTitle(ui);
                 SaveAbstractUI(ui);
             }
 
-            void SaveAbstractUI(AbstractUICollection collection)
+            void SetupTitle(AbstractUICollection collection)
             {
-                AbstractUIElements = collection.IntoList();
-                AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+                collection.Title = "Login to OneDrive";
+                collection.Subtitle = "To get set up with OneDrive, you'll need to log in with your Microsoft account.";
             }
 
             AbstractUICollection BuildSimpleSettings()
             {
                 return new AbstractUICollection("SettingsGroup")
                 {
-                    new AbstractRichTextBlock("IntroText", "To get set up with OneDrive, you'll need to log in with your Microsoft account."),
                     showAdvanced,
-                    continueButton,
+                    actionButtons,
                 };
             }
 
@@ -112,11 +132,13 @@ namespace StrixMusic.Cores.OneDrive
                 Guard.IsNotNull(showAdvanced, nameof(showAdvanced));
                 Guard.IsNotNull(continueButton, nameof(continueButton));
 
-                var clientIdTb = new AbstractTextBox("ClientId", string.Empty, "Enter client id");
-                var tenantTb = new AbstractTextBox("Tenant Id", string.Empty, "Enter tenant id");
-                var redirectUriTb = new AbstractTextBox("Redirect Uri", string.Empty, "Enter redirect uri (if any)");
+                var clientIdTb = new AbstractTextBox("ClientId", string.Empty, "Enter custom client id");
+                var tenantTb = new AbstractTextBox("Tenant Id", string.Empty, "Enter custom tenant id");
+                var redirectUriTb = new AbstractTextBox("Redirect Uri", string.Empty, "Enter custom redirect uri (if any)");
 
                 clientIdTb.ValueChanged += OnTextBoxChanged;
+                tenantTb.ValueChanged += OnTextBoxChanged;
+                redirectUriTb.ValueChanged += OnTextBoxChanged;
                 showAdvanced.StateChanged += OnAdvancedTurnedOff;
 
                 async void OnTextBoxChanged(object sender, string value)
@@ -136,30 +158,43 @@ namespace StrixMusic.Cores.OneDrive
                 void OnAdvancedTurnedOff(object sender, bool newState)
                 {
                     clientIdTb.ValueChanged -= OnTextBoxChanged;
+                    tenantTb.ValueChanged -= OnTextBoxChanged;
+                    redirectUriTb.ValueChanged -= OnTextBoxChanged;
                     showAdvanced.StateChanged -= OnAdvancedTurnedOff;
                 }
 
                 return new AbstractUICollection("SettingsGroup")
                 {
-                    new AbstractRichTextBlock("IntroText", "To get set up with OneDrive, you'll need to log in with your Microsoft account."),
                     showAdvanced,
                     clientIdTb,
                     tenantTb,
                     redirectUriTb,
-                    continueButton,
+                    actionButtons,
                 };
             }
+
+            return initialSettings;
+        }
+
+        public async Task<IFolderData?> GetFolderDataById(string id)
+        {
+            Guard.IsNotNull(_graphClient, nameof(_graphClient));
+
+            var driveItem = await _graphClient.Drive.Items[id].Request().GetAsync();
+            if (driveItem is null)
+                return null;
+
+            return new OneDriveFolderData(_graphClient, driveItem);
         }
 
         /// <summary>
         /// Logs the user in.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        public async Task LoginAsync()
+        public async Task<bool> TryLoginAsync()
         {
             Guard.IsNotNull(Services, nameof(Services));
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
-            Guard.IsNotNull(_graphClient, nameof(_graphClient));
 
             var notificationService = Services.GetRequiredService<INotificationService>();
 
@@ -173,61 +208,77 @@ namespace StrixMusic.Cores.OneDrive
             if (_graphClient is null)
             {
                 notificationService.RaiseNotification("Error", "OneDrive encountered an error while logging in.");
-                return;
+                return false;
             }
 
             SourceCore.Cast<OneDriveCore>().ChangeInstanceDescriptor(_authenticationManager.EmailAddress ?? string.Empty);
+            return true;
+        }
+
+        public async Task SetupMetadataScannerAsync(IFolderData folder)
+        {
+            _fileMetadataManager = new FileMetadataManager(SourceCore.InstanceId, folder);
+
+            await _fileMetadataManager.InitAsync();
+            Task.Run(_fileMetadataManager.StartScan).Forget();
+        }
+
+        public async Task<IFolderData?> PickSingleFolderAsync()
+        {
+            Guard.IsNotNull(_graphClient, nameof(_graphClient));
+            Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
             // Get root OneDrive folder.
             var driveItem = await _graphClient.Drive.Root.Request().Expand("children").GetAsync();
             _rootFolder = new OneDriveFolderData(_graphClient, driveItem);
 
-            await InitAbstractFolderExplorer(_rootFolder);
-
-            // Wait until the user has picked a file.
-            await _filePickerTaskCompletionSource.Task;
-
-            SourceCore.Cast<OneDriveCore>().ChangeCoreState(CoreState.Configured);
-            SourceCore.Cast<OneDriveCore>().ChangeCoreState(CoreState.Loaded);
-
-            AbstractUIElements = new AbstractUICollection(string.Empty).IntoList();
-            AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private async Task InitAbstractFolderExplorer(IFolderData folder)
-        {
-            var fileExplorer = new AbstractFolderExplorer(folder);
+            // Setup folder explorer
+            var fileExplorer = new AbstractFolderExplorer(_rootFolder);
             await fileExplorer.InitAsync();
 
-            Guard.IsNotNull(fileExplorer.AbstractUI, nameof(fileExplorer.AbstractUI));
-
-            AbstractUIElements = fileExplorer.AbstractUI.IntoList();
+            // Show folder explorer
+            AbstractUIElements = fileExplorer.IntoList();
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
 
-            fileExplorer.FolderSelected += FolderExplorerService_FolderSelected;
-            fileExplorer.DirectoryChanged += FileExplorer_DirectoryChanged;
+            fileExplorer.DirectoryChanged += OnDirectoryChanged;
+
+            // Wait until the user has picked a file.
+            var folderSelectionCancellationTokenSource = new CancellationTokenSource();
+            folderSelectionCancellationTokenSource.CancelAfter(TimeSpan.FromMinutes(30));
+
+            var taskCompletionSource = new TaskCompletionSource<IFolderData?>();
+
+            fileExplorer.FolderSelected += OnFolderSelected;
+            fileExplorer.Canceled += OnFileExplorerCanceled;
+
+            var result = await taskCompletionSource.Task;
+
+            fileExplorer.DirectoryChanged -= OnDirectoryChanged;
+            fileExplorer.Dispose();
+
+            if (result is null)
+                return null;
+
+            await _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.SelectedFolderId), result.Cast<OneDriveFolderData>().OneDriveFolderId);
+
+            void OnDirectoryChanged(object sender, IFolderData e)
+            {
+                var folderExplorer = (AbstractFolderExplorer)sender;
+
+                AbstractUIElements = folderExplorer.IntoList();
+                AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
+            }
+
+            return result;
+            
+            void OnFolderSelected(object sender, IFolderData e) => taskCompletionSource.SetResult(e);
+            void OnFileExplorerCanceled(object sender, EventArgs e) => taskCompletionSource.SetResult(null);
         }
 
-        private void FileExplorer_DirectoryChanged(object sender, IFolderData e)
+        public void SaveAbstractUI(AbstractUICollection collection)
         {
-            var fileExplorer = (AbstractFolderExplorer)sender;
-
-            Guard.IsNotNull(fileExplorer.AbstractUI, nameof(fileExplorer.AbstractUI));
-
-            AbstractUIElements = fileExplorer.AbstractUI.IntoList();
+            AbstractUIElements = collection.IntoList();
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void FolderExplorerService_FolderSelected(object sender, IFolderData e)
-        {
-            Guard.IsNotNull(_settingsService, nameof(OneDriveCoreSettingsService));
-            var fileExplorer = (AbstractFolderExplorer)sender;
-            fileExplorer.FolderSelected -= FolderExplorerService_FolderSelected;
-
-            _settingsService.SetValue<string>(nameof(OneDriveCoreSettingsKeys.FolderPath), e.Path);
-
-            // Let listeners know that the user has picked a file.
-            _filePickerTaskCompletionSource.SetResult(null);
         }
 
         public ValueTask DisposeAsync()
