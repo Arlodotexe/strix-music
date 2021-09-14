@@ -172,6 +172,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public MetadataScanTypes ScanTypes { get; set; } = MetadataScanTypes.TagLib | MetadataScanTypes.FileProperties;
 
         /// <inheritdoc />
+        public int DegreesOfParallelism { get; set; } = 2;
+
+        /// <inheritdoc />
         public async Task StartScan()
         {
             if (!IsInitialized)

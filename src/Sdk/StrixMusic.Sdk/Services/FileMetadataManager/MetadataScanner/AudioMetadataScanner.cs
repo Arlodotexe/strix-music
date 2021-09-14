@@ -22,7 +22,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     /// </summary>
     public class AudioMetadataScanner : IDisposable
     {
-        private const int SCAN_BATCH_SIZE = 2;
+        private readonly int _scanBatchSize;
         private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
 
         private static readonly PictureType[] _albumPictureTypesRanking =
@@ -80,10 +80,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioMetadataScanner"/> class.
         /// </summary>
-        /// <param name="metadataManager">The metadata manager that handles this scanner.</param>       
+        /// <param name="metadataManager">The metadata manager that handles this scanner.</param>
         public AudioMetadataScanner(FileMetadataManager metadataManager)
         {
             _metadataManager = metadataManager;
+            _scanBatchSize = metadataManager.DegreesOfParallelism;
 
             _batchLock = new SemaphoreSlim(1, 1);
 
@@ -159,7 +160,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     if (cancellationToken.IsCancellationRequested)
                         cancellationToken.ThrowIfCancellationRequested();
 
-                    var batchSize = SCAN_BATCH_SIZE;
+                    var batchSize = _scanBatchSize;
 
                     // Prevent going out of range
                     if (batchSize > remainingFilesToScan.Count)

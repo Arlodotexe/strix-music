@@ -221,6 +221,7 @@ namespace StrixMusic.Cores.OneDrive
             // Scanning file contents are possible but extremely slow over the network.
             // The Graph API supplies music metadata from file properties, which is much faster.
             _fileMetadataManager.ScanTypes = MetadataScanTypes.FileProperties;
+            _fileMetadataManager.DegreesOfParallelism = 6;
 
             // Must be on the Core IoC for FileCore base classes to get access to it.
             services.AddSingleton<IFileMetadataManager>(_fileMetadataManager);

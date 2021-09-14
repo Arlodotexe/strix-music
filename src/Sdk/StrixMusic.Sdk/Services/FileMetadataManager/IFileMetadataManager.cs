@@ -41,6 +41,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         MetadataScanTypes ScanTypes { get; set; }
 
         /// <summary>
+        /// The number of files that are scanned concurrently.
+        /// </summary>
+        int DegreesOfParallelism { get; set; }
+
+        /// <summary>
         /// Starts scanning the given folder.
         /// </summary>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
