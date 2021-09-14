@@ -34,7 +34,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
     }
 
     /// <inheritdoc cref="IFileMetadataManager" />
-    public class FileMetadataManager : IFileMetadataManager, IDisposable
+    public class FileMetadataManager : IFileMetadataManager
     {
         private static string NewGuid() => Guid.NewGuid().ToString();
 
@@ -43,13 +43,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private readonly AudioMetadataScanner _audioMetadataScanner;
         private readonly PlaylistMetadataScanner _playlistMetadataScanner;
         private readonly INotificationService? _notificationService;
+        private readonly IFolderData _rootFolder;
 
         private Notification? _filesScannedNotification;
         private Notification? _filesFoundNotification;
         private AbstractProgressIndicator? _progressUIElement;
 
         private FileScanningType _currentScanningType;
-        private IFolderData _rootFolder;
         private int _filesFound;
         private int _filesProcessed;
 
@@ -175,16 +175,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public AlbumRepository Albums { get; private set; }
+        public AlbumRepository Albums { get; }
 
         /// <inheritdoc />
-        public ArtistRepository Artists { get; private set; }
+        public ArtistRepository Artists { get; }
 
         /// <inheritdoc />
-        public PlaylistRepository Playlists { get; private set; }
+        public PlaylistRepository Playlists { get; }
 
         /// <inheritdoc />
-        public TrackRepository Tracks { get; private set; }
+        public TrackRepository Tracks { get; }
 
         /// <inheritdoc />
         public bool SkipRepoInit { get; set; }
@@ -207,16 +207,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             var findingFilesNotif = RaiseFileDiscoveryNotification();
             var discoveredFiles = await _fileScanner.ScanFolder(_rootFolder);
+            var filesToScan = discoveredFiles as IFileData[] ?? discoveredFiles.ToArray();
+
             findingFilesNotif.Dismiss();
 
             _currentScanningType = FileScanningType.AudioFiles;
             var scanningMusicNotif = RaiseProcessingNotification();
-            var fileMetadata = await _audioMetadataScanner.ScanMusicFiles(discoveredFiles);
+            var fileMetadata = await _audioMetadataScanner.ScanMusicFiles(filesToScan);
             scanningMusicNotif.Dismiss();
 
             _currentScanningType = FileScanningType.Playlists;
             var scanningPlaylistsNotif = RaiseProcessingNotification();
-            await _playlistMetadataScanner.ScanPlaylists(discoveredFiles, fileMetadata);
+            await _playlistMetadataScanner.ScanPlaylists(filesToScan, fileMetadata);
             scanningPlaylistsNotif.Dismiss();
 
             ScanningCompleted?.Invoke(this, EventArgs.Empty);
@@ -273,11 +275,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             return _filesScannedNotification = _notificationService.RaiseNotification(elementGroup);
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
         /// <inheritdoc />
         public ValueTask DisposeAsync()
         {
@@ -292,35 +289,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _filesFoundNotification?.Dismiss();
             _filesScannedNotification?.Dismiss();
 
+            DetachEvents();
             return default;
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!IsInitialized)
-                return;
-
-            if (disposing)
-            {
-                // dispose any objects you created here
-                ReleaseUnmanagedResources();
-            }
-
-            IsInitialized = false;
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
-        ~FileMetadataManager()
-        {
-            Dispose(false);
         }
     }
 }
