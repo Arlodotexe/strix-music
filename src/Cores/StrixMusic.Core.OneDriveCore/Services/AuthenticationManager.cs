@@ -15,7 +15,7 @@ namespace StrixMusic.Cores.OneDrive.Services
     public class AuthenticationManager
     {
         private readonly string _authorityUri = "https://login.microsoftonline.com/consumers";
-        private readonly string[] _scopes = { "Files.Read.All" };
+        private readonly string[] _scopes = { "Files.Read.All", "User.Read", "Files.ReadWrite" };
 
         private readonly IPublicClientApplication _clientApp;
 
@@ -61,7 +61,8 @@ namespace StrixMusic.Cores.OneDrive.Services
                 result = await _clientApp.AcquireTokenSilent(_scopes, accounts.FirstOrDefault()).ExecuteAsync();
 
                 AccessToken = result.AccessToken;
-                
+                EmailAddress = result.Account.Username;
+
                 var authProvider = new DelegateAuthenticationProvider(requestMessage =>
                 {
                     requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", AccessToken);
