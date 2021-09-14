@@ -23,15 +23,15 @@
                                             <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextWrapping="WrapWholeWords"
                                                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
-                                            <ItemsControl ItemsSource="{Binding Buttons}">
+                                            <ItemsControl ItemsSource="{Binding Buttons}" Margin="0,8,0,0">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate x:DataType="abstractUIVm:AbstractButtonViewModel">
-                                                        <controls:AbstractButtonPresenter Margin="8,0"/>
+                                                        <controls:AbstractButtonPresenter />
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
-                                                        <StackPanel Orientation="Horizontal" Margin="-4,0"/>
+                                                        <StackPanel Orientation="Horizontal" Margin="-4,0" Spacing="8"/>
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
                                             </ItemsControl>
