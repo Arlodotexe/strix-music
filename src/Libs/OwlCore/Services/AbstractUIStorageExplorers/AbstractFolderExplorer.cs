@@ -53,14 +53,14 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
 
         private void AttachEvents()
         {
-            _cancelButton.Clicked += Canceled;
-            _selectButton.Clicked += SelectFolderButtonOnClicked;
+            _cancelButton.Clicked += OnCancelButtonClicked;
+            _selectButton.Clicked += OnSelectFolderButtonClicked;
         }
 
         private void DetachEvents()
         {
-            _cancelButton.Clicked -= Canceled;
-            _selectButton.Clicked -= SelectFolderButtonOnClicked;
+            _cancelButton.Clicked -= OnCancelButtonClicked;
+            _selectButton.Clicked -= OnSelectFolderButtonClicked;
 
             if (_currentDataList is not null)
                 _currentDataList.ItemTapped -= AbstractDataListOnItemTapped;
@@ -159,12 +159,14 @@ namespace OwlCore.Services.AbstractUIStorageExplorers
             _currentDataList.ItemTapped += AbstractDataListOnItemTapped;
         }
 
-        private void SelectFolderButtonOnClicked(object sender, EventArgs e)
+        private void OnSelectFolderButtonClicked(object sender, EventArgs e)
         {
             Guard.IsNotNull(CurrentFolder, nameof(CurrentFolder));
             SelectedFolder = CurrentFolder;
             FolderSelected?.Invoke(this, CurrentFolder);
         }
+
+        private void OnCancelButtonClicked(object sender, EventArgs e) => Canceled?.Invoke(sender, e);
 
         private async void AbstractDataListOnItemTapped(object sender, AbstractUIMetadata e)
         {
