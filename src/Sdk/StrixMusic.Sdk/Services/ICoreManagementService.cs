@@ -57,7 +57,7 @@ namespace StrixMusic.Sdk.Services
         Task UnregisterCoreInstanceAsync(string instanceId);
 
         /// <summary>
-        /// Given a core intance, return the <see cref="CoreAssemblyInfo"/> that was used to create it.
+        /// Given a core instance, return the <see cref="CoreAssemblyInfo"/> that was used to create it.
         /// </summary>
         /// <param name="core">The core instance to check.</param>
         /// <returns>The assembly info used to create the given <paramref name="core"/>.</returns>
