@@ -12,27 +12,6 @@ using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
-    /// <summary>
-    /// The type of files being scanned.
-    /// </summary>
-    public enum FileScanningType
-    {
-        /// <summary>
-        /// Not currently scanning files.
-        /// </summary>
-        None,
-
-        /// <summary>
-        /// Files containing raw audio.
-        /// </summary>
-        AudioFiles,
-
-        /// <summary>
-        /// Files containing playlist metadata.
-        /// </summary>
-        Playlists
-    }
-
     /// <inheritdoc cref="IFileMetadataManager" />
     public class FileMetadataManager : IFileMetadataManager
     {
@@ -188,6 +167,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         /// <inheritdoc />
         public bool SkipRepoInit { get; set; }
+
+        /// <inheritdoc />
+        public MetadataScanTypes ScanTypes { get; set; } = MetadataScanTypes.TagLib | MetadataScanTypes.FileProperties;
 
         /// <inheritdoc />
         public async Task StartScan()

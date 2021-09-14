@@ -24,6 +24,8 @@ namespace StrixMusic.Cores.OneDrive.Storage
         {
             _graphClient = graphClient;
             _driveItem = driveItem;
+
+            Properties = new OneDriveFileDataProperties(_driveItem);
         }
 
         /// <inheritdoc />
@@ -39,7 +41,7 @@ namespace StrixMusic.Cores.OneDrive.Storage
         public string FileExtension => MimeTypeMap.GetExtension(_driveItem.File.MimeType);
 
         /// <inheritdoc />
-        public IFileDataProperties Properties { get; set; } = new OneDriveFileDataProperties();
+        public IFileDataProperties Properties { get; set; }
 
         /// <inheritdoc />
         public async Task<IFolderData> GetParentAsync()

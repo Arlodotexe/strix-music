@@ -328,12 +328,25 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private async Task<FileMetadata?> ScanFileMetadata(IFileData fileData)
         {
-            var id3Metadata = await GetId3Metadata(fileData);
+            var foundMetadata = new List<FileMetadata>();
 
-            // Disabled for now, UI is getting duplicate info (also may not use)
-            //var propertyMetadata = await GetMusicFilesProperties(fileData);
-            var foundMetadata = new[] { id3Metadata };
-            var validMetadata = foundMetadata.PruneNull().ToArray();
+            if (_metadataManager.ScanTypes.HasFlag(MetadataScanTypes.TagLib))
+            {
+                var id3Metadata = await GetId3Metadata(fileData);
+                
+                if (!(id3Metadata is null))
+                    foundMetadata.Add(id3Metadata);
+            }
+
+            if (_metadataManager.ScanTypes.HasFlag(MetadataScanTypes.FileProperties))
+            {
+                var propertyMetadata = await GetMusicFilesProperties(fileData);
+                
+                if (!(propertyMetadata is null))
+                    foundMetadata.Add(propertyMetadata);
+            }
+
+            var validMetadata = foundMetadata.ToArray();
             if (validMetadata.Length == 0)
                 return null;
 
@@ -358,7 +371,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 // Some underlying libs without nullable checks may return null by mistake.
                 if (stream is null)
                     return null;
-                
+
                 stream.Seek(0, SeekOrigin.Begin);
 
                 using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
@@ -387,17 +400,17 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         {
                             var imageFile = await CacheFolder.CreateFileAsync($"{fileData.Path.HashMD5Fast()}.png", CreationCollisionOption.ReplaceExisting);
 
-/*                            using var imgStream = new MemoryStream(imageData);
-                            using (Image image = Image.Load(imgStream))
-                            {
-                                image.Mutate(x => x.Resize(new ResizeOptions()
-                                {
-                                    Mode = ResizeMode.Min,
-                                    Size = new Size(150),
-                                }));
+                            /*                            using var imgStream = new MemoryStream(imageData);
+                                                        using (Image image = Image.Load(imgStream))
+                                                        {
+                                                            image.Mutate(x => x.Resize(new ResizeOptions()
+                                                            {
+                                                                Mode = ResizeMode.Min,
+                                                                Size = new Size(150),
+                                                            }));
 
-                                image.SaveAsPng(imgStream);
-                            }*/
+                                                            image.SaveAsPng(imgStream);
+                                                        }*/
 
                             await imageFile.WriteAllBytesAsync(imageData);
 
