@@ -107,7 +107,7 @@ namespace StrixMusic.Shared.ViewModels
 
             foreach (var loadedService in Services)
             {
-                loadedService.ConfigRequested += LoadedService_ConfigRequested;
+                loadedService.ConfigRequested -= LoadedService_ConfigRequested;
             }
 
             Guard.IsNotNull(CurrentWindow.AppFrame.ContentOverlay, nameof(CurrentWindow.AppFrame.ContentOverlay));
@@ -119,22 +119,33 @@ namespace StrixMusic.Shared.ViewModels
             core.CoreStateChanged -= Core_CoreStateChanged;
         }
 
-        private void LoadedService_ConfigRequested(object sender, EventArgs e)
+        private async void LoadedService_ConfigRequested(object sender, EventArgs e)
         {
             var viewModel = (LoadedServicesItemViewModel)sender;
             Guard.IsNotNull(viewModel.Core, nameof(viewModel.Core));
+
+            if (viewModel.Core.CoreState == CoreState.Unloaded)
+            {
+                await _mainViewModel.InitCore(viewModel.Core);
+                return;
+            }
 
             CurrentCoreConfig = viewModel.Core;
         }
 
         private async void ContentOverlay_Closed(object sender, EventArgs e)
         {
-            foreach (var core in _mainViewModel.Cores)
+            foreach (var core in _mainViewModel.Cores.ToArray())
             {
-                if (core.CoreState == CoreState.Unloaded || core.CoreState == CoreState.NeedsSetup)
+                if (core.CoreState == CoreState.Unloaded ||
+                    core.CoreState == CoreState.Faulted)
+                {
+                    await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);
                     await core.DisposeAsync();
+                }
             }
 
+            CurrentCoreConfig = null;
             IsShowingAddNew = false;
         }
 
