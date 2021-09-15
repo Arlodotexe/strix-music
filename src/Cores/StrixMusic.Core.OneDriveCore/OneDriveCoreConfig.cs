@@ -236,6 +236,7 @@ namespace StrixMusic.Cores.OneDrive
         public async Task<IFolderData?> PickSingleFolderAsync()
         {
             Guard.IsNotNull(_graphClient, nameof(_graphClient));
+            Guard.IsNotNull(_authenticationManager, nameof(_authenticationManager));
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
             // Get root OneDrive folder.
@@ -244,6 +245,21 @@ namespace StrixMusic.Cores.OneDrive
 
             // Setup folder explorer
             var fileExplorer = new AbstractFolderExplorer(_rootFolder);
+
+            if (!string.IsNullOrWhiteSpace(_authenticationManager.DisplayName))
+            {
+                fileExplorer.Title = $"{_authenticationManager.DisplayName}'s OneDrive";
+            }
+            else if (!string.IsNullOrWhiteSpace(_authenticationManager.EmailAddress))
+            {
+                fileExplorer.Title = $"OneDrive";
+                fileExplorer.Subtitle = _authenticationManager.EmailAddress;
+            }
+            else
+            {
+                fileExplorer.Title = $"OneDrive";
+            }
+
             await fileExplorer.InitAsync();
 
             // Show folder explorer
@@ -280,7 +296,7 @@ namespace StrixMusic.Cores.OneDrive
             }
 
             return result;
-            
+
             void OnFolderSelected(object sender, IFolderData e) => taskCompletionSource.SetResult(e);
             void OnFileExplorerCanceled(object sender, EventArgs e) => taskCompletionSource.SetResult(null);
         }

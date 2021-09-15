@@ -26,6 +26,8 @@ namespace StrixMusic.Cores.OneDrive.Services
 
         public string? EmailAddress { get; private set; }
 
+        public string? DisplayName {  get; private set; }
+
         /// <summary>
         /// Creates a new instance of <see cref="AuthenticationManager"/>.
         /// </summary>
@@ -70,6 +72,9 @@ namespace StrixMusic.Cores.OneDrive.Services
                 });
 
                 graphClient = new GraphServiceClient("https://graph.microsoft.com/v1.0", authProvider);
+
+                var x = await graphClient.Users.Request().GetAsync();
+                DisplayName = x.FirstOrDefault()?.DisplayName;
             }
             catch (MsalUiRequiredException)
             {
