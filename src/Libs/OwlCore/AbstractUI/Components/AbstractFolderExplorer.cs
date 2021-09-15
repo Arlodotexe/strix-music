@@ -47,6 +47,7 @@ namespace OwlCore.AbstractUI.Components
         /// <inheritdoc />
         public async Task InitAsync()
         {
+            FolderStack.Push(_rootFolder);
             await SetupFolderAsync(_rootFolder);
             IsInitialized = true;
         }
@@ -103,15 +104,11 @@ namespace OwlCore.AbstractUI.Components
         /// Setups the <see cref="AbstractFolderExplorer"/>.
         /// </summary>
         /// <param name="folder">The current directory to open.</param>
-        /// <param name="lastNavigationAction">The navigation action that was performed by the user.</param>
         /// <returns>Created datalist for the UI to display.</returns>
-        private async Task SetupFolderAsync(IFolderData folder, NavigationAction lastNavigationAction = NavigationAction.None)
+        private async Task SetupFolderAsync(IFolderData folder)
         {
             CurrentFolder = folder;
             _isRootFolder = ReferenceEquals(folder, _rootFolder);
-
-            if (lastNavigationAction != NavigationAction.Back)
-                FolderStack.Push(folder);
 
             var folders = await folder.GetFoldersAsync();
             var folderData = folders.ToArray();
@@ -171,11 +168,10 @@ namespace OwlCore.AbstractUI.Components
         private async void AbstractDataListOnItemTapped(object sender, AbstractUIMetadata e)
         {
             Guard.IsNotNull(_currentDisplayedFolders, nameof(_currentDisplayedFolders));
-            var lastNavigationAction = ReferenceEquals(e, _backUIMetadata) ? NavigationAction.Back : NavigationAction.Forward;
 
             IFolderData targetFolder;
 
-            if (lastNavigationAction == NavigationAction.Back)
+            if (ReferenceEquals(e, _backUIMetadata))
             {
                 FolderStack.Pop();
                 targetFolder = FolderStack.Peek();
@@ -186,7 +182,7 @@ namespace OwlCore.AbstractUI.Components
                 FolderStack.Push(targetFolder);
             }
 
-            await SetupFolderAsync(targetFolder, lastNavigationAction);
+            await SetupFolderAsync(targetFolder);
 
             DirectoryChanged?.Invoke(this, targetFolder);
         }
