@@ -52,9 +52,10 @@ namespace StrixMusic.Sdk.ViewModels
         {
             await Threading.OnPrimaryThread(() =>
             {
+                AbstractUIElements.Clear();
+
                 foreach (var abstractUIElement in _coreConfig.AbstractUIElements)
                 {
-                    AbstractUIElements.Clear();
                     AbstractUIElements.Add(new AbstractUICollectionViewModel(abstractUIElement));
                 }
             });
