@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
@@ -382,7 +383,25 @@ namespace StrixMusic.Shared
             CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell), true);
 
             // TODO Temp, not great. Need a proper flow here.
-            await Flow.EventAsTask(x => doneButton.Clicked += x, x => doneButton.Clicked -= x, TimeSpan.FromDays(1));
+            var setupFinishedSemaphore = new SemaphoreSlim(0, 1);
+
+            notification.Dismissed += OnNotificationDismissed;
+            doneButton.Clicked += OnDoneButtonClicked;
+
+            void OnNotificationDismissed(object sender, EventArgs e)
+            {
+                setupFinishedSemaphore.Release();
+            }
+
+            void OnDoneButtonClicked(object sender, EventArgs e)
+            {
+                setupFinishedSemaphore.Release();
+            }
+
+            await setupFinishedSemaphore.WaitAsync();
+
+            notification.Dismissed -= OnNotificationDismissed;
+            doneButton.Clicked -= OnDoneButtonClicked;
 
             notification.Dismiss();
         }
