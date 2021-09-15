@@ -88,7 +88,7 @@
                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Title), Mode=OneWay}"/>
 
             <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" 
-                       FontSize="18"
+                       FontSize="16" Opacity="0.7"
                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
             <ItemsControl ItemsSource="{x:Bind Items}"
