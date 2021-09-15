@@ -159,7 +159,8 @@
                             <Image Source="{Binding ImageSource, Mode=OneWay}" />
                         </Grid>
 
-                        <TextBlock Text="{Binding Title, Mode=OneWay}" FontSize="16" Grid.Row="1" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Title, Mode=OneWay}" FontSize="16" Grid.Row="1" TextTrimming="CharacterEllipsis"
+                                   Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Title), Mode=OneWay}" />
 
                         <Border Visibility="{Binding Parent.IsUserEditingEnabled, Converter={StaticResource BoolToVisibilityConverter}}">
                             <Button Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Top"
@@ -176,6 +177,7 @@
 
                         <TextBlock x:Name="SubtitleTextBlock" Grid.Row="2"  Grid.ColumnSpan="2"
                                        Text="{Binding Subtitle}"
+                                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"
                                        FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextTrimming="CharacterEllipsis" />
                     </Grid>
                 </DataTemplate>
