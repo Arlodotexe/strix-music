@@ -116,11 +116,16 @@ namespace StrixMusic.Sdk.Services.Settings
             }
             catch (JsonException ex)
             {
-                return default!;
+                return GetDefaultSettingValue();
             }
 
             // Try to get the default setting value
             if (obj == null)
+            {
+                return GetDefaultSettingValue();
+            }
+
+            T GetDefaultSettingValue()
             {
                 foreach (var type in SettingsKeysTypes)
                 {
@@ -138,6 +143,8 @@ namespace StrixMusic.Sdk.Services.Settings
                         // ignored
                     }
                 }
+
+                return ThrowHelper.ThrowArgumentOutOfRangeException<T>(key, $"{key} not found in the provided default {nameof(SettingsKeysTypes)}");
             }
 
             return obj!;
