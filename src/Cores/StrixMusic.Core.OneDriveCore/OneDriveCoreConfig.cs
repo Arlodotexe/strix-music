@@ -42,7 +42,7 @@ namespace StrixMusic.Cores.OneDrive
 
             _useTagLibScannerToggle = new AbstractBoolean("useTagLibScannerToggle", "Use TagLib")
             {
-                Subtitle = "TagLib is more accurate metadata and supports more formats, but is slower (not recommended).",
+                Subtitle = "TagLib is more accurate and supports more formats, but is slower (not recommended).",
             };
 
             _useFilePropsScannerToggle = new AbstractBoolean("useFilePropsScannerToggle", "Use file properties")
@@ -106,7 +106,7 @@ namespace StrixMusic.Cores.OneDrive
             };
 
             metadataScanType.Title = "Scanner type";
-            metadataScanType.Subtitle = "How to get audio metadata from files. Requires restart.";
+            metadataScanType.Subtitle = "Requires restart.";
 
             return new AbstractUICollection("GenericConfig")
             {
