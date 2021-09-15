@@ -1,22 +1,33 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="using:System"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:numerical="using:OwlCore.Uno.Converters.Numerical"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.AlbumItemStyle">
 
     <DataTemplate x:Key="DefaultAlbumItemImageDataTemplate" x:DataType="viewModels:AlbumViewModel">
         <strix:SafeImage Width="86" Height="86"/>
     </DataTemplate>
 
+    <numerical:StringToIntConverter x:Key="StringToIntConverter" />
+    <x:Int32 x:Key="LoadMoreArtistsCount">1</x:Int32>
+
     <DataTemplate x:Key="DefaultAlbumItemTextDataTemplate" x:DataType="viewModels:AlbumViewModel">
         <StackPanel>
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="Loaded">
+                    <core:InvokeCommandAction Command="{Binding  PopulateMoreArtistsCommand}" CommandParameter="{StaticResource LoadMoreArtistsCount}"/>
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+
             <TextBlock Text="{x:Bind Name}" FontSize="12" TextTrimming="Clip"/>
-            <TextBlock Text="{x:Bind Artists[0].Name}" FontSize="12" FontWeight="SemiLight" Opacity=".5"/>
+            <TextBlock Text="{x:Bind Artists[0].Name, Mode=OneWay}" FontSize="12" FontWeight="SemiLight" Opacity=".5"/>
         </StackPanel>
     </DataTemplate>
 
