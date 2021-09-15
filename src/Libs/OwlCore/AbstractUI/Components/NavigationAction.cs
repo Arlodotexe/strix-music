@@ -1,4 +1,4 @@
-﻿namespace OwlCore.Services.AbstractUIStorageExplorers
+﻿namespace OwlCore.AbstractUI.Components
 {
     /// <summary>
     /// The most recent navigation action.

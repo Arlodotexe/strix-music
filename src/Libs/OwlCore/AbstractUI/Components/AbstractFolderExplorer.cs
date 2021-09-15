@@ -8,10 +8,10 @@ using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using OwlCore.Provisos;
 
-namespace OwlCore.Services.AbstractUIStorageExplorers
+namespace OwlCore.AbstractUI.Components
 {
     /// <summary>
-    /// File explorer that lets user choose a folder using <see cref="IFolderData"/> and <see cref="IFileData"/>
+    /// An <see cref="AbstractUICollection"/> that acts as a standalone, inbox component. A Folder explorer that interops with <see cref="OwlCore.AbstractStorage"/> to browse and select subfolders from an <see cref="IFolderData"/>.
     /// </summary>
     public class AbstractFolderExplorer : AbstractUICollection, IAsyncInit, IDisposable
     {
