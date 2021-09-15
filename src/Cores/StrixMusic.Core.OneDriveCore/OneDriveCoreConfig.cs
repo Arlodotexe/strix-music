@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,10 +23,13 @@ namespace StrixMusic.Cores.OneDrive
     ///  <inheritdoc/>
     public sealed class OneDriveCoreConfig : ICoreConfig
     {
+        private readonly AbstractBoolean _useTagLibScannerToggle;
+        private readonly AbstractBoolean _useFilePropsScannerToggle;
         private GraphServiceClient? _graphClient;
         private IFolderData? _rootFolder;
 
         private ISettingsService? _settingsService;
+        private INotificationService? _notificationService;
         private AuthenticationManager? _authenticationManager;
         private FileMetadataManager? _fileMetadataManager;
 
@@ -35,6 +39,30 @@ namespace StrixMusic.Cores.OneDrive
         public OneDriveCoreConfig(ICore sourceCore)
         {
             SourceCore = sourceCore;
+
+            _useTagLibScannerToggle = new AbstractBoolean("useTagLibScannerToggle", "Use TagLib")
+            {
+                Subtitle = "TagLib is more accurate metadata and supports more formats, but is slower (not recommended).",
+            };
+
+            _useFilePropsScannerToggle = new AbstractBoolean("useFilePropsScannerToggle", "Use file properties")
+            {
+                Subtitle = "File properties are very fast, but provide less data.",
+            };
+
+            AttachEvents();
+        }
+
+        private void AttachEvents()
+        {
+            _useTagLibScannerToggle.StateChanged += UseTagLibScannerToggleOnStateChanged;
+            _useFilePropsScannerToggle.StateChanged += UseFilePropsToggleOnStateChanged;
+        }
+
+        private void DetachEvents()
+        {
+            _useTagLibScannerToggle.StateChanged -= UseTagLibScannerToggleOnStateChanged;
+            _useFilePropsScannerToggle.StateChanged -= UseFilePropsToggleOnStateChanged;
         }
 
         /// <inheritdoc />
@@ -52,14 +80,39 @@ namespace StrixMusic.Cores.OneDrive
         /// <inheritdoc/>
         public event EventHandler? AbstractUIElementsChanged;
 
-        public Task SetupConfigurationServices(IServiceCollection services)
+        public async Task SetupConfigurationServices(IServiceCollection services)
         {
+            DetachEvents();
+
             _settingsService = new OneDriveCoreSettingsService(SourceCore.InstanceId);
             services.AddSingleton(_settingsService);
 
+            _useFilePropsScannerToggle.State = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseFileProperties));
+            _useTagLibScannerToggle.State = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseTagLib));
+
             Services = services.BuildServiceProvider();
 
-            return Task.CompletedTask;
+            _notificationService = Services.GetRequiredService<INotificationService>();
+
+            AttachEvents();
+        }
+
+        public AbstractUICollection CreateGenericConfig()
+        {
+            var metadataScanType = new AbstractUICollection("metadataScanType")
+            {
+                _useTagLibScannerToggle,
+                _useFilePropsScannerToggle,
+            };
+
+            metadataScanType.Title = "Scanner type";
+            metadataScanType.Subtitle = "How to get audio metadata from files. Requires restart.";
+
+            return new AbstractUICollection("GenericConfig")
+            {
+                Title = "OneDrive settings",
+                Items = metadataScanType.IntoList(),
+            };
         }
 
         /// <summary>
@@ -72,6 +125,12 @@ namespace StrixMusic.Cores.OneDrive
         public AbstractUICollection CreateOutOfBoxSetupAsync()
         {
             var showAdvanced = new AbstractBoolean("showAdvanced", "Show advanced");
+            var advancedCollection = new AbstractUICollection("advancedSettings")
+            {
+                Title = "Advanced",
+                Items = showAdvanced.IntoList()
+            };
+
             var continueButton = new AbstractButton("continueButton", "Continue", type: AbstractButtonType.Confirm);
             var cancelButton = new AbstractButton("cancelButton", "Cancel", type: AbstractButtonType.Cancel);
             var actionButtons = new AbstractUICollection("actionButtons", PreferredOrientation.Horizontal)
@@ -80,17 +139,24 @@ namespace StrixMusic.Cores.OneDrive
                 continueButton,
             };
 
+            var ui = new AbstractUICollection("SettingsGroup")
+            {
+                CreateGenericConfig(),
+                advancedCollection,
+                actionButtons,
+            };
+
             showAdvanced.StateChanged += OnShowAdvancedClicked;
             continueButton.Clicked += OnNavigationButtonClicked;
             cancelButton.Clicked += OnNavigationButtonClicked;
 
-            var initialSettings = BuildSimpleSettings();
-            SetupTitle(initialSettings);
+            void OnNavigationButtonClicked(object sender, EventArgs e) => DetachOutOfBoxUIEvents();
 
-            void OnNavigationButtonClicked(object sender, EventArgs e) => DetachEvents();
-
-            void DetachEvents()
+            void DetachOutOfBoxUIEvents()
             {
+                Guard.IsNotNull(cancelButton, nameof(cancelButton));
+                Guard.IsNotNull(showAdvanced, nameof(showAdvanced));
+
                 continueButton.Clicked -= OnNavigationButtonClicked;
                 cancelButton.Clicked -= OnNavigationButtonClicked;
 
@@ -103,33 +169,31 @@ namespace StrixMusic.Cores.OneDrive
 
             void OnShowAdvancedClicked(object sender, bool newState)
             {
-                var ui = newState ?
-                    BuildAdvancedSettings() :
-                    BuildSimpleSettings();
 
-                SetupTitle(ui);
+                if (showAdvanced.State)
+                    InjectAdvancedSettings();
+                else
+                    RemoveAdvancedSettings();
+
                 SaveAbstractUI(ui);
             }
 
-            void SetupTitle(AbstractUICollection collection)
+            void RemoveAdvancedSettings()
             {
-                collection.Title = "Login to OneDrive";
-                collection.Subtitle = "To get set up with OneDrive, you'll need to log in with your Microsoft account.";
-            }
+                Guard.IsNotNull(advancedCollection, nameof(advancedCollection));
 
-            AbstractUICollection BuildSimpleSettings()
-            {
-                return new AbstractUICollection("SettingsGroup")
+                foreach (var item in advancedCollection.ToArray())
                 {
-                    showAdvanced,
-                    actionButtons,
-                };
+                    if (item != showAdvanced)
+                        advancedCollection.Remove(item);
+                }
             }
 
-            AbstractUICollection BuildAdvancedSettings()
+            void InjectAdvancedSettings()
             {
                 Guard.IsNotNull(showAdvanced, nameof(showAdvanced));
                 Guard.IsNotNull(continueButton, nameof(continueButton));
+                Guard.IsNotNull(advancedCollection, nameof(advancedCollection));
 
                 var clientIdTb = new AbstractTextBox("ClientId", string.Empty, "Enter custom client id");
                 var tenantTb = new AbstractTextBox("Tenant Id", string.Empty, "Enter custom tenant id");
@@ -139,6 +203,10 @@ namespace StrixMusic.Cores.OneDrive
                 tenantTb.ValueChanged += OnTextBoxChanged;
                 redirectUriTb.ValueChanged += OnTextBoxChanged;
                 showAdvanced.StateChanged += OnAdvancedTurnedOff;
+
+                advancedCollection.Add(clientIdTb);
+                advancedCollection.Add(tenantTb);
+                advancedCollection.Add(redirectUriTb);
 
                 async void OnTextBoxChanged(object sender, string value)
                 {
@@ -161,18 +229,9 @@ namespace StrixMusic.Cores.OneDrive
                     redirectUriTb.ValueChanged -= OnTextBoxChanged;
                     showAdvanced.StateChanged -= OnAdvancedTurnedOff;
                 }
-
-                return new AbstractUICollection("SettingsGroup")
-                {
-                    showAdvanced,
-                    clientIdTb,
-                    tenantTb,
-                    redirectUriTb,
-                    actionButtons,
-                };
             }
 
-            return initialSettings;
+            return ui;
         }
 
         public async Task<IFolderData?> GetFolderDataById(string id)
@@ -217,10 +276,20 @@ namespace StrixMusic.Cores.OneDrive
         public async Task SetupMetadataScannerAsync(IServiceCollection services, IFolderData folder)
         {
             _fileMetadataManager = new FileMetadataManager(SourceCore.InstanceId, folder);
+            Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
             // Scanning file contents are possible but extremely slow over the network.
             // The Graph API supplies music metadata from file properties, which is much faster.
-            _fileMetadataManager.ScanTypes = MetadataScanTypes.FileProperties;
+            // Use the user's preferences.
+            var scanTypes = MetadataScanTypes.None;
+
+            if (await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseTagLib)))
+                scanTypes |= MetadataScanTypes.TagLib;
+
+            if (await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseFileProperties)))
+                scanTypes |= MetadataScanTypes.FileProperties;
+
+            _fileMetadataManager.ScanTypes = scanTypes;
             _fileMetadataManager.DegreesOfParallelism = 6;
 
             // Must be on the Core IoC for FileCore base classes to get access to it.
@@ -307,8 +376,47 @@ namespace StrixMusic.Cores.OneDrive
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        void UseTagLibScannerToggleOnStateChanged(object sender, bool e)
+        {
+            DetachEvents();
+            Guard.IsNotNull(_settingsService, nameof(_settingsService));
+            Guard.IsNotNull(_notificationService, nameof(_notificationService));
+
+            if (!_useFilePropsScannerToggle.State && !_useTagLibScannerToggle.State)
+            {
+                _notificationService.RaiseNotification("Whoops", "At least one metadata scanner is required.");
+
+                _useTagLibScannerToggle.State = true;
+                AttachEvents();
+                return;
+            }
+
+            _ = _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseTagLib), e);
+            AttachEvents();
+        }
+
+        void UseFilePropsToggleOnStateChanged(object sender, bool e)
+        {
+            DetachEvents();
+            Guard.IsNotNull(_settingsService, nameof(_settingsService));
+            Guard.IsNotNull(_notificationService, nameof(_notificationService));
+
+            if (!_useFilePropsScannerToggle.State && !_useTagLibScannerToggle.State)
+            {
+                _notificationService.RaiseNotification("Whoops", "At least one metadata scanner is required.");
+                _useFilePropsScannerToggle.State = true;
+                AttachEvents();
+                return;
+            }
+
+            _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseFileProperties), e).Forget();
+            AttachEvents();
+        }
+
         public ValueTask DisposeAsync()
         {
+            // TODO: Logout?
+            DetachEvents();
             return default;
         }
     }
