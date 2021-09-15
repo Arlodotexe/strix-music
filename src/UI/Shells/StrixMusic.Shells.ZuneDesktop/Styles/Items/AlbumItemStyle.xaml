@@ -8,14 +8,12 @@
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
-    xmlns:numerical="using:OwlCore.Uno.Converters.Numerical"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.AlbumItemStyle">
 
     <DataTemplate x:Key="DefaultAlbumItemImageDataTemplate" x:DataType="viewModels:AlbumViewModel">
         <strix:SafeImage Width="86" Height="86"/>
     </DataTemplate>
 
-    <numerical:StringToIntConverter x:Key="StringToIntConverter" />
     <x:Int32 x:Key="LoadMoreArtistsCount">1</x:Int32>
 
     <DataTemplate x:Key="DefaultAlbumItemTextDataTemplate" x:DataType="viewModels:AlbumViewModel">
