@@ -80,7 +80,7 @@
     </Style>
 
     <DataTemplate x:Key="DefaultAbstractUICollectionTemplate" x:DataType="abstractUIVm:AbstractUICollectionViewModel">
-        <StackPanel Margin="10,0">
+        <StackPanel Margin="0,5">
 
             <TextBlock Text="{x:Bind Title, Mode=OneWay}"
                        FontSize="22" 

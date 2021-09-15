@@ -58,7 +58,8 @@
 
     <DataTemplate x:Key="DefaultAbstractMultipleChoiceTemplate" x:DataType="abstractUI:AbstractMultiChoiceViewModel">
         <StackPanel>
-            <TextBlock Text="{x:Bind Title}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText}" />
+            <TextBlock Text="{x:Bind Title}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText}"
+                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Title)}" />
 
             <TextBlock Text="{x:Bind Subtitle}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
