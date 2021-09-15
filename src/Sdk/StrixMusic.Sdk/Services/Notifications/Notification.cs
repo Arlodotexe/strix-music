@@ -31,12 +31,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         public AbstractUICollection AbstractUICollection { get; }
 
         /// <summary>
-        /// If true, the notification is being displayed to the user.
-        /// </summary>
-        internal bool IsDisplayed { get; set; }
-
-        /// <summary>
-        /// Raises the <see cref="Dismissed"/> event for the Core.
+        /// Raises the <see cref="Dismissed"/> event.
         /// </summary>
         [RemoteMethod]
         public void Dismiss()
