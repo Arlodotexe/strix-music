@@ -260,10 +260,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <summary>
         /// The path to the playable music file on disk.
         /// </summary>
-        public Uri? LocalTrackPath => _trackMetadata.Source;
-
-        /// <inheritdoc/>
-        public Uri? Url => null;
+        public Uri? LocalTrackPath => _trackMetadata.Url;
 
         /// <inheritdoc/>
         public string Name => _trackMetadata.Title ?? string.Empty;

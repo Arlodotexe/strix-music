@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using OwlCore.AbstractStorage;
 using Windows.Storage;
 using FileAccessMode = OwlCore.AbstractStorage.FileAccessMode;
@@ -26,6 +27,9 @@ namespace StrixMusic.Sdk.Uno.Models
         }
 
         /// <inheritdoc/>
+        public string Id => Path;
+
+        /// <inheritdoc/>
         public string Path => StorageFile.Path;
 
         /// <inheritdoc/>
@@ -44,6 +48,8 @@ namespace StrixMusic.Sdk.Uno.Models
         public async Task<IFolderData> GetParentAsync()
         {
             var storageFile = await StorageFile.GetParentAsync();
+
+            Guard.IsNotNull(storageFile, nameof(storageFile));
 
             return new FolderData(storageFile);
         }

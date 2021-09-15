@@ -29,6 +29,9 @@ namespace StrixMusic.Cores.OneDrive.Storage
         }
 
         /// <inheritdoc />
+        public string? Id => _driveItem.Id;
+
+        /// <inheritdoc />
         public string Path => _driveItem.AdditionalData["@microsoft.graph.downloadUrl"].ToString().Replace("ValueKind = String : ", string.Empty).Replace("\"", string.Empty);
 
         /// <inheritdoc />

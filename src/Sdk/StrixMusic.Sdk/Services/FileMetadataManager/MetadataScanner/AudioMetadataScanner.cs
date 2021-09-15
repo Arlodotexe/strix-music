@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using StrixMusic.Sdk.Data.Core;
 using TagLib;
 using File = TagLib.File;
 
@@ -116,9 +117,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// </summary>
         public event EventHandler<IEnumerable<FileMetadata>>? FileScanCompleted;
 
-        /// <inheritdoc/>
-        public bool IsInitialized { get; set; }
-
         /// <summary>
         /// The folder to use for storing file metadata.
         /// </summary>
@@ -216,7 +214,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
         private static void AssignMissingRequiredData(IFileData fileData, FileMetadata metadata)
         {
-            metadata.Id ??= fileData.Path.HashMD5Fast();
+            metadata.Id = fileData.Id?.HashMD5Fast();
+
+            Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
 
             if (metadata.AlbumMetadata != null)
             {
@@ -232,7 +232,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 if (string.IsNullOrWhiteSpace(metadata.TrackMetadata.Title))
                     metadata.TrackMetadata.Title = string.Empty;
 
-                metadata.TrackMetadata.Id ??= fileData.Path.HashMD5Fast();
+                metadata.TrackMetadata.Id ??= fileData.Id?.HashMD5Fast();
+
+                Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
 
                 if (metadata.TrackMetadata.ImagePath is null)
                 {
@@ -315,7 +317,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     Title = details.Title,
                     Genres = details.Genres?.ToOrAsList(),
                     Duration = details.Duration,
-                    Source = new Uri(fileData.Path),
+                    Url = new Uri(fileData.Path),
                     Year = details.Year,
                 },
                 ArtistMetadata = new ArtistMetadata
@@ -462,7 +464,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     },
                     TrackMetadata = new TrackMetadata
                     {
-                        Source = new Uri(fileData.Path),
+                        Url = new Uri(fileData.Path),
                         ImagePath = imagePath,
                         Description = tags.Description,
                         Title = tags.Title,
@@ -563,39 +565,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 FileScanCompleted?.Invoke(this, _allFileMetadata);
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!IsInitialized)
-                return;
-
-            if (disposing)
-            {
-                // dispose any objects you created here
-                ReleaseUnmanagedResources();
-
-                _scanningCancellationTokenSource?.Cancel();
-            }
-
-            IsInitialized = false;
-        }
-
         /// <inheritdoc />
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
-        ~AudioMetadataScanner()
-        {
-            Dispose(false);
+            DetachEvents();
         }
     }
 }
