@@ -23,13 +23,11 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
         {
             Loaded += AlbumItem_Loaded;
             Unloaded += AlbumItem_Unloaded;
-            DataContextChanged += AlbumItem_DataContextChanged;
         }
 
         private void DetachEvents()
         {
             Unloaded -= AlbumItem_Unloaded;
-            DataContextChanged -= AlbumItem_DataContextChanged;
         }
 
         private void AlbumItem_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -41,20 +39,6 @@ namespace StrixMusic.Sdk.Uno.Controls.Items
         {
             Loaded -= AlbumItem_Loaded;
         }
-
-        private async void AlbumItem_DataContextChanged(Windows.UI.Xaml.DependencyObject sender, Windows.UI.Xaml.DataContextChangedEventArgs args)
-        {
-            if (DataContext == null)
-                return;
-
-            await InitAsync();
-        }
-
-        private async Task InitAsync()
-        {
-            if (!ViewModel.PopulateMoreArtistsCommand.IsRunning)
-                await ViewModel.PopulateMoreArtistsCommand.ExecuteAsync(5);
-        } 
 
         /// <summary>
         /// The <see cref="ArtistViewModel"/> for the control.
