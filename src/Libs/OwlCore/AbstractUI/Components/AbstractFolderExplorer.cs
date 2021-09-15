@@ -21,6 +21,8 @@ namespace OwlCore.AbstractUI.Components
             IconCode = "\uE7EA",
         };
 
+        private readonly AbstractUICollection _actionButtons = new("ActionButtons", PreferredOrientation.Horizontal);
+
         private readonly IFolderData _rootFolder;
         private readonly AbstractButton _selectButton;
         private readonly AbstractButton _cancelButton;
@@ -39,7 +41,12 @@ namespace OwlCore.AbstractUI.Components
             _cancelButton = new AbstractButton("cancelFolderExplorerButton", "Cancel", type: AbstractButtonType.Cancel);
             _selectButton = new AbstractButton("selectFolderButton", "Select folder", type: AbstractButtonType.Confirm);
 
+            _actionButtons.Add(_cancelButton);
+            _actionButtons.Add(_selectButton);
+
             FolderStack = new Stack<IFolderData>();
+
+            Title = "Pick a folder";
 
             AttachEvents();
         }
@@ -113,9 +120,6 @@ namespace OwlCore.AbstractUI.Components
             var folders = await folder.GetFoldersAsync();
             var folderData = folders.ToArray();
 
-            if (!folderData.Any())
-                return;
-
             _currentDisplayedFolders = folderData;
 
             CreateAndSetupAbstractUIForFolders(folderData);
@@ -142,16 +146,15 @@ namespace OwlCore.AbstractUI.Components
             if (_currentDataList is not null)
                 _currentDataList.ItemTapped -= AbstractDataListOnItemTapped;
 
-            _currentDataList = new AbstractDataList(uniqueIdForFolders, folderListMetadata);
+            _currentDataList = new AbstractDataList(uniqueIdForFolders, folderListMetadata)
+            {
+                Title = CurrentFolder?.Name ?? string.Empty,
+            };
 
             Clear();
 
             Add(_currentDataList);
-            Add(new AbstractUICollection("ActionButtons", PreferredOrientation.Horizontal)
-            {
-                _cancelButton,
-                _selectButton,
-            });
+            Add(_actionButtons);
 
             _currentDataList.ItemTapped += AbstractDataListOnItemTapped;
         }
@@ -183,8 +186,6 @@ namespace OwlCore.AbstractUI.Components
             }
 
             await SetupFolderAsync(targetFolder);
-
-            DirectoryChanged?.Invoke(this, targetFolder);
         }
 
         /// <inheritdoc />
