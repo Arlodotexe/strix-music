@@ -146,9 +146,10 @@ namespace StrixMusic.Core.LocalFiles.Models
         {
             async Task<IReadOnlyList<CollectionChangedItem<ICoreImage>>> TransformAsync(IEnumerable<string> ids)
             {
-                var collectionChangedItems = new List<CollectionChangedItem<ICoreImage>>(ids.Count());
+	            var idArray = ids as string[] ?? ids.ToArray();
+	            var collectionChangedItems = new List<CollectionChangedItem<ICoreImage>>(idArray.Length);
 
-                foreach (var id in ids)
+                foreach (var id in idArray)
                 {
                     var image = await _fileMetadataManager.Images.GetImageByIdAsync(id);
 
