@@ -39,7 +39,7 @@ namespace OwlCore.AbstractUI.ViewModels
 
         private void OnToggled()
         {
-            ((AbstractBoolean)Model).State = IsToggled;
+            ((AbstractBoolean)Model).State = !IsToggled;
         }
 
         private void Model_LabelChanged(object sender, string e) => Label = e;
@@ -65,6 +65,7 @@ namespace OwlCore.AbstractUI.ViewModels
                     return;
 
                 SetProperty(ref _state, value);
+                ((AbstractBoolean)Model).State = value;
             }
         }
 

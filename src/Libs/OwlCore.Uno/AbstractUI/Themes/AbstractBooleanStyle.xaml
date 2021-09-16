@@ -36,11 +36,6 @@
                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
             <ToggleSwitch ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" OffContent="{Binding Label, Mode=OneWay}" OnContent="{Binding Label, Mode=OneWay}" IsOn="{Binding IsToggled, Mode=TwoWay}">
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="Toggled">
-                        <core:InvokeCommandAction Command="{x:Bind ToggledCommand}" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
             </ToggleSwitch>
         </StackPanel>
     </DataTemplate>
