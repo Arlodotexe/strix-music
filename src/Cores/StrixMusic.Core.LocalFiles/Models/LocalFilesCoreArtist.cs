@@ -126,9 +126,6 @@ namespace StrixMusic.Core.LocalFiles.Models
                 if (metadata.Name != previousData.Name)
                     NameChanged?.Invoke(this, Name);
 
-                if (metadata.ImageIds != previousData.ImageIds)
-                    HandleImagesChanged(previousData.ImageIds, metadata.ImageIds);
-
                 if (metadata.Description != previousData.Description)
                     DescriptionChanged?.Invoke(this, Description);
 
@@ -139,6 +136,8 @@ namespace StrixMusic.Core.LocalFiles.Models
 
                 if (metadata.AlbumIds.Count != (previousData.AlbumIds?.Count ?? 0))
                     AlbumItemsCountChanged?.Invoke(this, metadata.AlbumIds.Count);
+
+                HandleImagesChanged(previousData.ImageIds, metadata.ImageIds);
             }
         }
 
@@ -160,22 +159,18 @@ namespace StrixMusic.Core.LocalFiles.Models
                 return collectionChangedItems;
             }
 
-            IEnumerable<string> addedImages;
-            IEnumerable<string> removedImages;
+            // Null and empty lists should be handled the same.
+            oldImageIds ??= new List<string>();
+            newImageIds ??= new List<string>();
 
-            if (oldImageIds != null && newImageIds != null)
+            if (oldImageIds.OrderBy(s => s).SequenceEqual(newImageIds.OrderBy(s => s)))
             {
-                Guard.IsNotNull(oldImageIds, nameof(oldImageIds));
-                Guard.IsNotNull(newImageIds, nameof(newImageIds));
+	            // Lists have identical content, so no images have changed.
+	            return;
+            }
 
-                addedImages = newImageIds.Except(oldImageIds);
-                removedImages = oldImageIds.Except(newImageIds);
-            }
-            else
-            {
-                addedImages = newImageIds?.ToList() ?? Enumerable.Empty<string>();
-                removedImages = oldImageIds?.ToList() ?? Enumerable.Empty<string>();
-            }
+            var addedImages = newImageIds.Except(oldImageIds);
+            var removedImages = oldImageIds.Except(newImageIds);
 
             ImagesChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
         }
