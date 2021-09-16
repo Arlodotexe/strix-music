@@ -25,6 +25,10 @@ namespace StrixMusic.Cores.OneDrive
     {
         private readonly AbstractBoolean _useTagLibScannerToggle;
         private readonly AbstractBoolean _useFilePropsScannerToggle;
+        private Notification? _scannerRequiredNotification;
+
+        private bool _isConfigServicesSetup;
+
         private GraphServiceClient? _graphClient;
         private IFolderData? _rootFolder;
 
@@ -49,20 +53,22 @@ namespace StrixMusic.Cores.OneDrive
             {
                 Subtitle = "File properties are very fast, but provide less data.",
             };
-
-            AttachEvents();
         }
 
         private void AttachEvents()
         {
+            Guard.IsNotNull(_settingsService, nameof(_settingsService));
+            _settingsService.SettingChanged += SettingsServiceOnSettingChanged;
             _useTagLibScannerToggle.StateChanged += UseTagLibScannerToggleOnStateChanged;
-            _useFilePropsScannerToggle.StateChanged += UseFilePropsToggleOnStateChanged;
+            _useFilePropsScannerToggle.StateChanged += UseFilePropsScannerToggleOnStateChanged;
         }
 
         private void DetachEvents()
         {
+            Guard.IsNotNull(_settingsService, nameof(_settingsService));
+            _settingsService.SettingChanged -= SettingsServiceOnSettingChanged;
             _useTagLibScannerToggle.StateChanged -= UseTagLibScannerToggleOnStateChanged;
-            _useFilePropsScannerToggle.StateChanged -= UseFilePropsToggleOnStateChanged;
+            _useFilePropsScannerToggle.StateChanged -= UseFilePropsScannerToggleOnStateChanged;
         }
 
         /// <inheritdoc />
@@ -82,7 +88,10 @@ namespace StrixMusic.Cores.OneDrive
 
         public async Task SetupConfigurationServices(IServiceCollection services)
         {
-            DetachEvents();
+            if (_isConfigServicesSetup)
+                DetachEvents();
+
+            _isConfigServicesSetup = false;
 
             _settingsService = new OneDriveCoreSettingsService(SourceCore.InstanceId);
             services.AddSingleton(_settingsService);
@@ -95,6 +104,7 @@ namespace StrixMusic.Cores.OneDrive
             _notificationService = Services.GetRequiredService<INotificationService>();
 
             AttachEvents();
+            _isConfigServicesSetup = true;
         }
 
         public AbstractUICollection CreateGenericConfig()
@@ -376,41 +386,41 @@ namespace StrixMusic.Cores.OneDrive
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        void UseTagLibScannerToggleOnStateChanged(object sender, bool e)
+        private async void UseFilePropsScannerToggleOnStateChanged(object sender, bool e)
         {
-            DetachEvents();
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
-            Guard.IsNotNull(_notificationService, nameof(_notificationService));
-
-            if (!_useFilePropsScannerToggle.State && !_useTagLibScannerToggle.State)
-            {
-                _notificationService.RaiseNotification("Whoops", "At least one metadata scanner is required.");
-
-                _useTagLibScannerToggle.State = true;
-                AttachEvents();
-                return;
-            }
-
-            _ = _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseTagLib), e);
-            AttachEvents();
+            await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseFileProperties), e);
         }
 
-        void UseFilePropsToggleOnStateChanged(object sender, bool e)
+        private async void UseTagLibScannerToggleOnStateChanged(object sender, bool e)
         {
-            DetachEvents();
+            Guard.IsNotNull(_settingsService, nameof(_settingsService));
+            await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseTagLib), e);
+        }
+
+        private async void SettingsServiceOnSettingChanged(object sender, SettingChangedEventArgs e)
+        {
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
             Guard.IsNotNull(_notificationService, nameof(_notificationService));
 
-            if (!_useFilePropsScannerToggle.State && !_useTagLibScannerToggle.State)
-            {
-                _notificationService.RaiseNotification("Whoops", "At least one metadata scanner is required.");
-                _useFilePropsScannerToggle.State = true;
-                AttachEvents();
+            if (!(e.Key == nameof(OneDriveCoreSettingsKeys.UseFileProperties) ||
+                  e.Key == nameof(OneDriveCoreSettingsKeys.UseTagLib)))
                 return;
-            }
 
-            _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseFileProperties), e).Forget();
-            AttachEvents();
+            var filePropSetting = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseFileProperties));
+            var tagLibSetting = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseTagLib));
+
+            if (!filePropSetting && !tagLibSetting)
+            {
+                _scannerRequiredNotification?.Dismiss();
+                _scannerRequiredNotification = _notificationService.RaiseNotification("Whoops", "At least one metadata scanner is required.");
+
+                if (e.Key == nameof(OneDriveCoreSettingsKeys.UseFileProperties))
+                    _useFilePropsScannerToggle.State = true;
+
+                if (e.Key == nameof(OneDriveCoreSettingsKeys.UseTagLib))
+                    _useTagLibScannerToggle.State = true;
+            }
         }
 
         public ValueTask DisposeAsync()
