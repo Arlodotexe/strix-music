@@ -16,6 +16,7 @@ namespace StrixMusic.Cores.OneDrive
     /// <inheritdoc/>
     public sealed class OneDriveCore : FilesCore
     {
+        private readonly AbstractButton _completeGenericSetupButton;
         private OneDriveCoreSettingsService? _settingsService;
 
         /// <summary>
@@ -26,6 +27,9 @@ namespace StrixMusic.Cores.OneDrive
             : base(instanceId)
         {
             CoreConfig = new OneDriveCoreConfig(this);
+
+            _completeGenericSetupButton = new AbstractButton(Guid.NewGuid().ToString(), "OK");
+            _completeGenericSetupButton.Clicked += CompleteGenericSetupButton_Clicked;
         }
 
         /// <inheritdoc/>
@@ -143,7 +147,10 @@ namespace StrixMusic.Cores.OneDrive
             ChangeCoreState(CoreState.Configured);
             ChangeCoreState(CoreState.Loaded);
 
-            coreConfig.SaveAbstractUI(coreConfig.CreateGenericConfig());
+            var genericConfig = coreConfig.CreateGenericConfig();
+            genericConfig.Add(_completeGenericSetupButton);
+
+            coreConfig.SaveAbstractUI(genericConfig);
 
             await Library.Cast<FilesCoreLibrary>().InitAsync();
         }
@@ -158,6 +165,18 @@ namespace StrixMusic.Cores.OneDrive
         {
             InstanceDescriptor = instanceDescriptor;
             InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
+        }
+
+        private void CompleteGenericSetupButton_Clicked(object sender, EventArgs e)
+        {
+            ChangeCoreState(CoreState.Configured);
+            ChangeCoreState(CoreState.Loaded);
+        }
+
+        public override ValueTask DisposeAsync()
+        {
+            _completeGenericSetupButton.Clicked -= CompleteGenericSetupButton_Clicked;
+            return base.DisposeAsync();
         }
     }
 }
