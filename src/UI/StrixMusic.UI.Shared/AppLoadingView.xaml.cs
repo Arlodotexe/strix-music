@@ -1,22 +1,22 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 using StrixMusic.Sdk.Services.StorageService;
 using StrixMusic.Sdk.Uno.Assembly;
-using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
@@ -322,7 +322,7 @@ namespace StrixMusic.Shared
 
             var coreManagementService = new CoreManagementService(_settingsService);
 
-            services.AddSingleton(_localizationService);
+            services.AddSingleton<ILocalizationService>(_localizationService);
             services.AddSingleton<ITextStorageService>(_textStorageService);
             services.AddSingleton<ISettingsService>(_settingsService);
             services.AddSingleton<CacheServiceBase>(cacheFileSystemService);
