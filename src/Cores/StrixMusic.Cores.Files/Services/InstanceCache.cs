@@ -7,8 +7,16 @@ using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 namespace StrixMusic.Cores.Files.Services
 {
     /// <summary>
-    /// Contains caches for all instance created across the core.
+    /// Contains caches for all instance created across all core instances.
     /// </summary>
+    /// <remarks>
+    /// A "file core" has the possibility of using a folder which is a subfolder of the root selected in another core instance.
+    /// This means the same exact data will appear in two different core instances.
+    /// <para/>
+    /// Data from multiple different core instances are merged together by the Strix SDK, but this is computationally expensive.
+    /// <para/>
+    /// By using a shared repository between all core instances, we reduce remove extra overhead when a single file is updated.
+    /// </remarks>
     public static class InstanceCache
     {
         /// <summary>
