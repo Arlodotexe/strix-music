@@ -9,7 +9,7 @@
         <themes:AbstractBooleanStyle />
         <themes:AbstractButtonStyle />
         <themes:AbstractDataListStyle />
-        <themes:AbstractMultiChoiceUIElementStyle />
+        <themes:AbstractMultiChoiceStyle />
         <themes:AbstractRichTextBlockStyle />
         <themes:AbstractTextBoxStyle />
     </ResourceDictionary.MergedDictionaries>

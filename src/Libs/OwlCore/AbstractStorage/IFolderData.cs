@@ -22,7 +22,7 @@ namespace OwlCore.AbstractStorage
         /// The parent folder that contains this file.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the parent folder.</returns>
-        Task<IFolderData> GetParentAsync();
+        Task<IFolderData?> GetParentAsync();
 
         /// <summary>
         /// Creates a new subfolder with the specified name in the current folder.

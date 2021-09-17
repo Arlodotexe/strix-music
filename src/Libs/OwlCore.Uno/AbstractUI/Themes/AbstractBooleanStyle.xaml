@@ -27,7 +27,8 @@
 
     <DataTemplate x:Key="DefaultAbstractBooleanTemplate" x:DataType="abstractUI:AbstractBooleanViewModel">
         <StackPanel>
-            <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" />
+            <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" 
+                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Title), Mode=OneWay}"/>
 
             <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"
@@ -35,11 +36,6 @@
                        Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"/>
 
             <ToggleSwitch ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" OffContent="{Binding Label, Mode=OneWay}" OnContent="{Binding Label, Mode=OneWay}" IsOn="{Binding IsToggled, Mode=TwoWay}">
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="Toggled">
-                        <core:InvokeCommandAction Command="{x:Bind ToggledCommand}" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
             </ToggleSwitch>
         </StackPanel>
     </DataTemplate>

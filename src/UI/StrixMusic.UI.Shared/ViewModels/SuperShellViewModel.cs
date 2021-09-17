@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -18,6 +19,11 @@ using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.ViewModels;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Core;
+using Windows.Storage;
+using Windows.UI.Xaml;
+using OwlCore.AbstractUI.Models;
+using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Shared.ViewModels
 {
@@ -29,6 +35,7 @@ namespace StrixMusic.Shared.ViewModels
         private readonly MainViewModel _mainViewModel;
         private readonly LoadedServicesItemViewModel _addNewItem;
         private readonly ICoreManagementService _coreManagementService;
+        private readonly INotificationService _notificationService;
         private readonly LocalizationResourceLoader _localizationResourceLoader;
         private bool _disposedValue;
         private bool _isShowingAddNew;
@@ -42,6 +49,7 @@ namespace StrixMusic.Shared.ViewModels
         {
             _mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
             _coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
+            _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _localizationResourceLoader = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
 
             ShellSelectorViewModel = new ShellSelectorViewModel();
@@ -51,6 +59,7 @@ namespace StrixMusic.Shared.ViewModels
             // TODO nuke when switching to NavView for SuperShell.
             CancelAddNewCommand = new RelayCommand(() => IsShowingAddNew = false);
             CancelConfigCoreCommand = new RelayCommand(() => CurrentCoreConfig = null);
+            ResetAppCommand = new AsyncRelayCommand(ResetAppAsync);
 
             foreach (var coreVm in _mainViewModel.Cores)
                 Services.Add(new LoadedServicesItemViewModel(false, coreVm));
@@ -98,7 +107,7 @@ namespace StrixMusic.Shared.ViewModels
 
             foreach (var loadedService in Services)
             {
-                loadedService.ConfigRequested += LoadedService_ConfigRequested;
+                loadedService.ConfigRequested -= LoadedService_ConfigRequested;
             }
 
             Guard.IsNotNull(CurrentWindow.AppFrame.ContentOverlay, nameof(CurrentWindow.AppFrame.ContentOverlay));
@@ -110,24 +119,33 @@ namespace StrixMusic.Shared.ViewModels
             core.CoreStateChanged -= Core_CoreStateChanged;
         }
 
-        private void LoadedService_ConfigRequested(object sender, EventArgs e)
+        private async void LoadedService_ConfigRequested(object sender, EventArgs e)
         {
             var viewModel = (LoadedServicesItemViewModel)sender;
             Guard.IsNotNull(viewModel.Core, nameof(viewModel.Core));
+
+            if (viewModel.Core.CoreState == CoreState.Unloaded)
+            {
+                await _mainViewModel.InitCore(viewModel.Core);
+                return;
+            }
 
             CurrentCoreConfig = viewModel.Core;
         }
 
         private async void ContentOverlay_Closed(object sender, EventArgs e)
         {
-            foreach (var core in _mainViewModel.Cores)
+            foreach (var core in _mainViewModel.Cores.ToArray())
             {
-                if (core.CoreState == CoreState.Unloaded || core.CoreState == CoreState.NeedsSetup)
+                if (core.CoreState == CoreState.Unloaded ||
+                    core.CoreState == CoreState.Faulted)
                 {
+                    await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);
                     await core.DisposeAsync();
                 }
             }
 
+            CurrentCoreConfig = null;
             IsShowingAddNew = false;
         }
 
@@ -139,9 +157,14 @@ namespace StrixMusic.Shared.ViewModels
         private async void Core_CoreStateChanged(object sender, CoreState e)
         {
             var core = (ICore)sender;
-
-            var mainPage = Ioc.Default.GetRequiredService<MainPage>();
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
+
+            if (e == CoreState.Configured || e == CoreState.Unloaded)
+            {
+                await Threading.OnPrimaryThread(() => CurrentCoreConfig = null);
+                return;
+            }
+
             var relevantCore = mainViewModel.Cores.First(x => x.InstanceId == core.InstanceId);
 
             if (e == CoreState.NeedsSetup)
@@ -151,11 +174,6 @@ namespace StrixMusic.Shared.ViewModels
 
             if (CurrentCoreConfig?.InstanceId != relevantCore.InstanceId)
                 return;
-
-            if (e == CoreState.Configured || e == CoreState.Unloaded)
-            {
-                await Threading.OnPrimaryThread(() => CurrentCoreConfig = null);
-            }
         }
 
         private void Cores_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -201,21 +219,9 @@ namespace StrixMusic.Shared.ViewModels
         public ShellSelectorViewModel ShellSelectorViewModel { get; }
 
         /// <summary>
-        /// Gets the app's version number.
+        /// Gets the app version number.
         /// </summary>
-        public string AppVersion => string.Format(
-            "{0}.{1}.{2}",
-            Package.Current.Id.Version.Major,
-            Package.Current.Id.Version.Minor,
-            Package.Current.Id.Version.Build);
-
-        /// <summary>
-        /// Gets the last commit and branch used for build.
-        /// </summary>
-        public string CommitStatus => string.Empty;/*string.Format(
-            _localizationResourceLoader[Constants.Localization.SuperShellResource, "CommitFrom"],
-            ThisAssembly.Git.Commit,
-            ThisAssembly.Git.Branch);*/
+        public string AppVersion => $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}";
 
         /// <summary>
         /// If true, the user has selected to add a new item and the UI should reflect this.
@@ -256,6 +262,100 @@ namespace StrixMusic.Shared.ViewModels
         /// When fired, the user has canceled configuring a core.
         /// </summary>
         public IRelayCommand CancelConfigCoreCommand { get; }
+
+        /// <summary>
+        /// A command that resets the application.
+        /// </summary>
+        public IAsyncRelayCommand ResetAppCommand { get; }
+
+        private Task ResetAppAsync()
+        {
+            var taskCompletionSource = new TaskCompletionSource<object?>();
+            var confirmButton = new AbstractButton("confirmButton", "Confirm");
+            var progressIndicator = new AbstractProgressIndicator("progressIndicator", isIndeterminate: true);
+            var confirmationUI = new AbstractUICollection("confirmAppResetUI")
+            {
+                Title = "Are you sure?",
+                Subtitle = "This will wipe all data and restart the app",
+            };
+
+            var notification = _notificationService.RaiseNotification(confirmationUI);
+
+            confirmationUI.Add(confirmButton);
+            confirmButton.Clicked += OnConfirmButtonClicked;
+            notification.Dismissed += OnNotificationDismissed;
+
+            void OnNotificationDismissed(object sender, EventArgs e)
+            {
+                notification.Dismissed -= OnNotificationDismissed;
+                confirmButton.Clicked -= OnConfirmButtonClicked;
+                taskCompletionSource.SetResult(null);
+            }
+
+            async void OnConfirmButtonClicked(object sender, EventArgs e)
+            {
+                notification.Dismissed -= OnNotificationDismissed;
+                confirmButton.Clicked -= OnConfirmButtonClicked;
+
+                notification.Dismiss();
+
+                confirmationUI.Title = "Please wait.";
+                confirmationUI.Subtitle = "Wipe in progress...";
+                confirmationUI.Remove(confirmButton);
+                confirmationUI.Add(progressIndicator);
+
+                var progressNotification = _notificationService.RaiseNotification(confirmationUI);
+
+                await PeformNuke();
+
+                progressNotification.Dismiss();
+                taskCompletionSource.SetResult(null);
+            }
+
+            async Task PeformNuke()
+            {
+                await EmptyFolder(ApplicationData.Current.LocalFolder);
+                await EmptyFolder(ApplicationData.Current.LocalCacheFolder);
+                await EmptyFolder(ApplicationData.Current.RoamingFolder);
+
+                ApplicationData.Current.LocalSettings.Values.Clear();
+                ApplicationData.Current.RoamingSettings.Values.Clear();
+
+#if NETFX_CORE
+                await CoreApplication.RequestRestartAsync(string.Empty);
+#else
+                _notificationService.RaiseNotification("Reset complete.", "Please restart the app");
+#endif
+
+                async Task EmptyFolder(IStorageFolder folder)
+                {
+                    IReadOnlyList<IStorageItem>? items = null;
+
+                    try
+                    {
+                        items = await folder.GetItemsAsync();
+                    }
+                    catch
+                    {
+                        return;
+                    }
+
+                    foreach (var item in items)
+                    {
+                        try
+                        {
+                            await item.DeleteAsync();
+                        }
+                        catch
+                        {
+                             /* ignored */
+                        }
+                    }
+                }
+            }
+
+            return taskCompletionSource.Task;
+        }
 
         private async Task SetupCores()
         {

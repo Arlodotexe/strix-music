@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
@@ -12,7 +11,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
     {
         private static string? TryGetHashFromExistingTracks(Uri path, IEnumerable<FileMetadata?> files)
         {
-            return files.FirstOrDefault(c => c?.TrackMetadata?.Source?.AbsoluteUri == path.AbsoluteUri)?.Id;
+            return files.FirstOrDefault(c => c?.TrackMetadata?.Url?.AbsoluteUri == path.AbsoluteUri)?.Id;
         }
 
         /// <summary>
@@ -64,8 +63,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 }
                 else
                 {
-                    fullPath = Path.GetFullPath(Path.Combine(
-                        Path.GetDirectoryName(currentPath), path));
+                    fullPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(currentPath) ?? string.Empty, path));
                 }
 
                 return fullPath;
@@ -81,7 +79,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <returns>An absolute path.</returns>
         public static string ResolveFilePath(string path, IFileData fileData)
         {
-            return ResolveFilePath(path, Path.GetDirectoryName(fileData.Path));
+            return ResolveFilePath(path, Path.GetDirectoryName(fileData.Path) ?? string.Empty);
         }
     }
 }

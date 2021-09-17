@@ -16,7 +16,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <shells:NotificationAbstractUIGroupStyle/>
+                <shells:NotificationAbstractUICollectionStyle/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -37,7 +37,7 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <abstractUIControls:AbstractUIGroupPresenter DataContext="{x:Bind AbstractUINotificationViewModel, Mode=OneWay}" Style="{StaticResource DefaultNotificationAbstractUIGroupStyle}"/>
+                        <abstractUIControls:AbstractUICollectionPresenter DataContext="{x:Bind AbstractUINotificationViewModel, Mode=OneWay}" Style="{StaticResource DefaultNotificationAbstractUICollectionStyle}"/>
 
                         <Button CornerRadius="0" HorizontalAlignment="Right" VerticalAlignment="Stretch"
                                 Grid.Column="1" Width="48" Background="Transparent" Padding="0"

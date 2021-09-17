@@ -42,7 +42,7 @@ namespace StrixMusic.Sdk.Uno.Models
         public Task DeleteAsync() => StorageFolder.DeleteAsync().AsTask();
 
         /// <inheritdoc/>
-        public async Task<IFolderData> GetParentAsync()
+        public async Task<IFolderData?> GetParentAsync()
         {
             var storageFolder = await StorageFolder.GetParentAsync();
 

@@ -5,6 +5,7 @@
     xmlns:viewModels1="using:StrixMusic.Shared.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:models="using:StrixMusic.Sdk.Uno.Models"
+    xmlns:s="using:System"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:strixCoreData="using:StrixMusic.Sdk.Data.Core"
     xmlns:visibilityConverters="using:OwlCore.Uno.Converters.Bools.Visible"
@@ -101,12 +102,16 @@
                             </StackPanel>
 
                             <FlipView x:Name="PART_PreferredSkinPreviewFlipView" Grid.Row="0" Grid.Column="1"
-                                  ItemsSource="{Binding PreferredShell.ShellPreviews, Mode=OneWay}" Margin="10"
-                                  Height="225"
-                                  Background="Transparent">
+                                      ItemsSource="{x:Bind PreferredShell.ShellPreviews, Mode=OneWay}" Margin="10"
+                                      Height="225"
+                                      Background="Transparent">
                                 <FlipView.ItemTemplate>
                                     <DataTemplate>
-                                        <Image Source="{Binding}" Stretch="Uniform" />
+                                        <Image Stretch="Uniform">
+                                            <Image.Source>
+                                                <BitmapImage UriSource="{Binding}" />
+                                            </Image.Source>
+                                        </Image>
                                     </DataTemplate>
                                 </FlipView.ItemTemplate>
                             </FlipView>
@@ -148,6 +153,8 @@
                                         <VisualState.StateTriggers>
                                             <AdaptiveTrigger MinWindowWidth="800" />
                                         </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                        </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="FullyResponsive_Narrow">
                                         <VisualState.StateTriggers>

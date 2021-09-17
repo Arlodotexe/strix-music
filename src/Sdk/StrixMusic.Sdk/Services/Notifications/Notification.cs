@@ -19,24 +19,19 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="Notification"/> class.
         /// </summary>
-        /// <param name="abstractUIElementGroup">The <see cref="AbstractUIElementGroup"/> to display for the notification content.</param>
-        public Notification(AbstractUIElementGroup abstractUIElementGroup)
+        /// <param name="abstractUIElementGroup">The <see cref="AbstractUICollection"/> to display for the notification content.</param>
+        public Notification(AbstractUICollection abstractUIElementGroup)
         {
-            AbstractUIElementGroup = abstractUIElementGroup;
+            AbstractUICollection = abstractUIElementGroup;
         }
 
         /// <summary>
-        /// The <see cref="AbstractUIElementGroup"/> to be displayed for the notification.
+        /// The <see cref="OwlCore.AbstractUI.Models.AbstractUICollection"/> to be displayed for the notification.
         /// </summary>
-        public AbstractUIElementGroup AbstractUIElementGroup { get; }
+        public AbstractUICollection AbstractUICollection { get; }
 
         /// <summary>
-        /// If true, the notification is being displayed to the user.
-        /// </summary>
-        internal bool IsDisplayed { get; set; }
-
-        /// <summary>
-        /// Raises the <see cref="Dismissed"/> event for the Core.
+        /// Raises the <see cref="Dismissed"/> event.
         /// </summary>
         [RemoteMethod]
         public void Dismiss()

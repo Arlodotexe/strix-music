@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
 using OwlCore.Provisos;
-using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
@@ -35,6 +34,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// If true, the repositories will not be initialized when <see cref="IAsyncInit.InitAsync"/> is called for this <see cref="IFileMetadataManager"/>.
         /// </summary>
         bool SkipRepoInit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of metadata scan that should be used.
+        /// </summary>
+        MetadataScanTypes ScanTypes { get; set; }
+
+        /// <summary>
+        /// The number of files that are scanned concurrently.
+        /// </summary>
+        int DegreesOfParallelism { get; set; }
 
         /// <summary>
         /// Starts scanning the given folder.

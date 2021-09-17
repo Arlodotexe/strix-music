@@ -4,7 +4,7 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.Uno.AbstractUI.Themes
 {
     /// <summary>
-    /// Default template for the <see cref="AbstractRichTextBlockStyle"/>
+    /// Default template for an <see cref="AbstractRichTextBlock"/>.
     /// </summary>
     public sealed partial class AbstractRichTextBlockStyle : ResourceDictionary
     {

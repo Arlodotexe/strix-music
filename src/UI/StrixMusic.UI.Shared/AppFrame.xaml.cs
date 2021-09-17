@@ -72,6 +72,10 @@ namespace StrixMusic.Shared
             AttachEvents(notificationService);
         }
 
+        /// <summary>
+        /// Navigates top the primary app content to the given <paramref name="element" />.
+        /// </summary>
+        /// <param name="element"></param>
         public void NavigateTo(FrameworkElement element)
         {
             PART_ContentPresenter.Content = element;

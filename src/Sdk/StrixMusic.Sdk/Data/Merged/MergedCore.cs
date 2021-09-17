@@ -14,6 +14,7 @@ namespace StrixMusic.Sdk.Data.Merged
     public class MergedCore : IAppCore
     {
         private readonly List<ICore> _sources;
+        private readonly List<IDevice> _devices;
 
         /// <summary>
         /// Initializes a new instance of <see cref="MergedCore"/>.
@@ -35,7 +36,7 @@ namespace StrixMusic.Sdk.Data.Merged
             if (_sources.All(x => x.RecentlyPlayed == null))
                 RecentlyPlayed = new MergedRecentlyPlayed(_sources.Select(x => x.RecentlyPlayed).PruneNull());
 
-            Devices = new SynchronizedObservableCollection<IDevice>(_sources.SelectMany(x => x.Devices, (core, device) => new CoreDeviceProxy(device)));
+            _devices = new List<IDevice>(_sources.SelectMany(x => x.Devices, (core, device) => new CoreDeviceProxy(device)));
 
             AttachEvents();
         }
@@ -43,23 +44,25 @@ namespace StrixMusic.Sdk.Data.Merged
         private void AttachEvents()
         {
             foreach (var core in _sources)
-            {
                 core.DevicesChanged += Core_DevicesChanged;
-            }
         }
 
         private void DetachEvents()
         {
             foreach (var core in _sources)
-            {
                 core.DevicesChanged -= Core_DevicesChanged;
-            }
         }
 
         private void Core_DevicesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreDevice>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreDevice>> removedItems)
         {
             var itemsToAdd = addedItems.Select(x => new CollectionChangedItem<IDevice>(new CoreDeviceProxy(x.Data), x.Index)).ToList();
-            var itemsToRemove= removedItems.Select(x => new CollectionChangedItem<IDevice>(new CoreDeviceProxy(x.Data), x.Index)).ToList();
+            var itemsToRemove = removedItems.Select(x => new CollectionChangedItem<IDevice>(new CoreDeviceProxy(x.Data), x.Index)).ToList();
+
+            foreach (var item in itemsToRemove)
+                _devices.RemoveAt(item.Index);
+
+            foreach (var item in itemsToAdd)
+                _devices.InsertOrAdd(item.Index, item.Data);
 
             DevicesChanged?.Invoke(this, itemsToAdd, itemsToRemove);
         }
@@ -71,7 +74,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public IReadOnlyList<ICore> Sources => _sources;
 
         /// <inheritdoc />
-        public IReadOnlyList<IDevice> Devices { get; }
+        public IReadOnlyList<IDevice> Devices => _devices;
 
         /// <inheritdoc />
         public ILibrary Library { get; }

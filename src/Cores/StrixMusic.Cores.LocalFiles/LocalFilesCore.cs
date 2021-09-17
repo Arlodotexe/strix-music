@@ -1,0 +1,107 @@
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore.AbstractStorage;
+using OwlCore.Extensions;
+using StrixMusic.Cores.Files;
+using StrixMusic.Cores.Files.Models;
+using StrixMusic.Cores.LocalFiles.Services;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.Services.Notifications;
+using StrixMusic.Sdk.Services.Settings;
+
+namespace StrixMusic.Cores.LocalFiles
+{
+    /// <inheritdoc />
+    public sealed class LocalFilesCore : FilesCore
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FilesCore"/> class.
+        /// </summary>
+        /// <param name="instanceId"></param>
+        public LocalFilesCore(string instanceId)
+            : base(instanceId)
+        {
+            CoreConfig = new LocalFilesCoreConfig(this);
+        }
+
+        /// <inheritdoc/>
+        public override ICoreConfig CoreConfig { get; protected set; }
+
+        /// <summary>
+        /// Change the <see cref="CoreState"/>.
+        /// </summary>
+        /// <param name="state">The new state.</param>
+        public void ChangeCoreState(CoreState state)
+        {
+            CoreState = state;
+            CoreStateChanged?.Invoke(this, state);
+        }
+
+        /// <inheritdoc/>
+        public override ValueTask DisposeAsync()
+        {
+            // Dispose any resources not known to the SDK.
+            // Do not dispose Library, Devices, etc. manually. The SDK will dispose these for you.
+            return default;
+        }
+
+        /// <inheritdoc />
+        public override event EventHandler<CoreState>? CoreStateChanged;
+
+        /// <inheritdoc />
+        public override event EventHandler<string>? InstanceDescriptorChanged;
+
+        /// <inheritdoc/>
+        public override async Task InitAsync(IServiceCollection services)
+        {
+            Guard.IsNotNull(services, nameof(services));
+
+            ChangeCoreState(CoreState.Loading);
+
+            if (!(CoreConfig is LocalFilesCoreConfig coreConfig))
+                return;
+
+            await coreConfig.SetupConfigurationServices(services);
+
+            var configuredFolder = await coreConfig.GetConfiguredFolder();
+            if (configuredFolder is null)
+            {
+                _ = PickAndSaveFolder();
+                ChangeCoreState(CoreState.NeedsSetup);
+                return;
+            }
+
+            InstanceDescriptor = configuredFolder.Path;
+            InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
+
+            coreConfig.SetupAbstractUISettings();
+            await coreConfig.SetupServices(services);
+            await Library.Cast<FilesCoreLibrary>().InitAsync();
+
+            Guard.IsNotNull(CoreConfig.Services, nameof(CoreConfig.Services));
+            ChangeCoreState(CoreState.Loaded);
+        }
+
+        private async Task PickAndSaveFolder()
+        {
+            var fileSystem = this.GetService<IFileSystemService>();
+            var pickedFolder = await fileSystem.PickFolder();
+
+            // If they don't pick a folder, unload the core.
+            if (pickedFolder is null)
+            {
+                this.GetService<INotificationService>().RaiseNotification("No folder selected", "Unloading file core.");
+                ChangeCoreState(CoreState.Unloaded);
+                return;
+            }
+
+            await this.GetService<ISettingsService>().SetValue<string?>(nameof(LocalFilesCoreSettingsKeys.FolderPath), pickedFolder.Path);
+
+            ChangeCoreState(CoreState.Configured);
+        }
+    }
+}
