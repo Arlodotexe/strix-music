@@ -17,6 +17,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels.Helpers;
 using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
@@ -31,6 +32,7 @@ namespace StrixMusic.Sdk.ViewModels
         private readonly IPlaylist _playlist;
         private readonly IUserProfile? _owner;
         private readonly IPlaybackHandlerService _playbackHandler;
+        private readonly ILocalizationService _localizationService;
 
         private readonly AsyncLock _populateTracksMutex = new AsyncLock();
         private readonly AsyncLock _populateImagesMutex = new AsyncLock();
@@ -44,6 +46,7 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _playlist = playlist ?? throw new ArgumentNullException(nameof(playlist));
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
+            _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             SourceCores = playlist.GetSourceCores<ICorePlaylist>().Select(MainViewModel.GetLoadedCore).ToList();
 
@@ -382,7 +385,7 @@ namespace StrixMusic.Sdk.ViewModels
         public IUserProfile? Owner => _owner;
 
         /// <inheritdoc />
-        public string Name => _playlist.Name;
+        public string Name => _localizationService.LocalizeIfNullOrEmpty(_playlist.Name, this);
 
         /// <inheritdoc />
         public string? Description => _playlist.Description;

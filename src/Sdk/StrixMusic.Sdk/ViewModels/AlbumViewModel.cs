@@ -16,6 +16,7 @@ using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels.Helpers;
 using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
@@ -29,6 +30,7 @@ namespace StrixMusic.Sdk.ViewModels
     {
         private readonly IAlbum _album;
         private readonly IPlaybackHandlerService _playbackHandler;
+        private readonly ILocalizationService _localizationService;
 
         private readonly AsyncLock _populateTracksMutex = new AsyncLock();
         private readonly AsyncLock _populateArtistsMutex = new AsyncLock();
@@ -47,6 +49,7 @@ namespace StrixMusic.Sdk.ViewModels
             SourceCores = _album.GetSourceCores<ICoreAlbum>().Select(MainViewModel.GetLoadedCore).ToList();
 
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
+            _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             using (Threading.PrimaryContext)
             {
@@ -509,7 +512,7 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<IUrl> Urls { get; }
 
         /// <inheritdoc />
-        public string Name => _album.Name;
+        public string Name => _localizationService.LocalizeIfNullOrEmpty(_album.Name, this);
 
         /// <inheritdoc />
         public int TotalTrackCount => _album.TotalTrackCount;

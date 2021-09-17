@@ -32,9 +32,11 @@ namespace StrixMusic.Sdk.Services.Localization
         {
             return sender switch
             {
-                ITrack _ => LocalizeIfNullOrEmpty(value, Helpers.Constants.Localization.MusicResource, "UnknownName"),
-                IAlbum _ => LocalizeIfNullOrEmpty(value, Helpers.Constants.Localization.MusicResource, "UnknownAlbum"),
-                _ => ThrowHelper.ThrowArgumentException<string>($"{sender} not a valid {nameof(Type)}")
+                IAlbum _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownAlbum"),
+                IArtist _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownArtist"),
+
+                // Default to unknown name
+                _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownName"),
             };
         }
 
