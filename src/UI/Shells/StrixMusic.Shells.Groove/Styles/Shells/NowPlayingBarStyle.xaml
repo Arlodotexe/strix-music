@@ -60,7 +60,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!--Media info-->
-                                <Button x:Name="NowPlayingButton" MaxWidth="300" HorizontalAlignment="Left" VerticalAlignment="Stretch" Grid.RowSpan="2"
+                                <Button x:Name="NowPlayingButton" MinWidth="300" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Grid.RowSpan="2"
                                         BorderThickness="0" Background="Transparent" Padding="0,0,16,0">
                                     <nowplaying:MediaInfo x:Name="mediaInfo"/>
                                 </Button>
