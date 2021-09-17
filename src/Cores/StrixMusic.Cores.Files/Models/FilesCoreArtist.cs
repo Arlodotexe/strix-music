@@ -126,6 +126,7 @@ namespace StrixMusic.Cores.Files.Models
 
                 Guard.IsNotNull(metadata.AlbumIds, nameof(metadata.AlbumIds));
                 Guard.IsNotNull(metadata.TrackIds, nameof(metadata.TrackIds));
+                Guard.IsNotNull(metadata.Genres, nameof(metadata.Genres));
 
                 var previousData = _artistMetadata;
                 _artistMetadata = metadata;
@@ -139,7 +140,8 @@ namespace StrixMusic.Cores.Files.Models
                 if (metadata.Description != previousData.Description)
                     DescriptionChanged?.Invoke(this, Description);
 
-                // TODO genres, post genres do-over
+                if (metadata.Genres.Count != (previousData.Genres?.Count ?? 0))
+                    GenresCountChanged?.Invoke(this, metadata.Genres.Count);
 
                 if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
                     TracksCountChanged?.Invoke(this, metadata.TrackIds.Count);
