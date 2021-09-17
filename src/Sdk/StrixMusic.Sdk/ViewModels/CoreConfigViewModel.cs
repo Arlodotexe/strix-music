@@ -28,10 +28,10 @@ namespace StrixMusic.Sdk.ViewModels
             _coreConfig = coreConfig;
 
             AbstractUIElements = new ObservableCollection<AbstractUICollectionViewModel>();
+            AbstractUIElements.Clear();
 
             foreach (var abstractUIElement in _coreConfig.AbstractUIElements)
             {
-                AbstractUIElements.Clear();
                 AbstractUIElements.Add(new AbstractUICollectionViewModel(abstractUIElement));
             }
 
