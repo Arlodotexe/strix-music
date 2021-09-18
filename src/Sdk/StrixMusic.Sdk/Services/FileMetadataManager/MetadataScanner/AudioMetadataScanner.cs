@@ -29,9 +29,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private readonly FileMetadataManager _metadataManager;
         private readonly IFileScanner _fileScanner;
         private readonly SemaphoreSlim _batchLock;
+        private readonly SemaphoreSlim _imageBatchLock;
 
         private readonly string _emitDebouncerId = Guid.NewGuid().ToString();
+        private readonly string _emitImagesDebouncerId = Guid.NewGuid().ToString();
         private readonly HashSet<FileMetadata> _batchMetadataToEmit = new HashSet<FileMetadata>();
+        private readonly HashSet<ImageMetadata> _batchImageMetadataToEmit = new HashSet<ImageMetadata>();
         private readonly HashSet<FileMetadata> _allFileMetadata = new HashSet<FileMetadata>();
 
         private CancellationTokenSource? _scanningCancellationTokenSource;
@@ -49,6 +52,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             _fileScanner = fileScanner;
 
             _batchLock = new SemaphoreSlim(1, 1);
+            _imageBatchLock = new SemaphoreSlim(1, 1);
 
             AttachEvents();
         }
@@ -77,6 +81,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// Raised when all file scanning is complete.
         /// </summary>
         public event EventHandler<IEnumerable<FileMetadata>>? FileScanCompleted;
+
+        /// <summary>
+        /// Raised when images from files are discovered/resized.
+        /// </summary>
+        public event EventHandler<IEnumerable<ImageMetadata>>? ImageMetadataAdded;
 
         /// <inheritdoc/>
         public bool IsInitialized { get; set; }
@@ -301,9 +310,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     return null;
 
                 if (tags.Pictures != null)
-                {
-                    await HandleImagesAsync(fileData.Path, tags.Pictures);
-                }
+                    _ = HandleImagesAsync(fileData.Path, tags.Pictures);
                 
                 return new FileMetadata
                 {
@@ -422,6 +429,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         }
                     }
 
+                    var metadata = new List<ImageMetadata>();
+
                     // If the ceiling size index is -1, the image is smaller than all of the standard image sizes.
                     // In this case, we'll just use the original image size and copy the image into the cache folder
                     // rather than resizing it.
@@ -433,7 +442,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         using var stream = await imageFile.GetStreamAsync(FileAccessMode.ReadWrite);
                         await image.SaveAsPngAsync(stream);
 
-                        await _metadataManager.Images.AddOrUpdateImageAsync(new ImageMetadata
+                        metadata.Add(new ImageMetadata
                         {
                             Id = fullId,
                             Uri = new Uri(imageFile.Path),
@@ -458,7 +467,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                             await image.SaveAsPngAsync(stream);
 
-                            await _metadataManager.Images.AddOrUpdateImageAsync(new ImageMetadata
+                            metadata.Add(new ImageMetadata
                             {
                                 Id = fullId,
                                 Uri = new Uri(imageFile.Path),
@@ -467,6 +476,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                             });
                         }
 					}
+
+                    await _imageBatchLock.WaitAsync();
+                    foreach (var m in metadata)
+                        _batchImageMetadataToEmit.Add(m);
+                    _imageBatchLock.Release();
+
+                    _ = HandleImagesChangedAsync();
                 }
                 catch (FileLoadException)
                 {
@@ -536,6 +552,37 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             if (IsFinishedScanning())
                 FileScanCompleted?.Invoke(this, _allFileMetadata);
+        }
+
+        private async Task HandleImagesChangedAsync()
+        {
+            if (!await Flow.Debounce(_emitImagesDebouncerId, TimeSpan.FromSeconds(1)))
+                return;
+
+            await _imageBatchLock.WaitAsync();
+
+            if (_batchImageMetadataToEmit.Count == 0)
+            {
+                _imageBatchLock.Release();
+                return;
+            }
+
+            bool IsEnoughMetadataToEmit() => _batchImageMetadataToEmit.Count >= 100;
+            bool IsFinishedScanning() => _filesProcessed == _filesToScanCount;
+
+            if (!IsFinishedScanning() && !IsEnoughMetadataToEmit())
+            {
+                _imageBatchLock.Release();
+                return;
+            }
+
+            if (_scanningCancellationTokenSource?.Token.IsCancellationRequested ?? false)
+                _scanningCancellationTokenSource?.Token.ThrowIfCancellationRequested();
+
+            ImageMetadataAdded?.Invoke(this, _batchImageMetadataToEmit.ToArray());
+
+            _batchImageMetadataToEmit.Clear();
+            _imageBatchLock.Release();
         }
 
         private void ReleaseUnmanagedResources()

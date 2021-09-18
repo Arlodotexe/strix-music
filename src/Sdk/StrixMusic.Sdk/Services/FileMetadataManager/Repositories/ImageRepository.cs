@@ -42,6 +42,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             _initMutex = new SemaphoreSlim(1, 1);
             _audioMetadataScanner = audioMetadataScanner;
             _debouncerId = Guid.NewGuid().ToString();
+
+            AttachEvents();
         }
 
         /// <inheritdoc/>
@@ -55,6 +57,62 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 
         /// <inheritdoc/>
         public event EventHandler<IEnumerable<ImageMetadata>>? MetadataAdded;
+
+        private void AttachEvents()
+        {
+            _audioMetadataScanner.ImageMetadataAdded += AudioMetadataScanner_ImageMetadataAdded;
+        }
+
+        private void DetachEvents()
+        {
+            _audioMetadataScanner.ImageMetadataAdded -= AudioMetadataScanner_ImageMetadataAdded;
+        }
+
+        private async void AudioMetadataScanner_ImageMetadataAdded(object sender, IEnumerable<ImageMetadata> e)
+        {
+            var addedImages = new List<ImageMetadata>();
+            var updatedImages = new List<ImageMetadata>();
+
+            foreach (var metadata in e)
+            {
+                Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
+
+                var isUpdate = false;
+
+                await _storageMutex.WaitAsync();
+
+                _inMemoryMetadata.AddOrUpdate(
+                    metadata.Id,
+                    addValueFactory: id =>
+                    {
+                        isUpdate = false;
+                        return metadata;
+                    },
+                    updateValueFactory: (id, existing) =>
+                    {
+                        isUpdate = true;
+                        return metadata;
+                    });
+
+                _storageMutex.Release();
+
+                if (isUpdate)
+                    updatedImages.Add(metadata);
+                else
+                    addedImages.Add(metadata);
+            }
+
+            if (addedImages.Count > 0 || updatedImages.Count > 0)
+            {
+                _ = CommitChangesAsync();
+
+                if (addedImages.Count > 0)
+                    MetadataAdded?.Invoke(this, addedImages);
+
+                if (updatedImages.Count > 0)
+                    MetadataUpdated?.Invoke(this, updatedImages);
+            }
+        }
 
         /// <inheritdoc/>
         public async Task InitAsync()
@@ -190,7 +248,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 
         private void ReleaseUnmanagedResources()
         {
-            // TODO
+            DetachEvents();
         }
 
         /// <inheritdoc cref="Dispose()"/>
