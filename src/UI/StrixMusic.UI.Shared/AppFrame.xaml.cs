@@ -3,8 +3,9 @@ using OwlCore;
 using OwlCore.Uno.Controls;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Helpers;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Navigation;
-using StrixMusic.Sdk.Uno.Helpers;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
 using System;
@@ -158,7 +159,7 @@ namespace StrixMusic.Shared
 
         private async void Core_CoreStateChanged(object sender, Sdk.Data.CoreState e)
         {
-            var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
+            var localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             if (!(sender is ICore core))
                 return;
@@ -198,7 +199,7 @@ namespace StrixMusic.Shared
 
         private void NavServiceOnNavigationRequested(object sender, NavigateEventArgs<Control> e)
         {
-            var localizationService = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
+            var localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             switch (e.Page)
             {

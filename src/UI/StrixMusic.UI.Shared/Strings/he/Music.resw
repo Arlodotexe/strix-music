@@ -387,4 +387,13 @@
   <data name="DateAdded" xml:space="preserve">
     <value>תאריך הוסף</value>
   </data>
+  <data name="UnknownAlbum" xml:space="preserve">
+    <value>אלבום לא ידוע</value>
+  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>אמן לא ידוע</value>
+  </data>
+  <data name="UnknownName" xml:space="preserve">
+    <value>שם לא ידוע</value>
+  </data>
 </root>
