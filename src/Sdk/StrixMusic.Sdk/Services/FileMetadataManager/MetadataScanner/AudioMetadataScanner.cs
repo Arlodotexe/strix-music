@@ -376,15 +376,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             {
                 try
                 {
-                    /* 
-                     * TODO:
-                     * 
-                     * Properly handle resizing for images that aren't in a 1:1 aspect ratio.
-                     * 
-                     * Add each image to the image repository and associate it with a corresponding
-                     * Album/Image/TrackMetadata instance.
-                     */
-
                     var imageData = picture.Data.Data;
 
                     // Create a unique ID for the image by collecting every 16th byte in the data
@@ -437,9 +428,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     // We can also use this same logic when useOriginal is true.
                     if (ceilingSizeIndex == -1 || useOriginal)
                     {
-                        var imageFile = await fileImagesFolder.CreateFileAsync($"{imageId}-{ceiling}.png", CreationCollisionOption.ReplaceExisting);
+                        var fullId = $"{imageId}-{ceiling}";
+                        var imageFile = await fileImagesFolder.CreateFileAsync($"{fullId}.png", CreationCollisionOption.ReplaceExisting);
                         using var stream = await imageFile.GetStreamAsync(FileAccessMode.ReadWrite);
                         await image.SaveAsPngAsync(stream);
+
+                        await _metadataManager.Images.AddOrUpdateImageAsync(new ImageMetadata
+                        {
+                            Id = fullId,
+                            Uri = new Uri(imageFile.Path),
+                            Width = image.Width,
+                            Height = image.Height
+                        });
                     }
 
                     if (ceilingSizeIndex != -1)
@@ -450,12 +450,21 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                             var resizedWidth = image.Width > image.Height ? 0 : resizedSize;
                             var resizedHeight = image.Height > image.Width ? 0 : resizedSize;
 
-                            var imageFile = await fileImagesFolder.CreateFileAsync($"{imageId}-{resizedSize}.png", CreationCollisionOption.ReplaceExisting);
+                            var fullId = $"{imageId}-{resizedSize}";
+                            var imageFile = await fileImagesFolder.CreateFileAsync($"{fullId}.png", CreationCollisionOption.ReplaceExisting);
                             using var stream = await imageFile.GetStreamAsync(FileAccessMode.ReadWrite);
 
                             image.Mutate(x => x.Resize(resizedWidth, resizedHeight));
 
                             await image.SaveAsPngAsync(stream);
+
+                            await _metadataManager.Images.AddOrUpdateImageAsync(new ImageMetadata
+                            {
+                                Id = fullId,
+                                Uri = new Uri(imageFile.Path),
+                                Width = image.Width,
+                                Height = image.Height
+                            });
                         }
 					}
                 }
