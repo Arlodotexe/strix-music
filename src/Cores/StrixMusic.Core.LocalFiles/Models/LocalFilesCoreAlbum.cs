@@ -187,6 +187,11 @@ namespace StrixMusic.Core.LocalFiles.Models
             var removedImages = oldImageIds.Except(newImageIds);
 
             ImagesChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
+
+            if (oldImageIds.Count != newImageIds.Count)
+            {
+                ImagesCountChanged?.Invoke(this, newImageIds.Count);
+            }
         }
 
         /// <inheritdoc/>
