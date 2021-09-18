@@ -20,32 +20,21 @@ namespace StrixMusic.Core.LocalFiles.Models
             _imageMetadata = imageMetadata;
 
             SourceCore = sourceCore;
-
-            if (imageMetadata.Size != null)
-            {
-                var size = (double) imageMetadata.Size;
-                Width = size;
-                Height = size;
-            }
-            else
-            {
-                // TODO: Fix this placeholder exception (what should this constructor do if _imageMetadata.Size is null?).
-                throw new InvalidOperationException();
-            }
         }
 
         /// <inheritdoc />
         public ICore SourceCore { get; }
 
+        // TODO: Fix these placeholder exception (what should these properties do if _imageMetadata properties are null?).
+
         /// <inheritdoc />
-        // TODO: Fix this placeholder exception (what should this property do if _imageMetadata.Uri is null?).
         public Uri Uri => _imageMetadata.Uri ?? throw new InvalidOperationException();
 
         /// <inheritdoc />
-        public double Height { get; }
+        public double Height => _imageMetadata.Height ?? throw new InvalidOperationException();
 
         /// <inheritdoc />
-        public double Width { get; }
+        public double Width => _imageMetadata.Width ?? throw new InvalidOperationException();
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()

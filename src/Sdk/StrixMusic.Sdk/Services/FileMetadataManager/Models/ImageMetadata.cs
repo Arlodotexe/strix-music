@@ -18,8 +18,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         public Uri? Uri { get; set; }
 
         /// <summary>
-        /// The size of this image.
+        /// The width of this image.
         /// </summary>
-        public ImageSize? Size { get; set; }
+        public int? Width { get; set; }
+
+        /// <summary>
+        /// The height of this image.
+        /// </summary>
+        public int? Height { get; set; }
     }
 }
