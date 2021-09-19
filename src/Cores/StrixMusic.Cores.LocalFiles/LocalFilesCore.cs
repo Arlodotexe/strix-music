@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
+using OwlCore;
 using OwlCore.AbstractStorage;
+using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using StrixMusic.Cores.Files;
 using StrixMusic.Cores.Files.Models;
@@ -70,15 +73,37 @@ namespace StrixMusic.Cores.LocalFiles
             var configuredFolder = await coreConfig.GetConfiguredFolder();
             if (configuredFolder is null)
             {
-                _ = PickAndSaveFolder();
+                var ui = coreConfig.CreateGenericConfig();
+                ui.Subtitle = "Click \"Done\" to select a folder.";
+
+                coreConfig.SaveAbstractUI(ui);
+
+                var confirmButton = (AbstractButton)ui.First(x => x is AbstractButton { Type: AbstractButtonType.Confirm });
+
                 ChangeCoreState(CoreState.NeedsSetup);
+
+                _ = await Flow.EventAsTask(x => confirmButton.Clicked += x, x => confirmButton.Clicked -= x, TimeSpan.FromMinutes(30));
+
+                var fileSystem = SourceCore.GetService<IFileSystemService>();
+                var pickedFolder = await fileSystem.PickFolder();
+
+                // No folder selected.
+                if (pickedFolder is null)
+                {
+                    ChangeCoreState(CoreState.Unloaded);
+                    return;
+                }
+
+                await SourceCore.GetService<ISettingsService>().SetValue<string?>(nameof(LocalFilesCoreSettingsKeys.FolderPath), pickedFolder.Path);
+
+                ChangeCoreState(CoreState.Configured);
+                await InitAsync(services);
                 return;
             }
 
             InstanceDescriptor = configuredFolder.Path;
             InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
 
-            coreConfig.SetupAbstractUISettings();
             await coreConfig.SetupServices(services);
             await Library.Cast<FilesCoreLibrary>().InitAsync();
 
@@ -86,22 +111,5 @@ namespace StrixMusic.Cores.LocalFiles
             ChangeCoreState(CoreState.Loaded);
         }
 
-        private async Task PickAndSaveFolder()
-        {
-            var fileSystem = this.GetService<IFileSystemService>();
-            var pickedFolder = await fileSystem.PickFolder();
-
-            // If they don't pick a folder, unload the core.
-            if (pickedFolder is null)
-            {
-                this.GetService<INotificationService>().RaiseNotification("No folder selected", "Unloading file core.");
-                ChangeCoreState(CoreState.Unloaded);
-                return;
-            }
-
-            await this.GetService<ISettingsService>().SetValue<string?>(nameof(LocalFilesCoreSettingsKeys.FolderPath), pickedFolder.Path);
-
-            ChangeCoreState(CoreState.Configured);
-        }
     }
 }

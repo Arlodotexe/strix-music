@@ -14,5 +14,15 @@
         /// If true, the app will not initialize the metadata repos and previously scanned data will not be loaded.
         /// </summary>
         public static readonly bool InitWithEmptyMetadataRepos = false;
+
+        /// <summary>
+        /// If the core should use TagLib to scan file metadata.
+        /// </summary>
+        public static readonly bool ScanWithTagLib = true;
+
+        /// <summary>
+        /// If the core should use file properties to scan metadata. 
+        /// </summary>
+        public static readonly bool ScanWithFileProperties = false;
     }
 }
