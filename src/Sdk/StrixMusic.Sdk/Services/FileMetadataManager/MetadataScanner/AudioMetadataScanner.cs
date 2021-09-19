@@ -309,19 +309,20 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     Title = details.Album,
                     Duration = details.Duration,
-                    Genres = details.Genres?.ToOrAsList(),
+                    Genres = details.Genres?.PruneNull().ToOrAsList(),
                 },
                 TrackMetadata = new TrackMetadata
                 {
                     TrackNumber = details.TrackNumber,
                     Title = details.Title,
-                    Genres = details.Genres?.ToOrAsList(),
+                    Genres = details.Genres?.PruneNull().ToOrAsList(),
                     Duration = details.Duration,
                     Url = new Uri(fileData.Path),
                     Year = details.Year,
                 },
                 ArtistMetadata = new ArtistMetadata
                 {
+                    Genres = details.Genres?.PruneNull().ToOrAsList(),
                     Name = details.Artist,
                 },
             };
@@ -336,7 +337,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (_metadataManager.ScanTypes.HasFlag(MetadataScanTypes.TagLib))
             {
                 var id3Metadata = await GetId3Metadata(fileData);
-                
+
                 if (!(id3Metadata is null))
                     foundMetadata.Add(id3Metadata);
             }
@@ -344,7 +345,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (_metadataManager.ScanTypes.HasFlag(MetadataScanTypes.FileProperties))
             {
                 var propertyMetadata = await GetMusicFilesProperties(fileData);
-                
+
                 if (!(propertyMetadata is null))
                     foundMetadata.Add(propertyMetadata);
             }
