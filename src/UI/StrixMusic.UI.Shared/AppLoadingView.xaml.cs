@@ -372,7 +372,7 @@ namespace StrixMusic.Shared
             var notification = notifService.RaiseNotification(new AbstractUICollection($"{nameof(AppLoadingView)}.OOBEElementGroup", PreferredOrientation.Horizontal)
             {
                 Title = "First time?",
-                Subtitle = "Set up your skins and services before proceeding.",
+                Subtitle = "Set up your skins and services before proceeding. A proper OOBE will come later.",
                 Items = new List<AbstractUIElement>()
                 {
                     doneButton,
