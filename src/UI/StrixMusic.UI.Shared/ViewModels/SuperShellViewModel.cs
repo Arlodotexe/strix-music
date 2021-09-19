@@ -37,7 +37,6 @@ namespace StrixMusic.Shared.ViewModels
         private readonly ICoreManagementService _coreManagementService;
         private readonly INotificationService _notificationService;
         private readonly LocalizationResourceLoader _localizationResourceLoader;
-        private bool _disposedValue;
         private bool _isShowingAddNew;
         private int _selectedTabIndex;
         private CoreViewModel? _currentCoreConfig;
@@ -368,42 +367,13 @@ namespace StrixMusic.Shared.ViewModels
                 AttachEvents(core);
         }
 
-        /// <inheritdoc cref="Dispose"/>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects)
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
-                _disposedValue = true;
-
-                DetachEvents();
-
-                foreach (var core in _mainViewModel.Cores)
-                    DetachEvents(core);
-            }
-        }
-
         /// <inheritdoc/>
         public void Dispose()
         {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+            DetachEvents();
 
-        /// <summary>
-        /// Finalizes an instance of the <see cref="SuperShellViewModel"/> class.
-        /// </summary>
-        ~SuperShellViewModel()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: false);
+            foreach (var core in _mainViewModel.Cores)
+                DetachEvents(core);
         }
     }
 }
