@@ -114,6 +114,11 @@ namespace StrixMusic.Cores.LocalFiles
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task SetupServices(IServiceCollection services)
         {
+            if (_allServicesSetup)
+                return;
+
+            _allServicesSetup = true;
+
             await SetupConfigurationServices(services);
             Guard.IsNotNull(_fileSystemService, nameof(_fileSystemService));
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
@@ -140,8 +145,6 @@ namespace StrixMusic.Cores.LocalFiles
 
             AbstractUIElements = genericConfig.IntoList();
             AbstractUIElementsChanged?.Invoke(this, EventArgs.Empty);
-
-            _allServicesSetup = true;
         }
 
         /// <summary>
@@ -179,6 +182,9 @@ namespace StrixMusic.Cores.LocalFiles
             {
                 _initWithEmptyReposToggle,
             };
+
+            cacheSettings.Title = "Cache settings";
+            cacheSettings.Subtitle = "Requires restart.";
 
             if (_allServicesSetup)
                 cacheSettings.Add(_rescanButton);

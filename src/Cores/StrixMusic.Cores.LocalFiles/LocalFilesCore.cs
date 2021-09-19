@@ -13,7 +13,6 @@ using StrixMusic.Cores.LocalFiles.Services;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Extensions;
-using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
 
 namespace StrixMusic.Cores.LocalFiles
@@ -73,17 +72,6 @@ namespace StrixMusic.Cores.LocalFiles
             var configuredFolder = await coreConfig.GetConfiguredFolder();
             if (configuredFolder is null)
             {
-                var ui = coreConfig.CreateGenericConfig();
-                ui.Subtitle = "Click \"Done\" to select a folder.";
-
-                coreConfig.SaveAbstractUI(ui);
-
-                var confirmButton = (AbstractButton)ui.First(x => x is AbstractButton { Type: AbstractButtonType.Confirm });
-
-                ChangeCoreState(CoreState.NeedsSetup);
-
-                _ = await Flow.EventAsTask(x => confirmButton.Clicked += x, x => confirmButton.Clicked -= x, TimeSpan.FromMinutes(30));
-
                 var fileSystem = SourceCore.GetService<IFileSystemService>();
                 var pickedFolder = await fileSystem.PickFolder();
 
@@ -100,6 +88,18 @@ namespace StrixMusic.Cores.LocalFiles
                 await InitAsync(services);
                 return;
             }
+
+            var ui = coreConfig.CreateGenericConfig();
+            ui.Subtitle = configuredFolder.Path;
+
+            coreConfig.SaveAbstractUI(ui);
+
+            ChangeCoreState(CoreState.NeedsSetup);
+
+            var confirmButton = (AbstractButton)ui.First(x => x is AbstractButton { Type: AbstractButtonType.Confirm });
+            _ = await Flow.EventAsTask(x => confirmButton.Clicked += x, x => confirmButton.Clicked -= x, TimeSpan.FromMinutes(30));
+
+            ChangeCoreState(CoreState.Configured);
 
             InstanceDescriptor = configuredFolder.Path;
             InstanceDescriptorChanged?.Invoke(this, InstanceDescriptor);
