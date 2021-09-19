@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -24,6 +25,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private readonly INotificationService? _notificationService;
         private readonly IFolderData _rootFolder;
 
+        private CancellationTokenSource? _inProgressScanCancellationTokenSource;
         private Notification? _filesScannedNotification;
         private Notification? _filesFoundNotification;
         private AbstractProgressIndicator? _progressUIElement;
@@ -177,6 +179,17 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <inheritdoc />
         public async Task StartScan()
         {
+            if (!(_inProgressScanCancellationTokenSource is null))
+            {
+                _inProgressScanCancellationTokenSource.Cancel();
+                _inProgressScanCancellationTokenSource.Dispose();
+            }
+
+            _inProgressScanCancellationTokenSource = new CancellationTokenSource();
+            var currentToken = _inProgressScanCancellationTokenSource.Token;
+
+            DismissNotifs();
+
             if (!IsInitialized)
                 await InitAsync();
 
@@ -190,35 +203,61 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 await Playlists.InitAsync();
             }
 
-            var findingFilesNotif = RaiseFileDiscoveryNotification();
-            var discoveredFiles = await _fileScanner.ScanFolder(_rootFolder);
-            var filesToScan = discoveredFiles as IFileData[] ?? discoveredFiles.ToArray();
+            CancelIfNeeded();
+            FilesFound = 0;
 
+            var findingFilesNotif = RaiseFileDiscoveryNotification();
+            var discoveredFiles = await _fileScanner.ScanFolder(_rootFolder, currentToken);
+            var filesToScan = discoveredFiles as IFileData[] ?? discoveredFiles.ToArray();
             findingFilesNotif.Dismiss();
+
+            CancelIfNeeded();
+            FilesProcessed = 0;
 
             _currentScanningType = FileScanningType.AudioFiles;
             var scanningMusicNotif = RaiseProcessingNotification();
-            var fileMetadata = await _audioMetadataScanner.ScanMusicFiles(filesToScan);
+            var fileMetadata = await _audioMetadataScanner.ScanMusicFiles(filesToScan, currentToken);
             scanningMusicNotif.Dismiss();
+
+            CancelIfNeeded();
 
             _currentScanningType = FileScanningType.Playlists;
             var scanningPlaylistsNotif = RaiseProcessingNotification();
-            await _playlistMetadataScanner.ScanPlaylists(filesToScan, fileMetadata);
+            await _playlistMetadataScanner.ScanPlaylists(filesToScan, fileMetadata, currentToken);
             scanningPlaylistsNotif.Dismiss();
 
+            CancelIfNeeded();
+
             ScanningCompleted?.Invoke(this, EventArgs.Empty);
+
+            void CancelIfNeeded()
+            {
+                if (currentToken.IsCancellationRequested)
+                {
+                    DismissNotifs();
+                    currentToken.ThrowIfCancellationRequested();
+                }
+            }
+
+            void DismissNotifs()
+            {
+                _filesScannedNotification?.Dismiss();
+                _filesFoundNotification?.Dismiss();
+            }
         }
 
         private void UpdateFilesScannedNotification()
         {
-            Guard.IsNotNull(_filesScannedNotification, nameof(_filesScannedNotification));
+            if (_filesScannedNotification is null)
+                return;
 
             _filesScannedNotification.AbstractUICollection.Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolder.Path}";
         }
 
         private void UpdateFilesFoundNotification()
         {
-            Guard.IsNotNull(_filesFoundNotification, nameof(_filesFoundNotification));
+            if (_filesFoundNotification is null)
+                return;
 
             _filesFoundNotification.AbstractUICollection.Subtitle = $"Found {FilesFound} in {_rootFolder.Path}";
         }

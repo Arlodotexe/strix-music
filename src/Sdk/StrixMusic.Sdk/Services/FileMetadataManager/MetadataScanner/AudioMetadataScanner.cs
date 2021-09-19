@@ -140,6 +140,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is all discovered metadata from the scanned files.</returns>
         public async Task<IEnumerable<FileMetadata>> ScanMusicFiles(IEnumerable<IFileData> filesToScan, CancellationToken cancellationToken)
         {
+            _filesProcessed = 0;
+
+            if (cancellationToken.IsCancellationRequested)
+                cancellationToken.ThrowIfCancellationRequested();
+
             _scanningCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             var musicFiles = filesToScan.Where(x => _supportedMusicFileFormats.Contains(x.FileExtension));
