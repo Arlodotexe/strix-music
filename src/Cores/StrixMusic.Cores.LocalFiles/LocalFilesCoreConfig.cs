@@ -76,6 +76,7 @@ namespace StrixMusic.Cores.LocalFiles
             _useFilePropsScannerToggle.StateChanged += UseFilePropsScannerToggle_StateChanged;
             _useTagLibScannerToggle.StateChanged += UseTagLibScannerToggle_StateChanged;
             _initWithEmptyReposToggle.StateChanged += InitWithEmptyReposToggleOnStateChanged;
+            _rescanButton.Clicked += RescanButton_Clicked;
 
             _configDoneButton.Clicked += ConfigDoneButton_Clicked;
         }
@@ -88,6 +89,7 @@ namespace StrixMusic.Cores.LocalFiles
             _useFilePropsScannerToggle.StateChanged -= UseFilePropsScannerToggle_StateChanged;
             _useTagLibScannerToggle.StateChanged -= UseTagLibScannerToggle_StateChanged;
             _initWithEmptyReposToggle.StateChanged -= InitWithEmptyReposToggleOnStateChanged;
+            _rescanButton.Clicked -= RescanButton_Clicked;
 
             _configDoneButton.Clicked -= ConfigDoneButton_Clicked;
         }
@@ -285,6 +287,13 @@ namespace StrixMusic.Cores.LocalFiles
                 if (e.Key == nameof(LocalFilesCoreSettingsKeys.ScanWithTagLib))
                     _useTagLibScannerToggle.State = true;
             }
+        }
+
+        private void RescanButton_Clicked(object sender, EventArgs e)
+        {
+            Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
+
+            Task.Run(_fileMetadataManager.StartScan).Forget();
         }
 
         /// <inheritdoc />

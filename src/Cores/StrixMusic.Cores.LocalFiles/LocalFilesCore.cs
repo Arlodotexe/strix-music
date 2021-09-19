@@ -69,6 +69,9 @@ namespace StrixMusic.Cores.LocalFiles
 
             await coreConfig.SetupConfigurationServices(services);
 
+            var ui = coreConfig.CreateGenericConfig();
+            var confirmButton = (AbstractButton)ui.First(x => x is AbstractButton { Type: AbstractButtonType.Confirm });
+
             var configuredFolder = await coreConfig.GetConfiguredFolder();
             if (configuredFolder is null)
             {
@@ -83,21 +86,23 @@ namespace StrixMusic.Cores.LocalFiles
                 }
 
                 await SourceCore.GetService<ISettingsService>().SetValue<string?>(nameof(LocalFilesCoreSettingsKeys.FolderPath), pickedFolder.Path);
+                ui.Subtitle = pickedFolder.Path;
+
+                coreConfig.SaveAbstractUI(ui);
+
+                // Let the user change settings for the selected folder before first scan.
+                ChangeCoreState(CoreState.NeedsSetup);
+
+                _ = await Flow.EventAsTask(x => confirmButton.Clicked += x, x => confirmButton.Clicked -= x, TimeSpan.FromMinutes(30));
 
                 ChangeCoreState(CoreState.Configured);
                 await InitAsync(services);
                 return;
-            }
+            } 
 
-            var ui = coreConfig.CreateGenericConfig();
             ui.Subtitle = configuredFolder.Path;
 
             coreConfig.SaveAbstractUI(ui);
-
-            ChangeCoreState(CoreState.NeedsSetup);
-
-            var confirmButton = (AbstractButton)ui.First(x => x is AbstractButton { Type: AbstractButtonType.Confirm });
-            _ = await Flow.EventAsTask(x => confirmButton.Clicked += x, x => confirmButton.Clicked -= x, TimeSpan.FromMinutes(30));
 
             ChangeCoreState(CoreState.Configured);
 
