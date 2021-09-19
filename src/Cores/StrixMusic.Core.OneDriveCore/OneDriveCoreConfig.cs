@@ -96,8 +96,8 @@ namespace StrixMusic.Cores.OneDrive
             _settingsService = new OneDriveCoreSettingsService(SourceCore.InstanceId);
             services.AddSingleton(_settingsService);
 
-            _useFilePropsScannerToggle.State = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseFileProperties));
-            _useTagLibScannerToggle.State = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseTagLib));
+            _useFilePropsScannerToggle.State = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties));
+            _useTagLibScannerToggle.State = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithTagLib));
 
             Services = services.BuildServiceProvider();
 
@@ -293,10 +293,10 @@ namespace StrixMusic.Cores.OneDrive
             // Use the user's preferences.
             var scanTypes = MetadataScanTypes.None;
 
-            if (await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseTagLib)))
+            if (await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithTagLib)))
                 scanTypes |= MetadataScanTypes.TagLib;
 
-            if (await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseFileProperties)))
+            if (await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties)))
                 scanTypes |= MetadataScanTypes.FileProperties;
 
             _fileMetadataManager.ScanTypes = scanTypes;
@@ -389,13 +389,13 @@ namespace StrixMusic.Cores.OneDrive
         private async void UseFilePropsScannerToggleOnStateChanged(object sender, bool e)
         {
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
-            await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseFileProperties), e);
+            await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties), e);
         }
 
         private async void UseTagLibScannerToggleOnStateChanged(object sender, bool e)
         {
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
-            await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseTagLib), e);
+            await _settingsService.SetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithTagLib), e);
         }
 
         private async void SettingsServiceOnSettingChanged(object sender, SettingChangedEventArgs e)
@@ -403,22 +403,22 @@ namespace StrixMusic.Cores.OneDrive
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
             Guard.IsNotNull(_notificationService, nameof(_notificationService));
 
-            if (!(e.Key == nameof(OneDriveCoreSettingsKeys.UseFileProperties) ||
-                  e.Key == nameof(OneDriveCoreSettingsKeys.UseTagLib)))
+            if (!(e.Key == nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties) ||
+                  e.Key == nameof(OneDriveCoreSettingsKeys.ScanWithTagLib)))
                 return;
 
-            var filePropSetting = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseFileProperties));
-            var tagLibSetting = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.UseTagLib));
+            var filePropSetting = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties));
+            var tagLibSetting = await _settingsService.GetValue<bool>(nameof(OneDriveCoreSettingsKeys.ScanWithTagLib));
 
             if (!filePropSetting && !tagLibSetting)
             {
                 _scannerRequiredNotification?.Dismiss();
                 _scannerRequiredNotification = _notificationService.RaiseNotification("Whoops", "At least one metadata scanner is required.");
 
-                if (e.Key == nameof(OneDriveCoreSettingsKeys.UseFileProperties))
+                if (e.Key == nameof(OneDriveCoreSettingsKeys.ScanWithFileProperties))
                     _useFilePropsScannerToggle.State = true;
 
-                if (e.Key == nameof(OneDriveCoreSettingsKeys.UseTagLib))
+                if (e.Key == nameof(OneDriveCoreSettingsKeys.ScanWithTagLib))
                     _useTagLibScannerToggle.State = true;
             }
         }
