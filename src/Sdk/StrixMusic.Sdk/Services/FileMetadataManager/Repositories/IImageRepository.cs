@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
+namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
     /// <summary>
     /// Provides storage for image metadata.
