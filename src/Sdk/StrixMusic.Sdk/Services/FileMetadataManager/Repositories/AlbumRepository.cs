@@ -161,6 +161,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
                     workingMetadata.ArtistIds ??= new List<string>();
                     workingMetadata.TrackIds ??= new List<string>();
+                    workingMetadata.ImageIds ??= new List<string>();
 
                     if (!workingMetadata.ArtistIds.Contains(metadata.ArtistMetadata.Id))
                     {
