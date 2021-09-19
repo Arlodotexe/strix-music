@@ -3,7 +3,7 @@
 namespace OwlCore.Remoting.EventArgs
 {
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="MemberRemote.MessageReceiving"/>.
+    /// <see cref="System.EventArgs"/> for <see cref="MemberRemote.MessageReceiving"/>.
     /// </summary>
     public class RemoteMessageSendingEventArgs : System.EventArgs
     {

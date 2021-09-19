@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using OwlCore.Collections;
 using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Data.Core;
@@ -14,9 +13,15 @@ namespace StrixMusic.Sdk.Data
     /// <summary>
     /// The UI should use this to create a new playlist that can be added to the backend.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Must use instances to satisfy interface.")]
     public class InitialPlaylistData : IPlaylist, IInitialData
     {
         private readonly IReadOnlyList<ICorePlaylist> _sources = new List<ICorePlaylist>();
+
+        /// <summary>
+        /// Holds any tracks that the user wants to add to the playlist on creation.
+        /// </summary>
+        public List<ITrack> Tracks { get; set; } = new List<ITrack>();
 
         /// <summary>
         /// Holds any images that the user wants to add to the playlist on creation. These should point to a file that the app has access to.
@@ -24,9 +29,9 @@ namespace StrixMusic.Sdk.Data
         public List<IImage> Images { get; set; } = new List<IImage>();
 
         /// <summary>
-        /// Holds any tracks that the user wants to add to the playlist on creation.
+        /// Holds any urls that the user wants to add to the playlist on creation.
         /// </summary>
-        public List<ITrack> Tracks { get; set; } = new List<ITrack>();
+        public List<IUrl> Urls { get; set; } = new List<IUrl>();
 
         /// <inheritdoc />
         public List<ICore>? TargetSourceCores { get; set; } = new List<ICore>();
@@ -38,10 +43,10 @@ namespace StrixMusic.Sdk.Data
         public event EventHandler<int>? ImagesCountChanged;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<ITrack>? TrackItemsChanged;
+        public event CollectionChangedEventHandler<ITrack>? TracksChanged;
 
         /// <inheritdoc />
-        public event EventHandler<int>? TrackItemsCountChanged;
+        public event EventHandler<int>? TracksCountChanged;
 
         /// <inheritdoc />
         public event EventHandler<string>? NameChanged;
@@ -76,14 +81,20 @@ namespace StrixMusic.Sdk.Data
         /// <inheritdoc />
         public event EventHandler<bool>? IsChangeDurationAsyncAvailableChanged;
 
+        /// <inheritdoc/>
+        public event CollectionChangedEventHandler<IUrl>? UrlsChanged;
+
+        /// <inheritdoc/>
+        public event EventHandler<int>? UrlsCountChanged;
+
         /// <inheritdoc />
         public int TotalImageCount => Images.Count;
 
         /// <inheritdoc />
-        public int TotalTracksCount => Tracks.Count;
+        public int TotalTrackCount => Tracks.Count;
 
-        /// <inheritdoc />
-        public SynchronizedObservableCollection<string>? Genres { get; }
+        /// <inheritdoc/>
+        public int TotalUrlCount => Urls.Count;
 
         /// <inheritdoc />
         public string Id { get; set; } = string.Empty;
@@ -131,37 +142,49 @@ namespace StrixMusic.Sdk.Data
         public bool IsChangeDurationAsyncAvailable { get; }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveTrackAvailable(int index)
+        public Task<bool> IsRemoveTrackAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddTrackAvailable(int index)
+        public Task<bool> IsAddTrackAvailableAsync(int index)
         {
             return Task.FromResult(false);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddGenreAvailable(int index)
+        public Task<bool> IsAddGenreAvailableAsync(int index)
         {
             return Task.FromResult(true);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveGenreAvailable(int index)
+        public Task<bool> IsRemoveGenreAvailableAsync(int index)
         {
             return Task.FromResult(true);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsAddImageAvailable(int index)
+        public Task<bool> IsAddImageAvailableAsync(int index)
         {
             return Task.FromResult(true);
         }
 
         /// <inheritdoc />
-        public Task<bool> IsRemoveImageAvailable(int index)
+        public Task<bool> IsRemoveImageAvailableAsync(int index)
+        {
+            return Task.FromResult(true);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsAddUrlAvailableAsync(int index)
+        {
+            return Task.FromResult(true);
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsRemoveUrlAvailableAsync(int index)
         {
             return Task.FromResult(true);
         }
@@ -228,6 +251,22 @@ namespace StrixMusic.Sdk.Data
             return Task.CompletedTask;
         }
 
+        /// <inheritdoc/>
+        public Task AddUrlAsync(IUrl url, int index)
+        {
+            Urls.InsertOrAdd(index, url);
+
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc/>
+        public Task RemoveUrlAsync(int index)
+        {
+            Urls.RemoveAt(index);
+
+            return Task.CompletedTask;
+        }
+
         /// <inheritdoc cref="IMerged{T}.SourceCores" />
         public IReadOnlyList<ICore> SourceCores { get; } = new List<ICore>();
 
@@ -238,18 +277,24 @@ namespace StrixMusic.Sdk.Data
         IReadOnlyList<ICoreTrackCollection> IMerged<ICoreTrackCollection>.Sources => _sources;
 
         /// <inheritdoc />
-        IReadOnlyList<ICoreGenreCollection> IMerged<ICoreGenreCollection>.Sources => _sources;
-
-        /// <inheritdoc />
         IReadOnlyList<ICorePlaylistCollectionItem> IMerged<ICorePlaylistCollectionItem>.Sources => _sources;
 
         /// <inheritdoc />
         IReadOnlyList<ICorePlaylist> IMerged<ICorePlaylist>.Sources => _sources;
 
+        /// <inheritdoc/>
+        public IReadOnlyList<ICoreUrlCollection> Sources => _sources;
+
         /// <inheritdoc />
         public Task<IReadOnlyList<IImage>> GetImagesAsync(int limit, int offset)
         {
             return Task.FromResult<IReadOnlyList<IImage>>(Images.Skip(offset).Take(limit).ToList());
+        }
+
+        /// <inheritdoc/>
+        public Task<IReadOnlyList<IUrl>> GetUrlsAsync(int limit, int offset)
+        {
+            return Task.FromResult<IReadOnlyList<IUrl>>(Urls.Skip(offset).Take(limit).ToList());
         }
 
         /// <inheritdoc />
@@ -272,6 +317,9 @@ namespace StrixMusic.Sdk.Data
 
         /// <inheritdoc />
         public bool Equals(ICoreGenreCollection other) => false;
+
+        /// <inheritdoc/>
+        public bool Equals(ICoreUrlCollection other) => false;
 
         /// <inheritdoc />
         public bool Equals(ICorePlaylistCollectionItem other) => false;

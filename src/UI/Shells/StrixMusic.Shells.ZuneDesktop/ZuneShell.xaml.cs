@@ -63,7 +63,6 @@ namespace StrixMusic.Shells.ZuneDesktop
 
                 if (service.ImplementationInstance is NotificationService notificationService)
                     SetupNotificationService(notificationService);
-
             }
 
             return base.InitServices(services);

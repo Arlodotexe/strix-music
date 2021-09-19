@@ -141,7 +141,7 @@
             </GridView.ItemContainerStyle>
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="abstractUI:AbstractDataListItemViewModel">
-                    <Grid ToolTipService.ToolTip="{Binding TooltipText, Mode=OneWay}" Width="150" Margin="15">
+                    <Grid ToolTipService.ToolTip="{Binding TooltipText, Mode=OneWay}" Width="125" Margin="5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
@@ -153,13 +153,14 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <Grid BorderBrush="White" BorderThickness="1" Height="150" Width="150" Grid.ColumnSpan="2">
+                        <Grid BorderBrush="White" BorderThickness="1" Height="125" Width="125" Grid.ColumnSpan="2">
                             <FontIcon Glyph="{Binding IconCode}" FontFamily="Segoe MDL2 Assets" FontSize="34" />
                             <FontIcon Visibility="{Binding IsAddItem, Converter={StaticResource BoolToVisibilityConverter}}" Glyph="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="34" />
                             <Image Source="{Binding ImageSource, Mode=OneWay}" />
                         </Grid>
 
-                        <TextBlock Text="{Binding Title, Mode=OneWay}" FontSize="16" Grid.Row="1" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Title, Mode=OneWay}" FontSize="16" Grid.Row="1" TextTrimming="CharacterEllipsis"
+                                   Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Title), Mode=OneWay}" />
 
                         <Border Visibility="{Binding Parent.IsUserEditingEnabled, Converter={StaticResource BoolToVisibilityConverter}}">
                             <Button Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" VerticalAlignment="Top"
@@ -176,6 +177,7 @@
 
                         <TextBlock x:Name="SubtitleTextBlock" Grid.Row="2"  Grid.ColumnSpan="2"
                                        Text="{Binding Subtitle}"
+                                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Subtitle), Mode=OneWay}"
                                        FontSize="12" FontWeight="SemiLight" Opacity="0.5" TextTrimming="CharacterEllipsis" />
                     </Grid>
                 </DataTemplate>
@@ -185,7 +187,8 @@
 
     <DataTemplate x:Key="DefaultAbstractDataListTemplate" x:DataType="abstractUI:AbstractDataListViewModel">
         <StackPanel>
-            <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" />
+            <TextBlock Text="{x:Bind Title, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUITitleFontSize}" ToolTipService.ToolTip="{x:Bind TooltipText, Mode=OneWay}" 
+                       Visibility="{x:Bind convertvis:NotNullOrEmptyToVisibilityConverter.Convert(Title), Mode=OneWay}"/>
 
             <TextBlock Text="{x:Bind Subtitle, Mode=OneWay}" FontSize="{StaticResource DefaultAbstractUISubtitleFontSize}"
                        FontWeight="{StaticResource DefaultAbstractUISubtitleFontWeight}"

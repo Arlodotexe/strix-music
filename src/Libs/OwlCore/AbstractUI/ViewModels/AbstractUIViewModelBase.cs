@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using OwlCore.AbstractUI.Models;
 
@@ -8,7 +7,6 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// Base view model for all AbstractUI elements.
     /// </summary>
-    [Bindable(true)]
     public class AbstractUIViewModelBase : ObservableObject, IDisposable
     {
         /// <summary>
@@ -17,6 +15,12 @@ namespace OwlCore.AbstractUI.ViewModels
         /// <param name="model"></param>
         public AbstractUIViewModelBase(AbstractUIBase model)
         {
+            if (model.ImagePath != null)
+            {
+                //TODO: Check for a valid image.
+                ImageSourceIsValid = true;
+            }
+
             Model = model;
             AttachEvents();
         }
@@ -113,32 +117,10 @@ namespace OwlCore.AbstractUI.ViewModels
         /// </summary>
         public bool ImageSourceIsValid { get; set; }
 
-        private void ReleaseUnmanagedResources()
+        /// <inheritdoc />
+        public virtual void Dispose()
         {
-            // Release unmanaged resources here
             DetachEvents();
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
-        {
-            ReleaseUnmanagedResources();
-            if (disposing)
-            {
-            }
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
-        ~AbstractUIViewModelBase()
-        {
-            Dispose(false);
         }
     }
 }

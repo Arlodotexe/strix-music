@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.AbstractUI.Models;
@@ -10,7 +9,6 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// A ViewModel for the <see cref="AbstractTextBox"/>.
     /// </summary>
-    [Bindable(true)]
     public class AbstractTextBoxViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractTextBox _model;
@@ -54,13 +52,13 @@ namespace OwlCore.AbstractUI.ViewModels
         {
             if (await Flow.Debounce(_id, TimeSpan.FromSeconds(2)))
             {
-                _model.SaveValue(Value);
+                _model.Value = Value;
             }
         }
 
         private void HandleValueChanged()
         {
-            SaveValue().FireAndForget();
+            SaveValue().Forget();
         }
 
         /// <summary>

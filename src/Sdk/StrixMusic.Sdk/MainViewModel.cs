@@ -27,7 +27,6 @@ namespace StrixMusic.Sdk
     /// <summary>
     /// The MainViewModel used throughout the app
     /// </summary>
-    [Bindable(true)]
     public partial class MainViewModel : ObservableRecipient, IAppCore, IAsyncInit
     {
         private readonly Dictionary<string, CancellationTokenSource> _coreInitCancellationTokens = new Dictionary<string, CancellationTokenSource>();
@@ -51,7 +50,7 @@ namespace StrixMusic.Sdk
             Notifications = new NotificationsViewModel(notificationsService);
 
             Cores = new ObservableCollection<CoreViewModel>();
-            Users = new ObservableCollection<UserProfileViewModel>();
+            Users = new ObservableCollection<UserViewModel>();
             PlaybackQueue = new ObservableCollection<TrackViewModel>();
 
             AttachEvents();
@@ -106,15 +105,13 @@ namespace StrixMusic.Sdk
                 return;
 
             Guard.IsNotNull(_mergedLibrary, nameof(_mergedLibrary));
-            Guard.IsNotNull(_mergedDiscoverables, nameof(_mergedLibrary));
-            Guard.IsNotNull(_mergedRecentlyPlayed, nameof(_mergedRecentlyPlayed));
 
             _mergedLibrary.Cast<IMergedMutable<ICoreLibrary>>().AddSource(core.Library);
 
-            if (core.Discoverables != null)
+            if (core.Discoverables != null && _mergedDiscoverables != null)
                 _mergedDiscoverables.Cast<IMergedMutable<ICoreDiscoverables>>().AddSource(core.Discoverables);
 
-            if (core.RecentlyPlayed != null)
+            if (core.RecentlyPlayed != null && _mergedRecentlyPlayed != null)
                 _mergedRecentlyPlayed.Cast<IMergedMutable<ICoreRecentlyPlayed>>().AddSource(core.RecentlyPlayed);
 
             await Threading.OnPrimaryThread(() =>
@@ -125,6 +122,9 @@ namespace StrixMusic.Sdk
                     Devices.Add(deviceVm);
                     AttachEvents(deviceVm);
                 }
+
+                if (core.User != null)
+                    Users.Add(new UserViewModel(new CoreUserProxy(core.User)));
             });
 
             AttachEvents(core);
@@ -201,6 +201,8 @@ namespace StrixMusic.Sdk
                 LocalDevice,
             };
 
+            Users = new ObservableCollection<UserViewModel>(enumerable.Select(x => x.User).PruneNull().Select(x => new UserViewModel(new CoreUserProxy(x))));
+
             OnPropertyChanged(nameof(Devices));
 
             foreach (var device in Devices)
@@ -238,10 +240,15 @@ namespace StrixMusic.Sdk
             return core;
         }
 
-        private async Task InitCore(ICore core)
+        /// <summary>
+        /// Initializes and sets up the given core, triggering UI as needed.
+        /// </summary>
+        /// <param name="core">The core to initialize</param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        public async Task InitCore(ICore core)
         {
             var setupCancellationTokenSource = new CancellationTokenSource();
-            _coreInitCancellationTokens.Add(core.InstanceId, setupCancellationTokenSource);
+            _coreInitCancellationTokens.GetOrAdd(core.InstanceId, setupCancellationTokenSource);
 
             // If the core requests setup, cancel the init task.
             // Then wait for the core state to change to Configured.
@@ -258,61 +265,48 @@ namespace StrixMusic.Sdk
             {
             }
 
+            _coreInitCancellationTokens.Remove(core.InstanceId);
+
             if (setupCancellationTokenSource.IsCancellationRequested)
             {
-                await HandleStateChanged(setupCancellationTokenSource);
-
-                async Task HandleStateChanged(CancellationTokenSource cancellationToken)
+                while (true)
                 {
-                    while (true)
+                    // Wait for the configuration to complete.
+                    var timeAllowedForUISetup = TimeSpan.FromMinutes(10);
+                    var updatedState = await Flow.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, timeAllowedForUISetup);
+
+                    // Timed out or cancelled.
+                    if (updatedState is null || updatedState.Value.Result == CoreState.Unloaded)
                     {
-                        // Wait for the configuration to complete.
-                        var timeAllowedForUISetup = TimeSpan.FromMinutes(10);
-                        var updatedState = await Threading.EventAsTask<CoreState>(cb => core.CoreStateChanged += cb, cb => core.CoreStateChanged -= cb, timeAllowedForUISetup);
-
-                        // Timed out or cancelled.
-                        if (updatedState is null || updatedState.Value.Result == CoreState.Unloaded)
-                        {
-                            cancellationToken.Dispose();
-                            await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);
-                            return;
-                        }
-
-                        if (updatedState.Value.Result == CoreState.NeedsSetup)
-                        {
-                            // If the user needs to set up the core, wait for another state change.
-                            // Displaying the config UI is handled in the relevant ViewModel.
-                            continue;
-                        }
-
-                        if (updatedState.Value.Result == CoreState.Configured)
-                        {
-                            _coreInitCancellationTokens.Remove(core.InstanceId);
-                            await InitCore(core);
-                        }
-
+                        setupCancellationTokenSource.Dispose();
+                        await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);
                         break;
                     }
+
+                    if (updatedState.Value.Result == CoreState.NeedsSetup)
+                    {
+                        // If the user needs to set up the core, wait for another state change.
+                        // Displaying the config UI is handled in the relevant ViewModel.
+                        continue;
+                    }
+
+                    if (updatedState.Value.Result == CoreState.Configured)
+                    {
+                        await InitCore(core);
+                    }
+
+                    break;
                 }
-
-                setupCancellationTokenSource.Dispose();
-                return;
             }
-
-            await Threading.OnPrimaryThread(() =>
-            {
-                if (core.User != null)
-                    Users.Add(new UserViewModel(new CoreUserProxy(core.User)));
-
-                foreach (var device in core.Devices)
-                    Devices.Add(new DeviceViewModel(new CoreDeviceProxy(device)));
-            });
 
             core.CoreStateChanged -= OnCoreStateChanged_HandleConfigRequest;
 
             setupCancellationTokenSource.Dispose();
         }
 
+        /// <summary>
+        /// Method fires if core configuration is requested during InitAsync.
+        /// </summary>
         private void OnCoreStateChanged_HandleConfigRequest(object sender, CoreState e)
         {
             if (!(sender is ICore core))
@@ -375,7 +369,7 @@ namespace StrixMusic.Sdk
         /// <summary>
         /// A consolidated list of all users in the app.
         /// </summary>
-        public ObservableCollection<UserProfileViewModel> Users { get; }
+        public ObservableCollection<UserViewModel> Users { get; private set; }
 
         /// <summary>
         /// All available devices.

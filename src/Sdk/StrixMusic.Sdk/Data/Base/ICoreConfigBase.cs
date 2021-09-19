@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Data.Base
         /// <summary>
         /// Abstract UI elements that will be presented to the user for Settings, About, Legal notices, Donation links, etc.
         /// </summary>
-        public IReadOnlyList<AbstractUIElementGroup> AbstractUIElements { get; }
+        public IReadOnlyList<AbstractUICollection> AbstractUIElements { get; }
 
         /// <summary>
         /// The player type supported by this core. <see cref="MediaPlayerType"/> for information on the different types.

@@ -7,7 +7,7 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.Uno.AbstractUI.Themes
 {
     /// <summary>
-    /// Default template for the <see cref="AbstractTextBox"/>
+    /// Default template for an <see cref="AbstractTextBox"/>.
     /// </summary>
     public sealed partial class AbstractTextBoxStyle : ResourceDictionary
     {

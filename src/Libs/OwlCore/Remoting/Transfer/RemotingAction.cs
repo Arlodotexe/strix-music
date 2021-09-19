@@ -1,7 +1,7 @@
 ﻿namespace OwlCore.Remoting.Transfer
 {
     /// <summary>
-    /// The action associated with a single <see cref="IRemoteMemberMessage"/>.
+    /// The action associated with a single <see cref="IRemoteMessage"/>.
     /// </summary>
     public enum RemotingAction
     {
@@ -21,7 +21,7 @@
         PropertyChange,
 
         /// <summary>
-        /// Indicates that the message delegates a <see cref="RemoteMethodProxy{TResult}"/>.
+        /// Indicates that the message delegates a <see cref="RemoteDataMessage"/>.
         /// </summary>
         RemoteDataProxy,
 
@@ -31,7 +31,7 @@
         ExceptionThrown,
 
         /// <summary>
-        /// Indicates that the message contains a custom remoting action. See <see cref="IRemoteMemberMessage.CustomActionName"/>.
+        /// Indicates that the message contains a custom remoting action. See <see cref="IRemoteMessage.CustomActionName"/>.
         /// </summary>
         Custom,
     }

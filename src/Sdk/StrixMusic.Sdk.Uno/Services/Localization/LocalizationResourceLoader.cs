@@ -1,4 +1,7 @@
-﻿using StrixMusic.Sdk.Services.Localization;
+﻿using Microsoft.Toolkit.Diagnostics;
+using StrixMusic.Sdk.Data;
+using StrixMusic.Sdk.Services.Localization;
+using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
 
@@ -14,6 +17,28 @@ namespace StrixMusic.Sdk.Uno.Services.Localization
         /// <inheritdoc/>
         public string this[string provider, string key] => _providers.ContainsKey(provider) ? _providers[provider].GetString(key) : "ResourceError";
 
+        /// <inheritdoc/>
+        public string LocalizeIfNullOrEmpty(string value, string provider, string key)
+        {
+            if (string.IsNullOrEmpty(value))
+                return this[provider, key];
+            else
+                return value;
+        }
+
+        /// <inheritdoc/>
+        public string LocalizeIfNullOrEmpty<T>(string value, T sender)
+        {
+            return sender switch
+            {
+                IAlbum _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownAlbum"),
+                IArtist _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownArtist"),
+
+                // Default to unknown name
+                _ => LocalizeIfNullOrEmpty(value, Sdk.Helpers.Constants.Localization.MusicResource, "UnknownName"),
+            };
+        }
+
         /// <summary>
         /// Registers a new <see cref="ResourceLoader"/> as a provider.
         /// </summary>
@@ -21,9 +46,7 @@ namespace StrixMusic.Sdk.Uno.Services.Localization
         public void RegisterProvider(string path)
         {
             if (_providers.ContainsKey(path))
-            {
                 return;
-            }
 
             var loader = ResourceLoader.GetForCurrentView(path);
             _providers.Add(path, loader);

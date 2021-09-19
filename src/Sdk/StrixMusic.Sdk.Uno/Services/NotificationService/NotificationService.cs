@@ -13,8 +13,8 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
     /// </summary>
     public class NotificationService : INotificationService
     {
-        private readonly List<Notification> _notifications;
-        private int _activeNotifications;
+        private readonly List<Notification> _pendingNotifications;
+        private readonly List<Notification> _activeNotifications;
 
         /// <inheritdoc cref="INotificationService.NotificationRaised" />
         public event EventHandler<Notification>? NotificationRaised;
@@ -37,7 +37,8 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// </summary>
         public NotificationService()
         {
-            _notifications = new List<Notification>();
+            _pendingNotifications = new List<Notification>();
+            _activeNotifications = new List<Notification>();
         }
 
         /// <inheritdoc cref="NotificationRaised"/>
@@ -55,28 +56,29 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         }
 
         /// <inheritdoc/>
-        public int MaxActiveNotifications { get; set; } = 1;
+        public int MaxActiveNotifications { get; set; } = 3;
 
         /// <inheritdoc/>
         public Notification RaiseNotification(string title, string message)
         {
-            string NewGuid() => Guid.NewGuid().ToString();
-            var eg = new AbstractUIElementGroup(NewGuid())
+            var id = Guid.NewGuid().ToString();
+            var elementGroup = new AbstractUICollection(id)
             {
                 Title = title,
                 Subtitle = message,
             };
-            return RaiseNotification(eg);
+
+            return RaiseNotification(elementGroup);
         }
 
         /// <inheritdoc/>
-        public Notification RaiseNotification(AbstractUIElementGroup elementGroup)
+        public Notification RaiseNotification(AbstractUICollection elementGroup)
         {
             var notification = new Notification(elementGroup);
 
             notification.Dismissed += Notification_Dismissed;
 
-            _notifications.Add(notification);
+            _pendingNotifications.Add(notification);
 
             FireIfReady();
             return notification;
@@ -86,19 +88,19 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         {
             if (sender is Notification notification)
             {
-                var index = _notifications.FindIndex(x => ReferenceEquals(x, notification));
+                var index = _activeNotifications.FindIndex(x => ReferenceEquals(x, notification));
 
                 if (index == -1)
                     return;
 
-                DismissNotification(index);
+                DismissNotificationInternal(index);
             }
         }
 
         /// <summary>
         /// Request that the notification margin be changed.
         /// </summary>
-        /// <param name="thickness"></param>
+        /// <param name="thickness">The margin to put around the notification panel.</param>
         public void ChangeNotificationMargins(Thickness thickness)
         {
             NotificationMarginChanged?.Invoke(this, thickness);
@@ -117,17 +119,17 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// <summary>
         /// Dismisses the top notification and raises the next notification.
         /// </summary>
-        public void DismissNotification(int? index = null)
+        public void DismissNotification(int? index = null) => DismissNotificationInternal(index);
+
+        private void DismissNotificationInternal(int? index = null)
         {
-            var targetNotification = _notifications.ElementAtOrDefault(index ?? _notifications.Count - 1);
+            var targetNotification = _activeNotifications.ElementAtOrDefault(index ?? _pendingNotifications.Count - 1);
 
             Guard.IsNotNull(targetNotification, nameof(targetNotification));
 
-            _notifications.Remove(targetNotification);
+            _activeNotifications.Remove(targetNotification);
             NotificationDismissed?.Invoke(this, targetNotification);
             targetNotification.Dismissed -= Notification_Dismissed;
-
-            _activeNotifications--;
 
             FireIfReady();
         }
@@ -137,14 +139,14 @@ namespace StrixMusic.Sdk.Uno.Services.NotificationService
         /// </summary>
         private void FireIfReady()
         {
-            if (_notifications.Count > 0 && _activeNotifications < MaxActiveNotifications)
+            if (_pendingNotifications.Count > 0 && _activeNotifications.Count < MaxActiveNotifications)
             {
-                var nextNotification = _notifications.FirstOrDefault(x => !x.IsDisplayed);
+                var nextNotification = _pendingNotifications.FirstOrDefault();
                 if (nextNotification == null)
                     return;
 
-                nextNotification.IsDisplayed = true;
-
+                _pendingNotifications.Remove(nextNotification);
+                _activeNotifications.Add(nextNotification);
                 NotificationRaised?.Invoke(this, nextNotification);
             }
         }

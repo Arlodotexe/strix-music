@@ -1,12 +1,15 @@
 ﻿using System;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Remoting;
+using OwlCore.Remoting.Attributes;
 
 namespace StrixMusic.Sdk.Services.Notifications
 {
     /// <summary>
     /// A Notification displayed by a Shell.
     /// </summary>
-    public class Notification
+    [RemoteOptions(RemotingDirection.Bidirectional)]
+    public sealed class Notification
     {
         /// <summary>
         /// Raised when the Notification is dismissed.
@@ -16,25 +19,21 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="Notification"/> class.
         /// </summary>
-        /// <param name="elementGroup">The <see cref="AbstractUIElementGroup"/> to display for the notification content.</param>
-        public Notification(AbstractUIElementGroup elementGroup)
+        /// <param name="abstractUIElementGroup">The <see cref="AbstractUICollection"/> to display for the notification content.</param>
+        public Notification(AbstractUICollection abstractUIElementGroup)
         {
-            AbstractUIElementGroup = elementGroup;
+            AbstractUICollection = abstractUIElementGroup;
         }
 
         /// <summary>
-        /// The <see cref="AbstractUIElementGroup"/> to be displayed for the notification.
+        /// The <see cref="OwlCore.AbstractUI.Models.AbstractUICollection"/> to be displayed for the notification.
         /// </summary>
-        public AbstractUIElementGroup AbstractUIElementGroup { get; }
+        public AbstractUICollection AbstractUICollection { get; }
 
         /// <summary>
-        /// If true, the notification is being displayed to the user.
+        /// Raises the <see cref="Dismissed"/> event.
         /// </summary>
-        internal bool IsDisplayed { get; set; }
-
-        /// <summary>
-        /// Raises the <see cref="Dismissed"/> event for the Core.
-        /// </summary>
+        [RemoteMethod]
         public void Dismiss()
         {
             Dismissed?.Invoke(this, EventArgs.Empty);

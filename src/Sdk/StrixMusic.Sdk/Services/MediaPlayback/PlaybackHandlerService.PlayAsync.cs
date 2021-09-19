@@ -87,10 +87,27 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         }
 
         /// <inheritdoc />
+        public async Task PlayAsync(IPlaylistCollectionViewModel playlistCollection, IPlayableBase context)
+        {
+            await playlistCollection.InitAsync();
+
+            var firstPlaylist = playlistCollection.Playlists.FirstOrDefault();
+            if (firstPlaylist is null)
+            {
+                var apiPlaylists = await playlistCollection.GetPlaylistItemsAsync(1, 0);
+                Guard.HasSizeGreaterThan(apiPlaylists, 0, nameof(apiPlaylists));
+
+                firstPlaylist = apiPlaylists[0];
+            }
+
+            await PlayAsync(firstPlaylist, playlistCollection, context);
+        }
+
+        /// <inheritdoc />
         public async Task PlayAsync(IAlbumCollectionViewModel albumCollection, IPlayableBase context)
         {
             await albumCollection.InitAsync();
-
+            
             var firstAlbum = albumCollection.Albums.FirstOrDefault();
             if (firstAlbum is null)
             {
@@ -121,6 +138,29 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             ClearNext();
 
             var trackInfo = await AddAlbumCollectionToQueue(albumCollectionItem, albumCollection);
+            await PlayFromNext(0);
+            _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
+        }
+
+        /// <inheritdoc />
+        public async Task PlayAsync(IPlaylistCollectionItem playlistCollectionItem, IPlaylistCollectionViewModel playlistCollection, IPlayableBase context)
+        {
+            Guard.IsNotNull(_strixDevice, nameof(_strixDevice));
+
+            await playlistCollection.InitAsync();
+
+            var canPlay = await PrepareToPlayCollection();
+            if (!canPlay)
+            {
+                await playlistCollection.PlayPlaylistCollectionAsync(playlistCollectionItem);
+                return;
+            }
+
+            ClearPrevious();
+            ClearNext();
+
+            var trackInfo = await AddPlaylistCollectionToQueue(playlistCollectionItem, playlistCollection);
+
             await PlayFromNext(0);
             _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
         }
@@ -267,7 +307,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             return trackPlaybackIndex;
         }
 
-
         /// <summary>
         /// Adds all albums in the given collection to the queue.
         /// </summary>
@@ -290,7 +329,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     await albumVm.InitAsync();
 
                     // We expect an album to have at least 1 track.
-                    Guard.IsGreaterThan(album.TotalTracksCount, 0, nameof(album.TotalTracksCount));
+                    Guard.IsGreaterThan(album.TotalTrackCount, 0, nameof(album.TotalTrackCount));
 
                     var firstTrack = albumVm.Tracks[0].Model;
 
@@ -353,7 +392,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     await artistVm.InitAsync();
 
                     // We expect an artist to have at least 1 track.
-                    Guard.IsGreaterThan(artist.TotalTracksCount, 0, nameof(artist.TotalTracksCount));
+                    Guard.IsGreaterThan(artist.TotalTrackCount, 0, nameof(artist.TotalTrackCount));
 
                     var firstTrack = artistVm.Tracks[0].Model;
 
@@ -385,6 +424,69 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     await artistColVm.InitAsync();
 
                     _ = await AddArtistCollectionToQueue(null, artistColVm);
+                }
+            }
+
+            Guard.IsTrue(foundItemTarget, nameof(foundItemTarget));
+            Guard.IsNotNull(playbackTrack, nameof(playbackTrack));
+
+            return (playbackTrack, itemIndex);
+        }
+
+        /// <summary>
+        /// Adds all playlists in the given collection to the queue.
+        /// </summary>
+        /// <returns>The instance and index of the first playable track in the selected <paramref name="playlistCollectionItem"/> items within the entire <paramref name="playlistCollection"/>.</returns>
+        private async Task<(ITrack PlaybackTrack, int Index)> AddPlaylistCollectionToQueue(IPlaylistCollectionItem? playlistCollectionItem, IPlaylistCollectionViewModel playlistCollection)
+        {
+            await playlistCollection.InitAsync();
+
+            var itemIndex = 0;
+            ITrack? playbackTrack = null;
+            var foundItemTarget = false;
+            var offset = 0;
+
+            foreach (var playlistItem in playlistCollection.Playlists)
+            {
+                if (playlistItem is IPlaylist playlist)
+                {
+                    var playlistVm = (PlaylistViewModel)playlist;
+
+                    await playlistVm.InitAsync();
+
+                    // We expect an playlist to have at least 1 track.
+                    Guard.IsGreaterThan(playlist.TotalTrackCount, 0, nameof(playlist.TotalTrackCount));
+
+                    var firstTrack = playlistVm.Tracks[0].Model;
+
+                    if (playlistItem.Id == playlistCollectionItem?.Id && !foundItemTarget)
+                    {
+                        // Tracks are added to the queue of previous items until we reach the item the user wants to play.
+                        itemIndex = _prevItems.Count;
+                        foundItemTarget = true;
+
+                        playbackTrack = firstTrack;
+                    }
+
+                    if (foundItemTarget)
+                    {
+                        _ = await AddTrackCollectionToQueue(firstTrack, playlistVm, offset,
+                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                        offset = _nextItems.Count;
+                    }
+                    else
+                    {
+                        _ = await AddTrackCollectionToQueue(firstTrack, playlistVm,
+                            foundItemTarget ? AddTrackPushTarget.AllNext : AddTrackPushTarget.AllPrevious);
+                    }
+                }
+
+                if (playlistItem is IPlaylistCollection playlistCol)
+                {
+                    var playlistColVm = (PlaylistCollectionViewModel)playlistCol;
+                    await playlistColVm.InitAsync();
+
+                    _ = await AddPlaylistCollectionToQueue(null, playlistColVm);
                 }
             }
 

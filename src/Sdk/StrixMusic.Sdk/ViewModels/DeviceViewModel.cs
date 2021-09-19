@@ -99,9 +99,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _nowPlaying = new TrackViewModel(e);
 
-            if (_nowPlaying.PopulateMoreArtistsCommand?.CanExecute(1) ?? false)
-                _ = _nowPlaying.PopulateMoreArtistsCommand?.ExecuteAsync(1);
-
             OnPropertyChanged(nameof(NowPlaying));
         });
 
@@ -131,7 +128,7 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="IDevice.NowPlaying"/>
         public TrackViewModel? NowPlaying => _nowPlaying;
 
-        // TODO: Change this to ICoreTrack and create CoreTrackViewModel. A device only plays a track from one source at a time.
+#warning TODO: Change this to ICoreTrack and create CoreTrackViewModel. A device only plays a track from one source at a time.
         /// <inheritdoc />
         ITrack? IDevice.NowPlaying => _nowPlaying;
 

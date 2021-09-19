@@ -41,7 +41,7 @@
     <None Remove="Styles\ArtistViewStyle.xaml" />
     <None Remove="Styles\MediaSlider.xaml" />
     <None Remove="Styles\HomeViewStyle.xaml" />
-    <None Remove="Styles\NotificationAbstractUIGroupStyle.xaml" />
+    <None Remove="Styles\NotificationAbstractUICollectionStyle.xaml" />
     <None Remove="Styles\NowPlayingBarStyle.xaml" />
     <None Remove="Styles\NowPlayingViewStyle.xaml" />
     <None Remove="Styles\NowPlaying\MediaInfoStyle.xaml" />
@@ -66,7 +66,7 @@
     <UpToDateCheckInput Remove="Styles\ArtistViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\MediaSlider.xaml" />
     <UpToDateCheckInput Remove="Styles\HomeViewStyle.xaml" />
-    <UpToDateCheckInput Remove="Styles\NotificationAbstractUIGroupStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\NotificationAbstractUICollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingBarStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlayingViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\NowPlaying\MediaInfoStyle.xaml" />
@@ -79,6 +79,7 @@
     <UpToDateCheckInput Remove="Styles\SafeImageStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SearchViewStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\SettingsViewStyle.xaml" />
+    <UpToDateCheckInput Remove="Styles\Shells\NotificationAbstractUICollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\TrackCollectionStyle.xaml" />
     <UpToDateCheckInput Remove="Styles\TrackItemStyle.xaml" />
   </ItemGroup>
@@ -92,6 +93,9 @@
     </Compile>
     <Compile Update="DefaultShell.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\Shells\NotificationAbstractUICollectionStyle.xaml.cs">
+      <DependentUpon>NotificationAbstractUICollectionStyle.xaml</DependentUpon>
     </Compile>
     <Compile Update="Styles\Views\Secondary\PlaylistViewStyle.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>

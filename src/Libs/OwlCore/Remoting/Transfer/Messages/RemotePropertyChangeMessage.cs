@@ -3,7 +3,7 @@
     /// <summary>
     /// Holds data to communicate a method call.
     /// </summary>
-    public class RemotePropertyChangeMessage : IRemoteMemberMessage
+    public class RemotePropertyChangeMessage : RemoteMessageBase, IRemoteMemberMessage
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteMethodCallMessage"/>.
@@ -18,13 +18,24 @@
             TargetMemberSignature = targetMemberSignature;
             NewValue = newValue;
             OldValue = oldValue;
+
+            Action = RemotingAction.PropertyChange;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RemoteMethodCallMessage"/>.
+        /// </summary>
+        /// <remarks>Should only be used by deserializers.</remarks>
+        public RemotePropertyChangeMessage()
+        {
+            MemberRemoteId = string.Empty;
+            TargetMemberSignature = string.Empty;
+
+            Action = RemotingAction.PropertyChange;
         }
 
         /// <inheritdoc />
         public string MemberRemoteId { get; set; }
-
-        /// <inheritdoc />
-        public RemotingAction Action { get; } = RemotingAction.PropertyChange;
 
         /// <inheritdoc />
         public string TargetMemberSignature { get; set; }
@@ -38,8 +49,5 @@
         /// The new value being set to the backing field.
         /// </summary>
         public object? NewValue { get; set; }
-
-        /// <inheritdoc/>
-        public string? CustomActionName { get; set; }
     }
 }

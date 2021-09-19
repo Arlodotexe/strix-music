@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
 using StrixMusic.Sdk.Data;
@@ -18,17 +22,48 @@ namespace StrixMusic.Sdk.ViewModels.Helpers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task TrackCollection(ITrackCollectionViewModel trackCollection)
         {
-            // TODO Save/get to collection cache. All tracks collections should be cached to disk.
-            if (trackCollection.Tracks.Count < trackCollection.TotalTracksCount)
+            while (trackCollection.Tracks.Count < trackCollection.TotalTrackCount)
             {
-                var allTracks = await APIs.GetAllItemsAsync<ITrack>(trackCollection.TotalTracksCount, async offset => await trackCollection.GetTracksAsync(trackCollection.TotalTracksCount, offset));
+                await trackCollection.PopulateMoreTracksAsync(trackCollection.TotalTrackCount);
+            }
+        }
 
-                foreach (var track in allTracks)
-                {
-                    Guard.IsAssignableToType(track, typeof(MergedTrack), nameof(track));
+        /// <summary>
+        /// Initialize a album collection view model.
+        /// </summary>
+        /// <param name="albumCollection">The collection to initialize.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task AlbumCollection(IAlbumCollectionViewModel albumCollection)
+        {
+            while (albumCollection.Albums.Count < albumCollection.TotalAlbumItemsCount)
+            {
+                await albumCollection.PopulateMoreAlbumsAsync(albumCollection.TotalAlbumItemsCount);
+            }
+        }
 
-                    trackCollection.Tracks.Add(new TrackViewModel(track));
-                }
+        /// <summary>
+        /// Initialize a artist collection view model.
+        /// </summary>
+        /// <param name="artistCollection">The collection to initialize.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task ArtistCollection(IArtistCollectionViewModel artistCollection)
+        {
+            while (artistCollection.Artists.Count < artistCollection.TotalArtistItemsCount)
+            {
+                await artistCollection.PopulateMoreArtistsAsync(artistCollection.TotalArtistItemsCount);
+            }
+        }
+
+        /// <summary>
+        /// Initialize a playlists collection view model.
+        /// </summary>
+        /// <param name="playlistCollection">The collection to initialize.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task PlaylistCollection(IPlaylistCollectionViewModel playlistCollection)
+        {
+            while (playlistCollection.Playlists.Count < playlistCollection.TotalPlaylistItemsCount)
+            {
+                await playlistCollection.PopulateMorePlaylistsAsync(playlistCollection.TotalPlaylistItemsCount);
             }
         }
     }

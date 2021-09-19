@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Data
     /// <inheritdoc cref="ITrackCollectionBase"/>
     /// <remarks>This interface should be implemented by a core.</remarks>
     [SuppressMessage("ReSharper", "PossibleInterfaceMemberAmbiguity", Justification = "Ambiguity is handled")]
-    public interface ITrackCollection : ITrackCollectionBase, IImageCollection, ISdkMember, IMerged<ICoreTrackCollection>
+    public interface ITrackCollection : ITrackCollectionBase, IImageCollection, IUrlCollection, ISdkMember, IMerged<ICoreTrackCollection>
     {
         /// <summary>
         /// Attempts to play a specific item in the track collection. Restarts playback if already playing.
@@ -38,6 +38,6 @@ namespace StrixMusic.Sdk.Data
         /// <summary>
         /// Fires when the items in the backend are changed by something external.
         /// </summary>
-        event CollectionChangedEventHandler<ITrack>? TrackItemsChanged;
+        event CollectionChangedEventHandler<ITrack>? TracksChanged;
     }
 }

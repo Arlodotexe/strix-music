@@ -25,7 +25,7 @@ namespace OwlCore.Uno.AbstractUI.Themes
         /// <inheritdoc />
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            if (item is AbstractMultiChoiceUIElementViewModel viewModel)
+            if (item is AbstractMultiChoiceViewModel viewModel)
             {
                 return viewModel.PreferredDisplayMode switch
                 {

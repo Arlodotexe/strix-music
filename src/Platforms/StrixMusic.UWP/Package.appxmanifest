@@ -10,13 +10,13 @@
 
   <Identity
     Name="89ac1131-5215-4f43-b5ac-b4dfae1366f6"
-    Publisher="CN=avid2"
+    Publisher="CN=arlog"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="5f2553ae-cb74-4dd8-8928-5d654dbf9b75" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>StrixMusic</DisplayName>
+    <DisplayName>Strix Music</DisplayName>
     <PublisherDisplayName>StrixMusic</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>

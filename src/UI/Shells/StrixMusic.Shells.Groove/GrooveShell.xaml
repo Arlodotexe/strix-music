@@ -248,7 +248,7 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <abstractUIControls:AbstractUIGroupPresenter DataContext="{x:Bind AbstractUINotificationViewModel}" Style="{StaticResource GrooveNotificationAbstractUIGroupStyle}"/>
+                        <abstractUIControls:AbstractUICollectionPresenter DataContext="{x:Bind AbstractUINotificationViewModel}" Style="{StaticResource GrooveNotificationAbstractUICollectionStyle}"/>
 
                         <Button CornerRadius="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="8,0"
                                 Grid.Column="1" Width="40" Height="40" Background="Transparent" Padding="0"

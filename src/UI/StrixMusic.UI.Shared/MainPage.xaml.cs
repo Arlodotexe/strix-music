@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
 using StrixMusic.Sdk;
+using StrixMusic.Sdk.Services;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Notifications;
 using StrixMusic.Sdk.Services.Settings;
@@ -17,6 +14,10 @@ using StrixMusic.Sdk.Uno.Models;
 using StrixMusic.Sdk.Uno.Services;
 using StrixMusic.Sdk.Uno.Services.Localization;
 using StrixMusic.Sdk.Uno.Services.NotificationService;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -73,8 +74,8 @@ namespace StrixMusic.Shared
             var mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
             var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             var localizationService = new LocalizationResourceLoader();
-            localizationService.RegisterProvider(Helpers.Constants.Localization.CommonResource);
-            localizationService.RegisterProvider(Helpers.Constants.Localization.MusicResource);
+            localizationService.RegisterProvider(Sdk.Helpers.Constants.Localization.CommonResource);
+            localizationService.RegisterProvider(Sdk.Helpers.Constants.Localization.MusicResource);
 
             services.AddSingleton<INavigationService<Control>>(new NavigationService<Control>());
             services.AddSingleton(localizationService);
@@ -121,6 +122,16 @@ namespace StrixMusic.Shared
         private void AttachEvents()
         {
             Ioc.Default.GetRequiredService<ISettingsService>().SettingChanged += SettingsService_SettingChanged;
+
+#warning Remove me when live core editing is stable.
+            Ioc.Default.GetRequiredService<ICoreManagementService>().CoreInstanceRegistered += ShowEditCoresWarning;
+            Ioc.Default.GetRequiredService<ICoreManagementService>().CoreInstanceUnregistered += ShowEditCoresWarning;
+
+            void ShowEditCoresWarning(object sender, CoreInstanceEventArgs args)
+            {
+                Ioc.Default.GetRequiredService<INotificationService>().RaiseNotification("Restart recommended",
+                    "Editing cores while the app is running is not stable yet");
+            };
         }
 
         private void DetachEvents()

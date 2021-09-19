@@ -1,15 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using StrixMusic.Helpers;
 using StrixMusic.Sdk;
 using StrixMusic.Sdk.Data.Core;
+using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.MediaPlayback.LocalDevice;
 using StrixMusic.Sdk.Services;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.Services.Navigation;
 using StrixMusic.Sdk.Services.Notifications;
@@ -24,10 +25,10 @@ using StrixMusic.Sdk.Uno.Services.NotificationService;
 using StrixMusic.Shared.Services;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
@@ -106,6 +107,8 @@ namespace StrixMusic.Shared
 
         private async void AppLoadingView_OnLoaded(object sender, RoutedEventArgs e)
         {
+            PrereleaseNoticeContainer.Visibility = Visibility.Collapsed;
+
             await InitializeAssemblies();
             await InitializeServices();
             await InitializeInstanceRegistry();
@@ -201,9 +204,7 @@ namespace StrixMusic.Shared
         {
             Guard.IsNotNull(_settingsService, nameof(_settingsService));
 
-            // TODO: IMPORTANT
-            // Need to rename all core namespaces to StrixMusic.Cores.Something, and change the below when done. #723
-            const string shellAssemblyRegex = @"^(?:StrixMusic\.Core\.)(\w{3,})[^.]";
+            const string coreAssemblyRegex = @"^(?:StrixMusic\.Cores\.)(\w{3,})[^.]";
             var coreRegistryData = new List<CoreAssemblyInfo>();
 
             foreach (Assembly assembly in assemblies)
@@ -218,7 +219,7 @@ namespace StrixMusic.Shared
                 Guard.IsNotNullOrWhiteSpace(coreAttribute.CoreType.AssemblyQualifiedName, nameof(coreAttribute.CoreType.AssemblyQualifiedName));
 
                 // Check if the namespace is for a core.
-                var match = Regex.Match(coreAttribute.CoreType.Namespace, shellAssemblyRegex);
+                var match = Regex.Match(coreAttribute.CoreType.Namespace, coreAssemblyRegex);
                 if (!match.Success)
                     continue;
 
@@ -305,6 +306,7 @@ namespace StrixMusic.Shared
 
             _localizationService.RegisterProvider(Constants.Localization.SuperShellResource);
             _localizationService.RegisterProvider(Constants.Localization.CommonResource);
+            _localizationService.RegisterProvider(Constants.Localization.TimeResource);
             _localizationService.RegisterProvider(Constants.Localization.MusicResource);
 
             // TODO: Add debug boot mode.
@@ -320,7 +322,7 @@ namespace StrixMusic.Shared
 
             var coreManagementService = new CoreManagementService(_settingsService);
 
-            services.AddSingleton(_localizationService);
+            services.AddSingleton<ILocalizationService>(_localizationService);
             services.AddSingleton<ITextStorageService>(_textStorageService);
             services.AddSingleton<ISettingsService>(_settingsService);
             services.AddSingleton<CacheServiceBase>(cacheFileSystemService);
@@ -367,10 +369,10 @@ namespace StrixMusic.Shared
             var notifService = Ioc.Default.GetRequiredService<INotificationService>();
 
             var doneButton = new AbstractButton($"{nameof(AppLoadingView)}.OOBEFinishedButton", "Done", null, AbstractButtonType.Confirm);
-            var notification = notifService.RaiseNotification(new AbstractUIElementGroup($"{nameof(AppLoadingView)}.OOBEElementGroup", PreferredOrientation.Horizontal)
+            var notification = notifService.RaiseNotification(new AbstractUICollection($"{nameof(AppLoadingView)}.OOBEElementGroup", PreferredOrientation.Horizontal)
             {
                 Title = "First time?",
-                Subtitle = "Set up some music services to get started.",
+                Subtitle = "Set up your skins and services before proceeding. A proper OOBE will come later.",
                 Items = new List<AbstractUIElement>()
                 {
                     doneButton,
@@ -381,7 +383,25 @@ namespace StrixMusic.Shared
             CurrentWindow.NavigationService.NavigateTo(typeof(SuperShell), true);
 
             // TODO Temp, not great. Need a proper flow here.
-            await Threading.EventAsTask(x => doneButton.Clicked += x, x => doneButton.Clicked -= x, TimeSpan.FromDays(1));
+            var setupFinishedSemaphore = new SemaphoreSlim(0, 1);
+
+            notification.Dismissed += OnNotificationDismissed;
+            doneButton.Clicked += OnDoneButtonClicked;
+
+            void OnNotificationDismissed(object sender, EventArgs e)
+            {
+                setupFinishedSemaphore.Release();
+            }
+
+            void OnDoneButtonClicked(object sender, EventArgs e)
+            {
+                setupFinishedSemaphore.Release();
+            }
+
+            await setupFinishedSemaphore.WaitAsync();
+
+            notification.Dismissed -= OnNotificationDismissed;
+            doneButton.Clicked -= OnDoneButtonClicked;
 
             notification.Dismiss();
         }

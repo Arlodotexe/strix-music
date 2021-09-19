@@ -73,6 +73,15 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         Task PlayAsync(IAlbumCollectionItem albumCollectionItem, IAlbumCollectionViewModel albumCollection, IPlayableBase context);
 
         /// <summary>
+        /// Loads the given playlist collection into the play queue and plays the given track.
+        /// </summary>
+        /// <param name="playlistCollectionItem">The track to play.</param>
+        /// <param name="playlistCollection">The playlists to use in the queue.</param>
+        /// <param name="context">The playback context.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayAsync(IPlaylistCollectionItem playlistCollectionItem, IPlaylistCollectionViewModel playlistCollection, IPlayableBase context);
+
+        /// <summary>
         /// Loads the given track collection into the play queue and plays the first track.
         /// </summary>
         /// <param name="context">The playback context.</param>
@@ -89,14 +98,21 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         Task PlayAsync(IArtistCollectionViewModel artistCollection, IPlayableBase context);
 
         /// <summary>
+        /// Loads the given playlist collection into the play queue and plays the given track.
+        /// </summary>
+        /// <param name="playlistCollection">The playlist collection to play.</param>
+        /// <param name="context">The playback context.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PlayAsync(IPlaylistCollectionViewModel playlistCollection, IPlayableBase context);
+
+        /// <summary>
         /// Loads the given track collection into the play queue and plays the first track.
         /// </summary>
         /// <param name="context">The playback context.</param>
         /// <param name="artistCollectionItem">The album item to be played.</param>
         /// <param name="artistCollection">The album collection to play.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        Task PlayAsync(IArtistCollectionItem artistCollectionItem, IArtistCollectionViewModel artistCollection,
-            IPlayableBase context);
+        Task PlayAsync(IArtistCollectionItem artistCollectionItem, IArtistCollectionViewModel artistCollection, IPlayableBase context);
 
         /// <summary>
         /// Plays a specific media from <see cref="NextItems"/>.
@@ -195,7 +211,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <summary>
         /// Fires when the <see cref="CurrentItem"/> is changed.
         /// </summary>
-        event EventHandler<IMediaSourceConfig>? CurrentItemChanged;
+        event EventHandler<IMediaSourceConfig?>? CurrentItemChanged;
 
         /// <summary>
         /// Raised when a quantum of data is processed. 

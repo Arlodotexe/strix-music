@@ -7,17 +7,12 @@ namespace StrixMusic.Sdk.Data.Base
     /// <summary>
     /// Represents an item that can be played.
     /// </summary>
-    public interface IPlayableBase : IImageCollectionBase, IAsyncDisposable
+    public interface IPlayableBase : IImageCollectionBase, IUrlCollectionBase, IAsyncDisposable
     {
         /// <summary>
         /// The ID of the playable item.
         /// </summary>
         string Id { get; }
-
-        /// <summary>
-        /// An external link related to the item.
-        /// </summary>
-        Uri? Url { get; }
 
         /// <summary>
         /// Name of the playable item.
@@ -93,11 +88,6 @@ namespace StrixMusic.Sdk.Data.Base
         /// Raised when <see cref="Description"/> changes.
         /// </summary>
         event EventHandler<string?>? DescriptionChanged;
-
-        /// <summary>
-        /// Raised when <see cref="Url"/> changes.
-        /// </summary>
-        event EventHandler<Uri?>? UrlChanged;
 
         /// <summary>
         /// Raised when <see cref="Duration"/> changes;

@@ -11,7 +11,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// <summary>
         /// The maximum number of notification that will be raised at once. Dismiss a notification to show remaining notifications in the queue.
         /// </summary>
-        public int MaxActiveNotifications { get; set; }
+        public int MaxActiveNotifications { get; }
 
         /// <summary>
         /// Enqueue a notification for the Shell to display.
@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.Services.Notifications
         /// </summary>
         /// <returns>The created notification.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1030:Use events where appropriate", Justification = "Method raises event")]
-        Notification RaiseNotification(AbstractUIElementGroup elementGroup);
+        Notification RaiseNotification(AbstractUICollection elementGroup);
 
         /// <summary>
         /// Raised when a new notification needs to be displayed.

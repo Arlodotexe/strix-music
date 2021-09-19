@@ -48,7 +48,7 @@ namespace StrixMusic.Sdk.Uno.Controls.Collections
         protected override void CheckAndToggleEmpty()
         {
             if (!ViewModel.PopulateMoreTracksCommand.IsRunning &&
-                ViewModel.TotalTracksCount == 0)
+                ViewModel.TotalTrackCount == 0)
                 
             SetEmptyVisibility(Visibility.Visible);
         }

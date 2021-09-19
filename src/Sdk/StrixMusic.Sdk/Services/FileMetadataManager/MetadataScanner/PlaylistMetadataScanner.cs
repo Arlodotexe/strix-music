@@ -97,6 +97,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <returns>An <see cref="IEnumerable{PlaylistMetadata}"/> with playlist data linked to the given <paramref name="fileMetadata"/>.</returns>
         public async Task<IEnumerable<PlaylistMetadata>> ScanPlaylists(IEnumerable<IFileData> files, IEnumerable<FileMetadata> fileMetadata, CancellationToken cancellationToken)
         {
+            _filesProcessed = 0;
+
+            if (cancellationToken.IsCancellationRequested)
+                cancellationToken.ThrowIfCancellationRequested();
+
             _scanningCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             var playlists = files.Where(c => _supportedPlaylistFileFormats.Contains(c.FileExtension)).ToList();

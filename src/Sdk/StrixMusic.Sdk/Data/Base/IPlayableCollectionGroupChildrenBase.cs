@@ -36,17 +36,17 @@ namespace StrixMusic.Sdk.Data.Base
         /// Checks if the backend supports adding an <see cref="IPlayableCollectionGroupBase"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, an item can be added.</returns>
-        Task<bool> IsAddChildAvailable(int index);
+        Task<bool> IsAddChildAvailableAsync(int index);
 
         /// <summary>
         /// Checks if the backend supports removing an <see cref="IPlayableCollectionGroupBase"/> at a specific index.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the item can be removed.</returns>
-        Task<bool> IsRemoveChildAvailable(int index);
+        Task<bool> IsRemoveChildAvailableAsync(int index);
 
         /// <summary>
         /// Fires when the merged <see cref="TotalChildrenCount"/> changes.
         /// </summary>
-        event EventHandler<int>? TotalChildrenCountChanged;
+        event EventHandler<int>? ChildrenCountChanged;
     }
 }

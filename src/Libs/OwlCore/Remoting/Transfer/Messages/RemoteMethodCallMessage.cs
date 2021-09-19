@@ -6,7 +6,7 @@ namespace OwlCore.Remoting.Transfer
     /// <summary>
     /// Holds data to communicate a remotely invoked method.
     /// </summary>
-    public class RemoteMethodCallMessage : IRemoteMemberMessage
+    public class RemoteMethodCallMessage : RemoteMessageBase, IRemoteMemberMessage
     {
         /// <summary>
         /// Creates a new instance of <see cref="RemoteMethodCallMessage"/>.
@@ -14,11 +14,26 @@ namespace OwlCore.Remoting.Transfer
         /// <param name="memberInstanceId">A unique identifier for this instance, consistent between hosts and clients.</param>
         /// <param name="targetMemberSignature">The signature of the method being invoked.</param>
         /// <param name="parameters">The parameters to pass to the remote method, if any.</param>
-        public RemoteMethodCallMessage(string memberInstanceId, string targetMemberSignature, Dictionary<string, object?> parameters)
+        public RemoteMethodCallMessage(string memberInstanceId, string targetMemberSignature, IEnumerable<ParameterData> parameters)
         {
             MemberRemoteId = memberInstanceId;
             TargetMemberSignature = targetMemberSignature;
             Parameters = parameters;
+
+            Action = RemotingAction.MethodCall;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RemoteMethodCallMessage"/>.
+        /// </summary>
+        /// <remarks>Should only be used by deserializers.</remarks>
+        public RemoteMethodCallMessage()
+        {
+            MemberRemoteId = string.Empty;
+            TargetMemberSignature = string.Empty;
+            Parameters = new List<ParameterData>();
+
+            Action = RemotingAction.MethodCall;
         }
 
         /// <inheritdoc />
@@ -27,31 +42,25 @@ namespace OwlCore.Remoting.Transfer
         /// <inheritdoc/>
         public string TargetMemberSignature { get; set; }
 
-        /// <inheritdoc />
-        public RemotingAction Action { get; } = RemotingAction.MethodCall;
-
         /// <summary>
         /// The arguments being passed to the remotely called method. Key is the <see cref="Type.AssemblyQualifiedName"/>, value is the data.
         /// </summary>
-        public Dictionary<string, object?> Parameters { get; set; }
-
-        /// <inheritdoc/>
-        public string? CustomActionName { get; set; }
+        public IEnumerable<ParameterData> Parameters { get; set; }
     }
 
-
+    /// <summary>
+    /// Holds data about a parameter passed to a remote method call.
+    /// </summary>
     public class ParameterData
     {
         /// <summary>
         /// The value being passed to the parameter, if any.
         /// </summary>
-        public object? Value { get; }
+        public object? Value { get; set; }
 
         /// <summary>
         /// The assembly qualified name of the parameter type, if any
         /// </summary>
-        public string? AssemblyQualifiedName { get; }
-
-
+        public string? AssemblyQualifiedName { get; set; }
     }
 }

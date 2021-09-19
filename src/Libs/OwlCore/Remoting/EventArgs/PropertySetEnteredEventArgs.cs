@@ -4,7 +4,7 @@ using OwlCore.Remoting.Attributes;
 namespace OwlCore.Remoting.EventArgs
 {
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="RemotePropertyAttribute.SetEntered"/>.
+    /// <see cref="System.EventArgs"/> for <see cref="RemotePropertyAttribute.SetEntered"/>.
     /// </summary>
     public class PropertySetEnteredEventArgs : System.EventArgs
     {

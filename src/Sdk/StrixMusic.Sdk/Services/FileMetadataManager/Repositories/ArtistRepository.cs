@@ -158,23 +158,22 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     workingMetadata.AlbumIds ??= new List<string>();
                     workingMetadata.TrackIds ??= new List<string>();
 
-                    var newAlbum = !workingMetadata.AlbumIds.Contains(metadata.AlbumMetadata.Id);
-
-                    if (newAlbum)
+                    if (!workingMetadata.AlbumIds.Contains(metadata.AlbumMetadata.Id))
+                    {
+                        addedAlbumItems.Add(new CollectionChangedItem<(ArtistMetadata, AlbumMetadata)>((workingMetadata, metadata.AlbumMetadata), addedAlbumItems.Count));
                         workingMetadata.AlbumIds.Add(metadata.AlbumMetadata.Id);
+                    }
 
                     if (!workingMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
+                    {
+                        addedTrackItems.Add(new CollectionChangedItem<(ArtistMetadata, TrackMetadata)>((workingMetadata, metadata.TrackMetadata), addedTrackItems.Count));
                         workingMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
-
-                    if (newAlbum)
-                        addedAlbumItems.Add(new CollectionChangedItem<(ArtistMetadata, AlbumMetadata)>((workingMetadata, metadata.AlbumMetadata), addedAlbumItems.Count));
+                    }
 
                     if (artistExists)
                         updatedArtists.Add(workingMetadata);
                     else
                         addedArtists.Add(workingMetadata);
-
-                    addedTrackItems.Add(new CollectionChangedItem<(ArtistMetadata, TrackMetadata)>((workingMetadata, metadata.TrackMetadata), addedTrackItems.Count));
                 }
             }
 
@@ -275,8 +274,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (limit == -1)
                 return Task.FromResult<IReadOnlyList<ArtistMetadata>>(allArtists);
 
-            if (offset + limit > allArtists.Count)
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= allArtists.Count)
                 return Task.FromResult<IReadOnlyList<ArtistMetadata>>(new List<ArtistMetadata>());
+
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > allArtists.Count)
+                limit = allArtists.Count - offset;
 
             return Task.FromResult<IReadOnlyList<ArtistMetadata>>(allArtists.GetRange(offset, limit));
         }
@@ -296,8 +300,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     results.Add(item);
             }
 
-            if (offset + limit > allArtists.Count)
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= results.Count)
                 return new List<ArtistMetadata>();
+
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > results.Count)
+                limit = results.Count - offset;
 
             return results.GetRange(offset, limit).ToList();
         }
@@ -305,9 +314,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <inheritdoc />
         public async Task<IReadOnlyList<ArtistMetadata>> GetArtistsByTrackId(string trackId, int offset, int limit)
         {
-            var filteredArtists = new List<ArtistMetadata>();
-
             var allArtists = await GetArtists(0, -1);
+            var results = new List<ArtistMetadata>();
 
             foreach (var item in allArtists)
             {
@@ -315,13 +323,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 Guard.HasSizeGreaterThan(item.TrackIds, 0, nameof(ArtistMetadata.TrackIds));
 
                 if (item.TrackIds.Contains(trackId))
-                    filteredArtists.Add(item);
+                    results.Add(item);
             }
 
-            if (offset + limit > allArtists.Count)
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= results.Count)
                 return new List<ArtistMetadata>();
 
-            return filteredArtists.GetRange(offset, limit).ToList();
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > results.Count)
+                limit = results.Count - offset;
+
+            return results.GetRange(offset, limit).ToList();
         }
 
         /// <summary>

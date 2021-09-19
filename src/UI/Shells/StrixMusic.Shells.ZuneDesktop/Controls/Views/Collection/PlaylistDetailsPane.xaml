@@ -1,0 +1,29 @@
+﻿<UserControl
+    x:Class="StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection.PlaylistDetailsPane"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StrixMusic.Shells.ZuneDesktop.Controls.Views.Collection"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strix="using:StrixMusic.Sdk.Uno.Controls"
+    xmlns:timeconvert="using:StrixMusic.Sdk.Uno.Converters.Time"
+    xmlns:unitconvert="using:StrixMusic.Sdk.Uno.Converters.Units"
+    xmlns:a="using:OwlCore.Uno.Attached"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <StackPanel Padding="24,0,0,0">
+        <TextBlock x:Uid="/Common/DetailsTB" Text="DETAILS" FontSize="12" FontWeight="Bold" Margin="0,0,0,12"
+                   a:TextHelpers.CharacterCasing="Upper"/>
+
+        <strix:SafeImage Width="144" Height="144" HorizontalAlignment="Left" Margin="0,0,0,16"
+                         DataContext="{x:Bind ViewModel}"/>
+
+        <TextBlock Text="{x:Bind ViewModel.Name}" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,12"/>
+
+        <TextBlock Text="{x:Bind unitconvert:CountToSongsConverter.Convert(ViewModel.TotalTrackCount)}" FontSize="13" Margin="0,0,0,2"
+                   a:TextHelpers.CharacterCasing="Lower"/>
+        <TextBlock Text="{x:Bind timeconvert:TimeSpanToShortTextConverter.Convert(ViewModel.Duration)}" FontSize="13" Margin="0,0,0,2"/>
+    </StackPanel>
+</UserControl>

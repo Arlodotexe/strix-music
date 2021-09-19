@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using OwlCore.Provisos;
 using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Base;
+using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 
 namespace StrixMusic.Sdk.ViewModels
 {
@@ -19,11 +22,33 @@ namespace StrixMusic.Sdk.ViewModels
         public ObservableCollection<TrackViewModel> Tracks { get; }
 
         /// <summary>
+        /// Keeps the default track collection while sorting.
+        /// </summary>
+        public ObservableCollection<TrackViewModel> UnsortedTracks { get; }
+
+        /// <summary>
         /// Populates the next set of tracks into the collection.
         /// </summary>
         /// <param name="limit">The number of items to load.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task PopulateMoreTracksAsync(int limit);
+
+        /// <summary>
+        /// The current sorting type of tracks in the collection.
+        /// </summary>
+        public TrackSortingType CurrentTracksSortingType { get; }
+
+        /// <summary>
+        /// The current sorting direction of tracks in the collection. 
+        /// </summary>
+        public SortDirection CurrentTracksSortingDirection { get; }
+
+        /// <summary>
+        /// Sorts the track collection by <see cref="TrackSortingType"/>.
+        /// </summary>
+        /// <param name="trackSorting">The <see cref="TrackSortingType"/> by which to sort.</param>
+        /// <param name="sortDirection">The direction by which to sort.</param>
+        public void SortTrackCollection(TrackSortingType trackSorting, SortDirection sortDirection);
 
         /// <inheritdoc cref="PopulateMoreTracksAsync" />
         public IAsyncRelayCommand<int> PopulateMoreTracksCommand { get; }
@@ -42,5 +67,15 @@ namespace StrixMusic.Sdk.ViewModels
         /// <inheritdoc cref="ITrackCollectionBase.PauseTrackCollectionAsync"/>
         /// </summary>
         public IAsyncRelayCommand PauseTrackCollectionAsyncCommand { get; }
+
+        /// <summary>
+        /// Adjustes sorting to maintain its direction, with a new type.
+        /// </summary>
+        public IRelayCommand<TrackSortingType> ChangeTrackCollectionSortingTypeCommand { get; }
+
+        /// <summary>
+        /// Sorts adjustes sorting to maintain its type, with a new direction.
+        /// </summary>
+        public IRelayCommand<SortDirection> ChangeTrackCollectionSortingDirectionCommand { get; }
     }
 }

@@ -31,8 +31,30 @@ namespace OwlCore.Remoting
                         return;
 
                     var type = Type.GetType(remoteDataMessage.TargetMemberSignature);
-                    var res = Convert.ChangeType(remoteDataMessage.Result, type);
-                    taskCompletionSource.SetResult((TResult?)res);
+                    var mostDerivedType = remoteDataMessage.Result?.GetType();
+
+                    if (typeof(TResult?) != type)
+                    {
+                        throw new ArgumentException($"Generic type argument does not match the received member signature. " +
+                                                    $"Expected {typeof(TResult?).AssemblyQualifiedName}, " +
+                                                    $"received ({remoteDataMessage.TargetMemberSignature}).");
+                    }
+
+                    if (!type?.IsAssignableFrom(mostDerivedType) ?? false)
+                    {
+                        if (!type?.IsSubclassOf(typeof(IConvertible)) ?? false)
+                        {
+                            throw new NotSupportedException($"Received data {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"} " +
+                                                            $"and must implement {nameof(IConvertible)} for automatic type conversion. " +
+                                                            $"Either handle conversion of {nameof(RemoteDataMessage)}.{nameof(RemoteDataMessage.Result)} " +
+                                                            $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)} " +
+                                                            $"or use a primitive type that implements {nameof(IConvertible)}.");
+                        }
+
+                        remoteDataMessage.Result = Convert.ChangeType(remoteDataMessage.Result, type);
+                    }
+
+                    taskCompletionSource.SetResult((TResult?)remoteDataMessage.Result);
                 }
             }
 
@@ -43,7 +65,7 @@ namespace OwlCore.Remoting
         }
 
         /// <summary>
-        /// Publishes data 
+        /// Publishes data remotely, to be received by <see cref="ReceiveDataAsync{TResult}(MemberRemote, string, CancellationToken?)"/>.
         /// </summary>
         /// <typeparam name="T">The type of data being sent.</typeparam>
         /// <param name="memberRemote">The member remote used to send the message.</param>
@@ -53,7 +75,7 @@ namespace OwlCore.Remoting
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the exact data given to <paramref name="data"/>.</returns>
         public static async Task<T?> PublishDataAsync<T>(this MemberRemote memberRemote, T? data, string token, CancellationToken? cancellationToken = null)
         {
-            var memberSignature = MemberRemote.CreateMemberSignature(typeof(T));
+            var memberSignature = MemberRemote.CreateMemberSignature(typeof(T?));
 
             await memberRemote.SendRemotingMessageAsync(new RemoteDataMessage(memberRemote.Id, token, memberSignature, data), cancellationToken);
             return data;

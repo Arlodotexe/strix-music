@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The location of the file.
         /// </summary>
-        public Uri? Source { get; set; }
+        public Uri? Url { get; set; }
 
         /// <summary>
         /// The unique identifier for this track's album.
@@ -58,11 +58,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// The lyrics for this track.
         /// </summary>
         public Lyrics? Lyrics { get; set; }
-
-        /// <summary>
-        /// The external link associated with this track.
-        /// </summary>
-        public Uri? Url { get; set; }
 
         /// <summary>
         /// The unique identifier(s) for this track's image(s).

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace StrixMusic.Sdk.Data.Merged
 {
     /// <summary>
-    /// Maps indices for sources in an an <see cref="IMerged{T}"/>.
+    /// Manages the merging of multiple <typeparamref name="TCoreCollection"/>s and presents them as single <typeparamref name="TCollection"/>.
     /// </summary>
     /// <typeparam name="TCollection">The collection type that this is part of.</typeparam>
     /// <typeparam name="TCoreCollection">The types of items that were merged to form <typeparamref name="TCollection"/>.</typeparam>
@@ -56,7 +56,7 @@ namespace StrixMusic.Sdk.Data.Merged
         public MergedCollectionMap(TCollection collection)
         {
             _collection = collection;
-            _settingsService = Ioc.Default.GetService<ISettingsService>() ?? ThrowHelper.ThrowInvalidOperationException<ISettingsService>();
+            _settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
 
             AttachEvents();
         }
@@ -67,28 +67,36 @@ namespace StrixMusic.Sdk.Data.Merged
             switch (sourceCollection)
             {
                 case ICorePlayableCollectionGroup playableCollection:
-                    if (await playableCollection.IsAddChildAvailable(originalIndex))
+                    if (await playableCollection.IsAddChildAvailableAsync(originalIndex))
                         await playableCollection.AddChildAsync((ICorePlayableCollectionGroup)itemToAdd, originalIndex);
                     break;
                 case ICoreAlbumCollection albumCollection:
-                    if (await albumCollection.IsAddAlbumItemAvailable(originalIndex))
+                    if (await albumCollection.IsAddAlbumItemAvailableAsync(originalIndex))
                         await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)itemToAdd, originalIndex);
                     break;
                 case ICoreArtistCollection artistCollection:
-                    if (await artistCollection.IsAddArtistItemAvailable(originalIndex))
+                    if (await artistCollection.IsAddArtistItemAvailableAsync(originalIndex))
                         await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)itemToAdd, originalIndex);
                     break;
                 case ICorePlaylistCollection playlistCollection:
-                    if (await playlistCollection.IsAddPlaylistItemAvailable(originalIndex))
+                    if (await playlistCollection.IsAddPlaylistItemAvailableAsync(originalIndex))
                         await playlistCollection.AddPlaylistItemAsync((ICorePlaylistCollectionItem)itemToAdd, originalIndex);
                     break;
                 case ICoreTrackCollection trackCollection:
-                    if (await trackCollection.IsAddTrackAvailable(originalIndex))
+                    if (await trackCollection.IsAddTrackAvailableAsync(originalIndex))
                         await trackCollection.AddTrackAsync((ICoreTrack)itemToAdd, originalIndex);
                     break;
                 case ICoreImageCollection imageCollection:
-                    if (await imageCollection.IsAddImageAvailable(originalIndex))
+                    if (await imageCollection.IsAddImageAvailableAsync(originalIndex))
                         await imageCollection.AddImageAsync((ICoreImage)itemToAdd, originalIndex);
+                    break;
+                case ICoreGenreCollection genreCollection:
+                    if (await genreCollection.IsAddGenreAvailableAsync(originalIndex))
+                        await genreCollection.AddGenreAsync((ICoreGenre)itemToAdd, originalIndex);
+                    break;
+                case ICoreUrlCollection urlCollection:
+                    if (await urlCollection.IsAddUrlAvailableAsync(originalIndex))
+                        await urlCollection.AddUrlAsync((ICoreUrl)itemToAdd, originalIndex);
                     break;
                 default:
                     ThrowHelper.ThrowNotSupportedException<IMergedMutable<TCoreCollection>>($"Couldn't add item to collection. Type {sourceCollection.GetType()} not supported.");
@@ -219,7 +227,7 @@ namespace StrixMusic.Sdk.Data.Merged
             if (typeof(TCoreCollection) == typeof(ICorePlayableCollectionGroup))
             {
                 ((ICorePlayableCollectionGroup)item).ChildItemsChanged += MergedCollectionMap_ChildItemsChanged;
-                ((ICorePlayableCollectionGroup)item).TotalChildrenCountChanged += MergedCollectionMap_CountChanged;
+                ((ICorePlayableCollectionGroup)item).ChildrenCountChanged += MergedCollectionMap_CountChanged;
             }
             else if (typeof(TCoreCollection) == typeof(ICoreAlbumCollection))
             {
@@ -238,13 +246,23 @@ namespace StrixMusic.Sdk.Data.Merged
             }
             else if (typeof(TCoreCollection) == typeof(ICoreTrackCollection))
             {
-                ((ICoreTrackCollection)item).TrackItemsCountChanged += MergedCollectionMap_CountChanged;
-                ((ICoreTrackCollection)item).TrackItemsChanged += MergedCollectionMap_TrackItemsChanged;
+                ((ICoreTrackCollection)item).TracksCountChanged += MergedCollectionMap_CountChanged;
+                ((ICoreTrackCollection)item).TracksChanged += MergedCollectionMap_TrackItemsChanged;
             }
             else if (typeof(TCoreCollection) == typeof(ICoreImageCollection))
             {
                 ((ICoreImageCollection)item).ImagesCountChanged += MergedCollectionMap_CountChanged;
                 ((ICoreImageCollection)item).ImagesChanged += MergedCollectionMap_ImagesChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreGenreCollection))
+            {
+                ((ICoreGenreCollection)item).GenresCountChanged += MergedCollectionMap_CountChanged;
+                ((ICoreGenreCollection)item).GenresChanged += MergedCollectionMap_GenresChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreUrlCollection))
+            {
+                ((ICoreUrlCollection)item).UrlsCountChanged += MergedCollectionMap_CountChanged;
+                ((ICoreUrlCollection)item).UrlsChanged += MergedCollectionMap_UrlsChanged;
             }
             else
             {
@@ -258,7 +276,7 @@ namespace StrixMusic.Sdk.Data.Merged
             if (typeof(TCoreCollection) == typeof(ICorePlayableCollectionGroup))
             {
                 ((ICorePlayableCollectionGroup)item).ChildItemsChanged -= MergedCollectionMap_ChildItemsChanged;
-                ((ICorePlayableCollectionGroup)item).TotalChildrenCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICorePlayableCollectionGroup)item).ChildrenCountChanged -= MergedCollectionMap_CountChanged;
             }
             else if (typeof(TCoreCollection) == typeof(ICoreAlbumCollection))
             {
@@ -277,22 +295,42 @@ namespace StrixMusic.Sdk.Data.Merged
             }
             else if (typeof(TCoreCollection) == typeof(ICoreTrackCollection))
             {
-                ((ICoreTrackCollection)item).TrackItemsCountChanged -= MergedCollectionMap_CountChanged;
-                ((ICoreTrackCollection)item).TrackItemsChanged -= MergedCollectionMap_TrackItemsChanged;
+                ((ICoreTrackCollection)item).TracksCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICoreTrackCollection)item).TracksChanged -= MergedCollectionMap_TrackItemsChanged;
             }
             else if (typeof(TCoreCollection) == typeof(ICoreImageCollection))
             {
                 ((ICoreImageCollection)item).ImagesCountChanged -= MergedCollectionMap_CountChanged;
                 ((ICoreImageCollection)item).ImagesChanged -= MergedCollectionMap_ImagesChanged;
             }
+            else if (typeof(TCoreCollection) == typeof(ICoreGenreCollection))
+            {
+                ((ICoreGenreCollection)item).GenresCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICoreGenreCollection)item).GenresChanged -= MergedCollectionMap_GenresChanged;
+            }
+            else if (typeof(TCoreCollection) == typeof(ICoreUrlCollection))
+            {
+                ((ICoreUrlCollection)item).UrlsCountChanged -= MergedCollectionMap_CountChanged;
+                ((ICoreUrlCollection)item).UrlsChanged -= MergedCollectionMap_UrlsChanged;
+            }
             else
             {
                 ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>(
-                    "Couldn't attach events. Type not supported.");
+                    "Couldn't detach events. Type not supported.");
             }
         }
 
         private void MergedCollectionMap_ImagesChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreImage>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreImage>> removedItems)
+        {
+            MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
+        }
+
+        private void MergedCollectionMap_GenresChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreGenre>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreGenre>> removedItems)
+        {
+            MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
+        }
+
+        private void MergedCollectionMap_UrlsChanged(object sender, IReadOnlyList<CollectionChangedItem<ICoreUrl>> addedItems, IReadOnlyList<CollectionChangedItem<ICoreUrl>> removedItems)
         {
             MergedCollectionMap_ItemsChanged(sender, addedItems, removedItems);
         }
@@ -416,11 +454,10 @@ namespace StrixMusic.Sdk.Data.Merged
         private void MergedCollectionMap_CountChanged(object sender, int e)
         {
             // This is sent from each core.
-            // The count would be wrong if we tried to re-emit it as is.
-            // We emit CountChanged for the Map elsewhere when items are changed.
+            // The count would be wrong if we tried to re-emit it as is due to merging.
+            // We emit CountChanged (for the MergedCollectionMap) when items are changed.
 
-            // Instead, maybe we can use it this event verify the size of the collection is correct?
-            // Can't think of a better use.
+            // TODO: Maybe we can use it this event verify the size of the collection is correct?
         }
 
         /// <summary>
@@ -429,7 +466,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// <param name="limit">The max number of items to return.</param>
         /// <param name="offset">Get items starting at this index.</param>
         /// <returns>The requested range of items, sorted and merged from the sources in the input collection.</returns>
-        public async Task<IReadOnlyList<TCollectionItem>> GetItems(int limit, int offset)
+        public async Task<IReadOnlyList<TCollectionItem>> GetItemsAsync(int limit, int offset)
         {
             await TryInitAsync();
             Guard.IsNotNull(_sortingMethod, nameof(_sortingMethod));
@@ -484,27 +521,35 @@ namespace StrixMusic.Sdk.Data.Merged
                 var sourceCollection = mappedData.SourceCollection;
                 var source = mappedData.CollectionItem;
 
+                var isAvailable = await sourceCollection.IsRemoveAvailable(index);
+                if (!isAvailable)
+                    continue;
+
                 switch (sourceCollection)
                 {
                     case ICorePlayableCollectionGroup playableCollection:
-                        if (await playableCollection.IsAddChildAvailable(index))
-                            await playableCollection.AddChildAsync((ICorePlayableCollectionGroup)source, mappedData.OriginalIndex);
+                            await playableCollection.RemoveChildAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreAlbumCollection albumCollection:
-                        if (await albumCollection.IsAddAlbumItemAvailable(index))
-                            await albumCollection.AddAlbumItemAsync((ICoreAlbumCollectionItem)source, mappedData.OriginalIndex);
+                            await albumCollection.RemoveAlbumItemAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreArtistCollection artistCollection:
-                        if (await artistCollection.IsAddArtistItemAvailable(index))
-                            await artistCollection.AddArtistItemAsync((ICoreArtistCollectionItem)source, mappedData.OriginalIndex);
+                            await artistCollection.RemoveArtistItemAsync(mappedData.OriginalIndex);
                         break;
                     case ICorePlaylistCollection playlistCollection:
-                        if (await playlistCollection.IsAddPlaylistItemAvailable(index))
-                            await playlistCollection.AddPlaylistItemAsync((ICorePlaylistCollectionItem)source, mappedData.OriginalIndex);
+                            await playlistCollection.RemovePlaylistItemAsync(mappedData.OriginalIndex);
                         break;
                     case ICoreTrackCollection trackCollection:
-                        if (await trackCollection.IsAddTrackAvailable(index))
-                            await trackCollection.AddTrackAsync((ICoreTrack)source, mappedData.OriginalIndex);
+                            await trackCollection.RemoveTrackAsync(mappedData.OriginalIndex);
+                        break;
+                    case ICoreImageCollection imageCollection:
+                            await imageCollection.RemoveImageAsync(mappedData.OriginalIndex);
+                        break;
+                    case ICoreGenreCollection genreCollection:
+                        await genreCollection.RemoveGenreAsync(mappedData.OriginalIndex);
+                        break;
+                    case ICoreUrlCollection urlCollection:
+                        await urlCollection.RemoveUrlAsync(mappedData.OriginalIndex);
                         break;
                     default:
                         ThrowHelper.ThrowNotSupportedException<IMerged<TCoreCollection>>("Couldn't create merged item. Type not supported.");
@@ -518,7 +563,7 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         /// <param name="index">The index to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public async Task<bool> IsAddItemAvailable(int index)
+        public async Task<bool> IsAddItemAvailableAsync(int index)
         {
             await TryInitAsync();
 
@@ -533,12 +578,12 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </summary>
         /// <param name="index">The index to remove.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value indicates support.</returns>
-        public async Task<bool> IsRemoveItemSupport(int index)
+        public async Task<bool> IsRemoveItemAvailableAsync(int index)
         {
             await TryInitAsync();
 
             var sourceResults = await _mergedMappedData[index].MergedMapData
-                .InParallel(async x => await x.SourceCollection.IsAddAvailable(x.OriginalIndex));
+                .InParallel(async x => await x.SourceCollection.IsRemoveAvailable(x.OriginalIndex));
 
             return sourceResults.Any();
         }
@@ -592,8 +637,20 @@ namespace StrixMusic.Sdk.Data.Merged
                     returnData = (IMergedMutable<TCoreCollectionItem>)new MergedImage(coreImage.IntoList());
                     collection.Add(returnData);
                     break;
+                case ICoreGenre coreGenre:
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedGenre(coreGenre.IntoList());
+                    collection.Add(returnData);
+                    break;
+                case ICoreUrl coreUrl:
+                    returnData = (IMergedMutable<TCoreCollectionItem>)new MergedUrl(coreUrl.IntoList());
+                    collection.Add(returnData);
+                    break;
 
-                // TODO: Search results post search redo
+                // TODO: Search results post search redo (done, please do this)
+
+                // Collections that are returned from other collections, but need their own separate ViewModels.
+                // Example: an AlbumCollection can return either an Album or another AlbumCollection,
+                // so we need ViewModels and Merged proxy classes for both.
                 case ICorePlayableCollectionGroup playableCollection:
                     returnData = (IMergedMutable<TCoreCollectionItem>)new MergedPlayableCollectionGroup(playableCollection.IntoList());
                     collection.Add(returnData);
@@ -630,9 +687,9 @@ namespace StrixMusic.Sdk.Data.Merged
             Guard.IsGreaterThan(_coreInstanceRegistry.Count, 0, nameof(_coreInstanceRegistry.Count));
             Guard.IsGreaterThan(limit, 0, nameof(limit));
 
-            // Rebuild the sorted map so we're sure it's sorted correctly.
-            _sortedMap.Clear();
-            _sortedMap.AddRange(BuildSortedMapRanked());
+            var mappedData = BuildSortedMapRanked(_sortedMap.Count);
+
+            _sortedMap.AddRange(mappedData);
 
             // If the offset exceeds the number of items we have, return nothing.
             if (offset >= _sortedMap.Count)
@@ -691,7 +748,17 @@ namespace StrixMusic.Sdk.Data.Merged
 
             lock (_sortedMap)
             {
-                var relevantMergedMappedData = MergeMappedData(_sortedMap.ToArray()).Skip(offset).Take(limit);
+                var allItemsWithData = MergeMappedData(_sortedMap.ToArray());
+
+#warning TODO Re-do of merged collection item handling. 
+                // Since we don't get all items from the API, we don't know which are merged until we get the data, causing the count to be off.
+                // This problem may require a fundamental re-think of how we handle collection items,
+                // likely getting and processing the entire collection before emitting any items count
+                // or something simpler but smarter, like sparsely processing and adjusting the count as you get items.
+                // Until then, supply the maximum possible count (as if no items are merged).
+                ItemsCountChanged?.Invoke(this, _sortedMap.Count);
+
+                var relevantMergedMappedData = allItemsWithData.Skip(offset).Take(limit);
                 var merged = relevantMergedMappedData.Select(x => (TCollectionItem)x).ToList();
 
                 return merged;
@@ -718,11 +785,9 @@ namespace StrixMusic.Sdk.Data.Merged
                 if (!exists)
                     mergedItemMaps.Add(mergedInto, mergedMapItems);
             }
-
+          
             foreach (var item in mergedItemMaps)
                 _mergedMappedData.Add(new MergedMappedData(item.Key, item.Value));
-
-            ItemsCountChanged?.Invoke(this, _mergedMappedData.Count);
 
             return returnedData;
         }
@@ -738,7 +803,7 @@ namespace StrixMusic.Sdk.Data.Merged
             };
         }
 
-        private List<MappedData> BuildSortedMapRanked()
+        private List<MappedData> BuildSortedMapRanked(int offset = 0)
         {
             Guard.IsNotNull(_coreRanking, nameof(_coreRanking));
             Guard.IsNotNull(_coreInstanceRegistry, nameof(_coreInstanceRegistry));
@@ -770,7 +835,7 @@ namespace StrixMusic.Sdk.Data.Merged
             {
                 var itemsCount = source.GetItemsCount<TCollection>();
 
-                for (var i = 0; i < itemsCount; i++)
+                for (var i = offset; i < itemsCount; i++)
                 {
                     itemsMap.Add(new MappedData(i, source));
                 }
@@ -792,6 +857,7 @@ namespace StrixMusic.Sdk.Data.Merged
         private Task<MergedCollectionSorting> GetSortingMethod()
         {
             return Task.FromResult(MergedCollectionSorting.Ranked);
+
             //return _settingsService.GetValue<MergedCollectionSorting>(nameof(SettingsKeys.MergedCollectionSorting));
         }
 
@@ -833,7 +899,7 @@ namespace StrixMusic.Sdk.Data.Merged
                     continue;
 
                 // The items retrieved will exist in the sorted map.
-                await GetItems(item.OriginalIndex, i);
+                await GetItemsAsync(item.OriginalIndex, i);
             }
 
             var addedItems = new List<CollectionChangedItem<TCollectionItem>>();
@@ -881,13 +947,13 @@ namespace StrixMusic.Sdk.Data.Merged
         /// </remarks>
         void IMergedMutable<TCoreCollection>.AddSource(TCoreCollection itemToMerge)
         {
-            ResetDataRanked().FireAndForget();
+            ResetDataRanked().Forget();
         }
 
         /// <inheritdoc />
         void IMergedMutable<TCoreCollection>.RemoveSource(TCoreCollection itemToRemove)
         {
-            ResetDataRanked().FireAndForget();
+            ResetDataRanked().Forget();
         }
 
         /// <inheritdoc />

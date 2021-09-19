@@ -9,6 +9,11 @@ namespace OwlCore.AbstractStorage
     public interface IFileData
     {
         /// <summary>
+        /// An optional, consistent, unique identifier for this file.
+        /// </summary>
+        public string? Id { get; }
+
+        /// <summary>
         /// The path to the file.
         /// </summary>
         public string Path { get; }

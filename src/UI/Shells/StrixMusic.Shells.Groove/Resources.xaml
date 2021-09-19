@@ -39,7 +39,7 @@
         <nowplayingstyles:MediaTransportStyle/>
 
         <!--Shell related styles-->
-        <shellstyles:NotificationAbstractUIGroupStyle/>
+        <shellstyles:NotificationAbstractUICollectionStyle/>
         <shellstyles:NowPlayingBarStyle/>
         <shellstyles:PlayableCollectionGroupPivotStyle/>
 

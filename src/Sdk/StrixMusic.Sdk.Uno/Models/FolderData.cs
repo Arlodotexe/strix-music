@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage;
 using OwlCore.AbstractStorage;
+using Windows.Storage;
 using CreationCollisionOption = OwlCore.AbstractStorage.CreationCollisionOption;
-using Windows.Storage.Search;
 
 namespace StrixMusic.Sdk.Uno.Models
 {
@@ -43,7 +42,7 @@ namespace StrixMusic.Sdk.Uno.Models
         public Task DeleteAsync() => StorageFolder.DeleteAsync().AsTask();
 
         /// <inheritdoc/>
-        public async Task<IFolderData> GetParentAsync()
+        public async Task<IFolderData?> GetParentAsync()
         {
             var storageFolder = await StorageFolder.GetParentAsync();
 

@@ -22,12 +22,14 @@ namespace StrixMusic.Sdk.Extensions
 
             return typeof(TCollection) switch
             {
-                IPlayableCollectionGroupBase _ => ((ICorePlayableCollectionGroup)source).IsRemoveChildAvailable(index),
-                IAlbumCollectionBase _ => ((ICoreAlbumCollection)source).IsRemoveAlbumItemAvailable(index),
-                IArtistCollectionBase _ => ((ICoreArtistCollection)source).IsRemoveArtistItemAvailable(index),
-                IPlaylistCollectionBase _ => ((ICorePlaylistCollection)source).IsRemovePlaylistItemAvailable(index),
-                ITrackCollectionBase _ => ((ICoreTrackCollection)source).IsRemoveTrackAvailable(index),
-                IImageCollectionBase _ => ((ICoreImageCollection)source).IsRemoveImageAvailable(index),
+                IPlayableCollectionGroupBase _ => ((ICorePlayableCollectionGroup)source).IsRemoveChildAvailableAsync(index),
+                IAlbumCollectionBase _ => ((ICoreAlbumCollection)source).IsRemoveAlbumItemAvailableAsync(index),
+                IArtistCollectionBase _ => ((ICoreArtistCollection)source).IsRemoveArtistItemAvailableAsync(index),
+                IPlaylistCollectionBase _ => ((ICorePlaylistCollection)source).IsRemovePlaylistItemAvailableAsync(index),
+                ITrackCollectionBase _ => ((ICoreTrackCollection)source).IsRemoveTrackAvailableAsync(index),
+                IImageCollectionBase _ => ((ICoreImageCollection)source).IsRemoveImageAvailableAsync(index),
+                IGenreCollectionBase _ => ((ICoreGenreCollection)source).IsRemoveGenreAvailableAsync(index),
+                IUrlCollectionBase _ => ((ICoreUrlCollection)source).IsRemoveUrlAvailableAsync(index),
                 _ => throw new NotSupportedException("Collection type not handled"),
             };
         }

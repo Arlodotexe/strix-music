@@ -17,7 +17,7 @@ using StrixMusic.Sdk.MediaPlayback;
 namespace StrixMusic.Sdk.ViewModels
 {
     /// <summary>
-    /// Contains information about an <see cref="ICore"/>
+    /// Contains information about an <see cref="ICore"/>.
     /// </summary>
     public class CoreViewModel : ObservableObject, ICore
     {

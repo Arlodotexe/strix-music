@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
@@ -13,7 +12,6 @@ namespace OwlCore.AbstractUI.ViewModels
     /// <summary>
     /// A ViewModel for the <see cref="AbstractDataList"/>.
     /// </summary>
-    [Bindable(true)]
     public class AbstractDataListViewModel : AbstractUIViewModelBase
     {
         private readonly AbstractDataList _model;
@@ -233,5 +231,12 @@ namespace OwlCore.AbstractUI.ViewModels
         /// Fires when a new item has been requested.
         /// </summary>
         public IRelayCommand<AbstractDataListItemViewModel> ItemTappedCommand { get; set; }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            DetachEvents();
+            base.Dispose();
+        }
     }
 }

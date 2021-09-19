@@ -36,7 +36,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The total number of tracks in this playlist.
         /// </summary>
-        public int TotalTracksCount { get; set; }
+        public int TotalTrackCount { get; set; }
 
         /// <summary>
         /// The total number of artists represented in this playlist.

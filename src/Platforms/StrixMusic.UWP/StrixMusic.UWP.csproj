@@ -2,6 +2,11 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <ItemGroup>
+    <PackageReference Include="GitInfo">
+      <Version>2.1.2</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <!-- 
 			If, in the same solution, you are referencing a project that uses https://github.com/onovotny/MSBuildSdkExtras,
@@ -60,10 +65,12 @@
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>StrixMusic.Uwp_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>StrixMusic.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <WarningsAsErrors>nullable</WarningsAsErrors>
+    <PackageCertificateThumbprint>79CF4AB454D57E2A358686AAD228C7FC3C5CEEC0</PackageCertificateThumbprint>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -231,13 +238,21 @@
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.LocalFiles\StrixMusic.Core.LocalFiles.csproj">
-      <Project>{617f1778-92f9-454a-b041-d71b4b63a221}</Project>
-      <Name>StrixMusic.Core.LocalFiles</Name>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Core.OneDriveCore\StrixMusic.Cores.OneDrive.csproj">
+      <Project>{113fd74a-31a3-4180-bdb0-f0fc27f1339c}</Project>
+      <Name>StrixMusic.Cores.OneDrive</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cores\StrixMusic.Core.MusicBrainz\StrixMusic.Core.MusicBrainz.csproj">
-      <Project>{d0618335-d56c-419d-b9fa-98e475338efc}</Project>
-      <Name>StrixMusic.Core.MusicBrainz</Name>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.External\StrixMusic.Cores.External.csproj">
+      <Project>{605fe63c-ca63-4f47-b27d-b36e4b0e6211}</Project>
+      <Name>StrixMusic.Cores.External</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.Files\StrixMusic.Cores.Files.csproj">
+      <Project>{18f15e5e-9e8a-4f97-89cf-db66f568f075}</Project>
+      <Name>StrixMusic.Cores.Files</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cores\StrixMusic.Cores.LocalFiles\StrixMusic.Cores.LocalFiles.csproj">
+      <Project>{8c8f6e30-ab41-41a1-8172-9c237e0ac592}</Project>
+      <Name>StrixMusic.Cores.LocalFiles</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libs\OwlCore\OwlCore.csproj">
       <Project>{184CD528-2959-4AA5-A691-0E161C04E9AD}</Project>
@@ -265,10 +280,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Hqub.MusicBrainz.API, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Cores\StrixMusic.Core.MusicBrainz\Dependencies\Hqub.MusicBrainz.API.dll</HintPath>
-    </Reference>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="..\..\UI\StrixMusic.UI.Shared\StrixMusic.UI.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

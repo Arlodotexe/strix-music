@@ -37,6 +37,11 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public IMediaSourceConfig? CurrentSource { get; set; }
 
         /// <summary>
+        /// Raised when <see cref="CurrentSource"/> is changed.
+        /// </summary>
+        public event EventHandler<IMediaSourceConfig?>? CurrentSourceChanged;
+
+        /// <summary>
         /// Raised when a quantum of data is processed. 
         /// </summary>
         public event EventHandler<float[]>? QuantumProcessed;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -18,6 +19,11 @@ namespace OwlCore.Remoting
     public class MemberRemote : IDisposable
     {
         private static IRemoteMessageHandler? _defaultRemoteMessageHandler;
+
+        /// <summary>
+        /// Used to internally indicated when a member operation is performed by a <see cref="MemberRemote"/> on a given thread.
+        /// </summary>
+        internal static Dictionary<int, object> MemberHandleExpectancyMap { get; set; } = new Dictionary<int, object>();
 
         /// <summary>
         /// Set the default message handler to use for all instances of <see cref="MemberRemote"/>, unless given an overload.
@@ -69,10 +75,8 @@ namespace OwlCore.Remoting
             RemotePropertyAttribute.ExceptionRaised -= OnInterceptExceptionRaised;
         }
 
-        internal async void MessageHandler_DataReceived(object sender, byte[] e)
+        internal void MessageHandler_DataReceived(object sender, IRemoteMessage message)
         {
-            var message = await MessageHandler.MessageConverter.DeserializeAsync(e);
-
             if (message is IRemoteMemberMessage memberMsg && memberMsg.MemberRemoteId != Id)
                 return;
 
@@ -81,6 +85,9 @@ namespace OwlCore.Remoting
 
             if (receivedArgs.Handled)
                 return;
+
+            lock (MemberHandleExpectancyMap)
+                MemberHandleExpectancyMap.Add(Thread.CurrentThread.ManagedThreadId, Instance);
 
             if (message is RemoteMethodCallMessage methodCallMsg)
                 HandleIncomingRemoteMethodCall(methodCallMsg);
@@ -93,7 +100,7 @@ namespace OwlCore.Remoting
 
         private async void OnMethodEntered(object sender, MethodEnteredEventArgs e)
         {
-            if (e.Instance != Instance)
+            if (!ReferenceEquals(e.Instance, Instance))
                 return;
 
             if (!IsValidRemotingDirection(e.MethodBase, false))
@@ -101,21 +108,25 @@ namespace OwlCore.Remoting
 
             var paramData = CreateMethodParameterData(e.MethodBase, e.Values);
             var memberSignature = CreateMemberSignature(e.MethodBase);
+
             var remoteMessage = new RemoteMethodCallMessage(Id, memberSignature, paramData);
 
             await SendRemotingMessageAsync(remoteMessage);
         }
 
-        private async void OnInterceptExceptionRaised(object sender, Exception e)
+        private async void OnInterceptExceptionRaised(object sender, Exception exception)
         {
-            var exceptionMessage = new RemoteExceptionDataMessage(e);
+            var message = exception.Message;
+            var stackTrace = exception.StackTrace;
+            var targetSiteSignature = exception.TargetSite is null ? "Unknown" : CreateMemberSignature(exception.TargetSite);
 
+            var exceptionMessage = new RemoteExceptionDataMessage(message, stackTrace, targetSiteSignature);
             await SendRemotingMessageAsync(exceptionMessage);
         }
 
         private async void OnPropertySetEntered(object sender, PropertySetEnteredEventArgs e)
         {
-            if (e.PropertyInterceptionInfo.Instance != Instance)
+            if (!ReferenceEquals(e.PropertyInterceptionInfo.Instance, Instance))
                 return;
 
             var propertyInfo = e.PropertyInterceptionInfo.ToPropertyInfo();
@@ -185,10 +196,7 @@ namespace OwlCore.Remoting
                 return;
 
             await MessageHandler.InitAsync();
-
-            var data = await MessageHandler.MessageConverter.SerializeAsync(message, cancellationToken);
-
-            await MessageHandler.SendMessageAsync(data, cancellationToken);
+            await MessageHandler.SendMessageAsync(message, cancellationToken);
 
             MessageSent?.Invoke(this, message);
         }
@@ -197,44 +205,79 @@ namespace OwlCore.Remoting
         {
             var propertyInfo = Properties.First(x => CreateMemberSignature(x) == propertyChangeMessage.TargetMemberSignature);
 
-            if (!IsValidRemotingDirection(propertyInfo, true))
+            if (!IsValidRemotingDirection(propertyInfo, isReceiving: true))
                 return;
 
+            var type = Type.GetType(propertyChangeMessage.TargetMemberSignature);
+            var mostDerivedType = propertyChangeMessage.NewValue?.GetType();
+
+            if (!type?.IsAssignableFrom(mostDerivedType) ?? false)
+            {
+                if (!type?.IsSubclassOf(typeof(IConvertible)) ?? false)
+                {
+                    throw new NotSupportedException($"Received parameter value {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"} " +
+                                                    $"and must implement {nameof(IConvertible)} for automatic type conversion. " +
+                                                    $"Either handle conversion of {nameof(ParameterData)}.{nameof(ParameterData.Value)} " +
+                                                    $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)} " +
+                                                    $"or use a primitive type that implements {nameof(IConvertible)}. ");
+                }
+
+                propertyChangeMessage.NewValue = Convert.ChangeType(propertyChangeMessage.NewValue, type);
+            }
+
             var castValue = Convert.ChangeType(propertyChangeMessage.NewValue, propertyInfo.PropertyType);
+
             propertyInfo.SetValue(Instance, castValue);
         }
 
-        private void HandleIncomingRemoteMethodCall(RemoteMethodCallMessage methodCallMsg)
+        internal void HandleIncomingRemoteMethodCall(RemoteMethodCallMessage methodCallMsg)
         {
             var methodInfo = Methods.First(x => CreateMemberSignature(x) == methodCallMsg.TargetMemberSignature);
 
-            if (!IsValidRemotingDirection(methodInfo, true))
+            if (!IsValidRemotingDirection(methodInfo, isReceiving: true))
                 return;
 
             var parameterValues = new List<object?>();
 
             foreach (var param in methodCallMsg.Parameters)
             {
-                var type = Type.GetType(param.Key, true);
-                var castValue = Convert.ChangeType(param.Value, type);
+                var type = Type.GetType(param.AssemblyQualifiedName);
+                var mostDerivedType = param.Value?.GetType();
 
-                parameterValues.Add(castValue);
+                if (!type?.IsAssignableFrom(mostDerivedType) ?? false)
+                {
+                    if (!type?.IsSubclassOf(typeof(IConvertible)) ?? false)
+                    {
+                        throw new NotSupportedException($"Received parameter value {mostDerivedType?.FullName ?? "null"} is not assignable from received type {type?.FullName ?? "null"} " +
+                                                        $"and must implement {nameof(IConvertible)} for automatic type conversion. " +
+                                                        $"Either handle conversion of {nameof(ParameterData)}.{nameof(ParameterData.Value)} " +
+                                                        $"to this type in your {nameof(IRemoteMessageHandler.MessageConverter)} " +
+                                                        $"or use a primitive type that implements {nameof(IConvertible)}. ");
+                    }
+
+                    param.Value = Convert.ChangeType(param.Value, type);
+                }
+
+                parameterValues.Add(param.Value);
             }
 
             methodInfo?.Invoke(Instance, parameterValues.ToArray());
         }
 
-        private static Dictionary<string, object?> CreateMethodParameterData(MethodBase method, object?[] parameterValues)
+        private static List<ParameterData> CreateMethodParameterData(MethodBase method, object?[] parameterValues)
         {
             var parameterInfo = method.GetParameters();
-            var paramData = new Dictionary<string, object?>();
+            var paramData = new List<ParameterData>();
 
             for (int i = 0; i < parameterInfo.Length; i++)
             {
                 ParameterInfo? parameter = parameterInfo[i];
 
-                // TODO: Generic types.
-                paramData.Add(parameter.ParameterType.AssemblyQualifiedName, parameterValues[i]);
+                paramData.Add(new ParameterData()
+                {
+                    AssemblyQualifiedName = parameter.ParameterType.AssemblyQualifiedName,
+                    Value = parameterValues[i],
+                });
             }
 
             return paramData;

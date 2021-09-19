@@ -58,6 +58,9 @@ namespace OwlCore.AbstractStorage
         /// <inheritdoc/>
         public async Task<IEnumerable<IFileData>> ScanFolder(IFolderData rootFolder, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested)
+                cancellationToken.ThrowIfCancellationRequested();
+
             var foldersToScan = new Stack<IFolderData>();
             foldersToScan.Push(rootFolder);
 

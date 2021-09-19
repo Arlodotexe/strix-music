@@ -33,7 +33,7 @@ namespace StrixMusic.Sdk.ViewModels
         public bool Equals(ICoreLibrary other) => _library.Equals(other);
 
         /// <inheritdoc />
-        public Task InitAsync()
+        public override Task InitAsync()
         {
             IsInitialized = true;
 

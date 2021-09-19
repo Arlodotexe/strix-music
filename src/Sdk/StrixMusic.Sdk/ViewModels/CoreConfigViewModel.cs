@@ -27,12 +27,12 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _coreConfig = coreConfig;
 
-            AbstractUIElements = new ObservableCollection<AbstractUIElementGroupViewModel>();
+            AbstractUIElements = new ObservableCollection<AbstractUICollectionViewModel>();
+            AbstractUIElements.Clear();
 
             foreach (var abstractUIElement in _coreConfig.AbstractUIElements)
             {
-                AbstractUIElements.Clear();
-                AbstractUIElements.Add(new AbstractUIElementGroupViewModel(abstractUIElement));
+                AbstractUIElements.Add(new AbstractUICollectionViewModel(abstractUIElement));
             }
 
             AttachEvents();
@@ -48,14 +48,15 @@ namespace StrixMusic.Sdk.ViewModels
             _coreConfig.AbstractUIElementsChanged -= CoreConfig_AbstractUIElementsChanged;
         }
 
-        private void CoreConfig_AbstractUIElementsChanged(object sender, EventArgs e)
+        private async void CoreConfig_AbstractUIElementsChanged(object sender, EventArgs e)
         {
-            _ = Threading.OnPrimaryThread(() =>
+            await Threading.OnPrimaryThread(() =>
             {
+                AbstractUIElements.Clear();
+
                 foreach (var abstractUIElement in _coreConfig.AbstractUIElements)
                 {
-                    AbstractUIElements.Clear();
-                    AbstractUIElements.Add(new AbstractUIElementGroupViewModel(abstractUIElement));
+                    AbstractUIElements.Add(new AbstractUICollectionViewModel(abstractUIElement));
                 }
             });
         }
@@ -64,10 +65,10 @@ namespace StrixMusic.Sdk.ViewModels
         public IServiceProvider? Services => _coreConfig.Services;
 
         /// <inheritdoc/>
-        IReadOnlyList<AbstractUIElementGroup> ICoreConfigBase.AbstractUIElements => _coreConfig.AbstractUIElements;
+        IReadOnlyList<AbstractUICollection> ICoreConfigBase.AbstractUIElements => _coreConfig.AbstractUIElements;
 
         /// <inheritdoc cref="ICoreConfigBase.AbstractUIElements" />
-        public ObservableCollection<AbstractUIElementGroupViewModel> AbstractUIElements { get; private set; }
+        public ObservableCollection<AbstractUICollectionViewModel> AbstractUIElements { get; }
 
         /// <inheritdoc/>
         public MediaPlayerType PlaybackType => _coreConfig.PlaybackType;

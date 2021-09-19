@@ -5,7 +5,7 @@ using System.Reflection;
 namespace OwlCore.Remoting.EventArgs
 {
     /// <summary>
-    /// <see cref="EventArgs"/> for <see cref="RemoteMethodAttribute.Entered"/>.
+    /// <see cref="System.EventArgs"/> for <see cref="RemoteMethodAttribute.Entered"/>.
     /// </summary>
     public class MethodEnteredEventArgs : System.EventArgs
     {

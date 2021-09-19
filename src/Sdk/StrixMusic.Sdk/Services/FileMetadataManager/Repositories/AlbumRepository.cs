@@ -162,20 +162,22 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     workingMetadata.ArtistIds ??= new List<string>();
                     workingMetadata.TrackIds ??= new List<string>();
 
-                    var newArtist = !workingMetadata.ArtistIds.Contains(metadata.ArtistMetadata.Id);
+                    if (!workingMetadata.ArtistIds.Contains(metadata.ArtistMetadata.Id))
+                    {
+                        workingMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
+                        updatedArtistItems.Add(new CollectionChangedItem<(AlbumMetadata, ArtistMetadata)>((workingMetadata, metadata.ArtistMetadata), updatedAlbums.Count));
+                    }
 
-                    workingMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
-                    workingMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
+                    if (!workingMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
+                    {
+                        workingMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
+                        addedTrackItems.Add(new CollectionChangedItem<(AlbumMetadata, TrackMetadata)>((workingMetadata, metadata.TrackMetadata), addedTrackItems.Count));
+                    }
 
                     if (albumExists)
                         updatedAlbums.Add(workingMetadata);
                     else
                         addedAlbums.Add(workingMetadata);
-
-                    if (newArtist)
-                        updatedArtistItems.Add(new CollectionChangedItem<(AlbumMetadata, ArtistMetadata)>((workingMetadata, metadata.ArtistMetadata), updatedAlbums.Count));
-
-                    addedTrackItems.Add(new CollectionChangedItem<(AlbumMetadata, TrackMetadata)>((workingMetadata, metadata.TrackMetadata), addedTrackItems.Count));
                 }
             }
 
@@ -275,8 +277,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             if (limit == -1)
                 return Task.FromResult<IReadOnlyList<AlbumMetadata>>(allAlbums);
 
-            if (offset + limit > allAlbums.Count)
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= allAlbums.Count)
                 return Task.FromResult<IReadOnlyList<AlbumMetadata>>(new List<AlbumMetadata>());
+
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > allAlbums.Count)
+                limit = allAlbums.Count - offset;
 
             return Task.FromResult<IReadOnlyList<AlbumMetadata>>(allAlbums.GetRange(offset, limit));
         }
@@ -296,8 +303,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                     results.Add(item);
             }
 
-            if (offset + limit > allArtists.Count)
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= results.Count)
                 return new List<AlbumMetadata>();
+
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > results.Count)
+                limit = results.Count - offset;
 
             return results.GetRange(offset, limit).ToList();
         }

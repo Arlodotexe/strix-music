@@ -1,24 +1,27 @@
-﻿using System;
+﻿using StrixMusic.Sdk.Data.Core;
+using System;
 using System.Threading.Tasks;
 
 namespace StrixMusic.Sdk.Data.Base
 {
     /// <summary>
-    /// A collection of images.
+    /// A common class for a collection of images.
     /// </summary>
+    /// <seealso cref="IImageCollection"/>
+    /// <seealso cref="ICoreImageCollection"/>
     public interface IImageCollectionBase : ICollectionBase, IAsyncDisposable
     {
         /// <summary>
-        /// Checks if the backend supports adding an <see cref="IImageBase"/> at a specific position in the collection.
+        /// Checks if adding a <see cref="IImageBase"/> to the collection at at the given <paramref name="index"/> is supported.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, a new <see cref="IImageBase"/> can be added.</returns>
-        Task<bool> IsAddImageAvailable(int index);
+        Task<bool> IsAddImageAvailableAsync(int index);
 
         /// <summary>
-        /// Checks if the backend supports removing an <see cref="IImageBase"/> at a specific index.
+        /// Checks if removing a <see cref="IImageBase"/> to the collection at at the given <paramref name="index"/> is supported.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. If value is true, the <see cref="IImageBase"/> can be removed.</returns>
-        Task<bool> IsRemoveImageAvailable(int index);
+        Task<bool> IsRemoveImageAvailableAsync(int index);
 
         /// <summary>
         /// Removes the image from the collection on the backend.

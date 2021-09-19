@@ -4,6 +4,7 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:unitconvert="using:StrixMusic.Sdk.Uno.Converters.Units"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:a="using:OwlCore.Uno.Attached"
@@ -21,11 +22,9 @@
             </Grid.RowDefinitions>
 
             <StackPanel Margin="24,0,0,12">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{x:Bind TotalTracksCount, Mode=OneWay}" FontSize="12" FontWeight="Bold"/>
-                    <TextBlock x:Uid="/Music/SongsTB" Text="SONGS" FontSize="12" FontWeight="Bold" Margin="4,0,0,0"
-                               a:TextHelpers.CharacterCasing="Upper"/>
-                </StackPanel>
+                <TextBlock Text="{x:Bind unitconvert:CountToSongsConverter.Convert(TotalTrackCount), Mode=OneWay}"
+                           FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
+
                 <ProgressBar IsIndeterminate="True" Visibility="{x:Bind PopulateMoreTracksCommand.IsRunning, Mode=OneWay}"/>
             </StackPanel>
 

@@ -4,7 +4,7 @@ using OwlCore.AbstractUI.Models;
 namespace OwlCore.Uno.AbstractUI.Themes
 {
     /// <summary>
-    /// Default template for the <see cref="AbstractDataList"/>
+    /// Default template for an <see cref="AbstractDataList"/>.
     /// </summary>
     public sealed partial class AbstractDataListStyle : ResourceDictionary
     {

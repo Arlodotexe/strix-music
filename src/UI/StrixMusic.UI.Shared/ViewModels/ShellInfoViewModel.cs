@@ -76,7 +76,7 @@ namespace StrixMusic.Shared.ViewModels
 
             foreach (var file in foundFiles)
             {
-                ShellPreviews.Add(new Uri(file.Path));
+                ShellPreviews.Add(new Uri($"ms-appx:///Assets/ShellPreviews/{AssemblyInfo.AssemblyName}/{file.Name}"));
             }
         }
     }

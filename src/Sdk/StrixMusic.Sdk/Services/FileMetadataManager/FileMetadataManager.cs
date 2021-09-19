@@ -1,40 +1,21 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
+using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Repositories;
 using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {
-    /// <summary>
-    /// The type of files being scanned.
-    /// </summary>
-    public enum FileScanningType
-    {
-        /// <summary>
-        /// Not currently scanning files.
-        /// </summary>
-        None,
-
-        /// <summary>
-        /// Files containing raw audio.
-        /// </summary>
-        AudioFiles,
-
-        /// <summary>
-        /// Files containing playlist metadata.
-        /// </summary>
-        Playlists
-    }
-
     /// <inheritdoc cref="IFileMetadataManager" />
-    public class FileMetadataManager : IFileMetadataManager, IDisposable
+    public class FileMetadataManager : IFileMetadataManager
     {
         private static string NewGuid() => Guid.NewGuid().ToString();
 
@@ -43,13 +24,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private readonly AudioMetadataScanner _audioMetadataScanner;
         private readonly PlaylistMetadataScanner _playlistMetadataScanner;
         private readonly INotificationService? _notificationService;
+        private readonly IFolderData _rootFolder;
 
+        private CancellationTokenSource? _inProgressScanCancellationTokenSource;
         private Notification? _filesScannedNotification;
         private Notification? _filesFoundNotification;
-        private AbstractProgressUIElement? _progressUIElement;
+        private AbstractProgressIndicator? _progressUIElement;
 
         private FileScanningType _currentScanningType;
-        private IFolderData _rootFolder;
         private int _filesFound;
         private int _filesProcessed;
 
@@ -64,7 +46,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
             _fileScanner = new DepthFirstFileScanner(rootFolder);
-            _audioMetadataScanner = new AudioMetadataScanner(_fileScanner, this);
+            _audioMetadataScanner = new AudioMetadataScanner(this);
             _playlistMetadataScanner = new PlaylistMetadataScanner(this, _audioMetadataScanner, _fileScanner);
 
             Tracks = new TrackRepository(_audioMetadataScanner);
@@ -178,16 +160,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public AlbumRepository Albums { get; private set; }
+        public AlbumRepository Albums { get; }
 
         /// <inheritdoc />
-        public ArtistRepository Artists { get; private set; }
+        public ArtistRepository Artists { get; }
 
         /// <inheritdoc />
-        public PlaylistRepository Playlists { get; private set; }
+        public PlaylistRepository Playlists { get; }
 
         /// <inheritdoc />
-        public TrackRepository Tracks { get; private set; }
+        public TrackRepository Tracks { get; }
 
         /// <inheritdoc/>
         public ImageRepository Images { get; private set; }
@@ -196,8 +178,25 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public bool SkipRepoInit { get; set; }
 
         /// <inheritdoc />
+        public MetadataScanTypes ScanTypes { get; set; } = MetadataScanTypes.TagLib | MetadataScanTypes.FileProperties;
+
+        /// <inheritdoc />
+        public int DegreesOfParallelism { get; set; } = 2;
+
+        /// <inheritdoc />
         public async Task StartScan()
         {
+            if (!(_inProgressScanCancellationTokenSource is null))
+            {
+                _inProgressScanCancellationTokenSource.Cancel();
+                _inProgressScanCancellationTokenSource.Dispose();
+            }
+
+            _inProgressScanCancellationTokenSource = new CancellationTokenSource();
+            var currentToken = _inProgressScanCancellationTokenSource.Token;
+
+            DismissNotifs();
+
             if (!IsInitialized)
                 await InitAsync();
 
@@ -212,47 +211,74 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 await Images.InitAsync();
             }
 
+            CancelIfNeeded();
+            FilesFound = 0;
+
             var findingFilesNotif = RaiseFileDiscoveryNotification();
-            var discoveredFiles = await _fileScanner.ScanFolder(_rootFolder);
+            var discoveredFiles = await _fileScanner.ScanFolder(_rootFolder, currentToken);
+            var filesToScan = discoveredFiles as IFileData[] ?? discoveredFiles.ToArray();
             findingFilesNotif.Dismiss();
+
+            CancelIfNeeded();
+            FilesProcessed = 0;
 
             _currentScanningType = FileScanningType.AudioFiles;
             var scanningMusicNotif = RaiseProcessingNotification();
-            var fileMetadata = await _audioMetadataScanner.ScanMusicFiles(discoveredFiles);
+            var fileMetadata = await _audioMetadataScanner.ScanMusicFiles(filesToScan, currentToken);
             scanningMusicNotif.Dismiss();
 
-            // Playlist scanning is disabled until bugs are fixed.
-            /*            _currentScanningType = FileScanningType.Playlists;
-                        var scanningPlaylistsNotif = RaiseProcessingNotification();
-                        await _playlistMetadataScanner.ScanPlaylists(discoveredFiles, fileMetadata);
-                        scanningPlaylistsNotif.Dismiss();*/
+            CancelIfNeeded();
+
+            _currentScanningType = FileScanningType.Playlists;
+            var scanningPlaylistsNotif = RaiseProcessingNotification();
+            await _playlistMetadataScanner.ScanPlaylists(filesToScan, fileMetadata, currentToken);
+            scanningPlaylistsNotif.Dismiss();
+
+            CancelIfNeeded();
 
             ScanningCompleted?.Invoke(this, EventArgs.Empty);
+
+            void CancelIfNeeded()
+            {
+                if (currentToken.IsCancellationRequested)
+                {
+                    DismissNotifs();
+                    currentToken.ThrowIfCancellationRequested();
+                }
+            }
+
+            void DismissNotifs()
+            {
+                _filesScannedNotification?.Dismiss();
+                _filesFoundNotification?.Dismiss();
+            }
         }
 
         private void UpdateFilesScannedNotification()
         {
-            Guard.IsNotNull(_filesScannedNotification, nameof(_filesScannedNotification));
+            if (_filesScannedNotification is null)
+                return;
 
-            _filesScannedNotification.AbstractUIElementGroup.Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolder.Path}";
+            _filesScannedNotification.AbstractUICollection.Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolder.Path}";
         }
 
         private void UpdateFilesFoundNotification()
         {
-            Guard.IsNotNull(_filesFoundNotification, nameof(_filesFoundNotification));
+            if (_filesFoundNotification is null)
+                return;
 
-            _filesFoundNotification.AbstractUIElementGroup.Subtitle = $"Found {FilesFound} in {_rootFolder.Path}";
+            _filesFoundNotification.AbstractUICollection.Subtitle = $"Found {FilesFound} in {_rootFolder.Path}";
         }
 
         private Notification RaiseFileDiscoveryNotification()
         {
             Guard.IsNotNull(_notificationService, nameof(_notificationService));
 
-            var elementGroup = new AbstractUIElementGroup(NewGuid())
+            var elementGroup = new AbstractUICollection(NewGuid())
             {
                 Title = "Discovering files",
                 Subtitle = $"Found {FilesFound} in {_rootFolder.Path}",
-                Items = { new AbstractProgressUIElement(NewGuid(), null) },
+                Items = new AbstractProgressIndicator(NewGuid(), null).IntoList(),
             };
 
             return _filesFoundNotification = _notificationService.RaiseNotification(elementGroup);
@@ -262,7 +288,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             Guard.IsNotNull(_notificationService, nameof(_notificationService));
 
-            _progressUIElement = new AbstractProgressUIElement(NewGuid(), FilesProcessed, FilesFound);
+            _progressUIElement = new AbstractProgressIndicator(NewGuid(), FilesProcessed, FilesFound);
 
             var scanningTypeStr = _currentScanningType switch
             {
@@ -271,19 +297,14 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
                 _ => ThrowHelper.ThrowArgumentOutOfRangeException<string>(),
             };
 
-            var elementGroup = new AbstractUIElementGroup(NewGuid())
+            var elementGroup = new AbstractUICollection(NewGuid())
             {
                 Title = $"Scanning {scanningTypeStr}",
                 Subtitle = $"Scanned {FilesProcessed}/{FilesFound} in {_rootFolder.Path}",
-                Items = { _progressUIElement },
+                Items = _progressUIElement.IntoList(),
             };
 
             return _filesScannedNotification = _notificationService.RaiseNotification(elementGroup);
-        }
-
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
         }
 
         /// <inheritdoc />
@@ -301,35 +322,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _filesFoundNotification?.Dismiss();
             _filesScannedNotification?.Dismiss();
 
+            DetachEvents();
             return default;
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!IsInitialized)
-                return;
-
-            if (disposing)
-            {
-                // dispose any objects you created here
-                ReleaseUnmanagedResources();
-            }
-
-            IsInitialized = false;
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
-        ~FileMetadataManager()
-        {
-            Dispose(false);
         }
     }
 }
