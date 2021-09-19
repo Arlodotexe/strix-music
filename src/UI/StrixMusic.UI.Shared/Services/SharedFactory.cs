@@ -8,6 +8,7 @@ using OwlCore.Collections;
 using OwlCore.Uno.Collections;
 using StrixMusic.Sdk.Services;
 using Windows.Storage;
+using CreationCollisionOption = Windows.Storage.CreationCollisionOption;
 
 namespace StrixMusic.Shared.Services
 {
@@ -73,16 +74,7 @@ namespace StrixMusic.Shared.Services
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is the requested <see cref="FileSystemService"/>.</returns>
         public async Task<IFileSystemService> CreateFileSystemServiceForCache(string folderName)
         {
-            StorageFolder rootStorageFolder;
-
-            try
-            {
-                rootStorageFolder = await ApplicationData.Current.LocalCacheFolder.GetFolderAsync(folderName);
-            }
-            catch (FileNotFoundException)
-            {
-                rootStorageFolder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(folderName);
-            }
+            var rootStorageFolder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
 
             return new FileSystemService(rootStorageFolder);
         }
