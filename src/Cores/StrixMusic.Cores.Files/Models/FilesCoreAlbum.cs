@@ -10,9 +10,8 @@ using StrixMusic.Sdk.Extensions;
 using StrixMusic.Sdk.MediaPlayback;
 using StrixMusic.Sdk.Services.FileMetadataManager;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
-using TagLib.Riff;
 
-namespace StrixMusic.Core.LocalFiles.Models
+namespace StrixMusic.Cores.Files.Models
 {
     /// <summary>
     /// Wraps around <see cref="AlbumMetadata"/> to provide album information extracted from a file to the Strix SDK.
@@ -128,10 +127,17 @@ namespace StrixMusic.Core.LocalFiles.Models
                     return;
 
                 Guard.IsNotNull(metadata.ArtistIds, nameof(metadata.ArtistIds));
+                Guard.IsNotNull(metadata.ImageIds, nameof(metadata.ImageIds));
                 Guard.IsNotNull(metadata.TrackIds, nameof(metadata.TrackIds));
+                Guard.IsNotNull(metadata.Genres, nameof(metadata.Genres));
 
                 var previousData = _albumMetadata;
                 _albumMetadata = metadata;
+
+                Guard.IsNotNull(previousData.TrackIds, nameof(previousData.TrackIds));
+                Guard.IsNotNull(previousData.ArtistIds, nameof(previousData.ArtistIds));
+                Guard.IsNotNull(previousData.ImageIds, nameof(previousData.ImageIds));
+                Guard.IsNotNull(previousData.Genres, nameof(previousData.Genres));
 
                 if (metadata.Title != previousData.Title)
                     NameChanged?.Invoke(this, Name);
@@ -145,20 +151,36 @@ namespace StrixMusic.Core.LocalFiles.Models
                 if (metadata.Duration != previousData.Duration)
                     DurationChanged?.Invoke(this, Duration);
 
-                // TODO genres, post genres do-over
+                if (metadata.Genres.Count != previousData.Genres.Count)
+                    GenresCountChanged?.Invoke(this, metadata.Genres.Count);
 
-                if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
+                if (metadata.TrackIds.Count != previousData.TrackIds.Count)
                     TracksCountChanged?.Invoke(this, metadata.TrackIds.Count);
 
-                if (metadata.ArtistIds.Count != (previousData.ArtistIds?.Count ?? 0))
+                if (metadata.ArtistIds.Count != previousData.ArtistIds.Count)
                     ArtistItemsCountChanged?.Invoke(this, metadata.ArtistIds.Count);
 
                 HandleImagesChanged(previousData.ImageIds, metadata.ImageIds);
             }
         }
 
-        private async void HandleImagesChanged(IReadOnlyList<string>? oldImageIds, IReadOnlyList<string>? newImageIds)
+        private async void HandleImagesChanged(IReadOnlyList<string> oldImageIds, IReadOnlyList<string> newImageIds)
         {
+            if (oldImageIds.OrderBy(s => s).SequenceEqual(newImageIds.OrderBy(s => s)))
+            {
+                // Lists have identical content, so no images have changed.
+                return;
+            }
+
+            var addedImages = newImageIds.Except(oldImageIds);
+            var removedImages = oldImageIds.Except(newImageIds);
+
+            if (oldImageIds.Count != newImageIds.Count)
+            {
+                ImagesChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
+                ImagesCountChanged?.Invoke(this, newImageIds.Count);
+            }
+
             async Task<IReadOnlyList<CollectionChangedItem<ICoreImage>>> TransformAsync(IEnumerable<string> ids)
             {
                 var idArray = ids as string[] ?? ids.ToArray();
@@ -170,29 +192,11 @@ namespace StrixMusic.Core.LocalFiles.Models
 
                     Guard.IsNotNullOrWhiteSpace(image.Id, nameof(image.Id));
                     collectionChangedItems.Add(new CollectionChangedItem<ICoreImage>(InstanceCache.Images.GetOrCreate(image.Id, SourceCore, image), collectionChangedItems.Count));
-                    return collectionChangedItems;
                 }
 
-                // Null and empty lists should be handled the same.
-                oldImageIds ??= new List<string>();
-                newImageIds ??= new List<string>();
-
-                if (oldImageIds.OrderBy(s => s).SequenceEqual(newImageIds.OrderBy(s => s)))
-                {
-                    // Lists have identical content, so no images have changed.
-                    return;
-                }
-
-                var addedImages = newImageIds.Except(oldImageIds);
-                var removedImages = oldImageIds.Except(newImageIds);
-
-                ImagesChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
-
-                if (oldImageIds.Count != newImageIds.Count)
-                {
-                    ImagesCountChanged?.Invoke(this, newImageIds.Count);
-                }
+                return collectionChangedItems;
             }
+        }
 
         /// <inheritdoc/>
         public event EventHandler<PlaybackState>? PlaybackStateChanged;

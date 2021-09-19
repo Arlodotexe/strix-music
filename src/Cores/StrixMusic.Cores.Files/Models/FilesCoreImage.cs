@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
@@ -15,9 +16,14 @@ namespace StrixMusic.Cores.Files.Models
         /// </summary>
         /// <param name="sourceCore">The source core.</param>
         /// <param name="imageMetadata">The image metadata to wrap around.</param>
-        public LocalFilesCoreImage(ICore sourceCore, ImageMetadata imageMetadata)
+        public FilesCoreImage(ICore sourceCore, ImageMetadata imageMetadata)
         {
             _imageMetadata = imageMetadata;
+
+            // Guard.IsNotNull() wasn't working here. Fallback to ThrowHelper.
+            Uri = imageMetadata.Uri ?? ThrowHelper.ThrowArgumentNullException<Uri>(nameof(imageMetadata.Uri));
+            Height = (double?)imageMetadata.Height ?? ThrowHelper.ThrowArgumentNullException<int>(nameof(imageMetadata.Height));
+            Width = (double?)imageMetadata.Width ?? ThrowHelper.ThrowArgumentNullException<int>(nameof(imageMetadata.Width));
 
             SourceCore = sourceCore;
         }
@@ -28,13 +34,13 @@ namespace StrixMusic.Cores.Files.Models
         // TODO: Fix these placeholder exception (what should these properties do if _imageMetadata properties are null?).
 
         /// <inheritdoc />
-        public Uri Uri => _imageMetadata.Uri ?? throw new InvalidOperationException();
+        public Uri Uri { get; }
 
         /// <inheritdoc />
-        public double Height => _imageMetadata.Height ?? throw new InvalidOperationException();
+        public double Height { get; }
 
         /// <inheritdoc />
-        public double Width => _imageMetadata.Width ?? throw new InvalidOperationException();
+        public double Width { get; }
 
         /// <inheritdoc />
         public ValueTask DisposeAsync()
