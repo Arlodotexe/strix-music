@@ -10,7 +10,9 @@ using StrixMusic.Sdk.Data;
 using StrixMusic.Sdk.Data.Core;
 using StrixMusic.Sdk.Data.Merged;
 using StrixMusic.Sdk.Extensions;
+using StrixMusic.Sdk.Helpers;
 using StrixMusic.Sdk.MediaPlayback;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.MediaPlayback;
 using StrixMusic.Sdk.ViewModels.Helpers;
 using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
@@ -29,6 +31,7 @@ namespace StrixMusic.Sdk.ViewModels
     public class TrackViewModel : ObservableObject, ITrack, IArtistCollectionViewModel, IImageCollectionViewModel, IGenreCollectionViewModel
     {
         private readonly IPlaybackHandlerService _playbackHandler;
+        private readonly ILocalizationService _localizationService;
 
         private readonly AsyncLock _populateArtistsMutex = new AsyncLock();
         private readonly AsyncLock _populateImagesMutex = new AsyncLock();
@@ -46,6 +49,7 @@ namespace StrixMusic.Sdk.ViewModels
             SourceCores = Model.GetSourceCores<ICoreTrack>().Select(MainViewModel.GetLoadedCore).ToList();
 
             _playbackHandler = Ioc.Default.GetRequiredService<IPlaybackHandlerService>();
+            _localizationService = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             if (Model.Album != null)
                 Album = new AlbumViewModel(Model.Album);
@@ -501,7 +505,7 @@ namespace StrixMusic.Sdk.ViewModels
         public string Id => Model.Id;
 
         /// <inheritdoc />
-        public string Name => Model.Name;
+        public string Name => _localizationService.LocalizeIfNullOrEmpty(Model.Name, this);
 
         /// <inheritdoc />
         public int TotalArtistItemsCount => Model.TotalArtistItemsCount;

@@ -387,4 +387,13 @@
   <data name="DateAddedCOL.Header" xml:space="preserve">
     <value>Date added</value>
   </data>
+  <data name="UnknownAlbum" xml:space="preserve">
+    <value>Unknown Album</value>
+  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>Unknown Artist</value>
+  </data>
+  <data name="UnknownName" xml:space="preserve">
+    <value>Unknown Name</value>
+  </data>
 </root>
