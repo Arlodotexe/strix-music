@@ -23,6 +23,7 @@ using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using OwlCore.AbstractUI.Models;
+using StrixMusic.Sdk.Services.Localization;
 using StrixMusic.Sdk.Services.Notifications;
 
 namespace StrixMusic.Shared.ViewModels
@@ -36,7 +37,7 @@ namespace StrixMusic.Shared.ViewModels
         private readonly LoadedServicesItemViewModel _addNewItem;
         private readonly ICoreManagementService _coreManagementService;
         private readonly INotificationService _notificationService;
-        private readonly LocalizationResourceLoader _localizationResourceLoader;
+        private readonly ILocalizationService _localizationResourceLoader;
         private bool _isShowingAddNew;
         private int _selectedTabIndex;
         private CoreViewModel? _currentCoreConfig;
@@ -49,7 +50,7 @@ namespace StrixMusic.Shared.ViewModels
             _mainViewModel = Ioc.Default.GetRequiredService<MainViewModel>();
             _coreManagementService = Ioc.Default.GetRequiredService<ICoreManagementService>();
             _notificationService = Ioc.Default.GetRequiredService<INotificationService>();
-            _localizationResourceLoader = Ioc.Default.GetRequiredService<LocalizationResourceLoader>();
+            _localizationResourceLoader = Ioc.Default.GetRequiredService<ILocalizationService>();
 
             ShellSelectorViewModel = new ShellSelectorViewModel();
             Services = new ObservableCollection<LoadedServicesItemViewModel>();
