@@ -185,7 +185,11 @@ namespace StrixMusic.Shared.ViewModels
                     if (item is CoreViewModel coreVm)
                     {
                         AttachEvents(coreVm);
-                        Services.Insert(0, new LoadedServicesItemViewModel(false, coreVm));
+
+                        var loadedServicesViewModel = new LoadedServicesItemViewModel(false, coreVm);
+                        loadedServicesViewModel.ConfigRequested += LoadedService_ConfigRequested;
+
+                        Services.Insert(0, loadedServicesViewModel);
                     }
                 }
 
@@ -198,7 +202,11 @@ namespace StrixMusic.Shared.ViewModels
                 {
                     if (item is CoreViewModel coreVm)
                     {
+                        DetachEvents(coreVm);
+
                         var serviceToRemove = Services.First(x => x.Core?.InstanceId == coreVm.InstanceId);
+                        serviceToRemove.ConfigRequested -= LoadedService_ConfigRequested;
+
                         Services.Remove(serviceToRemove);
                     }
                 }
