@@ -99,9 +99,6 @@ namespace StrixMusic.Sdk.ViewModels
         {
             _nowPlaying = new TrackViewModel(e);
 
-            if (_nowPlaying.PopulateMoreArtistsCommand?.CanExecute(1) ?? false)
-                _ = _nowPlaying.PopulateMoreArtistsCommand?.ExecuteAsync(1);
-
             OnPropertyChanged(nameof(NowPlaying));
         });
 
