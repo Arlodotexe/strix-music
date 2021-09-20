@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Windows.Media;
+using Windows.Storage;
 using Windows.Storage.Streams;
 
 namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
@@ -178,11 +179,27 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             _systemMediaTransportControls.IsPreviousEnabled = _playbackHandlerService.PreviousItems.Count > 0;
 
             // Images
-            // Just the first, we don't care about the size.
-            await foreach (var image in e.Track.GetImagesAsync(1, 0))
+            if (e.Track.TotalImageCount == 0)
             {
-                updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(image.Uri);
-                break;
+                updater.Thumbnail = null;
+            }
+            else
+            {
+                // Just the first, we don't care about the size.
+                await foreach (var image in e.Track.GetImagesAsync(1, 0))
+                {
+                    if (image.Uri.IsFile)
+                    {
+                        var file = await StorageFile.GetFileFromPathAsync(image.Uri.LocalPath);
+                        updater.Thumbnail = RandomAccessStreamReference.CreateFromFile(file);
+                    }
+                    else
+                    {
+                        updater.Thumbnail = RandomAccessStreamReference.CreateFromUri(image.Uri);
+                    }
+
+                    break;
+                }
             }
 
             // Genres
