@@ -121,6 +121,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             fileMetadata.ImageMetadata = results;
 
             Guard.IsNotNull(fileMetadata.AlbumMetadata, nameof(fileMetadata.AlbumMetadata));
+            Guard.IsNotNull(fileMetadata.TrackMetadata, nameof(fileMetadata.TrackMetadata));
 
             // Must create a new instance to make an update.
             // FileCoreAlbum holds a reference to any emitted data, meaning it sees any changes to IDs before the data is in the repo.
@@ -137,7 +138,26 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 ImageIds = new HashSet<string>(results.Select(x => x.Id).PruneNull()),
             };
 
+            var updateTrackMetadata = new TrackMetadata
+            {
+                Id = fileMetadata.TrackMetadata.Id,
+                Title = fileMetadata.TrackMetadata.Title,
+                Description = fileMetadata.TrackMetadata.Description,
+                AlbumId = fileMetadata.TrackMetadata.AlbumId,
+                ArtistIds = fileMetadata.TrackMetadata.ArtistIds,
+                Duration = fileMetadata.TrackMetadata.Duration,
+                TrackNumber = fileMetadata.TrackMetadata.TrackNumber,
+                DiscNumber = fileMetadata.TrackMetadata.DiscNumber,
+                Genres = fileMetadata.TrackMetadata.Genres,
+                ImageIds = new HashSet<string>(results.Select(x => x.Id).PruneNull()),
+                Language = fileMetadata.TrackMetadata.Language,
+                Lyrics = fileMetadata.TrackMetadata.Lyrics,
+                Url = fileMetadata.TrackMetadata.Url,
+                Year = fileMetadata.TrackMetadata.Year
+            };
+
             fileMetadata.AlbumMetadata = updatedAlbumMetadata;
+            fileMetadata.TrackMetadata = updateTrackMetadata;
 
             AssignMissingRequiredData(fileData, fileMetadata);
             LinkMetadataIdsForFile(fileMetadata);
