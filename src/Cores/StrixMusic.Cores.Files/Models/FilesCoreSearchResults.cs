@@ -77,7 +77,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            _albumMetadata = await _fileMetadataManager.Albums.GetAlbums(0, int.MaxValue);
+            _albumMetadata = await _fileMetadataManager.Albums.GetItemsAsync(0, int.MaxValue);
 
             _albumMetadata = _albumMetadata.Where(c => c.Title?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
 
@@ -92,7 +92,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
-            _artistMetadata = await _fileMetadataManager.Artists.GetArtists(0, int.MaxValue);
+            _artistMetadata = await _fileMetadataManager.Artists.GetItemsAsync(0, int.MaxValue);
 
             _artistMetadata = _artistMetadata.Where(c => c.Name?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
 
@@ -105,7 +105,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc/>
         public override async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
-            _trackMetadata = await _fileMetadataManager.Tracks.GetTracks(0, int.MaxValue);
+            _trackMetadata = await _fileMetadataManager.Tracks.GetItemsAsync(0, int.MaxValue);
 
             _trackMetadata = _trackMetadata.Where(c => c.Title?.Equals(_query, StringComparison.OrdinalIgnoreCase) ?? false);
 

@@ -40,42 +40,11 @@ namespace StrixMusic.Cores.Files.Models
         private void AttachEvents()
         {
             _fileMetadataManager.Tracks.MetadataUpdated += Tracks_MetadataUpdated;
-            _fileMetadataManager.Tracks.ArtistItemsChanged += Tracks_ArtistItemsChanged;
         }
 
         private void DetachEvents()
         {
             _fileMetadataManager.Tracks.MetadataUpdated -= Tracks_MetadataUpdated;
-            _fileMetadataManager.Tracks.ArtistItemsChanged -= Tracks_ArtistItemsChanged;
-        }
-
-        private void Tracks_ArtistItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<(TrackMetadata Track, ArtistMetadata Artist)>> addedItems, IReadOnlyList<CollectionChangedItem<(TrackMetadata Track, ArtistMetadata Artist)>> removedItems)
-        {
-            var coreAddedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
-            var coreRemovedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>();
-
-            foreach (var item in addedItems)
-            {
-                if (item.Data.Track.Id == Id)
-                {
-                    Guard.IsNotNullOrWhiteSpace(item.Data.Artist.Id, nameof(item.Data.Artist.Id));
-                    var coreArtist = InstanceCache.Artists.GetOrCreate(item.Data.Artist.Id, SourceCore, item.Data.Artist);
-                    coreAddedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(coreArtist, item.Index));
-                }
-            }
-
-            foreach (var item in removedItems)
-            {
-                if (item.Data.Track.Id == Id)
-                {
-                    Guard.IsNotNullOrWhiteSpace(item.Data.Artist.Id, nameof(item.Data.Artist.Id));
-                    var coreArtist = InstanceCache.Artists.GetOrCreate(item.Data.Artist.Id, SourceCore, item.Data.Artist);
-                    coreRemovedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(coreArtist, item.Index));
-                }
-            }
-
-            if (coreAddedItems.Count + coreRemovedItems.Count > 0)
-                ArtistItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
         }
 
         private void Tracks_MetadataUpdated(object sender, IEnumerable<TrackMetadata> e)
@@ -123,11 +92,46 @@ namespace StrixMusic.Cores.Files.Models
                 if (metadata.ImageIds.Count != previousData.ImageIds.Count)
                     ImagesCountChanged?.Invoke(this, metadata.ImageIds.Count);
 
-                HandleImagesChanged(previousData.ImageIds, metadata.ImageIds);
+                _ = HandleImagesChanged(previousData.ImageIds, metadata.ImageIds);
+                _ = HandleArtistsChanged(previousData.ArtistIds, metadata.ArtistIds);
             }
         }
 
-        private async void HandleImagesChanged(IReadOnlyList<string> oldImageIds, IReadOnlyList<string> newImageIds)
+        private async Task HandleArtistsChanged(IReadOnlyList<string> oldArtistIds, IReadOnlyList<string> newArtistIds)
+        {
+            if (oldArtistIds.OrderBy(s => s).SequenceEqual(newArtistIds.OrderBy(s => s)))
+            {
+                // Lists have identical content, so no items have changed.
+                return;
+            }
+
+            var addedArtists = newArtistIds.Except(oldArtistIds);
+            var removedArtists = oldArtistIds.Except(newArtistIds);
+
+            if (oldArtistIds.Count != newArtistIds.Count)
+            {
+                ArtistItemsChanged?.Invoke(this, await TransformAsync(addedArtists), await TransformAsync(removedArtists));
+                ArtistItemsCountChanged?.Invoke(this, newArtistIds.Count);
+            }
+
+            async Task<IReadOnlyList<CollectionChangedItem<ICoreArtistCollectionItem>>> TransformAsync(IEnumerable<string> ids)
+            {
+                var idArray = ids as string[] ?? ids.ToArray();
+                var collectionChangedItems = new List<CollectionChangedItem<ICoreArtistCollectionItem>>(idArray.Length);
+
+                foreach (var id in idArray)
+                {
+                    var artist = await _fileMetadataManager.Artists.GetByIdAsync(id);
+                    Guard.IsNotNullOrWhiteSpace(artist?.Id, nameof(artist.Id));
+
+                    collectionChangedItems.Add(new CollectionChangedItem<ICoreArtistCollectionItem>(InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist), collectionChangedItems.Count));
+                }
+
+                return collectionChangedItems;
+            }
+        }
+
+        private async Task HandleImagesChanged(IReadOnlyList<string> oldImageIds, IReadOnlyList<string> newImageIds)
         {
             if (oldImageIds.OrderBy(s => s).SequenceEqual(newImageIds.OrderBy(s => s)))
             {
@@ -151,9 +155,9 @@ namespace StrixMusic.Cores.Files.Models
 
                 foreach (var id in idArray)
                 {
-                    var image = await _fileMetadataManager.Images.GetImageByIdAsync(id);
+                    var image = await _fileMetadataManager.Images.GetByIdAsync(id);
 
-                    Guard.IsNotNullOrWhiteSpace(image.Id, nameof(image.Id));
+                    Guard.IsNotNullOrWhiteSpace(image?.Id, nameof(image.Id));
                     collectionChangedItems.Add(new CollectionChangedItem<ICoreImage>(InstanceCache.Images.GetOrCreate(image.Id, SourceCore, image), collectionChangedItems.Count));
                 }
 
@@ -508,10 +512,10 @@ namespace StrixMusic.Cores.Files.Models
 
             foreach (var imageId in _trackMetadata.ImageIds)
             {
-                yield return InstanceCache.Images.GetOrCreate(
-                    imageId,
-                    SourceCore,
-                    await _fileMetadataManager.Images.GetImageByIdAsync(imageId));
+                var image = await _fileMetadataManager.Images.GetByIdAsync(imageId);
+                Guard.IsNotNull(image, nameof(image));
+
+                yield return InstanceCache.Images.GetOrCreate(imageId, SourceCore, image);
             }
         }
 

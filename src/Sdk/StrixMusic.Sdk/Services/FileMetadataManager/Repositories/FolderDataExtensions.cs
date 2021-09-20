@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
 
-namespace StrixMusic.Sdk.Services.FileMetadataManager
+namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 {
     /// <summary>
     /// <see cref="IFolderData"/> extension methods.

@@ -1,4 +1,6 @@
-﻿namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
+﻿using System.Collections.Generic;
+
+namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
 {
     /// <summary>
     /// Holds multiple sets of metadata scanned from a single file.
@@ -29,5 +31,10 @@
         /// The metadata for the playlist.
         /// </summary>
         public PlaylistMetadata? PlaylistMetadata { get; set; }
+
+        /// <summary>
+        /// Image metadata for this file.
+        /// </summary>
+        public List<ImageMetadata>? ImageMetadata { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -9,6 +10,7 @@ using OwlCore.AbstractStorage;
 using OwlCore.AbstractUI.Models;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using StrixMusic.Sdk.Services.FileMetadataManager.Repositories;
 using StrixMusic.Sdk.Services.Notifications;
 
@@ -49,11 +51,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _audioMetadataScanner = new AudioMetadataScanner(this);
             _playlistMetadataScanner = new PlaylistMetadataScanner(this, _audioMetadataScanner, _fileScanner);
 
-            Tracks = new TrackRepository(_audioMetadataScanner);
+            Images = new ImageRepository();
+            Tracks = new TrackRepository();
+            Albums = new AlbumRepository();
+            Artists = new ArtistRepository();
             Playlists = new PlaylistRepository(_playlistMetadataScanner);
-            Albums = new AlbumRepository(_audioMetadataScanner, Tracks);
-            Artists = new ArtistRepository(_audioMetadataScanner, Tracks);
-            Images = new ImageRepository(_audioMetadataScanner);
 
             _rootFolder = rootFolder;
         }
@@ -111,16 +113,36 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private void AttachEvents()
         {
             _fileScanner.FilesDiscovered += OnFilesDiscovered;
+            _audioMetadataScanner.FileMetadataAdded += AudioMetadataScanner_FileMetadataAdded;
         }
 
         private void DetachEvents()
         {
             _fileScanner.FilesDiscovered -= OnFilesDiscovered;
+            _audioMetadataScanner.FileMetadataAdded -= AudioMetadataScanner_FileMetadataAdded;
         }
 
         private void OnFilesDiscovered(object sender, System.Collections.Generic.IEnumerable<IFileData> e)
         {
             FilesFound += e.Count();
+        }
+
+        private async void AudioMetadataScanner_FileMetadataAdded(object sender, IEnumerable<FileMetadata> e)
+        {
+            var fileMetadata = e as FileMetadata[] ?? e.ToArray();
+
+            var imageMetadata = fileMetadata.Where(x => x.ImageMetadata != null).SelectMany(x => x.ImageMetadata).ToArray();
+            var trackMetadata = fileMetadata.Select(x => x.TrackMetadata).PruneNull().ToArray();
+            var artistMetadata = fileMetadata.Select(x => x.ArtistMetadata).PruneNull().ToArray();
+            var albumMetadata = fileMetadata.Select(x => x.AlbumMetadata).PruneNull().ToArray();
+
+            await Images.AddOrUpdateAsync(imageMetadata);
+            await Tracks.AddOrUpdateAsync(trackMetadata);
+
+            // Artists and albums reference each other, so update repos in parallel
+            // and cross your fingers that they internally add all data before emitting changed events 
+            // and that one doesn't finish first.
+            await Task.WhenAll(Artists.AddOrUpdateAsync(artistMetadata), Albums.AddOrUpdateAsync(albumMetadata));
         }
 
         /// <inheritdoc />
@@ -224,7 +246,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             _currentScanningType = FileScanningType.AudioFiles;
             var scanningMusicNotif = RaiseProcessingNotification();
-            var fileMetadata = await _audioMetadataScanner.ScanMusicFiles(filesToScan, currentToken);
+            var fileMetadata = await _audioMetadataScanner.ScanMusicFilesAsync(filesToScan, currentToken);
             scanningMusicNotif.Dismiss();
 
             CancelIfNeeded();

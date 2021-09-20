@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using OwlCore.AbstractStorage;
 using OwlCore.Provisos;
+using StrixMusic.Sdk.Services.FileMetadataManager.Repositories;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager
 {

@@ -6,14 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
-
 using OwlCore;
 using OwlCore.AbstractStorage;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Sdk.Services.FileMetadataManager
+namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 {
     /// <summary>
     /// The service that helps in interacting with image information.
@@ -25,7 +23,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private readonly ConcurrentDictionary<string, ImageMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;
         private readonly SemaphoreSlim _initMutex;
-        private readonly AudioMetadataScanner _audioMetadataScanner;
         private readonly string _debouncerId;
 
         private IFolderData? _folderData;
@@ -33,17 +30,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <summary>
         /// Creates a new instance of <see cref="ImageRepository"/>.
         /// </summary>
-        public ImageRepository(AudioMetadataScanner audioMetadataScanner)
+        public ImageRepository()
         {
-            Guard.IsNotNull(audioMetadataScanner, nameof(audioMetadataScanner));
-
             _inMemoryMetadata = new ConcurrentDictionary<string, ImageMetadata>();
             _storageMutex = new SemaphoreSlim(1, 1);
             _initMutex = new SemaphoreSlim(1, 1);
-            _audioMetadataScanner = audioMetadataScanner;
             _debouncerId = Guid.NewGuid().ToString();
-
-            AttachEvents();
         }
 
         /// <inheritdoc/>
@@ -57,62 +49,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
         /// <inheritdoc/>
         public event EventHandler<IEnumerable<ImageMetadata>>? MetadataAdded;
-
-        private void AttachEvents()
-        {
-            _audioMetadataScanner.ImageMetadataAdded += AudioMetadataScanner_ImageMetadataAdded;
-        }
-
-        private void DetachEvents()
-        {
-            _audioMetadataScanner.ImageMetadataAdded -= AudioMetadataScanner_ImageMetadataAdded;
-        }
-
-        private async void AudioMetadataScanner_ImageMetadataAdded(object sender, IEnumerable<ImageMetadata> e)
-        {
-            var addedImages = new List<ImageMetadata>();
-            var updatedImages = new List<ImageMetadata>();
-
-            foreach (var metadata in e)
-            {
-                Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
-
-                var isUpdate = false;
-
-                await _storageMutex.WaitAsync();
-
-                _inMemoryMetadata.AddOrUpdate(
-                    metadata.Id,
-                    addValueFactory: id =>
-                    {
-                        isUpdate = false;
-                        return metadata;
-                    },
-                    updateValueFactory: (id, existing) =>
-                    {
-                        isUpdate = true;
-                        return metadata;
-                    });
-
-                _storageMutex.Release();
-
-                if (isUpdate)
-                    updatedImages.Add(metadata);
-                else
-                    addedImages.Add(metadata);
-            }
-
-            if (addedImages.Count > 0 || updatedImages.Count > 0)
-            {
-                _ = CommitChangesAsync();
-
-                if (addedImages.Count > 0)
-                    MetadataAdded?.Invoke(this, addedImages);
-
-                if (updatedImages.Count > 0)
-                    MetadataUpdated?.Invoke(this, updatedImages);
-            }
-        }
 
         /// <inheritdoc/>
         public async Task InitAsync()
@@ -142,41 +78,55 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _folderData = rootFolder;
         }
 
-        /// <inheritdoc/>
-        public async Task AddOrUpdateImageAsync(ImageMetadata imageMetadata)
+        /// <inheritdoc />
+        public async Task AddOrUpdateAsync(params ImageMetadata[] metadata)
         {
-            Guard.IsNotNull(imageMetadata, nameof(imageMetadata));
-            Guard.IsNotNullOrWhiteSpace(imageMetadata.Id, nameof(imageMetadata.Id));
-
-            var isUpdate = false;
+            var addedImages = new List<ImageMetadata>();
+            var updatedImages = new List<ImageMetadata>();
 
             await _storageMutex.WaitAsync();
 
-            _inMemoryMetadata.AddOrUpdate(
-                imageMetadata.Id,
-                addValueFactory: id =>
-                {
-                    isUpdate = false;
-                    return imageMetadata;
-                },
-                updateValueFactory: (id, existing) =>
-                {
-                    isUpdate = true;
-                    return imageMetadata;
-                });
+            var isUpdate = false;
+
+            foreach (var item in metadata)
+            {
+                Guard.IsNotNullOrWhiteSpace(item.Id, nameof(item.Id));
+
+                _inMemoryMetadata.AddOrUpdate(
+                    item.Id,
+                    addValueFactory: id =>
+                    {
+                        isUpdate = false;
+                        return item;
+                    },
+                    updateValueFactory: (id, existing) =>
+                    {
+                        isUpdate = true;
+                        return item;
+                    });
+
+                if (isUpdate)
+                    updatedImages.Add(item);
+                else
+                    addedImages.Add(item);
+            }
 
             _storageMutex.Release();
 
-            _ = CommitChangesAsync();
+            if (addedImages.Count > 0 || updatedImages.Count > 0)
+            {
+                _ = CommitChangesAsync();
 
-            if (isUpdate)
-                MetadataUpdated?.Invoke(this, imageMetadata.IntoList());
-            else
-                MetadataAdded?.Invoke(this, imageMetadata.IntoList());
+                if (addedImages.Count > 0)
+                    MetadataAdded?.Invoke(this, addedImages);
+
+                if (updatedImages.Count > 0)
+                    MetadataUpdated?.Invoke(this, updatedImages);
+            }
         }
 
         /// <inheritdoc/>
-        public async Task RemoveImageAsync(ImageMetadata imageMetadata)
+        public async Task RemoveAsync(ImageMetadata imageMetadata)
         {
             Guard.IsNotNull(imageMetadata, nameof(imageMetadata));
             Guard.IsNotNullOrWhiteSpace(imageMetadata.Id, nameof(imageMetadata.Id));
@@ -184,7 +134,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             await _storageMutex.WaitAsync();
 
             var removed = _inMemoryMetadata.TryRemove(imageMetadata.Id, out _);
-            
+
             _storageMutex.Release();
 
             if (removed)
@@ -195,9 +145,34 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc/>
-        public Task<ImageMetadata> GetImageByIdAsync(string id)
+        public async Task<ImageMetadata?> GetByIdAsync(string id)
         {
-            return Task.FromResult(_inMemoryMetadata[id]);
+            await _storageMutex.WaitAsync();
+
+            var result = _inMemoryMetadata[id];
+
+            _storageMutex.Release();
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public Task<IReadOnlyList<ImageMetadata>> GetItemsAsync(int offset, int limit)
+        {
+            var allImages = _inMemoryMetadata.Values.ToList();
+
+            if (limit == -1)
+                return Task.FromResult<IReadOnlyList<ImageMetadata>>(allImages);
+
+            // If the offset exceeds the number of items we have, return nothing.
+            if (offset >= allImages.Count)
+                return Task.FromResult<IReadOnlyList<ImageMetadata>>(new List<ImageMetadata>());
+
+            // If the total number of requested items exceeds the number of items we have, adjust the limit so it won't go out of range.
+            if (offset + limit > allImages.Count)
+                limit = allImages.Count - offset;
+
+            return Task.FromResult<IReadOnlyList<ImageMetadata>>(allImages.GetRange(offset, limit));
         }
 
         private async Task LoadDataFromDiskAsync()
@@ -238,7 +213,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             await _storageMutex.WaitAsync();
 
             Guard.IsNotNull(_folderData, nameof(_folderData));
-            var bytes = MessagePackSerializer.Serialize(_inMemoryMetadata.Values.ToList(), MessagePack.Resolvers.ContractlessStandardResolver.Options);
+            var bytes = MessagePackSerializer.Serialize(_inMemoryMetadata.Values.DistinctBy(x => x.Id).ToList(), MessagePack.Resolvers.ContractlessStandardResolver.Options);
 
             var fileData = await _folderData.CreateFileAsync(IMAGE_DATA_FILENAME, CreationCollisionOption.OpenIfExists);
             await fileData.WriteAllBytesAsync(bytes);
@@ -246,31 +221,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _storageMutex.Release();
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
-        {
-            Guard.IsTrue(IsInitialized, nameof(IsInitialized));
-
-            ReleaseUnmanagedResources();
-            if (disposing)
-            {
-                _inMemoryMetadata.Clear();
-                _storageMutex.Dispose();
-            }
-
-            IsInitialized = false;
-        }
-
         /// <inheritdoc/>
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }
