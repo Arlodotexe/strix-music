@@ -222,7 +222,7 @@ namespace StrixMusic.Cores.Files.Models
         public override async IAsyncEnumerable<ICorePlaylistCollectionItem> GetPlaylistItemsAsync(int limit, int offset)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            var playlistsMetadata = await _fileMetadataManager.Playlists.GetPlaylists(offset, limit);
+            var playlistsMetadata = await _fileMetadataManager.Playlists.GetItemsAsync(offset, limit);
 
             foreach (var playList in playlistsMetadata)
             {
@@ -236,7 +236,7 @@ namespace StrixMusic.Cores.Files.Models
         public override async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            var albumMetadata = await _fileMetadataManager.Albums.GetAlbums(offset, limit);
+            var albumMetadata = await _fileMetadataManager.Albums.GetItemsAsync(offset, limit);
 
             foreach (var album in albumMetadata)
             {
@@ -255,13 +255,13 @@ namespace StrixMusic.Cores.Files.Models
         public override async IAsyncEnumerable<ICoreArtistCollectionItem> GetArtistItemsAsync(int limit, int offset)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            var artistMetadata = await _fileMetadataManager.Artists.GetArtists(offset, limit);
+            var artistMetadata = await _fileMetadataManager.Artists.GetItemsAsync(offset, limit);
 
             foreach (var artist in artistMetadata)
             {
                 Guard.IsNotNullOrWhiteSpace(artist.Id, nameof(artist.Id));
 
-                if (artist.ImagePath != null)
+                if (artist.ImageIds != null)
                     yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist);
 
                 yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist);
@@ -272,7 +272,7 @@ namespace StrixMusic.Cores.Files.Models
         public override async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset = 0)
         {
             Guard.IsNotNull(_fileMetadataManager, nameof(_fileMetadataManager));
-            var artistMetadata = await _fileMetadataManager.Tracks.GetTracks(offset, limit);
+            var artistMetadata = await _fileMetadataManager.Tracks.GetItemsAsync(offset, limit);
 
             foreach (var track in artistMetadata)
             {
@@ -285,6 +285,13 @@ namespace StrixMusic.Cores.Files.Models
         public override IAsyncEnumerable<ICoreUrl> GetUrlsAsync(int limit, int offset = 0)
         {
             return AsyncEnumerable.Empty<ICoreUrl>();
+        }
+
+        /// <inheritdoc/>
+        public override ValueTask DisposeAsync()
+        {
+            DetachEvents();
+            return base.DisposeAsync();
         }
     }
 }

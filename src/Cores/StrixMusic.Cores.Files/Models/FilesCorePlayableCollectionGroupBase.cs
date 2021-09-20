@@ -548,7 +548,7 @@ namespace StrixMusic.Cores.Files.Models
         }
 
         /// <inheritdoc />
-        public ValueTask DisposeAsync()
+        public virtual ValueTask DisposeAsync()
         {
             return default;
         }

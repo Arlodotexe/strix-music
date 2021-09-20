@@ -1,71 +1,28 @@
-﻿using Microsoft.Toolkit.Diagnostics;
-using OwlCore;
-using OwlCore.AbstractStorage;
-using OwlCore.Extensions;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using StrixMusic.Sdk.Services.FileMetadataManager.Models;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using StrixMusic.Sdk.Data.Core;
+using Microsoft.Toolkit.Diagnostics;
+using OwlCore;
+using OwlCore.AbstractStorage;
+using OwlCore.Extensions;
+using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 using TagLib;
-using File = TagLib.File;
+
+using TagLibFile = TagLib.File;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 {
     /// <summary>
     /// Handles scanning of individual audio files for metadata.
     /// </summary>
-    public class AudioMetadataScanner : IDisposable
+    public partial class AudioMetadataScanner : IDisposable
     {
         private readonly int _scanBatchSize;
         private static readonly string[] _supportedMusicFileFormats = { ".mp3", ".flac", ".m4a", ".wma" };
-
-        private static readonly PictureType[] _albumPictureTypesRanking =
-        {
-            PictureType.FrontCover,
-            PictureType.Illustration,
-            PictureType.Other,
-            PictureType.Media,
-            PictureType.MovieScreenCapture,
-            PictureType.DuringPerformance,
-            PictureType.DuringRecording,
-            PictureType.Artist,
-            PictureType.LeadArtist,
-            PictureType.Band,
-            PictureType.BandLogo,
-            PictureType.Composer,
-            PictureType.Conductor,
-            PictureType.RecordingLocation,
-            PictureType.FileIcon,
-            PictureType.OtherFileIcon,
-        };
-
-        private static readonly PictureType[] _artistPictureTypesRanking =
-        {
-            PictureType.Artist,
-            PictureType.LeadArtist,
-            PictureType.FrontCover,
-            PictureType.Illustration,
-            PictureType.Media,
-            PictureType.MovieScreenCapture,
-            PictureType.DuringPerformance,
-            PictureType.DuringRecording,
-            PictureType.DuringPerformance,
-            PictureType.DuringRecording,
-            PictureType.Band,
-            PictureType.BandLogo,
-            PictureType.Composer,
-            PictureType.Conductor,
-            PictureType.RecordingLocation,
-            PictureType.FileIcon,
-            PictureType.OtherFileIcon,
-        };
 
         private readonly FileMetadataManager _metadataManager;
         private readonly SemaphoreSlim _batchLock;
@@ -88,6 +45,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             _scanBatchSize = metadataManager.DegreesOfParallelism;
 
             _batchLock = new SemaphoreSlim(1, 1);
+            _ongoingImageProcessingTasksSemaphore = new SemaphoreSlim(1, 1);
+            _ongoingImageProcessingSemaphore = new SemaphoreSlim(_scanBatchSize, _scanBatchSize);
+            _ongoingImageProcessingTasks = new ConcurrentDictionary<string, Task<IEnumerable<ImageMetadata>>>();
 
             AttachEvents();
         }
@@ -110,7 +70,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <summary>
         /// Raised when a previously scanned file has been removed from the file system.
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
+#pragma warning disable 67 
         public event EventHandler<IEnumerable<FileMetadata>>? FileMetadataRemoved;
+#pragma warning restore 67
 
         /// <summary>
         /// Raised when all file scanning is complete.
@@ -129,7 +92,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is all discovered metadata from the scanned files.</returns>
         public Task<IEnumerable<FileMetadata>> ScanMusicFiles(IEnumerable<IFileData> filesToScan)
         {
-            return ScanMusicFiles(filesToScan, new CancellationToken());
+            return ScanMusicFilesAsync(filesToScan, new CancellationToken());
         }
 
         /// <summary>
@@ -138,7 +101,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         /// <param name="filesToScan">The files that will be scanned for metadata. Invalid or unsupported files will be skipped.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> that will cancel the scanning task.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation. Value is all discovered metadata from the scanned files.</returns>
-        public async Task<IEnumerable<FileMetadata>> ScanMusicFiles(IEnumerable<IFileData> filesToScan, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FileMetadata>> ScanMusicFilesAsync(IEnumerable<IFileData> filesToScan, CancellationToken cancellationToken)
         {
             _filesProcessed = 0;
 
@@ -177,7 +140,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     }
 
                     // Scan the files in the current batch
-                    await Task.Run(() => currentBatch.InParallel(ProcessFile));
+                    await Task.Run(() => currentBatch.InParallel(ProcessFile), cancellationToken);
                 }
 
                 return _allFileMetadata;
@@ -189,72 +152,90 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             }
         }
 
-        private static IPicture? GetAlbumArt(IPicture[] pics)
-        {
-            foreach (var type in _albumPictureTypesRanking)
-            {
-                foreach (var sourcePic in pics)
-                {
-                    if (sourcePic.Type == type)
-                        return sourcePic;
-                }
-            }
-
-            return null;
-        }
-
-        private static IPicture? GetArtistArt(IPicture[] pics)
-        {
-            foreach (var type in _artistPictureTypesRanking)
-            {
-                foreach (var sourcePic in pics)
-                {
-                    if (sourcePic.Type == type)
-                        return sourcePic;
-                }
-            }
-
-            return null;
-        }
-
         private static void AssignMissingRequiredData(IFileData fileData, FileMetadata metadata)
         {
-            metadata.Id = fileData.Id?.HashMD5Fast();
+            // If titles are missing, we leave it empty so the UI can localize the "Untitled" name.
+            metadata.Id = fileData.Path.HashMD5Fast();
 
             Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
+            Guard.IsNotNull(metadata.TrackMetadata, nameof(metadata.TrackMetadata));
+            Guard.IsNotNull(metadata.AlbumMetadata, nameof(metadata.AlbumMetadata));
+            Guard.IsNotNull(metadata.ArtistMetadata, nameof(metadata.ArtistMetadata));
 
-            if (metadata.AlbumMetadata != null)
-            {
-                if (string.IsNullOrWhiteSpace(metadata.AlbumMetadata.Title))
-                    metadata.AlbumMetadata.Title = string.Empty;
+            // Track
+            if (string.IsNullOrWhiteSpace(metadata.TrackMetadata.Title))
+                metadata.TrackMetadata.Title = string.Empty;
 
-                var albumId = (metadata.AlbumMetadata.Title ?? string.Empty + ".album").HashMD5Fast();
-                metadata.AlbumMetadata.Id = albumId;
-            }
+            metadata.TrackMetadata.Id ??= metadata.Id;
 
-            if (metadata.TrackMetadata != null)
-            {
-                if (string.IsNullOrWhiteSpace(metadata.TrackMetadata.Title))
-                    metadata.TrackMetadata.Title = string.Empty;
+            metadata.TrackMetadata.ArtistIds ??= new HashSet<string>();
+            metadata.TrackMetadata.ImageIds ??= new HashSet<string>();
 
-                metadata.TrackMetadata.Id ??= fileData.Id?.HashMD5Fast();
+            // Album
+            if (string.IsNullOrWhiteSpace(metadata.AlbumMetadata.Title))
+                metadata.AlbumMetadata.Title = string.Empty;
 
-                Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
+            var albumId = (metadata.AlbumMetadata.Title + "_album").HashMD5Fast();
+            metadata.AlbumMetadata.Id = albumId;
 
-                if (metadata.TrackMetadata.ImagePath is null)
-                {
-                    // TODO get file thumbnail
-                }
-            }
+            metadata.AlbumMetadata.ArtistIds ??= new HashSet<string>();
+            metadata.AlbumMetadata.ImageIds ??= new HashSet<string>();
+            metadata.AlbumMetadata.TrackIds ??= new HashSet<string>();
 
-            if (metadata.ArtistMetadata == null)
-                return;
-
+            // Artist
             if (string.IsNullOrWhiteSpace(metadata.ArtistMetadata.Name))
                 metadata.ArtistMetadata.Name = string.Empty;
 
-            var artistId = (metadata.ArtistMetadata.Name ?? string.Empty + ".artist").HashMD5Fast();
+            var artistId = (metadata.ArtistMetadata.Name + "_artist").HashMD5Fast();
             metadata.ArtistMetadata.Id = artistId;
+
+            metadata.ArtistMetadata.AlbumIds ??= new HashSet<string>();
+            metadata.ArtistMetadata.TrackIds ??= new HashSet<string>();
+            metadata.ArtistMetadata.ImageIds ??= new HashSet<string>();
+
+            Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
+            Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata.Id, nameof(metadata.AlbumMetadata.Id));
+            Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata.Id, nameof(metadata.ArtistMetadata.Id));
+        }
+
+        private void LinkMetadataIdsForFile(FileMetadata metadata)
+        {
+            // Each fileMetadata is the data for a single file.
+            // Album and artist ID are generated based on Title/Name
+            // so blindly linking based on Ids found in a single file is safe.
+
+            // The list of IDs for, e.g., the tracks in an AlbumMetadata, are merged by the repositories.
+            Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
+            Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
+            Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata?.Id, nameof(metadata.TrackMetadata.Id));
+
+            // Albums
+            Guard.IsNotNull(metadata.AlbumMetadata?.ArtistIds, nameof(metadata.AlbumMetadata.ArtistIds));
+            Guard.IsNotNull(metadata.AlbumMetadata?.TrackIds, nameof(metadata.AlbumMetadata.TrackIds));
+
+            if (!metadata.AlbumMetadata.ArtistIds.Contains(metadata.AlbumMetadata.Id))
+                metadata.AlbumMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
+
+            if (!metadata.AlbumMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
+                metadata.AlbumMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
+
+            // Artists
+            Guard.IsNotNull(metadata.ArtistMetadata?.TrackIds, nameof(metadata.ArtistMetadata.TrackIds));
+            Guard.IsNotNull(metadata.ArtistMetadata?.AlbumIds, nameof(metadata.ArtistMetadata.AlbumIds));
+
+            if (!metadata.ArtistMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
+                metadata.ArtistMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
+
+            if (!metadata.ArtistMetadata.AlbumIds.Contains(metadata.AlbumMetadata.Id))
+                metadata.ArtistMetadata.AlbumIds.Add(metadata.AlbumMetadata.Id);
+
+            // Tracks
+            Guard.IsNotNull(metadata.TrackMetadata?.ArtistIds, nameof(metadata.TrackMetadata.ArtistIds));
+
+            if (!metadata.TrackMetadata.ArtistIds.Contains(metadata.ArtistMetadata.Id))
+                metadata.TrackMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
+
+            metadata.TrackMetadata.AlbumId = metadata.AlbumMetadata.Id;
         }
 
         private static FileMetadata MergeMetadataFields(FileMetadata[] metadata)
@@ -264,6 +245,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 return metadata[0];
 
             var primaryData = metadata[0];
+
             for (var i = 1; i < metadata.Length; i++)
             {
                 var item = metadata[i];
@@ -314,20 +296,20 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     Title = details.Album,
                     Duration = details.Duration,
-                    Genres = details.Genres?.PruneNull().ToOrAsList(),
+                    Genres = new HashSet<string>(details.Genres?.PruneNull()),
                 },
                 TrackMetadata = new TrackMetadata
                 {
                     TrackNumber = details.TrackNumber,
                     Title = details.Title,
-                    Genres = details.Genres?.PruneNull().ToOrAsList(),
+                    Genres = new HashSet<string>(details.Genres?.PruneNull()),
                     Duration = details.Duration,
                     Url = new Uri(fileData.Path),
                     Year = details.Year,
                 },
                 ArtistMetadata = new ArtistMetadata
                 {
-                    Genres = details.Genres?.PruneNull().ToOrAsList(),
+                    Genres = new HashSet<string>(details.Genres?.PruneNull()),
                     Name = details.Artist,
                 },
             };
@@ -362,8 +344,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var aggregatedData = MergeMetadataFields(validMetadata);
 
             // Assign missing titles and IDs
-            // If titles are missing, we leave it empty so the UI can localize the "Untitled" name
             AssignMissingRequiredData(fileData, aggregatedData);
+
+            LinkMetadataIdsForFile(aggregatedData);
 
             return aggregatedData;
         }
@@ -371,6 +354,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
         private async Task<FileMetadata?> GetId3Metadata(IFileData fileData)
         {
             Guard.IsNotNull(CacheFolder, nameof(CacheFolder));
+            Guard.IsNotNull(_scanningCancellationTokenSource, nameof(_scanningCancellationTokenSource));
 
             try
             {
@@ -383,9 +367,10 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                using var tagFile = File.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
+                using var tagFile = TagLibFile.Create(new FileAbstraction(fileData.Name, stream), ReadStyle.Average);
 
                 // Read the raw tags
+                // TODO: Switch based on file type to avoid brute-forcing.
                 var tags = tagFile.GetTag(TagTypes.Id3v2) ??
                            tagFile.GetTag(TagTypes.Asf) ??
                            tagFile.GetTag(TagTypes.FlacMetadata);
@@ -394,102 +379,50 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 if (tags == null)
                     return null;
 
-                string? imagePath = null;
-                string? artistImagePath = null;
-
-                if (tags.Pictures != null)
-                {
-                    var albumArt = GetAlbumArt(tags.Pictures);
-
-                    if (albumArt != null)
-                    {
-                        byte[] imageData = albumArt.Data.Data;
-
-                        try
-                        {
-                            var imageFile = await CacheFolder.CreateFileAsync($"{fileData.Path.HashMD5Fast()}.png", CreationCollisionOption.ReplaceExisting);
-
-                            /*                            using var imgStream = new MemoryStream(imageData);
-                                                        using (Image image = Image.Load(imgStream))
-                                                        {
-                                                            image.Mutate(x => x.Resize(new ResizeOptions()
-                                                            {
-                                                                Mode = ResizeMode.Min,
-                                                                Size = new Size(150),
-                                                            }));
-
-                                                            image.SaveAsPng(imgStream);
-                                                        }*/
-
-                            await imageFile.WriteAllBytesAsync(imageData);
-
-                            imagePath = imageFile.Path;
-                        }
-                        catch (FileLoadException)
-                        {
-                            // Catch "The file is in use." error.
-                        }
-                    }
-
-                    var artistPic = GetArtistArt(tags.Pictures);
-
-                    if (artistPic?.Type == albumArt?.Type)
-                    {
-                        artistImagePath = imagePath;
-                    }
-                    else if (artistPic != null)
-                    {
-                        byte[] imageData = artistPic.Data.Data;
-
-                        try
-                        {
-                            var imageFile = await CacheFolder.CreateFileAsync($"{fileData.Path.HashMD5Fast()}_artist.thumb", CreationCollisionOption.ReplaceExisting);
-                            await imageFile.WriteAllBytesAsync(imageData);
-
-                            artistImagePath = imageFile.Path;
-                        }
-                        catch (FileLoadException)
-                        {
-                            // Catch "The file is in use." error.
-                        }
-                    }
-                }
-
-                return new FileMetadata
+                var fileMetadata = new FileMetadata
                 {
                     AlbumMetadata = new AlbumMetadata
                     {
                         Description = tags.Description,
                         Title = tags.Album,
-                        ImagePath = imagePath,
                         Duration = tagFile.Properties.Duration,
-                        Genres = new List<string>(tags.Genres),
+                        Genres = new HashSet<string>(tags.Genres),
                         DatePublished = tags.DateTagged,
-                        ArtistIds = new List<string>(),
-                        TrackIds = new List<string>(),
+                        ArtistIds = new HashSet<string>(),
+                        TrackIds = new HashSet<string>(),
+                        ImageIds = new HashSet<string>(),
                     },
                     TrackMetadata = new TrackMetadata
                     {
                         Url = new Uri(fileData.Path),
-                        ImagePath = imagePath,
                         Description = tags.Description,
                         Title = tags.Title,
                         DiscNumber = tags.Disc,
                         Duration = tagFile.Properties.Duration,
-                        Genres = new List<string>(tags.Genres),
+                        Genres = new HashSet<string>(tags.Genres),
                         TrackNumber = tags.Track,
                         Year = tags.Year,
-                        ArtistIds = new List<string>(),
+                        ArtistIds = new HashSet<string>(),
+                        ImageIds = new HashSet<string>(),
                     },
                     ArtistMetadata = new ArtistMetadata
                     {
                         Name = tags.FirstAlbumArtist,
-                        ImagePath = artistImagePath,
-                        Genres = new List<string>(tags.Genres),
-                        AlbumIds = new List<string>(),
-                        TrackIds = new List<string>(),
+                        Genres = new HashSet<string>(tags.Genres),
+                        AlbumIds = new HashSet<string>(),
+                        TrackIds = new HashSet<string>(),
+                        ImageIds = new HashSet<string>(),
                     },
                 };
+
+                if (tags.Pictures != null)
+                {
+                    var imageStreams = tags.Pictures.Select(x => x.Data.Data).Select(x => new MemoryStream(x));
+
+                    Task.Run(() => ProcessImagesAsync(fileData, fileMetadata, imageStreams), _scanningCancellationTokenSource.Token).Forget();
+                }
+
+                return fileMetadata;
             }
             catch (CorruptFileException)
             {
@@ -532,12 +465,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             _batchLock.Release();
 
-            _ = HandleChanged();
+            _ = HandleChangedAsync();
 
             return fileMetadata;
         }
 
-        private async Task HandleChanged()
+        private async Task HandleChangedAsync()
         {
             if (!await Flow.Debounce(_emitDebouncerId, TimeSpan.FromSeconds(1)))
                 return;
@@ -550,7 +483,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 return;
             }
 
-            bool IsEnoughMetadataToEmit() => _batchMetadataToEmit.Count >= 100;
+            bool IsEnoughMetadataToEmit() => _batchMetadataToEmit.Count >= 75;
             bool IsFinishedScanning() => _filesProcessed == _filesToScanCount;
 
             if (!(IsFinishedScanning() || IsEnoughMetadataToEmit()))

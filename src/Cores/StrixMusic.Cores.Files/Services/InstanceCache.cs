@@ -86,10 +86,10 @@ namespace StrixMusic.Cores.Files.Services
     /// </summary>
     public class ImageCacheRepo : InstanceCacheRepository<FilesCoreImage>
     {
-        /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, Func{T})"/>
-        public FilesCoreImage GetOrCreate(string id, ICore sourceCore, Uri uri, double? width = null, double? height = null)
+        /// <inheritdoc cref="IInstanceCacheRepository{T}.GetOrCreate(string, System.Func{T})"/>
+        public FilesCoreImage GetOrCreate(string id, ICore sourceCore, ImageMetadata imageMetadata)
         {
-            return GetOrCreate(id, () => new FilesCoreImage(sourceCore, uri, width, height));
+            return GetOrCreate(id, () => new FilesCoreImage(sourceCore, imageMetadata));
         }
     }
 

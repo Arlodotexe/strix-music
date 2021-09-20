@@ -90,15 +90,15 @@ namespace StrixMusic.Cores.Files
         {
             var fileMetadataManager = this.GetService<FileMetadataManager>();
 
-            var artist = await fileMetadataManager.Artists.GetArtistById(id);
+            var artist = await fileMetadataManager.Artists.GetByIdAsync(id);
             if (artist != null)
                 return InstanceCache.Artists.GetOrCreate(id, SourceCore, artist);
 
-            var album = await fileMetadataManager.Albums.GetAlbumById(id);
+            var album = await fileMetadataManager.Albums.GetByIdAsync(id);
             if (album != null)
                 return InstanceCache.Albums.GetOrCreate(id, SourceCore, album);
 
-            var track = await fileMetadataManager.Tracks.GetTrackById(id);
+            var track = await fileMetadataManager.Tracks.GetByIdAsync(id);
             if (track != null)
                 return new FilesCoreTrack(SourceCore, track);
 

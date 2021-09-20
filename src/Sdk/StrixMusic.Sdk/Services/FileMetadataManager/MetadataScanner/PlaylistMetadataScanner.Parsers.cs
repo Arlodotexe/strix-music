@@ -102,7 +102,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             if (mediaList == null)
                 return null;
 
-            playlist.TrackIds = new List<string>();
+            playlist.TrackIds = new HashSet<string>();
 
             foreach (var media in mediaList)
             {
@@ -166,7 +166,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                         if (hash != null)
                         {
-                            playlist.TrackIds ??= new List<string>();
+                            playlist.TrackIds ??= new HashSet<string>();
 
                             playlist.TrackIds.Add(hash);
                         }
@@ -216,7 +216,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     if (Uri.TryCreate(location, UriKind.RelativeOrAbsolute, out Uri localPath))
                     {
-                        playlist.TrackIds ??= new List<string>();
+                        playlist.TrackIds ??= new HashSet<string>();
                         localPath = new Uri(location);
                         var hash = TryGetHashFromExistingTracks(localPath, files);
 
@@ -261,7 +261,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     var hash = TryGetHashFromExistingTracks(uri, files);
 
-                    playlist.TrackIds ??= new List<string>();
+                    playlist.TrackIds ??= new HashSet<string>();
                     if (hash != null)
                     {
                         playlist.TrackIds.Add(hash);
@@ -403,7 +403,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                     var pathToTrack = stream.ReadNullTerminatedString(Encoding.UTF8);
                     stream.Seek(curPos, SeekOrigin.Begin);
 
-                    playlist.TrackIds ??= new List<string>();
+                    playlist.TrackIds ??= new HashSet<string>();
 
                     // Get track file size
                     var fileSize = content.ReadUInt64();
@@ -462,7 +462,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                                 if (hash != null)
                                 {
-                                    playlist.TrackIds ??= new List<string>();
+                                    playlist.TrackIds ??= new HashSet<string>();
 
                                     playlist.TrackIds.Add(hash);
                                 }
@@ -540,7 +540,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                             if (hash != null)
                             {
-                                playlist.TrackIds ??= new List<string>();
+                                playlist.TrackIds ??= new HashSet<string>();
                                 playlist.TrackIds.Add(hash);
                             }
                         }
@@ -626,7 +626,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
                                             if (hash != null)
                                             {
-                                                playlist.TrackIds ??= new List<string>();
+                                                playlist.TrackIds ??= new HashSet<string>();
 
                                                 playlist.TrackIds.Add(hash);
                                             }

@@ -1,25 +1,21 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using OwlCore;
 using OwlCore.AbstractStorage;
-using OwlCore.Events;
 using OwlCore.Extensions;
 using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
-using StrixMusic.Sdk.Services.FileMetadataManager.Repositories;
 
-namespace StrixMusic.Sdk.Services.FileMetadataManager
+namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 {
     /// <summary>
-    /// The service that helps in interacting with the saved file core playlists information.
+    /// The service that helps in interacting with playlist information.
     /// </summary>
     public class PlaylistRepository : IPlaylistRepository
     {
@@ -35,7 +31,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <summary>
         /// Creates a new instance of <see cref="PlaylistRepository"/>.
         /// </summary>
-        ///  <param name="playlistMetadataScanner">The file scanner instance to source metadata from.</param>
+        /// <param name="playlistMetadataScanner">The file scanner instance to source metadata from.</param>
         internal PlaylistRepository(PlaylistMetadataScanner playlistMetadataScanner)
         {
             _playlistMetadataScanner = playlistMetadataScanner;
@@ -124,28 +120,28 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
 
             foreach (var metadata in e)
             {
-                if (metadata != null)
+                if (metadata == null)
+                    continue;
+
+                Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
+
+                var playlistExists = true;
+                _inMemoryMetadata.GetOrAdd(metadata.Id, key =>
                 {
-                    Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
+                    playlistExists = false;
+                    return metadata;
+                });
 
-                    var playlistExists = true;
-                    var workingMetadata = _inMemoryMetadata.GetOrAdd(metadata.Id, key =>
-                    {
-                        playlistExists = false;
-                        return metadata;
-                    });
+                if (playlistExists)
+                    updatedPlaylists.Add(metadata);
+                else
+                    addedPlaylists.Add(metadata);
 
-                    if (playlistExists)
-                        updatedPlaylists.Add(metadata);
-                    else
-                        addedPlaylists.Add(metadata);
+                if (addedPlaylists.Count > 0)
+                    MetadataAdded?.Invoke(this, addedPlaylists);
 
-                    if (addedPlaylists.Count > 0)
-                        MetadataAdded?.Invoke(this, addedPlaylists);
-
-                    if (updatedPlaylists.Count > 0)
-                        MetadataUpdated?.Invoke(this, updatedPlaylists);
-                }
+                if (updatedPlaylists.Count > 0)
+                    MetadataUpdated?.Invoke(this, updatedPlaylists);
             }
 
             _ = CommitChangesAsync();
@@ -171,38 +167,50 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public async Task AddOrUpdatePlaylist(PlaylistMetadata playlistMetadata)
+        public async Task AddOrUpdateAsync(params PlaylistMetadata[] playlistMetadata)
         {
-            Guard.IsNotNullOrWhiteSpace(playlistMetadata.Id, nameof(playlistMetadata.Id));
-
-            var isUpdate = false;
             await _storageMutex.WaitAsync();
+            var updatedItems = new List<PlaylistMetadata>();
+            var newItems = new List<PlaylistMetadata>();
 
-            _inMemoryMetadata.AddOrUpdate(
-                playlistMetadata.Id,
-                addValueFactory: id =>
-                {
-                    isUpdate = false;
-                    return playlistMetadata;
-                },
-                updateValueFactory: (id, existing) =>
-                {
-                    isUpdate = true;
-                    return playlistMetadata;
-                });
+            foreach (var item in playlistMetadata)
+            {
+                Guard.IsNotNullOrWhiteSpace(item.Id, nameof(item.Id));
+
+                var isUpdate = false;
+
+                _inMemoryMetadata.AddOrUpdate(
+                    item.Id,
+                    addValueFactory: id =>
+                    {
+                        isUpdate = false;
+                        return item;
+                    },
+                    updateValueFactory: (id, existing) =>
+                    {
+                        isUpdate = true;
+                        return item;
+                    });
+
+                if (isUpdate)
+                    updatedItems.Add(item);
+                else
+                    newItems.Add(item);
+            }
 
             _storageMutex.Release();
 
             _ = CommitChangesAsync();
 
-            if (isUpdate)
-                MetadataUpdated?.Invoke(this, playlistMetadata.IntoList());
-            else
-                MetadataAdded?.Invoke(this, playlistMetadata.IntoList());
+            if (newItems.Count > 0)
+                MetadataAdded?.Invoke(this, newItems);
+
+            if (updatedItems.Count > 0)
+                MetadataUpdated?.Invoke(this, updatedItems);
         }
 
         /// <inheritdoc />
-        public async Task RemovePlaylist(PlaylistMetadata playlistMetadata)
+        public async Task RemoveAsync(PlaylistMetadata playlistMetadata)
         {
             Guard.IsNotNullOrWhiteSpace(playlistMetadata.Id, nameof(playlistMetadata.Id));
 
@@ -218,7 +226,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public Task<PlaylistMetadata?> GetPlaylistById(string id)
+        public Task<PlaylistMetadata?> GetByIdAsync(string id)
         {
             _inMemoryMetadata.TryGetValue(id, out var metadata);
 
@@ -226,7 +234,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<PlaylistMetadata>> GetPlaylists(int offset, int limit)
+        public Task<IReadOnlyList<PlaylistMetadata>> GetItemsAsync(int offset, int limit)
         {
             var allPlaylists = _inMemoryMetadata.Values.ToList();
 
@@ -316,12 +324,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
-        ~PlaylistRepository()
-        {
-            Dispose(false);
         }
     }
 }

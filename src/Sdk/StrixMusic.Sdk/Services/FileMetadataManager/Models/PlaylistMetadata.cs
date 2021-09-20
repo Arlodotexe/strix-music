@@ -16,7 +16,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The unique identifier(s) for tracks in this playlist.
         /// </summary>
-        public List<string>? TrackIds { get; set; }
+        public HashSet<string>? TrackIds { get; set; }
 
         /// <summary>
         /// The title of this playlist.

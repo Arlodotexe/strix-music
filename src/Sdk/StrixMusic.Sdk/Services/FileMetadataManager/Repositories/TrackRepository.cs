@@ -8,15 +8,13 @@ using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
 using OwlCore.AbstractStorage;
-using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Sdk.Services.FileMetadataManager
+namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 {
     /// <summary>
-    /// The service that helps in interacting with the saved file core track information.
+    /// The service that helps in interacting with track information.
     /// </summary>
     public class TrackRepository : ITrackRepository
     {
@@ -25,25 +23,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private readonly ConcurrentDictionary<string, TrackMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;
         private readonly SemaphoreSlim _initMutex;
-        private readonly AudioMetadataScanner _audioMetadataScanner;
         private readonly string _debouncerId;
         private IFolderData? _folderData;
 
         /// <summary>
-        /// Creates a new instance for <see cref="TrackRepository"/>.
+        /// Creates a new instance of <see cref="TrackRepository"/>.
         /// </summary>
-        ///  <param name="audioMetadataScanner">The file scanner instance to source metadata from.</param>
-        public TrackRepository(AudioMetadataScanner audioMetadataScanner)
+        public TrackRepository()
         {
-            Guard.IsNotNull(audioMetadataScanner, nameof(audioMetadataScanner));
-
             _inMemoryMetadata = new ConcurrentDictionary<string, TrackMetadata>();
-            _audioMetadataScanner = audioMetadataScanner;
             _storageMutex = new SemaphoreSlim(1, 1);
             _initMutex = new SemaphoreSlim(1, 1);
             _debouncerId = Guid.NewGuid().ToString();
-
-            AttachEvents();
         }
 
         /// <inheritdoc />
@@ -72,118 +63,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public event EventHandler<IEnumerable<TrackMetadata>>? MetadataRemoved;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<(TrackMetadata Track, ArtistMetadata Artist)>? ArtistItemsChanged;
-
-        private void AttachEvents()
-        {
-            _audioMetadataScanner.FileMetadataAdded += FileMetadataScanner_FileMetadataAdded;
-            _audioMetadataScanner.FileMetadataRemoved += FileMetadataScanner_FileMetadataRemoved;
-        }
-
-        private void DetachEvents()
-        {
-            _audioMetadataScanner.FileMetadataAdded -= FileMetadataScanner_FileMetadataAdded;
-            _audioMetadataScanner.FileMetadataRemoved -= FileMetadataScanner_FileMetadataRemoved;
-        }
-
-        private async void FileMetadataScanner_FileMetadataRemoved(object sender, IEnumerable<FileMetadata> e)
-        {
-            var removedTracks = new List<TrackMetadata>();
-
-            // Remove tracks
-            foreach (var metadata in e)
-            {
-                if (metadata.TrackMetadata != null)
-                {
-                    Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
-
-                    await _storageMutex.WaitAsync();
-                    var removed = _inMemoryMetadata.TryRemove(metadata.TrackMetadata.Id, out _);
-                    _storageMutex.Release();
-
-                    if (removed)
-                        removedTracks.Add(metadata.TrackMetadata);
-                }
-
-                // No need to update tracks with removed album IDs.
-                // The album exists as long as any tracks from the album still exist, so it's handled in the AlbumRepository.
-
-                // Update tracks with removed artist IDs 
-                foreach (var data in _inMemoryMetadata.Values)
-                {
-                    if (metadata.ArtistMetadata != null)
-                    {
-                        Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata.Id, nameof(metadata.ArtistMetadata.Id));
-
-                        if (data?.ArtistIds?.Contains(metadata.ArtistMetadata.Id) ?? false)
-                        {
-                            // TODO: emit artist items changed for this track.
-                            data.ArtistIds.Remove(metadata.ArtistMetadata.Id);
-                        }
-                    }
-                }
-            }
-
-            MetadataRemoved?.Invoke(this, removedTracks);
-            _ = CommitChangesAsync();
-        }
-
-        private async void FileMetadataScanner_FileMetadataAdded(object sender, IEnumerable<FileMetadata> e)
-        {
-            var addedTracks = new List<TrackMetadata>();
-            var updatedTracks = new List<TrackMetadata>();
-
-            // Iterate through FileMetadata and store in memory.
-            // Updates and additions are tracked separately and emitted as events after all metadata has been processed.
-            foreach (var metadata in e)
-            {
-                Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata?.Id, nameof(metadata.TrackMetadata.Id));
-                Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata?.Id, nameof(metadata.AlbumMetadata.Id));
-                Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
-
-                var trackMetadata = metadata.TrackMetadata;
-
-                trackMetadata.AlbumId = metadata.AlbumMetadata.Id;
-                trackMetadata.ArtistIds = metadata.ArtistMetadata.Id.IntoList();
-
-                var isUpdate = false;
-
-                await _storageMutex.WaitAsync();
-
-                _inMemoryMetadata.AddOrUpdate(
-                    trackMetadata.Id,
-                    addValueFactory: id =>
-                    {
-                        isUpdate = false;
-                        return trackMetadata;
-                    },
-                    updateValueFactory: (id, existing) =>
-                    {
-                        isUpdate = true;
-                        return trackMetadata;
-                    });
-
-                _storageMutex.Release();
-
-                if (isUpdate)
-                    updatedTracks.Add(metadata.TrackMetadata);
-                else
-                    addedTracks.Add(metadata.TrackMetadata);
-            }
-
-            if (addedTracks.Count > 0 || updatedTracks.Count > 0)
-            {
-                _ = CommitChangesAsync();
-
-                if (addedTracks.Count > 0)
-                    MetadataAdded?.Invoke(this, addedTracks);
-
-                if (updatedTracks.Count > 0)
-                    MetadataUpdated?.Invoke(this, updatedTracks);
-            }
-        }
-
-        /// <inheritdoc />
         public bool IsInitialized { get; private set; }
 
         /// <summary>
@@ -202,39 +81,62 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public async Task AddOrUpdateTrack(TrackMetadata trackMetadata)
+        public async Task AddOrUpdateAsync(params TrackMetadata[] trackMetadata)
         {
-            Guard.IsNotNullOrWhiteSpace(trackMetadata.Id, nameof(trackMetadata.Id));
+            var addedTracks = new List<TrackMetadata>();
+            var updatedTracks = new List<TrackMetadata>();
 
-            var isUpdate = false;
+            // Iterate through FileMetadata and store in memory.
+            // Updates and additions are tracked separately and emitted as events after all metadata has been processed.
+            foreach (var item in trackMetadata)
+            {
+                Guard.IsNotNullOrWhiteSpace(item.Id, nameof(item.Id));
 
-            await _storageMutex.WaitAsync();
+                var trackExists = true;
+                await _storageMutex.WaitAsync();
 
-            _inMemoryMetadata.AddOrUpdate(
-                trackMetadata.Id,
-                addValueFactory: id =>
+                var workingMetadata = _inMemoryMetadata.GetOrAdd(item.Id, key =>
                 {
-                    isUpdate = false;
-                    return trackMetadata;
-                },
-                updateValueFactory: (id, existing) =>
-                {
-                    isUpdate = true;
-                    return trackMetadata;
+                    trackExists = false;
+                    return item;
                 });
 
-            _storageMutex.Release();
+                workingMetadata.ArtistIds ??= new HashSet<string>();
+                workingMetadata.ImageIds ??= new HashSet<string>();
+                item.ArtistIds ??= new HashSet<string>();
+                item.ImageIds ??= new HashSet<string>();
 
-            await CommitChangesAsync();
+                Combine(workingMetadata.ArtistIds, item.ArtistIds);
+                Combine(workingMetadata.ImageIds, item.ImageIds);
 
-            if (isUpdate)
-                MetadataUpdated?.Invoke(this, trackMetadata.IntoList());
-            else
-                MetadataAdded?.Invoke(this, trackMetadata.IntoList());
+                _storageMutex.Release();
+
+                if (trackExists)
+                    updatedTracks.Add(workingMetadata);
+                else
+                    addedTracks.Add(workingMetadata);
+            }
+
+            if (addedTracks.Count > 0 || updatedTracks.Count > 0)
+            {
+                _ = CommitChangesAsync();
+
+                if (addedTracks.Count > 0)
+                    MetadataAdded?.Invoke(this, addedTracks);
+
+                if (updatedTracks.Count > 0)
+                    MetadataUpdated?.Invoke(this, updatedTracks);
+            }
+
+            void Combine(HashSet<string> originalData, HashSet<string> newIds)
+            {
+                foreach (var newId in newIds)
+                    originalData.Add(newId);
+            }
         }
 
         /// <inheritdoc />
-        public async Task RemoveTrack(TrackMetadata trackMetadata)
+        public async Task RemoveAsync(TrackMetadata trackMetadata)
         {
             Guard.IsNotNullOrWhiteSpace(trackMetadata.Id, nameof(trackMetadata.Id));
 
@@ -250,7 +152,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public Task<TrackMetadata?> GetTrackById(string id)
+        public Task<TrackMetadata?> GetByIdAsync(string id)
         {
             _inMemoryMetadata.TryGetValue(id, out var trackMetadata);
 
@@ -258,7 +160,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<TrackMetadata>> GetTracks(int offset, int limit)
+        public Task<IReadOnlyList<TrackMetadata>> GetItemsAsync(int offset, int limit)
         {
             var allTracks = _inMemoryMetadata.Values.OrderBy(c => c.TrackNumber).ToList();
 
@@ -271,13 +173,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <inheritdoc />
         public async Task<IReadOnlyList<TrackMetadata>> GetTracksByArtistId(string artistId, int offset, int limit)
         {
-            var allTracks = await GetTracks(offset, -1);
+            var allTracks = await GetItemsAsync(offset, -1);
             var results = new List<TrackMetadata>();
 
             foreach (var item in allTracks)
             {
                 Guard.IsNotNull(item.ArtistIds, nameof(item.ArtistIds));
-                Guard.HasSizeGreaterThan(item.ArtistIds, 0, nameof(TrackMetadata.ArtistIds));
+                Guard.IsGreaterThan(item.ArtistIds.Count, 0, nameof(item.ArtistIds.Count));
 
                 if (item.ArtistIds.Contains(artistId))
                     results.Add(item);
@@ -298,7 +200,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public async Task<IReadOnlyList<TrackMetadata>> GetTracksByAlbumId(string albumId, int offset, int limit)
         {
             var results = new List<TrackMetadata>();
-            var allTracks = await GetTracks(offset, -1);
+            var allTracks = await GetItemsAsync(offset, -1);
 
             foreach (var item in allTracks)
             {
@@ -369,37 +271,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _storageMutex.Release();
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
-        {
-            Guard.IsTrue(IsInitialized, nameof(IsInitialized));
-
-            ReleaseUnmanagedResources();
-            if (disposing)
-            {
-                _inMemoryMetadata.Clear();
-                _storageMutex.Dispose();
-            }
-
-            IsInitialized = false;
-        }
-
         /// <inheritdoc />
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
-        ~TrackRepository()
-        {
-            Dispose(false);
         }
     }
 }

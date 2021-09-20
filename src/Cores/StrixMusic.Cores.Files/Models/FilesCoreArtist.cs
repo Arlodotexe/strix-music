@@ -20,7 +20,6 @@ namespace StrixMusic.Cores.Files.Models
     {
         private readonly IFileMetadataManager _fileMetadataManager;
         private ArtistMetadata _artistMetadata;
-        private FilesCoreImage? _image;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilesCoreArtist"/> class.
@@ -33,88 +32,17 @@ namespace StrixMusic.Cores.Files.Models
             _artistMetadata = artistMetadata;
             _fileMetadataManager = SourceCore.GetService<IFileMetadataManager>();
 
-            if (artistMetadata.ImagePath != null)
-                _image = InstanceCache.Images.GetOrCreate(Id, SourceCore, new Uri(artistMetadata.ImagePath));
-
             AttachEvents();
         }
 
         private void AttachEvents()
         {
             _fileMetadataManager.Artists.MetadataUpdated += Artists_MetadataUpdated;
-            _fileMetadataManager.Artists.TracksChanged += Artists_TracksChanged;
-            _fileMetadataManager.Artists.AlbumItemsChanged += Artists_AlbumItemsChanged;
         }
 
         private void DetachEvents()
         {
             _fileMetadataManager.Artists.MetadataUpdated -= Artists_MetadataUpdated;
-            _fileMetadataManager.Artists.TracksChanged -= Artists_TracksChanged;
-            _fileMetadataManager.Artists.AlbumItemsChanged -= Artists_AlbumItemsChanged;
-        }
-
-        private void Artists_TracksChanged(object sender, IReadOnlyList<CollectionChangedItem<(ArtistMetadata Artist, TrackMetadata Track)>> addedItems, IReadOnlyList<CollectionChangedItem<(ArtistMetadata Artist, TrackMetadata Track)>> removedItems)
-        {
-            var coreAddedItems = new List<CollectionChangedItem<ICoreTrack>>();
-            var coreRemovedItems = new List<CollectionChangedItem<ICoreTrack>>();
-
-            foreach (var item in addedItems)
-            {
-                if (item.Data.Artist.Id == Id)
-                {
-                    Guard.IsNotNullOrWhiteSpace(item.Data.Track.Id, nameof(item.Data.Track.Id));
-                    var coreTrack = InstanceCache.Tracks.GetOrCreate(item.Data.Track.Id, SourceCore, item.Data.Track);
-                    coreAddedItems.Add(new CollectionChangedItem<ICoreTrack>(coreTrack, item.Index));
-                }
-            }
-
-            foreach (var item in removedItems)
-            {
-                if (item.Data.Artist.Id == Id)
-                {
-                    Guard.IsNotNullOrWhiteSpace(item.Data.Track.Id, nameof(item.Data.Track.Id));
-                    var coreTrack = InstanceCache.Tracks.GetOrCreate(item.Data.Track.Id, SourceCore, item.Data.Track);
-                    coreRemovedItems.Add(new CollectionChangedItem<ICoreTrack>(coreTrack, item.Index));
-                }
-            }
-
-            if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
-            {
-                TracksChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
-                TracksCountChanged?.Invoke(this, TotalTrackCount);
-            }
-        }
-
-        private void Artists_AlbumItemsChanged(object sender, IReadOnlyList<CollectionChangedItem<(ArtistMetadata Artist, AlbumMetadata Album)>> addedItems, IReadOnlyList<CollectionChangedItem<(ArtistMetadata Artist, AlbumMetadata Album)>> removedItems)
-        {
-            var coreAddedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>();
-            var coreRemovedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>();
-
-            foreach (var item in addedItems)
-            {
-                if (item.Data.Artist.Id == Id)
-                {
-                    Guard.IsNotNullOrWhiteSpace(item.Data.Album.Id, nameof(item.Data.Album.Id));
-                    var coreAlbum = InstanceCache.Albums.GetOrCreate(item.Data.Album.Id, SourceCore, item.Data.Album);
-                    coreAddedItems.Add(new CollectionChangedItem<ICoreAlbumCollectionItem>(coreAlbum, item.Index));
-                }
-            }
-
-            foreach (var item in removedItems)
-            {
-                if (item.Data.Artist.Id == Id)
-                {
-                    Guard.IsNotNullOrWhiteSpace(item.Data.Album.Id, nameof(item.Data.Album.Id));
-                    var coreAlbum = InstanceCache.Albums.GetOrCreate(item.Data.Album.Id, SourceCore, item.Data.Album);
-                    coreRemovedItems.Add(new CollectionChangedItem<ICoreAlbumCollectionItem>(coreAlbum, item.Index));
-                }
-            }
-
-            if (coreAddedItems.Count > 0 || coreRemovedItems.Count > 0)
-            {
-                AlbumItemsChanged?.Invoke(this, coreAddedItems, coreRemovedItems);
-                AlbumItemsCountChanged?.Invoke(this, TotalAlbumItemsCount);
-            }
         }
 
         private void Artists_MetadataUpdated(object sender, IEnumerable<ArtistMetadata> e)
@@ -126,56 +54,137 @@ namespace StrixMusic.Cores.Files.Models
 
                 Guard.IsNotNull(metadata.AlbumIds, nameof(metadata.AlbumIds));
                 Guard.IsNotNull(metadata.TrackIds, nameof(metadata.TrackIds));
+                Guard.IsNotNull(metadata.ImageIds, nameof(metadata.ImageIds));
                 Guard.IsNotNull(metadata.Genres, nameof(metadata.Genres));
 
                 var previousData = _artistMetadata;
                 _artistMetadata = metadata;
 
+                Guard.IsNotNull(previousData.TrackIds, nameof(previousData.TrackIds));
+                Guard.IsNotNull(previousData.AlbumIds, nameof(previousData.AlbumIds));
+                Guard.IsNotNull(previousData.ImageIds, nameof(previousData.ImageIds));
+                Guard.IsNotNull(previousData.Genres, nameof(previousData.Genres));
+
                 if (metadata.Name != previousData.Name)
                     NameChanged?.Invoke(this, Name);
-
-                if (metadata.ImagePath != previousData.ImagePath)
-                    HandleImageChanged(metadata);
 
                 if (metadata.Description != previousData.Description)
                     DescriptionChanged?.Invoke(this, Description);
 
-                if (metadata.Genres.Count != (previousData.Genres?.Count ?? 0))
+                if (metadata.Genres.Count != previousData.Genres.Count)
                     GenresCountChanged?.Invoke(this, metadata.Genres.Count);
 
-                if (metadata.TrackIds.Count != (previousData.TrackIds?.Count ?? 0))
+                if (metadata.TrackIds.Count != previousData.TrackIds.Count)
                     TracksCountChanged?.Invoke(this, metadata.TrackIds.Count);
 
-                if (metadata.AlbumIds.Count != (previousData.AlbumIds?.Count ?? 0))
+                if (metadata.AlbumIds.Count != previousData.AlbumIds.Count)
                     AlbumItemsCountChanged?.Invoke(this, metadata.AlbumIds.Count);
+
+                _ = HandleImagesChanged(previousData.ImageIds, metadata.ImageIds);
+                _ = HandleTracksChanged(previousData.TrackIds, metadata.TrackIds);
+                _ = HandleAlbumsChanged(previousData.AlbumIds, metadata.AlbumIds);
             }
         }
 
-        private void HandleImageChanged(ArtistMetadata e)
+        private async Task HandleAlbumsChanged(HashSet<string> oldAlbumIds, HashSet<string> newAlbumIds)
         {
-            var previousImage = _image;
-
-            var removed = new List<CollectionChangedItem<ICoreImage>>();
-            var added = new List<CollectionChangedItem<ICoreImage>>();
-
-            if (previousImage != null)
-                removed.Add(new CollectionChangedItem<ICoreImage>(previousImage, 0));
-
-            // ReSharper disable once ReplaceWithStringIsNullOrEmpty (breaks nullability check)
-            if (e.ImagePath != null && e.ImagePath.Length > 0)
+            if (oldAlbumIds.OrderBy(s => s).SequenceEqual(newAlbumIds.OrderBy(s => s)))
             {
-                var newImage = new FilesCoreImage(SourceCore, new Uri(e.ImagePath));
-                InstanceCache.Images.Replace(Id, newImage);
-                added.Add(new CollectionChangedItem<ICoreImage>(newImage, 0));
-                _image = newImage;
+                // Lists have identical content, so no images have changed.
+                return;
             }
 
-            if (added.Count > 0 || removed.Count > 0)
-            {
-                ImagesChanged?.Invoke(this, added, removed);
+            var addedAlbums = newAlbumIds.Except(oldAlbumIds);
+            var removedAlbums = oldAlbumIds.Except(newAlbumIds);
 
-                if (added.Count != removed.Count)
-                    ImagesCountChanged?.Invoke(this, TotalImageCount);
+            if (oldAlbumIds.Count != newAlbumIds.Count)
+            {
+                AlbumItemsChanged?.Invoke(this, await TransformAsync(addedAlbums), await TransformAsync(removedAlbums));
+                AlbumItemsCountChanged?.Invoke(this, newAlbumIds.Count);
+            }
+
+            async Task<IReadOnlyList<CollectionChangedItem<ICoreAlbumCollectionItem>>> TransformAsync(IEnumerable<string> ids)
+            {
+                var idArray = ids as string[] ?? ids.ToArray();
+                var collectionChangedItems = new List<CollectionChangedItem<ICoreAlbumCollectionItem>>(idArray.Length);
+
+                foreach (var id in idArray)
+                {
+                    var album = await _fileMetadataManager.Albums.GetByIdAsync(id);
+
+                    Guard.IsNotNullOrWhiteSpace(album?.Id, nameof(album.Id));
+                    collectionChangedItems.Add(new CollectionChangedItem<ICoreAlbumCollectionItem>(InstanceCache.Albums.GetOrCreate(album.Id, SourceCore, album), collectionChangedItems.Count));
+                }
+
+                return collectionChangedItems;
+            }
+        }
+
+        private async Task HandleTracksChanged(HashSet<string> oldTrackIds, HashSet<string> newTrackIds)
+        {
+            if (oldTrackIds.OrderBy(s => s).SequenceEqual(newTrackIds.OrderBy(s => s)))
+            {
+                // Lists have identical content, so no images have changed.
+                return;
+            }
+
+            var addedImages = newTrackIds.Except(oldTrackIds);
+            var removedImages = oldTrackIds.Except(newTrackIds);
+
+            if (oldTrackIds.Count != newTrackIds.Count)
+            {
+                TracksChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
+                TracksCountChanged?.Invoke(this, newTrackIds.Count);
+            }
+
+            async Task<IReadOnlyList<CollectionChangedItem<ICoreTrack>>> TransformAsync(IEnumerable<string> ids)
+            {
+                var idArray = ids as string[] ?? ids.ToArray();
+                var collectionChangedItems = new List<CollectionChangedItem<ICoreTrack>>(idArray.Length);
+
+                foreach (var id in idArray)
+                {
+                    var track = await _fileMetadataManager.Tracks.GetByIdAsync(id);
+
+                    Guard.IsNotNullOrWhiteSpace(track?.Id, nameof(track.Id));
+                    collectionChangedItems.Add(new CollectionChangedItem<ICoreTrack>(InstanceCache.Tracks.GetOrCreate(track.Id, SourceCore, track), collectionChangedItems.Count));
+                }
+
+                return collectionChangedItems;
+            }
+        }
+
+        private async Task HandleImagesChanged(HashSet<string> oldImageIds, HashSet<string> newImageIds)
+        {
+            if (oldImageIds.OrderBy(s => s).SequenceEqual(newImageIds.OrderBy(s => s)))
+            {
+                // Lists have identical content, so no images have changed.
+                return;
+            }
+
+            var addedImages = newImageIds.Except(oldImageIds);
+            var removedImages = oldImageIds.Except(newImageIds);
+
+            if (oldImageIds.Count != newImageIds.Count)
+            {
+                ImagesChanged?.Invoke(this, await TransformAsync(addedImages), await TransformAsync(removedImages));
+                ImagesCountChanged?.Invoke(this, newImageIds.Count);
+            }
+
+            async Task<IReadOnlyList<CollectionChangedItem<ICoreImage>>> TransformAsync(IEnumerable<string> ids)
+            {
+                var idArray = ids as string[] ?? ids.ToArray();
+                var collectionChangedItems = new List<CollectionChangedItem<ICoreImage>>(idArray.Length);
+
+                foreach (var id in idArray)
+                {
+                    var image = await _fileMetadataManager.Images.GetByIdAsync(id);
+
+                    Guard.IsNotNullOrWhiteSpace(image?.Id, nameof(image.Id));
+                    collectionChangedItems.Add(new CollectionChangedItem<ICoreImage>(InstanceCache.Images.GetOrCreate(image.Id, SourceCore, image), collectionChangedItems.Count));
+                }
+
+                return collectionChangedItems;
             }
         }
 
@@ -258,7 +267,7 @@ namespace StrixMusic.Cores.Files.Models
         public int TotalGenreCount => _artistMetadata.Genres?.Count ?? 0;
 
         /// <inheritdoc />
-        public int TotalImageCount => _image != null ? 1 : 0;
+        public int TotalImageCount => _artistMetadata.ImageIds?.Count ?? 0;
 
         /// <inheritdoc />
         public int TotalUrlCount => 0;
@@ -485,14 +494,11 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreAlbumCollectionItem> GetAlbumItemsAsync(int limit, int offset)
         {
-            var albumsService = _fileMetadataManager.Albums;
-
-            var albums = await albumsService.GetAlbumsByArtistId(Id, offset, limit);
+            var albums = await _fileMetadataManager.Albums.GetAlbumsByArtistId(Id, offset, limit);
 
             foreach (var album in albums)
             {
                 Guard.IsNotNull(album.Id, nameof(album.Id));
-
                 yield return InstanceCache.Albums.GetOrCreate(album.Id, SourceCore, album);
             }
         }
@@ -500,8 +506,7 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc/>
         public async IAsyncEnumerable<ICoreTrack> GetTracksAsync(int limit, int offset)
         {
-            var trackService = _fileMetadataManager.Tracks;
-            var tracks = await trackService.GetTracksByArtistId(Id, offset, limit);
+            var tracks = await _fileMetadataManager.Tracks.GetTracksByArtistId(Id, offset, limit);
 
             foreach (var track in tracks)
             {
@@ -513,10 +518,16 @@ namespace StrixMusic.Cores.Files.Models
         /// <inheritdoc />
         public async IAsyncEnumerable<ICoreImage> GetImagesAsync(int limit, int offset)
         {
-            if (_image != null)
-                yield return _image;
+            if (_artistMetadata.ImageIds == null)
+                yield break;
 
-            await Task.CompletedTask;
+            foreach (var imageId in _artistMetadata.ImageIds)
+            {
+                var image = await _fileMetadataManager.Images.GetByIdAsync(imageId);
+                Guard.IsNotNull(image, nameof(image));
+
+                yield return InstanceCache.Images.GetOrCreate(imageId, SourceCore, image);
+            }
         }
 
         /// <inheritdoc />

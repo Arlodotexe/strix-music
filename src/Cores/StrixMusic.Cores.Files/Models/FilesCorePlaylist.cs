@@ -269,7 +269,7 @@ namespace StrixMusic.Cores.Files.Models
             var tracks = new List<TrackMetadata>();
             foreach (var id in trackIds)
             {
-                var track = await _fileMetadataManager.Tracks.GetTrackById(id);
+                var track = await _fileMetadataManager.Tracks.GetByIdAsync(id);
 
                 Guard.IsNotNull(track, nameof(track));
                 tracks.Add(track);

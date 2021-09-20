@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
 namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 {
     /// <summary>
-    /// Provides storage for playlist metadata.
+    /// Provides storage for image metadata.
     /// </summary>
-    public interface IPlaylistRepository : IMetadataRepository<PlaylistMetadata>
+    public interface IImageRepository : IMetadataRepository<ImageMetadata>
     {
     }
 }

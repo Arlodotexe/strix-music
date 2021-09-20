@@ -8,7 +8,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
     /// </summary>
     public class AlbumMetadata : IFileMetadata
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// The unique identifier for this album.
+        /// </summary>
         public string? Id { get; set; }
 
         /// <summary>
@@ -22,19 +24,19 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         public string? Description { get; set; }
 
         /// <summary>
-        /// The path to the cover art for this album.
+        /// The unique identifer(s) for this album's image(s).
         /// </summary>
-        public string? ImagePath { get; set; }
+        public HashSet<string>? ImageIds { get; set; }
 
         /// <summary>
         /// The unique identifier(s) for this album's track(s).
         /// </summary>
-        public List<string>? TrackIds { get; set; }
+        public HashSet<string>? TrackIds { get; set; }
 
         /// <summary>
         /// The unique identifier(s) for this album's artist(s).
         /// </summary>
-        public List<string>? ArtistIds { get; set; }
+        public HashSet<string>? ArtistIds { get; set; }
 
         /// <summary>
         /// The total duration of this album.
@@ -49,6 +51,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The genres of this album.
         /// </summary>
-        public List<string>? Genres { get; set; }
+        public HashSet<string>? Genres { get; set; }
     }
 }

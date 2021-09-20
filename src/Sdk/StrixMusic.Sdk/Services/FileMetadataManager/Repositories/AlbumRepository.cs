@@ -8,14 +8,14 @@ using MessagePack;
 using Microsoft.Toolkit.Diagnostics;
 using OwlCore;
 using OwlCore.AbstractStorage;
-using OwlCore.Events;
 using OwlCore.Extensions;
-using StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner;
 using StrixMusic.Sdk.Services.FileMetadataManager.Models;
 
-namespace StrixMusic.Sdk.Services.FileMetadataManager
+namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// The service that helps in interacting with album information.
+    /// </summary>
     public class AlbumRepository : IAlbumRepository
     {
         private const string ALBUM_DATA_FILENAME = "AlbumData.bin";
@@ -23,30 +23,18 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         private readonly ConcurrentDictionary<string, AlbumMetadata> _inMemoryMetadata;
         private readonly SemaphoreSlim _storageMutex;
         private readonly SemaphoreSlim _initMutex;
-        private readonly AudioMetadataScanner _audioMetadataScanner;
-        private readonly TrackRepository _trackRepository;
         private readonly string _debouncerId;
         private IFolderData? _folderData;
 
         /// <summary>
         /// Creates a new instance of <see cref="AlbumRepository"/>.
         /// </summary>
-        ///  <param name="audioMetadataScanner">The file scanner instance to source metadata from.</param>
-        /// <param name="trackRepository">A <see cref="TrackRepository"/> that references the same set of data as this <see cref="AlbumMetadata"/>.</param>
-        internal AlbumRepository(AudioMetadataScanner audioMetadataScanner, TrackRepository trackRepository)
+        internal AlbumRepository()
         {
-            Guard.IsNotNull(audioMetadataScanner, nameof(audioMetadataScanner));
-
-            _audioMetadataScanner = audioMetadataScanner;
-            _trackRepository = trackRepository;
-
             _inMemoryMetadata = new ConcurrentDictionary<string, AlbumMetadata>();
-            _audioMetadataScanner = audioMetadataScanner;
             _storageMutex = new SemaphoreSlim(1, 1);
             _initMutex = new SemaphoreSlim(1, 1);
             _debouncerId = Guid.NewGuid().ToString();
-
-            AttachEvents();
         }
 
         /// <inheritdoc />
@@ -75,126 +63,6 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         public event EventHandler<IEnumerable<AlbumMetadata>>? MetadataRemoved;
 
         /// <inheritdoc />
-        public event CollectionChangedEventHandler<(AlbumMetadata Album, ArtistMetadata Artist)>? ArtistItemsChanged;
-
-        /// <inheritdoc />
-        public event CollectionChangedEventHandler<(AlbumMetadata Album, TrackMetadata Track)>? TracksChanged;
-
-        private void AttachEvents()
-        {
-            _audioMetadataScanner.FileMetadataAdded += FileMetadataScanner_FileMetadataAdded;
-            _audioMetadataScanner.FileMetadataRemoved += FileMetadataScanner_FileMetadataRemoved;
-        }
-
-        private void DetachEvents()
-        {
-            _audioMetadataScanner.FileMetadataAdded -= FileMetadataScanner_FileMetadataAdded;
-            _audioMetadataScanner.FileMetadataRemoved -= FileMetadataScanner_FileMetadataRemoved;
-        }
-
-        private async void FileMetadataScanner_FileMetadataRemoved(object sender, IEnumerable<FileMetadata> e)
-        {
-            var removedAlbums = new List<AlbumMetadata>();
-
-            var removedArtistItems = new List<CollectionChangedItem<(AlbumMetadata Album, ArtistMetadata Artist)>>();
-            var removedTrackItems = new List<CollectionChangedItem<(AlbumMetadata Album, TrackMetadata Track)>>();
-
-            // Remove album
-            foreach (var metadata in e)
-            {
-                if (metadata.AlbumMetadata != null)
-                {
-                    Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata.Id, nameof(metadata.AlbumMetadata.Id));
-
-                    // If all tracks with this artist have been removed, we can safely remove this artist.
-                    var tracksWithAlbum = await _trackRepository.GetTracksByAlbumId(metadata.AlbumMetadata.Id, 0, -1);
-                    if (tracksWithAlbum.Count == 0)
-                    {
-                        await _storageMutex.WaitAsync();
-                        var removed = _inMemoryMetadata.TryRemove(metadata.AlbumMetadata.Id, out _);
-                        _storageMutex.Release();
-
-                        removedAlbums.Add(metadata.AlbumMetadata);
-
-                        if (!removed)
-                            ThrowHelper.ThrowInvalidOperationException($"Unable to remove metadata from {nameof(_inMemoryMetadata)}");
-                    }
-                }
-            }
-
-            if (removedAlbums.Count > 0)
-            {
-                MetadataRemoved?.Invoke(this, removedAlbums);
-                _ = CommitChangesAsync();
-            }
-        }
-
-        private async void FileMetadataScanner_FileMetadataAdded(object sender, IEnumerable<FileMetadata> e)
-        {
-            var addedAlbums = new List<AlbumMetadata>();
-            var updatedAlbums = new List<AlbumMetadata>();
-
-            var updatedArtistItems = new List<CollectionChangedItem<(AlbumMetadata, ArtistMetadata)>>();
-            var addedTrackItems = new List<CollectionChangedItem<(AlbumMetadata, TrackMetadata)>>();
-
-            foreach (var metadata in e)
-            {
-                // Add new or update existing album, with the given artist and track ID.
-                if (metadata.AlbumMetadata != null)
-                {
-                    Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata.Id, nameof(metadata.AlbumMetadata.Id));
-                    Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata?.Id, nameof(metadata.TrackMetadata.Id));
-                    Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata?.Id, nameof(metadata.ArtistMetadata.Id));
-
-                    var albumExists = true;
-                    await _storageMutex.WaitAsync();
-
-                    var workingMetadata = _inMemoryMetadata.GetOrAdd(metadata.AlbumMetadata.Id, key =>
-                    {
-                        albumExists = false;
-                        return metadata.AlbumMetadata;
-                    });
-
-                    _storageMutex.Release();
-
-                    workingMetadata.ArtistIds ??= new List<string>();
-                    workingMetadata.TrackIds ??= new List<string>();
-
-                    if (!workingMetadata.ArtistIds.Contains(metadata.ArtistMetadata.Id))
-                    {
-                        workingMetadata.ArtistIds.Add(metadata.ArtistMetadata.Id);
-                        updatedArtistItems.Add(new CollectionChangedItem<(AlbumMetadata, ArtistMetadata)>((workingMetadata, metadata.ArtistMetadata), updatedAlbums.Count));
-                    }
-
-                    if (!workingMetadata.TrackIds.Contains(metadata.TrackMetadata.Id))
-                    {
-                        workingMetadata.TrackIds.Add(metadata.TrackMetadata.Id);
-                        addedTrackItems.Add(new CollectionChangedItem<(AlbumMetadata, TrackMetadata)>((workingMetadata, metadata.TrackMetadata), addedTrackItems.Count));
-                    }
-
-                    if (albumExists)
-                        updatedAlbums.Add(workingMetadata);
-                    else
-                        addedAlbums.Add(workingMetadata);
-                }
-            }
-
-            if (updatedArtistItems.Count > 0)
-                ArtistItemsChanged?.Invoke(this, updatedArtistItems, Array.Empty<CollectionChangedItem<(AlbumMetadata, ArtistMetadata)>>());
-
-            if (updatedAlbums.Count > 0)
-                MetadataUpdated?.Invoke(this, updatedAlbums);
-
-            if (addedAlbums.Count > 0)
-                MetadataAdded?.Invoke(this, addedAlbums);
-
-            if (addedTrackItems.Count > 0)
-                TracksChanged?.Invoke(this, addedTrackItems, Array.Empty<CollectionChangedItem<(AlbumMetadata, TrackMetadata)>>());
-
-            _ = CommitChangesAsync();
-        }
-
-        /// <inheritdoc />
         public bool IsInitialized { get; private set; }
 
         /// <summary>
@@ -213,62 +81,86 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         }
 
         /// <inheritdoc />
-        public async Task AddOrUpdateAlbum(AlbumMetadata albumMetadata)
+        public async Task AddOrUpdateAsync(params AlbumMetadata[] metadata)
         {
-            Guard.IsNotNullOrWhiteSpace(albumMetadata.Id, nameof(albumMetadata.Id));
+            var addedAlbums = new List<AlbumMetadata>();
+            var updatedAlbums = new List<AlbumMetadata>();
 
-            var isUpdate = false;
-            await _storageMutex.WaitAsync();
+            foreach (var item in metadata)
+            {
+                Guard.IsNotNull(item.Id, nameof(item.Id));
 
-            _inMemoryMetadata.AddOrUpdate(
-                albumMetadata.Id,
-                addValueFactory: id =>
+                var albumExists = true;
+                await _storageMutex.WaitAsync();
+
+                var workingMetadata = _inMemoryMetadata.GetOrAdd(item.Id, key =>
                 {
-                    isUpdate = false;
-                    return albumMetadata;
-                },
-                updateValueFactory: (id, existing) =>
-                {
-                    isUpdate = true;
-                    return albumMetadata;
+                    albumExists = false;
+                    return item;
                 });
 
-            _storageMutex.Release();
+                _storageMutex.Release();
+
+                workingMetadata.ArtistIds ??= new HashSet<string>();
+                workingMetadata.TrackIds ??= new HashSet<string>();
+                workingMetadata.ImageIds ??= new HashSet<string>();
+                item.ArtistIds ??= new HashSet<string>();
+                item.TrackIds ??= new HashSet<string>();
+                item.ImageIds ??= new HashSet<string>();
+                item.ArtistIds ??= new HashSet<string>();
+                item.TrackIds ??= new HashSet<string>();
+                item.ImageIds ??= new HashSet<string>();
+
+                Combine(workingMetadata.ArtistIds, item.ArtistIds);
+                Combine(workingMetadata.TrackIds, item.TrackIds);
+                Combine(workingMetadata.ImageIds, item.ImageIds);
+
+                if (albumExists)
+                    updatedAlbums.Add(workingMetadata);
+                else
+                    addedAlbums.Add(workingMetadata);
+            }
+
+            if (updatedAlbums.Count > 0)
+                MetadataUpdated?.Invoke(this, updatedAlbums);
+
+            if (addedAlbums.Count > 0)
+                MetadataAdded?.Invoke(this, addedAlbums);
 
             _ = CommitChangesAsync();
 
-            if (isUpdate)
-                MetadataUpdated?.Invoke(this, albumMetadata.IntoList());
-            else
-                MetadataAdded?.Invoke(this, albumMetadata.IntoList());
-
+            void Combine(HashSet<string> originalData, HashSet<string> newIds)
+            {
+                foreach (var newId in newIds)
+                    originalData.Add(newId);
+            }
         }
 
         /// <inheritdoc />
-        public async Task RemoveAlbum(AlbumMetadata albumMetadata)
+        public async Task RemoveAsync(AlbumMetadata metadata)
         {
-            Guard.IsNotNullOrWhiteSpace(albumMetadata.Id, nameof(albumMetadata.Id));
+            Guard.IsNotNullOrWhiteSpace(metadata.Id, nameof(metadata.Id));
 
             await _storageMutex.WaitAsync();
-            var removed = _inMemoryMetadata.TryRemove(albumMetadata.Id, out _);
+            var removed = _inMemoryMetadata.TryRemove(metadata.Id, out _);
             _storageMutex.Release();
 
             if (removed)
             {
                 _ = CommitChangesAsync();
-                MetadataRemoved?.Invoke(this, albumMetadata.IntoList());
+                MetadataRemoved?.Invoke(this, metadata.IntoList());
             }
         }
 
         /// <inheritdoc />
-        public Task<AlbumMetadata?> GetAlbumById(string id)
+        public Task<AlbumMetadata?> GetByIdAsync(string id)
         {
             _inMemoryMetadata.TryGetValue(id, out var metadata);
             return Task.FromResult<AlbumMetadata?>(metadata);
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<AlbumMetadata>> GetAlbums(int offset, int limit)
+        public Task<IReadOnlyList<AlbumMetadata>> GetItemsAsync(int offset, int limit)
         {
             var allAlbums = _inMemoryMetadata.Values.ToList();
 
@@ -289,13 +181,13 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
         /// <inheritdoc />
         public async Task<IReadOnlyList<AlbumMetadata>> GetAlbumsByArtistId(string artistId, int offset, int limit)
         {
-            var allArtists = await GetAlbums(offset, -1);
+            var allArtists = await GetItemsAsync(offset, -1);
             var results = new List<AlbumMetadata>();
 
             foreach (var item in allArtists)
             {
                 Guard.IsNotNull(item.ArtistIds, nameof(item.ArtistIds));
-                Guard.HasSizeGreaterThan(item.ArtistIds, 0, nameof(AlbumMetadata.ArtistIds));
+                Guard.IsGreaterThan(item.ArtistIds.Count, 0, nameof(item.ArtistIds.Count));
 
                 if (item.ArtistIds.Contains(artistId))
                     results.Add(item);
@@ -362,39 +254,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager
             _storageMutex.Release();
         }
 
-        private void ReleaseUnmanagedResources()
-        {
-            DetachEvents();
-        }
-
-        /// <inheritdoc cref="Dispose()"/>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!IsInitialized)
-                return;
-
-            ReleaseUnmanagedResources();
-            if (disposing)
-            {
-                // dispose any objects you created here
-                _inMemoryMetadata.Clear();
-                _storageMutex.Dispose();
-            }
-
-            IsInitialized = false;
-        }
-
         /// <inheritdoc />
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
-        ~AlbumRepository()
-        {
-            Dispose(false);
         }
     }
 }
