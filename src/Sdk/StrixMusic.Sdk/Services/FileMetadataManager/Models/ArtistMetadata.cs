@@ -16,12 +16,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The unique identifier(s) for <see cref="TrackMetadata"/>.
         /// </summary>
-        public List<string>? TrackIds { get; set; }
+        public HashSet<string>? TrackIds { get; set; }
 
         /// <summary>
         /// Holds unique identifier(s) for the <see cref="AlbumMetadata"/>.
         /// </summary>
-        public List<string>? AlbumIds { get; set; }
+        public HashSet<string>? AlbumIds { get; set; }
 
         /// <summary>
         /// Holds the name of the artist.
@@ -41,11 +41,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The unique identifier(s) for this artist's image(s).
         /// </summary>
-        public List<string>? ImageIds { get; set; }
+        public HashSet<string>? ImageIds { get; set; }
 
         /// <summary>
         /// The genres of this track.
         /// </summary>
-        public List<string>? Genres { get; set; }
+        public HashSet<string>? Genres { get; set; }
     }
 }

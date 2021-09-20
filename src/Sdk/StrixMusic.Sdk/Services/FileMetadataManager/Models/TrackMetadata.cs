@@ -27,7 +27,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The unique identifier(s) for this track's artist(s).
         /// </summary>
-        public List<string>? ArtistIds { get; set; }
+        public HashSet<string>? ArtistIds { get; set; }
 
         /// <summary>
         /// The title of this track.
@@ -62,7 +62,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The unique identifier(s) for this track's image(s).
         /// </summary>
-        public List<string>? ImageIds { get; set; }
+        public HashSet<string>? ImageIds { get; set; }
 
         /// <summary>
         /// The description of this track.
@@ -72,7 +72,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Models
         /// <summary>
         /// The genres of this track.
         /// </summary>
-        public List<string>? Genres { get; set; }
+        public HashSet<string>? Genres { get; set; }
 
         /// <summary>
         /// The year this track was released.

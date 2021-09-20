@@ -101,19 +101,19 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
 
                 _storageMutex.Release();
 
-                workingMetadata.ArtistIds ??= new List<string>();
-                workingMetadata.TrackIds ??= new List<string>();
-                workingMetadata.ImageIds ??= new List<string>();
-                item.ArtistIds ??= new List<string>();
-                item.TrackIds ??= new List<string>();
-                item.ImageIds ??= new List<string>();
-                item.ArtistIds ??= new List<string>();
-                item.TrackIds ??= new List<string>();
-                item.ImageIds ??= new List<string>();
+                workingMetadata.ArtistIds ??= new HashSet<string>();
+                workingMetadata.TrackIds ??= new HashSet<string>();
+                workingMetadata.ImageIds ??= new HashSet<string>();
+                item.ArtistIds ??= new HashSet<string>();
+                item.TrackIds ??= new HashSet<string>();
+                item.ImageIds ??= new HashSet<string>();
+                item.ArtistIds ??= new HashSet<string>();
+                item.TrackIds ??= new HashSet<string>();
+                item.ImageIds ??= new HashSet<string>();
 
-                workingMetadata.ArtistIds.AddRange(item.ArtistIds);
-                workingMetadata.TrackIds.AddRange(item.TrackIds);
-                workingMetadata.ImageIds.AddRange(item.ImageIds);
+                Combine(workingMetadata.ArtistIds, item.ArtistIds);
+                Combine(workingMetadata.TrackIds, item.TrackIds);
+                Combine(workingMetadata.ImageIds, item.ImageIds);
 
                 if (albumExists)
                     updatedAlbums.Add(workingMetadata);
@@ -128,6 +128,12 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
                 MetadataAdded?.Invoke(this, addedAlbums);
 
             _ = CommitChangesAsync();
+
+            void Combine(HashSet<string> originalData, HashSet<string> newIds)
+            {
+                foreach (var newId in newIds)
+                    originalData.Add(newId);
+            }
         }
 
         /// <inheritdoc />
@@ -181,7 +187,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.Repositories
             foreach (var item in allArtists)
             {
                 Guard.IsNotNull(item.ArtistIds, nameof(item.ArtistIds));
-                Guard.HasSizeGreaterThan(item.ArtistIds, 0, nameof(AlbumMetadata.ArtistIds));
+                Guard.IsGreaterThan(item.ArtistIds.Count, 0, nameof(item.ArtistIds.Count));
 
                 if (item.ArtistIds.Contains(artistId))
                     results.Add(item);

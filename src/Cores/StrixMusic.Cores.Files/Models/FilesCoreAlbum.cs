@@ -98,7 +98,7 @@ namespace StrixMusic.Cores.Files.Models
             }
         }
 
-        private async Task HandleTracksChangedAsync(IReadOnlyList<string> oldTrackIds, IReadOnlyList<string> newTrackIds)
+        private async Task HandleTracksChangedAsync(HashSet<string> oldTrackIds, HashSet<string> newTrackIds)
         {
             if (oldTrackIds.OrderBy(s => s).SequenceEqual(newTrackIds.OrderBy(s => s)))
             {
@@ -132,7 +132,7 @@ namespace StrixMusic.Cores.Files.Models
             }
         }
 
-        private async Task HandleArtistsChangedAsync(IReadOnlyList<string> newArtistIds, IReadOnlyList<string> oldArtistIds)
+        private async Task HandleArtistsChangedAsync(HashSet<string> newArtistIds, HashSet<string> oldArtistIds)
         {
             if (oldArtistIds.OrderBy(s => s).SequenceEqual(newArtistIds.OrderBy(s => s)))
             {
@@ -166,7 +166,7 @@ namespace StrixMusic.Cores.Files.Models
             }
         }
 
-        private async Task HandleImagesChangedAsync(IReadOnlyList<string> oldImageIds, IReadOnlyList<string> newImageIds)
+        private async Task HandleImagesChangedAsync(HashSet<string> oldImageIds, HashSet<string> newImageIds)
         {
             if (oldImageIds.OrderBy(s => s).SequenceEqual(newImageIds.OrderBy(s => s)))
             {

@@ -168,8 +168,8 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
 
             metadata.TrackMetadata.Id ??= metadata.Id;
 
-            metadata.TrackMetadata.ArtistIds ??= new List<string>();
-            metadata.TrackMetadata.ImageIds ??= new List<string>();
+            metadata.TrackMetadata.ArtistIds ??= new HashSet<string>();
+            metadata.TrackMetadata.ImageIds ??= new HashSet<string>();
 
             // Album
             if (string.IsNullOrWhiteSpace(metadata.AlbumMetadata.Title))
@@ -178,9 +178,9 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var albumId = (metadata.AlbumMetadata.Title + "_album").HashMD5Fast();
             metadata.AlbumMetadata.Id = albumId;
 
-            metadata.AlbumMetadata.ArtistIds ??= new List<string>();
-            metadata.AlbumMetadata.ImageIds ??= new List<string>();
-            metadata.AlbumMetadata.TrackIds ??= new List<string>();
+            metadata.AlbumMetadata.ArtistIds ??= new HashSet<string>();
+            metadata.AlbumMetadata.ImageIds ??= new HashSet<string>();
+            metadata.AlbumMetadata.TrackIds ??= new HashSet<string>();
 
             // Artist
             if (string.IsNullOrWhiteSpace(metadata.ArtistMetadata.Name))
@@ -189,16 +189,16 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
             var artistId = (metadata.ArtistMetadata.Name + "_artist").HashMD5Fast();
             metadata.ArtistMetadata.Id = artistId;
 
-            metadata.ArtistMetadata.AlbumIds ??= new List<string>();
-            metadata.ArtistMetadata.TrackIds ??= new List<string>();
-            metadata.ArtistMetadata.ImageIds ??= new List<string>();
+            metadata.ArtistMetadata.AlbumIds ??= new HashSet<string>();
+            metadata.ArtistMetadata.TrackIds ??= new HashSet<string>();
+            metadata.ArtistMetadata.ImageIds ??= new HashSet<string>();
 
             Guard.IsNotNullOrWhiteSpace(metadata.TrackMetadata.Id, nameof(metadata.TrackMetadata.Id));
             Guard.IsNotNullOrWhiteSpace(metadata.AlbumMetadata.Id, nameof(metadata.AlbumMetadata.Id));
             Guard.IsNotNullOrWhiteSpace(metadata.ArtistMetadata.Id, nameof(metadata.ArtistMetadata.Id));
         }
 
-        private static void LinkMetadataIdsForFile(FileMetadata metadata)
+        private void LinkMetadataIdsForFile(FileMetadata metadata)
         {
             // Each fileMetadata is the data for a single file.
             // Album and artist ID are generated based on Title/Name
@@ -296,20 +296,20 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 {
                     Title = details.Album,
                     Duration = details.Duration,
-                    Genres = details.Genres?.PruneNull().ToOrAsList(),
+                    Genres = new HashSet<string>(details.Genres?.PruneNull()),
                 },
                 TrackMetadata = new TrackMetadata
                 {
                     TrackNumber = details.TrackNumber,
                     Title = details.Title,
-                    Genres = details.Genres?.PruneNull().ToOrAsList(),
+                    Genres = new HashSet<string>(details.Genres?.PruneNull()),
                     Duration = details.Duration,
                     Url = new Uri(fileData.Path),
                     Year = details.Year,
                 },
                 ArtistMetadata = new ArtistMetadata
                 {
-                    Genres = details.Genres?.PruneNull().ToOrAsList(),
+                    Genres = new HashSet<string>(details.Genres?.PruneNull()),
                     Name = details.Artist,
                 },
             };
@@ -386,11 +386,11 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         Description = tags.Description,
                         Title = tags.Album,
                         Duration = tagFile.Properties.Duration,
-                        Genres = new List<string>(tags.Genres),
+                        Genres = new HashSet<string>(tags.Genres),
                         DatePublished = tags.DateTagged,
-                        ArtistIds = new List<string>(),
-                        TrackIds = new List<string>(),
-                        ImageIds = new List<string>(),
+                        ArtistIds = new HashSet<string>(),
+                        TrackIds = new HashSet<string>(),
+                        ImageIds = new HashSet<string>(),
                     },
                     TrackMetadata = new TrackMetadata
                     {
@@ -399,19 +399,19 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                         Title = tags.Title,
                         DiscNumber = tags.Disc,
                         Duration = tagFile.Properties.Duration,
-                        Genres = new List<string>(tags.Genres),
+                        Genres = new HashSet<string>(tags.Genres),
                         TrackNumber = tags.Track,
                         Year = tags.Year,
-                        ArtistIds = new List<string>(),
-                        ImageIds = new List<string>(),
+                        ArtistIds = new HashSet<string>(),
+                        ImageIds = new HashSet<string>(),
                     },
                     ArtistMetadata = new ArtistMetadata
                     {
                         Name = tags.FirstAlbumArtist,
-                        Genres = new List<string>(tags.Genres),
-                        AlbumIds = new List<string>(),
-                        TrackIds = new List<string>(),
-                        ImageIds = new List<string>(),
+                        Genres = new HashSet<string>(tags.Genres),
+                        AlbumIds = new HashSet<string>(),
+                        TrackIds = new HashSet<string>(),
+                        ImageIds = new HashSet<string>(),
                     },
                 };
 

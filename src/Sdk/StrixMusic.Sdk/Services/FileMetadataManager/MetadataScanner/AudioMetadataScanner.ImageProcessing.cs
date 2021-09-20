@@ -134,7 +134,7 @@ namespace StrixMusic.Sdk.Services.FileMetadataManager.MetadataScanner
                 Duration = fileMetadata.AlbumMetadata.Duration,
                 DatePublished = fileMetadata.AlbumMetadata.DatePublished,
                 Genres = fileMetadata.AlbumMetadata.Genres,
-                ImageIds = results?.Select(x => x.Id).PruneNull().ToList(),
+                ImageIds = new HashSet<string>(results.Select(x => x.Id).PruneNull()),
             };
 
             fileMetadata.AlbumMetadata = updatedAlbumMetadata;
