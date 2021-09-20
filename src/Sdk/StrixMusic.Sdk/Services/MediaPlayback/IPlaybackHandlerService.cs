@@ -14,7 +14,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
     /// <summary>
     /// Manages an internal queue, handles playback, and delegates playback commands to an <see cref="IAudioPlayerService"/>.
     /// </summary>
-    public interface IPlaybackHandlerService : IAudioPlayerBase
+    public interface IPlaybackHandlerService : IAudioPlayerBase, IDisposable
     {
         /// <summary>
         /// Associating an <see cref="IAudioPlayerService"/> with a specific <see cref="ICore"/>.
@@ -187,6 +187,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task ToggleRepeatAsync();
+
+        /// <summary>
+        /// Sets the repeat state to a specific state.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task SetRepeatStateAsync(RepeatState state);
 
         /// <summary>
         /// Fires when <see cref="ShuffleState"/> changes.

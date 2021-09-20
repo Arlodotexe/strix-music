@@ -267,6 +267,8 @@ namespace StrixMusic.Shared
             var mediaPlayerElement = new MediaPlayerElement();
             mediaPlayerElement.SetMediaPlayer(mediaSource);
 
+            mediaSource.CommandManager.IsEnabled = false;
+
             _mediaPlayerElements.Add(mediaPlayerElement);
 
             // If loaded, add it to the visual tree.

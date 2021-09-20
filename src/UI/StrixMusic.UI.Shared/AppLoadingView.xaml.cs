@@ -48,6 +48,7 @@ namespace StrixMusic.Shared
         private bool _showingQuip;
         private LocalizationResourceLoader? _localizationService;
         private PlaybackHandlerService? _playbackHandlerService;
+        private SystemMediaTransportControlsHandler? _smtpHandler;
         private IReadOnlyList<CoreAssemblyInfo>? _coreRegistry;
         private Dictionary<string, CoreAssemblyInfo>? _coreInstanceRegistry;
         private MainPage? _mainPage;
@@ -289,6 +290,7 @@ namespace StrixMusic.Shared
             IServiceCollection services = new ServiceCollection();
 
             _playbackHandlerService = new PlaybackHandlerService();
+            _smtpHandler = new SystemMediaTransportControlsHandler(_playbackHandlerService);
             _mainPage = new MainPage();
 
             var strixDevice = new StrixDevice(_playbackHandlerService);
@@ -296,6 +298,7 @@ namespace StrixMusic.Shared
 
             services.AddSingleton<INavigationService<Control>, NavigationService<Control>>();
             services.AddSingleton<IPlaybackHandlerService>(_playbackHandlerService);
+            services.AddSingleton(_smtpHandler);
             services.AddSingleton(strixDevice);
             services.AddSingleton<MainViewModel>();
             services.AddSingleton(_mainPage);

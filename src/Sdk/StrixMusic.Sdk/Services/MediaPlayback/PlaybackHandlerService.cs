@@ -256,7 +256,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             {
                 // Move NowPlaying into previous
                 _prevItems.Push(_currentPlayerService.CurrentSource);
-                
+
                 // Take the next item out of the queue (becomes NowPlaying)
                 _nextItems.Remove(nextItem);
 
@@ -409,6 +409,16 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         }
 
         /// <inheritdoc />
+        public Task SetRepeatStateAsync(RepeatState state)
+        {
+            _repeatState = state;
+
+            RepeatStateChanged?.Invoke(this, _repeatState);
+
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
         public Task ToggleRepeatAsync()
         {
             _repeatState = _repeatState switch
@@ -422,6 +432,12 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             RepeatStateChanged?.Invoke(this, _repeatState);
 
             return Task.CompletedTask;
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            DetachEvents();
         }
     }
 }
