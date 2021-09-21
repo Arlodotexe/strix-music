@@ -300,7 +300,7 @@ namespace StrixMusic.Cores.OneDrive
                 scanTypes |= MetadataScanTypes.FileProperties;
 
             _fileMetadataManager.ScanTypes = scanTypes;
-            _fileMetadataManager.DegreesOfParallelism = 6;
+            _fileMetadataManager.DegreesOfParallelism = 8;
 
             // Must be on the Core IoC for FileCore base classes to get access to it.
             services.AddSingleton<IFileMetadataManager>(_fileMetadataManager);
