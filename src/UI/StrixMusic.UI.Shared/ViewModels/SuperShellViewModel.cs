@@ -141,7 +141,6 @@ namespace StrixMusic.Shared.ViewModels
                     core.CoreState == CoreState.Faulted)
                 {
                     await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);
-                    await core.DisposeAsync();
                 }
             }
 

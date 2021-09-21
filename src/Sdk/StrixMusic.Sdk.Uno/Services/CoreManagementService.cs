@@ -98,7 +98,11 @@ namespace StrixMusic.Sdk.Uno.Services
                 _coreRanking.Remove(instanceId);
             }
 
+            // TODO: Wait for MainViewModel to fully dispose of core.
             CoreInstanceUnregistered?.Invoke(this, new CoreInstanceEventArgs(instanceId, value));
+
+            var rootStorageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(instanceId, CreationCollisionOption.OpenIfExists);
+            await rootStorageFolder.DeleteAsync();
 
             await _settingsService.SetValue<Dictionary<string, CoreAssemblyInfo>>(nameof(SettingsKeys.CoreInstanceRegistry), _coreInstanceRegistry);
             await _settingsService.SetValue<IReadOnlyList<string>>(nameof(SettingsKeys.CoreRanking), _coreRanking.AsReadOnly());
@@ -108,7 +112,7 @@ namespace StrixMusic.Sdk.Uno.Services
         public async Task<IServiceCollection> CreateInitialCoreServicesAsync(ICore core)
         {
             var services = new ServiceCollection();
-            StorageFolder rootStorageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(core.InstanceId, CreationCollisionOption.OpenIfExists);
+            var rootStorageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(core.InstanceId, CreationCollisionOption.OpenIfExists);
 
             // The same INotificationService instance should be used across all core instances.
             var notificationService = Ioc.Default.GetRequiredService<INotificationService>();
