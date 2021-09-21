@@ -100,8 +100,25 @@ namespace StrixMusic.Sdk.Uno.Controls
 
         private async Task RequestImages()
         {
-            if (ViewModel?.PopulateMoreImagesCommand.IsRunning == false)
-                await ViewModel.PopulateMoreImagesCommand.ExecuteAsync(1);
+            if (ViewModel == null)
+                return;
+
+            await ViewModel.PopulateMoreImagesAsync(1);
+            if (ViewModel.Images.Count == 0)
+                OverrideToFallback();
+            else
+                ResetOverride();
+        }
+
+        /// <summary>
+        /// Reset to the fallback override.
+        /// </summary>
+        private void ResetOverride()
+        {
+            Guard.IsNotNull(PART_Fallback, nameof(PART_Fallback));
+            Guard.IsNotNull(PART_ImageRectangle, nameof(PART_ImageRectangle));
+            PART_Fallback.Visibility = Visibility.Collapsed;
+            PART_ImageRectangle.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -110,7 +127,9 @@ namespace StrixMusic.Sdk.Uno.Controls
         private void OverrideToFallback()
         {
             Guard.IsNotNull(PART_Fallback, nameof(PART_Fallback));
+            Guard.IsNotNull(PART_ImageRectangle, nameof(PART_ImageRectangle));
             PART_Fallback.Visibility = Visibility.Visible;
+            PART_ImageRectangle.Visibility = Visibility.Collapsed;
         }
     }
 }
