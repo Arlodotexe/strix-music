@@ -17,6 +17,13 @@
     <DataTemplate x:Key="GrooveMediaTransportsDataTemplate" x:DataType="sdk:MainViewModel">
         <StackPanel Orientation="Horizontal">
             <ToggleButton Style="{StaticResource MediaToggleButton}">
+
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Click">
+                        <core:InvokeCommandAction Command="{x:Bind ActiveDevice.ToggleShuffleCommandAsync, Mode=OneWay}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+
                 <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
             </ToggleButton>
             
@@ -49,14 +56,22 @@
                     <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                 </Button>
             </StackPanel>
-            
+
             <owlcoreuno:ToggleContentButton IsThreeState="True" Style="{StaticResource MediaToggleContentButton}">
+
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Click">
+                        <core:InvokeCommandAction Command="{x:Bind ActiveDevice.ToggleRepeatCommandAsync, Mode=OneWay}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+
                 <owlcoreuno:ToggleContentButton.IndeterminateContent>
                     <FontIcon Glyph="&#xE8ED;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                 </owlcoreuno:ToggleContentButton.IndeterminateContent>
                 <owlcoreuno:ToggleContentButton.CheckedContent>
                     <FontIcon Glyph="&#xE8EE;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                 </owlcoreuno:ToggleContentButton.CheckedContent>
+
                 <FontIcon Glyph="&#xE8EE;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
             </owlcoreuno:ToggleContentButton>
         </StackPanel>
