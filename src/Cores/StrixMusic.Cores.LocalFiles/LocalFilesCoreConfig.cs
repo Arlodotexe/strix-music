@@ -129,9 +129,18 @@ namespace StrixMusic.Cores.LocalFiles
 
             Guard.IsNotNull(folderData, nameof(folderData));
 
+            var scanTypes = MetadataScanTypes.None;
+
+            if (await _settingsService.GetValue<bool>(nameof(LocalFilesCoreSettingsKeys.ScanWithTagLib)))
+                scanTypes |= MetadataScanTypes.TagLib;
+
+            if (await _settingsService.GetValue<bool>(nameof(LocalFilesCoreSettingsKeys.ScanWithFileProperties)))
+                scanTypes |= MetadataScanTypes.FileProperties;
+
             _fileMetadataManager = new FileMetadataManager(SourceCore.InstanceId, folderData)
             {
                 SkipRepoInit = _initWithEmptyReposToggle.State,
+                ScanTypes = scanTypes,
             };
 
             await _fileMetadataManager.InitAsync();
