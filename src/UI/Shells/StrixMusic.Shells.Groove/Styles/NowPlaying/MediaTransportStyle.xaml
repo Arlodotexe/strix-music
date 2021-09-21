@@ -6,6 +6,8 @@
     xmlns:owlcoreuno="using:OwlCore.Uno.Controls"
     xmlns:sdk="using:StrixMusic.Sdk"
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     x:Class="StrixMusic.Shells.Groove.Styles.NowPlaying.MediaTransportStyle">
 
     <ResourceDictionary.MergedDictionaries>
@@ -17,20 +19,37 @@
             <ToggleButton Style="{StaticResource MediaToggleButton}">
                 <FontIcon Glyph="&#xE8B1;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
             </ToggleButton>
+            
             <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
                 <Button Style="{StaticResource MediaButton}">
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Click">
+                            <core:InvokeCommandAction Command="{x:Bind ActiveDevice.PreviousAsyncCommand, Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
                     <FontIcon Glyph="&#xE100;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                 </Button>
-                <owlcoreuno:ToggleContentButton Style="{StaticResource PlayPauseToggleContentButton}">
+                <owlcoreuno:ToggleContentButton Style="{StaticResource PlayPauseToggleContentButton}" IsChecked="{x:Bind ActiveDevice.IsPlaying, Mode=OneWay}">
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Click">
+                            <core:InvokeCommandAction Command="{x:Bind ActiveDevice.TogglePauseResumeCommand, Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
                     <owlcoreuno:ToggleContentButton.CheckedContent>
                         <FontIcon Glyph="&#xE103;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                     </owlcoreuno:ToggleContentButton.CheckedContent>
                     <FontIcon Glyph="&#xE102;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                 </owlcoreuno:ToggleContentButton>
                 <Button Style="{StaticResource MediaButton}">
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Click">
+                            <core:InvokeCommandAction Command="{x:Bind ActiveDevice.NextAsyncCommand, Mode=OneWay}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
                     <FontIcon Glyph="&#xE101;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>
                 </Button>
             </StackPanel>
+            
             <owlcoreuno:ToggleContentButton IsThreeState="True" Style="{StaticResource MediaToggleContentButton}">
                 <owlcoreuno:ToggleContentButton.IndeterminateContent>
                     <FontIcon Glyph="&#xE8ED;" FontFamily="ms-appx://StrixMusic.Sdk.Uno/Assets/SegoeMDL2.ttf#Segoe MDL2 Assets"/>

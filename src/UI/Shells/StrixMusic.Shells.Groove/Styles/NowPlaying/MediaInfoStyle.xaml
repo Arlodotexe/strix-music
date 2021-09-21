@@ -15,10 +15,12 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="Diplomat's Son" FontSize="18" FontWeight="SemiLight"/>
-                <TextBlock Text="Vampire Weekend" FontSize="15" FontWeight="Bold"/>
+                <TextBlock Text="{Binding ActiveDevice.NowPlaying.Name, Mode=OneWay}" FontSize="18" FontWeight="SemiLight"/>
+                <!--TODO: Bind Artist name-->
+                <TextBlock Text="Artist Name" FontSize="15" FontWeight="Bold"/>
             </StackPanel>
-            <Rectangle x:Name="PART_AlbumImage" Fill="#FF00FF" Width="96" Height="96"/>
+            
+            <strix:SafeImage x:Name="PART_TrackImage" Width="96" Height="96" Grid.RowSpan="3" VerticalAlignment="Center" DataContext="{Binding ActiveDevice.NowPlaying, Mode=OneWay}"/>
         </Grid>
     </DataTemplate>
 

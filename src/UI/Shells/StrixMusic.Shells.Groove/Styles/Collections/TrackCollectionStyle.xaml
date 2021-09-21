@@ -4,6 +4,8 @@
     xmlns:collections="using:StrixMusic.Sdk.Uno.Controls.Collections"
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
     x:Class="StrixMusic.Shells.Groove.Styles.Collections.TrackCollectionStyle">
 
@@ -19,8 +21,14 @@
                 </Grid>
             </ListView.Header>
             <ListView.ItemTemplate>
-                <DataTemplate>
-                    <items:TrackItem />
+                <DataTemplate x:DataType="viewModels:TrackViewModel">
+                    <items:TrackItem>
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="DoubleTapped">
+                                <core:InvokeCommandAction Command="{Binding ElementName=PART_Selector, Path=DataContext.PlayTrackAsyncCommand, Mode=OneWay}" CommandParameter="{x:Bind}" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+                    </items:TrackItem>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
