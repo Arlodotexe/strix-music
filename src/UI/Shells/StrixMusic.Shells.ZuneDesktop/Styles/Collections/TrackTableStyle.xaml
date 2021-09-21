@@ -38,6 +38,8 @@
                                  FrozenColumnCount="1" GridLinesVisibility="Vertical"
                                  HorizontalAlignment="Stretch" SelectionMode="Extended" IsReadOnly="True"
                                  Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                 Loaded="DataGrid_Loaded"
+                                 LoadingRow="DataGrid_LoadingRow"
                                  Sorting="DataGrid_Sorting">
                 <tkcontrols:DataGrid.Columns>
                     <tkcontrols:DataGridTextColumn x:Uid="/Music/SongCOL" Header="SONG" Binding="{Binding Name}" Tag="Song"

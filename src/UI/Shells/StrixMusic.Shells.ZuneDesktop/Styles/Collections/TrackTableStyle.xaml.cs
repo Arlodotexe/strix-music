@@ -3,20 +3,28 @@ using StrixMusic.Sdk.ViewModels;
 using StrixMusic.Sdk.ViewModels.Helpers.Sorting;
 using System;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 
 namespace StrixMusic.Shells.ZuneDesktop.Styles.Collections
 {
     /// <summary>
-    /// A <see cref="ResourceDictionary"/> containing the style and template for the <see cref="Sdk.Uno.Controls.TrackCollection"/> in the ZuneDesktop Shell.
+    /// A <see cref="ResourceDictionary"/> containing the style and template for the <see cref="Sdk.Uno.Controls.Collections.TrackCollection"/> in the ZuneDesktop Shell.
     /// </summary>
     public sealed partial class TrackTableStyle : ResourceDictionary
     {
+        private DataGrid? _grid;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackTableStyle"/> class.
         /// </summary>
         public TrackTableStyle()
         {
             this.InitializeComponent();
+        }
+
+        private void DataGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            _grid = (DataGrid)sender;
         }
 
         private void ClearSortings(DataGrid grid)
@@ -31,6 +39,23 @@ namespace StrixMusic.Shells.ZuneDesktop.Styles.Collections
         {
             DataGrid grid = (DataGrid)sender;
             SortColumn(grid, e.Column);
+        }
+
+        private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.DoubleTapped += Row_DoubleTapped;
+        }
+
+        private void Row_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            // TODO: Investiage better DoubleTapped handling for DataGridRow. This is super hacky, but currently the only method
+            if (_grid == null)
+                return;
+
+            var row = (DataGridRow)sender;
+            ITrackCollectionViewModel viewModel = (ITrackCollectionViewModel)_grid.DataContext;
+            var track = (TrackViewModel)row.DataContext;
+            viewModel.PlayTrackCollectionAsync(track);
         }
 
         private void SortColumn(DataGrid grid, DataGridColumn column)
