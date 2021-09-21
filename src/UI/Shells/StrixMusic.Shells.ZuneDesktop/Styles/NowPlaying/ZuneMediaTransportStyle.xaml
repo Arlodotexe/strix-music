@@ -23,13 +23,6 @@
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
                 <owlcoreuno:ToggleContentButton x:Name="RepeatButton" Style="{StaticResource ZuneSmallToggleContentButton}" VerticalAlignment="Center" IsThreeState="True" FontSize="20">
-
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Click">
-                            <core:InvokeCommandAction Command="{x:Bind ActiveDevice.ToggleRepeatCommandAsync, Mode=OneWay}" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-
                     <FontIcon Glyph="&#xE1CD;"/>
                     <owlcoreuno:ToggleContentButton.CheckedContent>
                         <FontIcon Glyph="&#xE1CD;"/>
@@ -39,14 +32,6 @@
                     </owlcoreuno:ToggleContentButton.IndeterminateContent>
                 </owlcoreuno:ToggleContentButton>
                 <ToggleButton x:Name="ShuffleButton" Style="{StaticResource ZuneSmallToggleButton}" Margin="-8,0,8,0" VerticalAlignment="Center" FontSize="20">
-
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Click">
-                            <core:InvokeCommandAction Command="{x:Bind ActiveDevice.ToggleShuffleCommandAsync, Mode=OneWay}" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-
-
                     <FontIcon Glyph="&#xE8B1;"/>
                 </ToggleButton>
 
