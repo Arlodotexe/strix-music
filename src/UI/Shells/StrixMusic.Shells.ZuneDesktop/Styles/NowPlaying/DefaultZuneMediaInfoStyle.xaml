@@ -33,10 +33,9 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <!--<controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">
-                                    </controls:DropShadowPanel>-->
-
-            <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#FF00FF" Grid.RowSpan="3" VerticalAlignment="Center"/>
+            <controls:DropShadowPanel BlurRadius="15" Color="{ThemeResource ForegroundColor}" Grid.RowSpan="3" VerticalAlignment="Center">
+                <Rectangle x:Name="TrackCover" Width="64" Height="64" Fill="#E6E6E6"/>
+            </controls:DropShadowPanel>
 
             <strix:SafeImage x:Name="PART_TrackImage" Width="64" Height="64" Grid.RowSpan="3" VerticalAlignment="Center" DataContext="{Binding ActiveDevice.NowPlaying, Mode=OneWay}"/>
 
