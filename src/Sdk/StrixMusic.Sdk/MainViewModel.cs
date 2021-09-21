@@ -267,8 +267,18 @@ namespace StrixMusic.Sdk
 
             _coreInitCancellationTokens.Remove(core.InstanceId);
 
-            if (setupCancellationTokenSource.IsCancellationRequested)
+            if (core.CoreState == CoreState.Configured || core.CoreState == CoreState.Loaded)
             {
+                setupCancellationTokenSource.Dispose();
+            }
+            else if (core.CoreState == CoreState.Unloaded || core.CoreState == CoreState.Faulted)
+            {
+                setupCancellationTokenSource.Dispose();
+                await _coreManagementService.UnregisterCoreInstanceAsync(core.InstanceId);
+            }
+            else if (setupCancellationTokenSource.IsCancellationRequested)
+            {
+                // TODO: Re-evaluate. Is the loop/EventAsTask needed? Can we just check state and do a recursive local function call?
                 while (true)
                 {
                     // Wait for the configuration to complete.
