@@ -141,7 +141,7 @@ namespace StrixMusic.Sdk.Uno.Services.MediaPlayback
             if (e == PlaybackState.Queued)
                 return;
 
-            _systemMediaTransportControls.IsPlayEnabled = e == PlaybackState.Paused;
+            _systemMediaTransportControls.IsPlayEnabled = e == PlaybackState.Paused || e == PlaybackState.None;
             _systemMediaTransportControls.IsPauseEnabled = e == PlaybackState.Playing;
             _systemMediaTransportControls.IsStopEnabled = e == PlaybackState.Playing;
             _systemMediaTransportControls.IsRewindEnabled = e == PlaybackState.Playing;
