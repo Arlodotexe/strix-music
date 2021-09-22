@@ -102,7 +102,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
                     await PlayFromNext(0);
                     return;
                 case RepeatState.One:
-                    await NextAsync(false);
+                    await NextAsync();
                     return;
                 case RepeatState.None:
                     await NextAsync();
@@ -153,10 +153,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public IMediaSourceConfig? CurrentItem { get; private set; }
 
         /// <inheritdoc />
-        public bool ShuffleState { get; }
+        public bool ShuffleState => _shuffleState;
 
         /// <inheritdoc />
-        public RepeatState RepeatState { get; }
+        public RepeatState RepeatState => _repeatState;
 
         /// <inheritdoc />
         public TimeSpan Position => _currentPlayerService?.Position ?? TimeSpan.Zero;
@@ -233,9 +233,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         }
 
         /// <inheritdoc />
-        public Task NextAsync() => NextAsync(true);
-
-        private async Task NextAsync(bool shouldRemoveFromQueue)
+        public async Task NextAsync()
         {
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
 
@@ -247,28 +245,41 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             await _currentPlayerService.PauseAsync();
             DetachEvents();
 
-            if (NextItems.Count == 0)
+            if (RepeatState == RepeatState.All && NextItems.Count == 0)
+            {
+                // Move all items from previous back into Next
+                _nextItems.AddRange(_prevItems);
+                _prevItems.Clear();
+            }
+
+            if (NextItems.Count <= nextIndex)
                 return;
 
-            var nextItem = NextItems[nextIndex];
+            IMediaSourceConfig? nextItem = null;
 
-            if (shouldRemoveFromQueue)
+            if (RepeatState == RepeatState.One && !(CurrentItem is null))
             {
+                nextItem = CurrentItem;
+            }
+            else
+            {
+                nextItem = NextItems[nextIndex];
+
                 // Move NowPlaying into previous
                 _prevItems.Push(_currentPlayerService.CurrentSource);
 
                 // Take the next item out of the queue (becomes NowPlaying)
                 _nextItems.Remove(nextItem);
+            }
 
-                var removedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
+            var removedItems = new List<CollectionChangedItem<IMediaSourceConfig>>()
                 {
                     new CollectionChangedItem<IMediaSourceConfig>(nextItem, nextIndex),
                 };
 
-                var addedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
+            var addedItems = Array.Empty<CollectionChangedItem<IMediaSourceConfig>>();
 
-                NextItemsChanged?.Invoke(this, addedItems, removedItems);
-            }
+            NextItemsChanged?.Invoke(this, addedItems, removedItems);
 
             _currentPlayerService = _audioPlayerRegistry[nextItem.Track.SourceCore.InstanceId];
             AttachEvents();
