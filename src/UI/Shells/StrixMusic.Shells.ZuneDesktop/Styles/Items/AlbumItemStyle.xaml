@@ -8,33 +8,22 @@
     xmlns:items="using:StrixMusic.Sdk.Uno.Controls.Items"
     xmlns:converters="using:StrixMusic.Sdk.Uno.Converters"
     xmlns:viewModels="using:StrixMusic.Sdk.ViewModels"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:text="using:Windows.UI.Text"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.Items.AlbumItemStyle">
 
     <DataTemplate x:Key="DefaultAlbumItemImageDataTemplate" x:DataType="viewModels:AlbumViewModel">
-        <strix:SafeImage Width="86" Height="86"/>
+        <strix:SafeImage Height="86" Width="86" />
     </DataTemplate>
 
     <x:Int32 x:Key="LoadMoreArtistsCount">1</x:Int32>
-
-    <DataTemplate x:Key="DefaultAlbumItemTextDataTemplate" x:DataType="viewModels:AlbumViewModel">
-        <StackPanel>
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Loaded">
-                    <core:InvokeCommandAction Command="{Binding  PopulateMoreArtistsCommand}" CommandParameter="{StaticResource LoadMoreArtistsCount}"/>
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-
-            <TextBlock Text="{x:Bind Name}" FontSize="12" TextTrimming="Clip"/>
-            <TextBlock Text="{x:Bind Artists[0].Name, Mode=OneWay}" FontSize="12" FontWeight="SemiLight" Opacity=".5"/>
-        </StackPanel>
-    </DataTemplate>
 
     <Style x:Key="DefaultAlbumItemStyle" TargetType="items:AlbumItem">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="items:AlbumItem">
-                        <Grid Width="94" Background="Transparent">
+                        <Grid Width="99" Margin="4">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="PointerEntered">
                                     <core:GoToStateAction StateName="PointerOver"/>
@@ -47,17 +36,29 @@
                                 <VisualStateGroup x:Name="Selection">
                                     <VisualState x:Name="Unselected">
                                         <VisualState.Setters>
-                                            <Setter Target="ImageOutline.(Rectangle.Opacity)" Value="0"/>
+                                            <Setter Target="ImageContent.Padding" Value="6"/>
+                                            <Setter Target="SelectedImageOutline.Opacity" Value="0"/>
+                                            <Setter Target="ShadowPanel.BlurRadius" Value="0"/>
+                                            <Setter Target="HoverShadowPanel.ShadowOpacity" Value="0.8"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Selected">
                                         <VisualState.Setters>
-                                            <Setter Target="ImageOutline.(Rectangle.Opacity)" Value="1"/>
+                                            <Setter Target="ImageContent.Padding" Value="0"/>
+                                            <Setter Target="SelectedImageOutline.Opacity" Value="1"/>
+                                            <Setter Target="ShadowPanel.BlurRadius" Value="6"/>
+                                            <Setter Target="HoverShadowPanel.ShadowOpacity" Value="0"/>
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
                                 <VisualStateGroup x:Name="Common">
                                     <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Target="ArtistName.Foreground" Value="#919497"/>
+                                            <Setter Target="AlbumName.Foreground" Value="#3f4246"/>
+                                            <Setter Target="ImageOutline.Opacity" Value="0"/>
+                                            <Setter Target="HoverShadowPanel.BlurRadius" Value="0"/>
+                                        </VisualState.Setters>
                                         <VisualState.Storyboard>
                                             <Storyboard>
                                                 <DoubleAnimation Storyboard.TargetName="ImageHover" Storyboard.TargetProperty="Opacity"
@@ -70,10 +71,16 @@
                                         </VisualState.Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="ArtistName.Foreground" Value="Black"/>
+                                            <Setter Target="AlbumName.Foreground" Value="Black"/>
+                                            <Setter Target="ImageOutline.Opacity" Value="1"/>
+                                            <Setter Target="HoverShadowPanel.BlurRadius" Value="6"/>
+                                        </VisualState.Setters>
                                         <VisualState.Storyboard>
                                             <Storyboard>
                                                 <DoubleAnimation Storyboard.TargetName="ImageHover" Storyboard.TargetProperty="Opacity"
-                                                     Duration="0:0:0.3" From="0" To="1">
+                                                                 Duration="0:0:0.3" From="0" To="1">
                                                     <DoubleAnimation.EasingFunction>
                                                         <CircleEase/>
                                                     </DoubleAnimation.EasingFunction>
@@ -83,30 +90,48 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            
+
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            
+
                             <!--Image-->
-                            <Grid Height="86" Width="86">
-                                <!--Backup backgroup-->
-                                <Rectangle Fill="#F4F4F4"/>
-                                <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemImageDataTemplate}"
-                                        HorizontalContentAlignment="Stretch"/>
-                                <Rectangle x:Name="ImageOutline" Stroke="Black" StrokeThickness="2" Opacity="0" Margin="-5"/>
-                                <Rectangle x:Name="ImageHover" Opacity="0" StrokeThickness=".5" Stroke="Black">
-                                    <Rectangle.Fill>
-                                        <ImageBrush ImageSource="ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/Hover.png"/>
-                                    </Rectangle.Fill>
-                                </Rectangle>
+                            <Grid Height="98" Width="99" Padding="6" x:Name="ImageContent">
+                                <controls:DropShadowPanel x:Name="ShadowPanel" BlurRadius="0" Color="#191919" ShadowOpacity="1"
+                                                          HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                                    <controls:DropShadowPanel x:Name="HoverShadowPanel" BlurRadius="0" Color="Black" ShadowOpacity="0.8"
+                                                                      HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                                        <Grid Background="#F4F4F4">
+                                            <Grid Height="86" Width="86">
+                                                <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemImageDataTemplate}"
+                                                            HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+
+                                                <Rectangle x:Name="ImageHover" Opacity="0">
+                                                    <Rectangle.Fill>
+                                                        <ImageBrush ImageSource="ms-appx:///StrixMusic.Shells.ZuneDesktop/Assets/Hover.png"/>
+                                                    </Rectangle.Fill>
+                                                </Rectangle>
+                                            </Grid>
+
+                                            <Border x:Name="ImageOutline" BorderBrush="Black" BorderThickness="1" Opacity="0" />
+                                            <Border x:Name="SelectedImageOutline" BorderBrush="Black" BorderThickness="1" Opacity="0" />
+                                        </Grid>
+                                    </controls:DropShadowPanel>
+                                </controls:DropShadowPanel>
                             </Grid>
 
                             <!--Text-->
-                            <ContentControl ContentTemplate="{StaticResource DefaultAlbumItemTextDataTemplate}"
-                                        HorizontalContentAlignment="Stretch" Grid.Row="1" Margin="0,4,0,0"
-                                            Width="86"/>
+                            <StackPanel Grid.Row="1" Width="86">
+                                <interactivity:Interaction.Behaviors>
+                                    <core:EventTriggerBehavior EventName="Loaded">
+                                        <core:InvokeCommandAction Command="{Binding PopulateMoreArtistsCommand}" CommandParameter="{StaticResource LoadMoreArtistsCount}"/>
+                                    </core:EventTriggerBehavior>
+                                </interactivity:Interaction.Behaviors>
+
+                                <TextBlock x:Name="AlbumName" Text="{Binding Name}" FontSize="12" TextTrimming="Clip" Foreground="#3f4246" />
+                                <TextBlock x:Name="ArtistName" Text="{Binding Artists[0].Name}" FontSize="12" Foreground="#919497" Margin="0,-1,0,0"/>
+                            </StackPanel>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
