@@ -13,13 +13,14 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="ThinGridSplitterStyle" TargetType="tkcontrols:GridSplitter">
-        <Setter Property="IsTabStop" Value="True"></Setter>
-        <Setter Property="UseSystemFocusVisuals" Value="True"></Setter>
-        <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
-        <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
-        <Setter Property="IsFocusEngagementEnabled" Value="True"></Setter>
-        <Setter Property="MinWidth" Value="6"></Setter>
-        <Setter Property="MinHeight" Value="6"></Setter>
+        <Setter Property="IsTabStop" Value="True" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="IsFocusEngagementEnabled" Value="True" />
+        <!-- MinWidth ensures a hit area that isn't 1px wide -->
+        <Setter Property="MinWidth" Value="6" />
+        <Setter Property="MinHeight" Value="6" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="tkcontrols:GridSplitter">
@@ -31,7 +32,7 @@
                                 <VisualState x:Name="Pressed"/>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Rectangle x:Name="Rectangle" Fill="#A7A9AC" Width="1" HorizontalAlignment="Left"/>
+                        <Rectangle x:Name="Rectangle" Fill="#A7A9AC" Width="1" HorizontalAlignment="Center"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

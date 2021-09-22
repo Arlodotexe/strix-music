@@ -20,10 +20,10 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
-                <RowDefinition/>
+                <RowDefinition />
             </Grid.RowDefinitions>
 
-            <StackPanel Margin="24,0,0,12">
+            <StackPanel Margin="24,0,0,0">
                 <TextBlock Text="{x:Bind unitconvert:CountToAlbumsConverter.Convert(TotalAlbumItemsCount), Mode=OneWay}"
                            FontSize="12" FontWeight="Bold" Margin="4,0,0,0" a:TextHelpers.CharacterCasing="Upper"/>
 
@@ -32,7 +32,7 @@
 
             <GridView x:Name="PART_Selector" ItemsSource="{x:Bind Albums}"
                   ItemContainerStyle="{StaticResource ZuneDesktopAlbumGridViewItemStyle}" Grid.Row="1"
-                  Padding="16" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
+                  Padding="10,6" HorizontalAlignment="Stretch" SelectionMode="Extended" IsItemClickEnabled="True">
                 <GridView.ItemTemplate>
                     <DataTemplate x:Key="ZuneDesktopAlbumCollectionItemStyle">
                         <items:AlbumItem>

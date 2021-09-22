@@ -33,7 +33,6 @@
                                                 ContentTransitions="{TemplateBinding ContentTransitions}"
                                                 Content="{TemplateBinding Content}"
                                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                Padding="{TemplateBinding Padding}"
                                                 Margin="{TemplateBinding Margin}"
                                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Grid>
