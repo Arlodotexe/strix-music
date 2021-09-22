@@ -46,7 +46,7 @@
                                         <VisualState.Setters>
                                             <Setter Target="ImageContent.Padding" Value="0"/>
                                             <Setter Target="SelectedImageOutline.Opacity" Value="1"/>
-                                            <Setter Target="ShadowPanel.BlurRadius" Value="6"/>
+                                            <Setter Target="ShadowPanel.BlurRadius" Value="8"/>
                                             <Setter Target="HoverShadowPanel.ShadowOpacity" Value="0"/>
                                         </VisualState.Setters>
                                     </VisualState>
@@ -98,7 +98,7 @@
 
                             <!--Image-->
                             <Grid Height="98" Width="99" Padding="6" x:Name="ImageContent">
-                                <controls:DropShadowPanel x:Name="ShadowPanel" BlurRadius="0" Color="#191919" ShadowOpacity="1"
+                                <controls:DropShadowPanel x:Name="ShadowPanel" BlurRadius="0" Color="#191919" ShadowOpacity="0.8"
                                                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                                     <controls:DropShadowPanel x:Name="HoverShadowPanel" BlurRadius="0" Color="Black" ShadowOpacity="0.8"
                                                                       HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
