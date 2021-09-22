@@ -23,7 +23,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="items:AlbumItem">
-                        <Grid Width="99" Margin="4">
+                        <Grid Width="99" Margin="5,0,5,12">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="PointerEntered">
                                     <core:GoToStateAction StateName="PointerOver"/>
@@ -55,7 +55,7 @@
                                     <VisualState x:Name="Normal">
                                         <VisualState.Setters>
                                             <Setter Target="ArtistName.Foreground" Value="#919497"/>
-                                            <Setter Target="AlbumName.Foreground" Value="#3f4246"/>
+                                            <Setter Target="AlbumName.Foreground" Value="#242628"/>
                                             <Setter Target="ImageOutline.Opacity" Value="0"/>
                                             <Setter Target="HoverShadowPanel.BlurRadius" Value="0"/>
                                         </VisualState.Setters>
@@ -129,8 +129,8 @@
                                     </core:EventTriggerBehavior>
                                 </interactivity:Interaction.Behaviors>
 
-                                <TextBlock x:Name="AlbumName" Text="{Binding Name}" FontSize="12" TextTrimming="Clip" Foreground="#3f4246" />
-                                <TextBlock x:Name="ArtistName" Text="{Binding Artists[0].Name}" FontSize="12" Foreground="#919497" Margin="0,-1,0,0"/>
+                                <TextBlock x:Name="AlbumName" Text="{Binding Name}" FontSize="11" TextTrimming="Clip" Foreground="#242628" />
+                                <TextBlock x:Name="ArtistName" Text="{Binding Artists[0].Name}" FontSize="11" Foreground="#919497" Margin="0,-2,0,0"/>
                             </StackPanel>
                         </Grid>
                     </ControlTemplate>
