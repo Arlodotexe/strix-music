@@ -8,12 +8,16 @@
     xmlns:convertnumtime="using:OwlCore.Uno.Converters.Time.Numerical"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:converters="using:OwlCore.Uno.Converters"
+    xmlns:playback="using:StrixMusic.Sdk.MediaPlayback"
     x:Class="StrixMusic.Shells.ZuneDesktop.Styles.NowPlaying.ZuneMediaTransportStyle">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/Brushes.xaml"/>
         <ResourceDictionary Source="ms-appx:///StrixMusic.Shells.ZuneDesktop/Resources/ButtonStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
+
+    <converters:DataTriggerBehaviorEnumConverter x:Key="DataTriggerBehaviorEnumConverter" />
 
     <DataTemplate x:Key="ZuneMediaTransparentDataTemplate" x:DataType="sdk:MainViewModel">
         <Grid>
@@ -22,23 +26,53 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
-                <owlcoreuno:ToggleContentButton x:Name="RepeatButton" Style="{StaticResource ZuneSmallToggleContentButton}" VerticalAlignment="Center" IsThreeState="True" FontSize="20">
 
-                     <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Click">
+                <Grid Background="#01000000">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="RepeatStates">
+                            <VisualState x:Name="None">
+                                <VisualState.Setters>
+                                    <Setter Target="RepeatFontIcon.Foreground" Value="Black"/>
+                                    <Setter Target="RepeatFontIcon.Glyph" Value="&#xE1CD;"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="One">
+                                <VisualState.Setters>
+                                    <Setter Target="RepeatFontIcon.Foreground" Value="#f854be"/>
+                                    <Setter Target="RepeatFontIcon.Glyph" Value="&#xE1CC;"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="All">
+                                <VisualState.Setters>
+                                    <Setter Target="RepeatFontIcon.Foreground" Value="#f854be"/>
+                                    <Setter Target="RepeatFontIcon.Glyph" Value="&#xE1CD;"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Tapped">
                             <core:InvokeCommandAction Command="{x:Bind ActiveDevice.ToggleRepeatCommandAsync, Mode=OneWay}" />
                         </core:EventTriggerBehavior>
+                        
+                        <core:DataTriggerBehavior Binding="{x:Bind ActiveDevice.RepeatState, Mode=OneWay, Converter={StaticResource DataTriggerBehaviorEnumConverter}}" ComparisonCondition="Equal" Value="All">
+                            <core:GoToStateAction StateName="All" TargetObject="{Binding ElementName=RepeatStates}"/>
+                        </core:DataTriggerBehavior>
+
+                        <core:DataTriggerBehavior Binding="{x:Bind ActiveDevice.RepeatState, Mode=OneWay, Converter={StaticResource DataTriggerBehaviorEnumConverter}}" ComparisonCondition="Equal" Value="None">
+                            <core:GoToStateAction StateName="None" TargetObject="{Binding ElementName=RepeatStates}"/>
+                        </core:DataTriggerBehavior>
+                        
+                        <core:DataTriggerBehavior Binding="{x:Bind ActiveDevice.RepeatState, Mode=OneWay, Converter={StaticResource DataTriggerBehaviorEnumConverter}}" ComparisonCondition="Equal" Value="One">
+                            <core:GoToStateAction StateName="One" TargetObject="{Binding ElementName=RepeatStates}"/>
+                        </core:DataTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
 
-                    <FontIcon Glyph="&#xE1CD;"/>
-                    <owlcoreuno:ToggleContentButton.CheckedContent>
-                        <FontIcon Glyph="&#xE1CD;"/>
-                    </owlcoreuno:ToggleContentButton.CheckedContent>
-                    <owlcoreuno:ToggleContentButton.IndeterminateContent>
-                        <FontIcon Glyph="&#xE1CC;"/>
-                    </owlcoreuno:ToggleContentButton.IndeterminateContent>
-                </owlcoreuno:ToggleContentButton>
-                <ToggleButton x:Name="ShuffleButton" Style="{StaticResource ZuneSmallToggleButton}" Margin="-8,0,8,0" VerticalAlignment="Center" FontSize="20">
+                    <FontIcon x:Name="RepeatFontIcon" Glyph="&#xE1CD;" FontSize="12"/>
+                </Grid>
+
+                <ToggleButton x:Name="ShuffleButton" Style="{StaticResource ZuneSmallToggleButton}" Margin="4,0,8,0" VerticalAlignment="Center">
 
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Click">
@@ -46,7 +80,7 @@
                         </core:EventTriggerBehavior>
                     </interactivity:Interaction.Behaviors>
 
-                    <FontIcon Glyph="&#xE8B1;"/>
+                    <FontIcon Glyph="&#xE8B1;" FontSize="14" />
                 </ToggleButton>
 
                 <!--Skip and Prev buttons shouldn't flip with Bi-directional languages-->
@@ -68,7 +102,7 @@
                             </core:EventTriggerBehavior>
                         </interactivity:Interaction.Behaviors>
                         <owlcoreuno:ToggleContentButton.CheckedContent>
-                                <FontIcon Glyph="&#xE103;" FontSize="20" />
+                            <FontIcon Glyph="&#xE103;" FontSize="20" />
                         </owlcoreuno:ToggleContentButton.CheckedContent>
 
                         <PathIcon Data="M 11.1125 6.4158049 2.3841858e-7 12.83161 l 0 -12.831609975863432 z" HorizontalAlignment="Center" VerticalAlignment="Center" />
