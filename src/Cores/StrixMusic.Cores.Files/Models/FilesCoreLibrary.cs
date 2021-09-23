@@ -242,11 +242,6 @@ namespace StrixMusic.Cores.Files.Models
             {
                 Guard.IsNotNull(album.Id, nameof(album.Id));
 
-                var tracks = await _fileMetadataManager.Tracks.GetTracksByAlbumId(album.Id, 0, 1);
-                var track = tracks.FirstOrDefault();
-
-                Guard.IsNotNullOrWhiteSpace(track?.Id, nameof(track.Id));
-
                 yield return InstanceCache.Albums.GetOrCreate(album.Id, SourceCore, album);
             }
         }
