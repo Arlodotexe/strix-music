@@ -43,50 +43,5 @@ namespace OwlCore.Extensions
 
             return Task.WhenAll(tasks);
         }
-
-        /// <summary>
-        /// Runs an action in parallel from a list of <typeparamref name="T"/> on a background thread.
-        /// </summary>
-        /// <typeparam name="T">The type to operate on.</typeparam>
-        /// <param name="items">The source items.</param>
-        /// <param name="func">Returns the action to run in parallel, given <typeparamref name="T"/>.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationTokenSource"/> used to cancel the task.</param>
-        /// <returns>A <see cref="Task"/> representing the completion of all tasks.</returns>
-        public static Task InParallel<T>(this IEnumerable<T> items, Func<T, Action> func, CancellationToken? cancellationToken = null)
-        {
-            return Task.Run(() => Parallel.ForEach(items, x => func(x)()), cancellationToken ?? CancellationToken.None);
-        }
-
-        /// <summary>
-        /// Runs an action in parallel from a list of <typeparamref name="T"/>, returning all the completed values.
-        /// </summary>
-        /// <typeparam name="T">The type to operate on.</typeparam>
-        /// <typeparam name="T2">The return type.</typeparam>
-        /// <param name="items">The source items.</param>
-        /// <param name="func">Returns the action to run in parallel, given <typeparamref name="T"/>.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> used to cancel the task.</param>
-        /// <returns>A <see cref="Task"/> representing the completion of all tasks. The result is an array of all the returned values.</returns>
-        public static Task<T2[]> InParallel<T, T2>(this IEnumerable<T> items, Func<T, Func<T2>> func, CancellationToken? cancellationToken = null)
-        {
-            return Task.Run(() =>
-            {
-                object localLockObject = new object();
-                var enumerable = items as ICollection<T> ?? items.ToArray();
-
-                var resultCollection = new T2[enumerable.Count];
-
-                Parallel.For(0, enumerable.Count, (i, x) =>
-                {
-                    cancellationToken?.Register(x.Stop);
-
-                    var results = func(enumerable.ElementAt(i))();
-
-                    lock (localLockObject)
-                        resultCollection[i] = results;
-                });
-
-                return resultCollection;
-            }, cancellationToken ?? CancellationToken.None);
-        }
     }
 }
