@@ -261,9 +261,6 @@ namespace StrixMusic.Cores.Files.Models
             {
                 Guard.IsNotNullOrWhiteSpace(artist.Id, nameof(artist.Id));
 
-                if (artist.ImageIds != null)
-                    yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist);
-
                 yield return InstanceCache.Artists.GetOrCreate(artist.Id, SourceCore, artist);
             }
         }
