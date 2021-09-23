@@ -55,7 +55,7 @@ namespace StrixMusic.Cores.LocalFiles
 
             _initWithEmptyReposToggle = new AbstractBoolean(nameof(LocalFilesCoreSettingsKeys.InitWithEmptyMetadataRepos), "Ignore scan cache")
             {
-                Subtitle = "Always rescan metadata on startup, ignoring anything. Requires an app restart",
+                Subtitle = "Always rescan metadata on startup, ignoring data from previous scans. Requires an app restart",
             };
 
             _rescanButton = new AbstractButton("rescan", "Scan metadata", "\uE149")
