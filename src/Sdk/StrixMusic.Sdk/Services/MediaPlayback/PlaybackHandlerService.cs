@@ -25,8 +25,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         private RepeatState _repeatState;
         private bool _shuffleState;
 
-        private List<IMediaSourceConfig> _itemsToShuffle;
-
         /// <summary>
         /// Creates a new instance of <see cref="PlaybackHandlerService"/>.
         /// </summary>
@@ -36,7 +34,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             _prevItems = new Stack<IMediaSourceConfig>();
             _nextItems = new List<IMediaSourceConfig>();
-            _itemsToShuffle = new List<IMediaSourceConfig>();
         }
 
         /// <summary>
@@ -394,31 +391,28 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         {
             _shuffleState = !_shuffleState;
 
+            if (!_shuffleState) 
+                return Task.CompletedTask;
+
+            ShuffleStateChanged?.Invoke(this, _shuffleState);
+
             return ShuffleInternalAsync();
         }
 
         private Task ShuffleInternalAsync()
         {
-            if (_shuffleState)
-            {
-                _itemsToShuffle.AddRange(_prevItems);
-                _itemsToShuffle.AddRange(_nextItems);
+            var itemsToShuffle = new List<IMediaSourceConfig>();
+            itemsToShuffle.AddRange(_prevItems);
+            itemsToShuffle.AddRange(_nextItems);
 
-                var itemsArray = _itemsToShuffle.ToArray();
-                itemsArray.Shuffle();
+            var itemsArray = itemsToShuffle.ToArray();
+            itemsArray.Shuffle();
 
-                _itemsToShuffle = itemsArray.ToList();
+            itemsToShuffle = itemsArray.ToList();
 
-                _nextItems = _itemsToShuffle;
+            _nextItems = itemsToShuffle;
 
-                _prevItems.Clear();
-            }
-            else
-            {
-                _itemsToShuffle.Clear();
-            }
-
-            ShuffleStateChanged?.Invoke(this, _shuffleState);
+            _prevItems.Clear();
 
             return Task.CompletedTask;
         }
