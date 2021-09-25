@@ -394,6 +394,11 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         {
             _shuffleState = !_shuffleState;
 
+            return ShuffleInternalAsync();
+        }
+
+        private Task ShuffleInternalAsync()
+        {
             if (_shuffleState)
             {
                 _itemsToShuffle.AddRange(_prevItems);
