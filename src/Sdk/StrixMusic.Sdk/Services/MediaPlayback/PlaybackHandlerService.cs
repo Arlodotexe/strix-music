@@ -17,7 +17,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
     public partial class PlaybackHandlerService : IPlaybackHandlerService
     {
         private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry;
-        private readonly List<IMediaSourceConfig> _nextItems;
+        private List<IMediaSourceConfig> _nextItems;
         private readonly Stack<IMediaSourceConfig> _prevItems;
 
         private StrixDevice? _strixDevice;
@@ -25,7 +25,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         private RepeatState _repeatState;
         private bool _shuffleState;
 
-        private int[]? _shuffledNextItemsIndices;
+        private List<IMediaSourceConfig> _itemsToShuffle;
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaybackHandlerService"/>.
@@ -36,6 +36,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             _prevItems = new Stack<IMediaSourceConfig>();
             _nextItems = new List<IMediaSourceConfig>();
+            _itemsToShuffle = new List<IMediaSourceConfig>();
         }
 
         /// <summary>
@@ -191,9 +192,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <inheritdoc />
         public async Task PlayFromNext(int queueIndex)
         {
-            if (_shuffleState && _shuffledNextItemsIndices != null)
-                queueIndex = _shuffledNextItemsIndices[queueIndex];
-
             if (_currentPlayerService != null)
             {
                 await _currentPlayerService.PauseAsync();
@@ -201,6 +199,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             }
 
             var mediaSource = NextItems.ElementAtOrDefault(queueIndex);
+
             if (mediaSource is null)
                 return;
 
@@ -238,9 +237,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
 
             var nextIndex = 0;
-
-            if (_shuffleState && _shuffledNextItemsIndices != null)
-                nextIndex = _shuffledNextItemsIndices[nextIndex];
 
             await _currentPlayerService.PauseAsync();
             DetachEvents();
@@ -400,18 +396,21 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             if (_shuffleState)
             {
-                var totalItems = NextItems.Count;
+                _itemsToShuffle.AddRange(_prevItems);
+                _itemsToShuffle.AddRange(_nextItems);
 
-                _shuffledNextItemsIndices = new int[totalItems];
+                var itemsArray = _itemsToShuffle.ToArray();
+                itemsArray.Shuffle();
 
-                for (var i = 0; i < totalItems; i++)
-                    _shuffledNextItemsIndices[i] = i;
+                _itemsToShuffle = itemsArray.ToList();
 
-                _shuffledNextItemsIndices.Shuffle();
+                _nextItems = _itemsToShuffle;
+
+                _prevItems.Clear();
             }
             else
             {
-                _shuffledNextItemsIndices = null;
+                _itemsToShuffle.Clear();
             }
 
             ShuffleStateChanged?.Invoke(this, _shuffleState);
