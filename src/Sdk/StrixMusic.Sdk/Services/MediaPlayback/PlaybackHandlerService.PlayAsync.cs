@@ -42,6 +42,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             ClearNext();
 
             await AddTrackCollectionToQueue(track, trackCollection);
+
+            if (ShuffleState)
+                await ShuffleInternalAsync();
+
             await PlayFromNext(0);
             _strixDevice.SetPlaybackData(context, track);
         }
@@ -82,6 +86,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             var trackInfo = await AddArtistCollectionToQueue(artistCollectionItem, artistCollection);
 
+            if (ShuffleState)
+                await ShuffleInternalAsync();
+
             await PlayFromNext(0);
             _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
         }
@@ -107,7 +114,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         public async Task PlayAsync(IAlbumCollectionViewModel albumCollection, IPlayableBase context)
         {
             await albumCollection.InitAsync();
-            
+
             var firstAlbum = albumCollection.Albums.FirstOrDefault();
             if (firstAlbum is null)
             {
@@ -138,6 +145,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             ClearNext();
 
             var trackInfo = await AddAlbumCollectionToQueue(albumCollectionItem, albumCollection);
+
+            if (ShuffleState)
+                await ShuffleInternalAsync();
+
             await PlayFromNext(0);
             _strixDevice.SetPlaybackData(context, trackInfo.PlaybackTrack);
         }
@@ -158,6 +169,9 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
 
             ClearPrevious();
             ClearNext();
+
+            if (ShuffleState)
+                await ShuffleInternalAsync();
 
             var trackInfo = await AddPlaylistCollectionToQueue(playlistCollectionItem, playlistCollection);
 

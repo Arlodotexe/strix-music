@@ -17,15 +17,13 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
     public partial class PlaybackHandlerService : IPlaybackHandlerService
     {
         private readonly Dictionary<string, IAudioPlayerService> _audioPlayerRegistry;
-        private readonly List<IMediaSourceConfig> _nextItems;
+        private List<IMediaSourceConfig> _nextItems;
         private readonly Stack<IMediaSourceConfig> _prevItems;
 
         private StrixDevice? _strixDevice;
         private IAudioPlayerService? _currentPlayerService;
         private RepeatState _repeatState;
         private bool _shuffleState;
-
-        private int[]? _shuffledNextItemsIndices;
 
         /// <summary>
         /// Creates a new instance of <see cref="PlaybackHandlerService"/>.
@@ -191,9 +189,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         /// <inheritdoc />
         public async Task PlayFromNext(int queueIndex)
         {
-            if (_shuffleState && _shuffledNextItemsIndices != null)
-                queueIndex = _shuffledNextItemsIndices[queueIndex];
-
             if (_currentPlayerService != null)
             {
                 await _currentPlayerService.PauseAsync();
@@ -201,6 +196,7 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             }
 
             var mediaSource = NextItems.ElementAtOrDefault(queueIndex);
+
             if (mediaSource is null)
                 return;
 
@@ -238,9 +234,6 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
             Guard.IsNotNull(_currentPlayerService?.CurrentSource, nameof(_currentPlayerService.CurrentSource));
 
             var nextIndex = 0;
-
-            if (_shuffleState && _shuffledNextItemsIndices != null)
-                nextIndex = _shuffledNextItemsIndices[nextIndex];
 
             await _currentPlayerService.PauseAsync();
             DetachEvents();
@@ -398,23 +391,28 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         {
             _shuffleState = !_shuffleState;
 
-            if (_shuffleState)
-            {
-                var totalItems = NextItems.Count;
-
-                _shuffledNextItemsIndices = new int[totalItems];
-
-                for (var i = 0; i < totalItems; i++)
-                    _shuffledNextItemsIndices[i] = i;
-
-                _shuffledNextItemsIndices.Shuffle();
-            }
-            else
-            {
-                _shuffledNextItemsIndices = null;
-            }
-
             ShuffleStateChanged?.Invoke(this, _shuffleState);
+
+            if (!_shuffleState) 
+                return Task.CompletedTask;
+
+            return ShuffleInternalAsync();
+        }
+
+        private Task ShuffleInternalAsync()
+        {
+            var itemsToShuffle = new List<IMediaSourceConfig>();
+            itemsToShuffle.AddRange(_prevItems);
+            itemsToShuffle.AddRange(_nextItems);
+
+            var itemsArray = itemsToShuffle.ToArray();
+            itemsArray.Shuffle();
+
+            itemsToShuffle = itemsArray.ToList();
+
+            _nextItems = itemsToShuffle;
+
+            _prevItems.Clear();
 
             return Task.CompletedTask;
         }
