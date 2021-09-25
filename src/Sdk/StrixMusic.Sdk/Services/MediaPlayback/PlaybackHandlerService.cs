@@ -391,10 +391,10 @@ namespace StrixMusic.Sdk.Services.MediaPlayback
         {
             _shuffleState = !_shuffleState;
 
+            ShuffleStateChanged?.Invoke(this, _shuffleState);
+
             if (!_shuffleState) 
                 return Task.CompletedTask;
-
-            ShuffleStateChanged?.Invoke(this, _shuffleState);
 
             return ShuffleInternalAsync();
         }
